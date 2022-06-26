@@ -3,25 +3,29 @@
 }
 
 @web get /fixed {
-  return {html:"root"};
+  return {html:"fixed path"};
 }
 
 @web get /path0/$x:int {
-  return {html:"path integer"};
+  return {html:"path integer:" + x};
 }
 
 @web get /path1/$x:double {
-  return {html:"path double"};
+  return {html:"path double:" + x};
 }
 
 @web get /path2/$x:long {
-  return {html:"path long without child"};
+  return {html:"path long without child:" + x};
 }
 
 @web get /path2/$x:long/child {
-  return {html:"path long with child"};
+  return {html:"path long with child: " + x + "!"};
 }
 
 @web get /path3/$a* {
-  return {html:"tail"};
+  return {html:"tail:" + a};
+}
+
+@web get /path3/$a:string/child {
+  return {html:"abort tail and go with direct child:" + a};
 }

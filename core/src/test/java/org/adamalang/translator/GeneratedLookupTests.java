@@ -677,7 +677,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");

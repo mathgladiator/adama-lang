@@ -68,7 +68,7 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  protected WebResponse __get(NtClient __who, WebGet __get) {
+  public WebResponse __get(NtClient __who, WebGet __get) {
     return null;
   }
 

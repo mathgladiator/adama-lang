@@ -491,7 +491,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1366,7 +1366,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1901,7 +1901,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  private void __step_game_setup() {");
@@ -2896,7 +2896,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -4760,7 +4760,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __queue_single_play.clear();");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  private void __step_lobby() {");
@@ -7283,7 +7283,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -8048,7 +8048,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -8633,7 +8633,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -9241,7 +9241,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  private void __step_next() {");
@@ -10316,7 +10316,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __queue_play.clear();");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  private void __step_initiate() {");
@@ -11490,7 +11490,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");

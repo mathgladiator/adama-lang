@@ -30,16 +30,14 @@ public class CodeGenWeb {
     this.translate = new TreeMap<>();
   }
 
-  private void levelChild(final StringBuilderWithTabs sb, TreeMap<String, UriTable.UriLevel> next, int at, String fieldRaw) {
+  private void levelChild(final StringBuilderWithTabs sb, TreeMap<String, UriTable.UriLevel> next, int at, String field) {
     for (Map.Entry<String, UriTable.UriLevel> entry : next.entrySet()) {
-      final String fieldToUse;
-      if (fieldRaw.equals("fragment") && entry.getValue().tail) {
-        fieldToUse = "tail()";
-      } else {
-        fieldToUse = fieldRaw;
+      sb.append("if (_").append("" + at).append(".").append(field).append(" != null) {").tabUp().writeNewline();
+      translate.put(entry.getKey(), "_" + at + "." + field);
+      if (entry.getValue().tail) {
+        translate.put("#tail-" + at + "-name", entry.getKey());
+        translate.put("#tail-" + at + "-value", "_" + at + ".tail()");
       }
-      sb.append("if (_").append("" + at).append(".").append(fieldToUse).append(" != null) {").tabUp().writeNewline();
-      translate.put(entry.getKey(), "_" + at + "." + fieldToUse);
       level(sb, entry.getValue(), at + 1, true);
       sb.append("}").writeNewline();
     }
@@ -61,18 +59,33 @@ public class CodeGenWeb {
     levelChild(sb, level.longs, at, "val_long");
     levelChild(sb, level.doubles, at, "val_double");
     levelChild(sb, level.strings, at, "fragment");
-
-    if (level.action != null) {
-      sb.append("return ").append("__get_").append(level.name).append("(__who, __request");
-      for (Map.Entry<String, TyType> param : level.action.parameters().entrySet()) {
-        sb.append(", ").append(translate.get(param.getKey()));
-      }
-      sb.append(");").tabDown().writeNewline();
-    } else {
-      sb.append("/* END:").append("_" + at).append(" */").tabDown().writeNewline();
-    }
+    sb.append("/** END:" + at + "*/").tabDown().writeNewline();
     sb.append("}");
-
+    if (level.action != null) {
+      if (level.tail) {
+        sb.writeNewline();
+        sb.append("return ").append("__get_").append(level.name).append("(__who, __request");
+        String paramName = translate.get("#tail-" + (at - 1) + "-name");
+        if (paramName != null) {
+          String paramValue = translate.get("#tail-" + (at - 1) + "-value");
+          if (paramValue != null) {
+            translate.put(paramName, paramValue);
+          }
+        }
+        for (Map.Entry<String, TyType> param : level.action.parameters().entrySet()) {
+          sb.append(", ").append(translate.get(param.getKey()));
+        }
+        sb.append(");").writeNewline();
+      } else {
+        sb.append(" else {").tabUp().writeNewline();
+        sb.append("return ").append("__get_").append(level.name).append("(__who, __request");
+        for (Map.Entry<String, TyType> param : level.action.parameters().entrySet()) {
+          sb.append(", ").append(translate.get(param.getKey()));
+        }
+        sb.append(");").tabDown().writeNewline();
+        sb.append("}");
+      }
+    }
     if (tabDown) {
       sb.tabDown();
     }
@@ -95,10 +108,10 @@ public class CodeGenWeb {
 
   public static void writeWebHandlers(final StringBuilderWithTabs sb, Environment environment) {
     sb.append("@Override").writeNewline();
-    sb.append("protected WebResponse __get(NtClient __who, WebGet __request) {").tabUp().writeNewline();
+    sb.append("public WebResponse __get(NtClient __who, WebGet __request) {").tabUp().writeNewline();
     TreeMap<String, UriAction> actions = environment.document.webGet.ready("GET");
     CodeGenWeb get = new CodeGenWeb(environment, environment.document.webGet);
-    // get.table(sb);
+    get.table(sb);
     sb.append("return null;").tabDown().writeNewline();
     sb.append("}").writeNewline();
     for (Map.Entry<String, UriAction> action : actions.entrySet()) {

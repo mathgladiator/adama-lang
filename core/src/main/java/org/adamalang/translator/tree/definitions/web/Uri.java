@@ -81,6 +81,8 @@ public class Uri extends Definition {
         variables.put(id.text, new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string")));
         next.add((level) -> level.next(id.text, level.strings).tail());
       }
+    } else {
+      next.add((level) -> level.next("", level.fixed));
     }
   }
 
