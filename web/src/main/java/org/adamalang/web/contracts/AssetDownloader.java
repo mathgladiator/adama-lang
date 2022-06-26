@@ -22,6 +22,4 @@ public interface AssetDownloader {
 
     void failure(int code);
   }
-
-
 }

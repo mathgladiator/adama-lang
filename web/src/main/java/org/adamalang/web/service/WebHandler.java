@@ -17,13 +17,18 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.CookieHeaderNames;
 import io.netty.handler.codec.http.cookie.DefaultCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.TreeMap;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(WebHandler.class);
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final HttpHandler httpHandler;
@@ -36,30 +41,16 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     this.downloader = downloader;
   }
 
-  @Override
-  protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
-    HttpHandler.HttpResult httpResult = null;
-    try {
-      if (req.method() == HttpMethod.POST) {
-        metrics.webhandler_post.run();
-        byte[] memory = new byte[req.content().readableBytes()];
-        req.content().readBytes(memory);
-        httpResult = httpHandler.handlePost(req.uri(), new String(memory, StandardCharsets.UTF_8));
-      } else {
-        metrics.webhandler_get.run();
-        httpResult = httpHandler.handleGet(req.uri());
-      }
-    } catch (Exception exception) {
-      httpResult = null;
-      metrics.webhandler_exception.run();
-    }
+  private void afterHttpResult(HttpHandler.HttpResult httpResultIncoming, final ChannelHandlerContext ctx, final FullHttpRequest req) {
+    HttpHandler.HttpResult httpResult = httpResultIncoming;
     if (httpResult != null) {
       metrics.webhandler_found.run();
     }
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
     boolean isAdamaClient = "/libadama.js".equals(req.uri());
     boolean isSetAssetKey = req.uri().startsWith("/p");
-    boolean isAsset = req.uri().startsWith("/assets/");
+    boolean isAssetEncrypted = req.uri().startsWith("/assets/");
+    boolean isAssetRequestInHttpResult = httpResult != null && httpResult.asset != null;
     // send the default response for bad or health checks
     final HttpResponseStatus status;
     final byte[] content;
@@ -79,7 +70,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       status = HttpResponseStatus.OK;
       content = "OK".getBytes(StandardCharsets.UTF_8);
       contentType = "text/text; charset=UTF-8";
-    } else if (isAsset) {
+    } else if (isAssetEncrypted) {
       String assetKey = AssetRequest.extractAssetKey(req.headers().get(HttpHeaderNames.COOKIE));
       if (assetKey != null) {
         try {
@@ -172,6 +163,38 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
     }
     sendWithKeepAlive(webConfig, ctx, req, res);
+  }
+
+  @Override
+  protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
+    Callback<HttpHandler.HttpResult> callback = new Callback<HttpHandler.HttpResult>() {
+      @Override
+      public void success(HttpHandler.HttpResult value) {
+        ctx.executor().execute(() -> {
+          afterHttpResult(value, ctx, req);
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        // TODO: DO SOME LOGGER, ADD THE ERROR CODE to the HEADER
+        afterHttpResult(null, ctx, req);
+      }
+    };
+    TreeMap<String, String> headers = new TreeMap<>();
+    // TODO: parse the URI into parameters?
+    // TODO: copy the headers into the headers (which are needed by clients per a deny list)
+    String uri = req.uri();
+    String parameters = "{}";
+    if (req.method() == HttpMethod.POST) {
+      metrics.webhandler_post.run();
+      byte[] memory = new byte[req.content().readableBytes()];
+      req.content().readBytes(memory);
+      httpHandler.handlePost(uri, headers, parameters, new String(memory, StandardCharsets.UTF_8), callback);
+    } else {
+      metrics.webhandler_get.run();
+      httpHandler.handleGet(uri, headers, parameters, callback);
+    }
   }
 
   private static void sendWithKeepAlive(final WebConfig webConfig, final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {

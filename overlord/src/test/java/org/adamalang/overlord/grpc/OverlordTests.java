@@ -9,6 +9,8 @@
  */
 package org.adamalang.overlord.grpc;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.overlord.OverlordMetrics;
@@ -20,9 +22,11 @@ import org.junit.Test;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class OverlordTests {
   @Test
@@ -44,9 +48,49 @@ public class OverlordTests {
       server.put("/ninja", new HttpHandler.HttpResult("text/plain", "text".getBytes(StandardCharsets.UTF_8)));
       int attempts = 50;
       while (attempts-- > 0) {
-        HttpHandler.HttpResult resultOfNinja = handler.handleGet("/ninja");
-        HttpHandler.HttpResult resultOfNinja2 = handler.handleGet("/ninja2");
-        HttpHandler.HttpResult heatResult = handler.handleGet("/heat");
+        AtomicReference<HttpHandler.HttpResult> resultOfNinjaRef = new AtomicReference<>();
+        AtomicReference<HttpHandler.HttpResult> resultOfNinja2Ref = new AtomicReference<>();
+        AtomicReference<HttpHandler.HttpResult> heatResultRef = new AtomicReference<>();
+        CountDownLatch latchGet = new CountDownLatch(3);
+        handler.handleGet("/ninja", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+          @Override
+          public void success(HttpHandler.HttpResult value) {
+            resultOfNinjaRef.set(value);
+            latchGet.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        handler.handleGet("/ninja2", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+          @Override
+          public void success(HttpHandler.HttpResult value) {
+            resultOfNinja2Ref.set(value);
+            latchGet.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        handler.handleGet("/heat", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+          @Override
+          public void success(HttpHandler.HttpResult value) {
+            heatResultRef.set(value);
+            latchGet.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        HttpHandler.HttpResult resultOfNinja = resultOfNinjaRef.get();
+        HttpHandler.HttpResult resultOfNinja2 = resultOfNinja2Ref.get();
+        HttpHandler.HttpResult heatResult = heatResultRef.get();
         if (heatResult != null) {
           String htmlHeat = new String(heatResult.body);
           if (htmlHeat.contains("127.0.0.1:10001")) {

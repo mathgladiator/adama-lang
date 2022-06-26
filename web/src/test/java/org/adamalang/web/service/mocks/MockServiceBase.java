@@ -9,6 +9,7 @@
  */
 package org.adamalang.web.service.mocks;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
@@ -21,6 +22,7 @@ import org.adamalang.web.service.AssetRequest;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class MockServiceBase implements ServiceBase {
   @Override
@@ -79,25 +81,29 @@ public class MockServiceBase implements ServiceBase {
   public HttpHandler http() {
     return new HttpHandler() {
       @Override
-      public HttpResult handleGet(String uri) {
+      public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         if ("/foo".equals(uri)){
-          return new HttpHandler.HttpResult("text/html; charset=UTF-8", "goo".getBytes(StandardCharsets.UTF_8));
+          callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", "goo".getBytes(StandardCharsets.UTF_8)));
+          return;
         }
         if ("/crash".equals(uri)) {
-          throw new NullPointerException();
+          callback.failure(new ErrorCodeException(-1));
+          return;
         }
-        return null;
+        callback.success(null);
       }
 
       @Override
-      public HttpResult handlePost(String uri, String body) {
+      public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         if ("/body".equals(uri)){
-          return new HttpHandler.HttpResult("text/html; charset=UTF-8", ("body:" + body).getBytes(StandardCharsets.UTF_8));
+          callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", ("body:" + body).getBytes(StandardCharsets.UTF_8)));
+          return;
         }
         if ("/crash".equals(uri)) {
-          throw new NullPointerException();
+          callback.failure(new ErrorCodeException(-1));
+          return;
         }
-        return null;
+        callback.success(null);
       }
     };
   }
