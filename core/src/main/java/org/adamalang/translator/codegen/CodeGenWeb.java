@@ -98,7 +98,7 @@ public class CodeGenWeb {
     sb.append("protected WebResponse __get(NtClient __who, WebGet __request) {").tabUp().writeNewline();
     TreeMap<String, UriAction> actions = environment.document.webGet.ready("GET");
     CodeGenWeb get = new CodeGenWeb(environment, environment.document.webGet);
-    get.table(sb);
+    // get.table(sb);
     sb.append("return null;").tabDown().writeNewline();
     sb.append("}").writeNewline();
     for (Map.Entry<String, UriAction> action : actions.entrySet()) {
