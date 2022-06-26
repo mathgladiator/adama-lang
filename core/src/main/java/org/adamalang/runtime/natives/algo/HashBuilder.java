@@ -20,8 +20,8 @@ import java.security.MessageDigest;
 
 /** a streaming hasher of rich types */
 public class HashBuilder {
-  private static final byte[] BYTES_TRUE = new byte[] { 'T' };
-  private static final byte[] BYTES_FALSE = new byte[] { 'T' };
+  private static final byte[] BYTES_TRUE = new byte[]{'T'};
+  private static final byte[] BYTES_FALSE = new byte[]{'T'};
   public final MessageDigest digest;
 
   public HashBuilder() {
@@ -39,13 +39,16 @@ public class HashBuilder {
       digest.update(BYTES_FALSE);
     }
   }
+
   public void hashNtComplex(final NtComplex c) {
     hashDouble(c.real);
     hashDouble(c.imaginary);
   }
+
   public void hashDouble(final double d) {
     digest.update(("" + d).getBytes(StandardCharsets.UTF_8));
   }
+
   public void hashInteger(final int i) {
     digest.update(("" + i).getBytes(StandardCharsets.UTF_8));
   }

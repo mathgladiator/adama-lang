@@ -29,10 +29,6 @@ public class WebFragment {
     this.val_double = parseDouble(fragment);
   }
 
-  public String tail() {
-    return uri.substring(tail);
-  }
-
   private static final Boolean parseBoolean(String x) {
     if ("true".equalsIgnoreCase(x)) {
       return true;
@@ -41,14 +37,6 @@ public class WebFragment {
       return false;
     }
     return null;
-  }
-
-  private static final Double parseDouble(String x) {
-    try {
-      return Double.parseDouble(x);
-    } catch (NumberFormatException nfe) {
-      return null;
-    }
   }
 
   private static final Integer parseInteger(String x) {
@@ -65,5 +53,17 @@ public class WebFragment {
     } catch (NumberFormatException nfe) {
       return null;
     }
+  }
+
+  private static final Double parseDouble(String x) {
+    try {
+      return Double.parseDouble(x);
+    } catch (NumberFormatException nfe) {
+      return null;
+    }
+  }
+
+  public String tail() {
+    return uri.substring(tail);
   }
 }

@@ -226,10 +226,6 @@ public class DurableLivingDocument {
     return result;
   }
 
-  public LivingDocumentFactory getCurrentFactory() {
-    return currentFactory;
-  }
-
   public void deploy(LivingDocumentFactory factory, Callback<Integer> callback) throws ErrorCodeException {
     LivingDocument newDocument = factory.create(document.__monitor);
     newDocument.__setKey(key.key);
@@ -277,6 +273,14 @@ public class DurableLivingDocument {
     issueCloseWhileInExecutor(ErrorCodes.DOCUMENT_SHEDDING_LOAD);
   }
 
+  private void issueCloseWhileInExecutor(int errorCode) {
+    document.__nukeViews();
+    while (pending.size() > 0) {
+      pending.removeFirst().callback.failure(new ErrorCodeException(errorCode));
+    }
+    internalCloseExecutor();
+  }
+
   private void internalCloseExecutor() {
     base.map.remove(key);
     base.metrics.inflight_documents.down();
@@ -287,12 +291,8 @@ public class DurableLivingDocument {
     }
   }
 
-  private void issueCloseWhileInExecutor(int errorCode) {
-    document.__nukeViews();
-    while (pending.size() > 0) {
-      pending.removeFirst().callback.failure(new ErrorCodeException(errorCode));
-    }
-    internalCloseExecutor();
+  public LivingDocumentFactory getCurrentFactory() {
+    return currentFactory;
   }
 
   private void catastrophicFailureWhileInExecutor() {
