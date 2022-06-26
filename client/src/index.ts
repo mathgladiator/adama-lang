@@ -643,7 +643,7 @@ export class Connection {
   constructor(host: string) {
     this.backoff = 1;
     this.host = host;
-    this.url = "wss://" + host + "/s";
+    this.url = "wss://" + host + "/~s";
     this.assets = true;
     this.connected = false;
     this.dead = false;
@@ -748,7 +748,7 @@ export class Connection {
           success: function(payload) {
             try {
               var xhttp = new XMLHttpRequest();
-              xhttp.open("GET", "https://" + self.host + "/p" + payload.assetKey, true);
+              xhttp.open("GET", "https://" + self.host + "/~p" + payload.assetKey, true);
               xhttp.withCredentials = true;
               xhttp.send();
             } catch (ex) {

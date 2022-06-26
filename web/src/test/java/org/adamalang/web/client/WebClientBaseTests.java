@@ -48,7 +48,7 @@ public class WebClientBaseTests {
       Runnable exFin = streamEx.latchAt(1);
       Runnable emptyFin = streamEmpty.latchAt(1);
       clientBase.open(
-          "http://localhost:" + webConfig.port + "/s",
+          "http://localhost:" + webConfig.port + "/~s",
           new WebLifecycle() {
             @Override
             public void connected(WebClientConnection connection) {
@@ -105,7 +105,7 @@ public class WebClientBaseTests {
       CountDownLatch connectedLatch = new CountDownLatch(1);
       CountDownLatch disconnected = new CountDownLatch(1);
       clientBase.open(
-          "http://localhost:" + webConfig.port + "/s",
+          "http://localhost:" + webConfig.port + "/~s",
           new WebLifecycle() {
             @Override
             public void connected(WebClientConnection connection) {
@@ -151,7 +151,7 @@ public class WebClientBaseTests {
       CountDownLatch firstPing = new CountDownLatch(1);
       CountDownLatch disconnected = new CountDownLatch(1);
       clientBase.open(
-          "http://localhost:" + webConfig.port + "/s",
+          "http://localhost:" + webConfig.port + "/~s",
           new WebLifecycle() {
             @Override
             public void connected(WebClientConnection connection) {
@@ -199,7 +199,7 @@ public class WebClientBaseTests {
       CountDownLatch failure = new CountDownLatch(1);
       CountDownLatch disconnected = new CountDownLatch(1);
       clientBase.open(
-          "http://localhost:" + webConfig.port + "/s",
+          "http://localhost:" + webConfig.port + "/~s",
           new WebLifecycle() {
             @Override
             public void connected(WebClientConnection connection) {

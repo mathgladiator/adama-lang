@@ -56,7 +56,7 @@ public class WebHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
-            .get("/assets/space/key/id=123")
+            .get("/~assets/space/key/id=123")
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("<html><head><title>bad request</title></head><body>Asset cookie was not set.</body></html>");
@@ -67,7 +67,7 @@ public class WebHandlerTests {
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
             .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", SecureAssetUtil.makeAssetKeyHeader()))
-            .get("/assets/space/key/id=123")
+            .get("/~assets/space/key/id=123")
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("<html><head><title>got asset request</title></head><body>Failure to initiate asset attachment.</body></html>");
@@ -80,7 +80,7 @@ public class WebHandlerTests {
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
             .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
-            .get("/assets/space/fail/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
+            .get("/~assets/space/fail/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("Download asset failure:1234");
@@ -93,7 +93,7 @@ public class WebHandlerTests {
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
             .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
-            .get("/assets/space/incomplete/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
+            .get("/~assets/space/incomplete/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("Chunk");
@@ -106,7 +106,7 @@ public class WebHandlerTests {
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
             .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
-            .get("/assets/space/1/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
+            .get("/~assets/space/1/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("ChunkAndDone");
@@ -119,7 +119,7 @@ public class WebHandlerTests {
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
             .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
-            .get("/assets/space/3/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
+            .get("/~assets/space/3/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("Chunk1Chunk2Chunk3");
@@ -181,7 +181,7 @@ public class WebHandlerTests {
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
             .header("Origin", "FOO")
-            .get("/p123")
+            .get("/~p123")
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("OK");

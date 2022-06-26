@@ -35,7 +35,7 @@ public class SimpleCanaryConfig {
   public final int connectDelayMs;
 
   public SimpleCanaryConfig(ConfigObject config) {
-    this.endpoint = config.strOf("endpoint", "https://aws-us-east-2.adama-platform.com/s");
+    this.endpoint = config.strOf("endpoint", "https://aws-us-east-2.adama-platform.com/~s");
     this.identities = config.stringsOf("identities", "identities was not an array");
     this.connections = config.intOf("connections", 100);
     this.documentsPerConnectionMin = config.intOf("documents_per_connection_min", 1);

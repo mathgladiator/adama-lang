@@ -42,7 +42,7 @@ public class WebSocketHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
-            .get("/s")
+            .get("/~s")
             .header("X-Forwarded-For", "4.3.2.1")
             .withWebSocket()
             .execute(callback);
@@ -54,7 +54,7 @@ public class WebSocketHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
-            .get("/s")
+            .get("/~s")
             .header("Cookie", ClientCookieEncoder.STRICT.encode(new DefaultCookie("sak", "123")))
             .withWebSocket()
             .execute(callback);
@@ -67,7 +67,7 @@ public class WebSocketHandlerTests {
         TestClientRequestBuilder b =
             TestClientRequestBuilder.start(group)
                 .server("localhost", webConfig.port)
-                .get("/s")
+                .get("/~s")
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
@@ -88,7 +88,7 @@ public class WebSocketHandlerTests {
         TestClientRequestBuilder b =
             TestClientRequestBuilder.start(group)
                 .server("localhost", webConfig.port)
-                .get("/s")
+                .get("/~s")
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
@@ -108,7 +108,7 @@ public class WebSocketHandlerTests {
         TestClientRequestBuilder b =
             TestClientRequestBuilder.start(group)
                 .server("localhost", webConfig.port)
-                .get("/s")
+                .get("/~s")
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
@@ -131,7 +131,7 @@ public class WebSocketHandlerTests {
         TestClientRequestBuilder b =
             TestClientRequestBuilder.start(group)
                 .server("localhost", webConfig.port)
-                .get("/s")
+                .get("/~s")
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
@@ -149,7 +149,7 @@ public class WebSocketHandlerTests {
         TestClientRequestBuilder b =
             TestClientRequestBuilder.start(group)
                 .server("localhost", webConfig.port)
-                .get("/s")
+                .get("/~s")
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
@@ -167,7 +167,7 @@ public class WebSocketHandlerTests {
         TestClientRequestBuilder b =
             TestClientRequestBuilder.start(group)
                 .server("localhost", webConfig.port)
-                .get("/s")
+                .get("/~s")
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
@@ -184,7 +184,7 @@ public class WebSocketHandlerTests {
         TestClientRequestBuilder b =
             TestClientRequestBuilder.start(group)
                 .server("localhost", webConfig.port)
-                .get("/s")
+                .get("/~s")
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();

@@ -48,8 +48,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
     boolean isAdamaClient = "/libadama.js".equals(req.uri());
-    boolean isSetAssetKey = req.uri().startsWith("/p");
-    boolean isAssetEncrypted = req.uri().startsWith("/assets/");
+    boolean isSetAssetKey = req.uri().startsWith("/~p");
+    boolean isAssetEncrypted = req.uri().startsWith("/~assets/");
     boolean isAssetRequestInHttpResult = httpResult != null && httpResult.asset != null;
     // send the default response for bad or health checks
     final HttpResponseStatus status;
@@ -74,7 +74,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       String assetKey = AssetRequest.extractAssetKey(req.headers().get(HttpHeaderNames.COOKIE));
       if (assetKey != null) {
         try {
-          String encryptedId = req.uri().substring("/assets/".length());
+          String encryptedId = req.uri().substring("/!assets/".length());
           metrics.webhandler_assets_start.run();
           AssetRequest assetRequest = AssetRequest.parse(encryptedId, assetKey);
           downloader.request(assetRequest, new AssetDownloader.AssetStream() {
@@ -149,7 +149,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     HttpUtil.setContentLength(res, content.length);
     res.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
     if (isSetAssetKey) {
-      String value = req.uri().substring(2);
+      String value = req.uri().substring(3);
       String origin = req.headers().get(HttpHeaderNames.ORIGIN);
       if (origin != null) {
         res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
