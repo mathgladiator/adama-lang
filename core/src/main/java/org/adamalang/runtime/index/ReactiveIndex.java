@@ -61,6 +61,9 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
             break;
           }
         }
+        if (values.size() == 0) {
+          return null;
+        }
         return values;
       }
       case LessThanOrEqual: {
@@ -73,6 +76,9 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
           } else {
             break;
           }
+        }
+        if (values.size() == 0) {
+          return null;
         }
         return values;
       }
@@ -87,6 +93,9 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
             break;
           }
         }
+        if (values.size() == 0) {
+          return null;
+        }
         return values;
       }
       case GreaterThanOrEqual: {
@@ -99,6 +108,9 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
           } else {
             break;
           }
+        }
+        if (values.size() == 0) {
+          return null;
         }
         return values;
       }

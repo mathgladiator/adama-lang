@@ -47,6 +47,47 @@ public class ReactiveIndexTests {
   }
 
   @Test
+  public void flow_lessthan() {
+    final var unknowns = new TreeSet<MockRecord>();
+    final var index = new ReactiveIndex<>(unknowns);
+    Assert.assertNull(index.of(42, IndexQuerySet.LookupMode.LessThan));
+    index.add(42, MockRecord.make(1));
+    Assert.assertEquals(1, index.of(44, IndexQuerySet.LookupMode.LessThan).size());
+    Assert.assertNull(index.of(40, IndexQuerySet.LookupMode.LessThan));
+  }
+
+  @Test
+  public void flow_lessthan_eq() {
+    final var unknowns = new TreeSet<MockRecord>();
+    final var index = new ReactiveIndex<>(unknowns);
+
+    Assert.assertNull(index.of(42, IndexQuerySet.LookupMode.LessThanOrEqual));
+    index.add(42, MockRecord.make(1));
+    Assert.assertEquals(1, index.of(44, IndexQuerySet.LookupMode.LessThanOrEqual).size());
+    Assert.assertNull(index.of(40, IndexQuerySet.LookupMode.LessThanOrEqual));
+  }
+
+  @Test
+  public void flow_greaterthan() {
+    final var unknowns = new TreeSet<MockRecord>();
+    final var index = new ReactiveIndex<>(unknowns);
+    Assert.assertNull(index.of(42, IndexQuerySet.LookupMode.GreaterThan));
+    index.add(42, MockRecord.make(1));
+    Assert.assertEquals(1, index.of(40, IndexQuerySet.LookupMode.GreaterThan).size());
+    Assert.assertNull(index.of(42, IndexQuerySet.LookupMode.GreaterThan));
+  }
+
+  @Test
+  public void flow_greaterthan_eq() {
+    final var unknowns = new TreeSet<MockRecord>();
+    final var index = new ReactiveIndex<>(unknowns);
+    Assert.assertNull(index.of(42, IndexQuerySet.LookupMode.GreaterThanOrEqual));
+    index.add(42, MockRecord.make(1));
+    Assert.assertEquals(1, index.of(40, IndexQuerySet.LookupMode.GreaterThanOrEqual).size());
+    Assert.assertNull(index.of(44, IndexQuerySet.LookupMode.GreaterThanOrEqual));
+  }
+
+  @Test
   public void memory() {
     final var unknowns = new TreeSet<MockRecord>();
     final var index = new ReactiveIndex<>(unknowns);

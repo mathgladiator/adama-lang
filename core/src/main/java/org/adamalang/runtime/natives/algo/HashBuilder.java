@@ -40,21 +40,26 @@ public class HashBuilder {
   public void hashInteger(final int i) {
     digest.update(("" + i).getBytes(StandardCharsets.UTF_8));
   }
+
   public void hashNtAsset(final NtAsset a) {
     digest.update(a.id.getBytes(StandardCharsets.UTF_8));
     digest.update(a.md5.getBytes(StandardCharsets.UTF_8));
     digest.update(a.sha384.getBytes(StandardCharsets.UTF_8));
   }
+
   public void hashString(final String s) {
     digest.update(s.getBytes(StandardCharsets.UTF_8));
   }
+
   public void hashLong(final long l) {
     digest.update(("" + l).getBytes(StandardCharsets.UTF_8));
   }
+
   public void hashNtClient(final NtClient c) {
     digest.update(c.agent.getBytes(StandardCharsets.UTF_8));
     digest.update(c.authority.getBytes(StandardCharsets.UTF_8));
   }
+
   public String finish() {
     return Hashing.finishAndEncode(digest);
   }

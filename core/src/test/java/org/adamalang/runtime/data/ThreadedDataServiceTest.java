@@ -100,8 +100,21 @@ public class ThreadedDataServiceTest {
 
       }
     });
+    CountDownLatch latchClosed = new CountDownLatch(1);
+    ds.close(key, new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        latchClosed.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
     Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
     Assert.assertTrue(latchCompacted.await(1000, TimeUnit.MILLISECONDS));
+    Assert.assertTrue(latchClosed.await(1000, TimeUnit.MILLISECONDS));
     Assert.assertTrue(ds.shutdown().await(1000, TimeUnit.MILLISECONDS));
   }
 }

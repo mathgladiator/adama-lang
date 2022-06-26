@@ -49,6 +49,15 @@ public class JsonStreamWriterTests {
   }
 
   @Test
+  public void nullstring() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.writeString(null);
+    writer.force_comma();
+    writer.writeString(null);
+    Assert.assertEquals("null,null", writer.toString());
+  }
+
+  @Test
   public void tree_empty_map() {
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.writeTree(new HashMap<>());
