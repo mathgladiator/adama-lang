@@ -63,6 +63,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -341,6 +342,9 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -543,6 +547,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -863,6 +868,9 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -903,6 +911,15 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n  private static class RTxM implements NtMessageBase {");
     gold.append("\n    private NtMaybe<Integer> k = new NtMaybe<Integer>();");
     gold.append("\n    private int z = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"k\");");
+    gold.append("\n      if (this.k.has()) {");
+    gold.append("\n        __hash.hashInteger(this.k.get());");
+    gold.append("\n      }");
+    gold.append("\n      __hash.hashString(\"z\");");
+    gold.append("\n      __hash.hashInteger(this.z);");
+    gold.append("\n      __hash.hashString(\"M\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxM(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -1143,6 +1160,11 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx_AnonObjConvert_1 implements NtMessageBase {");
     gold.append("\n    private int x = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"x\");");
+    gold.append("\n      __hash.hashInteger(this.x);");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_1(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -1202,6 +1224,13 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx_AnonObjConvert_2 implements NtMessageBase {");
     gold.append("\n    private NtMaybe<Boolean> z = new NtMaybe<Boolean>();");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"z\");");
+    gold.append("\n      if (this.z.has()) {");
+    gold.append("\n        __hash.hashBoolean(this.z.get());");
+    gold.append("\n      }");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_2(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");

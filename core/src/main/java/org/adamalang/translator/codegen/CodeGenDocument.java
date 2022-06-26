@@ -23,6 +23,7 @@ public class CodeGenDocument {
     sb.append("import org.adamalang.runtime.index.*;").writeNewline();
     sb.append("import org.adamalang.runtime.json.*;").writeNewline();
     sb.append("import org.adamalang.runtime.natives.*;").writeNewline();
+    sb.append("import org.adamalang.runtime.natives.algo.*;").writeNewline();
     sb.append("import org.adamalang.runtime.natives.lists.*;").writeNewline();
     sb.append("import org.adamalang.runtime.ops.*;").writeNewline();
     sb.append("import org.adamalang.runtime.reactives.*;").writeNewline();

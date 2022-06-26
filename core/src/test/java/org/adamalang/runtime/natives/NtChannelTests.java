@@ -13,16 +13,25 @@ import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.async.Sink;
 import org.adamalang.runtime.exceptions.ComputeBlockedException;
+import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.algo.HashBuilder;
 import org.adamalang.runtime.reactives.RxInt32;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class NtChannelTests {
-  public static final NtMessageBase DEMO =
-      writer -> {
-        writer.beginObject();
-        writer.endObject();
-      };
+  public static final NtMessageBase DEMO = new NtMessageBase() {
+    @Override
+    public void __writeOut(JsonStreamWriter writer) {
+      writer.beginObject();
+      writer.endObject();
+    }
+
+    @Override
+    public void __hash(HashBuilder __hash) {
+      __hash.hashString("demo");
+    }
+  };
 
   @Test
   public void flow1() {

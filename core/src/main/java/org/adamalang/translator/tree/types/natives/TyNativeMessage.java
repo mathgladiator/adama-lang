@@ -85,6 +85,7 @@ public class TyNativeMessage extends TyType implements IsStructure, //
       }
       sb.append(";").writeNewline();
     }
+    CodeGenMessage.generateHashers(name, storage, sb, environment);
     CodeGenMessage.generateJsonReaders(name, storage, sb, environment);
     { // CLOSE UP THE MESSAGE WITH A CONSTRUCTOR FOR ANONYMOUS OBJECTS
       sb.append("private RTx" + name + "() {}");

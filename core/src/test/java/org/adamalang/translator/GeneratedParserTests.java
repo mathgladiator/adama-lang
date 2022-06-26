@@ -63,6 +63,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -323,6 +324,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -1059,6 +1063,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -1319,6 +1324,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -1358,6 +1366,11 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTxFoo implements NtMessageBase {");
     gold.append("\n    private int x = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"x\");");
+    gold.append("\n      __hash.hashInteger(this.x);");
+    gold.append("\n      __hash.hashString(\"Foo\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxFoo(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -1578,6 +1591,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -1838,6 +1852,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -1894,6 +1911,11 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx_AnonObjConvert_0 implements NtMessageBase {");
     gold.append("\n    private int x = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"x\");");
+    gold.append("\n      __hash.hashInteger(this.x);");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_0(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -1954,6 +1976,13 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  private static class RTxAutoMaxRecord6 implements NtMessageBase {");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"x\");");
+    gold.append("\n      __hash.hashInteger(this.x);");
+    gold.append("\n      __hash.hashString(\"y\");");
+    gold.append("\n      __hash.hashInteger(this.y);");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord6(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -2017,6 +2046,17 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    private String a1 = \"\";");
     gold.append("\n    private boolean a2 = false;");
     gold.append("\n    private int x = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"a0\");");
+    gold.append("\n      __hash.hashBoolean(this.a0);");
+    gold.append("\n      __hash.hashString(\"a1\");");
+    gold.append("\n      __hash.hashString(this.a1);");
+    gold.append("\n      __hash.hashString(\"a2\");");
+    gold.append("\n      __hash.hashBoolean(this.a2);");
+    gold.append("\n      __hash.hashString(\"x\");");
+    gold.append("\n      __hash.hashInteger(this.x);");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord9(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -2671,6 +2711,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -2931,6 +2972,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -3142,6 +3186,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -3402,6 +3447,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -3618,6 +3666,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -3878,6 +3927,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -3916,6 +3968,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxX implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"X\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxX(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -4218,6 +4273,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -4478,6 +4534,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -4680,6 +4739,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -4953,6 +5013,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -5165,6 +5228,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -5438,6 +5502,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -5476,6 +5543,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxF implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"F\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxF(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -5734,6 +5804,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -5994,6 +6065,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -6033,6 +6107,11 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTxX implements NtMessageBase {");
     gold.append("\n    private int x = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"x\");");
+    gold.append("\n      __hash.hashInteger(this.x);");
+    gold.append("\n      __hash.hashString(\"X\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxX(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -6093,6 +6172,13 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  private static class RTxXY implements NtMessageBase {");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"x\");");
+    gold.append("\n      __hash.hashInteger(this.x);");
+    gold.append("\n      __hash.hashString(\"y\");");
+    gold.append("\n      __hash.hashInteger(this.y);");
+    gold.append("\n      __hash.hashString(\"XY\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxXY(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -6365,6 +6451,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -6625,6 +6712,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -6663,6 +6753,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxM implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"M\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxM(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -6864,6 +6957,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -7124,6 +7218,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -7329,6 +7426,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -7602,6 +7700,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -7814,6 +7915,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -8092,6 +8194,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -8591,6 +8696,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -8851,6 +8957,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -9480,6 +9589,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -9740,6 +9850,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -9990,6 +10103,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -10250,6 +10364,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -10477,6 +10594,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -10737,6 +10855,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -10964,6 +11085,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -11224,6 +11346,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -11434,6 +11559,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -11694,6 +11820,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -11908,6 +12037,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -12186,6 +12316,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -12225,6 +12358,11 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTxM implements NtMessageBase {");
     gold.append("\n    private int x = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"x\");");
+    gold.append("\n      __hash.hashInteger(this.x);");
+    gold.append("\n      __hash.hashString(\"M\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxM(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -12527,6 +12665,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -12805,6 +12944,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -13015,6 +13157,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -13310,6 +13453,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -13663,6 +13809,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -13923,6 +14070,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -14317,6 +14467,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -14595,6 +14746,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -14634,6 +14788,11 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTxM implements NtMessageBase {");
     gold.append("\n    private int x = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"x\");");
+    gold.append("\n      __hash.hashInteger(this.x);");
+    gold.append("\n      __hash.hashString(\"M\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxM(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -15070,6 +15229,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -15330,6 +15490,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -15523,6 +15686,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -16037,6 +16201,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -16246,6 +16413,11 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx_AnonObjConvert_0 implements NtMessageBase {");
     gold.append("\n    private String name = \"\";");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"name\");");
+    gold.append("\n      __hash.hashString(this.name);");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_0(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -16574,6 +16746,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -16834,6 +17007,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -16872,6 +17048,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxFoo implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"Foo\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxFoo(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -17100,6 +17279,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -17360,6 +17540,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -17564,6 +17747,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -17824,6 +18008,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -18128,6 +18315,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -18415,6 +18603,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -18673,6 +18864,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -18933,6 +19125,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -18971,6 +19166,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxM implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"M\");");
+    gold.append("\n    }");
     gold.append("\n    private RTxM(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -19399,6 +19597,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -19677,6 +19876,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -19952,6 +20154,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -20212,6 +20415,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -20252,6 +20458,13 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  private static class RTx__GenFOO1 implements NtMessageBase {");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"x\");");
+    gold.append("\n      __hash.hashInteger(this.x);");
+    gold.append("\n      __hash.hashString(\"y\");");
+    gold.append("\n      __hash.hashInteger(this.y);");
+    gold.append("\n      __hash.hashString(\"__GenFOO1\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__GenFOO1(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -20320,6 +20533,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__GenFOO2 implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"__GenFOO2\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__GenFOO2(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -20561,6 +20777,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -20834,6 +21051,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -21183,6 +21403,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -21456,6 +21677,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -21795,6 +22019,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -22055,6 +22280,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -22505,6 +22733,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -22765,6 +22994,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -22970,6 +23202,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -23256,6 +23489,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -23641,6 +23877,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -23901,6 +24138,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -24107,6 +24347,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -24380,6 +24621,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -24580,6 +24824,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -24853,6 +25098,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -25128,6 +25376,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -25414,6 +25663,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -25757,6 +26009,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -26017,6 +26270,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -26058,6 +26314,15 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    private int first = 0;");
     gold.append("\n    private int second = 0;");
     gold.append("\n    private double third = 0.0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"first\");");
+    gold.append("\n      __hash.hashInteger(this.first);");
+    gold.append("\n      __hash.hashString(\"second\");");
+    gold.append("\n      __hash.hashInteger(this.second);");
+    gold.append("\n      __hash.hashString(\"third\");");
+    gold.append("\n      __hash.hashDouble(this.third);");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx_TupleConvert_0(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -26302,6 +26567,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -26562,6 +26828,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -26762,6 +27031,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -27041,6 +27311,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");

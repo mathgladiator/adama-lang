@@ -10,13 +10,23 @@
 package org.adamalang.runtime.natives;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.algo.HashBuilder;
 
 /** the base contract which messages must obey */
 public interface NtMessageBase /* extends CanConvertToObject */ {
-  NtMessageBase NULL = writer -> {
-    writer.beginObject();
-    writer.endObject();
+  NtMessageBase NULL = new NtMessageBase() {
+    @Override
+    public void __writeOut(JsonStreamWriter writer) {
+      writer.beginObject();
+      writer.endObject();
+    }
+
+    @Override
+    public void __hash(HashBuilder __hash) {
+    }
   };
 
   void __writeOut(JsonStreamWriter writer);
+
+  void __hash(HashBuilder __hash);
 }

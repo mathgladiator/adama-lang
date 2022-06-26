@@ -63,6 +63,7 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -371,6 +372,9 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -560,6 +564,13 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("\n  private static class RTx_TupleConvert_2 implements NtMessageBase {");
     gold.append("\n    private int first = 0;");
     gold.append("\n    private int second = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"first\");");
+    gold.append("\n      __hash.hashInteger(this.first);");
+    gold.append("\n      __hash.hashString(\"second\");");
+    gold.append("\n      __hash.hashInteger(this.second);");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx_TupleConvert_2(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");

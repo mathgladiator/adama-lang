@@ -63,6 +63,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -360,6 +361,9 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -558,6 +562,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -855,6 +860,9 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -1048,6 +1056,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -1342,6 +1351,11 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
     gold.append("\n    private String name = \"\";");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"name\");");
+    gold.append("\n      __hash.hashString(this.name);");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -1557,6 +1571,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.algo.*;");
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
@@ -1820,6 +1835,17 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    private String name = \"\";");
     gold.append("\n    private int[] offsets_z = new int[]{};");
     gold.append("\n    private int scroll_x = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"name\");");
+    gold.append("\n      __hash.hashString(this.name);");
+    gold.append("\n      __hash.hashString(\"offsets_z\");");
+    gold.append("\n      for (Integer __item1 : this.offsets_z) {");
+    gold.append("\n        __hash.hashInteger(__item1);");
+    gold.append("\n      }");
+    gold.append("\n      __hash.hashString(\"scroll_x\");");
+    gold.append("\n      __hash.hashInteger(this.scroll_x);");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");

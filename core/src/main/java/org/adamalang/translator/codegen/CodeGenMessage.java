@@ -22,11 +22,51 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CodeGenMessage {
-  /*
   public static void generateHashers(final String name, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
-
+    AtomicInteger localVar = new AtomicInteger(1);
+    sb.append("public void __hash(HashBuilder __hash) {").tabUp().writeNewline();
+    for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
+      sb.append("__hash.hashString(\"").append(e.getKey()).append("\");").writeNewline();
+      writeValueHasher("this." + e.getKey(), environment.rules.Resolve(e.getValue().type, false), sb, environment, localVar, false);
+    }
+    if (storage.anonymous) {
+      sb.append("__hash.hashString(\"anonymous\");").tabDown().writeNewline();
+    } else {
+      sb.append("__hash.hashString(\"").append(name).append("\");").tabDown().writeNewline();
+    }
+    sb.append("}").writeNewline();
   }
-  */
+
+  public static void writeValueHasher(final String expression, final TyType type, final StringBuilderWithTabs sb, final Environment environment, final AtomicInteger localVar, boolean tabDown) {
+    if (type instanceof TySimpleNative) {
+      sb.append("__hash.hash").append(type.getJavaBoxType(environment)).append("(").append(expression).append(");");
+    } else if (type instanceof TyNativeMaybe) {
+      final var elementType = ((DetailContainsAnEmbeddedType) type).getEmbeddedType(environment);
+      sb.append("if (").append(expression).append(".has()) {").tabUp().writeNewline();
+      writeValueHasher(expression + ".get()", environment.rules.Resolve(elementType, false), sb, environment, localVar, true);
+      sb.append("}");
+    } else if (type instanceof TyNativeMessage) {
+      sb.append(expression).append(".__hash(__hash);");
+    } else if (type instanceof TyNativeMap) {
+      TyType domainType = environment.rules.Resolve(((TyNativeMap) type).domainType, true);
+      TyType rangeType = environment.rules.Resolve(((TyNativeMap) type).rangeType, true);
+      final var entryKey = "__entry" + localVar.getAndIncrement();
+      sb.append("for (Map.Entry<").append(domainType.getJavaBoxType(environment)).append(",").append(rangeType.getJavaBoxType(environment)).append("> ").append(entryKey).append(" : ").append(expression).append(") {").tabUp().writeNewline();
+      writeValueHasher(entryKey + ".getKey()", domainType, sb, environment, localVar, false);
+      writeValueHasher(entryKey + ".getValue()", rangeType, sb, environment, localVar, true);
+      sb.append("}");
+    } else if (type instanceof TyNativeArray || type instanceof TyNativeList) {
+      final var itemVar = "__item" + localVar.getAndIncrement();
+      TyType itemType = environment.rules.Resolve(((DetailContainsAnEmbeddedType) type).getEmbeddedType(environment), true);
+      sb.append("for (").append(itemType.getJavaBoxType(environment)).append(" ").append(itemVar).append(" : ").append(expression).append(") {").tabUp().writeNewline();
+      writeValueHasher(itemVar, itemType, sb, environment, localVar, true);
+      sb.append("}");
+    }
+    if (tabDown) {
+      sb.tabDown();
+    }
+    sb.writeNewline();
+  }
   public static void generateJsonReaders(final String name, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
     final var localVar = new AtomicInteger();
     { // READ FROM STREAM
