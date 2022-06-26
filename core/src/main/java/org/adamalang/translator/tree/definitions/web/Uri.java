@@ -26,7 +26,7 @@ import java.util.function.Function;
 
 public class Uri extends Definition {
   private final ArrayList<Consumer<Consumer<Token>>> emission;
-  private final TreeMap<String, TyType> variables;
+  public final TreeMap<String, TyType> variables;
   private final ArrayList<Function<UriTable.UriLevel, UriTable.UriLevel>> next;
   private final StringBuilder str;
 

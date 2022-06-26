@@ -15,7 +15,9 @@ import org.adamalang.translator.tree.definitions.web.Uri;
 import org.adamalang.translator.tree.definitions.web.UriAction;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
+import org.adamalang.translator.tree.types.TyType;
 
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
 /** defines a URI to get a web resource */
@@ -44,10 +46,20 @@ public class DefineWebGet extends Definition implements UriAction {
   }
 
   @Override
-  public void typing(Environment environment) {
+  public TreeMap<String, TyType> parameters() {
+    return uri.variables;
+  }
+
+  public Environment next(Environment environment) {
     Environment env = environment.scopeAsReadOnlyBoundary().scopeAsWeb();
     uri.extendInto(env);
     uri.typing(env);
+    return env;
+  }
+
+  @Override
+  public void typing(Environment environment) {
+    Environment env = next(environment);
     if (code.typing(env) == ControlFlow.Open) {
       environment.document.createError(this, String.format("The @web handlers must return a message"), "Web");
     }

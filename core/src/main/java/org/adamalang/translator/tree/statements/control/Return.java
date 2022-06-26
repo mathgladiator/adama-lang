@@ -96,13 +96,17 @@ public class Return extends Statement {
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
     if (environment.state.isWeb()) {
       if (webFields != null) {
+        sb.append("{").tabUp().writeNewline();
         String exprName = "__capture" + environment.autoVariable();
-        sb.append("RTx").append(webReturnType.name).append(" ").append(" = ").append(exprName).append(");").writeNewline();
+        sb.append("RTx").append(webReturnType.name).append(" ").append(exprName).append(" = ");
+        expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+        sb.append(";").writeNewline();
         sb.append("return new WebResponse()");
         for (String webField : webFields) {
           sb.append(".").append(webField).append("(").append(exprName).append(".").append(webField).append(")");
         }
-        sb.append(";");
+        sb.append(";").tabDown().writeNewline();
+        sb.append("}");
       }
     } else {
       sb.append("return");

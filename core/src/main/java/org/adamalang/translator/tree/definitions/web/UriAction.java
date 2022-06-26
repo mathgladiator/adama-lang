@@ -9,5 +9,11 @@
  */
 package org.adamalang.translator.tree.definitions.web;
 
+import org.adamalang.translator.tree.types.TyType;
+
+import java.util.TreeMap;
+
+/** what happens when a UriAction happens */
 public interface UriAction {
+  TreeMap<String, TyType> parameters();
 }

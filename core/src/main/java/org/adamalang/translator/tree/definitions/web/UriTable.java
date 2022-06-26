@@ -66,9 +66,9 @@ public class UriTable {
       return false;
     }
 
-    private void walkAndAssign(String prefix, TreeMap<String, UriLevel> children, TreeSet<String> taken) {
+    private void walkAndAssign(String prefix, TreeMap<String, UriLevel> children, TreeSet<String> taken, TreeMap<String, UriAction> actions) {
       for (Map.Entry<String, UriLevel> entry : children.entrySet()) {
-        entry.getValue().assignName(prefix + entry.getValue(), taken);
+        entry.getValue().assignName(prefix + entry.getValue(), taken, actions);
       }
     }
 
@@ -84,16 +84,17 @@ public class UriTable {
       pickStableName(AlphaHex.encode(Hashing.sha384().digest((stableCandidate + ":" + stableCandidate).getBytes(StandardCharsets.UTF_8))), taken);
     }
 
-    public void assignName(String prefix, TreeSet<String> taken) {
-      walkAndAssign(prefix + "fixed:", fixed, taken);
-      walkAndAssign(prefix + "bools:", bools, taken);
-      walkAndAssign(prefix + "ints:", ints, taken);
-      walkAndAssign(prefix + "longs:", longs, taken);
-      walkAndAssign(prefix + "doubles:", doubles, taken);
-      walkAndAssign(prefix + "strings:", strings, taken);
+    public void assignName(String prefix, TreeSet<String> taken, TreeMap<String, UriAction> actions) {
+      walkAndAssign(prefix + "fixed:", fixed, taken, actions);
+      walkAndAssign(prefix + "bools:", bools, taken, actions);
+      walkAndAssign(prefix + "ints:", ints, taken, actions);
+      walkAndAssign(prefix + "longs:", longs, taken, actions);
+      walkAndAssign(prefix + "doubles:", doubles, taken, actions);
+      walkAndAssign(prefix + "strings:", strings, taken, actions);
       if (action != null) {
         String testName = prefix + (tail ? "*TAIL" : "");
         pickStableName(AlphaHex.encode(Hashing.sha384().digest(testName.getBytes(StandardCharsets.UTF_8))), taken);
+        actions.put(this.name, action);
       }
     }
   }
@@ -121,8 +122,10 @@ public class UriTable {
     }
   }
 
-  public void ready(String prefix) {
+  public TreeMap<String, UriAction> ready(String prefix) {
     TreeSet<String> taken = new TreeSet<>();
-    root.assignName(prefix, taken);
+    TreeMap<String, UriAction> actions = new TreeMap<>();
+    root.assignName(prefix, taken, actions);
+    return actions;
   }
 }

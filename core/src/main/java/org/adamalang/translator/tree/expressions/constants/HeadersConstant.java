@@ -15,13 +15,15 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.TyNativeMap;
+import org.adamalang.translator.tree.types.natives.TyNativeString;
 
 import java.util.function.Consumer;
 
-public class WhoClientConstant extends Expression {
+public class HeadersConstant extends Expression {
   public final Token token;
 
-  public WhoClientConstant(final Token token) {
+  public HeadersConstant(final Token token) {
     this.token = token;
     ingest(token);
   }
@@ -33,17 +35,18 @@ public class WhoClientConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    if (environment.state.isStatic() || environment.state.isMessageHandler() || environment.state.isPolicy() || environment.state.isBubble() || environment.state.isWeb()) {
+    if (environment.state.isWeb()) {
       environment.mustBeComputeContext(this);
-      return new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
+      TyNativeString str = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"));
+      return new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, str, null, str, null);
     } else {
-      environment.document.createError(this, "@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers", "WHO");
+      environment.document.createError(this, "@headers is only available in web paths", "WHO");
       return null;
     }
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    sb.append("__who");
+    sb.append("__viewer");
   }
 }

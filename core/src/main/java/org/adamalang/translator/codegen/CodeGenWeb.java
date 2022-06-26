@@ -11,7 +11,10 @@ package org.adamalang.translator.codegen;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.definitions.DefineWebGet;
+import org.adamalang.translator.tree.definitions.web.UriAction;
 import org.adamalang.translator.tree.definitions.web.UriTable;
+import org.adamalang.translator.tree.types.TyType;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -60,11 +63,16 @@ public class CodeGenWeb {
     levelChild(sb, level.strings, at, "fragment");
 
     if (level.action != null) {
-      sb.append("// EXECUTE ACTION:" + level.name).writeNewline();
+      sb.append("return ").append("__get_").append(level.name).append("(__who, __request");
+      for (Map.Entry<String, TyType> param : level.action.parameters().entrySet()) {
+        sb.append(", ").append(translate.get(param.getKey()));
+      }
+      sb.append(");").tabDown().writeNewline();
+    } else {
+      sb.append("/* END:").append("_" + at).append(" */").tabDown().writeNewline();
     }
-
-    sb.append("/* END:").append("_" + at).append(" */").tabDown().writeNewline();
     sb.append("}");
+
     if (tabDown) {
       sb.tabDown();
     }
@@ -75,18 +83,26 @@ public class CodeGenWeb {
     level(sb, this.table.root, 0, false);
   }
 
-  private void handlers(StringBuilderWithTabs sb, Environment environment) {
-
+  private void writeGetHandler(StringBuilderWithTabs sb, Environment environment, String name, DefineWebGet get) {
+    sb.append("private WebResponse __get_").append(name).append("(NtClient __who, WebGet __request");
+    for (Map.Entry<String, TyType> param : get.parameters().entrySet()) {
+      sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
+    }
+    sb.append(")");
+    get.code.writeJava(sb, get.next(environment));
+    sb.writeNewline();
   }
 
   public static void writeWebHandlers(final StringBuilderWithTabs sb, Environment environment) {
     sb.append("@Override").writeNewline();
     sb.append("protected WebResponse __get(NtClient __who, WebGet __request) {").tabUp().writeNewline();
-    environment.document.webGet.ready("GET");
+    TreeMap<String, UriAction> actions = environment.document.webGet.ready("GET");
     CodeGenWeb get = new CodeGenWeb(environment, environment.document.webGet);
     get.table(sb);
     sb.append("return null;").tabDown().writeNewline();
     sb.append("}").writeNewline();
-    get.handlers(sb, environment);
+    for (Map.Entry<String, UriAction> action : actions.entrySet()) {
+      get.writeGetHandler(sb, environment, action.getKey(), (DefineWebGet) action.getValue());
+    }
   }
 }

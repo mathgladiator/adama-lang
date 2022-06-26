@@ -14,6 +14,10 @@
   return {html:"path double"};
 }
 
+@web get /path2/$x:long {
+  return {html:"path long without child"};
+}
+
 @web get /path2/$x:long/child {
   return {html:"path long with child"};
 }

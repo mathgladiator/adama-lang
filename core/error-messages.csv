@@ -582,4 +582,4 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Web_BadVerb_failure.a,0,0,0,0,"Import failed (Parse): Parser was get or put after @web to indicate a read (i.e. get) or write (i.e. put) request {Token: `@web` @ (0,0) -> (0,4): Keyword} (ImportIssue)"
 ./test_code/Web_NoReturn_failure.a,0,0,1,1,"The @web handlers must return a message (Web)"
 ./test_code/Web_NoReturn_failure.a,5,0,6,1,"The @web handlers must return a message (Web)"
-./test_code/Who_CantStateTransition_failure.a,1,10,1,14,"@who is only available from static policies, document policies, privacy policies, bubbles, and message handlers (WHO)"
+./test_code/Who_CantStateTransition_failure.a,1,10,1,14,"@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers (WHO)"
