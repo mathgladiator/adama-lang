@@ -64,7 +64,6 @@ public class ServiceReflectTests {
     }
   }
 
-
   @Test
   public void reflect_sad() throws Exception {
     MockInstantLivingDocumentFactoryFactory factoryFactory =

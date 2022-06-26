@@ -294,4 +294,33 @@ public class ClientMessage {
     @FieldOrder(2)
     public String key;
   }
+
+
+  @TypeId(1722)
+  @Flow("WebGetHeader")
+  public static class Header {
+    @FieldOrder(1)
+    public String key;
+    @FieldOrder(2)
+    public String value;
+  }
+
+  @TypeId(1721)
+  @Flow("Server")
+  public static class WebGet {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+    @FieldOrder(3)
+    public String agent;
+    @FieldOrder(4)
+    public String authority;
+    @FieldOrder(5)
+    public String uri;
+    @FieldOrder(6)
+    public Header[] headers;
+    @FieldOrder(7)
+    public String parametersJson;
+  }
 }

@@ -12,6 +12,7 @@ package org.adamalang.net.client;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
+import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.common.net.ChannelClient;
 import org.adamalang.common.net.NetBase;
@@ -31,8 +32,12 @@ import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.runtime.data.DataService;
+import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebResponse;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -207,6 +212,66 @@ public class InstanceClient implements AutoCloseable {
     });
     latch.await(timeLimit, TimeUnit.MILLISECONDS);
     return success.get();
+  }
+
+  public void webGet(String space, String key, WebGet request, Callback<WebResponse> callback) {
+    executor.execute(new NamedRunnable("execute-web-get") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_WEBGET_TIMEOUT, ErrorCodes.ADAMA_NET_WEBGET_REJECTED, metrics.client_webget.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamWeb() {
+              @Override
+              public void handle(ServerMessage.WebResponseNet payload) {
+                WebResponse response = new WebResponse();
+                response.body = payload.body;
+                response.bodyContentType = payload.contentType;
+                if (payload.assetId != null) {
+                  response.asset = new NtAsset(payload.assetId, payload.assetName, payload.contentType, payload.assetSize, payload.assetMD5, payload.assetSHA384);
+                }
+                callback.success(response);
+              }
+
+              @Override
+              public void completed() {}
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new CallbackByteStreamWriter(callback) {
+              @Override
+              public void write(ByteStream stream) {
+                ByteBuf toWrite = stream.create(space.length() + key.length() + request.who.agent.length() + request.who.authority.length() + request.uri.length() + 40);
+                ClientMessage.WebGet webGet = new ClientMessage.WebGet();
+                webGet.agent = request.who.agent;
+                webGet.authority = request.who.authority;
+                webGet.uri = request.uri;
+                webGet.key = key;
+                webGet.space = space;
+                webGet.headers = new ClientMessage.Header[request.headers.size()];
+                int at = 0;
+                for (Map.Entry<String, String> header : request.headers.entries()) {
+                  webGet.headers[at] = new ClientMessage.Header();
+                  webGet.headers[at].key = header.getKey();
+                  webGet.headers[at].value = header.getValue();
+                }
+                webGet.parametersJson = request.parameters.json;
+
+                ClientCodec.write(toWrite, webGet);
+                stream.next(toWrite);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
   }
 
   /** create a document */

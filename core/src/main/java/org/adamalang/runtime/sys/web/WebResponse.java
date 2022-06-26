@@ -33,6 +33,7 @@ public class WebResponse {
   }
 
   public WebResponse asset(NtAsset asset) {
+    this.bodyContentType = asset.contentType;
     this.asset = asset;
     return this;
   }

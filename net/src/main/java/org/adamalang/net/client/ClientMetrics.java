@@ -24,6 +24,7 @@ public class ClientMetrics {
 
   public final ItemActionMonitor client_ping;
   public final ItemActionMonitor client_create;
+  public final ItemActionMonitor client_webget;
   public final CallbackMonitor client_create_cb;
   public final ItemActionMonitor client_close;
   public final ItemActionMonitor client_reflection;
@@ -46,6 +47,7 @@ public class ClientMetrics {
   public final ItemActionMonitor client_proxy;
 
   public final RequestResponseMonitor client_create_found_machine;
+  public final RequestResponseMonitor client_webget_found_machine;
 
   public ClientMetrics(MetricsFactory factory) {
     client_connection_alive = factory.inflight("client_connection_alive");
@@ -63,6 +65,7 @@ public class ClientMetrics {
     client_open_document = factory.makeStreamMonitor("client_open_document");
     client_ping = factory.makeItemActionMonitor("client_ping");
     client_create = factory.makeItemActionMonitor("client_create");
+    client_webget = factory.makeItemActionMonitor("client_webget");
     client_create_cb = factory.makeCallbackMonitor("client_create");
     client_reflection = factory.makeItemActionMonitor("client_reflection");
     client_reflection_cb = factory.makeCallbackMonitor("client_reflection");
@@ -77,5 +80,6 @@ public class ClientMetrics {
     client_info_failed_ask = factory.counter("client_info_failed_ask");
     client_proxy = factory.makeItemActionMonitor("client_proxy");
     client_create_found_machine = factory.makeRequestResponseMonitor("client_create_found_machine");
+    client_webget_found_machine = factory.makeRequestResponseMonitor("client_webget_found_machine");
   }
 }

@@ -145,4 +145,23 @@ public class ServerMessage {
       return new LocalDocumentChange(patch, reads, seq);
     }
   }
+
+  @TypeId(1721)
+  @Flow("Web")
+  public static class WebResponseNet {
+    @FieldOrder(1)
+    public String contentType;
+    @FieldOrder(2)
+    public String body;
+    @FieldOrder(3)
+    public String assetId;
+    @FieldOrder(4)
+    public String assetName;
+    @FieldOrder(5)
+    public long assetSize;
+    @FieldOrder(6)
+    public String assetMD5;
+    @FieldOrder(7)
+    public String assetSHA384;
+  }
 }

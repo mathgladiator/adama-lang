@@ -12,6 +12,7 @@ package org.adamalang.net.codec;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ServerMessage.WebResponseNet;
 import org.adamalang.net.codec.ServerMessage.ProxyLocalDataChange;
 import org.adamalang.net.codec.ServerMessage.ProxyIntResponse;
 import org.adamalang.net.codec.ServerMessage.ProxyVoidResponse;
@@ -96,6 +97,41 @@ public class ServerCodec {
     switch (buf.readIntLE()) {
       case 12524:
         handler.handle(readBody_12524(buf, new CreateResponse()));
+        return;
+    }
+  }
+
+
+  public static abstract class StreamWeb implements ByteStream {
+    public abstract void handle(WebResponseNet payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 1721:
+          handle(readBody_1721(buf, new WebResponseNet()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerWeb {
+    public void handle(WebResponseNet payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerWeb handler) {
+    switch (buf.readIntLE()) {
+      case 1721:
+        handler.handle(readBody_1721(buf, new WebResponseNet()));
         return;
     }
   }
@@ -435,6 +471,26 @@ public class ServerCodec {
   }
 
 
+  public static WebResponseNet read_WebResponseNet(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 1721:
+        return readBody_1721(buf, new WebResponseNet());
+    }
+    return null;
+  }
+
+
+  private static WebResponseNet readBody_1721(ByteBuf buf, WebResponseNet o) {
+    o.contentType = Helper.readString(buf);
+    o.body = Helper.readString(buf);
+    o.assetId = Helper.readString(buf);
+    o.assetName = Helper.readString(buf);
+    o.assetSize = buf.readLongLE();
+    o.assetMD5 = Helper.readString(buf);
+    o.assetSHA384 = Helper.readString(buf);
+    return o;
+  }
+
   public static ProxyLocalDataChange read_ProxyLocalDataChange(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 9006:
@@ -659,6 +715,21 @@ public class ServerCodec {
 
   private static PingResponse readBody_24322(ByteBuf buf, PingResponse o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, WebResponseNet o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(1721);
+    Helper.writeString(buf, o.contentType);;
+    Helper.writeString(buf, o.body);;
+    Helper.writeString(buf, o.assetId);;
+    Helper.writeString(buf, o.assetName);;
+    buf.writeLongLE(o.assetSize);
+    Helper.writeString(buf, o.assetMD5);;
+    Helper.writeString(buf, o.assetSHA384);;
   }
 
   public static void write(ByteBuf buf, ProxyLocalDataChange o) {

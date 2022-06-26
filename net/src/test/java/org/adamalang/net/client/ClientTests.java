@@ -20,12 +20,17 @@ import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.mocks.MockMeteringFlow;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.runtime.sys.metering.MeterReading;
+import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebResponse;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -154,6 +159,89 @@ public class ClientTests {
         Assert.assertTrue(latchFailedOnReflectionBadSpace.await(5000, TimeUnit.MILLISECONDS));
         connection.close();
         Assert.assertTrue(latchGotDisconnect.await(5000, TimeUnit.MILLISECONDS));
+      } finally{
+        client.shutdown();
+      }
+    }
+  }
+
+  @Test
+  public void web_get() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 12700,
+                 "@static { create { return true; } } @web get / {\n" + "  return {html:\"root\"};\n" + "}\n" + "\n" + "@web get /fixed {\n" + "  return {html:\"fixed path\"};\n" + "}\n" + "\n" + "@web get /path0/$x:int {\n" + "  return {html:\"path integer:\" + x};\n" + "}\n" + "\n" + "@web get /path1/$x:double {\n" + "  return {html:\"path double:\" + x};\n" + "}\n" + "\n" + "@web get /path2/$x:long {\n" + "  return {html:\"path long without child:\" + x};\n" + "}\n" + "\n" + "@web get /path2/$x:long/child {\n" + "  return {html:\"path long with child: \" + x + \"!\"};\n" + "}\n" + "\n" + "@web get /path3/$a* {\n" + "  return {html:\"tail:\" + a};\n" + "}\n" + "\n" + "@web get /path3/$a:string/child {\n" + "  return {html:\"abort tail and go with direct child:\" + a};\n" + "}")) {
+      bed.startServer();
+      ClientConfig clientConfig = new TestClientConfig();
+      Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+      try {
+        waitForRouting(bed, client);
+        CountDownLatch latchGetDeployTargets = new CountDownLatch(1);
+        client.getDeploymentTargets(
+            "space",
+            new Consumer<String>() {
+              @Override
+              public void accept(String s) {
+                Assert.assertEquals("127.0.0.1:12700", s);
+                latchGetDeployTargets.countDown();
+              }
+            });
+        Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
+        client.notifyDeployment("127.0.0.1:12700", "space");
+
+        CountDownLatch latchFound = new CountDownLatch(1);
+        AtomicReference<Boolean> got = new AtomicReference<>(null);
+        client.waitForCapacity("space", 5000, new Consumer<Boolean>() {
+          @Override
+          public void accept(Boolean b) {
+            got.set(b);
+            latchFound.countDown();
+          }
+        });
+        Assert.assertTrue(latchFound.await(7500, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(got.get());
+        Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
+        CountDownLatch latchCreatedKey = new CountDownLatch(1);
+        client.create("127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            latchCreatedKey.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            System.err.println("CODE:" + ex.code);
+          }
+        });
+        Assert.assertTrue(latchCreatedKey.await(5000, TimeUnit.MILLISECONDS));
+
+        CountDownLatch getLatches = new CountDownLatch(2);
+        client.webGet("space", "key1", new WebGet(NtClient.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<WebResponse>() {
+          @Override
+          public void success(WebResponse value) {
+            Assert.assertEquals("root", value.body);
+            getLatches.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            System.err.println("Ex1:" + ex.code);
+
+          }
+        });
+        client.webGet("space", "key1", new WebGet(NtClient.NO_ONE, "/nope", new TreeMap<>(), new NtDynamic("{}")), new Callback<WebResponse>() {
+          @Override
+          public void success(WebResponse value) {
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            getLatches.countDown();
+            Assert.assertEquals(133308, ex.code);
+          }
+        });
+
+        Assert.assertTrue(getLatches.await(5000, TimeUnit.MILLISECONDS));
       } finally{
         client.shutdown();
       }

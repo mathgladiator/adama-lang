@@ -21,6 +21,8 @@ import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
+import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -416,6 +418,26 @@ public class CoreService {
         }
       });
     }
+  }
+
+  /** execute a web get against the document */
+  public void webGet(Key key, WebGet request, Callback<WebResponse> callback) {
+    load(key, new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        WebResponse response = document.document().__get(request);
+        if (response != null) {
+          callback.success(response);
+        } else {
+          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_NOT_FOUND));
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   /** internal: deploy a specific document */

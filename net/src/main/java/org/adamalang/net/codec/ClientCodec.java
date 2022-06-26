@@ -12,6 +12,8 @@ package org.adamalang.net.codec;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ClientMessage.WebGet;
+import org.adamalang.net.codec.ClientMessage.Header;
 import org.adamalang.net.codec.ClientMessage.ProxyClose;
 import org.adamalang.net.codec.ClientMessage.ProxySnapshot;
 import org.adamalang.net.codec.ClientMessage.ProxyDelete;
@@ -38,6 +40,8 @@ import org.adamalang.net.codec.ClientMessage.PingRequest;
 public class ClientCodec {
 
   public static abstract class StreamServer implements ByteStream {
+    public abstract void handle(WebGet payload);
+
     public abstract void handle(ProxyClose payload);
 
     public abstract void handle(ProxySnapshot payload);
@@ -92,6 +96,9 @@ public class ClientCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
+        case 1721:
+          handle(readBody_1721(buf, new WebGet()));
+          return;
         case 9015:
           handle(readBody_9015(buf, new ProxyClose()));
           return;
@@ -160,6 +167,7 @@ public class ClientCodec {
   }
 
   public static interface HandlerServer {
+    public void handle(WebGet payload);
     public void handle(ProxyClose payload);
     public void handle(ProxySnapshot payload);
     public void handle(ProxyDelete payload);
@@ -185,6 +193,9 @@ public class ClientCodec {
 
   public static void route(ByteBuf buf, HandlerServer handler) {
     switch (buf.readIntLE()) {
+      case 1721:
+        handler.handle(readBody_1721(buf, new WebGet()));
+        return;
       case 9015:
         handler.handle(readBody_9015(buf, new ProxyClose()));
         return;
@@ -286,6 +297,76 @@ public class ClientCodec {
     }
   }
 
+
+  public static abstract class StreamWebGetHeader implements ByteStream {
+    public abstract void handle(Header payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 1722:
+          handle(readBody_1722(buf, new Header()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerWebGetHeader {
+    public void handle(Header payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerWebGetHeader handler) {
+    switch (buf.readIntLE()) {
+      case 1722:
+        handler.handle(readBody_1722(buf, new Header()));
+        return;
+    }
+  }
+
+
+  public static WebGet read_WebGet(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 1721:
+        return readBody_1721(buf, new WebGet());
+    }
+    return null;
+  }
+
+
+  private static WebGet readBody_1721(ByteBuf buf, WebGet o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    o.agent = Helper.readString(buf);
+    o.authority = Helper.readString(buf);
+    o.uri = Helper.readString(buf);
+    o.headers = Helper.readArray(buf, (n) -> new Header[n], () -> read_Header(buf));
+    o.parametersJson = Helper.readString(buf);
+    return o;
+  }
+
+  public static Header read_Header(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 1722:
+        return readBody_1722(buf, new Header());
+    }
+    return null;
+  }
+
+
+  private static Header readBody_1722(ByteBuf buf, Header o) {
+    o.key = Helper.readString(buf);
+    o.value = Helper.readString(buf);
+    return o;
+  }
 
   public static ProxyClose read_ProxyClose(ByteBuf buf) {
     switch (buf.readIntLE()) {
@@ -636,6 +717,31 @@ public class ClientCodec {
 
   private static PingRequest readBody_24321(ByteBuf buf, PingRequest o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, WebGet o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(1721);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
+    Helper.writeString(buf, o.agent);;
+    Helper.writeString(buf, o.authority);;
+    Helper.writeString(buf, o.uri);;
+    Helper.writeArray(buf, o.headers, (item) -> write(buf, item));
+    Helper.writeString(buf, o.parametersJson);;
+  }
+
+  public static void write(ByteBuf buf, Header o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(1722);
+    Helper.writeString(buf, o.key);;
+    Helper.writeString(buf, o.value);;
   }
 
   public static void write(ByteBuf buf, ProxyClose o) {
