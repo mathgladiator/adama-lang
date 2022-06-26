@@ -216,7 +216,7 @@ public class ClientTests {
         Assert.assertTrue(latchCreatedKey.await(5000, TimeUnit.MILLISECONDS));
 
         CountDownLatch getLatches = new CountDownLatch(2);
-        client.webGet("space", "key1", new WebGet(NtClient.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<WebResponse>() {
+        client.webGet("space", "key1", new WebGet(NtClient.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("root", value.body);
@@ -229,7 +229,9 @@ public class ClientTests {
 
           }
         });
-        client.webGet("space", "key1", new WebGet(NtClient.NO_ONE, "/nope", new TreeMap<>(), new NtDynamic("{}")), new Callback<WebResponse>() {
+        TreeMap<String, String> header1 = new TreeMap<>();
+        header1.put("x", "y");
+        client.webGet("space", "key1", new WebGet(NtClient.NO_ONE, "/nope", header1, new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
           }

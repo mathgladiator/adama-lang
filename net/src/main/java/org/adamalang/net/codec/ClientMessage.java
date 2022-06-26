@@ -295,7 +295,6 @@ public class ClientMessage {
     public String key;
   }
 
-
   @TypeId(1722)
   @Flow("WebGetHeader")
   public static class Header {
