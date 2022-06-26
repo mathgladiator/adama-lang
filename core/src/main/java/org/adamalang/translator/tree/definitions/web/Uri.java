@@ -36,7 +36,7 @@ public class Uri extends Definition {
     this.str = new StringBuilder();
   }
 
-  public void push(Token slash, Token dollarSign, Token id, Token colon, TyType type) {
+  public void push(Token slash, Token dollarSign, Token id, Token starToken, Token colon, TyType type) {
     ingest(slash);
     emission.add((y) -> y.accept(slash));
     str.append("/");
@@ -47,6 +47,9 @@ public class Uri extends Definition {
         str.append("$");
       }
       emission.add((y) -> y.accept(id));
+      if (starToken != null) {
+        emission.add((y) -> y.accept(starToken));
+      }
       str.append(id.text);
       if (colon != null) {
         ingest(type);
@@ -56,20 +59,24 @@ public class Uri extends Definition {
         str.append(":");
         str.append(type.getAdamaType());
       }
-      if (dollarSign != null) {
-        if (type instanceof TyNativeBoolean) {
-          next.add((level) -> level.next(id.text, level.bools));
-        } else if (type instanceof TyNativeInteger) {
-          next.add((level) -> level.next(id.text, level.ints));
-        } else if (type instanceof TyNativeLong) {
-          next.add((level) -> level.next(id.text, level.longs));
-        } else if (type instanceof TyNativeDouble) {
-          next.add((level) -> level.next(id.text, level.doubles));
-        } else if (type instanceof TyNativeString) {
-          next.add((level) -> level.next(id.text, level.strings));
+      if (starToken == null) {
+        if (dollarSign != null) {
+            if (type instanceof TyNativeBoolean) {
+              next.add((level) -> level.next(id.text, level.bools));
+            } else if (type instanceof TyNativeInteger) {
+              next.add((level) -> level.next(id.text, level.ints));
+            } else if (type instanceof TyNativeLong) {
+              next.add((level) -> level.next(id.text, level.longs));
+            } else if (type instanceof TyNativeDouble) {
+              next.add((level) -> level.next(id.text, level.doubles));
+            } else if (type instanceof TyNativeString) {
+              next.add((level) -> level.next(id.text, level.strings));
+          }
+        } else {
+          next.add((level) -> level.next(id.text, level.fixed));
         }
       } else {
-        next.add((level) -> level.next(id.text, level.fixed));
+        next.add((level) -> level.next(id.text, level.strings).tail());
       }
     }
   }

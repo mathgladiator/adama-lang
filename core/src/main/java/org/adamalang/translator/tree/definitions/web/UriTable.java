@@ -20,6 +20,7 @@ public class UriTable {
     public final HashMap<String, UriLevel> longs;
     public final HashMap<String, UriLevel> doubles;
     public final HashMap<String, UriLevel> strings;
+    public boolean tail;
     public UriAction action;
 
     public UriLevel() {
@@ -30,6 +31,7 @@ public class UriTable {
       this.longs = new HashMap<>();
       this.strings = new HashMap<>();
       this.action = null;
+      this.tail = false;
     }
 
     public UriLevel next(String id, HashMap<String, UriLevel> map) {
@@ -39,6 +41,11 @@ public class UriTable {
         map.put(id, next);
       }
       return next;
+    }
+
+    public UriLevel tail() {
+      this.tail = true;
+      return this;
     }
   }
 

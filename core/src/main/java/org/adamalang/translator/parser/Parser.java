@@ -444,12 +444,18 @@ public class Parser {
       Token isParameter = tokens.popIf((t) -> t.isSymbolWithTextEq("$"));
       if (isParameter != null) {
         Token parameter = id();
-        Token colon = consumeExpectedSymbol(":");
-        TyType type = native_type_base();
-        uri.push(hasMore, isParameter, parameter, colon, type);
+        Token starToken = tokens.popIf((t) -> t.isSymbolWithTextEq("*"));
+        if (starToken != null) {
+          uri.push(hasMore, isParameter, parameter, starToken, null, null);
+          return uri;
+        } else {
+          Token colon = consumeExpectedSymbol(":");
+          TyType type = native_type_base();
+          uri.push(hasMore, isParameter, parameter, null, colon, type);
+        }
       } else {
         Token uriMore = tokens.popIf((t) -> t.isIdentifier());
-        uri.push(hasMore, null, uriMore, null, null);
+        uri.push(hasMore, null, uriMore, null, null, null);
       }
     }
     return uri;

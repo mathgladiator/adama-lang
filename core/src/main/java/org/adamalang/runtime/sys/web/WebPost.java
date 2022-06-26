@@ -13,11 +13,13 @@ import java.util.HashMap;
 
 public class WebPost {
   public final String uri;
+  public final WebRouter router;
   public final HashMap<String, String> headers;
   public String body;
 
   public WebPost(String uri, HashMap<String, String> headers, String body) {
     this.uri = uri;
+    this.router = new WebRouter(uri);
     this.headers = headers;
     this.body = body;
   }

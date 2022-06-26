@@ -11,12 +11,15 @@ package org.adamalang.runtime.sys.web;
 
 import java.util.HashMap;
 
+/** represents a get request */
 public class WebGet {
   public final String uri;
+  public final WebRouter router;
   public final HashMap<String, String> headers;
 
   public WebGet(String uri, HashMap<String, String> headers) {
     this.uri = uri;
+    this.router = new WebRouter(uri);
     this.headers = headers;
   }
 }
