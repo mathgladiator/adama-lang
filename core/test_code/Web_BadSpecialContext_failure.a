@@ -1,0 +1,7 @@
+#sm1 {
+  let x = @parameters;
+}
+
+#sm2 {
+  let x = @headers;
+}

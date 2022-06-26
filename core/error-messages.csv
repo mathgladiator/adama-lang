@@ -574,6 +574,8 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Types_ReactiveAssignmentMismatches_failure.a,14,12,14,13,"Type check failure: the type 'int' is unable to store type 'maybe<int>'. (TypeCheckReferences)"
 ./test_code/Types_ReactiveAssignmentMismatches_failure.a,10,0,10,5,"Type check failure: the type 'r<label>' is unable to store type 'int'. (TypeCheckReferences)"
 ./test_code/Types_ReactiveAssignmentMismatches_failure.a,16,10,16,21,"Variable 'z' was already defined (EnvironmentDefine)"
+./test_code/Web_BadSpecialContext_failure.a,1,10,1,21,"@parameters is only available in web paths (WHO)"
+./test_code/Web_BadSpecialContext_failure.a,5,10,5,18,"@headers is only available in web paths (WHO)"
 ./test_code/Web_BadUriTypes_failure.a,0,9,0,26,"The parameter type must be int, long, double, string, or boolean (WebUri)"
 ./test_code/Web_BadUriTypes_failure.a,0,0,2,1,"The @web handlers must return a message (Web)"
 ./test_code/Web_BadUriTypes_failure.a,6,9,6,26,"The parameter type must be int, long, double, string, or boolean (WebUri)"

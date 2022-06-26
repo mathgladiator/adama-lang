@@ -68,7 +68,7 @@ public class UriTable {
 
     private void walkAndAssign(String prefix, TreeMap<String, UriLevel> children, TreeSet<String> taken, TreeMap<String, UriAction> actions) {
       for (Map.Entry<String, UriLevel> entry : children.entrySet()) {
-        entry.getValue().assignName(prefix + entry.getValue(), taken, actions);
+        entry.getValue().assignName(prefix + entry.getKey() + "/", taken, actions);
       }
     }
 

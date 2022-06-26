@@ -22,6 +22,11 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CodeGenMessage {
+  /*
+  public static void generateHashers(final String name, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
+
+  }
+  */
   public static void generateJsonReaders(final String name, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
     final var localVar = new AtomicInteger();
     { // READ FROM STREAM

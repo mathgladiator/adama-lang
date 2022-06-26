@@ -9,17 +9,26 @@
  */
 package org.adamalang.runtime.sys.web;
 
-import java.util.HashMap;
+import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.NtMap;
+
+import java.util.TreeMap;
 
 /** represents a get request */
 public class WebGet {
+  public final NtClient who;
   public final String uri;
   public final WebRouter router;
-  public final HashMap<String, String> headers;
+  public final NtMap<String, String> headers;
+  public final NtDynamic parameters;
 
-  public WebGet(String uri, HashMap<String, String> headers) {
+  public WebGet(NtClient who, String uri, TreeMap<String, String> headers, NtDynamic parameters) {
+    this.who = who;
     this.uri = uri;
     this.router = new WebRouter(uri);
-    this.headers = headers;
+    this.headers = new NtMap<>();
+    this.headers.storage.putAll(headers);
+    this.parameters = parameters;
   }
 }

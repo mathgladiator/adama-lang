@@ -64,7 +64,7 @@ public class CodeGenWeb {
     if (level.action != null) {
       if (level.tail) {
         sb.writeNewline();
-        sb.append("return ").append("__get_").append(level.name).append("(__who, __request");
+        sb.append("return ").append("__get_").append(level.name).append("(__request.who, __request");
         String paramName = translate.get("#tail-" + (at - 1) + "-name");
         if (paramName != null) {
           String paramValue = translate.get("#tail-" + (at - 1) + "-value");
@@ -78,7 +78,7 @@ public class CodeGenWeb {
         sb.append(");").writeNewline();
       } else {
         sb.append(" else {").tabUp().writeNewline();
-        sb.append("return ").append("__get_").append(level.name).append("(__who, __request");
+        sb.append("return ").append("__get_").append(level.name).append("(__request.who, __request");
         for (Map.Entry<String, TyType> param : level.action.parameters().entrySet()) {
           sb.append(", ").append(translate.get(param.getKey()));
         }
@@ -108,7 +108,7 @@ public class CodeGenWeb {
 
   public static void writeWebHandlers(final StringBuilderWithTabs sb, Environment environment) {
     sb.append("@Override").writeNewline();
-    sb.append("public WebResponse __get(NtClient __who, WebGet __request) {").tabUp().writeNewline();
+    sb.append("public WebResponse __get(WebGet __request) {").tabUp().writeNewline();
     TreeMap<String, UriAction> actions = environment.document.webGet.ready("GET");
     CodeGenWeb get = new CodeGenWeb(environment, environment.document.webGet);
     get.table(sb);

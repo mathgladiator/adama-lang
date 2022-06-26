@@ -115,6 +115,10 @@ public class Parser {
           return new NoOneClientConstant(token);
         case "@who":
           return new WhoClientConstant(token);
+        case "@headers":
+          return new HeadersConstant(token);
+        case "@parameters":
+          return new ParametersConstant(token);
         case "@viewer":
           return new ViewerConstant(token);
         case "@i":

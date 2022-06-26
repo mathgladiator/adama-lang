@@ -15,15 +15,16 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.TyNativeDynamic;
 import org.adamalang.translator.tree.types.natives.TyNativeMap;
 import org.adamalang.translator.tree.types.natives.TyNativeString;
 
 import java.util.function.Consumer;
 
-public class HeadersConstant extends Expression {
+public class ParametersConstant extends Expression {
   public final Token token;
 
-  public HeadersConstant(final Token token) {
+  public ParametersConstant(final Token token) {
     this.token = token;
     ingest(token);
   }
@@ -37,16 +38,15 @@ public class HeadersConstant extends Expression {
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     if (environment.state.isWeb()) {
       environment.mustBeComputeContext(this);
-      TyNativeString str = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"));
-      return new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, str, null, str, null);
+      return new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"));
     } else {
-      environment.document.createError(this, "@headers is only available in web paths", "WHO");
+      environment.document.createError(this, "@parameters is only available in web paths", "WHO");
       return null;
     }
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    sb.append("__request.headers");
+    sb.append("__request.parameters");
   }
 }

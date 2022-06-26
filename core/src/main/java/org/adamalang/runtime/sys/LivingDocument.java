@@ -489,7 +489,7 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** code generated: respond to a get request */
-  public abstract WebResponse __get(NtClient __who, WebGet __get);
+  public abstract WebResponse __get(WebGet __get);
 
   /** code generated: state machine labelslabels can be dynamically invoked */
   protected abstract void __invoke_label(String __new_state);

@@ -507,7 +507,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  private void __step_one() {");
@@ -1279,7 +1279,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  private void __step_one() {");
@@ -2192,7 +2192,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2740,7 +2740,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3307,7 +3307,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -4006,7 +4006,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  private void __step_one() {");
@@ -4801,7 +4801,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  private void __step_one() {");
@@ -5513,7 +5513,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  private void __step_one() {");
@@ -6112,7 +6112,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  private void __step_one() {");
@@ -6833,7 +6833,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
