@@ -45,6 +45,15 @@ public class CaravanDataService implements ArchivingDataService {
   }
 
   @Override
+  public void cleanUp(Key key, String archiveKey) {
+    cloud.delete(key, archiveKey);
+    File local = new File(new File(cloud.path(), key.space), archiveKey);
+    if (local.exists()) {
+      local.delete();
+    }
+  }
+
+  @Override
   public void restore(Key key, String archiveKey, Callback<Void> callback) {
     // ask the cloud to ensure the archive key has been downloaded
     cloud.restore(key, archiveKey, new Callback<File>() {
@@ -114,8 +123,12 @@ public class CaravanDataService implements ArchivingDataService {
       int seq = cached.seq();
       AtomicLong deltaBytesSum = new AtomicLong(0);
       AtomicLong assetBytesSum = new AtomicLong(0);
-      File tempOutput = new File(cloud.path(), archiveKey + ".temp");
-      File finalOutput = new File(cloud.path(), archiveKey);
+      File root = new File(cloud.path(), key.space);
+      if (!root.exists()) {
+        root.mkdir();
+      }
+      File tempOutput = new File(root, archiveKey + ".temp");
+      File finalOutput = new File(root, archiveKey);
       try {
         DataOutputStream output = new DataOutputStream(new FileOutputStream(tempOutput));
         store.read(id, new ByteArrayStream() {

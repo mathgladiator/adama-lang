@@ -27,6 +27,7 @@ import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -108,7 +109,11 @@ public class S3 implements AssetUploader, AssetDownloader, Cloud {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.restore_document.start();
     executors.execute(() -> {
       try {
-        File file = new File(path(), archiveKey);
+        File root = new File(path(), key.space);
+        if (!root.exists()) {
+          root.mkdir();
+        }
+        File file = new File(root, archiveKey);
         if (!file.exists()) {
           GetObjectRequest request = GetObjectRequest.builder().bucket(bucket).key("backups/" + key.space + "/" + key.key + "/#" + archiveKey).build();
           s3.getObject(request, file.toPath());
@@ -136,6 +141,21 @@ public class S3 implements AssetUploader, AssetDownloader, Cloud {
         LOGGER.error("failed-backup-file", ex);
         instance.failure(ErrorCodes.API_CLOUD_BACKUP_FAILED);
         callback.failure(new ErrorCodeException(ErrorCodes.API_CLOUD_BACKUP_FAILED, ex));
+      }
+    });
+  }
+
+  @Override
+  public void delete(Key key, String archiveKey) {
+    RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.delete_document.start();
+    DeleteObjectRequest request = DeleteObjectRequest.builder().bucket(bucket).key("backups/" + key.space + "/" + key.key + "/#" + archiveKey).build();
+    executors.execute(() -> {
+      try {
+        s3.deleteObject(request);
+        instance.success();
+      } catch (Exception ex) {
+        LOGGER.error("failed-backup-file", ex);
+        instance.failure(ErrorCodes.API_CLOUD_DELETE_FAILED);
       }
     });
   }

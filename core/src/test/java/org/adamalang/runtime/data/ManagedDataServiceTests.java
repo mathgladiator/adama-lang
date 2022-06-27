@@ -74,22 +74,23 @@ public class ManagedDataServiceTests {
     try (Setup setup = new Setup()) {
       Runnable firstArchive = setup.archive.latchLogAt(1);
       Runnable secondArchive = setup.archive.latchLogAt(3);
-      Runnable secondArchiveExec = setup.archive.latchLogAt(4);
+      Runnable secondArchiveExecAndDelete = setup.archive.latchLogAt(5);
       Runnable waitForDelete = setup.data.latchLogAt(7);
-      Runnable firstRestore = setup.archive.latchLogAt(5);
-      Runnable thirdBackup = setup.archive.latchLogAt(7);
-      Runnable thirdBackupComplete = setup.archive.latchLogAt(8);
+      Runnable firstRestore = setup.archive.latchLogAt(6);
+      Runnable thirdBackup = setup.archive.latchLogAt(8);
+      Runnable thirdBackupComplete = setup.archive.latchLogAt(9);
       Runnable waitForClose = setup.data.latchLogAt(13);
-      Runnable cantRestoreGotBackuped = setup.archive.latchLogAt(9);
+      Runnable cantRestoreGotBackuped = setup.archive.latchLogAt(11);
+
       Runnable waitForDeleteOfRestoreFailure = setup.data.latchLogAt(16);
-      Runnable cantRestoreFailure = setup.archive.latchLogAt(11);
-      Runnable restoreWorks = setup.archive.latchLogAt(13);
-      Runnable retryBackup = setup.archive.latchLogAt(15);
-      Runnable retryBackupAgain = setup.archive.latchLogAt(17);
+      Runnable cantRestoreFailure = setup.archive.latchLogAt(13);
+      Runnable restoreWorks = setup.archive.latchLogAt(15);
+      Runnable retryBackup = setup.archive.latchLogAt(17);
+      Runnable retryBackupAgain = setup.archive.latchLogAt(19);
       Runnable waitForRetryDelete = setup.data.latchLogAt(21);
-      Runnable restoreAgain = setup.archive.latchLogAt(19);
-      Runnable backupLoadedContent = setup.archive.latchLogAt(21);
-      Runnable backupFinished = setup.archive.latchLogAt(22);
+      Runnable restoreAgain = setup.archive.latchLogAt(21);
+      Runnable backupLoadedContent = setup.archive.latchLogAt(24);
+      Runnable backupFinished = setup.archive.latchLogAt(25);
 
       {
         SimpleVoidCallback cb_Init = new SimpleVoidCallback();
@@ -162,11 +163,12 @@ public class ManagedDataServiceTests {
       setup.archive.driveBackup();
       secondArchive.run();
       setup.archive.driveBackup();
-      secondArchiveExec.run();
+      secondArchiveExecAndDelete.run();
       setup.archive.assertLogAt(0, "BACKUP:space/123");
       setup.archive.assertLogAt(1, "BACKUP-EXEC:space/123");
       setup.archive.assertLogAt(2, "BACKUP:space/123");
       setup.archive.assertLogAt(3, "BACKUP-EXEC:space/123");
+      setup.archive.assertLogAt(4, "CLEAN:space/123");
       waitForDelete.run();
       setup.data.assertLogAt(0, "INIT:space/123:1->{\"x\":1,\"y\":4}");
       setup.data.assertLogAt(1, "PATCH:space/123:2-2->{\"x\":2}");
@@ -232,12 +234,13 @@ public class ManagedDataServiceTests {
         setup.archive.driveBackup();
       }
 
-      setup.archive.assertLogAt(4, "RESTORE-INIT:space/123");
-      setup.archive.assertLogAt(5, "RESTORE-EXEC:space/123");
-      setup.archive.assertLogAt(6, "BACKUP:space/123");
-      setup.archive.assertLogAt(7, "BACKUP-EXEC:space/123");
-      setup.archive.assertLogAt(8, "BACKUP:space/fail-restore");
-      setup.archive.assertLogAt(9, "BACKUP-EXEC:space/fail-restore");
+      setup.archive.assertLogAt(5, "RESTORE-INIT:space/123");
+      setup.archive.assertLogAt(6, "RESTORE-EXEC:space/123");
+      setup.archive.assertLogAt(7, "BACKUP:space/123");
+      setup.archive.assertLogAt(8, "BACKUP-EXEC:space/123");
+      setup.archive.assertLogAt(9, "CLEAN:space/123");
+      setup.archive.assertLogAt(10, "BACKUP:space/fail-restore");
+      setup.archive.assertLogAt(11, "BACKUP-EXEC:space/fail-restore");
 
       waitForDeleteOfRestoreFailure.run();
       setup.data.assertLogAt(13, "INIT:space/fail-restore:1->{\"x\":1,\"y\":4}");
@@ -252,8 +255,8 @@ public class ManagedDataServiceTests {
         cb_Get.assertFailure(-2000);
       }
 
-      setup.archive.assertLogAt(10, "RESTORE-INIT:space/fail-restore");
-      setup.archive.assertLogAt(11, "RESTORE-EXEC:space/fail-restore");
+      setup.archive.assertLogAt(12, "RESTORE-INIT:space/fail-restore");
+      setup.archive.assertLogAt(13, "RESTORE-EXEC:space/fail-restore");
 
       {
         setup.finder.bindLocal(KEY_SLOW_FIND);
@@ -290,8 +293,8 @@ public class ManagedDataServiceTests {
         cb_Get.assertFailure(735344);
       }
 
-      setup.archive.assertLogAt(12, "RESTORE-INIT:space/cant-bind");
-      setup.archive.assertLogAt(13, "RESTORE-EXEC:space/cant-bind");
+      setup.archive.assertLogAt(14, "RESTORE-INIT:space/cant-bind");
+      setup.archive.assertLogAt(15, "RESTORE-EXEC:space/cant-bind");
 
       {
         SimpleVoidCallback cb_Init = new SimpleVoidCallback();
@@ -308,10 +311,10 @@ public class ManagedDataServiceTests {
 
       waitForRetryDelete.run();
 
-      setup.archive.assertLogAt(14, "BACKUP:space/retry-key");
-      setup.archive.assertLogAt(15, "BACKUP-EXEC:space/retry-key");
       setup.archive.assertLogAt(16, "BACKUP:space/retry-key");
       setup.archive.assertLogAt(17, "BACKUP-EXEC:space/retry-key");
+      setup.archive.assertLogAt(18, "BACKUP:space/retry-key");
+      setup.archive.assertLogAt(19, "BACKUP-EXEC:space/retry-key");
 
       setup.data.assertLogAt(16, "INIT:space/cant-bind:1->{}");
       setup.data.assertLogAt(17, "INIT:space/retry-key:1->{\"x\":1,\"y\":4}");
@@ -334,7 +337,7 @@ public class ManagedDataServiceTests {
         Assert.assertEquals("{\"x\":4,\"y\":4}", cb_Get.value);
       }
 
-      setup.archive.assertLogAt(18, "RESTORE-INIT:space/123");
+      setup.archive.assertLogAt(20, "RESTORE-INIT:space/123");
 
       {
         SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
@@ -371,9 +374,10 @@ public class ManagedDataServiceTests {
         backupFinished.run();
       }
 
-      setup.archive.assertLogAt(19, "RESTORE-EXEC:space/123");
-      setup.archive.assertLogAt(20, "BACKUP:space/456");
-      setup.archive.assertLogAt(21, "BACKUP-EXEC:space/456");
+      setup.archive.assertLogAt(21, "RESTORE-EXEC:space/123");
+      setup.archive.assertLogAt(22, "CLEAN:space/123");
+      setup.archive.assertLogAt(23, "BACKUP:space/456");
+      setup.archive.assertLogAt(24, "BACKUP-EXEC:space/456");
     }
   }
 }

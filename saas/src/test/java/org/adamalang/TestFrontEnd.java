@@ -143,6 +143,10 @@ public class TestFrontEnd implements AutoCloseable, Email {
       public void backup(Key key, File archiveFile, Callback<Void> callback) {
         callback.success(null);
       }
+
+      @Override
+      public void delete(Key key, String archiveKey) {
+      }
     };
     CaravanDataService caravanDataService = new CaravanDataService(cloud, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
     Base managedBase = new Base(finder, caravanDataService, "test-region", identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);

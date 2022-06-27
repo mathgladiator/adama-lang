@@ -15,16 +15,19 @@ import org.adamalang.common.metrics.RequestResponseMonitor;
 public class AWSMetrics {
   public final RequestResponseMonitor restore_document;
   public final RequestResponseMonitor backup_document;
+  public final RequestResponseMonitor delete_document;
 
   public final RequestResponseMonitor upload_file;
   public final RequestResponseMonitor download_file;
   public final RequestResponseMonitor send_email;
 
   public AWSMetrics(MetricsFactory factory) {
-    upload_file = factory.makeRequestResponseMonitor("aws_upload_file");
-    download_file = factory.makeRequestResponseMonitor("aws_download_file");
     restore_document = factory.makeRequestResponseMonitor("aws_restore_document");
     backup_document = factory.makeRequestResponseMonitor("aws_backup_document");
+    delete_document = factory.makeRequestResponseMonitor("aws_delete_document");
+
+    upload_file = factory.makeRequestResponseMonitor("aws_upload_file");
+    download_file = factory.makeRequestResponseMonitor("aws_download_file");
     send_email = factory.makeRequestResponseMonitor("aws_send_email");
   }
 }

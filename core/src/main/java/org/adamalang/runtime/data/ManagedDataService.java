@@ -94,6 +94,7 @@ public class ManagedDataService implements DataService {
 
   private void deleteLocal(Key key, Callback<Void> callback) {
     base.on(key, (machine) -> {
+      machine.delete();
       base.data.delete(key, new Callback<Void>() {
         @Override
         public void success(Void value) {

@@ -93,6 +93,10 @@ public class LocalDrive {
         public void backup(Key key, File archiveFile, Callback<Void> callback) {
 
         }
+
+        @Override
+        public void delete(Key key, String archiveKey) {
+        }
       };
       CaravanDataService service = new CaravanDataService(cloud, new FinderServiceToKeyToIdService(finder), dls, executor);
       dataService = service;

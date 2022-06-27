@@ -41,6 +41,14 @@ public class MockCloud implements Cloud {
   }
 
   @Override
+  public void delete(Key key, String archiveKey) {
+    File found = map.remove(archiveKey);
+    if (found != null) {
+      found.delete();
+    }
+  }
+
+  @Override
   public File path() {
     return path;
   }

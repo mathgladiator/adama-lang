@@ -57,6 +57,13 @@ public class MockArchiveDataSource implements ArchivingDataService {
     this.archiveSeq.put(archiveKey, seq);
   }
 
+  @Override
+  public void cleanUp(Key key, String archiveKey) {
+    archive.remove(archiveKey);
+    archiveSeq.remove(archiveKey);
+    println("CLEAN:" + key.space + "/" + key.key);
+  }
+
   public synchronized void assertLogAt(int k, String expected) {
     Assert.assertEquals(expected, log.get(k));
   }

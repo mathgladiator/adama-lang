@@ -28,6 +28,7 @@ public class Machine {
   private int pendingWrites;
   private Runnable cancelArchive;
   private int writesInFlight;
+  private String lastArchiveKey;
 
   public Machine(Key key, Base base) {
     this.key = key;
@@ -38,6 +39,7 @@ public class Machine {
     this.pendingWrites = 0;
     this.cancelArchive = null;
     this.writesInFlight = 0;
+    this.lastArchiveKey = null;
   }
 
   private void queue(Action action) {
@@ -83,10 +85,16 @@ public class Machine {
     });
   }
 
-  private void archive_Success() {
+  private void archive_Success(BackupResult result) {
     base.executor.execute(new NamedRunnable("machine-archive-success") {
       @Override
       public void execute() throws Exception {
+        System.err.println("Success@:" + result.archiveKey);
+        if (lastArchiveKey != null) {
+          System.err.println("Clean@:" + lastArchiveKey);
+          base.data.cleanUp(key, lastArchiveKey);
+        }
+        lastArchiveKey = result.archiveKey;
         cancelArchive = null;
         pendingWrites -= writesInFlight;
         writesInFlight = 0;
@@ -116,7 +124,7 @@ public class Machine {
         base.finder.backup(key, result, base.target, new Callback<Void>() {
           @Override
           public void success(Void value) {
-            archive_Success();
+            archive_Success(result);
           }
 
           @Override
@@ -192,6 +200,7 @@ public class Machine {
       @Override
       public void execute() throws Exception {
         state = State.Restoring;
+        lastArchiveKey = archiveKey;
         base.data.restore(key, archiveKey, new Callback<Void>() {
           @Override
           public void success(Void value) {
@@ -284,6 +293,13 @@ public class Machine {
     closed = true;
     if (state == State.OnMachine && pendingWrites == 0) {
       executeClosed();
+    }
+  }
+
+  public void delete() {
+    if (lastArchiveKey != null) {
+      base.data.cleanUp(key, lastArchiveKey);
+      lastArchiveKey = null;
     }
   }
 }

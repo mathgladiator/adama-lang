@@ -18,4 +18,7 @@ public interface ArchivingDataService extends DataService {
 
   /** backup a document, returning an archiveKey */
   void backup(Key key, Callback<BackupResult> callback);
+
+  /** delete an overwritten back up */
+  void cleanUp(Key key, String archiveKey);
 }
