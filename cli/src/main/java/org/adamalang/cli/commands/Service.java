@@ -432,7 +432,11 @@ public class Service {
           client.webGet(skr.space, skr.key, get, new Callback<>() {
             @Override
             public void success(WebResponse value) {
-              callback.success(new HttpResult(value.bodyContentType, value.body.getBytes(StandardCharsets.UTF_8)));
+              if (value != null) {
+                callback.success(new HttpResult(value.bodyContentType, value.body.getBytes(StandardCharsets.UTF_8)));
+              } else {
+                callback.success(null);
+              }
             }
 
             @Override
