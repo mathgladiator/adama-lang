@@ -19,7 +19,10 @@ import org.adamalang.mysql.mocks.SimpleMockCallback;
 import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.HashMap;
 
 public class FinderTests {
   private final Key KEY1 = new Key("space-1", "key-1");
@@ -130,6 +133,10 @@ public class FinderTests {
           machine.free(KEY1,  "machineB:523", callback);
           callback.assertSuccess();
         }
+        HashMap<String, Long> inventory = FinderOperations.inventoryStorage(dataBase);
+        Assert.assertEquals(1, inventory.size());
+        Assert.assertEquals(5, (long) inventory.get(KEY1.space));
+
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);

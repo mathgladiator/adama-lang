@@ -19,7 +19,6 @@ import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
-import org.adamalang.mysql.backend.BackendOperations;
 import org.adamalang.mysql.backend.data.DocumentIndex;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.finder.FinderOperations;
@@ -312,10 +311,6 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, SpaceDeleteRequest request, SimpleResponder responder) {
     try {
       if (request.policy.canUserDeleteSpace(request.who)) {
-        if (BackendOperations.list(nexus.dataBaseBackend, request.space, null, 1).size() > 0) {
-          responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NOT_EMPTY));
-          return;
-        }
         if (FinderOperations.list(nexus.dataBaseBackend, request.space, null, 1).size() > 0) {
           responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NOT_EMPTY));
           return;
@@ -405,9 +400,6 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder) {
     try {
       if (request.policy.canUserSeeKeyListing(request.who)) {
-        for (DocumentIndex item : BackendOperations.list(nexus.dataBaseBackend, request.space, request.marker, request.limit != null ? request.limit : 100)) {
-          responder.next(item.key, item.created, item.updated, item.seq);
-        }
         for (DocumentIndex item : FinderOperations.list(nexus.dataBaseBackend, request.space, request.marker, request.limit != null ? request.limit : 100)) {
           responder.next(item.key, item.created, item.updated, item.seq);
         }
