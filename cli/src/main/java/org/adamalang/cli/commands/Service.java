@@ -53,13 +53,11 @@ import org.adamalang.net.server.ServerNexus;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.grpc.OverlordClient;
-import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.data.managed.Base;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
-import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -69,7 +67,6 @@ import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebResponse;
-import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.*;
@@ -224,16 +221,10 @@ public class Service {
       }
     }, 30000, 30000, TimeUnit.MILLISECONDS);
 
-    BackendMetrics backendMetrics = new BackendMetrics(prometheusMetricsFactory);
-    ThreadedDataService dbDataService = new ThreadedDataService(dataThreads, () -> new BlockingDataService(backendMetrics, dataBaseBackend));
-    PrefixSplitDataService carveMemoryOff = new PrefixSplitDataService(dbDataService, "mem_", new ThreadedDataService(dataThreads, () -> new InMemoryDataService((r) -> r.run(), TimeSource.REAL_TIME)));
-
-    DataService caravanService = caravan(identity, config, prometheusMetricsFactory, dataBaseBackend);
-    PrefixSplitDataService carvanCaravanOff = new PrefixSplitDataService(carveMemoryOff, "caravan_", caravanService);
-
+    DataService data = caravan(identity, config, prometheusMetricsFactory, dataBaseBackend);
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
-    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), carvanCaravanOff, TimeSource.REAL_TIME, coreThreads);
+    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), data, TimeSource.REAL_TIME, coreThreads);
 
     engine.newApp("adama", port, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
@@ -386,13 +377,8 @@ public class Service {
     AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
     S3 s3 = new S3(awsConfig, awsMetrics);
 
-
-    ClientRouter router = ClientRouter.REACTIVE(metrics);
-    // TODO: use new FINDER for client router, requires the finder service and blah-blah-blah
-    /*
     Finder finder = new Finder(dataBaseFront);
-    ClientRouter.FINDER(metrics, finder, region);
-    */
+    ClientRouter router = ClientRouter.FINDER(metrics, finder, region);
     Client client = new Client(netBase, clientConfig, metrics, router, null);
     Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
 
