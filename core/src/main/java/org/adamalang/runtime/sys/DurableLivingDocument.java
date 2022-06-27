@@ -26,6 +26,8 @@ import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -106,7 +108,13 @@ public class DurableLivingDocument {
   }
 
   public JsonStreamWriter forge(final String command, final NtClient who) {
-    this.lastActivityMS = base.time.nowMilliseconds();
+    return forge(command, who, true);
+  }
+
+  public JsonStreamWriter forge(final String command, final NtClient who, boolean activity) {
+    if (activity) {
+      this.lastActivityMS = base.time.nowMilliseconds();
+    }
     final var writer = new JsonStreamWriter();
     writer.beginObject();
     writer.writeObjectFieldIntro("command");
@@ -558,7 +566,7 @@ public class DurableLivingDocument {
   }
 
   public void expire(long limit, Callback<Integer> callback) {
-    final var request = forge("expire", null);
+    final var request = forge("expire", null, false);
     request.writeObjectFieldIntro("limit");
     request.writeLong(limit);
     request.endObject();
