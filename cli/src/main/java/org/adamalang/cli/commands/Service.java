@@ -60,25 +60,28 @@ import org.adamalang.runtime.data.managed.Base;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
+import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
-import org.adamalang.web.service.AssetRequest;
-import org.adamalang.web.service.ServiceRunnable;
-import org.adamalang.web.service.WebConfig;
-import org.adamalang.web.service.WebMetrics;
+import org.adamalang.web.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.TreeMap;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -406,9 +409,8 @@ public class Service {
       System.err.println("adama targets:" + notice);
       targetPublisher.accept(targets);
     });
-    ConcurrentCachedHttpHandler propigatedHandler = new ConcurrentCachedHttpHandler();
 
-    OverlordClient overlordClient = new OverlordClient(identity, webConfig.port, propigatedHandler);
+    OverlordClient overlordClient = new OverlordClient(identity, webConfig.port);
     engine.subscribe("overlord", new Consumer<Collection<String>>() {
       @Override
       public void accept(Collection<String> targets) {
@@ -420,6 +422,35 @@ public class Service {
       }
     });
 
+    HttpHandler http = new HttpHandler() {
+      @Override
+      public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+        SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
+        if (skr != null) {
+          // TODO: need a way to get an NtClient token
+          WebGet get = new WebGet(NtClient.NO_ONE, skr.uri, headers, new NtDynamic(parametersJson));
+          client.webGet(skr.space, skr.key, get, new Callback<>() {
+            @Override
+            public void success(WebResponse value) {
+              callback.success(new HttpResult(value.bodyContentType, value.body.getBytes(StandardCharsets.UTF_8)));
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              callback.failure(ex);
+            }
+          });
+        } else {
+          callback.success(null);
+        }
+      }
+
+      @Override
+      public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+        callback.success(null);
+      }
+    };
+
     Email email = new SES(awsConfig, awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
@@ -427,7 +458,7 @@ public class Service {
       accessLog.debug(item.toString());
     });
     System.err.println("nexus constructed");
-    ServiceBase serviceBase = BootstrapFrontend.make(nexus, propigatedHandler);
+    ServiceBase serviceBase = BootstrapFrontend.make(nexus, http);
     // TODO: have some sense of health checking in the web package
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();
     CountDownLatch latchForHeartbeat = new CountDownLatch(1);

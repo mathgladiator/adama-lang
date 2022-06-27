@@ -25,7 +25,6 @@ import org.adamalang.web.contracts.HttpHandler;
 public class OverlordClient implements StreamObserver<WebReverse> {
   private final MachineIdentity identity;
   private final SimpleExecutor executor;
-  private final ConcurrentCachedHttpHandler handler;
   private final int webPort;
   private String currentTarget;
   private ManagedChannel channel;
@@ -34,11 +33,10 @@ public class OverlordClient implements StreamObserver<WebReverse> {
   private boolean sendHeat;
   private boolean alive;
 
-  public OverlordClient(MachineIdentity identity, int webPort, ConcurrentCachedHttpHandler handler) {
+  public OverlordClient(MachineIdentity identity, int webPort) {
     this.identity = identity;
     this.webPort = webPort;
     this.executor = SimpleExecutor.create("overlord-http-client");
-    this.handler = handler;
     this.currentTarget = null;
     this.channel = null;
     this.stub = null;
@@ -106,8 +104,6 @@ public class OverlordClient implements StreamObserver<WebReverse> {
         });
         return;
       case CONTENT: {
-        WebContent content = webReverse.getContent();
-        handler.put(content.getUri(), new HttpHandler.HttpResult(content.getContentType(), content.getContent().toByteArray()));
         return;
       }
     }
