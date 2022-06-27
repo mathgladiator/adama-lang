@@ -52,6 +52,7 @@ public class DurableLivingDocument {
   private int outstandingExecutionsWhichRequireDrain;
   private boolean inflightCompact;
   private int trackingSeq;
+  private long lastActivityMS;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
@@ -66,6 +67,7 @@ public class DurableLivingDocument {
     this.outstandingExecutionsWhichRequireDrain = 0;
     this.size = new AtomicInteger(0);
     this.trackingSeq = document.__seq.get();
+    this.lastActivityMS = base.time.nowMilliseconds();
   }
 
   public static void fresh(final Key key, final LivingDocumentFactory factory, final NtClient who, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
@@ -104,6 +106,7 @@ public class DurableLivingDocument {
   }
 
   public JsonStreamWriter forge(final String command, final NtClient who) {
+    this.lastActivityMS = base.time.nowMilliseconds();
     final var writer = new JsonStreamWriter();
     writer.beginObject();
     writer.writeObjectFieldIntro("command");
@@ -278,16 +281,17 @@ public class DurableLivingDocument {
     while (pending.size() > 0) {
       pending.removeFirst().callback.failure(new ErrorCodeException(errorCode));
     }
-    internalCloseExecutor();
+    cleanupWhileInExecutor();
   }
 
-  private void internalCloseExecutor() {
-    base.map.remove(key);
-    base.metrics.inflight_documents.down();
-    if (getCurrentFactory().delete_on_close) {
-      base.service.delete(key, Callback.DONT_CARE_VOID);
-    } else {
-      base.service.close(key, Callback.DONT_CARE_VOID);
+  public void cleanupWhileInExecutor() {
+    if (base.map.remove(key) != null) {
+      base.metrics.inflight_documents.down();
+      if (getCurrentFactory().delete_on_close) {
+        base.service.delete(key, Callback.DONT_CARE_VOID);
+      } else {
+        base.service.close(key, Callback.DONT_CARE_VOID);
+      }
     }
   }
 
@@ -561,6 +565,10 @@ public class DurableLivingDocument {
     ingest(NtClient.NO_ONE, request.toString(), base.metrics.document_expire.wrap(callback), true, false);
   }
 
+  public void registerActivity() {
+    this.lastActivityMS = base.time.nowMilliseconds();
+  }
+
   public void connect(final NtClient who, Callback<Integer> callback) {
     final var request = forge("connect", who);
     request.endObject();
@@ -586,10 +594,15 @@ public class DurableLivingDocument {
       @Override
       public void execute() throws Exception {
         if (document.__canRemoveFromMemory()) {
-          internalCloseExecutor();
+          cleanupWhileInExecutor();
         }
       }
     }, base.getMillisecondsForCleanupCheck());
+  }
+
+  public boolean testInactive() {
+    long timeSinceLastActivity = base.time.nowMilliseconds() - lastActivityMS;
+    return timeSinceLastActivity > base.getMillisecondsInactivityBeforeCleanup() && document.__canRemoveFromMemory();
   }
 
   public void disconnect(final NtClient who, Callback<Integer> callback) {

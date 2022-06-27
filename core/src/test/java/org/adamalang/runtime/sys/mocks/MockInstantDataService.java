@@ -199,7 +199,7 @@ public class MockInstantDataService implements DataService {
     latches.add(latch);
     return () -> {
       try {
-        Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
       } catch (InterruptedException ie) {
         Assert.fail();
       }

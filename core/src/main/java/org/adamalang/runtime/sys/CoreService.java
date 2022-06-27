@@ -425,6 +425,7 @@ public class CoreService {
     load(key, new Callback<DurableLivingDocument>() {
       @Override
       public void success(DurableLivingDocument document) {
+        document.registerActivity();
         WebResponse response = document.document().__get(request);
         if (response != null) {
           callback.success(response);

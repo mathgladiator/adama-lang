@@ -38,6 +38,7 @@ public class DocumentThreadBase {
   private int millisecondsAfterLoadForReconciliation;
   private int millisecondsToPerformInventory;
   private int millisecondsToPerformInventoryJitter;
+  private int millisecondsInactivityBeforeCleanup;
 
   public DocumentThreadBase(DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
     this.service = service;
@@ -53,6 +54,11 @@ public class DocumentThreadBase {
     this.rng = new Random();
     this.millisecondsToPerformInventory = 30000;
     this.millisecondsToPerformInventoryJitter = 15000;
+    this.millisecondsInactivityBeforeCleanup = 120000;
+  }
+
+  public int getMillisecondsInactivityBeforeCleanup() {
+    return millisecondsInactivityBeforeCleanup;
   }
 
   public void kickOffInventory() {
@@ -102,6 +108,7 @@ public class DocumentThreadBase {
   public void performInventory() {
     HashMap<String, PredictiveInventory.PreciseSnapshotAccumulator> accumulators = new HashMap<>(inventoryBySpace.size());
     Iterator<Map.Entry<Key, DurableLivingDocument>> it = map.entrySet().iterator();
+    ArrayList<DurableLivingDocument> inactive = new ArrayList<>();
     while (it.hasNext()) {
       DurableLivingDocument document = it.next().getValue();
       document.triggerExpire();
@@ -115,6 +122,12 @@ public class DocumentThreadBase {
       document.zeroOutCodeCost();
       accum.connections += document.getConnectionsCount();
       accum.count++;
+      if (document.testInactive()) {
+        inactive.add(document);
+      }
+    }
+    for (DurableLivingDocument close : inactive) {
+      close.cleanupWhileInExecutor();
     }
     HashMap<String, PredictiveInventory> nextInventoryBySpace = new HashMap<>();
     for (Map.Entry<String, PredictiveInventory.PreciseSnapshotAccumulator> entry : accumulators.entrySet()) {
@@ -131,6 +144,7 @@ public class DocumentThreadBase {
       }
     }, millisecondsToPerformInventory + rng.nextInt(millisecondsToPerformInventoryJitter) + rng.nextInt(millisecondsToPerformInventoryJitter));
   }
+
 
   public int getMillisecondsForCleanupCheck() {
     return millisecondsForCleanupCheck;
@@ -151,5 +165,9 @@ public class DocumentThreadBase {
   public void setInventoryMillisecondsSchedule(int period, int jitter) {
     this.millisecondsToPerformInventory = period;
     this.millisecondsToPerformInventoryJitter = jitter;
+  }
+
+  public void setMillisecondsInactivityBeforeCleanup(int ms) {
+    this.millisecondsInactivityBeforeCleanup = ms;
   }
 }

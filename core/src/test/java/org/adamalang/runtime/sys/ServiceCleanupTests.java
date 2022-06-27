@@ -9,17 +9,23 @@
  */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.mocks.*;
+import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -28,7 +34,7 @@ public class ServiceCleanupTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
-      "@static { create { return true; } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create { return true; } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; } @web get / { return {html:\"Hi\"}; } ";
 
   @Test
   public void cleanup_happens() throws Exception {
@@ -85,6 +91,64 @@ public class ServiceCleanupTests {
         time.time += 10000;
       }
       Thread.sleep(1000);
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void cleanup_happens_just_load() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    MockTime time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    AtomicReference<CountDownLatch> latchMade = new AtomicReference<>(null);
+    CountDownLatch latchSet = new CountDownLatch(1);
+    Runnable dataLatch = dataService.latchLogAt(3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (samples) -> {
+      time.time += 1000;
+      PredictiveInventory.MeteringSample meteringSample = samples.get(KEY.space);
+      if (meteringSample != null) {
+        if (meteringSample.count == 1) {
+          if (latchMade.get() == null) {
+            latchMade.set(new CountDownLatch(1));
+            latchSet.countDown();
+          }
+        } else if (meteringSample.count == 0) {
+          if (latchMade.get() != null) {
+            latchMade.get().countDown();
+          }
+        }
+        System.err.println(meteringSample.count);
+      }
+    }, dataService, time, 3);
+    service.tune(
+        (base) -> {
+          base.setInventoryMillisecondsSchedule(250, 50);
+          base.setMillisecondsInactivityBeforeCleanup(25);
+        });
+    try {
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      created.await_success();
+      CountDownLatch got = new CountDownLatch(1);
+      service.webGet(KEY, new WebGet(NtClient.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<WebResponse>() {
+        @Override
+        public void success(WebResponse value) {
+          got.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+      Assert.assertTrue(got.await(5000, TimeUnit.MILLISECONDS));
+      dataLatch.run();
+      dataService.assertLogAtStartsWith(0, "INIT:space/key:");
+      dataService.assertLogAt(1, "LOAD:space/key");
+      dataService.assertLogAt(2, "CLOSE:space/key");
     } finally {
       service.shutdown();
     }
