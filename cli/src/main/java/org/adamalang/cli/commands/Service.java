@@ -66,6 +66,8 @@ import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebPut;
+import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
@@ -438,6 +440,28 @@ public class Service {
       @Override
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         callback.success(null);
+        SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
+        if (skr != null) {
+          WebPut put = new WebPut(NtClient.NO_ONE, new WebPutRaw(skr.uri, headers, new NtDynamic(parametersJson), body));
+          client.webPut(skr.space, skr.key, put, new Callback<>() {
+            @Override
+            public void success(WebResponse value) {
+              if (value != null) {
+                callback.success(new HttpResult(value.bodyContentType, value.body.getBytes(StandardCharsets.UTF_8)));
+              } else {
+                callback.success(null);
+              }
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              callback.failure(ex);
+            }
+          });
+        } else {
+          callback.success(null);
+        }
+
       }
     };
 

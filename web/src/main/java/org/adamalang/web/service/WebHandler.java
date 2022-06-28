@@ -186,7 +186,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     // TODO: copy the headers into the headers (which are needed by clients per a deny list)
     String uri = req.uri();
     String parameters = "{}";
-    if (req.method() == HttpMethod.POST) {
+    if (req.method() == HttpMethod.POST || req.method() == HttpMethod.PUT) {
+      // TODO: detect the type and ensure the body is JSON
       metrics.webhandler_post.run();
       byte[] memory = new byte[req.content().readableBytes()];
       req.content().readBytes(memory);
