@@ -265,7 +265,11 @@ public class Service {
           service.deploy(deploymentMonitor);
         }
       } catch (Exception ex) {
-        LOGGER.error("failed-scan-" + space, ex);
+        if (ex instanceof ErrorCodeException) {
+          LOGGER.error("failed-scan-" + space + ":" + ((ErrorCodeException) ex).code);
+        } else {
+          LOGGER.error("failed-scan-" + space, ex);
+        }
       }
     };
     File billingRoot = new File(billingRootPath);
