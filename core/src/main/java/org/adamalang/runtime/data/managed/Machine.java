@@ -89,9 +89,7 @@ public class Machine {
     base.executor.execute(new NamedRunnable("machine-archive-success") {
       @Override
       public void execute() throws Exception {
-        System.err.println("Success@:" + result.archiveKey);
         if (lastArchiveKey != null) {
-          System.err.println("Clean@:" + lastArchiveKey);
           base.data.cleanUp(key, lastArchiveKey);
         }
         lastArchiveKey = result.archiveKey;

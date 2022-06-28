@@ -45,10 +45,11 @@ public class LivingDocumentFactory {
     final var fileManager = new ByteArrayJavaFileManager(compiler.getStandardFileManager(null, null, null));
     final var task = compiler.getTask(null, fileManager, diagnostics, null, null, ByteArrayJavaFileManager.turnIntoCompUnits(className + ".java", javaSource));
     if (task.call() == false) {
+      StringBuilder report = new StringBuilder();
       for (final Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
-        System.err.println(diagnostic.toString());
+        report.append(diagnostic.toString() + "\n");
       }
-      throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_COMPILE_JAVA_CODE);
+      throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_COMPILE_JAVA_CODE, report.toString());
     }
     try {
       final var classBytes = fileManager.getClasses();
