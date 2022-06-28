@@ -12,7 +12,6 @@ package org.adamalang.net.client;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
-import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.common.net.ChannelClient;
 import org.adamalang.common.net.NetBase;
@@ -31,11 +30,9 @@ import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
-import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
-import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 
 import java.util.Arrays;
@@ -219,7 +216,7 @@ public class InstanceClient implements AutoCloseable {
   private void commonWebReturn(ServerMessage.WebResponseNet payload, Callback<WebResponse> callback) {
     WebResponse response = new WebResponse();
     response.body = payload.body;
-    response.bodyContentType = payload.contentType;
+    response.contentType = payload.contentType;
     if (payload.assetId != null) {
       response.asset = new NtAsset(payload.assetId, payload.assetName, payload.contentType, payload.assetSize, payload.assetMD5, payload.assetSHA384);
     }

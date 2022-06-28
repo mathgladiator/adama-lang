@@ -52,12 +52,14 @@ public class Return extends Statement {
     yielder.accept(semicolonToken);
   }
 
-  private void consider(String field, TyNativeMessage message, Consumer<TyType> check) {
+  private boolean consider(String field, TyNativeMessage message, Consumer<TyType> check) {
     FieldDefinition fd = message.storage.fields.get(field);
     if (fd != null) {
       check.accept(fd.type);
       webFields.add(field);
+      return true;
     }
+    return false;
   }
 
   @Override
@@ -67,9 +69,22 @@ public class Return extends Statement {
       if (givenReturnType instanceof TyNativeMessage) {
         webFields = new TreeSet<>();
         webReturnType = (TyNativeMessage) givenReturnType;
-        consider("html", webReturnType, (ty) -> environment.rules.IsString(ty, false));
-        consider("json", webReturnType, (ty) -> environment.rules.IsNativeMessage(ty, false));
-        consider("asset", webReturnType, (ty) -> environment.rules.IsAsset(ty, false));
+        int body = 0;
+        if (consider("html", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+          body++;
+        }
+        if (consider("xml", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+          body++;
+        }
+        if (consider("json", webReturnType, (ty) -> environment.rules.IsNativeMessage(ty, false))) {
+          body++;
+        }
+        if (consider("asset", webReturnType, (ty) -> environment.rules.IsAsset(ty, false))) {
+          body++;
+        }
+        if (body != 1) {
+          environment.document.createError(this, String.format("The return statement within a @web expects exactly one field type; got " + body + " instead"), "ReturnFlowWeb");
+        }
       } else {
         environment.document.createError(this, String.format("The return statement within a @web expects a message type"), "ReturnFlowWeb");
       }

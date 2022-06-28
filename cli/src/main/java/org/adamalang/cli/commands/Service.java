@@ -38,7 +38,6 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.backend.BackendMetrics;
-import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
 import org.adamalang.mysql.finder.Finder;
@@ -421,7 +420,7 @@ public class Service {
             @Override
             public void success(WebResponse value) {
               if (value != null) {
-                callback.success(new HttpResult(value.bodyContentType, value.body.getBytes(StandardCharsets.UTF_8)));
+                callback.success(new HttpResult(value.contentType, value.body.getBytes(StandardCharsets.UTF_8)));
               } else {
                 callback.success(null);
               }
@@ -447,7 +446,7 @@ public class Service {
             @Override
             public void success(WebResponse value) {
               if (value != null) {
-                callback.success(new HttpResult(value.bodyContentType, value.body.getBytes(StandardCharsets.UTF_8)));
+                callback.success(new HttpResult(value.contentType, value.body.getBytes(StandardCharsets.UTF_8)));
               } else {
                 callback.success(null);
               }

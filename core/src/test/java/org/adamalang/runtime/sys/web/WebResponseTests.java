@@ -9,5 +9,23 @@
  */
 package org.adamalang.runtime.sys.web;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 public class WebResponseTests {
+  @Test
+  public void flow() {
+    {
+      WebResponse response = new WebResponse();
+      response.xml("x");
+      Assert.assertEquals("x", response.body);
+      Assert.assertEquals("application/xml", response.contentType);
+    }
+    {
+      WebResponse response = new WebResponse();
+      response.html("HTTTTMMMEl");
+      Assert.assertEquals("HTTTTMMMEl", response.body);
+      Assert.assertEquals("text/html; charset=utf-8", response.contentType);
+    }
+  }
 }

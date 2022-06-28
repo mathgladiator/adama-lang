@@ -14,18 +14,24 @@ import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtMessageBase;
 
 public class WebResponse {
-  public String bodyContentType;
+  public String contentType;
   public String body;
   public NtAsset asset;
 
   public WebResponse html(String body) {
-    this.bodyContentType = "text/html; charset=utf-8";
+    this.contentType = "text/html; charset=utf-8";
+    this.body = body;
+    return this;
+  }
+
+  public WebResponse xml(String body) {
+    this.contentType = "application/xml";
     this.body = body;
     return this;
   }
 
   public WebResponse json(NtMessageBase message) {
-    this.bodyContentType = "application/json";
+    this.contentType = "application/json";
     JsonStreamWriter writer = new JsonStreamWriter();
     message.__writeOut(writer);
     this.body = writer.toString();
@@ -33,7 +39,7 @@ public class WebResponse {
   }
 
   public WebResponse asset(NtAsset asset) {
-    this.bodyContentType = asset.contentType;
+    this.contentType = asset.contentType;
     this.asset = asset;
     return this;
   }

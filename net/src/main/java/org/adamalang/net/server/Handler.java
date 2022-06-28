@@ -32,7 +32,6 @@ import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.web.WebGet;
-import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 
@@ -178,7 +177,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   private void commonWebHandle(WebResponse value) {
     ServerMessage.WebResponseNet response = new ServerMessage.WebResponseNet();
     response.body = value.body;
-    response.contentType = value.bodyContentType;
+    response.contentType = value.contentType;
     if (value.asset != null) {
       response.assetId = value.asset.id;
       response.assetName = value.asset.name;

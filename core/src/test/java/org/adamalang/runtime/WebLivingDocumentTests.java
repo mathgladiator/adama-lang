@@ -33,49 +33,49 @@ public class WebLivingDocumentTests {
     {
       WebResponse response = setup.document.document().__get(simple("/"));
       Assert.assertNotNull(response);
-      Assert.assertEquals("text/html; charset=utf-8", response.bodyContentType);
+      Assert.assertEquals("text/html; charset=utf-8", response.contentType);
       Assert.assertEquals("root", response.body);
     }
     {
       WebResponse response = setup.document.document().__get(simple("/fixed"));
       Assert.assertNotNull(response);
-      Assert.assertEquals("text/html; charset=utf-8", response.bodyContentType);
+      Assert.assertEquals("text/html; charset=utf-8", response.contentType);
       Assert.assertEquals("fixed path", response.body);
     }
     {
       WebResponse response = setup.document.document().__get(simple("/path0/42"));
       Assert.assertNotNull(response);
-      Assert.assertEquals("text/html; charset=utf-8", response.bodyContentType);
+      Assert.assertEquals("text/html; charset=utf-8", response.contentType);
       Assert.assertEquals("path integer:42", response.body);
     }
     {
       WebResponse response = setup.document.document().__get(simple("/path1/3.14"));
       Assert.assertNotNull(response);
-      Assert.assertEquals("text/html; charset=utf-8", response.bodyContentType);
+      Assert.assertEquals("text/html; charset=utf-8", response.contentType);
       Assert.assertEquals("path double:3.14", response.body);
     }
     {
       WebResponse response = setup.document.document().__get(simple("/path2/342424222"));
       Assert.assertNotNull(response);
-      Assert.assertEquals("text/html; charset=utf-8", response.bodyContentType);
+      Assert.assertEquals("text/html; charset=utf-8", response.contentType);
       Assert.assertEquals("path long without child:342424222", response.body);
     }
     {
       WebResponse response = setup.document.document().__get(simple("/path2/4242/child"));
       Assert.assertNotNull(response);
-      Assert.assertEquals("text/html; charset=utf-8", response.bodyContentType);
+      Assert.assertEquals("text/html; charset=utf-8", response.contentType);
       Assert.assertEquals("path long with child: 4242!", response.body);
     }
     {
       WebResponse response = setup.document.document().__get(simple("/path3/yo/yo/yo/yo"));
       Assert.assertNotNull(response);
-      Assert.assertEquals("text/html; charset=utf-8", response.bodyContentType);
+      Assert.assertEquals("text/html; charset=utf-8", response.contentType);
       Assert.assertEquals("tail:yo/yo/yo/yo", response.body);
     }
     {
       WebResponse response = setup.document.document().__get(simple("/path3/something/child"));
       Assert.assertNotNull(response);
-      Assert.assertEquals("text/html; charset=utf-8", response.bodyContentType);
+      Assert.assertEquals("text/html; charset=utf-8", response.contentType);
       Assert.assertEquals("abort tail and go with direct child:something", response.body);
     }
   }
