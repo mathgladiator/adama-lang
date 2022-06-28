@@ -23,7 +23,6 @@ import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
 import org.adamalang.runtime.sys.web.WebGet;
-import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -433,7 +432,7 @@ public class CoreService {
         if (response != null) {
           callback.success(response);
         } else {
-          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_NOT_FOUND));
+          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_GET_NOT_FOUND));
         }
       }
 

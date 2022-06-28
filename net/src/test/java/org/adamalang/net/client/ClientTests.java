@@ -25,6 +25,8 @@ import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebPut;
+import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.junit.Assert;
 import org.junit.Test;
@@ -166,11 +168,11 @@ public class ClientTests {
   }
 
   @Test
-  public void web_get() throws Exception {
+  public void web() throws Exception {
     try (TestBed bed =
              new TestBed(
                  12700,
-                 "@static { create { return true; } } @web get / {\n" + "  return {html:\"root\"};\n" + "}\n" + "\n" + "@web get /fixed {\n" + "  return {html:\"fixed path\"};\n" + "}\n" + "\n" + "@web get /path0/$x:int {\n" + "  return {html:\"path integer:\" + x};\n" + "}\n" + "\n" + "@web get /path1/$x:double {\n" + "  return {html:\"path double:\" + x};\n" + "}\n" + "\n" + "@web get /path2/$x:long {\n" + "  return {html:\"path long without child:\" + x};\n" + "}\n" + "\n" + "@web get /path2/$x:long/child {\n" + "  return {html:\"path long with child: \" + x + \"!\"};\n" + "}\n" + "\n" + "@web get /path3/$a* {\n" + "  return {html:\"tail:\" + a};\n" + "}\n" + "\n" + "@web get /path3/$a:string/child {\n" + "  return {html:\"abort tail and go with direct child:\" + a};\n" + "}")) {
+                 "@static { create { return true; } } @web get / { return {html:\"root\"};\n" + "}  message M { int x; } public int z = 1000; @web put / (M m) { z = m.x; return {html:\"c:\" + z}; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
@@ -243,7 +245,33 @@ public class ClientTests {
           }
         });
 
+        CountDownLatch putLatches = new CountDownLatch(2);
+        client.webPut("space", "key1", new WebPut(NtClient.NO_ONE, new WebPutRaw("/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
+          @Override
+          public void success(WebResponse value) {
+            Assert.assertEquals("c:123", value.body);
+            putLatches.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+          }
+        });
+
+        client.webPut("space", "key1", new WebPut(NtClient.NO_ONE, new WebPutRaw("/nope", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
+          @Override
+          public void success(WebResponse value) {
+            System.err.println(value.body);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            putLatches.countDown();
+          }
+        });
+
         Assert.assertTrue(getLatches.await(5000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(putLatches.await(5000, TimeUnit.MILLISECONDS));
       } finally{
         client.shutdown();
       }

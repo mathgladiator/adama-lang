@@ -49,7 +49,8 @@ public class ErrorCodes {
   public static final int FACTORY_CANT_INVOKE_CAN_INVENT = 146558;
   public static final int CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION = 144416;
   public static final int DOCUMENT_SHEDDING_LOAD = 146115;
-  public static final int DOCUMENT_WEB_NOT_FOUND = 133308;
+  public static final int DOCUMENT_WEB_GET_NOT_FOUND = 133308;
+  public static final int DOCUMENT_WEB_PUT_NOT_FOUND = 114881;
 
   @User
   @Description("The document is already created, so please try connecting instead. This happens when two create calls are executed")
@@ -155,7 +156,7 @@ public class ErrorCodes {
   public static final int DEPLOYMENT_UNKNOWN_EXCEPTION = 146561;
 
   /**
-   * 114881 187586 127169 197827 168131 161987
+   * 187586 127169 197827 168131 161987
    * 194752 121027 130242 144583 146631 183498 199883 116936 115917 127692 199886 109775
    * 139469 128208 114384 145627 113884 197852 199907 191713 180978 147186 120048 177395 110832
    * 193267 193264 111347 197872 193265 131825 127732 162036 127736 133371 145659 134399 120060
@@ -433,7 +434,6 @@ public class ErrorCodes {
   public static final int DISK_UNABLE_TO_COMPUTE_FILE_NOT_FOUND = 790544;
 
   public static final int DISK_COMPUTE_HEADPATCH_NOTHING_TO_DO = 725039;
-  public static final int DISK_COMPUTE_HEADPATCH_IOEXCEPTION = 773164;
 
   public static final int NET_FAILED_INITIATION = 753699;
   public static final int NET_DISCONNECT = 773155;

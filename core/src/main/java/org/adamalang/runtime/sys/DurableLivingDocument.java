@@ -670,10 +670,14 @@ public class DurableLivingDocument {
     final var writer = forge("web_put", who);
     put.writeBody(writer);
     writer.endObject();
-    ingest(who, writer.toString(), base.metrics.document_attach.wrap(new Callback<LivingDocumentChange>() {
+    ingest(who, writer.toString(), base.metrics.document_web_put.wrap(new Callback<LivingDocumentChange>() {
       @Override
       public void success(LivingDocumentChange value) {
-        callback.success((WebResponse) value.response);
+        if (value.response != null) {
+          callback.success((WebResponse) value.response);
+        } else {
+          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_PUT_NOT_FOUND));
+        }
       }
 
       @Override
