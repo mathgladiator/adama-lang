@@ -9,11 +9,10 @@
  */
 package org.adamalang.runtime.sys.web;
 
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtMap;
-
-import java.util.TreeMap;
 
 public class WebPut {
   public final NtClient who;
@@ -23,13 +22,17 @@ public class WebPut {
   public final NtDynamic parameters;
   public String bodyJson;
 
-  public WebPut(NtClient who, String uri, TreeMap<String, String> headers, NtDynamic parameters, String bodyJson) {
+  public WebPut(NtClient who, WebPutRaw put) {
     this.who = who;
-    this.uri = uri;
-    this.router = new WebRouter(uri);
+    this.uri = put.uri;
+    this.router = new WebRouter(put.uri);
     this.headers = new NtMap<>();
-    this.headers.storage.putAll(headers);
-    this.parameters = parameters;
-    this.bodyJson = bodyJson;
+    this.headers.storage.putAll(put.headers);
+    this.parameters = put.parameters;
+    this.bodyJson = put.bodyJson;
+  }
+
+  public JsonStreamReader body() {
+    return new JsonStreamReader(bodyJson);
   }
 }

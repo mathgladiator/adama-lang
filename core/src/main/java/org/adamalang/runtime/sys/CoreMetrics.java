@@ -34,6 +34,7 @@ public class CoreMetrics {
   public final CallbackMonitor document_invalidate;
   public final CallbackMonitor document_send;
   public final CallbackMonitor document_attach;
+  public final CallbackMonitor document_web_put;
   public final CallbackMonitor document_apply;
   public final CallbackMonitor document_disconnect;
   public final CallbackMonitor document_connect;
@@ -67,6 +68,7 @@ public class CoreMetrics {
     document_invalidate = metricsFactory.makeCallbackMonitor("core_document_invalidate");
     document_send = metricsFactory.makeCallbackMonitor("core_document_send");
     document_attach = metricsFactory.makeCallbackMonitor("core_document_attach");
+    document_web_put = metricsFactory.makeCallbackMonitor("core_document_web_put");
     document_apply = metricsFactory.makeCallbackMonitor("core_document_apply");
     document_disconnect = metricsFactory.makeCallbackMonitor("core_document_disconnect");
     document_connect = metricsFactory.makeCallbackMonitor("core_document_connect");

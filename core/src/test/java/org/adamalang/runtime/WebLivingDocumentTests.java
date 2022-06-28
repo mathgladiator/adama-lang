@@ -9,9 +9,12 @@
  */
 package org.adamalang.runtime;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.junit.Assert;
 import org.junit.Test;
@@ -75,5 +78,23 @@ public class WebLivingDocumentTests {
       Assert.assertEquals("text/html; charset=utf-8", response.bodyContentType);
       Assert.assertEquals("abort tail and go with direct child:something", response.body);
     }
+  }
+
+  @Test
+  public void put() throws Exception {
+    final var setup = new RealDocumentSetup("public int x; message M { int x; } @web put / (M m) { x = m.x; return {html:\"Got it! \" + m.x}; }");
+
+    setup.document.webPut(NtClient.NO_ONE, new WebPutRaw("/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":42}"), new Callback<WebResponse>() {
+      @Override
+      public void success(WebResponse value) {
+
+        Assert.assertEquals("Got it! 42", value.body);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
   }
 }

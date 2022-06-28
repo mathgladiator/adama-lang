@@ -114,8 +114,8 @@ public class CodeGenWeb {
     for (Map.Entry<String, TyType> param : put.parameters().entrySet()) {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
-    sb.append(") {");
-    // TODO: parse the message type
+    sb.append(") {").tabUp().writeNewline();
+    sb.append("RTx").append(put.messageType.text).append(" ").append(put.messageVariable.text).append(" = new RTx").append(put.messageType.text).append("(__request.body());").writeNewline();
     put.code.specialWriteJava(sb, put.next(environment), false, true);
     sb.append("}").writeNewline();
   }

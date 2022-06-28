@@ -112,8 +112,8 @@ public class ServiceCatastropheTests {
       latch.run();
       realDataService.assertLogAt(0, "INIT:space/key:1->{\"__constructed\":true,\"__entropy\":\"-4964420948893066024\",\"__messages\":null,\"__seq\":1}");
       realDataService.assertLogAt(1, "LOAD:space/key");
-      realDataService.assertLogAt(2, "PATCH:space/key:2-3->{\"__seq\":3,\"__connection_id\":1,\"x\":1,\"__clients\":{\"0\":{\"agent\":\"alice\",\"authority\":\"test\"}},\"__messages\":null,\"__entropy\":\"323091568684100223\"}");
-      realDataService.assertLogAt(3, "PATCH:space/key:4-4->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"-6153234687710755147\"}");
+      realDataService.assertLogAt(2, "PATCH:space/key:2-3->{\"__seq\":3,\"__entropy\":\"-6153234687710755147\",\"__connection_id\":1,\"x\":1,\"__clients\":{\"0\":{\"agent\":\"alice\",\"authority\":\"test\"}},\"__messages\":null}");
+      realDataService.assertLogAt(3, "PATCH:space/key:4-4->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"6497997367891420869\"}");
       realDataService.assertLogAt(4, "DELETE:space/key");
     } finally {
       service.shutdown();
@@ -168,13 +168,13 @@ public class ServiceCatastropheTests {
       latch.run();
       realDataService.assertLogAt(0, "INIT:space/key:1->{\"__constructed\":true,\"__entropy\":\"-4964420948893066024\",\"__messages\":null,\"__seq\":1}");
       realDataService.assertLogAt(1, "LOAD:space/key");
-      realDataService.assertLogAt(2, "PATCH:space/key:2-3->{\"__seq\":3,\"__connection_id\":1,\"x\":1,\"__clients\":{\"0\":{\"agent\":\"alice\",\"authority\":\"test\"}},\"__messages\":null,\"__entropy\":\"323091568684100223\"}");
-      realDataService.assertLogAt(3, "PATCH:space/key:4-4->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"-6153234687710755147\"}");
+      realDataService.assertLogAt(2, "PATCH:space/key:2-3->{\"__seq\":3,\"__entropy\":\"-6153234687710755147\",\"__connection_id\":1,\"x\":1,\"__clients\":{\"0\":{\"agent\":\"alice\",\"authority\":\"test\"}},\"__messages\":null}");
+      realDataService.assertLogAt(3, "PATCH:space/key:4-4->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"6497997367891420869\"}");
       realDataService.assertLogAt(4, "CLOSE:space/key");
       realDataService.assertLogAt(5, "LOAD:space/key");
-      realDataService.assertLogAt(6, "PATCH:space/key:5-6->{\"__seq\":6,\"__connection_id\":2,\"x\":2,\"__clients\":{\"1\":{\"agent\":\"bob\",\"authority\":\"test\"}},\"__messages\":null,\"__entropy\":\"6497997367891420869\"}");
-      realDataService.assertLogAt(7, "PATCH:space/key:7-7->{\"__messages\":null,\"__seq\":7,\"__entropy\":\"-5218234856268126500\"}");
-      realDataService.assertLogAt(8, "PATCH:space/key:8-9->{\"__seq\":9,\"x\":1,\"__clients\":{\"0\":null},\"__messages\":null,\"__entropy\":\"-7509292263826677178\"}");
+      realDataService.assertLogAt(6, "PATCH:space/key:5-6->{\"__seq\":6,\"__entropy\":\"-7509292263826677178\",\"__connection_id\":2,\"x\":2,\"__clients\":{\"1\":{\"agent\":\"bob\",\"authority\":\"test\"}},\"__messages\":null}");
+      realDataService.assertLogAt(7, "PATCH:space/key:7-7->{\"__messages\":null,\"__seq\":7,\"__entropy\":\"3749908817274402468\"}");
+      realDataService.assertLogAt(8, "PATCH:space/key:8-9->{\"__seq\":9,\"__entropy\":\"3155693776702036113\",\"x\":1,\"__clients\":{\"0\":null},\"__messages\":null}");
     } finally {
       service.shutdown();
     }

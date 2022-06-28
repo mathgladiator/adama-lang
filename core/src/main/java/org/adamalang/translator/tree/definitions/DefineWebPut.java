@@ -16,6 +16,8 @@ import org.adamalang.translator.tree.definitions.web.UriAction;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyNativeRef;
 
 import java.util.TreeMap;
 import java.util.function.Consumer;
@@ -29,6 +31,7 @@ public class DefineWebPut extends Definition implements UriAction {
   public final Token messageVariable;
   public final Token closeParen;
   public final Block code;
+  private TyType messageTypeFound;
 
   public DefineWebPut(Token webToken, Token postToken, Uri uri, Token openParen, Token messageType, Token messageVariable, Token closeParen, Block code) {
     this.webToken = webToken;
@@ -39,6 +42,7 @@ public class DefineWebPut extends Definition implements UriAction {
     this.messageVariable = messageVariable;
     this.closeParen = closeParen;
     this.code = code;
+    this.messageTypeFound = null;
     ingest(webToken);
     ingest(code);
   }
@@ -63,15 +67,21 @@ public class DefineWebPut extends Definition implements UriAction {
   public Environment next(Environment environment) {
     Environment env = environment.scopeAsWeb();
     uri.extendInto(env);
+    env.define(messageVariable.text, messageTypeFound, false, this);
     uri.typing(env);
     return env;
   }
 
   @Override
   public void typing(Environment environment) {
-    Environment env = next(environment);
-    if (code.typing(env) == ControlFlow.Open) {
-      environment.document.createError(this, String.format("The @web handlers must return a message"), "Web");
+    messageTypeFound = environment.rules.Resolve(new TyNativeRef(TypeBehavior.ReadWriteNative, null, messageType), false);
+    if (messageTypeFound != null) {
+      if (environment.rules.IsNativeMessage(messageTypeFound, false)) {
+        Environment env = next(environment);
+        if (code.typing(env) == ControlFlow.Open) {
+          environment.document.createError(this, String.format("The @web handlers must return a message"), "Web");
+        }
+      }
     }
   }
 }

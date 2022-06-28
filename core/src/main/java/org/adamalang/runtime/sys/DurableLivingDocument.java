@@ -25,9 +25,9 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.web.WebPutRaw;
+import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -333,17 +333,36 @@ public class DurableLivingDocument {
     };
     try {
       LivingDocumentChange last = null;
-      ArrayList<Callback<Integer>> callbacks = new ArrayList<>();
+
+      Runnable happy = () -> {
+        for (final IngestRequest request : requests) {
+          if (request.change != null) {
+            request.callback.success(request.change);
+          }
+        }
+        for (final LivingDocumentChange change : changes) {
+          change.complete();
+        }
+      };
+
+      Consumer<ErrorCodeException> sad = (ErrorCodeException ex) -> {
+        for (final IngestRequest request : requests) {
+          if (request.change != null) {
+            request.callback.failure(ex);
+          }
+        }
+      };
+
       boolean requestsCleanUp = false;
-      for (IngestRequest request : requests) {
+      for (final IngestRequest request : requests) {
         try {
           if (request.cleanupTest) {
             requestsCleanUp = true;
           }
           lastRequest = request;
-          last = document.__transact(request.request, currentFactory);
-          changes.add(last);
-          callbacks.add(request.callback);
+          request.change = document.__transact(request.request, currentFactory);
+          changes.add(request.change);
+          last = request.change;
         } catch (ErrorCodeException ex) {
           request.callback.failure(ex);
         }
@@ -358,9 +377,7 @@ public class DurableLivingDocument {
           @Override
           public void execute() throws Exception {
             inflightPatch = false;
-            for (Callback<Integer> callback : callbacks) {
-              callback.failure(ex2);
-            }
+            sad.accept(ex2);
             catastrophicFailureWhileInExecutor();
           }
         });
@@ -387,7 +404,6 @@ public class DurableLivingDocument {
         }
         trackingSeq = change.update.seqEnd;
       }
-      int seqToUse = last.update.seqEnd;
       size.addAndGet(patches.length);
       RemoteDocumentUpdate[] compactPatches = RemoteDocumentUpdate.compact(patches);
       base.service.patch(key, compactPatches, base.metrics.document_execute_patch.wrap(new Callback<>() {
@@ -396,12 +412,8 @@ public class DurableLivingDocument {
           base.executor.execute(new NamedRunnable("execute-now-patch-callback") {
             @Override
             public void execute() throws Exception {
-              for (Callback<Integer> callback : callbacks) {
-                callback.success(seqToUse);
-              }
-              for (LivingDocumentChange change : changes) {
-                change.complete();
-              }
+
+              happy.run();
               if (shouldCleanUp && document.__canRemoveFromMemory()) {
                 scheduleCleanup();
               }
@@ -434,7 +446,7 @@ public class DurableLivingDocument {
                       public void execute() throws Exception {
                         document.__insert(new JsonStreamReader(value.patch));
                         IngestRequest[] requestsAfterCatchUp = new IngestRequest[requests.length + 1];
-                        requestsAfterCatchUp[0] = new IngestRequest(NtClient.NO_ONE, forgeInvalidate(), Callback.DONT_CARE_INTEGER, false);
+                        requestsAfterCatchUp[0] = new IngestRequest(NtClient.NO_ONE, forgeInvalidate(), DONT_CARE_CHANGE, false);
                         for (int j = 0; j < requests.length; j++) {
                           requestsAfterCatchUp[j + 1] = requests[j];
                         }
@@ -517,7 +529,7 @@ public class DurableLivingDocument {
     }
   }
 
-  private void ingest(NtClient who, String requestJson, Callback<Integer> callback, boolean cleanupTest, boolean forceIntoQueue) {
+  private void ingest(NtClient who, String requestJson, Callback<LivingDocumentChange> callback, boolean cleanupTest, boolean forceIntoQueue) {
     IngestRequest request = new IngestRequest(who, requestJson, callback, cleanupTest);
     if (catastrophicFailureOccurred) {
       request.callback.failure(new ErrorCodeException(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION));
@@ -546,7 +558,7 @@ public class DurableLivingDocument {
   }
 
   public void invalidate(Callback<Integer> callback) {
-    ingest(NtClient.NO_ONE, forgeInvalidate(), base.metrics.document_invalidate.wrap(callback), false, true);
+    ingest(NtClient.NO_ONE, forgeInvalidate(), JUST_SEQ(base.metrics.document_invalidate.wrap(callback)), false, true);
   }
 
   public int getCodeCost() {
@@ -570,7 +582,7 @@ public class DurableLivingDocument {
     request.writeObjectFieldIntro("limit");
     request.writeLong(limit);
     request.endObject();
-    ingest(NtClient.NO_ONE, request.toString(), base.metrics.document_expire.wrap(callback), true, false);
+    ingest(NtClient.NO_ONE, request.toString(), JUST_SEQ(base.metrics.document_expire.wrap(callback)), true, false);
   }
 
   public void registerActivity() {
@@ -580,7 +592,7 @@ public class DurableLivingDocument {
   public void connect(final NtClient who, Callback<Integer> callback) {
     final var request = forge("connect", who);
     request.endObject();
-    ingest(who, request.toString(), base.metrics.document_connect.wrap(callback), false, false);
+    ingest(who, request.toString(), JUST_SEQ(base.metrics.document_connect.wrap(callback)), false, false);
   }
 
   public boolean isConnected(final NtClient who) {
@@ -616,7 +628,7 @@ public class DurableLivingDocument {
   public void disconnect(final NtClient who, Callback<Integer> callback) {
     final var request = forge("disconnect", who);
     request.endObject();
-    ingest(who, request.toString(), base.metrics.document_disconnect.wrap(callback), true, false);
+    ingest(who, request.toString(), JUST_SEQ(base.metrics.document_disconnect.wrap(callback)), true, false);
   }
 
   public void send(final CoreRequestContext context, final String marker, final String channel, final String message, Callback<Integer> callback) {
@@ -630,7 +642,7 @@ public class DurableLivingDocument {
     writer.writeObjectFieldIntro("message");
     writer.injectJson(message);
     writer.endObject();
-    ingest(context.who, writer.toString(), base.metrics.document_send.wrap(callback), false, false);
+    ingest(context.who, writer.toString(), JUST_SEQ(base.metrics.document_send.wrap(callback)), false, false);
   }
 
   public void apply(NtClient who, String patch, Callback<Integer> callback) {
@@ -638,7 +650,7 @@ public class DurableLivingDocument {
     writer.writeObjectFieldIntro("patch");
     writer.injectJson(patch);
     writer.endObject();
-    ingest(who, writer.toString(), base.metrics.document_apply.wrap(callback), false, false);
+    ingest(who, writer.toString(), JUST_SEQ(base.metrics.document_apply.wrap(callback)), false, false);
   }
 
   public boolean canAttach(NtClient who) {
@@ -651,7 +663,24 @@ public class DurableLivingDocument {
     writer.writeObjectFieldIntro("asset");
     writer.writeNtAsset(asset);
     writer.endObject();
-    ingest(who, writer.toString(), base.metrics.document_attach.wrap(callback), false, false);
+    ingest(who, writer.toString(), JUST_SEQ(base.metrics.document_attach.wrap(callback)), false, false);
+  }
+
+  public void webPut(NtClient who, WebPutRaw put, Callback<WebResponse> callback) {
+    final var writer = forge("web_put", who);
+    put.writeBody(writer);
+    writer.endObject();
+    ingest(who, writer.toString(), base.metrics.document_attach.wrap(new Callback<LivingDocumentChange>() {
+      @Override
+      public void success(LivingDocumentChange value) {
+        callback.success((WebResponse) value.response);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    }), false, false);
   }
 
   public String json() {
@@ -670,19 +699,45 @@ public class DurableLivingDocument {
     public final boolean cleanupTest;
     private final NtClient who;
     private final String request;
-    private final Callback<Integer> callback;
+    private final Callback<LivingDocumentChange> callback;
     private int attempts;
+    private LivingDocumentChange change;
 
-    private IngestRequest(NtClient who, String request, Callback<Integer> callback, boolean cleanup) {
+    private IngestRequest(NtClient who, String request, Callback<LivingDocumentChange> callback, boolean cleanup) {
       this.who = who;
       this.request = request;
       this.callback = callback;
       this.attempts = 0;
       this.cleanupTest = cleanup;
+      this.change = null;
     }
 
     public boolean tryAgain() {
       return attempts++ < 5;
     }
   }
+
+  private static Callback<LivingDocumentChange> JUST_SEQ(Callback<Integer> callback) {
+    return new Callback<LivingDocumentChange>() {
+      @Override
+      public void success(LivingDocumentChange value) {
+        callback.success(value.update.seqEnd);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    };
+  }
+
+  private static final Callback<LivingDocumentChange> DONT_CARE_CHANGE = new Callback<LivingDocumentChange>() {
+    @Override
+    public void success(LivingDocumentChange value) {
+    }
+
+    @Override
+    public void failure(ErrorCodeException ex) {
+    }
+  };
 }
