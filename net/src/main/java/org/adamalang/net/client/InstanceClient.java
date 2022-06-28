@@ -34,6 +34,8 @@ import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebPut;
+import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 
 import java.util.Arrays;
@@ -214,6 +216,16 @@ public class InstanceClient implements AutoCloseable {
     return success.get();
   }
 
+  private void commonWebReturn(ServerMessage.WebResponseNet payload, Callback<WebResponse> callback) {
+    WebResponse response = new WebResponse();
+    response.body = payload.body;
+    response.bodyContentType = payload.contentType;
+    if (payload.assetId != null) {
+      response.asset = new NtAsset(payload.assetId, payload.assetName, payload.contentType, payload.assetSize, payload.assetMD5, payload.assetSHA384);
+    }
+    callback.success(response);
+  }
+
   public void webGet(String space, String key, WebGet request, Callback<WebResponse> callback) {
     executor.execute(new NamedRunnable("execute-web-get") {
       @Override
@@ -224,13 +236,7 @@ public class InstanceClient implements AutoCloseable {
             client.open(new ServerCodec.StreamWeb() {
               @Override
               public void handle(ServerMessage.WebResponseNet payload) {
-                WebResponse response = new WebResponse();
-                response.body = payload.body;
-                response.bodyContentType = payload.contentType;
-                if (payload.assetId != null) {
-                  response.asset = new NtAsset(payload.assetId, payload.assetName, payload.contentType, payload.assetSize, payload.assetMD5, payload.assetSHA384);
-                }
-                callback.success(response);
+                commonWebReturn(payload, callback);
               }
 
               @Override
@@ -273,6 +279,61 @@ public class InstanceClient implements AutoCloseable {
       }
     });
   }
+
+  public void webPut(String space, String key, WebPut request, Callback<WebResponse> callback) {
+    executor.execute(new NamedRunnable("execute-web-put") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_WEBPUT_TIMEOUT, ErrorCodes.ADAMA_NET_WEBPUT_REJECTED, metrics.client_webput.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamWeb() {
+              @Override
+              public void handle(ServerMessage.WebResponseNet payload) {
+                commonWebReturn(payload, callback);
+              }
+
+              @Override
+              public void completed() {}
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new CallbackByteStreamWriter(callback) {
+              @Override
+              public void write(ByteStream stream) {
+                ByteBuf toWrite = stream.create(space.length() + key.length() + request.who.agent.length() + request.who.authority.length() + request.uri.length() + 40);
+                ClientMessage.WebPut webPut = new ClientMessage.WebPut();
+                webPut.agent = request.who.agent;
+                webPut.authority = request.who.authority;
+                webPut.uri = request.uri;
+                webPut.key = key;
+                webPut.space = space;
+                webPut.headers = new ClientMessage.Header[request.headers.size()];
+                int at = 0;
+                for (Map.Entry<String, String> header : request.headers.entries()) {
+                  webPut.headers[at] = new ClientMessage.Header();
+                  webPut.headers[at].key = header.getKey();
+                  webPut.headers[at].value = header.getValue();
+                }
+                webPut.parametersJson = request.parameters.json;
+                webPut.bodyJson = request.bodyJson;
+                ClientCodec.write(toWrite, webPut);
+                stream.next(toWrite);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
 
   /** create a document */
   public void create(String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callbackRaw) {

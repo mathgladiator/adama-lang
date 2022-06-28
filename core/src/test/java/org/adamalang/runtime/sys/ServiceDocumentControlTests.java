@@ -57,9 +57,9 @@ public class ServiceDocumentControlTests {
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":3}", streamback.get(1));
       LatchCallback cb1 = new LatchCallback();
       streamback.get().send("foo", null, "{}", cb1);
-      cb1.await_success(3);
+      cb1.await_success(4);
       latch2.run();
-      Assert.assertEquals("{\"data\":{\"x\":1000},\"seq\":3}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":1000},\"seq\":4}", streamback.get(2));
       streamback.get().disconnect();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
@@ -105,10 +105,10 @@ public class ServiceDocumentControlTests {
       dataService.unpause();
       cb1.await_success(4);
       cb2.await_failure(159869);
-      cb3.await_success(4);
+      cb3.await_success(5);
       latch2.run();
       Assert.assertEquals("{\"data\":{\"x\":43},\"seq\":4}", streamback.get(2));
-      Assert.assertEquals("{\"data\":{\"x\":1000},\"seq\":4}", streamback.get(3));
+      Assert.assertEquals("{\"data\":{\"x\":1000},\"seq\":5}", streamback.get(3));
       streamback.get().disconnect();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(4));

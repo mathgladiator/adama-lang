@@ -134,6 +134,11 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
+  public void handle(ClientMessage.WebPut payload) {
+    real.failure(new ErrorCodeException(-1000));
+  }
+
+  @Override
   public void handle(ClientMessage.ProxyClose payload) {
     real.failure(new ErrorCodeException(-1000));
   }

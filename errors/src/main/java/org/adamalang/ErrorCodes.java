@@ -449,6 +449,7 @@ public class ErrorCodes {
   public static final int ADAMA_NET_CREATE_TIMEOUT = 720955;
   public static final int ADAMA_NET_CREATE_FOUND_REGION_RATHER_THAN_MACHINE = 717952;
   public static final int ADAMA_NET_WEBGET_FOUND_REGION_RATHER_THAN_MACHINE = 797824;
+  public static final int ADAMA_NET_WEBPUT_FOUND_REGION_RATHER_THAN_MACHINE = 703539;
   public static final int ADAMA_NET_CREATE_REJECTED = 737336;
   public static final int ADAMA_NET_CLOSE_TIMEOUT = 788543;
   public static final int ADAMA_NET_CLOSE_REJECTED = 796735;
@@ -460,6 +461,8 @@ public class ErrorCodes {
   public static final int ADAMA_NET_CONNECT_DOCUMENT_REJECTED = 702524;
   public static final int ADAMA_NET_WEBGET_TIMEOUT = 783411;
   public static final int ADAMA_NET_WEBGET_REJECTED = 724019;
+  public static final int ADAMA_NET_WEBPUT_TIMEOUT = 792631;
+  public static final int ADAMA_NET_WEBPUT_REJECTED = 732208;
 
   @RetryInternally
   public static final int ADAMA_NET_CONNECTION_DONE = 769085;
@@ -468,10 +471,6 @@ public class ErrorCodes {
   public static final int ADAMA_NET_FAILED_FINDING_SUBID = 797755;
 
   // TODO: nuke prior WAL implementation
-  public static final int CARAVAN_DISK_LOGGER_SHUTDOWN = 703539;
-  public static final int CARAVAN_DISK_LOGGER_IOEXCEPTION = 792631;
-  public static final int CARAVAN_DISK_COMPUTE_METHOD_NOT_FOUND = 732208;
-
   public static final int CARAVAN_KEY_NOT_LOADED_PATCH = 707675;
   public static final int CARAVAN_KEY_NOT_LOADED_COMPUTE = 790622;
   public static final int CARAVAN_KEY_NOT_LOADED_SNAPSHOT = 790623;

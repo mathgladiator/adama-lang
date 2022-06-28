@@ -1028,6 +1028,7 @@ public abstract class LivingDocument implements RxParent {
   /** transaction: apply a data patch to the document */
   private LivingDocumentChange __transaction_apply_patch(final String request, final NtClient who, String patch) {
     __patch(new JsonStreamReader(patch));
+    __seq.bumpUpPre();
     return __simple_commit(who, request, null);
   }
 

@@ -322,4 +322,25 @@ public class ClientMessage {
     @FieldOrder(7)
     public String parametersJson;
   }
+
+  @TypeId(1723)
+  @Flow("Server")
+  public static class WebPut {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+    @FieldOrder(3)
+    public String agent;
+    @FieldOrder(4)
+    public String authority;
+    @FieldOrder(5)
+    public String uri;
+    @FieldOrder(6)
+    public Header[] headers;
+    @FieldOrder(7)
+    public String parametersJson;
+    @FieldOrder(8)
+    public String bodyJson;
+  }
 }

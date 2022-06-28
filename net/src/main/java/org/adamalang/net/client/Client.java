@@ -22,6 +22,8 @@ import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.client.sm.ConnectionBase;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebPut;
+import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 
 import java.util.*;
@@ -198,6 +200,38 @@ public class Client {
           @Override
           public void success(InstanceClient client) {
             client.webGet(space, key, request, callback);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
+  public void webPut(String space, String key, WebPut request, Callback<WebResponse> callback) {
+    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_webput_found_machine.start();
+    router.routerForDocuments.get(new Key(space, key), new RoutingSubscriber() {
+      @Override
+      public void onRegion(String region) {
+        mInstance.failure(ErrorCodes.ADAMA_NET_WEBPUT_FOUND_REGION_RATHER_THAN_MACHINE);
+        callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_WEBPUT_FOUND_REGION_RATHER_THAN_MACHINE));
+      }
+
+      @Override
+      public void onMachine(String machine) {
+        mInstance.success();
+        clientFinder.find(machine,  new Callback<InstanceClient>() {
+          @Override
+          public void success(InstanceClient client) {
+            client.webPut(space, key, request, callback);
           }
 
           @Override

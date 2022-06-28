@@ -32,6 +32,8 @@ import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebPut;
+import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 
 import java.util.ArrayList;
@@ -173,6 +175,43 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     nexus.service.dataService.compute(key, ComputeMethod.fromType(payload.method), payload.seq, respondViaLocalDataChange());
   }
 
+  private void commonWebHandle(WebResponse value) {
+    ServerMessage.WebResponseNet response = new ServerMessage.WebResponseNet();
+    response.body = value.body;
+    response.contentType = value.bodyContentType;
+    if (value.asset != null) {
+      response.assetId = value.asset.id;
+      response.assetName = value.asset.name;
+      response.assetMD5 = value.asset.md5;
+      response.assetSHA384 = value.asset.sha384;
+      response.assetSize = value.asset.size;
+    }
+    ByteBuf buf = upstream.create(1024);
+    ServerCodec.write(buf, response);
+    upstream.next(buf);
+    upstream.completed();
+  }
+
+  @Override
+  public void handle(ClientMessage.WebPut payload) {
+    Key key = new Key(payload.space, payload.key);
+    TreeMap<String, String> headers = new TreeMap<>();
+    for (ClientMessage.Header header : payload.headers) {
+      headers.put(header.key, header.value);
+    }
+    nexus.service.webPut(new NtClient(payload.agent, payload.authority), key, new WebPutRaw(payload.uri, headers, new NtDynamic(payload.parametersJson), payload.bodyJson), new Callback<>() {
+      @Override
+      public void success(WebResponse value) {
+        commonWebHandle(value);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
+  }
+
   @Override
   public void handle(ClientMessage.WebGet payload) {
     Key key = new Key(payload.space, payload.key);
@@ -184,20 +223,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     nexus.service.webGet(key, get, new Callback<>() {
       @Override
       public void success(WebResponse value) {
-        ServerMessage.WebResponseNet response = new ServerMessage.WebResponseNet();
-        response.body = value.body;
-        response.contentType = value.bodyContentType;
-        if (value.asset != null) {
-          response.assetId = value.asset.id;
-          response.assetName = value.asset.name;
-          response.assetMD5 = value.asset.md5;
-          response.assetSHA384 = value.asset.sha384;
-          response.assetSize = value.asset.size;
-        }
-        ByteBuf buf = upstream.create(1024);
-        ServerCodec.write(buf, response);
-        upstream.next(buf);
-        upstream.completed();
+        commonWebHandle(value);
       }
 
       @Override

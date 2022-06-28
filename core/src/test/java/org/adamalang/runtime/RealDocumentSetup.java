@@ -114,6 +114,7 @@ public class RealDocumentSetup {
 
     @Override
     public void success(Integer actual) {
+      System.err.println("exp:" + expected + "/" + actual);
       Assert.assertEquals(expected, (int) actual);
     }
 
