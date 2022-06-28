@@ -30,6 +30,7 @@ import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
 import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
@@ -498,6 +499,9 @@ public abstract class LivingDocument implements RxParent {
 
   /** code generated: respond to a get request */
   public abstract WebResponse __get(WebGet __get);
+
+  /** code generated: respond to a put request */
+  protected abstract WebResponse __put_internal(WebPut __get);
 
   public boolean __isConnected(final NtClient __who) {
     return __clients.containsKey(__who);

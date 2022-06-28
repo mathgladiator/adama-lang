@@ -466,6 +466,10 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __put_internal(WebPut __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
     gold.append("\n  private void __step_z() {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
@@ -991,6 +995,10 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public WebResponse __get(WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __put_internal(WebPut __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  private void __step_next() {");
@@ -1606,6 +1614,10 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public WebResponse __get(WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __put_internal(WebPut __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");

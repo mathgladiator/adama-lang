@@ -23,6 +23,7 @@ import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
 
 import java.util.ArrayList;
@@ -69,6 +70,11 @@ public class MockLivingDocument extends LivingDocument {
 
   @Override
   public WebResponse __get(WebGet __get) {
+    return null;
+  }
+
+  @Override
+  protected WebResponse __put_internal(WebPut __get) {
     return null;
   }
 

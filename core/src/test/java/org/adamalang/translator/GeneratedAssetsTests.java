@@ -485,6 +485,10 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __put_internal(WebPut __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public boolean __onCanAssetAttached__0(NtClient __who) {");
     gold.append("\n    __code_cost += 2;");
@@ -1066,6 +1070,10 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public WebResponse __get(WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __put_internal(WebPut __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");

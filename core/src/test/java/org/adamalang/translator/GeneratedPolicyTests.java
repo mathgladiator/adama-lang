@@ -429,6 +429,10 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __put_internal(WebPut __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate__0(StaticState __static_state, NtClient __who, CoreRequestContext context) {");
     gold.append("\n    return (context.ip).equals(\"127.0.0.1\") && (context.origin).equals(\"internal://\") || (context.who).equals(__who);");
@@ -943,6 +947,10 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public WebResponse __get(WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __put_internal(WebPut __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");

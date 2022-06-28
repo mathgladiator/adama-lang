@@ -928,6 +928,10 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __put_internal(WebPut __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public boolean __onConnected__0(NtClient __who) {");
     gold.append("\n    __code_cost += 2;");
