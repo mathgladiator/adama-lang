@@ -9,6 +9,8 @@
  */
 package org.adamalang.web.service;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -20,11 +22,14 @@ import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.Json;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
@@ -181,20 +186,26 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         afterHttpResult(null, ctx, req);
       }
     };
-    TreeMap<String, String> headers = new TreeMap<>();
-    // TODO: parse the URI into parameters?
-    // TODO: copy the headers into the headers (which are needed by clients per a deny list)
-    String uri = req.uri();
-    String parameters = "{}";
+
+    final WebToAdama wta;
+    try {
+      wta = new WebToAdama(req);
+    } catch (Exception ex) {
+      // TODO: LOG THIS and RESPOND WITH better error message
+      byte[] content = new byte[0];
+      final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.BAD_REQUEST, Unpooled.wrappedBuffer(content));
+      HttpUtil.setContentLength(res, content.length);
+      res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
+      sendWithKeepAlive(webConfig, ctx, req, res);
+      return;
+    }
+
     if (req.method() == HttpMethod.POST || req.method() == HttpMethod.PUT) {
-      // TODO: detect the type and ensure the body is JSON
       metrics.webhandler_post.run();
-      byte[] memory = new byte[req.content().readableBytes()];
-      req.content().readBytes(memory);
-      httpHandler.handlePost(uri, headers, parameters, new String(memory, StandardCharsets.UTF_8), callback);
+      httpHandler.handlePost(wta.uri, wta.headers, wta.parameters, wta.body, callback);
     } else {
       metrics.webhandler_get.run();
-      httpHandler.handleGet(uri, headers, parameters, callback);
+      httpHandler.handleGet(wta.uri, wta.headers, wta.parameters, callback);
     }
   }
 

@@ -160,10 +160,10 @@ public class WebHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
           .server("localhost", webConfig.port)
-          .post("/body", "BODY")
+          .post("/body", "{\"x\":{}}")
           .execute(callback);
         callback.awaitFirst();
-        callback.assertData("body:BODY");
+        callback.assertData("body:{\"x\":{}}");
       }
 
       {
