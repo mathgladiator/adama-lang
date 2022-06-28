@@ -259,9 +259,9 @@ public class InstanceClient implements AutoCloseable {
                   webGet.headers[at] = new ClientMessage.Header();
                   webGet.headers[at].key = header.getKey();
                   webGet.headers[at].value = header.getValue();
+                  at++;
                 }
                 webGet.parametersJson = request.parameters.json;
-
                 ClientCodec.write(toWrite, webGet);
                 stream.next(toWrite);
               }
@@ -313,6 +313,7 @@ public class InstanceClient implements AutoCloseable {
                   webPut.headers[at] = new ClientMessage.Header();
                   webPut.headers[at].key = header.getKey();
                   webPut.headers[at].value = header.getValue();
+                  at++;
                 }
                 webPut.parametersJson = request.parameters.json;
                 webPut.bodyJson = request.bodyJson;

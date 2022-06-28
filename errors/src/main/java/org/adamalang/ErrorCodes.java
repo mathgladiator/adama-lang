@@ -57,7 +57,7 @@ public class ErrorCodes {
   public static final int SERVICE_DOCUMENT_ALREADY_CREATED = 130092;
 
   @User
-  @Description("The document was rejected because the @static { create(who) {...} } policy returned false. Either your are not allowed to create the document, or the create() call doesn't exist or is buggy.")
+  @Description("The document was rejected because the @static { create {...} } policy returned false. Either your are not allowed to create the document, or the create() call doesn't exist or is buggy.")
   public static final int SERVICE_DOCUMENT_REJECTED_CREATION = 134259;
 
   public static final int DOCUMENT_SELF_DESTRUCT_SUCCESSFUL = 134195;

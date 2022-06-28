@@ -68,7 +68,6 @@ public class WebToAdama {
         this.body = "{}";
       } else {
         // TODO: DETECT application/x-www-form-urlencoded
-
         // Otherwise, the body is JSON
         this.body = Json.parseJsonObject(new String(memory, StandardCharsets.UTF_8)).toString();
       }

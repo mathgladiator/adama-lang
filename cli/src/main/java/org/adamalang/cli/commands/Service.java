@@ -460,7 +460,6 @@ public class Service {
         } else {
           callback.success(null);
         }
-
       }
     };
 

@@ -9,8 +9,6 @@
  */
 package org.adamalang.web.service;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -21,19 +19,16 @@ import io.netty.handler.codec.http.cookie.DefaultCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.Json;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
-  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(WebHandler.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WebHandler.class);
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final HttpHandler httpHandler;
@@ -182,8 +177,11 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
       @Override
       public void failure(ErrorCodeException ex) {
-        // TODO: DO SOME LOGGER, ADD THE ERROR CODE to the HEADER
-        afterHttpResult(null, ctx, req);
+        LOG.error("failed-handler: {}", ex);
+        ctx.executor().execute(() -> {
+          // this is a giant mess at the moment, fall back
+          afterHttpResult(null, ctx, req);
+        });
       }
     };
 
@@ -191,7 +189,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     try {
       wta = new WebToAdama(req);
     } catch (Exception ex) {
-      // TODO: LOG THIS and RESPOND WITH better error message
+      LOG.error("failure-to-build-wta:{}", ex);
       byte[] content = new byte[0];
       final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.BAD_REQUEST, Unpooled.wrappedBuffer(content));
       HttpUtil.setContentLength(res, content.length);

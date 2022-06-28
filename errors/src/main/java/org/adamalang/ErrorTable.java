@@ -108,7 +108,7 @@ public class ErrorTable {
     descriptions.put(130092, "The document is already created, so please try connecting instead. This happens when two create calls are executed");
     userspace.add(130092);
     names.put(134259, "SERVICE_DOCUMENT_REJECTED_CREATION");
-    descriptions.put(134259, "The document was rejected because the @static { create(who) {...} } policy returned false. Either your are not allowed to create the document, or the create() call doesn't exist or is buggy.");
+    descriptions.put(134259, "The document was rejected because the @static { create {...} } policy returned false. Either your are not allowed to create the document, or the create() call doesn't exist or is buggy.");
     userspace.add(134259);
     names.put(134195, "DOCUMENT_SELF_DESTRUCT_SUCCESSFUL");
     descriptions.put(134195, "no description of error (yet)");
