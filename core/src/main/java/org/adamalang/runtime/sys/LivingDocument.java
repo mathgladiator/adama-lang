@@ -321,8 +321,13 @@ public abstract class LivingDocument implements RxParent {
       return false;
     }
 
-    // we have a state to execute, so keep it alive
-    return !__state.has();
+    // if we have a running state (i.e. asking for input or a temporal time transition)
+    if (__state.has()) {
+      // if blocked by user input, then let allow expire if blocked for too long
+      return __blocked.get();
+    }
+
+    return true;
   }
 
   /** get a list of clients to disconnect due to not actually being connected */
