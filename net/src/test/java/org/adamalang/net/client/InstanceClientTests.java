@@ -249,7 +249,7 @@ public class InstanceClientTests {
         Assert.assertTrue(canAttachLatch.await(2000, TimeUnit.MILLISECONDS));
         events.assertWrite(0, "CONNECTED");
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
-        events.assertWrite(2, "DELTA:{\"data\":{\"x\":124},\"seq\":6}");
+        events.assertWrite(2, "DELTA:{\"data\":{\"x\":124},\"seq\":5}");
         events.assertWrite(3, "DISCONNECTED");
       }
     }
