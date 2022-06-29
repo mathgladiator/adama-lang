@@ -100,7 +100,7 @@ public class Machine {
         pendingWrites -= writesInFlight;
         writesInFlight = 0;
         if (pendingWrites > 0) {
-          scheduleArchiveWhileInExecutor((attemptClose || closed) ? true : false);
+          scheduleArchiveWhileInExecutor(false);
         } else if (attemptClose) {
           executeClosed();
         }
