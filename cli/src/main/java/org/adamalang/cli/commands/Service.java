@@ -245,6 +245,7 @@ public class Service {
 
       }
     };
+    // TODO: clean this up, this ... kind of sucks
     Consumer<String> scanForDeployments = (space) -> {
       try {
         if ("*".equals(space)) {
@@ -255,7 +256,11 @@ public class Service {
               }));
               service.deploy(deploymentMonitor);
             } catch (Exception ex) {
-              LOGGER.error("failed-scan-" + deployment.space, ex);
+              if (ex instanceof ErrorCodeException) {
+                LOGGER.error("failed-scan-" + space + ":" + ((ErrorCodeException) ex).code);
+              } else {
+                LOGGER.error("failed-scan-" + space, ex);
+              }
             }
           }
         } else {
@@ -442,9 +447,9 @@ public class Service {
 
       @Override
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
-        callback.success(null);
         SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
         if (skr != null) {
+          // TODO: need a way to get an NtClient token
           WebPut put = new WebPut(NtClient.NO_ONE, new WebPutRaw(skr.uri, headers, new NtDynamic(parametersJson), body));
           client.webPut(skr.space, skr.key, put, new Callback<>() {
             @Override
