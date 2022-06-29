@@ -80,7 +80,7 @@ public class Machine {
           public void execute() throws Exception {
             executeClosed();
           }
-        }, base.reportFreeFailureGetRetryBackoff()); // TODO: retry policy
+        }, base.reportFreeFailureGetRetryBackoff());
       }
     });
   }
@@ -97,7 +97,7 @@ public class Machine {
         pendingWrites -= writesInFlight;
         writesInFlight = 0;
         if (pendingWrites > 0) {
-          scheduleArchiveWhileInExecutor();
+          scheduleArchiveWhileInExecutor(false);
         } else if (closed) {
           executeClosed();
         }
@@ -110,7 +110,7 @@ public class Machine {
       @Override
       public void execute() throws Exception {
         cancelArchive = null;
-        scheduleArchiveWhileInExecutor();
+        scheduleArchiveWhileInExecutor(true);
       }
     });
   }
@@ -139,7 +139,7 @@ public class Machine {
     });
   }
 
-  private void scheduleArchiveWhileInExecutor() {
+  private void scheduleArchiveWhileInExecutor(boolean dueToFailure) {
     if (cancelArchive == null) {
       writesInFlight = pendingWrites;
       cancelArchive = base.executor.schedule(new NamedRunnable("machine-archive") {
@@ -147,7 +147,7 @@ public class Machine {
         public void execute() throws Exception {
           archiveWhileInExecutor();
         }
-      }, base.archiveTimeMilliseconds);
+      }, dueToFailure ? base.reportFreeFailureGetRetryBackoff() : base.archiveTimeMilliseconds);
     }
   }
 
@@ -173,7 +173,7 @@ public class Machine {
             action.action.run();
           }
           if (pendingWrites > 0) {
-            scheduleArchiveWhileInExecutor();
+            scheduleArchiveWhileInExecutor(false);
           }
         } else {
           failQueueWhileInExecutor(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_WRONG_MACHINE));
@@ -264,7 +264,7 @@ public class Machine {
         return;
       case OnMachine:
         action.action.run();
-        scheduleArchiveWhileInExecutor();
+        scheduleArchiveWhileInExecutor(false);
         return;
     }
   }

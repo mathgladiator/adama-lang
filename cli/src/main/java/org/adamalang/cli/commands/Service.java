@@ -170,7 +170,7 @@ public class Service {
     DurableListStore store = new DurableListStore(new DurableListStoreMetrics(metricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
     Finder finder = new Finder(dataBase);
     CaravanDataService caravanDataService = new CaravanDataService(s3, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
-    Base managedBase = new Base(finder, caravanDataService, region, identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
+    Base managedBase = new Base(finder, caravanDataService, region, identity.ip + ":" + port, managedExecutor, 2 * 60 * 1000);
     ManagedDataService dataService = new ManagedDataService(managedBase);
     AtomicBoolean alive = new AtomicBoolean(true);
     Thread flusher = new Thread(new Runnable() {

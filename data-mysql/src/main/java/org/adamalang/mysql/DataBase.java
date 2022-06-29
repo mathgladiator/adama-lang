@@ -16,12 +16,15 @@ import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.mysql.contracts.SQLConsumer;
 import org.adamalang.mysql.contracts.SQLTransact;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
 
 /** the connection pool and helpers for interacting with MySQL */
 public class DataBase implements AutoCloseable {
+  private static Logger LOG = LoggerFactory.getLogger(DataBase.class);
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(DataBase.class);
   public final ComboPooledDataSource pool;
   public final String databaseName;
@@ -75,27 +78,47 @@ public class DataBase implements AutoCloseable {
   }
 
   public <R> void transact(SQLTransact<R> transaction, Callback<R> callback, int failureReason) {
-    RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.transaction.start();
-    try {
-      Connection connection = pool.getConnection();
-      boolean commit = false;
+    int backoff = (int) (25 + Math.random() * 25);
+    while(true) {
+      RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.transaction.start();
       try {
-        connection.setAutoCommit(false);
-        R result = transaction.execute(connection);
-        commit = true;
-        connection.commit();
-        callback.success(result);
-        instance.success();
-      } finally {
-        if (!commit) {
-          connection.rollback();
+        Connection connection = pool.getConnection();
+        boolean commit = false;
+        try {
+          connection.setAutoCommit(false);
+          R result = transaction.execute(connection);
+          commit = true;
+          connection.commit();
+          callback.success(result);
+          instance.success();
+          return;
+        } finally {
+          if (!commit) {
+            connection.rollback();
+          }
+          connection.close();
         }
-        connection.close();
+      } catch (Throwable ex) {
+        LOG.error("database-exception", ex);
+        if (ex instanceof ErrorCodeException) {
+          callback.failure((ErrorCodeException) ex);
+          instance.failure(((ErrorCodeException) ex).code);
+          return;
+        }
+        boolean validException = ex instanceof java.sql.SQLIntegrityConstraintViolationException;
+        if (backoff < 500 && !validException) {
+          try {
+            Thread.sleep(backoff);
+            backoff += (int) (Math.random() * backoff);
+          } catch (InterruptedException ie) {
+          }
+        } else {
+          ErrorCodeException ece = ErrorCodeException.detectOrWrap(failureReason, ex, LOGGER);
+          callback.failure(ece);
+          instance.failure(ece.code);
+          return;
+        }
       }
-    } catch (Throwable ex) {
-      ErrorCodeException ece = ErrorCodeException.detectOrWrap(failureReason, ex, LOGGER);
-      callback.failure(ece);
-      instance.failure(ece.code);
     }
   }
 }
