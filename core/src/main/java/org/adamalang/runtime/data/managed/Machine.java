@@ -29,6 +29,7 @@ public class Machine {
   private Runnable cancelArchive;
   private int writesInFlight;
   private String lastArchiveKey;
+  private boolean attemptClose;
 
   public Machine(Key key, Base base) {
     this.key = key;
@@ -40,6 +41,7 @@ public class Machine {
     this.cancelArchive = null;
     this.writesInFlight = 0;
     this.lastArchiveKey = null;
+    this.attemptClose = false;
   }
 
   private void queue(Action action) {
@@ -60,10 +62,11 @@ public class Machine {
   }
 
   private void executeClosed() {
+    closed = true;
     base.finder.free(key, base.target, new Callback<Void>() {
       @Override
       public void success(Void value) {
-        base.reportFreeSuccess();
+        base.reportSuccess();
         base.executor.execute(new NamedRunnable("machine-archive-freed") {
           @Override
           public void execute() throws Exception {
@@ -80,7 +83,7 @@ public class Machine {
           public void execute() throws Exception {
             executeClosed();
           }
-        }, base.reportFreeFailureGetRetryBackoff());
+        }, base.reportFailureGetRetryBackoff());
       }
     });
   }
@@ -97,8 +100,8 @@ public class Machine {
         pendingWrites -= writesInFlight;
         writesInFlight = 0;
         if (pendingWrites > 0) {
-          scheduleArchiveWhileInExecutor(false);
-        } else if (closed) {
+          scheduleArchiveWhileInExecutor((attemptClose || closed) ? true : false);
+        } else if (attemptClose) {
           executeClosed();
         }
       }
@@ -147,7 +150,7 @@ public class Machine {
         public void execute() throws Exception {
           archiveWhileInExecutor();
         }
-      }, dueToFailure ? base.reportFreeFailureGetRetryBackoff() : base.archiveTimeMilliseconds);
+      }, dueToFailure ? base.reportFailureGetRetryBackoff() : base.archiveTimeMilliseconds);
     }
   }
 
@@ -155,7 +158,7 @@ public class Machine {
     base.executor.execute(new NamedRunnable("machine-found-machine") {
       @Override
       public void execute() throws Exception {
-        if (closed) {
+        if (closed || attemptClose) {
           state = State.Unknown;
           base.documents.remove(key);
           failQueueWhileInExecutor(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_CLOSED_BEFORE_FOUND));
@@ -198,7 +201,6 @@ public class Machine {
       @Override
       public void execute() throws Exception {
         state = State.Restoring;
-        lastArchiveKey = archiveKey;
         base.data.restore(key, archiveKey, new Callback<Void>() {
           @Override
           public void success(Void value) {
@@ -229,11 +231,18 @@ public class Machine {
     base.finder.find(key, new Callback<>() {
       @Override
       public void success(FinderService.Result found) {
-        if (found.location == FinderService.Location.Machine) {
-          find_FoundMachine(found.machine, false);
-        } else {
-          find_Restore(found.archiveKey);
-        }
+        base.executor.execute(new NamedRunnable("got-find-result") {
+          @Override
+          public void execute() throws Exception {
+            lastArchiveKey = found.archiveKey;
+            if (found.location == FinderService.Location.Machine) {
+              find_FoundMachine(found.machine, false);
+            } else {
+              find_Restore(found.archiveKey);
+            }
+          }
+        });
+
       }
 
       @Override
@@ -253,6 +262,9 @@ public class Machine {
     if (closed) {
       action.callback.failure(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_WRITE_FAILED_CLOSED));
       return;
+    }
+    if (attemptClose) {
+      attemptClose = false;
     }
     pendingWrites++;
     switch (state) {
@@ -274,6 +286,9 @@ public class Machine {
       action.callback.failure(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_READ_FAILED_CLOSED));
       return;
     }
+    if (attemptClose) {
+      attemptClose = false;
+    }
     switch (state) {
       case Unknown:
         find();
@@ -288,7 +303,7 @@ public class Machine {
   }
 
   public void close() {
-    closed = true;
+    attemptClose = true;
     if (state == State.OnMachine && pendingWrites == 0) {
       executeClosed();
     }

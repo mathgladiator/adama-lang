@@ -39,7 +39,7 @@ public class WebToAdama {
     }
 
     QueryStringDecoder qsd = new QueryStringDecoder(req.uri());
-    this.uri = qsd.uri();
+    this.uri = qsd.path();
     {
       ObjectNode parametersJson = Json.newJsonObject();
       for (Map.Entry<String, List<String>> param : qsd.parameters().entrySet()) {
@@ -63,16 +63,37 @@ public class WebToAdama {
     if (req.method() == HttpMethod.POST || req.method() == HttpMethod.PUT) {
       byte[] memory = new byte[req.content().readableBytes()];
       req.content().readBytes(memory);
-
       if (memory.length == 0) {
         this.body = "{}";
       } else {
-        // TODO: DETECT application/x-www-form-urlencoded
-        // Otherwise, the body is JSON
-        this.body = Json.parseJsonObject(new String(memory, StandardCharsets.UTF_8)).toString();
+        String bodyString = new String(memory, StandardCharsets.UTF_8);
+        String bodyTest = detectBodyAsQueryString(bodyString);
+        if (bodyTest != null) {
+          this.body = bodyTest;
+        } else {
+          this.body = Json.parseJsonObject(bodyString).toString();
+        }
       }
     } else {
       this.body = null;
+    }
+  }
+
+  public static String detectBodyAsQueryString(String body) {
+    try {
+      if (body.startsWith("{") || body.startsWith("[")) {
+        return null;
+      }
+      QueryStringDecoder test = new QueryStringDecoder("/?" + body);
+      ObjectNode bodyJson = Json.newJsonObject();
+      for (Map.Entry<String, List<String>> param : test.parameters().entrySet()) {
+        if (param.getValue().size() == 1) {
+          bodyJson.put(param.getKey(), param.getValue().get(0));
+        }
+      }
+      return bodyJson.toString();
+    } catch (Exception ex) {
+      return null;
     }
   }
 }

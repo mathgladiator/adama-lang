@@ -28,7 +28,7 @@ public class Base {
   public final HashMap<Key, Machine> documents;
   public final SimpleExecutor executor;
   public final int archiveTimeMilliseconds;
-  private final AtomicInteger freeFailureBackoff;
+  private final AtomicInteger failureBackoff;
 
   public Base(FinderService finder, ArchivingDataService data, String region, String target, SimpleExecutor executor, int archiveTimeMilliseconds) {
     this.finder = finder;
@@ -38,7 +38,7 @@ public class Base {
     this.documents = new HashMap<>();
     this.executor = executor;
     this.archiveTimeMilliseconds = archiveTimeMilliseconds;
-    this.freeFailureBackoff = new AtomicInteger(1);
+    this.failureBackoff = new AtomicInteger(1);
   }
 
   /** jump into a state machine for a given key */
@@ -56,13 +56,13 @@ public class Base {
     });
   }
 
-  public void reportFreeSuccess() {
-    this.freeFailureBackoff.set(Math.max(1, (int) (freeFailureBackoff.get() * Math.random())));
+  public void reportSuccess() {
+    this.failureBackoff.set(Math.max(1, (int) (failureBackoff.get() * Math.random())));
   }
 
-  public int reportFreeFailureGetRetryBackoff() {
-    int prior = freeFailureBackoff.get();
-    this.freeFailureBackoff.set(Math.min(5000, (int) (prior * (1.0 + Math.random()))) + 1);
+  public int reportFailureGetRetryBackoff() {
+    int prior = failureBackoff.get();
+    this.failureBackoff.set(Math.min(5000, (int) (prior * (1.0 + Math.random()))) + 1);
     return prior;
   }
 

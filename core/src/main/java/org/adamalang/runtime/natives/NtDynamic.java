@@ -9,13 +9,25 @@
  */
 package org.adamalang.runtime.natives;
 
+import org.adamalang.runtime.json.JsonStreamReader;
+
 /** a native data type to hide and hold an entire json tree */
 public class NtDynamic implements Comparable<NtDynamic> {
   public static final NtDynamic NULL = new NtDynamic("null");
   public final String json;
+  private Object cached;
 
   public NtDynamic(String json) {
     this.json = json;
+    this.cached = null;
+  }
+
+  public Object cached() {
+    if (cached != null) {
+      return cached;
+    }
+    cached = new JsonStreamReader(json).readJavaTree();
+    return cached;
   }
 
   @Override

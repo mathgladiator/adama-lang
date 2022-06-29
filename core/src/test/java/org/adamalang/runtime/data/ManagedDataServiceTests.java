@@ -148,17 +148,6 @@ public class ManagedDataServiceTests {
         setup.managed.close(KEY1, cb_Close);
         cb_Close.assertSuccess();
       }
-      {
-        SimpleVoidCallback cb_Patch = new SimpleVoidCallback();
-        setup.managed.patch(KEY1, new RemoteDocumentUpdate[] { UPDATE_3 }, cb_Patch);
-        cb_Patch.assertFailure(734320);
-      }
-      {
-        SimpleDataCallback cb_Get = new SimpleDataCallback();
-        setup.managed.compute(KEY1, ComputeMethod.Rewind, 1, cb_Get);
-        cb_Get.assertFailure(768112);
-      }
-
       firstArchive.run();
       setup.archive.driveBackup();
       secondArchive.run();

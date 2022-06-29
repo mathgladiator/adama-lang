@@ -9,10 +9,7 @@
  */
 package org.adamalang.translator.env;
 
-import org.adamalang.runtime.stdlib.LibClient;
-import org.adamalang.runtime.stdlib.LibMath;
-import org.adamalang.runtime.stdlib.LibStatistics;
-import org.adamalang.runtime.stdlib.LibString;
+import org.adamalang.runtime.stdlib.*;
 import org.adamalang.translator.reflect.GlobalFactory;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -42,6 +39,7 @@ public class GlobalObjectPool {
     pool.add(mathlib);
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Client", LibClient.class, pool.extensions));
+    pool.add(GlobalFactory.makeGlobal("Dynamic", LibDynamic.class, pool.extensions));
     final var document = new TyNativeGlobalObject("Document", null, false);
     document.functions.put("destroy", generateInternalDocumentFunction("__destroyDocument", new TyNativeVoid()));
     document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeVoid()));
