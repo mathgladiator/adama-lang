@@ -36,7 +36,12 @@ public abstract class NamedRunnable implements Runnable {
     try {
       execute();
     } catch (Exception ex) {
-      LOGGER.error(name, ex);
+      boolean noise = ex instanceof java.util.concurrent.RejectedExecutionException;
+      if (noise) {
+        LOGGER.error("noise:" + name + ex.getMessage());
+      } else {
+        LOGGER.error(name, ex);
+      }
     }
   }
 

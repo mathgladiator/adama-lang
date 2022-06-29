@@ -50,15 +50,25 @@ public class MachineTests {
       }
     };
 
+    Callback<Void> debug = new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        ex.printStackTrace();
+      }
+    };
+
     BaseTests.flow((base) -> {
       base.on(KEY, (machine) -> {
-        machine.write(new Action(() -> archive.initialize(KEY, update(1, "{\"x\":1}", "{\"x\":0}"), Callback.DONT_CARE_VOID), Callback.DONT_CARE_VOID));
-        machine.write(new Action(() -> archive.patch(KEY, new RemoteDocumentUpdate[] { update(2, "{\"x\":2}", "{\"x\":1}") }, Callback.DONT_CARE_VOID), Callback.DONT_CARE_VOID));
+        machine.write(new Action(() -> archive.initialize(KEY, update(1, "{\"x\":1}", "{\"x\":0}"), debug), debug));
+        machine.write(new Action(() -> archive.patch(KEY, new RemoteDocumentUpdate[] { update(2, "{\"x\":2}", "{\"x\":1}") }, debug), debug));
         machine.read(new Action(() -> archive.get(KEY, got), got));
       });
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+      Assert.assertEquals("{\"x\":2}", val.get());
     }, archive);
-
-    Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
-    Assert.assertEquals("{\"x\":2}", val.get());
   }
 }

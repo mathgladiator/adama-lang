@@ -235,6 +235,9 @@ public class Machine {
           @Override
           public void execute() throws Exception {
             lastArchiveKey = found.archiveKey;
+            if ("".equals(lastArchiveKey)) {
+              lastArchiveKey = null;
+            }
             if (found.location == FinderService.Location.Machine) {
               find_FoundMachine(found.machine, false);
             } else {
