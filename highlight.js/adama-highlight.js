@@ -55,6 +55,22 @@ hljs.registerLanguage("adama", (() => {
         className: 'keyword',
         begin: '@static'
     };
+    const KEYWORD_WEB = {
+        className: 'keyword',
+        begin: '@web'
+    };
+    const KEYWORD_WHO = {
+        className: 'keyword',
+        begin: '@who'
+    };
+    const KEYWORD_PARAMETERS = {
+        className: 'keyword',
+        begin: '@parameters'
+    };
+    const KEYWORD_HEADERS = {
+        className: 'keyword',
+        begin: '@headers'
+    };
     const KEYWORD_CONSTRUCT = {
         className: 'keyword',
         begin: '@construct'
@@ -138,6 +154,10 @@ hljs.registerLanguage("adama", (() => {
             KEYWORD_MAYBE,
             KEYWORD_CONVERT,
             KEYWORD_STATIC,
+            KEYWORD_WEB,
+            KEYWORD_WHO,
+            KEYWORD_PARAMETERS,
+            KEYWORD_HEADERS,
             KEYWORD_CONSTRUCT,
             KEYWORD_CONNECTED,
             KEYWORD_DISCONNECTED,
