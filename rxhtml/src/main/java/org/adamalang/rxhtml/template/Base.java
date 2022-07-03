@@ -156,10 +156,6 @@ public class Base {
           case "input":
             Input.write(childEnv);
             break;
-          /*
-          case "iterate":
-            Iterate.write(childEnv);
-            break; */
           case "lookup":
             Lookup.write(childEnv);
             break;
@@ -169,16 +165,6 @@ public class Base {
           case "pick":
             Pick.write(childEnv);
             break;
-            /*
-          case "scope":
-            Scope.write(childEnv);
-            break;
-            */
-            /*
-          case "switch":
-            Switch.write(childEnv);
-            break;
-            */
           case "use":
             Use.write(childEnv);
             break;
