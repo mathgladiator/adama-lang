@@ -21,6 +21,7 @@ import org.jsoup.nodes.TextNode;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class Base {
 
@@ -84,8 +85,6 @@ public class Base {
         }
       }
 
-
-
       Environment next = env.parentVariable(eVar);
       if (xmlns != null) {
         next = next.xmlns(xmlns);
@@ -94,58 +93,25 @@ public class Base {
         next = next.formVariable(eVar);
       }
 
-      boolean expand = env.element.hasAttr("rx:expand-view-state");
+      RxAttributes rx = new RxAttributes(env, eVar);
+
+      // TODO: warning if too many of the rx:*
 
       if (env.element.hasAttr("rx:iterate")) {
-        StatePath path = StatePath.resolve(env.element.attr("rx:iterate"), env.stateVar);
-        String childStateVar = env.pool.ask();
-        env.writer.tab().append("$.IT(").append(eVar).append(", ").append(path.command).append(", '").append(path.name).append("', function(").append(childStateVar).append(") {").tabUp().newline();
-        String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(env.soloChild()), true);
-        env.writer.tab().append("return ").append(childDomVar).append(";").newline();
-        env.pool.give(childDomVar);
-        env.writer.tabDown().tab().append("});").newline();
-        env.pool.give(childStateVar);
+        rx._iterate();
       } else if (env.element.hasAttr("rx:if")) {
-        StatePath path = StatePath.resolve(env.element.attr("rx:if"), env.stateVar);
-        String childStateVar = env.pool.ask();
-        String parentVar = env.pool.ask();
-        env.writer.tab().append("$.IF(").append(eVar).append(",").append(path.command);
-        env.writer.append(",'").append(path.name).append("', function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-        Base.children(env.stateVar(childStateVar).parentVariable(parentVar));
-        env.writer.tabDown().tab().append("});").newline();
-        env.pool.give(childStateVar);
-        env.pool.give(parentVar);
+        rx._if();
       } else if (env.element.hasAttr("rx:ifnot")) {
-
+        rx._ifnot();
       } else if (env.element.hasAttr("rx:scope")) {
-        StatePath path = StatePath.resolve(env.element.attr("rx:scope"), env.stateVar);
-        String newStateVar = env.pool.ask();
-        env.writer.tab().append("var ").append(newStateVar).append(" = $.pI(").append(path.command).append(", '").append(path.name).append("');").newline();
-        Base.children(env.stateVar(newStateVar));
+        rx._scope();
       } else if (env.element.hasAttr("rx:switch")) {
-        StatePath path = StatePath.resolve(env.element.attr("rx:switch"), env.stateVar);
-        String childStateVar = env.pool.ask();
-        String caseVar = env.pool.ask();
-        String parentVar = env.pool.ask();
-        env.writer.tab().append("$.W(").append(eVar).append(", ").append(path.command);
-        env.writer.append(", '").append(path.name).append("', function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
-        Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(parentVar));
-        env.writer.tabDown().tab().append("});").newline();
-        env.pool.give(caseVar);
-        env.pool.give(childStateVar);
-        env.pool.give(parentVar);
+        rx._switch();
       } else {
         children(next);
       }
 
       if (env.parentVariable != null) {
-        if (env.element.hasAttr("rx:if")) {
-          // is this like a switch, or is this something else?
-        } else if (env.element.hasAttr("rx:ifnot")) {
-
-        } else {
-          // default
-        }
         env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
       }
       if (hasCase) {
@@ -213,9 +179,6 @@ public class Base {
             Switch.write(childEnv);
             break;
             */
-          case "test":
-            Test.write(childEnv);
-            break;
           case "use":
             Use.write(childEnv);
             break;

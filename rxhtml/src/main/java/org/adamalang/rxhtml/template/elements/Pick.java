@@ -17,7 +17,7 @@ public class Pick {
     String sVar = env.pool.ask();
     String name = env.element.attr("name");
     env.writer.tab().append("{").tabUp().newline();
-    env.writer.tab().append("var ").append(sVar).append(" = $.P('").append(name).append("');").newline();
+    env.writer.tab().append("var ").append(sVar).append(" = $.P('").append(name).append("',").append(env.stateVar).append(");").newline();
     // TODO: figure out how to handle a reactive name
     Base.children(env.stateVar(sVar));
     env.writer.tab().append(sVar).append(".bind();").newline();

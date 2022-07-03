@@ -37,7 +37,7 @@ public class NetSuiteTests {
   public void happy() throws Exception {
     NetBase base = new NetBase(identity(), 2, 4);
     try {
-      ServerHandle handle = base.serve(5001, new Handler() {
+      ServerHandle handle = base.serve(25001, new Handler() {
         @Override
         public ByteStream create(ByteStream upstream) {
           return new ByteStream() {
@@ -78,7 +78,7 @@ public class NetSuiteTests {
         Thread thread = new Thread(() -> handle.waitForEnd());
         thread.start();
         System.err.println("Server running");
-        base.connect("127.0.0.1:5001", new Lifecycle() {
+        base.connect("127.0.0.1:25001", new Lifecycle() {
           @Override
           public void connected(ChannelClient channel) {
             System.err.println("client connected");
@@ -135,7 +135,7 @@ public class NetSuiteTests {
           @Override
           public void failed(ErrorCodeException ex) {
             if (attemptsLeft-- > 0) {
-              base.connect("127.0.0.1:5001", this);
+              base.connect("127.0.0.1:25001", this);
             }
           }
 
@@ -151,7 +151,7 @@ public class NetSuiteTests {
     } finally {
       base.shutdown();
       CountDownLatch latchFailed = new CountDownLatch(1);
-      base.connect("127.0.0.1:5001", new Lifecycle() {
+      base.connect("127.0.0.1:25001", new Lifecycle() {
         @Override
         public void connected(ChannelClient channel) {
 
@@ -176,7 +176,7 @@ public class NetSuiteTests {
   public void sad_remote_error() throws Exception {
     NetBase base = new NetBase(identity(), 2, 4);
     try {
-      ServerHandle handle = base.serve(5002, upstream -> new ByteStream() {
+      ServerHandle handle = base.serve(25002, upstream -> new ByteStream() {
         @Override
         public ByteBuf create(int bestGuessForSize) { // Not used on server side
           return null;
@@ -216,7 +216,7 @@ public class NetSuiteTests {
         Thread thread = new Thread(() -> handle.waitForEnd());
         thread.start();
         System.err.println("Server running");
-        base.connect("127.0.0.1:5002", new Lifecycle() {
+        base.connect("127.0.0.1:25002", new Lifecycle() {
           @Override
           public void connected(ChannelClient channel) {
             System.err.println("client connected");
@@ -274,7 +274,7 @@ public class NetSuiteTests {
           @Override
           public void failed(ErrorCodeException ex) {
             if (attemptsLeft-- > 0) {
-              base.connect("127.0.0.1:5001", this);
+              base.connect("127.0.0.1:25001", this);
             }
           }
 
