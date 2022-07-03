@@ -17,6 +17,8 @@ public class Connection {
     RxAttributeObject obj = new RxAttributeObject(env, "name", "space", "key", "identity");
     env.writer.tab().append("$.CONNECT(").append(env.stateVar).append(",").append(obj.rxObj).append(");").newline();
     obj.finish();
-    Pick.write(env);
+    if (env.element.childNodeSize() > 0) {
+      Pick.write(env);
+    }
   }
 }

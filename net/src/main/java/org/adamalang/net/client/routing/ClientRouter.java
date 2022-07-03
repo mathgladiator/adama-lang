@@ -19,10 +19,12 @@ import org.adamalang.net.client.routing.finder.MachinePicker;
 import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Set;
 
 public class ClientRouter {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ClientRouter.class);
   private final SimpleExecutor executor;
   public final ReativeRoutingEngine engine;
   public final Router routerForDocuments;
@@ -64,6 +66,8 @@ public class ClientRouter {
           @Override
           public void onMachine(String machine) {
             if (machine == null) {
+              LOGGER.error("failed-find-find-host: {}/{}", key.space, key.key);
+              metrics.client_failed_pick_host.run();
               callback.failure(new ErrorCodeException(ErrorCodes.NET_FINDER_ROUTER_NULL_MACHINE));
             } else {
               callback.success(machine);

@@ -12,7 +12,6 @@ package org.adamalang.rxhtml.template;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.template.elements.*;
-import org.adamalang.rxhtml.template.elements.defunct.Switch;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Node;
@@ -20,8 +19,6 @@ import org.jsoup.nodes.TextNode;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
 
 public class Base {
 
@@ -132,7 +129,7 @@ public class Base {
       if (node instanceof TextNode) {
         TextNode text = (TextNode) node;
         if (!text.text().trim().equalsIgnoreCase("")) {
-          env.writer.tab().append(env.parentVariable).append(".append($.t('").append(text.text()).append("'));").newline();
+          env.writer.tab().append(env.parentVariable).append(".append($.T('").append(text.text()).append("'));").newline();
         }
       } else if (node instanceof Comment) {
         // ignore comments

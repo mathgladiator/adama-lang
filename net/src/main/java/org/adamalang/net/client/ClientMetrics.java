@@ -51,6 +51,8 @@ public class ClientMetrics {
   public final RequestResponseMonitor client_webget_found_machine;
   public final RequestResponseMonitor client_webput_found_machine;
 
+  public final Runnable client_failed_pick_host;
+
   public ClientMetrics(MetricsFactory factory) {
     client_connection_alive = factory.inflight("client_connection_alive");
     client_state_machines_alive = factory.inflight("client_state_machines_alive");
@@ -85,5 +87,6 @@ public class ClientMetrics {
     client_create_found_machine = factory.makeRequestResponseMonitor("client_create_found_machine");
     client_webget_found_machine = factory.makeRequestResponseMonitor("client_webget_found_machine");
     client_webput_found_machine = factory.makeRequestResponseMonitor("client_webput_found_machine");
+    client_failed_pick_host = factory.counter("client_failed_pick_host");
   }
 }

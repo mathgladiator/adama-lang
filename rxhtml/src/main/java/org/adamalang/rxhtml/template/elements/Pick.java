@@ -25,9 +25,10 @@ public class Pick {
       env.writer.tab().append("var ").append(parentVar).append("=$.e('div');").newline();
       env.writer.tab().append(env.parentVariable).append(".append(").append(parentVar).append(");").newline();
     }
-    env.writer.tab().append("$.P(").append(env.stateVar).append(",").append(obj.rxObj).append(",function(").append(sVar).append(") {").tabUp().newline();
+    env.writer.tab().append("$.P(").append(parentVar).append(",").append(env.stateVar).append(",").append(obj.rxObj).append(",function(").append(sVar).append(") {").tabUp().newline();
     Base.children(env.stateVar(sVar).parentVariable(parentVar));
     env.writer.tabDown().tab().append("});").newline();
+    obj.finish();
     env.pool.give(sVar);
   }
 }

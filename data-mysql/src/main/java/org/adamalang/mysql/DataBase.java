@@ -99,13 +99,15 @@ public class DataBase implements AutoCloseable {
           connection.close();
         }
       } catch (Throwable ex) {
-        LOG.error("database-exception", ex);
         if (ex instanceof ErrorCodeException) {
           callback.failure((ErrorCodeException) ex);
           instance.failure(((ErrorCodeException) ex).code);
           return;
         }
         boolean validException = ex instanceof java.sql.SQLIntegrityConstraintViolationException;
+        if (!validException) {
+          LOG.error("database-exception", ex);
+        }
         if (backoff < 500 && !validException) {
           try {
             Thread.sleep(backoff);
