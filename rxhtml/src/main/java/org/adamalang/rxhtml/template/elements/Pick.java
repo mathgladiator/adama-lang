@@ -11,17 +11,23 @@ package org.adamalang.rxhtml.template.elements;
 
 import org.adamalang.rxhtml.template.Base;
 import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.template.RxAttributeObject;
 
 public class Pick {
   public static void write(Environment env) {
+    RxAttributeObject obj = new RxAttributeObject(env, "name");
     String sVar = env.pool.ask();
-    String name = env.element.attr("name");
-    env.writer.tab().append("{").tabUp().newline();
-    env.writer.tab().append("var ").append(sVar).append(" = $.P('").append(name).append("',").append(env.stateVar).append(");").newline();
-    // TODO: figure out how to handle a reactive name
-    Base.children(env.stateVar(sVar));
-    env.writer.tab().append(sVar).append(".bind();").newline();
+    final String parentVar;
+    if (env.singleParent) {
+      parentVar = env.parentVariable;
+    } else {
+      parentVar = env.pool.ask();
+      env.writer.tab().append("var ").append(parentVar).append("=$.e('div');").newline();
+      env.writer.tab().append(env.parentVariable).append(".append(").append(parentVar).append(");").newline();
+    }
+    env.writer.tab().append("$.P(").append(env.stateVar).append(",").append(obj.rxObj).append(",function(").append(sVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(sVar).parentVariable(parentVar));
+    env.writer.tabDown().tab().append("});").newline();
     env.pool.give(sVar);
-    env.writer.tabDown().tab().append("}").newline();
   }
 }

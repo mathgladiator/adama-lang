@@ -42,9 +42,7 @@ public class Environment {
   }
 
   public static Environment fresh() {
-    Writer writer = new Writer();
-    writer.append(" function install($) {").tabUp().newline();
-    return new Environment(null, writer, new VariablePool(), null, false, null, null, null, null, null);
+    return new Environment(null, new Writer(), new VariablePool(), null, false, null, null, null, null, null);
   }
 
   public void assertSoloParent() {
@@ -80,6 +78,7 @@ public class Environment {
     return result;
   }
 
+  // TODO: the whole single parent thing is strange
   public Environment element(Element element) {
     return new Environment(this, writer, pool, element, inferSingleParent(element), parentVariable, formVariable, stateVar, caseVar, xmlns);
   }

@@ -10,6 +10,9 @@
 package org.adamalang.rxhtml.template;
 
 public class Root {
+  public static void start(Environment env) {
+    env.writer.append("(function($){").tabUp().newline();
+  }
   public static void template(Environment env) {
     String parentVar = env.pool.ask();
     String stateVar = env.pool.ask();
@@ -25,8 +28,7 @@ public class Root {
     // FOR now, have direct lookups
     String stateVar = env.pool.ask();
     String rootVar = env.pool.ask();
-    env.writer.tab().append("$.page('").append(env.element.attr("uri")).append("', function(").append(stateVar).append(") {").newline().tabUp();
-    env.writer.tab().append("var ").append(rootVar).append(" = document.body;").newline();
+    env.writer.tab().append("$.PG('").append(env.element.attr("uri")).append("', function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();
     Base.children(env.parentVariable(rootVar).stateVar(stateVar));
     env.writer.tabDown().tab().append("});").newline();
     env.pool.give(rootVar);
@@ -34,7 +36,7 @@ public class Root {
   }
 
   public static String finish(Environment env) {
-    env.writer.tabDown().tab().append("}").newline();
+    env.writer.tabDown().tab().append("})(RxHTML);").newline();
     return env.writer.toString();
   }
 }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class RxHtmlTool {
   public static String convertFilesToTemplateForest(ArrayList<File> files) throws Exception {
     Environment env = Environment.fresh();
+    Root.start(env);
     for (File file : files) {
       Document document = Jsoup.parse(file, "UTF-8");
       for (Element element : document.getElementsByTag("template")) {
@@ -31,6 +32,7 @@ public class RxHtmlTool {
         Root.page(env.element(element));
       }
     }
+    // TODO: do warnings about cross-page linking, etc...
     return Root.finish(env);
   }
 }

@@ -9,30 +9,35 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import org.adamalang.rxhtml.template.StatePath;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 /** lookup a variable */
 public class Lookup implements Tree {
-  public final String variable;
+  public final String name;
+  public final String complete;
 
   public Lookup(String variable) {
-    this.variable = variable;
+    StatePath resolve = StatePath.resolve(variable, "$");
+    this.name = resolve.name;
+    this.complete = variable;
   }
 
   @Override
   public Map<String, String> variables() {
-    return Collections.singletonMap(variable, variable);
+    return Collections.singletonMap(name, complete);
   }
 
   @Override
   public String debug() {
-    return "LOOKUP[" + variable + "]";
+    return "LOOKUP[" + name + "]";
   }
 
   @Override
   public String js(String env) {
-    return env + "['" + variable + "']";
+    return env + "['" + name + "']";
   }
 }

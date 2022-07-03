@@ -29,6 +29,10 @@ public class StatePath {
       toParse = toParse.substring(5);
       command = "$.pV(" + command + ")";
     }
+    if (toParse.startsWith("data:")) {
+      toParse = toParse.substring(5);
+      command = "$.pD(" + command + ")";
+    }
     while (true) {
       if (toParse.startsWith("/")) {
         toParse = toParse.substring(1);
