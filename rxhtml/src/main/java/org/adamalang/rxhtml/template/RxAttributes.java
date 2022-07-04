@@ -22,15 +22,20 @@ public class RxAttributes {
   }
 
   public void commonBetweenIfAndIfNot(String version) {
-    StatePath path = StatePath.resolve(env.element.attr(version), env.stateVar);
-    String childStateVar = env.pool.ask();
-    String parentVar = env.pool.ask();
-    env.writer.tab().append("$.IF(").append(eVar).append(",").append(path.command);
-    env.writer.append(",'").append(path.name).append("', ").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(childStateVar).parentVariable(parentVar));
-    env.writer.tabDown().tab().append("});").newline();
-    env.pool.give(childStateVar);
-    env.pool.give(parentVar);
+    String value = env.element.attr(version);
+    if (value.startsWith("decide:")) {
+      // We do something completely different, but... not really
+    } else {
+      StatePath path = StatePath.resolve(env.element.attr(version), env.stateVar);
+      String childStateVar = env.pool.ask();
+      String parentVar = env.pool.ask();
+      env.writer.tab().append("$.IF(").append(eVar).append(",").append(path.command);
+      env.writer.append(",'").append(path.name).append("', ").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+      Base.children(env.stateVar(childStateVar).parentVariable(parentVar));
+      env.writer.tabDown().tab().append("});").newline();
+      env.pool.give(childStateVar);
+      env.pool.give(parentVar);
+    }
   }
 
   public void _if() {
