@@ -21,7 +21,7 @@ public class Environment {
   public final Writer writer;
   public final VariablePool pool;
   public final Element element;
-  public final boolean singleParent;
+  public final boolean elementAlone;
   public final String parentVariable;
   public final String formVariable;
   public final String stateVar;
@@ -29,12 +29,12 @@ public class Environment {
   public final String xmlns;
   public final String fragmentFunc;
 
-  private Environment(Environment parent, Writer writer, VariablePool pool, Element element, boolean singleParent, String parentVariable, String formVariable, String stateVar, String caseVar, String xmlns, String fragmentFunc) {
+  private Environment(Environment parent, Writer writer, VariablePool pool, Element element, boolean elementAlone, String parentVariable, String formVariable, String stateVar, String caseVar, String xmlns, String fragmentFunc) {
     this.parent = parent;
     this.writer = writer;
     this.pool = pool;
     this.element = element;
-    this.singleParent = singleParent;
+    this.elementAlone = elementAlone;
     this.parentVariable = parentVariable;
     this.formVariable = formVariable;
     this.stateVar = stateVar;
@@ -45,12 +45,6 @@ public class Environment {
 
   public static Environment fresh() {
     return new Environment(null, new Writer(), new VariablePool(), null, false, null, null, null, null, null, null);
-  }
-
-  public void assertSoloParent() {
-    if (!singleParent) {
-      throw new UnsupportedOperationException("<" + element.tagName() + "> was expecting a single parent");
-    }
   }
 
   public void assertHasParent() {
@@ -80,32 +74,21 @@ public class Environment {
     return result;
   }
 
-  // TODO: the whole single parent thing is strange
-  public Environment element(Element element) {
-    return new Environment(this, writer, pool, element, inferSingleParent(element), parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc);
-  }
-
-  private static boolean inferSingleParent(Element element) {
-    if (element == null) {
-      return false;
-    }
-    return element.children().size() == 1;
-  }
-
+  public Environment element(Element element, boolean elementAlone) { return new Environment(this, writer, pool, element, elementAlone, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc); }
   public Environment parentVariable(String parentVariable) {
-    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, writer, pool, element, elementAlone, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
-  public Environment formVariable(String formVariable) { return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc); }
+  public Environment formVariable(String formVariable) { return new Environment(this, writer, pool, element, elementAlone, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc); }
   public Environment stateVar(String stateVar) {
-    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, writer, pool, element, elementAlone, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
   public Environment caseVar(String caseVar) {
-    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, writer, pool, element, elementAlone, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
   public Environment xmlns(String xmlns) {
-    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, writer, pool, element, elementAlone, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
   public Environment fragmentFunc(String fragmentFunc) {
-    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, writer, pool, element, elementAlone, parentVariable, formVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
 }

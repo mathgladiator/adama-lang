@@ -9,27 +9,16 @@
  */
 package org.adamalang.rxhtml.template;
 
-import org.adamalang.rxhtml.atl.Parser;
-import org.adamalang.rxhtml.atl.tree.Tree;
-import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Locale;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.function.Function;
 
 public class Base {
-
-  private static void writeDomSetter(Environment env, String var, String key, String expr) {
-    if (key.startsWith("json:")) {
-      env.writer.tab().append(var).append(".set_").append(key.substring(5).toLowerCase(Locale.ROOT)).append("(").append(expr).append(");").newline();
-    } else {
-      env.writer.tab().append(var).append(".setAttribute('").append(key).append("', ").append(expr).append(");").newline();
-    }
-  }
   public static String write(Environment env, boolean returnVariable) {
     String xmlns = env.element.hasAttr("xmlns") ? env.element.attr("xmlns") : null;
     if (env.element.tagName().equals("svg")) {
@@ -49,39 +38,8 @@ public class Base {
         env.writer.tab().append("if (").append(env.caseVar).append(" == '").append(env.element.attr("rx:case")).append("') {").tabUp().newline();
       }
       env.writer.tab().append("var ").append(eVar).append(" = $.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append(");").newline();
-      for (Attribute attr : env.element.attributes().asList()) {
-        // String realKey = convertXmlAttributeToJavaScriptField(attr.getKey());
-        if (attr.getKey().equals("xmlns") || attr.getKey().startsWith("rx:")) {
-          continue;
-        }
-        if (attr.hasDeclaredValue()) {
-          Tree tree = Parser.parse(attr.getValue());
-          Map<String, String> vars = tree.variables();
-          if (vars.size() > 0) {
-            var oVar = env.pool.ask();
-            var computeFoo = env.pool.ask();
-            env.writer.tab().append("{").tabUp().newline();
-            env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
-            env.writer.tab().append(oVar).append(".__dom = ").append(eVar).append(";").newline();
-            env.writer.tab().append("var ").append(computeFoo).append(" = (function() {").tabUp().newline();
-            writeDomSetter(env, "this.__dom", attr.getKey(), tree.js("this"));
-            env.writer.tabDown().tab().append("}).bind(").append(oVar).append(");").newline();
-            for (Map.Entry<String, String> ve : vars.entrySet()) {
-              StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);
-              env.writer.tab().append("$.Y(").append(path.command).append(",").append(oVar).append(",'").append(path.name).append("',").append(computeFoo).append(");").newline();
-            }
-            env.pool.give(oVar);
-            env.pool.give(computeFoo);
-            env.writer.tab().append(computeFoo).append("();").newline();
-            env.writer.tabDown().tab().append("}").newline();
-          } else {
-            // TODO: escape
-            writeDomSetter(env, eVar, attr.getKey(), "'" + attr.getValue() + "'");
-          }
-        } else {
-          writeDomSetter(env, eVar, attr.getKey(), "true");
-        }
-      }
+      RxAttributes rx = new RxAttributes(env, eVar);
+      rx._base();
 
       Environment next = env.parentVariable(eVar);
       if (xmlns != null) {
@@ -90,8 +48,6 @@ public class Base {
       if (env.element.tagName().equals("form")) {
         next = next.formVariable(eVar);
       }
-
-      RxAttributes rx = new RxAttributes(env, eVar);
 
       // TODO: warning if too many of the rx:*
 
@@ -126,19 +82,40 @@ public class Base {
     }
   }
 
-  public static void children(Environment env) {
+  private static ArrayList<Node> filtered(Environment env) {
+    ArrayList<Node> filtered = new ArrayList<>();
     for (int k = 0; k < env.element.childNodeSize(); k++) {
       Node node = env.element.childNode(k);
       if (node instanceof TextNode) {
         TextNode text = (TextNode) node;
         if (!text.text().trim().equalsIgnoreCase("")) {
-          env.writer.tab().append(env.parentVariable).append(".append($.T('").append(text.text()).append("'));").newline();
+          filtered.add(node);
         }
       } else if (node instanceof Comment) {
         // ignore comments
       } else if (node instanceof org.jsoup.nodes.Element) {
+        filtered.add(node);
+      }
+    }
+    return filtered;
+  }
+
+  public static void children(Environment env) {
+    children(env, (x) -> true);
+  }
+
+  public static void children(Environment env, Function<Node, Boolean> filter) {
+    ArrayList<Node> nodes = filtered(env);
+    for (Node node : nodes) {
+      if (!filter.apply(node)) {
+        continue;
+      }
+      if (node instanceof TextNode) {
+        TextNode text = (TextNode) node;
+        env.writer.tab().append(env.parentVariable).append(".append($.T('").append(text.text()).append("'));").newline();
+      } else if (node instanceof org.jsoup.nodes.Element) {
         org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) node;
-        Environment childEnv = env.element(child);
+        Environment childEnv = env.element(child, nodes.size() == 1);
         try {
           Method method = RxElements.class.getMethod(child.tagName(), Environment.class);
           method.invoke(null, childEnv);

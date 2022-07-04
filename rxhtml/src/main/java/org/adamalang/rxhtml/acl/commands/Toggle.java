@@ -7,11 +7,12 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.rxhtml.template.elements;
+package org.adamalang.rxhtml.acl.commands;
 
-import org.adamalang.rxhtml.template.Base;
-import org.adamalang.rxhtml.template.Environment;
+public class Toggle implements Command {
+  public final String name;
 
-public class Decide {
-
+  public Toggle(String name) {
+    this.name = name;
+  }
 }

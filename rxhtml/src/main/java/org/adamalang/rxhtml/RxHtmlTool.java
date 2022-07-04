@@ -26,10 +26,10 @@ public class RxHtmlTool {
     for (File file : files) {
       Document document = Jsoup.parse(file, "UTF-8");
       for (Element element : document.getElementsByTag("template")) {
-        Root.template(env.element(element));
+        Root.template(env.element(element, true));
       }
       for (Element element : document.getElementsByTag("page")) {
-        Root.page(env.element(element));
+        Root.page(env.element(element, true));
       }
     }
     // TODO: do warnings about cross-page linking, etc...
