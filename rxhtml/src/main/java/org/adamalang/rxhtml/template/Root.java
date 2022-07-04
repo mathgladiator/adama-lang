@@ -16,10 +16,12 @@ public class Root {
   public static void template(Environment env) {
     String parentVar = env.pool.ask();
     String stateVar = env.pool.ask();
-    env.writer.tab().append("$.register('").append(env.element.attr("name")).append("', function(").append(parentVar).append(", ").append(stateVar).append(") {").newline().tabUp();
-    Base.children(env.stateVar(stateVar).parentVariable(parentVar));
+    String fragmentFunc = env.pool.ask();
+    env.writer.tab().append("$.TP('").append(env.element.attr("name")).append("', function(").append(parentVar).append(",").append(stateVar).append(",").append(fragmentFunc).append(") {").newline().tabUp();
+    Base.children(env.stateVar(stateVar).parentVariable(parentVar).fragmentFunc(fragmentFunc));
     env.pool.give(parentVar);
     env.pool.give(stateVar);
+    env.pool.give(fragmentFunc);
     env.writer.tabDown().tab().append("});").newline();
   }
 

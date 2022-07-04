@@ -11,12 +11,13 @@ package org.adamalang.rxhtml.template;
 
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
-import org.adamalang.rxhtml.template.elements.*;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Map;
 
@@ -104,6 +105,8 @@ public class Base {
         rx._scope();
       } else if (env.element.hasAttr("rx:switch")) {
         rx._switch();
+      } else if (env.element.hasAttr("rx:template")) {
+        rx._template();
       } else {
         children(next);
       }
@@ -136,38 +139,13 @@ public class Base {
       } else if (node instanceof org.jsoup.nodes.Element) {
         org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) node;
         Environment childEnv = env.element(child);
-        switch (child.tagName()) {
-          case "template":
-          case "page":
-            // these handled at a higher level
-            break;
-          case "connection":
-            Connection.write(childEnv);
-            break;
-          case "decide":
-            Decide.write(childEnv);
-            break;
-          case "execute":
-            Execute.write(childEnv);
-            break;
-          case "input":
-            Input.write(childEnv);
-            break;
-          case "lookup":
-            Lookup.write(childEnv);
-            break;
-          case "message":
-            Message.write(childEnv);
-            break;
-          case "pick":
-            Pick.write(childEnv);
-            break;
-          case "use":
-            Use.write(childEnv);
-            break;
-          default:
-            Base.write(childEnv, false);
-            break;
+        try {
+          Method method = RxElements.class.getMethod(child.tagName(), Environment.class);
+          method.invoke(null, childEnv);
+        } catch (IllegalAccessException | InvocationTargetException bad) {
+          bad.printStackTrace();
+        } catch (NoSuchMethodException nsme) {
+          Base.write(childEnv, false);
         }
       } else {
         throw new UnsupportedOperationException("not sure how to handle node type:" + node.getClass());

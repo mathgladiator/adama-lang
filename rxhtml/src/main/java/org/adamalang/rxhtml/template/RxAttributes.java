@@ -64,7 +64,7 @@ public class RxAttributes {
     String childStateVar = env.pool.ask();
     String caseVar = env.pool.ask();
     String parentVar = env.pool.ask();
-    env.writer.tab().append("$.W(").append(eVar).append(",").append(path.command);
+    env.writer.tab().append("$.SW(").append(eVar).append(",").append(path.command);
     env.writer.append(",'").append(path.name).append("',function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
     Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(parentVar));
     env.writer.tabDown().tab().append("});").newline();
@@ -73,4 +73,14 @@ public class RxAttributes {
     env.pool.give(parentVar);
   }
 
+  public void _template() {
+    String name = env.element.attr("rx:template");
+    String parentVar = env.pool.ask();
+    String childStateVar = env.pool.ask();
+    env.writer.tab().append("$.UT(").append(eVar).append(",").append(env.stateVar).append(",'").append(name).append("', function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar));
+    env.writer.tabDown().tab().append("});").newline();
+    env.pool.give(childStateVar);
+    env.pool.give(parentVar);
+  }
 }
