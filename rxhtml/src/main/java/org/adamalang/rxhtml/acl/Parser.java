@@ -9,15 +9,13 @@
  */
 package org.adamalang.rxhtml.acl;
 
-import org.adamalang.rxhtml.acl.commands.Command;
-import org.adamalang.rxhtml.acl.commands.Set;
-import org.adamalang.rxhtml.acl.commands.Toggle;
+import org.adamalang.rxhtml.acl.commands.*;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class Parser {
-  public ArrayList<Command> parse(String command) {
+  public static ArrayList<Command> parse(String command) {
     ArrayList<Command> commands = new ArrayList<>();
     for (String phrase : command.split(Pattern.quote(" "))) {
       int kColon = phrase.indexOf(':');
@@ -28,6 +26,24 @@ public class Parser {
         switch (cmd) {
           case "toggle": {
             commands.add(new Toggle(body));
+            break;
+          }
+          case "increment":
+          case "inc": {
+            commands.add(new Increment(body));
+            break;
+          }
+          case "decrement":
+          case "dec": {
+            commands.add(new Decrement(body));
+            break;
+          }
+          case "raise": {
+            commands.add(new Raise(body));
+            break;
+          }
+          case "lower": {
+            commands.add(new Lower(body));
             break;
           }
           case "set": {

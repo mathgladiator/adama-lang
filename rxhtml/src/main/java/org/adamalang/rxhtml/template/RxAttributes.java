@@ -9,11 +9,14 @@
  */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.rxhtml.acl.commands.Command;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Element;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -181,6 +184,14 @@ public class RxAttributes {
       } else {
         writeDomSetter(eVar, attr.getKey(), "true");
       }
+    }
+  }
+
+  public void _event(String event) {
+    env.pool.ask();
+    ArrayList<Command> commands = org.adamalang.rxhtml.acl.Parser.parse(env.element.attr("rx:" + event));
+    for (Command command : commands) {
+      command.write(env, event, eVar);
     }
   }
 }

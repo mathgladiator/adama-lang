@@ -12,11 +12,11 @@ package org.adamalang.rxhtml.acl.commands;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.StatePath;
 
-/** Flip/flop (i.e. toggle) a boolean value between false and true */
-public class Toggle implements Command {
+/** Increment a number by 1 */
+public class Increment implements Command {
   public final String path;
 
-  public Toggle(String path) {
+  public Increment(String path) {
     if (path.startsWith("view:") | path.startsWith("data:")) {
       this.path = path;
     } else {
@@ -27,6 +27,6 @@ public class Toggle implements Command {
   @Override
   public void write(Environment env, String type, String eVar) {
     StatePath path = StatePath.resolve(this.path, env.stateVar);
-    env.writer.tab().append("$.onT(").append(eVar).append(",'").append(type).append("',").append(path.command).append(",'").append(path.name).append("');").newline();
+    env.writer.tab().append("$.onD(").append(eVar).append(",'").append(type).append("',").append(path.command).append(",'").append(path.name).append("', 1);").newline();
   }
 }

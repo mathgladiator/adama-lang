@@ -9,5 +9,11 @@
  */
 package org.adamalang.rxhtml.acl.commands;
 
+import org.adamalang.rxhtml.template.Environment;
+
+/** a command to run from an event */
 public interface Command {
+
+  /** write the runtime code to attach the event of $type to element by $eVar */
+  public void write(Environment env, String type, String eVar);
 }

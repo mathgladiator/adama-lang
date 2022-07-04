@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 public class Base {
+  private static final String[] EVENTS = new String[] { "click", "mouseenter", "mouseleave" };
+
   public static String write(Environment env, boolean returnVariable) {
     String xmlns = env.element.hasAttr("xmlns") ? env.element.attr("xmlns") : null;
     if (env.element.tagName().equals("svg")) {
@@ -40,6 +42,12 @@ public class Base {
       env.writer.tab().append("var ").append(eVar).append(" = $.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append(");").newline();
       RxAttributes rx = new RxAttributes(env, eVar);
       rx._base();
+
+      for (String event : EVENTS) {
+        if (env.element.hasAttr("rx:" + event)) {
+          rx._event(event);
+        }
+      }
 
       Environment next = env.parentVariable(eVar);
       if (xmlns != null) {
@@ -112,7 +120,7 @@ public class Base {
       }
       if (node instanceof TextNode) {
         TextNode text = (TextNode) node;
-        env.writer.tab().append(env.parentVariable).append(".append($.T('").append(text.text()).append("'));").newline();
+        env.writer.tab().append(env.parentVariable).append(".append($.T('").append(Escapes.escape39(text.text())).append("'));").newline();
       } else if (node instanceof org.jsoup.nodes.Element) {
         org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) node;
         Environment childEnv = env.element(child, nodes.size() == 1);
