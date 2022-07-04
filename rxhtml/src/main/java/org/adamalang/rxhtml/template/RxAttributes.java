@@ -13,13 +13,11 @@ import org.adamalang.rxhtml.acl.commands.Command;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.jsoup.nodes.Attribute;
-import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class RxAttributes {
 
@@ -41,7 +39,7 @@ public class RxAttributes {
       StatePath pathName = StatePath.resolve(env.element.hasAttr("name") ? env.element.attr(version) : "id", env.stateVar);
       String childStateVar = env.pool.ask();
       String parentVar = env.pool.ask();
-      env.writer.tab().append("$.DE2(").append(eVar).append(",").append(env.stateVar).append(",").append(pathName.command);
+      env.writer.tab().append("$.DE(").append(eVar).append(",").append(env.stateVar).append(",").append(pathName.command);
       env.writer.append(",'").append(channel).append("','").append(key).append("'");
       env.writer.append(",'").append(pathName.name).append("', ").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
       Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
@@ -62,10 +60,6 @@ public class RxAttributes {
       env.writer.tabDown().tab().append("});").newline();
       env.pool.give(childStateVar);
       env.pool.give(parentVar);
-
-
-
-      // We do something completely different, but... not really
     } else {
       StatePath path = StatePath.resolve(env.element.attr(version), env.stateVar);
       String childStateVar = env.pool.ask();
