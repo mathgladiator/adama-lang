@@ -9,7 +9,7 @@
  */
 package org.adamalang.rxhtml.template;
 
-public class RxElements {
+public class Elements {
   public static void template(Environment env) { /* no-op */ }
   public static void page(Environment env) { /* no-op */ }
   public static void fragment(Environment env) {
@@ -20,7 +20,6 @@ public class RxElements {
   }
   public static void lookup(Environment env) {
     StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
-    // TODO: assert static path
     String transform = env.element.attr("transform");
     if (transform == null || "".equals(transform)) {
       env.writer.tab().append(env.parentVariable).append(".append($.L(").append(path.command).append(", '").append(path.name).append("'));").newline();
@@ -28,18 +27,16 @@ public class RxElements {
       // TODO sort out transforms
     }
   }
-
   public static void connection(Environment env) {
-    RxAttributeObject obj = new RxAttributeObject(env, "name", "space", "key", "identity");
+    RxObject obj = new RxObject(env, "name", "space", "key", "identity");
     env.writer.tab().append("$.CONNECT(").append(env.stateVar).append(",").append(obj.rxObj).append(");").newline();
     obj.finish();
     if (env.element.childNodeSize() > 0) {
-      RxElements.pick(env);
+      Elements.pick(env);
     }
   }
-
   public static void pick(Environment env) {
-    RxAttributeObject obj = new RxAttributeObject(env, "name");
+    RxObject obj = new RxObject(env, "name");
     String sVar = env.pool.ask();
     final String parentVar;
     if (env.elementAlone) {
@@ -55,7 +52,6 @@ public class RxElements {
     obj.finish();
     env.pool.give(sVar);
   }
-
   public static void input(Environment env) {
     String inputVar = Base.write(env, true);
     if (env.element.hasAttr("rx:sync")) {
@@ -66,7 +62,6 @@ public class RxElements {
         ms = Double.parseDouble(env.element.attr("rx:debounce"));
       } catch (NumberFormatException nfe) {
       }
-
       StatePath _path = StatePath.resolve(tuned ? path : ("view:" + path), env.stateVar);
       env.writer.tab().append("$.SY(").append(inputVar).append(",").append(_path.command).append(",'").append(_path.name).append("',").append("" + ms).append(");").newline();
     }

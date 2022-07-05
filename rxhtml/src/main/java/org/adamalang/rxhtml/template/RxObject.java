@@ -16,13 +16,13 @@ import org.jsoup.nodes.Attribute;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class RxAttributeObject {
+public class RxObject {
   private final Environment env;
   private final ArrayList<Attribute> attributes;
   public final String rxObj;
   public final boolean delayed;
 
-  public RxAttributeObject(Environment env, String... names) {
+  public RxObject(Environment env, String... names) {
     this.env = env;
     this.attributes = new ArrayList<>();
     rxObj = env.pool.ask();

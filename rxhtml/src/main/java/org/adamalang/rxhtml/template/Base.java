@@ -58,7 +58,7 @@ public class Base {
   private static String writeIntro(Environment env, String xmlns) {
     String eVar = env.pool.ask();
     env.writer.tab().append("var ").append(eVar).append(" = $.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append(");").newline();
-    RxAttributes rx = new RxAttributes(env, eVar);
+    Attributes rx = new Attributes(env, eVar);
     rx._base();
     for (String event : EVENTS) {
       if (env.element.hasAttr("rx:" + event)) {
@@ -76,7 +76,7 @@ public class Base {
 
   private static void body(Environment env, String eVar) {
     // TODO: warning if too many of the rx:*
-    RxAttributes rx = new RxAttributes(env, eVar);
+    Attributes rx = new Attributes(env, eVar);
     if (env.element.hasAttr("rx:iterate")) {
       rx._iterate();
     } else if (env.element.hasAttr("rx:if")) {
@@ -170,7 +170,7 @@ public class Base {
         org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) node;
         Environment childEnv = env.element(child, nodes.size() == 1);
         try {
-          Method method = RxElements.class.getMethod(child.tagName(), Environment.class);
+          Method method = Elements.class.getMethod(child.tagName(), Environment.class);
           method.invoke(null, childEnv);
         } catch (IllegalAccessException | InvocationTargetException bad) {
           bad.printStackTrace();

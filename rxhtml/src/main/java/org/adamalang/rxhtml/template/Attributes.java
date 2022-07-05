@@ -16,16 +16,18 @@ import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
 
-public class RxAttributes {
+public class Attributes {
 
   public final Environment env;
   public final String eVar;
   public final boolean expand;
 
-  public RxAttributes(Environment env, String eVar) {
+  public Attributes(Environment env, String eVar) {
     this.env = env;
     this.eVar = eVar;
     this.expand = env.element.hasAttr("rx:expand-view-state");
@@ -189,30 +191,101 @@ public class RxAttributes {
     }
   }
 
+  private void walkAndValidateAndWitness(Element element, Function<Element, Boolean> check, HashSet<String> seen) {
+    if (element.tagName().equalsIgnoreCase("input")) {
+      if (check.apply(element)) {
+        seen.add(element.attr("name"));
+      }
+    } else {
+      for (Element child : element.children()) {
+        walkAndValidateAndWitness(child, check, seen);
+      }
+    }
+  }
+
+  private boolean walkAndValidateAndCheck(Element element, Function<Element, Boolean> test, String... checks) {
+    HashSet<String> seen = new HashSet<>();
+    walkAndValidateAndWitness(element, test, seen);
+    boolean result = true;
+    for (String check : checks) {
+      if (!seen.contains(check)) {
+        // TODO: WARN
+        result = false;
+      }
+    }
+    return result;
+  }
+
   public void _action() {
     String action = env.element.attr("rx:action").trim();
     if ("adama:sign-in".equalsIgnoreCase(action)) {
       String identityName = "default";
-      if (env.element.hasAttr("rx:save-identity-as")) {
-        identityName = env.element.attr("rx:save-identity-as");
+      if (env.element.hasAttr("rx:identity")) {
+        identityName = env.element.attr("rx:identity");
       }
+      walkAndValidateAndCheck(env.element, (el) -> {
+        String name = el.attr("name");
+        if ("password".equals(name)) {
+          if (!("password".equals(el.attr("type")))) {
+            // TODO: WARNING, passwords should be of type password
+          }
+          return true;
+        }
+        if ("email".equals(name)) {
+          el.attr("type", "email"); // force it to be email
+          return true;
+        }
+        if ("remember".equals(name)) {
+          return true;
+        }
+        // TODO: WARNING, excessive field
+        return false;
+      }, "email", "password", "remember");
+
       // TODO: bounce back (somehow)
-      // TODO: WALK THE CHILDREN AND VALIDATE email, password, remember
       env.writer.tab().append("$.aSO(").append(eVar).append(",").append(env.stateVar).append(",'").append(identityName).append("','").append(failureVar("sign_in_failed")).append("');").newline();
     } else if ("adama:sign-up".equalsIgnoreCase(action)) {
       String identityName = "default";
       if (env.element.hasAttr("rx:save-identity-as")) {
         identityName = env.element.attr("rx:save-identity-as");
       }
+      walkAndValidateAndCheck(env.element, (el) -> {
+        if ("email".equals(el.attr("name"))) {
+          el.attr("type", "email"); // force it to be email
+          return true;
+        }
+        return false;
+      }, "email");
       env.writer.tab().append("$.aSU(").append(eVar).append(",").append(env.stateVar).append(",'").append(identityName).append("','").append(failureVar("sign_up_failed")).append("');").newline();
-    } else if ("adama:reset-password".equalsIgnoreCase(action)) {
-      String forwardTo = ""; //
-      env.writer.tab().append("$.aRP(").append(eVar).append(",").append(env.stateVar).append(");").newline();
     } else if ("adama:set-password".equalsIgnoreCase(action)) {
+      walkAndValidateAndCheck(env.element, (el) -> {
+        String name = el.attr("name");
+        if ("password".equals(name)) {
+          if (!("password".equals(el.attr("type")))) {
+            // TODO: WARNING, passwords should be of type password
+          }
+          return true;
+        }
+        if ("email".equals(name)) {
+          el.attr("type", "email"); // force it to be email
+          return true;
+        }
+        if ("code".equals(name)) {
+          return true;
+        }
+        return false;
+      }, "email", "password", "code");
+
+      String forwardTo = ""; //
       env.writer.tab().append("$.aSP(").append(eVar).append(",").append(env.stateVar).append(");").newline();
     } else if (action.startsWith("send:")) {
       String channel = action.substring(5);
       env.writer.tab().append("$.aSD(").append(eVar).append(",").append(env.stateVar).append(",'").append(channel).append("');").newline();
+    } else if (action.startsWith("copy:")) {
+      String path = action.substring(5);
+      boolean tuned = path.startsWith("view:") | path.startsWith("data:");
+      StatePath _path = StatePath.resolve(tuned ? path : ("view:" + path), env.stateVar);
+      env.writer.tab().append("$.aCP(").append(eVar).append(",").append(_path.command).append(",'").append(_path.name).append("');").newline();
     }
   }
 }
