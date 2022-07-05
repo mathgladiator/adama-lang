@@ -15,6 +15,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
+import io.netty.handler.ssl.SniHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
@@ -45,7 +46,13 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
     logger.info("initializing channel: {}", ch.remoteAddress());
     final var pipeline = ch.pipeline();
     if (context != null) {
-      pipeline.addLast("ssl", context.newHandler(ch.alloc()));
+      pipeline.addLast("sni", new SniHandler((domain, promise) -> {
+        // IF domain == NULL or domain == DEFAULT, then GO; maybe we even
+        // TODO: LOOKUP context otherwise
+        // IF LOOKUP fails, then use context? TODO... consider
+        promise.setSuccess(context);
+        return promise;
+      }));
     }
     pipeline.addLast(new HttpServerCodec());
     pipeline.addLast(new ReadTimeoutHandler(webConfig.readTimeoutSeconds));
