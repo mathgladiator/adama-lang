@@ -57,6 +57,10 @@ public class Base {
         next = next.formVariable(eVar);
       }
 
+      if (env.element.hasAttr("rx:link")) {
+        env.writer.tab().append(eVar).append(".link(").append(env.stateVar).append(");").newline();
+      }
+
       // TODO: warning if too many of the rx:*
 
       if (env.element.hasAttr("rx:iterate")) {
