@@ -15,9 +15,6 @@ public class RxElements {
   public static void fragment(Environment env) {
     env.writer.tab().append(env.fragmentFunc).append("(").append(env.parentVariable).append(",").append(env.stateVar).append(");").newline();
   }
-  public static void input(Environment env) {
-    String inputVar = Base.write(env, true);
-  }
   public static void button(Environment env) {
     String inputVar = Base.write(env, true);
   }
@@ -56,4 +53,49 @@ public class RxElements {
     obj.finish();
     env.pool.give(sVar);
   }
+
+  private static String getSyncFunction(String type) {
+    if ("submit".equals(type)||"radio".equals(type)) {
+      return null;
+    }
+    if ("checkbox".equals(type)) {
+      return "syC";
+    }
+    if ("radio".equals(type)) {
+      return "syR";
+    }
+    return "syT";
+  }
+
+  public static void input(Environment env) {
+    String inputVar = Base.write(env, true);
+    env.pool.give(inputVar);
+  }
+
+  /**
+   *
+   <input type="button">
+   <input type="checkbox">
+   <input type="color">
+   <input type="date">
+   <input type="datetime-local">
+   <input type="email">
+   <input type="file">
+   <input type="hidden">
+   <input type="image">
+   <input type="month">
+   <input type="number">
+   <input type="password">
+   <input type="radio">
+   <input type="range">
+   <input type="reset">
+   <input type="search">
+   <input type="submit">
+   <input type="tel">
+   <input type="text">
+   <input type="time">
+   <input type="url">
+   <input type="week">
+
+   */
 }

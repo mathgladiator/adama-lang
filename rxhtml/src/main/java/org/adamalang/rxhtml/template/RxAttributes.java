@@ -106,13 +106,6 @@ public class RxAttributes {
     env.pool.give(childStateVar);
   }
 
-  public void _scope() {
-    StatePath path = StatePath.resolve(env.element.attr("rx:scope"), env.stateVar);
-    String newStateVar = env.pool.ask();
-    env.writer.tab().append("var ").append(newStateVar).append(" = $.pI(").append(path.command).append(",'").append(path.name).append("');").newline();
-    Base.children(env.stateVar(newStateVar));
-  }
-
   public void _switch() {
     StatePath path = StatePath.resolve(env.element.attr("rx:switch"), env.stateVar);
     String childStateVar = env.pool.ask();
@@ -148,7 +141,6 @@ public class RxAttributes {
 
   public void _base() {
     for (Attribute attr : env.element.attributes().asList()) {
-      // String realKey = convertXmlAttributeToJavaScriptField(attr.getKey());
       if (attr.getKey().equals("xmlns") || attr.getKey().startsWith("rx:")) {
         continue;
       }
@@ -186,6 +178,41 @@ public class RxAttributes {
     ArrayList<Command> commands = org.adamalang.rxhtml.acl.Parser.parse(env.element.attr("rx:" + event));
     for (Command command : commands) {
       command.write(env, event, eVar);
+    }
+  }
+
+  private String failureVar(String defaultValue) {
+    if (env.element.hasAttr("rx:failure-variable")) {
+      return env.element.attr("rx:failure-variable");
+    } else {
+      return defaultValue;
+    }
+  }
+
+  public void _action() {
+    String action = env.element.attr("rx:action").trim();
+    if ("adama:sign-in".equalsIgnoreCase(action)) {
+      String identityName = "default";
+      if (env.element.hasAttr("rx:save-identity-as")) {
+        identityName = env.element.attr("rx:save-identity-as");
+      }
+      // TODO: bounce back (somehow)
+      // TODO: WALK THE CHILDREN AND VALIDATE email, password, remember
+      env.writer.tab().append("$.aSO(").append(eVar).append(",").append(env.stateVar).append(",'").append(identityName).append("','").append(failureVar("sign_in_failed")).append("');").newline();
+    } else if ("adama:sign-up".equalsIgnoreCase(action)) {
+      String identityName = "default";
+      if (env.element.hasAttr("rx:save-identity-as")) {
+        identityName = env.element.attr("rx:save-identity-as");
+      }
+      env.writer.tab().append("$.aSU(").append(eVar).append(",").append(env.stateVar).append(",'").append(identityName).append("','").append(failureVar("sign_up_failed")).append("');").newline();
+    } else if ("adama:reset-password".equalsIgnoreCase(action)) {
+      String forwardTo = ""; //
+      env.writer.tab().append("$.aRP(").append(eVar).append(",").append(env.stateVar).append(");").newline();
+    } else if ("adama:set-password".equalsIgnoreCase(action)) {
+      env.writer.tab().append("$.aSP(").append(eVar).append(",").append(env.stateVar).append(");").newline();
+    } else if (action.startsWith("send:")) {
+      String channel = action.substring(5);
+      env.writer.tab().append("$.aSD(").append(eVar).append(",").append(env.stateVar).append(",'").append(channel).append("');").newline();
     }
   }
 }

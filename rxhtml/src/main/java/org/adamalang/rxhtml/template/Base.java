@@ -21,7 +21,7 @@ import java.util.function.Function;
 public class Base {
   private static final String[] EVENTS = new String[] { "click", "mouseenter", "mouseleave" };
 
-  public static String write(Environment env, boolean returnVariable) {
+  private static String xmlnsOf(Environment env) {
     String xmlns = env.element.hasAttr("xmlns") ? env.element.attr("xmlns") : null;
     if (env.element.tagName().equals("svg")) {
       xmlns = "http://www.w3.org/2000/svg";
@@ -29,68 +29,109 @@ public class Base {
     if (xmlns == null) {
       xmlns = env.xmlns;
     }
+    return xmlns;
+  }
 
+  private static boolean testForFastPathIsSoWrite(Environment env, boolean returnVariable, String xmlns) {
     if (env.element.attributesSize() == 0 && env.element.childNodeSize() == 0 && !returnVariable) {
       env.writer.tab().append(env.parentVariable).append(".append(").append("$.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append("));").newline();
-      return null;
+      return true;
+    }
+    return false;
+  }
+
+  private static boolean testRxCaseIfSoThenOpen(Environment env) {
+    boolean hasCase = env.element.hasAttr("rx:case") && env.caseVar != null;
+    if (hasCase) {
+      env.writer.tab().append("if (").append(env.caseVar).append(" == '").append(env.element.attr("rx:case")).append("') {").tabUp().newline();
+      return true;
+    }
+    return false;
+  }
+
+  private static void wrapUpRxCase(Environment env, boolean hasCase) {
+    if (hasCase) {
+      env.writer.tabDown().tab().append("}").newline();
+    }
+  }
+
+  private static String writeIntro(Environment env, String xmlns) {
+    String eVar = env.pool.ask();
+    env.writer.tab().append("var ").append(eVar).append(" = $.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append(");").newline();
+    RxAttributes rx = new RxAttributes(env, eVar);
+    rx._base();
+    for (String event : EVENTS) {
+      if (env.element.hasAttr("rx:" + event)) {
+        rx._event(event);
+      }
+    }
+    if (env.element.tagName().equals("form") && env.element.hasAttr("rx:action")) {
+      rx._action();
+    }
+    if (env.element.hasAttr("rx:link")) {
+      env.writer.tab().append(eVar).append(".link(").append(env.stateVar).append(");").newline();
+    }
+    return eVar;
+  }
+
+  private static void body(Environment env, String eVar) {
+    // TODO: warning if too many of the rx:*
+    RxAttributes rx = new RxAttributes(env, eVar);
+    if (env.element.hasAttr("rx:iterate")) {
+      rx._iterate();
+    } else if (env.element.hasAttr("rx:if")) {
+      rx._if();
+    } else if (env.element.hasAttr("rx:ifnot")) {
+      rx._ifnot();
+    } else if (env.element.hasAttr("rx:scope")) {
+      // rx._scope();
+    } else if (env.element.hasAttr("rx:switch")) {
+      rx._switch();
+    } else if (env.element.hasAttr("rx:template")) {
+      rx._template();
     } else {
-      String eVar = env.pool.ask();
-      boolean hasCase = env.element.hasAttr("rx:case") && env.caseVar != null;
-      if (hasCase) {
-        env.writer.tab().append("if (").append(env.caseVar).append(" == '").append(env.element.attr("rx:case")).append("') {").tabUp().newline();
-      }
-      env.writer.tab().append("var ").append(eVar).append(" = $.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append(");").newline();
-      RxAttributes rx = new RxAttributes(env, eVar);
-      rx._base();
+      children(env);
+    }
+  }
 
-      for (String event : EVENTS) {
-        if (env.element.hasAttr("rx:" + event)) {
-          rx._event(event);
-        }
-      }
+  public static String write(Environment env, boolean returnVariable) {
+    // get the namespace of the element
+    String xmlns = xmlnsOf(env);
+    if (testForFastPathIsSoWrite(env, returnVariable, xmlns)) {
+      return null;
+    }
+    // does the element have an rx:case
+    boolean hasCase = testRxCaseIfSoThenOpen(env);
 
-      Environment next = env.parentVariable(eVar);
-      if (xmlns != null) {
-        next = next.xmlns(xmlns);
-      }
-      if (env.element.tagName().equals("form")) {
-        next = next.formVariable(eVar);
-      }
+    // introduce the element
+    String eVar = writeIntro(env, xmlns);
 
-      if (env.element.hasAttr("rx:link")) {
-        env.writer.tab().append(eVar).append(".link(").append(env.stateVar).append(");").newline();
-      }
+    // start build a new environment
+    Environment next = env.parentVariable(eVar);
+    if (xmlns != null) {
+      next = next.xmlns(xmlns);
+    }
+    // apply rx:scope to the environment
+    if (env.element.hasAttr("rx:scope")) {
+      StatePath path = StatePath.resolve(env.element.attr("rx:scope"), env.stateVar);
+      String newStateVar = env.pool.ask();
+      env.writer.tab().append("var ").append(newStateVar).append(" = $.pI(").append(path.command).append(",'").append(path.name).append("');").newline();
+      next = next.stateVar(newStateVar);
+    }
 
-      // TODO: warning if too many of the rx:*
+    // write the body of the element (the children and more)
+    body(next, eVar);
 
-      if (env.element.hasAttr("rx:iterate")) {
-        rx._iterate();
-      } else if (env.element.hasAttr("rx:if")) {
-        rx._if();
-      } else if (env.element.hasAttr("rx:ifnot")) {
-        rx._ifnot();
-      } else if (env.element.hasAttr("rx:scope")) {
-        rx._scope();
-      } else if (env.element.hasAttr("rx:switch")) {
-        rx._switch();
-      } else if (env.element.hasAttr("rx:template")) {
-        rx._template();
-      } else {
-        children(next);
-      }
-
-      if (env.parentVariable != null) {
-        env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
-      }
-      if (hasCase) {
-        env.writer.tabDown().tab().append("}").newline();
-      }
-      if (returnVariable) {
-        return eVar;
-      } else {
-        env.pool.give(eVar);
-        return null;
-      }
+    // if we have a parent variable, then append it
+    if (env.parentVariable != null) {
+      env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
+    }
+    wrapUpRxCase(env, hasCase);
+    if (returnVariable) {
+      return eVar;
+    } else {
+      env.pool.give(eVar);
+      return null;
     }
   }
 
