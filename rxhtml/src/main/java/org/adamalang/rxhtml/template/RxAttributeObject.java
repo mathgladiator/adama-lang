@@ -21,6 +21,7 @@ public class RxAttributeObject {
   private final ArrayList<Attribute> attributes;
   public final String rxObj;
   public final boolean delayed;
+
   public RxAttributeObject(Environment env, String... names) {
     this.env = env;
     this.attributes = new ArrayList<>();

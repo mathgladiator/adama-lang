@@ -45,12 +45,6 @@ public class Environment {
     return new Environment(null, new Writer(), new VariablePool(), null, false, null, null, null, null, null);
   }
 
-  public void assertHasParent() {
-    if (parentVariable == null) {
-      throw new UnsupportedOperationException("<" + element.tagName() + "> must have a valid parent");
-    }
-  }
-
   public Element soloChild() {
     Element result = null;
     for (int k = 0; k < element.childNodeSize(); k++) {

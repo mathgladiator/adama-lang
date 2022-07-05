@@ -28,6 +28,7 @@ public class RxElements {
       // TODO sort out transforms
     }
   }
+
   public static void connection(Environment env) {
     RxAttributeObject obj = new RxAttributeObject(env, "name", "space", "key", "identity");
     env.writer.tab().append("$.CONNECT(").append(env.stateVar).append(",").append(obj.rxObj).append(");").newline();
@@ -36,6 +37,7 @@ public class RxElements {
       RxElements.pick(env);
     }
   }
+
   public static void pick(Environment env) {
     RxAttributeObject obj = new RxAttributeObject(env, "name");
     String sVar = env.pool.ask();
@@ -54,48 +56,20 @@ public class RxElements {
     env.pool.give(sVar);
   }
 
-  private static String getSyncFunction(String type) {
-    if ("submit".equals(type)||"radio".equals(type)) {
-      return null;
-    }
-    if ("checkbox".equals(type)) {
-      return "syC";
-    }
-    if ("radio".equals(type)) {
-      return "syR";
-    }
-    return "syT";
-  }
-
   public static void input(Environment env) {
     String inputVar = Base.write(env, true);
+    if (env.element.hasAttr("rx:sync")) {
+      String path = env.element.attr("rx:sync");
+      boolean tuned = path.startsWith("view:") | path.startsWith("data:");
+      double ms = 100;
+      try {
+        ms = Double.parseDouble(env.element.attr("rx:debounce"));
+      } catch (NumberFormatException nfe) {
+      }
+
+      StatePath _path = StatePath.resolve(tuned ? path : ("view:" + path), env.stateVar);
+      env.writer.tab().append("$.SY(").append(inputVar).append(",").append(_path.command).append(",'").append(_path.name).append("',").append("" + ms).append(");").newline();
+    }
     env.pool.give(inputVar);
   }
-
-  /**
-   *
-   <input type="button">
-   <input type="checkbox">
-   <input type="color">
-   <input type="date">
-   <input type="datetime-local">
-   <input type="email">
-   <input type="file">
-   <input type="hidden">
-   <input type="image">
-   <input type="month">
-   <input type="number">
-   <input type="password">
-   <input type="radio">
-   <input type="range">
-   <input type="reset">
-   <input type="search">
-   <input type="submit">
-   <input type="tel">
-   <input type="text">
-   <input type="time">
-   <input type="url">
-   <input type="week">
-
-   */
 }
