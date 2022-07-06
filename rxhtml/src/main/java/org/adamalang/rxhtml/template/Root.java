@@ -27,15 +27,39 @@ public class Root {
   }
 
   public static void page(Environment env) {
-    // TODO: parse a mini-language around the path (similar to Adama's get (have first slash be optional, (/ ( text | $ var : type ))*
-    // FOR now, have direct lookups
     String stateVar = env.pool.ask();
     String rootVar = env.pool.ask();
-    env.writer.tab().append("$.PG('").append(env.element.attr("uri")).append("', function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();
+    env.writer.tab().append("$.PG(").append(uri_to_instructions(env.element.attr("uri"))).append(", function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();
     Base.children(env.parentVariable(rootVar).stateVar(stateVar));
     env.writer.tabDown().tab().append("});").newline();
     env.pool.give(rootVar);
     env.pool.give(stateVar);
+  }
+
+  public static String uri_to_instructions(String uriRaw) {
+    String uri = uriRaw.startsWith("/") ? uriRaw.substring(1) : uriRaw;
+    StringBuilder sb = new StringBuilder();
+    sb.append("[");
+    boolean first = true;
+    do {
+      int kSlash = uri.indexOf('/');
+      String fragment = kSlash >= 0 ? uri.substring(0, kSlash) : uri;
+      uri = kSlash >= 0 ? uri.substring(kSlash + 1) : "";
+      if (!first) {
+        sb.append(",");
+      }
+      first = false;
+      if (fragment.startsWith("$")) {
+        int colon = fragment.indexOf(':');
+        String type = colon > 0 ? fragment.substring(colon + 1) : "text";
+        String name = colon > 0 ? fragment.substring(1, colon) : fragment.substring(1);
+        sb.append("'").append(type).append("','").append(name).append("'");
+      } else {
+        sb.append("'fixed','").append(fragment).append("'");
+      }
+    } while (uri.length() > 0);
+    sb.append("]");
+    return sb.toString();
   }
 
   public static String finish(Environment env) {
