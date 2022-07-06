@@ -10,9 +10,7 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 /** an if/then/else node */
 public class Condition implements Tree {

@@ -44,15 +44,15 @@ public class Environment {
     this.fragmentFunc = fragmentFunc;
   }
 
+  public static Environment fresh(Feedback feedback) {
+    return new Environment(null, feedback, new Writer(), new VariablePool(), null, false, null, null, null, null, null);
+  }
+
   public String val(String name, String defaultVal) {
     if (element.hasAttr(name)) {
       return element.attr(name);
     }
     return defaultVal;
-  }
-
-  public static Environment fresh(Feedback feedback) {
-    return new Environment( null, feedback, new Writer(), new VariablePool(), null, false, null, null, null, null, null);
   }
 
   public Element soloChild() {
@@ -76,19 +76,26 @@ public class Environment {
     return result;
   }
 
-  public Environment element(Element element, boolean elementAlone) { return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc); }
+  public Environment element(Element element, boolean elementAlone) {
+    return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+  }
+
   public Environment parentVariable(String parentVariable) {
     return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
+
   public Environment stateVar(String stateVar) {
     return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
+
   public Environment caseVar(String caseVar) {
     return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
+
   public Environment xmlns(String xmlns) {
     return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
+
   public Environment fragmentFunc(String fragmentFunc) {
     return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }

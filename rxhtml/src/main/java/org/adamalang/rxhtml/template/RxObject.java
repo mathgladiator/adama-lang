@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class RxObject {
-  private final Environment env;
-  private final ArrayList<Attribute> attributes;
   public final String rxObj;
   public final boolean delayed;
+  private final Environment env;
+  private final ArrayList<Attribute> attributes;
 
   public RxObject(Environment env, String... names) {
     this.env = env;

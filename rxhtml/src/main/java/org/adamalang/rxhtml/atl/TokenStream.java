@@ -13,51 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class TokenStream {
-  private static enum ScanState {
-    Start,
-    Text,
-    PushVariable,
-    PushCondition,
-  }
-
-  public static enum Type {
-    Text,
-    Variable,
-    Condition
-  }
-
-  public static enum Modifier {
-    None,
-    Not,
-    Else,
-    End,
-  }
-
-  public static class Token {
-    public final Type type;
-    public final Modifier mod;
-    public final String base;
-    public final String[] transforms;
-
-    public Token(Type type, String base, String... transforms) {
-      this.type = type;
-      if (base.startsWith("#")) {
-        this.mod = Modifier.Else;
-        this.base = base.substring(1).trim();
-      } else if (base.startsWith("!")) {
-        this.mod = Modifier.Not;
-        this.base = base.substring(1).trim();
-      } else if (base.startsWith("/")) {
-        this.mod = Modifier.End;
-        this.base = base.substring(1).trim();
-      } else {
-        this.mod = Modifier.None;
-        this.base = base;
-      }
-      this.transforms = transforms;
-    }
-  }
-
   public static ArrayList<Token> tokenize(String text) {
     ArrayList<Token> tokens = new ArrayList<>();
     StringBuilder currentText = new StringBuilder();
@@ -161,7 +116,7 @@ public class TokenStream {
         }
       }
     }
-    if  (currentText.length() > 0) {
+    if (currentText.length() > 0) {
       switch (state) {
         case Text:
           tokens.add(new Token(Type.Text, currentText.toString()));
@@ -171,5 +126,42 @@ public class TokenStream {
       }
     }
     return tokens;
+  }
+
+  private enum ScanState {
+    Start, Text, PushVariable, PushCondition,
+  }
+
+  public enum Type {
+    Text, Variable, Condition
+  }
+
+  public enum Modifier {
+    None, Not, Else, End,
+  }
+
+  public static class Token {
+    public final Type type;
+    public final Modifier mod;
+    public final String base;
+    public final String[] transforms;
+
+    public Token(Type type, String base, String... transforms) {
+      this.type = type;
+      if (base.startsWith("#")) {
+        this.mod = Modifier.Else;
+        this.base = base.substring(1).trim();
+      } else if (base.startsWith("!")) {
+        this.mod = Modifier.Not;
+        this.base = base.substring(1).trim();
+      } else if (base.startsWith("/")) {
+        this.mod = Modifier.End;
+        this.base = base.substring(1).trim();
+      } else {
+        this.mod = Modifier.None;
+        this.base = base;
+      }
+      this.transforms = transforms;
+    }
   }
 }

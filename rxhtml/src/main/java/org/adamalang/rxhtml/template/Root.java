@@ -13,6 +13,7 @@ public class Root {
   public static void start(Environment env) {
     env.writer.append("(function($){").tabUp().newline();
   }
+
   public static void template(Environment env) {
     String parentVar = env.pool.ask();
     String stateVar = env.pool.ask();

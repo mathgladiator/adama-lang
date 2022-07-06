@@ -13,9 +13,9 @@ import org.jsoup.nodes.Element;
 
 /** feedback mechanism for learning of not-so-great ideas in the RxHTML document */
 public interface Feedback {
-  public void warn(Element element, String warning);
-
-  public final static Feedback NoOp = (element, warning) -> {
+  Feedback NoOp = (element, warning) -> {
 
   };
+
+  void warn(Element element, String warning);
 }

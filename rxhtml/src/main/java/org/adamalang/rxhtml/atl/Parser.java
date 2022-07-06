@@ -28,7 +28,7 @@ public class Parser {
   private static Tree of(ArrayList<Tree> children) {
     if (children.size() > 1) {
       return new Concat(children.toArray(new Tree[children.size()]));
-    } else if (children.size() == 1){
+    } else if (children.size() == 1) {
       return children.get(0);
     } else {
       return new Empty();

@@ -11,13 +11,17 @@ package org.adamalang.rxhtml.template;
 
 public class Elements {
   public static void template(Environment env) { /* no-op */ }
+
   public static void page(Environment env) { /* no-op */ }
+
   public static void fragment(Environment env) {
     env.writer.tab().append(env.fragmentFunc).append("(").append(env.parentVariable).append(",").append(env.stateVar).append(");").newline();
   }
+
   public static void button(Environment env) {
     String inputVar = Base.write(env, true);
   }
+
   public static void lookup(Environment env) {
     StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
     String transform = env.element.attr("transform");
@@ -27,6 +31,7 @@ public class Elements {
       env.writer.tab().append(env.parentVariable).append(".append($.LT(").append(path.command).append(",'").append(path.name).append("',").append(Transforms.of(transform)).append("));").newline();
     }
   }
+
   public static void connection(Environment env) {
     RxObject obj = new RxObject(env, "name", "space", "key");
     env.writer.tab().append("$.CONNECT(").append(env.stateVar).append(",").append(obj.rxObj).append(",'").append(env.val("identity", "default")).append("','").append(env.val("redirect", "/sign-in")).append("');").newline();
@@ -35,6 +40,7 @@ public class Elements {
       Elements.pick(env);
     }
   }
+
   public static void pick(Environment env) {
     RxObject obj = new RxObject(env, "name");
     String sVar = env.pool.ask();
@@ -52,6 +58,7 @@ public class Elements {
     obj.finish();
     env.pool.give(sVar);
   }
+
   public static void input(Environment env) {
     String inputVar = Base.write(env, true);
     if (env.element.hasAttr("rx:sync")) {

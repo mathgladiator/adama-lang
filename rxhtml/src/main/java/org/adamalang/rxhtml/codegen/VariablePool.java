@@ -14,26 +14,16 @@ import java.util.TreeSet;
 
 public class VariablePool {
   private final char[] basis;
-  private int at;
   private final TreeSet<String> pool;
+  private int at;
 
   public VariablePool() {
     this.at = 0;
     this.pool = new TreeSet<>();
     this.basis = new char[26];
-    for(int k = 0; k < 26; k++) {
+    for (int k = 0; k < 26; k++) {
       this.basis[k] = (char) ('a' + k);
     }
-  }
-
-  private String make(int idx) {
-    StringBuilder sb = new StringBuilder();
-    int v = idx;
-    while (v > 0 || sb.length() == 0) {
-      sb.append(basis[v % 26]);
-      v /= 26;
-    }
-    return sb.toString();
   }
 
   public String ask() {
@@ -47,6 +37,16 @@ public class VariablePool {
     String result = make(at);
     at++;
     return result;
+  }
+
+  private String make(int idx) {
+    StringBuilder sb = new StringBuilder();
+    int v = idx;
+    while (v > 0 || sb.length() == 0) {
+      sb.append(basis[v % 26]);
+      v /= 26;
+    }
+    return sb.toString();
   }
 
   public void give(String p) {

@@ -13,7 +13,6 @@ import org.adamalang.rxhtml.template.StatePath;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 /** lookup a variable */
 public class Lookup implements Tree {
