@@ -13,6 +13,6 @@ import java.util.regex.Pattern;
 
 public class Escapes {
   public static String escape39(String x) {
-    return String.join("\\'",x.split(Pattern.quote("\'"), -1));
+    return String.join("\\'", x.split(Pattern.quote("'"), -1));
   }
 }

@@ -11,7 +11,6 @@ package org.adamalang.rxhtml.atl.tree;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 /** Raw Text */
 public class Text implements Tree {
@@ -22,7 +21,7 @@ public class Text implements Tree {
   }
 
   @Override
-  public Map<String, String>  variables() {
+  public Map<String, String> variables() {
     return Collections.emptyMap();
   }
 

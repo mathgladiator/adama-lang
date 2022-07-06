@@ -10,7 +10,6 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import java.util.Map;
-import java.util.Set;
 
 /** Negate a node (i.e. not for boolean) */
 public class Negate implements Tree {

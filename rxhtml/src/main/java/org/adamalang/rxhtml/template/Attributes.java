@@ -9,7 +9,6 @@
  */
 package org.adamalang.rxhtml.template;
 
-import org.adamalang.rxhtml.Feedback;
 import org.adamalang.rxhtml.acl.commands.Command;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
@@ -32,6 +31,10 @@ public class Attributes {
     this.env = env;
     this.eVar = eVar;
     this.expand = env.element.hasAttr("rx:expand-view-state");
+  }
+
+  public void _if() {
+    commonBetweenIfAndIfNot("rx:if");
   }
 
   public void commonBetweenIfAndIfNot(String version) {
@@ -90,10 +93,6 @@ public class Attributes {
     }
   }
 
-  public void _if() {
-    commonBetweenIfAndIfNot("rx:if");
-  }
-
   public void _ifnot() {
     commonBetweenIfAndIfNot("rx:ifnot");
   }
@@ -134,14 +133,6 @@ public class Attributes {
     env.pool.give(parentVar);
   }
 
-  private void writeDomSetter(String var, String key, String expr) {
-    if (key.startsWith("json:")) {
-      env.writer.tab().append(var).append(".set_").append(key.substring(5).toLowerCase(Locale.ROOT)).append("(").append(expr).append(");").newline();
-    } else {
-      env.writer.tab().append(var).append(".setAttribute('").append(key).append("', ").append(expr).append(");").newline();
-    }
-  }
-
   public void _base() {
     for (Attribute attr : env.element.attributes().asList()) {
       if (attr.getKey().equals("xmlns") || attr.getKey().startsWith("rx:")) {
@@ -173,6 +164,14 @@ public class Attributes {
       } else {
         writeDomSetter(eVar, attr.getKey(), "true");
       }
+    }
+  }
+
+  private void writeDomSetter(String var, String key, String expr) {
+    if (key.startsWith("json:")) {
+      env.writer.tab().append(var).append(".set_").append(key.substring(5).toLowerCase(Locale.ROOT)).append("(").append(expr).append(");").newline();
+    } else {
+      env.writer.tab().append(var).append(".setAttribute('").append(key).append("', ").append(expr).append(");").newline();
     }
   }
 
@@ -263,10 +262,7 @@ public class Attributes {
         }
         return true;
       }
-      if ("code".equals(name)) {
-        return true;
-      }
-      return false;
+      return "code".equals(name);
     }, "email", "password", "code");
   }
 

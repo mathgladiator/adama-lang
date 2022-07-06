@@ -20,18 +20,18 @@ public class Writer {
     tabCache = "";
   }
 
+  public Writer tabUp() {
+    tabAt++;
+    rebuildTabCache();
+    return this;
+  }
+
   private void rebuildTabCache() {
     StringBuilder tabCacheBuilder = new StringBuilder();
     for (int k = 0; k < tabAt; k++) {
       tabCacheBuilder.append("  ");
     }
     tabCache = tabCacheBuilder.toString();
-  }
-
-  public Writer tabUp() {
-    tabAt++;
-    rebuildTabCache();
-    return this;
   }
 
   public Writer tabDown() {
