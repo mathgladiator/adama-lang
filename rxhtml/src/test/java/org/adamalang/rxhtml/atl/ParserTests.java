@@ -34,7 +34,7 @@ public class ParserTests {
   public void variable() {
     Tree tree = Parser.parse("hi {first|trim} {last}");
     Assert.assertEquals("[TEXT(hi ),TRANSFORM(LOOKUP[first],trim),TEXT( ),LOOKUP[last]]", tree.debug());
-    Assert.assertEquals("\"hi \" + trim($X['first']) + \" \" + $X['last']", tree.js("$X"));
+    Assert.assertEquals("\"hi \" + (function(x) { return ('' + x).trim(); })($X['first']) + \" \" + $X['last']", tree.js("$X"));
     Map<String, String> vars = tree.variables();
     Assert.assertEquals(2, vars.size());
     Assert.assertTrue(vars.containsKey("first"));
