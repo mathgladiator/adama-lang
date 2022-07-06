@@ -9,6 +9,7 @@
  */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.rxhtml.Feedback;
 import org.adamalang.rxhtml.codegen.VariablePool;
 import org.adamalang.rxhtml.codegen.Writer;
 import org.jsoup.nodes.Comment;
@@ -18,6 +19,7 @@ import org.jsoup.nodes.TextNode;
 
 public class Environment {
   public final Environment parent;
+  public final Feedback feedback;
   public final Writer writer;
   public final VariablePool pool;
   public final Element element;
@@ -28,8 +30,9 @@ public class Environment {
   public final String xmlns;
   public final String fragmentFunc;
 
-  private Environment(Environment parent, Writer writer, VariablePool pool, Element element, boolean elementAlone, String parentVariable, String stateVar, String caseVar, String xmlns, String fragmentFunc) {
+  private Environment(Environment parent, Feedback feedback, Writer writer, VariablePool pool, Element element, boolean elementAlone, String parentVariable, String stateVar, String caseVar, String xmlns, String fragmentFunc) {
     this.parent = parent;
+    this.feedback = feedback;
     this.writer = writer;
     this.pool = pool;
     this.element = element;
@@ -41,8 +44,15 @@ public class Environment {
     this.fragmentFunc = fragmentFunc;
   }
 
-  public static Environment fresh() {
-    return new Environment(null, new Writer(), new VariablePool(), null, false, null, null, null, null, null);
+  public String val(String name, String defaultVal) {
+    if (element.hasAttr(name)) {
+      return element.attr(name);
+    }
+    return defaultVal;
+  }
+
+  public static Environment fresh(Feedback feedback) {
+    return new Environment( null, feedback, new Writer(), new VariablePool(), null, false, null, null, null, null, null);
   }
 
   public Element soloChild() {
@@ -66,20 +76,20 @@ public class Environment {
     return result;
   }
 
-  public Environment element(Element element, boolean elementAlone) { return new Environment(this, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc); }
+  public Environment element(Element element, boolean elementAlone) { return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc); }
   public Environment parentVariable(String parentVariable) {
-    return new Environment(this, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
   public Environment stateVar(String stateVar) {
-    return new Environment(this, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
   public Environment caseVar(String caseVar) {
-    return new Environment(this, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
   public Environment xmlns(String xmlns) {
-    return new Environment(this, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
   public Environment fragmentFunc(String fragmentFunc) {
-    return new Environment(this, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
 }

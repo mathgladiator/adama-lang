@@ -22,7 +22,7 @@ public class SimpleTests {
 
   private static String drive(String html) {
     Document document = Jsoup.parse(html);
-    Environment env = Environment.fresh();
+    Environment env = Environment.fresh(Feedback.NoOp);
     for (Element element : document.getElementsByTag("template")) {
       Root.template(env.element(element, true));
     }

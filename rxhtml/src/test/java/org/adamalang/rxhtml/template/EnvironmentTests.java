@@ -9,13 +9,14 @@
  */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.rxhtml.Feedback;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class EnvironmentTests {
   @Test
   public void sanity() {
-    Environment env = Environment.fresh();
+    Environment env = Environment.fresh(Feedback.NoOp);
     env = env.parentVariable("pv");
     Assert.assertEquals("pv", env.parentVariable);
   }

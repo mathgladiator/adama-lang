@@ -21,7 +21,12 @@ import java.util.ArrayList;
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
   public static String convertFilesToTemplateForest(ArrayList<File> files) throws Exception {
-    Environment env = Environment.fresh();
+    Environment env = Environment.fresh(new Feedback() {
+      @Override
+      public void warn(Element element, String warning) {
+        System.err.println(warning);
+      }
+    });
     Root.start(env);
     for (File file : files) {
       Document document = Jsoup.parse(file, "UTF-8");

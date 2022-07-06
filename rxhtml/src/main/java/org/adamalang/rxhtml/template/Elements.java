@@ -22,14 +22,14 @@ public class Elements {
     StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
     String transform = env.element.attr("transform");
     if (transform == null || "".equals(transform)) {
-      env.writer.tab().append(env.parentVariable).append(".append($.L(").append(path.command).append(", '").append(path.name).append("'));").newline();
+      env.writer.tab().append(env.parentVariable).append(".append($.L(").append(path.command).append(",'").append(path.name).append("'));").newline();
     } else {
-      // TODO sort out transforms
+      env.writer.tab().append(env.parentVariable).append(".append($.LT(").append(path.command).append(",'").append(path.name).append("',").append(Transforms.of(transform)).append("));").newline();
     }
   }
   public static void connection(Environment env) {
-    RxObject obj = new RxObject(env, "name", "space", "key", "identity");
-    env.writer.tab().append("$.CONNECT(").append(env.stateVar).append(",").append(obj.rxObj).append(");").newline();
+    RxObject obj = new RxObject(env, "name", "space", "key");
+    env.writer.tab().append("$.CONNECT(").append(env.stateVar).append(",").append(obj.rxObj).append(",'").append(env.val("identity", "default")).append("','").append(env.val("redirect", "/sign-in")).append("');").newline();
     obj.finish();
     if (env.element.childNodeSize() > 0) {
       Elements.pick(env);

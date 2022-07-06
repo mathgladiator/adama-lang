@@ -9,18 +9,19 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import org.adamalang.rxhtml.template.Transforms;
+
 import java.util.Map;
-import java.util.Set;
 
 /** Transform a node */
 public class Transform implements Tree {
 
   public final Tree base;
-  public final String operation;
+  public final String transform;
 
-  public Transform(Tree base, String operation) {
+  public Transform(Tree base, String transform) {
     this.base = base;
-    this.operation = operation;
+    this.transform = transform;
   }
 
   @Override
@@ -30,12 +31,11 @@ public class Transform implements Tree {
 
   @Override
   public String debug() {
-    return "TRANSFORM(" + base.debug() + "," + operation + ")";
+    return "TRANSFORM(" + base.debug() + "," + transform + ")";
   }
 
   @Override
   public String js(String env) {
-    // TODO: big table
-    return operation + "(" + base.js(env) + ")";
+    return "(" + Transforms.of(transform) + ")(" + base.js(env) + ")";
   }
 }

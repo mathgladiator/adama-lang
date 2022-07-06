@@ -9,6 +9,7 @@
  */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.rxhtml.Feedback;
 import org.adamalang.rxhtml.acl.commands.Command;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
@@ -183,14 +184,6 @@ public class Attributes {
     }
   }
 
-  private String failureVar(String defaultValue) {
-    if (env.element.hasAttr("rx:failure-variable")) {
-      return env.element.attr("rx:failure-variable");
-    } else {
-      return defaultValue;
-    }
-  }
-
   private void walkAndValidateAndWitness(Element element, Function<Element, Boolean> check, HashSet<String> seen) {
     if (element.tagName().equalsIgnoreCase("input")) {
       if (check.apply(element)) {
@@ -203,85 +196,112 @@ public class Attributes {
     }
   }
 
-  private boolean walkAndValidateAndCheck(Element element, Function<Element, Boolean> test, String... checks) {
+  private boolean walkAndValidateAndCheck(Environment env, Function<Element, Boolean> test, String... checks) {
     HashSet<String> seen = new HashSet<>();
-    walkAndValidateAndWitness(element, test, seen);
+    walkAndValidateAndWitness(env.element, test, seen);
     boolean result = true;
     for (String check : checks) {
       if (!seen.contains(check)) {
-        // TODO: WARN
+        env.feedback.warn(env.element, "Failed to find an input for '" + check + "'");
         result = false;
       }
     }
     return result;
   }
 
+  private void check_action_sign_in() {
+    walkAndValidateAndCheck(env, (el) -> {
+      String name = el.attr("name");
+      String type = el.attr("type");
+      if ("password".equals(name)) {
+        if (!("password".equals(type))) {
+          env.feedback.warn(el, "Passwords should have type 'password'.");
+        }
+        return true;
+      }
+      if ("email".equals(name)) {
+        if (!("email".equals(type))) {
+          env.feedback.warn(el, "Emails should have type 'email'.");
+        }
+        return true;
+      }
+      if ("remember".equals(name)) {
+        return true;
+      }
+      if ("submit".equals(type)) {
+        return true;
+      }
+      env.feedback.warn(el, "The input '" + name + "' is excessive.");
+      return false;
+    }, "email", "password", "remember");
+  }
+
+  private void check_action_sign_up() {
+    walkAndValidateAndCheck(env, (el) -> {
+      if ("email".equals(el.attr("name"))) {
+        if (!("email".equals(el.attr("type")))) {
+          env.feedback.warn(el, "Emails should have type 'email'");
+        }
+        return true;
+      }
+      return false;
+    }, "email");
+  }
+
+  private void check_set_password() {
+    walkAndValidateAndCheck(env, (el) -> {
+      String name = el.attr("name");
+      if ("password".equals(name)) {
+        if (!("password".equals(el.attr("type")))) {
+          env.feedback.warn(el, "Passwords should have type 'password'.");
+        }
+        return true;
+      }
+      if ("email".equals(name)) {
+        if (!("email".equals(el.attr("type")))) {
+          env.feedback.warn(el, "Emails should have type 'email'");
+        }
+        return true;
+      }
+      if ("code".equals(name)) {
+        return true;
+      }
+      return false;
+    }, "email", "password", "code");
+  }
+
   public void _action() {
     String action = env.element.attr("rx:action").trim();
-    if ("adama:sign-in".equalsIgnoreCase(action)) {
-      String identityName = "default";
-      if (env.element.hasAttr("rx:identity")) {
-        identityName = env.element.attr("rx:identity");
-      }
-      walkAndValidateAndCheck(env.element, (el) -> {
-        String name = el.attr("name");
-        if ("password".equals(name)) {
-          if (!("password".equals(el.attr("type")))) {
-            // TODO: WARNING, passwords should be of type password
-          }
-          return true;
-        }
-        if ("email".equals(name)) {
-          el.attr("type", "email"); // force it to be email
-          return true;
-        }
-        if ("remember".equals(name)) {
-          return true;
-        }
-        // TODO: WARNING, excessive field
-        return false;
-      }, "email", "password", "remember");
-
-      // TODO: bounce back (somehow)
-      env.writer.tab().append("$.aSO(").append(eVar).append(",").append(env.stateVar).append(",'").append(identityName).append("','").append(failureVar("sign_in_failed")).append("');").newline();
-    } else if ("adama:sign-up".equalsIgnoreCase(action)) {
-      String identityName = "default";
-      if (env.element.hasAttr("rx:save-identity-as")) {
-        identityName = env.element.attr("rx:save-identity-as");
-      }
-      walkAndValidateAndCheck(env.element, (el) -> {
-        if ("email".equals(el.attr("name"))) {
-          el.attr("type", "email"); // force it to be email
-          return true;
-        }
-        return false;
-      }, "email");
-      env.writer.tab().append("$.aSU(").append(eVar).append(",").append(env.stateVar).append(",'").append(identityName).append("','").append(failureVar("sign_up_failed")).append("');").newline();
-    } else if ("adama:set-password".equalsIgnoreCase(action)) {
-      walkAndValidateAndCheck(env.element, (el) -> {
-        String name = el.attr("name");
-        if ("password".equals(name)) {
-          if (!("password".equals(el.attr("type")))) {
-            // TODO: WARNING, passwords should be of type password
-          }
-          return true;
-        }
-        if ("email".equals(name)) {
-          el.attr("type", "email"); // force it to be email
-          return true;
-        }
-        if ("code".equals(name)) {
-          return true;
-        }
-        return false;
-      }, "email", "password", "code");
-
-      String forwardTo = ""; //
-      env.writer.tab().append("$.aSP(").append(eVar).append(",").append(env.stateVar).append(");").newline();
-    } else if (action.startsWith("send:")) {
+    if ("adama:sign-in".equalsIgnoreCase(action)) { // sign in as an Adama user
+      check_action_sign_in();
+      env.writer.tab().append("$.aSO(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'").append(env.val("rx:identity", "default")) //
+          .append("','").append(env.val("rx:failure", "sign_in_failed")) //
+          .append("','").append(env.val("rx:forward", "/")) //
+          .append("');").newline();
+    } else if ("adama:sign-up".equalsIgnoreCase(action)) { // sign up as an Adama user
+      check_action_sign_up();
+      env.writer.tab().append("$.aSU(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'").append(env.val("rx:failure", "sign_up_failed")) //
+          .append("','").append(env.val("rx:forward", "/")) //
+          .append("');").newline();
+    } else if ("adama:set-password".equalsIgnoreCase(action)) { // set the password for the connection
+      check_set_password();
+      env.writer.tab().append("$.aSP(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'").append(env.val("rx:failure", "set_password_failed")) //
+          .append("','").append(env.val("rx:forward", "/")) //
+          .append("'").append(");").newline();
+    } else if (action.startsWith("send:")) { // Send a message on the given channel
       String channel = action.substring(5);
-      env.writer.tab().append("$.aSD(").append(eVar).append(",").append(env.stateVar).append(",'").append(channel).append("');").newline();
-    } else if (action.startsWith("copy:")) {
+      env.writer.tab().append("$.aSD(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'").append(channel) //
+          .append("','").append(env.val("rx:failure", "send_failed")) //
+          .append("');").newline();
+    } else if (action.startsWith("copy:")) { // Copy the form object into the view
       String path = action.substring(5);
       boolean tuned = path.startsWith("view:") | path.startsWith("data:");
       StatePath _path = StatePath.resolve(tuned ? path : ("view:" + path), env.stateVar);
