@@ -69,7 +69,7 @@ public class Base {
       rx._action();
     }
     if (env.element.hasAttr("rx:link")) {
-      env.writer.tab().append(eVar).append(".link(").append(env.stateVar).append(");").newline();
+      env.writer.tab().append(eVar).append(".link(").append(env.stateVar).append(",'").append(env.element.attr("rx:link")).append("');").newline();
     }
     return eVar;
   }

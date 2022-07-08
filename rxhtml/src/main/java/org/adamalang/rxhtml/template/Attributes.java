@@ -168,10 +168,14 @@ public class Attributes {
   }
 
   private void writeDomSetter(String var, String key, String expr) {
-    if (key.startsWith("json:")) {
-      env.writer.tab().append(var).append(".set_").append(key.substring(5).toLowerCase(Locale.ROOT)).append("(").append(expr).append(");").newline();
+    if (env.element.tagName().equalsIgnoreCase("textarea") && key.equalsIgnoreCase("value")) {
+      env.writer.tab().append(var).append(".innerHTML=").append(expr).append(";").newline();
     } else {
-      env.writer.tab().append(var).append(".setAttribute('").append(key).append("', ").append(expr).append(");").newline();
+      if (key.startsWith("json:")) {
+        env.writer.tab().append(var).append(".set_").append(key.substring(5).toLowerCase(Locale.ROOT)).append("(").append(expr).append(");").newline();
+      } else {
+        env.writer.tab().append(var).append(".setAttribute('").append(key).append("',").append(expr).append(");").newline();
+      }
     }
   }
 

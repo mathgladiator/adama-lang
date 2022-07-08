@@ -33,8 +33,17 @@ public class Elements {
   }
 
   public static void connection(Environment env) {
+    if (!env.element.hasAttr("name")) {
+      env.element.attr("name", "default");
+    }
+    // TODO: validate that space and key are set
     RxObject obj = new RxObject(env, "name", "space", "key");
-    env.writer.tab().append("$.CONNECT(").append(env.stateVar).append(",").append(obj.rxObj).append(",'").append(env.val("identity", "default")).append("','").append(env.val("redirect", "/sign-in")).append("');").newline();
+    env.writer.tab().append("$.CONNECT(") //
+        .append(env.stateVar) //
+        .append(",").append(obj.rxObj) //
+        .append(",'").append(env.val("identity", "default")) //
+        .append("','").append(env.val("redirect", "/sign-in")) //
+        .append("');").newline();
     obj.finish();
     if (env.element.childNodeSize() > 0) {
       Elements.pick(env);
@@ -42,6 +51,9 @@ public class Elements {
   }
 
   public static void pick(Environment env) {
+    if (!env.element.hasAttr("name")) {
+      env.element.attr("name", "default");
+    }
     RxObject obj = new RxObject(env, "name");
     String sVar = env.pool.ask();
     final String parentVar;

@@ -9,9 +9,13 @@
  */
 package org.adamalang.rxhtml.acl.commands;
 
+import org.adamalang.rxhtml.atl.Parser;
+import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Escapes;
 import org.adamalang.rxhtml.template.StatePath;
+
+import java.util.Map;
 
 /** set the string value of the path to the given value */
 public class Set implements Command {
@@ -26,10 +30,7 @@ public class Set implements Command {
     }
     this.value = value;
   }
-
-  @Override
-  public void write(Environment env, String type, String eVar) {
-    StatePath path = StatePath.resolve(this.path, env.stateVar);
+  private String constant() {
     String processedValue = "'" + Escapes.escape39(value) + "'";
     try {
       Double.parseDouble(value);
@@ -39,7 +40,24 @@ public class Set implements Command {
     if (value.equals("true") || value.equals("false")) {
       processedValue = value;
     }
-    env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(path.command).append(",'").append(path.name).append("',").append(processedValue).append(");").newline();
+    return processedValue;
+  }
 
+  @Override
+  public void write(Environment env, String type, String eVar) {
+    StatePath pathSet = StatePath.resolve(this.path, env.stateVar);
+    Tree tree = Parser.parse(value);
+    Map<String, String> vars = tree.variables();
+    if (vars.size() == 0) {
+      env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',").append(constant()).append(");").newline();
+    } else {
+      var oVar = env.pool.ask();
+      env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
+      for (Map.Entry<String, String> ve : vars.entrySet()) {
+        StatePath pathVar = StatePath.resolve(ve.getValue(), env.stateVar);
+        env.writer.tab().append("$.YS(").append(pathVar.command).append(",").append(oVar).append(",'").append(pathVar.name).append("');").newline();
+      }
+      env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',function(){ return ").append(tree.js(oVar)).append(";});").newline();
+    }
   }
 }
