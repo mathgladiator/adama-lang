@@ -158,7 +158,10 @@ public class RxText extends RxBase {
 
   @Override
   public void __patch(JsonStreamReader reader) {
-    // TODO
+    if (value == backup) {
+      value = new Text(backup);
+    }
+    value.patch(reader);
   }
 
   @Override
@@ -170,22 +173,9 @@ public class RxText extends RxBase {
   }
 
   public boolean append(int seq, NtDynamic changes) {
-    JsonStreamReader reader = new JsonStreamReader(changes.json);
-    if (reader.startArray()) {
-      int off = 0;
-      while (reader.notEndOfArray()) {
-        if (!value.append(seq + off, reader.skipValueIntoJson())) {
-          return false;
-        }
-        off++;
-      }
+    if (value.append(seq, changes.json)) {
       __raiseDirty();
       return true;
-    } else {
-      if (value.append(seq, changes.json)) {
-        __raiseDirty();
-        return true;
-      }
     }
     return false;
   }

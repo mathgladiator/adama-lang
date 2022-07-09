@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.text;
 
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.junit.Assert;
@@ -81,6 +82,7 @@ public class RxTextTests {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
     RxText text = new RxText(null);
+    Assert.assertEquals("", text.get());
     text.append(0, new NtDynamic("[" + PATCH_0 + "," + PATCH_1 + "," + PATCH_2 + "," + PATCH_3 + "," + PATCH_4 + "]"));
     text.__commit("x", redo, undo);
     Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}\",\"1\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}\",\"2\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}\",\"3\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}\",\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\"}}", redo.toString());
@@ -189,12 +191,44 @@ public class RxTextTests {
 
   @Test
   public void insert() {
-    JsonStreamWriter c = new JsonStreamWriter();
-
+    JsonStreamWriter redo = new JsonStreamWriter();
+    JsonStreamWriter undo = new JsonStreamWriter();
+    RxText text = new RxText(null);
+    Assert.assertEquals("", text.get());
+    text.append(0, new NtDynamic("[" + PATCH_0 + "," + PATCH_1 + "," + PATCH_2 + "," + PATCH_3 + "," + PATCH_4 + "]"));
+    text.__commit("x", redo, undo);
+    JsonStreamWriter writer = new JsonStreamWriter();
+    text.__dump(writer); {
+      RxText clone = new RxText(null);
+      clone.__insert(new JsonStreamReader(writer.toString()));
+      Assert.assertEquals("z/*  */x", clone.get());
+    }
   }
 
   @Test
-  public void patch() {
-    JsonStreamWriter c = new JsonStreamWriter();
+  public void patchViaUndoJustChanges() {
+    JsonStreamWriter redo = new JsonStreamWriter();
+    JsonStreamWriter undo = new JsonStreamWriter();
+    RxText text = new RxText(null);
+    Assert.assertEquals("", text.get());
+    text.append(0, new NtDynamic("[" + PATCH_0 + "," + PATCH_1 + "," + PATCH_2 + "," + PATCH_3 + "," + PATCH_4 + "]"));
+    text.__commit("x", redo, undo);
+    Assert.assertEquals("z/*  */x", text.get());
+    text.__patch(new JsonStreamReader(undo.toString().substring(4)));
+    Assert.assertEquals("", text.get());
+  }
+
+  @Test
+  public void patchViaUndoCompacted() {
+    JsonStreamWriter redo = new JsonStreamWriter();
+    JsonStreamWriter undo = new JsonStreamWriter();
+    RxText text = new RxText(null);
+    Assert.assertEquals("", text.get());
+    text.append(0, new NtDynamic("[" + PATCH_0 + "," + PATCH_1 + "," + PATCH_2 + "," + PATCH_3 + "," + PATCH_4 + "]"));
+    text.current().compact(0.7);
+    text.__commit("x", redo, undo);
+    Assert.assertEquals("z/*  */x", text.get());
+    text.__patch(new JsonStreamReader(undo.toString().substring(4)));
+    Assert.assertEquals("", text.get());
   }
 }

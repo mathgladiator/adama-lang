@@ -20,13 +20,13 @@ import java.util.regex.Pattern;
 
 /** the core Text class for representing large text which can undergo OT transformations */
 public class Text {
-  public final boolean upgraded;
   public final HashMap<String, String> fragments;
   public final HashMap<Integer, String> order;
   public final HashMap<Integer, String> changes;
   public final HashMap<Integer, String> uncommitedChanges;
   public int seq;
   public int gen;
+  public boolean upgraded;
   private SeqString copy;
 
   /** fresh Text */
@@ -59,9 +59,14 @@ public class Text {
     this.order = new HashMap<>();
     this.changes = new HashMap<>();
     this.uncommitedChanges = new HashMap<>();
-    int _seq = 0;
-    int _gen = 0;
-    boolean _upgraded = false;
+    this.seq = 0;
+    this.gen = 0;
+    this.upgraded = false;
+    patch(reader);
+  }
+
+  public void patch(JsonStreamReader reader) {
+    this.copy = null;
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         switch (reader.fieldName()) {
@@ -69,7 +74,11 @@ public class Text {
             if (reader.startObject()) {
               while (reader.notEndOfObject()) {
                 String key = reader.fieldName();
-                fragments.put(key, reader.readString());
+                if (reader.testLackOfNull()) {
+                  fragments.put(key, reader.readString());
+                } else {
+                  fragments.remove(key);
+                }
               }
             } else {
               reader.skipValue();
@@ -79,7 +88,11 @@ public class Text {
             if (reader.startObject()) {
               while (reader.notEndOfObject()) {
                 int index = Integer.parseInt(reader.fieldName());
-                order.put(index, reader.readString());
+                if (reader.testLackOfNull()) {
+                  order.put(index, reader.readString());
+                } else {
+                  order.remove(index);
+                }
               }
             } else {
               reader.skipValue();
@@ -89,28 +102,28 @@ public class Text {
             if (reader.startObject()) {
               while (reader.notEndOfObject()) {
                 int __seq = Integer.parseInt(reader.fieldName());
-                changes.put(__seq, reader.skipValueIntoJson());
+                if (reader.testLackOfNull()) {
+                  changes.put(__seq, reader.skipValueIntoJson());
+                } else {
+                  changes.remove(__seq);
+                }
               }
             } else {
               reader.skipValue();
             }
             break;
           case "seq":
-            _seq = reader.readInteger();
+            seq = reader.readInteger();
             break;
           case "gen":
-            _gen = reader.readInteger();
+            gen = reader.readInteger();
             break;
         }
       }
     } else {
       set(reader.readString());
-      _upgraded = true;
+      upgraded = true;
     }
-    this.seq = _seq;
-    this.gen = _gen;
-    this.upgraded = _upgraded;
-    this.copy = null;
   }
 
   public void commit() {
@@ -192,16 +205,40 @@ public class Text {
     writer.endObject();
   }
 
+  private void internalAppend(int seq, String change) {
+    if (copy != null) {
+      copy = new SeqString(copy.seq + 1, Operand.apply(new Raw(copy.value), change).get());
+    }
+  }
+
   public boolean append(int seq, String change) {
     boolean exists = this.changes.containsKey(seq) || uncommitedChanges.containsKey(seq);
     boolean priorExists = this.seq == seq || this.changes.containsKey(seq - 1) || this.uncommitedChanges.containsKey(seq - 1);
     if (exists || !priorExists) {
       return false;
     }
-    if (copy != null) {
-      copy = new SeqString(copy.seq + 1, Operand.apply(new Raw(copy.value), change).get());
+
+    JsonStreamReader reader = new JsonStreamReader(change);
+    if (reader.startArray()) {
+      int off = 0;
+      Operand operand = copy != null ? new Raw(copy.value) : null;
+      while (reader.notEndOfArray()) {
+        String elementChange = reader.skipValueIntoJson();
+        uncommitedChanges.put(seq + off, elementChange);
+        if (operand != null) {
+          operand = Operand.apply(operand, elementChange);
+        }
+        off++;
+      }
+      if (operand != null) {
+        copy = new SeqString(seq + off, operand.get());
+      }
+    } else {
+      uncommitedChanges.put(seq, change);
+      if (copy != null) {
+        copy = new SeqString(seq + 1, Operand.apply(new Raw(copy.value), change).get());
+      }
     }
-    uncommitedChanges.put(seq, change);
     return true;
   }
 
