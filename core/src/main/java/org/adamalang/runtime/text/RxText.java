@@ -24,10 +24,14 @@ public class RxText extends RxBase {
   private Text backup;
   private Text value;
 
-  public RxText(final RxParent parent, final Text value) {
+  public RxText(final RxParent parent) {
     super(parent);
-    this.backup = value;
-    this.value = value;
+    this.backup = new Text();
+    this.value = new Text();
+  }
+
+  public Text current() {
+    return value;
   }
 
   @Override
@@ -155,8 +159,8 @@ public class RxText extends RxBase {
     }
   }
 
-  public boolean change(int seq, NtDynamic changes) {
-    if (value.change(seq, changes.json)) {
+  public boolean append(int seq, NtDynamic changes) {
+    if (value.append(seq, changes.json)) {
       __raiseDirty();
       return true;
     }
@@ -172,6 +176,12 @@ public class RxText extends RxBase {
   }
 
   public String get() {
-    return value.get();
+    return value.get().value;
+  }
+
+  @Override
+  public long __memory() {
+    // TODO
+    return super.__memory();
   }
 }

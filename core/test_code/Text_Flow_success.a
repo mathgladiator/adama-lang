@@ -1,0 +1,16 @@
+@static {
+  create {
+    return true;
+  }
+}
+
+public text document;
+
+message Append {
+  int seq;
+  dynamic change;
+}
+
+channel write(Append a) {
+  document.append(a.seq, a.change);
+}

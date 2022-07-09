@@ -30,6 +30,7 @@ public class CodeGenDocument {
     sb.append("import org.adamalang.runtime.stdlib.*;").writeNewline();
     sb.append("import org.adamalang.runtime.sys.*;").writeNewline();
     sb.append("import org.adamalang.runtime.sys.web.*;").writeNewline();
+    sb.append("import org.adamalang.runtime.text.*;").writeNewline();
     sb.append("import java.util.function.Consumer;").writeNewline();
     sb.append("import java.util.function.Function;").writeNewline();
     sb.append("import java.util.ArrayList;").writeNewline();

@@ -39,6 +39,7 @@ public class LivingDocumentFactory {
   public final int maximum_history;
   public final boolean delete_on_close;
 
+
   public LivingDocumentFactory(final String className, final String javaSource, String reflection) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
     final var diagnostics = new DiagnosticCollector<JavaFileObject>();

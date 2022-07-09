@@ -150,6 +150,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
+    gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -647,6 +648,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
+    gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -1407,6 +1409,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
+    gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -2078,6 +2081,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
+    gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -2785,6 +2789,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
+    gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -3456,6 +3461,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
+    gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -3956,6 +3962,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
+    gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -4481,6 +4488,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
+    gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -5292,6 +5300,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
+    gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");

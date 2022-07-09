@@ -1395,6 +1395,8 @@ public class Parser {
         return new TyReactiveString(token);
       case "label":
         return new TyReactiveStateMachineRef(token);
+      case "text":
+        return new TyReactiveText(token);
       case "table": {
         final var typeParameter = type_parameter();
         return new TyReactiveTable(token, typeParameter);

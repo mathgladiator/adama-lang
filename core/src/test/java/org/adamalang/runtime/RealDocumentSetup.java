@@ -35,6 +35,7 @@ public class RealDocumentSetup {
   public final MockTime time;
   public final DurableLivingDocument document;
   private DurableLivingDocument mirror;
+  public final String code;
 
   public RealDocumentSetup(final String code) throws Exception {
     this(code, null);
@@ -67,6 +68,7 @@ public class RealDocumentSetup {
     DocumentThreadBase base = new DocumentThreadBase(dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
     dds.setData(json);
     factory = LivingDocumentTests.compile(code);
+    this.code = code;
     DumbDataService.DumbDurableLivingDocumentAcquire acquireReal =
         new DumbDataService.DumbDurableLivingDocumentAcquire();
     DumbDataService.DumbDurableLivingDocumentAcquire acquireMirror =

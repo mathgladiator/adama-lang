@@ -33,7 +33,7 @@ import java.util.Map;
 /** responsible for writing the code for records */
 public class CodeGenRecords {
   private static boolean isCommitRevertable(final TyType fieldType) {
-    return fieldType instanceof TySimpleReactive || fieldType instanceof TyReactiveMaybe || fieldType instanceof TyReactiveTable || fieldType instanceof TyReactiveRef || fieldType instanceof TyReactiveRecord || fieldType instanceof TyReactiveMap;
+    return fieldType instanceof TySimpleReactive || fieldType instanceof TyReactiveMaybe || fieldType instanceof TyReactiveTable || fieldType instanceof TyReactiveRef || fieldType instanceof TyReactiveRecord || fieldType instanceof TyReactiveMap || fieldType instanceof TyReactiveText;
   }
 
   public static void writeCommitAndRevert(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot, final String... others) {
@@ -99,6 +99,8 @@ public class CodeGenRecords {
       result.append("new RxTable<>(__self, ").append(parent).append(", \"").append(className);
       result.append("\", (RxParent __parent) -> new RTx").append(((TyReactiveTable) fieldType).recordName);
       result.append("(__parent), ").append(numberIndicies).append(")");
+    } else if (fieldType instanceof TyReactiveText) {
+      result.append("new RxText(__self)");
     } else if (fieldType instanceof TyReactiveRecord) {
       result.append("new ").append(fieldType.getJavaConcreteType(environment)).append("(").append(parent).append(")");
     } else if (fieldType instanceof TyReactiveMap) {
@@ -155,11 +157,7 @@ public class CodeGenRecords {
       }
       final var javaConcreteType = fieldType.getJavaConcreteType(environment);
       classFields.append("private final ").append(javaConcreteType).append(" ").append(fieldName).append(";").writeNewline();
-      if (fieldType instanceof TyReactiveTable) {
-        classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, null, environment)).append(";").writeNewline();
-      } else if (fieldType instanceof TyReactiveMap) {
-        classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, null, environment)).append(";").writeNewline();
-      } else if (fieldType instanceof TyReactiveRecord) {
+      if (fieldType instanceof TyReactiveTable || fieldType instanceof TyReactiveText || fieldType instanceof TyReactiveMap || fieldType instanceof TyReactiveRecord) {
         classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, null, environment)).append(";").writeNewline();
       } else if (fieldType instanceof IsReactiveValue) {
         classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, fdInOrder.defaultValueOverride, environment)).append(";").writeNewline();

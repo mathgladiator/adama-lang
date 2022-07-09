@@ -81,6 +81,18 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void text() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup(
+          "public text document; @construct {}",
+          "{}");
+      System.err.println(setup.code);
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+    }
+  }
+
+  @Test
   @SuppressWarnings("unchecked")
   public void accept_array_message() throws Exception {
     final var setup =

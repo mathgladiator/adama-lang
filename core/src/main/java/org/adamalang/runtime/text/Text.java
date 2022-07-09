@@ -26,7 +26,7 @@ public class Text {
   public final HashMap<Integer, String> changes;
   public final HashMap<Integer, String> uncommitedChanges;
   public int seq;
-  private String copy;
+  private SeqString copy;
 
   /** fresh Text */
   public Text() {
@@ -135,7 +135,7 @@ public class Text {
     changes.clear();
     uncommitedChanges.clear();
     this.seq = 0;
-    this.copy = str;
+    this.copy = new SeqString(seq, str);
   }
 
   public static String keyFor(String ln, HashMap<String, String> inverse) {
@@ -183,20 +183,20 @@ public class Text {
     writer.endObject();
   }
 
-  public boolean change(int seq, String change) {
+  public boolean append(int seq, String change) {
     boolean exists = this.changes.containsKey(seq) || uncommitedChanges.containsKey(seq);
     boolean priorExists = this.seq == seq || this.changes.containsKey(seq - 1) || this.uncommitedChanges.containsKey(seq - 1);
     if (exists || !priorExists) {
       return false;
     }
     if (copy != null) {
-      copy = Operand.apply(new Raw(copy), change).get();
+      copy = new SeqString(copy.seq + 1, Operand.apply(new Raw(copy.value), change).get());
     }
     uncommitedChanges.put(seq, change);
     return true;
   }
 
-  public String get() {
+  public SeqString get() {
     if (copy == null) {
       StringBuilder sb = new StringBuilder();
       for(int k = 0; k < order.size(); k++) {
@@ -216,7 +216,7 @@ public class Text {
         result = Operand.apply(result, change);
         at++;
       }
-      copy = result.get();
+      copy = new SeqString(at, result.get());
     }
     return copy;
   }
