@@ -115,6 +115,8 @@ public class RxText extends RxBase {
     forwardDelta.endObject();
     reverseDelta.endObject();
 
+    value.commit();
+
     forwardDelta.writeObjectFieldIntro("changes");
     reverseDelta.writeObjectFieldIntro("changes");
     forwardDelta.beginObject();
@@ -133,7 +135,6 @@ public class RxText extends RxBase {
     forwardDelta.endObject();
     reverseDelta.endObject();
 
-    value.commit();
     backup = value;
   }
 
@@ -150,7 +151,7 @@ public class RxText extends RxBase {
 
   @Override
   public void __patch(JsonStreamReader reader) {
-    value = new Text(reader);
+    // TODO
   }
 
   @Override

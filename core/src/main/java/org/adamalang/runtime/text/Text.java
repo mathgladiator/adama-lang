@@ -196,6 +196,32 @@ public class Text {
     return true;
   }
 
+  public void compact(double ratio) {
+    StringBuilder sb = new StringBuilder();
+    for(int k = 0; k < order.size(); k++) {
+      if (k > 0) {
+        sb.append("\n");
+      }
+      sb.append(fragments.get(order.get(k)));
+    }
+    Operand result = new Raw(sb.toString());
+    int toDo = (int) (ratio * (changes.size() + uncommitedChanges.size()));
+    while (toDo-- > 0) {
+      String change = changes.remove(seq);
+      if (change == null) {
+        change = uncommitedChanges.remove(seq);
+      }
+      if (change != null) {
+        System.err.println("apply:" + change + " to:" + result.get());
+        result = Operand.apply(result, change);
+        seq++;
+      } else {
+        toDo = 0;
+      }
+    }
+    setBase(result.get());
+  }
+
   public SeqString get() {
     if (copy == null) {
       StringBuilder sb = new StringBuilder();
