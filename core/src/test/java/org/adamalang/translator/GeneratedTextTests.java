@@ -92,7 +92,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public Append_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    document = new RxText(__self);");
+    gold.append("\n    document = new RxText(this);");
     gold.append("\n    document_str = new RxLazy<String>(this, () -> (document.get()));");
     gold.append("\n    document.__subscribe(document_str);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -653,7 +653,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public CompileAdama_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    document = new RxText(__self);");
+    gold.append("\n    document = new RxText(this);");
     gold.append("\n    document_str = new RxLazy<String>(this, () -> (document.get()));");
     gold.append("\n    document.__subscribe(document_str);");
     gold.append("\n    issues = new RxLazy<NtDynamic>(this, () -> (LibAdama.validate(document_str.get())));");
@@ -1190,7 +1190,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public Flow_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    document = new RxText(__self);");
+    gold.append("\n    document = new RxText(this);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -1804,7 +1804,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public Ingestion_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    document = new RxText(__self);");
+    gold.append("\n    document = new RxText(this);");
     gold.append("\n    r = new RTxR(this);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -2130,7 +2130,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    private final RxInt32 id;");
     gold.append("\n    private RTxR(RxParent __owner) {");
     gold.append("\n      super(__owner);");
-    gold.append("\n      doc = new RxText(__self);");
+    gold.append("\n      doc = new RxText(this);");
     gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -2453,7 +2453,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"document\":{\"type\":{\"nature\":\"reactive_text\"},\"privacy\":\"public\"},\"r\":{\"type\":{\"nature\":\"reactive_record\",\"name\":\"R\",\"fields\":{\"doc\":{\"type\":{\"nature\":\"reactive_text\"},\"privacy\":\"public\"}}},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"R\":{\"nature\":\"reactive_record\",\"name\":\"R\",\"fields\":{\"doc\":{\"type\":{\"nature\":\"reactive_text\"},\"privacy\":\"public\"}}},\"_AnonObjConvert_0\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_0\",\"anonymous\":true,\"fields\":{\"doc\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"}}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"document\":{\"fragments\":{\"be\":\"123\"},\"order\":{\"0\":\"be\"},\"changes\":{},\"gen\":1},\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"document\":{\"fragments\":{\"be\":\"123\"},\"order\":{\"0\":\"be\"},\"changes\":{},\"gen\":1},\"r\":{\"doc\":{\"fragments\":{\"67\":\"42\"},\"order\":{\"0\":\"67\"},\"changes\":{},\"gen\":1}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:4");
     gold.append("\nMEMORY:554");
