@@ -27,11 +27,13 @@ public interface Operand {
               while (reader.notEndOfArray()) {
                 if (reader.startArray()) {
                   at += reader.readInteger();
-                  if (reader.notEndOfArray()) {
-                    next.children.add(new Raw(reader.readString()));
-                    while (reader.notEndOfArray()) {
-                      reader.skipValue();
+                  boolean notFirst = false;
+                  while (reader.notEndOfArray()) {
+                    if (notFirst) {
+                      next.children.add(new Raw("\n"));
                     }
+                    next.children.add(new Raw(reader.readString()));
+                    notFirst = true;
                   }
                 } else {
                   int copy = reader.readInteger();
