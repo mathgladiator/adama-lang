@@ -62,13 +62,13 @@ public class DText implements DeltaNode {
         seq++;
       }
       if (start != seq) {
-        obj.planField("@s").writeInt(seq);
+        obj.planField("$s").writeInt(seq);
       }
     } else {
       init = true;
       SeqString val = value.current().get();
-      obj.planField("@i").writeString(val.value);
-      obj.planField("@s").writeInt(val.seq);
+      obj.planField("$i").writeString(val.value);
+      obj.planField("$s").writeInt(val.seq);
       seq = val.seq;
     }
     obj.end();

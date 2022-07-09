@@ -34,6 +34,6 @@ public class DTextTests {
     dt.show(text, writer);
     dt.hide(writer);
     dt.show(text, writer);
-    Assert.assertEquals("{\"@i\":\"\",\"@s\":0}{\"@i\":\"xyz\",\"@s\":0}{\"@i\":\"/* adama */\",\"@s\":0}{\"0\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}]\",\"@s\":1}null{\"@i\":\"/* adama */x\",\"@s\":1}", stream.toString());
+    Assert.assertEquals("{\"$i\":\"\",\"$s\":0}{\"$i\":\"xyz\",\"$s\":0}{\"$i\":\"/* adama */\",\"$s\":0}{\"0\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}]\",\"$s\":1}null{\"$i\":\"/* adama */x\",\"$s\":1}", stream.toString());
   }
 }
