@@ -28,6 +28,29 @@ public class RxTextTests {
   }
 
   @Test
+  public void commit_set() {
+    RxText text = new RxText(null);
+    text.set("Howdy");
+    {
+      JsonStreamWriter redo = new JsonStreamWriter();
+      JsonStreamWriter undo = new JsonStreamWriter();
+      text.__commit("x", redo, undo);
+      Assert.assertEquals("Howdy", text.get());
+      Assert.assertEquals("\"x\":{\"fragments\":{\"42\":\"Howdy\"},\"order\":{\"0\":\"42\"},\"changes\":{},\"gen\":1}", redo.toString());
+      Assert.assertEquals("\"x\":{\"fragments\":{\"42\":null},\"order\":{\"0\":null},\"changes\":{},\"gen\":0}", undo.toString());
+    }
+    text.set("Yo");
+    {
+      JsonStreamWriter redo = new JsonStreamWriter();
+      JsonStreamWriter undo = new JsonStreamWriter();
+      text.__commit("x", redo, undo);
+      Assert.assertEquals("Yo", text.get());
+      Assert.assertEquals("\"x\":{\"fragments\":{\"b3\":\"Yo\",\"42\":null},\"order\":{\"0\":\"b3\"},\"changes\":{},\"gen\":2}", redo.toString());
+      Assert.assertEquals("\"x\":{\"fragments\":{\"b3\":null,\"42\":\"Howdy\"},\"order\":{\"0\":\"42\"},\"changes\":{},\"gen\":1}", undo.toString());
+    }
+  }
+
+  @Test
   public void commit_no_change() {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();

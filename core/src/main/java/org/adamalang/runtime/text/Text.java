@@ -26,6 +26,7 @@ public class Text {
   public final HashMap<Integer, String> changes;
   public final HashMap<Integer, String> uncommitedChanges;
   public int seq;
+  public int gen;
   private SeqString copy;
 
   /** fresh Text */
@@ -35,6 +36,7 @@ public class Text {
     this.changes = new HashMap<>();
     this.uncommitedChanges = new HashMap<>();
     this.seq = 0;
+    this.gen = 0;
     this.upgraded = false;
     this.copy = null;
   }
@@ -47,6 +49,7 @@ public class Text {
     this.uncommitedChanges = new HashMap<>(other.uncommitedChanges);
     this.seq = other.seq;
     this.upgraded = other.upgraded;
+    this.gen = other.gen;
     this.copy = null;
   }
 
@@ -57,6 +60,7 @@ public class Text {
     this.changes = new HashMap<>();
     this.uncommitedChanges = new HashMap<>();
     int _seq = 0;
+    int _gen = 0;
     boolean _upgraded = false;
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
@@ -94,6 +98,9 @@ public class Text {
           case "seq":
             _seq = reader.readInteger();
             break;
+          case "gen":
+            _gen = reader.readInteger();
+            break;
         }
       }
     } else {
@@ -101,6 +108,7 @@ public class Text {
       _upgraded = true;
     }
     this.seq = _seq;
+    this.gen = _gen;
     this.upgraded = _upgraded;
     this.copy = null;
   }
@@ -135,6 +143,7 @@ public class Text {
     changes.clear();
     uncommitedChanges.clear();
     this.seq = 0;
+    this.gen ++;
     this.copy = new SeqString(seq, str);
   }
 
@@ -212,7 +221,6 @@ public class Text {
         change = uncommitedChanges.remove(seq);
       }
       if (change != null) {
-        System.err.println("apply:" + change + " to:" + result.get());
         result = Operand.apply(result, change);
         seq++;
       } else {

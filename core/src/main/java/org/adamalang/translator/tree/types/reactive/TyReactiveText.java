@@ -19,6 +19,7 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.traits.assign.AssignmentViaSetter;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailRequiresResolveCall;
@@ -28,7 +29,8 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class TyReactiveText extends TyType implements //
-    DetailHasDeltaType,
+    DetailHasDeltaType, //
+    AssignmentViaSetter, //
     DetailTypeHasMethods {
   public final Token textToken;
 

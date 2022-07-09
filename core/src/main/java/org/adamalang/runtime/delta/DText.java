@@ -18,10 +18,12 @@ import org.adamalang.runtime.text.SeqString;
 public class DText implements DeltaNode {
   private boolean init;
   private int seq;
+  private int gen;
 
   public DText() {
     init = false;
     seq = 0;
+    gen = 0;
   }
 
   /** the string is no longer visible (was made private) */
@@ -30,6 +32,7 @@ public class DText implements DeltaNode {
       writer.writeNull();
       init = false;
       seq = 0;
+      gen = 0;
     }
   }
 
@@ -37,10 +40,15 @@ public class DText implements DeltaNode {
   public void clear() {
     init = false;
     seq = 0;
+    gen = 0;
   }
 
   public void show(final RxText value, final PrivateLazyDeltaWriter writer) {
-    // TODO: need to detect a reset condition, seq going backwards, etc...
+    if (value.current().gen != gen) {
+      this.init = false;
+      this.seq = 0;
+      this.gen = value.current().gen;
+    }
     PrivateLazyDeltaWriter obj = writer.planObject();
     if (init) {
       int start = seq;

@@ -94,6 +94,10 @@ public class RuleSetAssignment {
     if (aString && bString) {
       return true;
     }
+    final var aText = RuleSetCommon.IsText(environment, typeA, true);
+    if (aText && bString) {
+      return true;
+    }
     final var aClient = RuleSetAsync.IsClient(environment, typeA, true);
     final var bClient = RuleSetAsync.IsClient(environment, typeB, true);
     if (aClient && bClient) {

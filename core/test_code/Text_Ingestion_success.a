@@ -1,0 +1,18 @@
+@static {
+  create {
+    return true;
+  }
+}
+
+public text document;
+
+record R {
+  public text doc;
+}
+
+public R r;
+
+@construct {
+  document = "123";
+  r <- {doc:"42"};
+}

@@ -267,6 +267,17 @@ public class RuleSetCommon {
     return false;
   }
 
+  public static boolean IsText(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    final var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType != null) {
+      if (tyType instanceof TyReactiveText) {
+        return true;
+      }
+      SignalTypeFailure(environment, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+    }
+    return false;
+  }
+
   static boolean IsLong(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {

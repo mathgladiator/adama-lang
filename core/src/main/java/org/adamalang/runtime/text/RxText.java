@@ -132,6 +132,13 @@ public class RxText extends RxBase {
       reverseDelta.writeInteger(backup.seq);
     }
 
+    if (backup.gen != value.gen) {
+      forwardDelta.writeObjectFieldIntro("gen");
+      forwardDelta.writeInteger(value.gen);
+      reverseDelta.writeObjectFieldIntro("gen");
+      reverseDelta.writeInteger(backup.gen);
+    }
+
     forwardDelta.endObject();
     reverseDelta.endObject();
 
