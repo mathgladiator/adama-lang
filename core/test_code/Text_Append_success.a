@@ -9,18 +9,18 @@ public formula document_str = document.get();
 
 @construct {
   if (("[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]}]").toDynamic() as a) {
-    //document.append(0, a);
+    document.append(0, a);
   }
   if (("[{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}]").toDynamic() as a) {
-   // document.append(1, a);
+    document.append(1, a);
   }
   if (("[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]}]").toDynamic() as a) {
-    //document.append(2, a);
+    document.append(2, a);
   }
   if (("[{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}]").toDynamic() as a) {
-   // document.append(3, a);
+    document.append(3, a);
   }
   if (("[{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}]").toDynamic() as a) {
-   // document.append(4, a);
+    document.append(4, a);
   }
 }

@@ -42,7 +42,8 @@ public class DText implements DeltaNode {
   public void show(final RxText value, final PrivateLazyDeltaWriter writer) {
     // TODO: need to detect a reset condition, seq going backwards, etc...
     PrivateLazyDeltaWriter obj = writer.planObject();
-    if (!init) {
+    if (init) {
+      int start = seq;
       String change = null;
       while ((change = value.current().changes.get(seq)) != null) {
         obj.planField("" + seq).writeString(change);
@@ -52,7 +53,9 @@ public class DText implements DeltaNode {
         obj.planField("" + seq).writeString(change);
         seq++;
       }
-      obj.planField("@s").writeInt(seq);
+      if (start != seq) {
+        obj.planField("@s").writeInt(seq);
+      }
     } else {
       init = true;
       SeqString val = value.current().get();
