@@ -100,24 +100,24 @@ public class RxText extends RxBase {
     reverseDelta.beginObject();
 
     forwardDelta.writeObjectFieldIntro("fragments");
-    forwardDelta.beginObject();
     reverseDelta.writeObjectFieldIntro("fragments");
+    forwardDelta.beginObject();
     reverseDelta.beginObject();
     __commitDiffMap(backup.fragments, value.fragments, forwardDelta, reverseDelta);
     forwardDelta.endObject();
     reverseDelta.endObject();
 
     forwardDelta.writeObjectFieldIntro("order");
-    forwardDelta.beginObject();
     reverseDelta.writeObjectFieldIntro("order");
+    forwardDelta.beginObject();
     reverseDelta.beginObject();
     __commitDiffMap(backup.order, value.order, forwardDelta, reverseDelta);
     forwardDelta.endObject();
     reverseDelta.endObject();
 
     forwardDelta.writeObjectFieldIntro("changes");
-    forwardDelta.beginObject();
     reverseDelta.writeObjectFieldIntro("changes");
+    forwardDelta.beginObject();
     reverseDelta.beginObject();
     __commitDiffMap(backup.changes, value.changes, forwardDelta, reverseDelta);
     forwardDelta.endObject();
@@ -127,9 +127,11 @@ public class RxText extends RxBase {
       forwardDelta.writeObjectFieldIntro("seq");
       forwardDelta.writeInteger(value.seq);
       reverseDelta.writeObjectFieldIntro("seq");
-      forwardDelta.writeInteger(backup.seq);
+      reverseDelta.writeInteger(backup.seq);
     }
+
     forwardDelta.endObject();
+    reverseDelta.endObject();
 
     value.commit();
     backup = value;

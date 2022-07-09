@@ -80,11 +80,28 @@ public class Block extends Statement {
     if (brace) {
       sb.tabUp().append("{").writeNewline();
       if (!environment.state.hasNoCost() && !environment.state.isStatic()) {
-        sb.append(String.format("__code_cost += %d;", 1 + statements.size())).writeNewline();
+        sb.append(String.format("__code_cost += %d;", 1 + statements.size()));
+        if (n == 0 && (brace || tabDownOnEnd)) {
+          sb.tabDown();
+        }
+        sb.writeNewline();
+      } else {
+        if (n == 0 && (brace || tabDownOnEnd)) {
+          sb.tabDown().append("/* empty */").writeNewline();
+        }
       }
     } else if (!environment.state.hasNoCost() && !environment.state.isStatic()) {
-      sb.append(String.format("__code_cost += %d;", 1 + statements.size())).writeNewline();
+      sb.append(String.format("__code_cost += %d;", 1 + statements.size()));
+      if (n == 0 && (brace || tabDownOnEnd)) {
+        sb.tabDown();
+      }
+      sb.writeNewline();
+    } else {
+      if (n == 0 && (brace || tabDownOnEnd)) {
+        sb.tabDown().append("/* empty */").writeNewline();
+      }
     }
+
     for (var k = 0; k < n; k++) {
       final var s = statements.get(k);
       final var codeCoverageIndex = environment.codeCoverageTracker.register(s);
