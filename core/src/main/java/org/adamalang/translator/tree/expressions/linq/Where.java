@@ -25,6 +25,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
 import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
@@ -173,7 +174,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
 
   private String compileIndexExpr(final Expression indexValue, final Environment prior) {
     try {
-      final var nope = prior.watch(x -> {
+      final var nope = prior.watch((x, ty) -> {
         throw new RuntimeException();
       }).scopeWithComputeContext(ComputeContext.Computation);
       for (final Map.Entry<String, TyType> whatIs : closureTyTypes.entrySet()) {
@@ -208,13 +209,14 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     if (typeFrom != null && environment.rules.IsNativeListOfStructure(typeFrom, false)) {
       final var storageType = (IsStructure) ((TyNativeList) typeFrom).elementType;
       structureStorage = storageType.storage();
-      final var watch = environment.watch(name -> {
-        if (!closureTypes.containsKey(name)) {
-          final var ty = environment.lookup(name, true, this, false);
-          if (ty != null) {
-            closureTyTypes.put(name, ty);
-            closureTypes.put(name, ty.getJavaConcreteType(environment));
-          }
+      final var watch = environment.watch((name, tyUn) -> {
+        TyType ty = environment.rules.Resolve(tyUn, false);
+        if (ty instanceof TyNativeGlobalObject) {
+          return;
+        }
+        if (!closureTypes.containsKey(name) && ty != null) {
+          closureTyTypes.put(name, ty);
+          closureTypes.put(name, ty.getJavaConcreteType(environment));
         }
       });
       if (environment.state.isBubble()) {

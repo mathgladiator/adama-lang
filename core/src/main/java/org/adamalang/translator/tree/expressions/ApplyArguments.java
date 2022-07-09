@@ -19,6 +19,7 @@ import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
+import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 import org.adamalang.translator.tree.types.natives.TyNativeVoid;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -82,12 +83,13 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       var environmentToUse = environmentX;
       if (isAggregate) {
         closureTyTypes = new TreeMap<>();
-        environmentToUse = environmentX.watch(name -> {
-          if (!closureTyTypes.containsKey(name)) {
-            final var ty = environmentX.lookup(name, true, this, false);
-            if (ty != null) {
-              closureTyTypes.put(name, ty);
-            }
+        environmentToUse = environmentX.watch((String name, TyType tyUn) -> {
+          TyType ty = environmentX.rules.Resolve(tyUn, false);
+          if (ty instanceof TyNativeGlobalObject) {
+            return;
+          }
+          if (!closureTyTypes.containsKey(name) && ty != null) {
+            closureTyTypes.put(name, ty);
           }
         });
         environmentToUse.document.add(this);

@@ -12,6 +12,7 @@ package org.adamalang.translator.tree.expressions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 
 import java.util.function.Consumer;
@@ -38,12 +39,12 @@ public class Lookup extends Expression {
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     var type = environment.lookup(variableToken.text, environment.state.isContextComputation(), this, false);
+
+    if (type instanceof TyNativeGlobalObject) {
+      hide = true;
+      return type;
+    }
     if (type == null) {
-      final var globalObject = environment.state.globals.get(variableToken.text);
-      if (globalObject != null) {
-        hide = true;
-        return globalObject;
-      }
       environment.document.createError(this, String.format("The variable '%s' was not defined", variableToken.text), "VariableLookup");
     }
     if (type != null && environment.state.isContextComputation() && type instanceof DetailComputeRequiresGet) {

@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.types.checking.Rules;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -33,7 +34,7 @@ public class Environment {
   private TyType returnType;
   private boolean returnTypeSet;
   private Function<String, TyType> trap = null;
-  private Consumer<String> watch = null;
+  private BiConsumer<String, TyType> watch = null;
 
   private Environment(final Document document, final EnvironmentState state, final Environment parent) {
     this.document = document;
@@ -106,12 +107,7 @@ public class Environment {
     return null;
   }
 
-  /** look up the type of the given variable; will throw issues */
-  public TyType lookup(final String name, final boolean compute, final DocumentPosition position, final boolean silent) {
-    // something is watching what flows pass this
-    if (watch != null) {
-      watch.accept(name);
-    }
+  private TyType lookup_internal(final String name, final boolean compute, final DocumentPosition position, final boolean silent) {
     // test the current environment
     var result = variables.get(name);
     if (result != null) {
@@ -139,7 +135,24 @@ public class Environment {
         return func;
       }
     }
+
+    // Ok, it must be a global object
+    final var globalObject = state.globals.get(name);
+    if (globalObject != null) {
+      return globalObject;
+    }
+
     return result;
+  }
+
+  /** look up the type of the given variable; will throw issues */
+  public TyType lookup(final String name, final boolean compute, final DocumentPosition position, final boolean silent) {
+    // something is watching what flows pass this
+    TyType type = lookup_internal(name, compute, position, silent);
+    if (watch != null) {
+      watch.accept(name, type);
+    }
+    return type;
   }
 
   /** test the immediate environment for a variable definition */
@@ -230,7 +243,7 @@ public class Environment {
   }
 
   /** create a new environment (scoped) that will watch for variables that escape */
-  public Environment watch(final Consumer<String> watch) {
+  public Environment watch(final BiConsumer<String, TyType> watch) {
     final var next = scope();
     next.watch = watch;
     return next;

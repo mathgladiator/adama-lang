@@ -15,13 +15,16 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.privacy.PrivatePolicy;
+import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
+import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
 import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
 import org.adamalang.translator.tree.types.reactive.TyReactiveInteger;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class StructureStorage extends DocumentPosition {
@@ -101,15 +104,22 @@ public class StructureStorage extends DocumentPosition {
     add(bd, typeCheckOrder);
   }
 
+  private BiConsumer<String, TyType> watcher(Environment env, LinkedHashSet<String> variablesToWatch) {
+    return (name, type) -> {
+      TyType resolved = env.rules.Resolve(type, true);
+      if (resolved instanceof TyNativeGlobalObject) return;
+      if (!env.document.functionTypes.containsKey(name)) {
+        variablesToWatch.add(name);
+      }
+    };
+  }
+
   public void add(final BubbleDefinition bd, final ArrayList<Consumer<Environment>> order) {
     emissions.add(emit -> bd.emit(emit));
     ingest(bd);
     order.add(env -> {
-      bd.typing(env.watch(name -> {
-        if (!env.document.functionTypes.containsKey(name)) {
-          bd.variablesToWatch.add(name);
         }
-      }));
+      bd.typing(env.watch(watcher(env, bd.variablesToWatch)));
     });
     if (has(bd.nameToken.text)) {
       order.add(env -> {
@@ -159,11 +169,7 @@ public class StructureStorage extends DocumentPosition {
       fieldsWithDefaults.add(fd.name);
     }
     order.add(env -> {
-      fd.typing(env.watch(name -> {
-        if (!env.document.functionTypes.containsKey(name)) {
-          fd.variablesToWatch.add(name);
-        }
-      }), this);
+      fd.typing(env.watch(watcher(env, fd.variablesToWatch)), this);
       env.define(fd.name, fd.type, false, fd);
     });
     fields.put(fd.name, fd);
