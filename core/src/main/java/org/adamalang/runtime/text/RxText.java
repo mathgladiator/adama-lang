@@ -15,6 +15,8 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.reactives.RxBase;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /** a text field within a document */
@@ -36,6 +38,7 @@ public class RxText extends RxBase {
       } else {
         __commitFullDiff(name, forwardDelta, reverseDelta);
       }
+      backup = value;
       __lowerDirtyCommit();
     }
   }
@@ -54,33 +57,78 @@ public class RxText extends RxBase {
       forwardDelta.injectJson(change.getValue());
       reverseDelta.writeObjectFieldIntro(change.getKey());
       reverseDelta.writeNull();
-      value.changes.put(change.getKey(), change.getValue());
     }
-    value.uncommitedChanges.clear();
+    value.commit();
     forwardDelta.endObject();
     forwardDelta.endObject();
     reverseDelta.endObject();
     reverseDelta.endObject();
   }
 
+  private static <T> void __commitDiffMap(HashMap<T, String> prior, HashMap<T, String> next, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
+    HashSet<T> nuke = new HashSet<>(prior.keySet());
+    for (Map.Entry<T, String> entryNew : next.entrySet()) {
+      nuke.remove(entryNew.getKey());
+      String old = prior.get(entryNew.getKey());
+      if (!entryNew.getValue().equals(old)) {
+        forwardDelta.writeObjectFieldIntro(entryNew.getKey());
+        forwardDelta.writeString(entryNew.getValue());
+        reverseDelta.writeObjectFieldIntro(entryNew.getKey());
+        if (old == null) {
+          reverseDelta.writeNull();
+        } else {
+          reverseDelta.writeString(old);
+        }
+      }
+    }
+    for (T nukeKey : nuke) {
+      forwardDelta.writeObjectFieldIntro(nukeKey);
+      forwardDelta.writeNull();
+      reverseDelta.writeObjectFieldIntro(nukeKey);
+      reverseDelta.writeString(prior.get(nukeKey));
+    }
+  }
+
   private void __commitFullDiff(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     forwardDelta.writeObjectFieldIntro(name);
     forwardDelta.beginObject();
+    reverseDelta.writeObjectFieldIntro(name);
+    reverseDelta.beginObject();
 
     forwardDelta.writeObjectFieldIntro("fragments");
     forwardDelta.beginObject();
-    // for each NEW, add it; for each change, show it; for each removal, null it out
+    reverseDelta.writeObjectFieldIntro("fragments");
+    reverseDelta.beginObject();
+    __commitDiffMap(backup.fragments, value.fragments, forwardDelta, reverseDelta);
     forwardDelta.endObject();
+    reverseDelta.endObject();
 
     forwardDelta.writeObjectFieldIntro("order");
     forwardDelta.beginObject();
+    reverseDelta.writeObjectFieldIntro("order");
+    reverseDelta.beginObject();
+    __commitDiffMap(backup.order, value.order, forwardDelta, reverseDelta);
     forwardDelta.endObject();
+    reverseDelta.endObject();
 
     forwardDelta.writeObjectFieldIntro("changes");
     forwardDelta.beginObject();
+    reverseDelta.writeObjectFieldIntro("changes");
+    reverseDelta.beginObject();
+    __commitDiffMap(backup.changes, value.changes, forwardDelta, reverseDelta);
+    forwardDelta.endObject();
+    reverseDelta.endObject();
+
+    if (backup.seq != value.seq) {
+      forwardDelta.writeObjectFieldIntro("seq");
+      forwardDelta.writeInteger(value.seq);
+      reverseDelta.writeObjectFieldIntro("seq");
+      forwardDelta.writeInteger(backup.seq);
+    }
     forwardDelta.endObject();
 
-    forwardDelta.endObject();
+    value.commit();
+    backup = value;
   }
 
   @Override
@@ -107,9 +155,12 @@ public class RxText extends RxBase {
     }
   }
 
-  public void change(int seq, NtDynamic changes) {
-    value.change(seq, changes);
-    __raiseDirty();
+  public boolean change(int seq, NtDynamic changes) {
+    if (value.change(seq, changes.json)) {
+      __raiseDirty();
+      return true;
+    }
+    return false;
   }
 
   public void set(String str) {

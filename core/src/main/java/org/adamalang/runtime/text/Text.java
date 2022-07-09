@@ -11,7 +11,8 @@ package org.adamalang.runtime.text;
 
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.text.ot.Operand;
+import org.adamalang.runtime.text.ot.Raw;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,8 @@ public class Text {
   public final HashMap<Integer, String> order;
   public final HashMap<Integer, String> changes;
   public final HashMap<Integer, String> uncommitedChanges;
-  public final int seq;
+  public int seq;
+  private String copy;
 
   /** fresh Text */
   public Text() {
@@ -34,6 +36,7 @@ public class Text {
     this.uncommitedChanges = new HashMap<>();
     this.seq = 0;
     this.upgraded = false;
+    this.copy = null;
   }
 
   /** shallow copy as all values in maps are immutable */
@@ -44,6 +47,7 @@ public class Text {
     this.uncommitedChanges = new HashMap<>(other.uncommitedChanges);
     this.seq = other.seq;
     this.upgraded = other.upgraded;
+    this.copy = null;
   }
 
   /** read from JSON */
@@ -98,9 +102,15 @@ public class Text {
     }
     this.seq = _seq;
     this.upgraded = _upgraded;
+    this.copy = null;
   }
 
-  public void set(String str) {
+  public void commit() {
+    changes.putAll(uncommitedChanges);
+    uncommitedChanges.clear();
+  }
+
+  private void setBase(String str) {
     HashMap<String, String> inverse = new HashMap<>();
     for (Map.Entry<String, String> prior : fragments.entrySet()) {
       inverse.put(prior.getValue(), prior.getKey());
@@ -118,8 +128,14 @@ public class Text {
       order.put(at, key);
       at++;
     }
+  }
+
+  public void set(String str) {
+    setBase(str);
     changes.clear();
     uncommitedChanges.clear();
+    this.seq = 0;
+    this.copy = str;
   }
 
   public static String keyFor(String ln, HashMap<String, String> inverse) {
@@ -157,17 +173,51 @@ public class Text {
       writer.writeObjectFieldIntro(changeEntry.getKey());
       writer.injectJson(changeEntry.getValue());
     }
+    for (Map.Entry<Integer, String> changeEntry : uncommitedChanges.entrySet()) {
+      writer.writeObjectFieldIntro(changeEntry.getKey());
+      writer.injectJson(changeEntry.getValue());
+    }
     writer.endObject();
     writer.writeObjectFieldIntro("seq");
     writer.writeInteger(seq);
     writer.endObject();
   }
 
-  public void change(int seq, NtDynamic changes) {
-    uncommitedChanges.put(seq, changes.json);
+  public boolean change(int seq, String change) {
+    boolean exists = this.changes.containsKey(seq) || uncommitedChanges.containsKey(seq);
+    boolean priorExists = this.seq == seq || this.changes.containsKey(seq - 1) || this.uncommitedChanges.containsKey(seq - 1);
+    if (exists || !priorExists) {
+      return false;
+    }
+    if (copy != null) {
+      copy = Operand.apply(new Raw(copy), change).get();
+    }
+    uncommitedChanges.put(seq, change);
+    return true;
   }
 
   public String get() {
-    return null;
+    if (copy == null) {
+      StringBuilder sb = new StringBuilder();
+      for(int k = 0; k < order.size(); k++) {
+        if (k > 0) {
+          sb.append("\n");
+        }
+        sb.append(fragments.get(order.get(k)));
+      }
+      int at = seq;
+      Operand result = new Raw(sb.toString());
+      String change;
+      while ((change = changes.get(at)) != null) {
+        result = Operand.apply(result, change);
+        at++;
+      }
+      while ((change = uncommitedChanges.get(at)) != null) {
+        result = Operand.apply(result, change);
+        at++;
+      }
+      copy = result.get();
+    }
+    return copy;
   }
 }

@@ -9,5 +9,11 @@
  */
 package org.adamalang.runtime.text;
 
+import org.junit.Test;
+
 public class RxTextTests {
+  @Test
+  public void basic() {
+
+  }
 }
