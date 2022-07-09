@@ -28,6 +28,11 @@ public class DFastString implements DeltaNode {
     }
   }
 
+  @Override
+  public void clear() {
+    prior = null;
+  }
+
   /** the fast-string is visible, so show changes */
   public void show(final String value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || !value.equals(prior)) {

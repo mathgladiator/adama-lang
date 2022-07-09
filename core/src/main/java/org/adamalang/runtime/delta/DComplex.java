@@ -28,6 +28,11 @@ public class DComplex implements DeltaNode {
     }
   }
 
+  @Override
+  public void clear() {
+    prior = null;
+  }
+
   /** the double is visible, so show changes */
   public void show(final NtComplex value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || !value.equals(prior)) {

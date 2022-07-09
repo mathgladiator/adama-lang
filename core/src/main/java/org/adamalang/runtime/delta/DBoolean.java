@@ -28,6 +28,11 @@ public class DBoolean implements DeltaNode {
     }
   }
 
+  @Override
+  public void clear() {
+    prior = null;
+  }
+
   /** the boolean is visible, so show changes */
   public void show(final boolean value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || value != prior.booleanValue()) {

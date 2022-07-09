@@ -11,6 +11,9 @@ package org.adamalang.runtime.contracts;
 
 /** for holding onto a copy of the data used by client to differentiate against */
 public interface DeltaNode {
+  /** recursively clear any data because a parent was hidden */
+  void clear();
+
   /** estimate the memory of this node */
   long __memory();
 }

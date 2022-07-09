@@ -348,8 +348,13 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void clear() {");
+    gold.append("\n      __code_cost += 0;");
+    gold.append("\n    }");
     gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      if (__emitted) {");
+    gold.append("\n        clear();");
     gold.append("\n        __emitted = false;");
     gold.append("\n        __writer.writeNull();");
     gold.append("\n      }");
@@ -420,8 +425,13 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void clear() {");
+    gold.append("\n      __code_cost += 0;");
+    gold.append("\n    }");
     gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      if (__emitted) {");
+    gold.append("\n        clear();");
     gold.append("\n        __emitted = false;");
     gold.append("\n        __writer.writeNull();");
     gold.append("\n      }");

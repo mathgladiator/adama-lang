@@ -25,6 +25,12 @@ public class DRecordList<dRecordTy extends DeltaNode> implements DeltaNode {
     this.cache = new HashMap<>();
   }
 
+  @Override
+  public void clear() {
+    this.order.clear();
+    this.cache.clear();
+  }
+
   /** start walking the records */
   public Walk begin() {
     return new Walk();

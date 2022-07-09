@@ -9,10 +9,7 @@
  */
 package org.adamalang.translator.reflect;
 
-import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.natives.NtComplex;
-import org.adamalang.runtime.natives.NtList;
-import org.adamalang.runtime.natives.NtMaybe;
+import org.adamalang.runtime.natives.*;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -50,6 +47,10 @@ public class TypeBridge {
       return new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (Void.class == x || void.class == x) {
       return null;
+    } else if (NtDynamic.class == x) {
+      return new TyNativeDynamic(TypeBehavior.ReadWriteNative, null, null);
+    } else if (NtComplex.class == x) {
+      return new TyNativeComplex(TypeBehavior.ReadWriteNative, null, null);
     } else if (NtList.class == x) {
       TyType subType = getAdamaSubType("NtList<>", hiddenTypes);
       return new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(subType));

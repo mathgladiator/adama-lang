@@ -39,6 +39,11 @@ public class DMap<TyIn, dTyOut extends DeltaNode> implements DeltaNode {
     }
   }
 
+  @Override
+  public void clear() {
+    cache.clear();
+  }
+
   /** memory usage */
   @Override
   public long __memory() {

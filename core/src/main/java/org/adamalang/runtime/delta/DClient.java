@@ -29,6 +29,11 @@ public class DClient implements DeltaNode {
     }
   }
 
+  @Override
+  public void clear() {
+    prior = null;
+  }
+
   /** the client is visible, so show changes */
   public void show(final NtClient value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || !value.equals(prior)) {

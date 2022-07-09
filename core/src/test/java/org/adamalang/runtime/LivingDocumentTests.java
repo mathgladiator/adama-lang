@@ -81,6 +81,42 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void privacy_flux() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup(
+          "@connected { return true; } public bool x; policy p { return x; } record R { public int z; } use_policy<p> R r; @construct { r.z = 1000; x = true; } message N {} channel foo(N n) { x = !x; }",
+          null);
+      RealDocumentSetup.GotView gv = new RealDocumentSetup.GotView();
+      ArrayList<String> list = new ArrayList<>();
+      Perspective linked =
+          new Perspective() {
+            @Override
+            public void data(String data) {
+              list.add(data);
+            }
+
+            @Override
+            public void disconnect() {}
+          };
+
+      setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      for (int k = 0; k < 5; k++) {
+        setup.document.send(ContextSupport.WRAP(A), null, "foo", "{}", new RealDocumentSetup.AssertInt(5 + k));
+      }
+      Assert.assertEquals(6, list.size());
+      Assert.assertEquals("{\"data\":{\"x\":true,\"r\":{\"z\":1000}},\"seq\":4}", list.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":false,\"r\":null},\"seq\":5}", list.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":true,\"r\":{\"z\":1000}},\"seq\":6}", list.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":false,\"r\":null},\"seq\":7}", list.get(3));
+      Assert.assertEquals("{\"data\":{\"x\":true,\"r\":{\"z\":1000}},\"seq\":8}", list.get(4));
+      Assert.assertEquals("{\"data\":{\"x\":false,\"r\":null},\"seq\":9}", list.get(5));
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+    }
+  }
+
+  @Test
   public void text() throws Exception {
     try {
       RealDocumentSetup setup = new RealDocumentSetup(

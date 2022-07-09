@@ -25,6 +25,12 @@ public class DList<dTy extends DeltaNode> implements DeltaNode {
     this.emittedSize = 0;
   }
 
+  @Override
+  public void clear() {
+    this.cachedDeltas.clear();
+    this.emittedSize = 0;
+  }
+
   /** the list is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (emittedSize > 0) {

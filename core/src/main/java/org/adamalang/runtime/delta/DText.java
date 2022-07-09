@@ -33,6 +33,12 @@ public class DText implements DeltaNode {
     }
   }
 
+  @Override
+  public void clear() {
+    init = false;
+    seq = 0;
+  }
+
   public void show(final RxText value, final PrivateLazyDeltaWriter writer) {
     // TODO: need to detect a reset condition, seq going backwards, etc...
     PrivateLazyDeltaWriter obj = writer.planObject();

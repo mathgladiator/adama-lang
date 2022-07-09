@@ -29,6 +29,11 @@ public class DAsset implements DeltaNode {
     }
   }
 
+  @Override
+  public void clear() {
+    prior = null;
+  }
+
   /** the asset is visible, so show changes */
   public void show(final NtAsset value, final PrivateLazyDeltaWriter writer) {
     if (writer.assetIdEncoder != null) {

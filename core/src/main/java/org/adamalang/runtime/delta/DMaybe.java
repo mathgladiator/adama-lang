@@ -34,6 +34,11 @@ public class DMaybe<dTy extends DeltaNode> implements DeltaNode {
     }
   }
 
+  @Override
+  public void clear() {
+    cache = null;
+  }
+
   /** memory usage */
   @Override
   public long __memory() {

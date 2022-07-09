@@ -1,0 +1,12 @@
+@static {
+  create {
+    return true;
+  }
+}
+
+public text document;
+public formula document_str = document.get();
+
+@construct {
+
+}

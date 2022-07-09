@@ -29,6 +29,11 @@ public class DDynamic implements DeltaNode {
     }
   }
 
+  @Override
+  public void clear() {
+    prior = null;
+  }
+
   /** the dynamic tree is visible, so show changes */
   public void show(final NtDynamic value, final PrivateLazyDeltaWriter writer) {
     if (value == null || !value.equals(prior)) {

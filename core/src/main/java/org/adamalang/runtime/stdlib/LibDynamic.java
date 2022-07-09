@@ -9,15 +9,17 @@
  */
 package org.adamalang.runtime.stdlib;
 
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.translator.reflect.Extension;
+import org.adamalang.translator.reflect.HiddenType;
 
 import java.util.Map;
 
 public class LibDynamic {
   @Extension
-  public NtMaybe<String> str(NtDynamic dyn, String field) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> str(NtDynamic dyn, String field) {
     if (dyn.cached() instanceof Map) {
       Object value = ((Map<?, ?>) dyn.cached()).get(field);
       if (value instanceof String) {
@@ -25,5 +27,14 @@ public class LibDynamic {
       }
     }
     return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz = NtDynamic.class) NtMaybe<NtDynamic> toDynamic(String json) {
+    try {
+      return new NtMaybe<>(new JsonStreamReader(json).readNtDynamic());
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
   }
 }

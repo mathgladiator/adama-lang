@@ -74,20 +74,6 @@ public class CodeGenDeltaClass {
     sb.append("}").writeNewline();
   }
 
-  private static void writeCommonTrailer(final StringBuilderWithTabs sb) {
-    sb.append("if (__obj.end()) {").tabUp().writeNewline();
-    sb.append("__emitted = true;").tabDown().writeNewline();
-    sb.append("}").tabDown().writeNewline();
-    sb.append("}").writeNewline();
-    sb.append("public void hide(PrivateLazyDeltaWriter __writer) {").tabUp().writeNewline();
-    sb.append("if (__emitted) {").tabUp().writeNewline();
-    sb.append("__emitted = false;").writeNewline();
-    sb.append("__writer.writeNull();").tabDown().writeNewline();
-    sb.append("}").tabDown().writeNewline();
-    sb.append("}").tabDown().writeNewline();
-    sb.append("}").writeNewline();
-  }
-
   public static void writeMessageDeltaClass(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final String className) {
     sb.append("private class Delta").append(className).append(" implements DeltaNode {").tabUp().writeNewline();
     for (final FieldDefinition fd : storage.fieldsByOrder) {
@@ -106,7 +92,25 @@ public class CodeGenDeltaClass {
       final var fieldType = environment.rules.Resolve(fd.type, false);
       writeShowData(sb, "__d" + fd.name, "__item." + fd.name, fieldType, "__obj.planField(\"" + fd.name + "\")", environment, false);
     }
-    writeCommonTrailer(sb);
+    sb.append("if (__obj.end()) {").tabUp().writeNewline();
+    sb.append("__emitted = true;").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+    sb.append("@Override").writeNewline();
+    sb.append("public void clear() {").tabUp().writeNewline();
+    for (final FieldDefinition fd : storage.fieldsByOrder) {
+      sb.append("__d").append(fd.name).append(".clear();").writeNewline();
+    }
+    sb.append("__code_cost += ").append("" + ( storage.fieldsByOrder.size())).append(";").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+    sb.append("public void hide(PrivateLazyDeltaWriter __writer) {").tabUp().writeNewline();
+    sb.append("if (__emitted) {").tabUp().writeNewline();
+    sb.append("clear();").writeNewline();
+    sb.append("__emitted = false;").writeNewline();
+    sb.append("__writer.writeNull();").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").writeNewline();
   }
 
   public static void writeRecordDeltaClass(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final String className, final boolean forceManifest) {
@@ -148,7 +152,6 @@ public class CodeGenDeltaClass {
     if (forceManifest) {
       sb.append("__obj.manifest();").writeNewline();
     }
-
     for (final FieldDefinition fd : fds) {
       final var isLazy = fd.type instanceof TyReactiveLazy;
       var fieldType = environment.rules.Resolve(fd.type, false);
@@ -191,7 +194,29 @@ public class CodeGenDeltaClass {
         sb.append("}").writeNewline();
       }
     }
-    writeCommonTrailer(sb);
+    sb.append("if (__obj.end()) {").tabUp().writeNewline();
+    sb.append("__emitted = true;").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+    sb.append("@Override").writeNewline();
+    sb.append("public void clear() {").tabUp().writeNewline();
+    for (final FieldDefinition fd : fds) {
+      sb.append("__d").append(fd.name).append(".clear();").writeNewline();
+    }
+    for (final BubbleDefinition bd : storage.bubbles.values()) {
+      sb.append("__d").append(bd.nameToken.text).append(".clear();").writeNewline();
+    }
+    sb.append("__code_cost += ").append("" + (fds.size() + storage.bubbles.size())).append(";").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+    sb.append("public void hide(PrivateLazyDeltaWriter __writer) {").tabUp().writeNewline();
+    sb.append("if (__emitted) {").tabUp().writeNewline();
+    sb.append("clear();").writeNewline();
+    sb.append("__emitted = false;").writeNewline();
+    sb.append("__writer.writeNull();").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+
   }
 
   private static void writeShowData(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyType sourceType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {

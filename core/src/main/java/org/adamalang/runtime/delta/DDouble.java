@@ -28,6 +28,11 @@ public class DDouble implements DeltaNode {
     }
   }
 
+  @Override
+  public void clear() {
+    prior = null;
+  }
+
   /** the double is visible, so show changes */
   public void show(final double value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || value != prior) {

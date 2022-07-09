@@ -28,6 +28,11 @@ public class DInt64 implements DeltaNode {
     }
   }
 
+  @Override
+  public void clear() {
+    prior = null;
+  }
+
   /** the int64 is visible, so show changes */
   public void show(final long value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || value != prior.longValue()) {
