@@ -15,11 +15,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class RxTextTests {
-  private static String PATCH_0 = "[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]}]";
-  private static String PATCH_1 = "[{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}]";
-  private static String PATCH_2 = "[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]}]";
-  private static String PATCH_3 = "[{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}]";
-  private static String PATCH_4 = "[{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}]";
+  private static String PATCH_0 = "{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]}";
+  private static String PATCH_1 = "{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}";
+  private static String PATCH_2 = "{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]}";
+  private static String PATCH_3 = "{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}";
+  private static String PATCH_4 = "{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}";
 
   @Test
   public void memory() {
@@ -71,7 +71,19 @@ public class RxTextTests {
     text.append(3, new NtDynamic(PATCH_3));
     text.append(4, new NtDynamic(PATCH_4));
     text.__commit("x", redo, undo);
-    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}]\",\"1\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}]\",\"2\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}]\",\"3\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}]\",\"4\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}]\"}}", redo.toString());
+    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}\",\"1\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}\",\"2\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}\",\"3\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}\",\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\"}}", redo.toString());
+    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":null,\"1\":null,\"2\":null,\"3\":null,\"4\":null}}", undo.toString());
+    Assert.assertEquals("z/*  */x", text.get());
+  }
+
+  @Test
+  public void commit_change_batch() {
+    JsonStreamWriter redo = new JsonStreamWriter();
+    JsonStreamWriter undo = new JsonStreamWriter();
+    RxText text = new RxText(null);
+    text.append(0, new NtDynamic("[" + PATCH_0 + "," + PATCH_1 + "," + PATCH_2 + "," + PATCH_3 + "," + PATCH_4 + "]"));
+    text.__commit("x", redo, undo);
+    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}\",\"1\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}\",\"2\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}\",\"3\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}\",\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\"}}", redo.toString());
     Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":null,\"1\":null,\"2\":null,\"3\":null,\"4\":null}}", undo.toString());
     Assert.assertEquals("z/*  */x", text.get());
   }
@@ -88,7 +100,7 @@ public class RxTextTests {
     text.append(4, new NtDynamic(PATCH_4));
     text.current().compact(0.7);
     text.__commit("x", redo, undo);
-    Assert.assertEquals("\"x\":{\"fragments\":{\"68\":\"z/* adama */x\"},\"order\":{\"0\":\"68\"},\"changes\":{\"4\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}]\",\"3\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}]\"},\"seq\":3}", redo.toString());
+    Assert.assertEquals("\"x\":{\"fragments\":{\"68\":\"z/* adama */x\"},\"order\":{\"0\":\"68\"},\"changes\":{\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\",\"3\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}\"},\"seq\":3}", redo.toString());
     Assert.assertEquals("\"x\":{\"fragments\":{\"68\":null},\"order\":{\"0\":null},\"changes\":{\"4\":null,\"3\":null},\"seq\":0}", undo.toString());
     Assert.assertEquals("z/*  */x", text.get());
   }
@@ -136,7 +148,7 @@ public class RxTextTests {
     Assert.assertTrue(text.append(3, new NtDynamic(PATCH_3)));
     Assert.assertTrue(text.append(4, new NtDynamic(PATCH_4)));
     text.__dump(c);
-    Assert.assertEquals("{\"fragments\":{},\"order\":{},\"changes\":{\"0\":[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]}],\"1\":[{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}],\"2\":[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]}],\"3\":[{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}],\"4\":[{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}]},\"seq\":0}", c.toString());
+    Assert.assertEquals("{\"fragments\":{},\"order\":{},\"changes\":{\"0\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]},\"1\":{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]},\"2\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]},\"3\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":0}", c.toString());
     Assert.assertEquals("z/*  */x", text.get());
   }
 
@@ -151,7 +163,7 @@ public class RxTextTests {
     Assert.assertTrue(text.append(4, new NtDynamic(PATCH_4)));
     text.current().compact(0.7);
     text.__dump(c);
-    Assert.assertEquals("{\"fragments\":{\"68\":\"z/* adama */x\"},\"order\":{\"0\":\"68\"},\"changes\":{\"3\":[{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}],\"4\":[{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}]},\"seq\":3}", c.toString());
+    Assert.assertEquals("{\"fragments\":{\"68\":\"z/* adama */x\"},\"order\":{\"0\":\"68\"},\"changes\":{\"3\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":3}", c.toString());
     Assert.assertEquals("z/*  */x", text.get());
   }
 
@@ -168,10 +180,10 @@ public class RxTextTests {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
     text.__commit("x", redo, undo);
-    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}]\",\"1\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}]\",\"2\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}]\",\"3\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}]\",\"4\":\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}]\"}}", redo.toString());
+    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}\",\"1\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}\",\"2\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}\",\"3\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}\",\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\"}}", redo.toString());
     Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":null,\"1\":null,\"2\":null,\"3\":null,\"4\":null}}", undo.toString());
     text.__dump(c);
-    Assert.assertEquals("{\"fragments\":{},\"order\":{},\"changes\":{\"0\":[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]}],\"1\":[{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}],\"2\":[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]}],\"3\":[{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}],\"4\":[{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}]},\"seq\":0}", c.toString());
+    Assert.assertEquals("{\"fragments\":{},\"order\":{},\"changes\":{\"0\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]},\"1\":{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]},\"2\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]},\"3\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":0}", c.toString());
     Assert.assertEquals("z/*  */x", text.get());
   }
 

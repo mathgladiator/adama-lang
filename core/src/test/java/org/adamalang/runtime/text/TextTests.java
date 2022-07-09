@@ -62,22 +62,22 @@ public class TextTests {
   public void changeLogBatch() {
     Text text = new Text();
     text.set("/* adama */");
-    Assert.assertTrue(text.append(0, "[{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}]"));
-    Assert.assertTrue(text.append(1, "[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]}]"));
-    Assert.assertTrue(text.append(2, "[{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}]"));
-    Assert.assertTrue(text.append(3, "[{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}]"));
+    Assert.assertTrue(text.append(0, "{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}"));
+    Assert.assertTrue(text.append(1, "{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]}"));
+    Assert.assertTrue(text.append(2, "{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}"));
+    Assert.assertTrue(text.append(3, "{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}"));
     Assert.assertFalse(text.append(10, "{}"));
     Assert.assertEquals("z/*  */x", text.get().value);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       text.write(writer);
-      Assert.assertEquals("{\"fragments\":{\"5b\":\"/* adama */\"},\"order\":{\"0\":\"5b\"},\"changes\":{\"0\":[{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}],\"1\":[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]}],\"2\":[{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}],\"3\":[{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}]},\"seq\":0}", writer.toString());
+      Assert.assertEquals("{\"fragments\":{\"5b\":\"/* adama */\"},\"order\":{\"0\":\"5b\"},\"changes\":{\"0\":{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]},\"1\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]},\"2\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"3\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":0}", writer.toString());
     }
     text.commit();
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       text.write(writer);
-      Assert.assertEquals("{\"fragments\":{\"5b\":\"/* adama */\"},\"order\":{\"0\":\"5b\"},\"changes\":{\"0\":[{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}],\"1\":[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]}],\"2\":[{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}],\"3\":[{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}]},\"seq\":0}", writer.toString());
+      Assert.assertEquals("{\"fragments\":{\"5b\":\"/* adama */\"},\"order\":{\"0\":\"5b\"},\"changes\":{\"0\":{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]},\"1\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]},\"2\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"3\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":0}", writer.toString());
     }
   }
 
@@ -85,15 +85,15 @@ public class TextTests {
   public void compact() {
     Text text = new Text();
     text.set("/* adama */");
-    Assert.assertTrue(text.append(0, "[{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}]"));
-    Assert.assertTrue(text.append(1, "[{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]}]"));
-    Assert.assertTrue(text.append(2, "[{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}]"));
-    Assert.assertTrue(text.append(3, "[{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}]"));
+    Assert.assertTrue(text.append(0, "{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}"));
+    Assert.assertTrue(text.append(1, "{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]}"));
+    Assert.assertTrue(text.append(2, "{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]}"));
+    Assert.assertTrue(text.append(3, "{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}"));
     text.compact(0.8);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       text.write(writer);
-      Assert.assertEquals("{\"fragments\":{\"a7\":\"z/* adama adama */x\"},\"order\":{\"0\":\"a7\"},\"changes\":{\"3\":[{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}]},\"seq\":3}", writer.toString());
+      Assert.assertEquals("{\"fragments\":{\"a7\":\"z/* adama adama */x\"},\"order\":{\"0\":\"a7\"},\"changes\":{\"3\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":3}", writer.toString());
       Text clone = new Text(new JsonStreamReader(writer.toString()));
       Assert.assertEquals("z/*  */x", clone.get().value);
     }

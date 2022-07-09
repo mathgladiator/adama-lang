@@ -170,9 +170,22 @@ public class RxText extends RxBase {
   }
 
   public boolean append(int seq, NtDynamic changes) {
-    if (value.append(seq, changes.json)) {
+    JsonStreamReader reader = new JsonStreamReader(changes.json);
+    if (reader.startArray()) {
+      int off = 0;
+      while (reader.notEndOfArray()) {
+        if (!value.append(seq + off, reader.skipValueIntoJson())) {
+          return false;
+        }
+        off++;
+      }
       __raiseDirty();
       return true;
+    } else {
+      if (value.append(seq, changes.json)) {
+        __raiseDirty();
+        return true;
+      }
     }
     return false;
   }

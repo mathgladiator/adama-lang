@@ -100,7 +100,7 @@ public class CodeGenRecords {
       result.append("\", (RxParent __parent) -> new RTx").append(((TyReactiveTable) fieldType).recordName);
       result.append("(__parent), ").append(numberIndicies).append(")");
     } else if (fieldType instanceof TyReactiveText) {
-      result.append("new RxText(__self)");
+      result.append("new RxText(").append(parent).append(")");
     } else if (fieldType instanceof TyReactiveRecord) {
       result.append("new ").append(fieldType.getJavaConcreteType(environment)).append("(").append(parent).append(")");
     } else if (fieldType instanceof TyReactiveMap) {

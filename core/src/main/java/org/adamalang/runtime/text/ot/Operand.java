@@ -17,45 +17,38 @@ public interface Operand {
   static Operand apply(Operand start, String changes) {
     Operand result = start;
     JsonStreamReader reader = new JsonStreamReader(changes);
-    if (reader.startArray()) {
-      while (reader.notEndOfArray()) {
-        if (reader.startObject()) {
-          while (reader.notEndOfObject()) {
-            switch (reader.fieldName()) {
-              case "changes": {
+    if (reader.startObject()) {
+      while (reader.notEndOfObject()) {
+        switch (reader.fieldName()) {
+          case "changes": {
+            if (reader.startArray()) {
+              Join next = new Join();
+              int at = 0;
+              while (reader.notEndOfArray()) {
                 if (reader.startArray()) {
-                  Join next = new Join();
-                  int at = 0;
-                  while (reader.notEndOfArray()) {
-                    if (reader.startArray()) {
-                      at += reader.readInteger();
-                      if (reader.notEndOfArray()) {
-                        next.children.add(new Raw(reader.readString()));
-                        while (reader.notEndOfArray()) {
-                          reader.skipValue();
-                        }
-                      }
-                    } else {
-                      int copy = reader.readInteger();
-                      result.transposeRangeIntoJoin(at, copy, next);
-                      at += copy;
+                  at += reader.readInteger();
+                  if (reader.notEndOfArray()) {
+                    next.children.add(new Raw(reader.readString()));
+                    while (reader.notEndOfArray()) {
+                      reader.skipValue();
                     }
                   }
-                  result = next;
+                } else {
+                  int copy = reader.readInteger();
+                  result.transposeRangeIntoJoin(at, copy, next);
+                  at += copy;
                 }
               }
-              break;
-              default:
-                reader.skipValue();
+              result = next;
             }
           }
-        } else {
-          reader.skipValue();
+          break;
+          default:
+            reader.skipValue();
         }
       }
     } else {
       reader.skipValue();
-      return result;
     }
     return result;
   }
