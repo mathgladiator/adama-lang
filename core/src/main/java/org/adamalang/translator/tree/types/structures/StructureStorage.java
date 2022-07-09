@@ -118,7 +118,6 @@ public class StructureStorage extends DocumentPosition {
     emissions.add(emit -> bd.emit(emit));
     ingest(bd);
     order.add(env -> {
-        }
       bd.typing(env.watch(watcher(env, bd.variablesToWatch)));
     });
     if (has(bd.nameToken.text)) {
