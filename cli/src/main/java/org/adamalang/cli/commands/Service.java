@@ -76,10 +76,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -151,81 +148,91 @@ public class Service {
     }
   }
 
-  private static DataService caravan(MachineIdentity identity, Config config, MetricsFactory metricsFactory, DataBase dataBase) throws Exception {
-    String caravanRoot = config.get_string("caravan_root", "caravan");
-    String region = config.get_string("region", null);
-    int port = config.get_int("adama_port", 8001);
-    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
-    AWSMetrics awsMetrics = new AWSMetrics(metricsFactory);
-    S3 s3 = new S3(awsConfig, awsMetrics);
-    SimpleExecutor caravanExecutor = SimpleExecutor.create("caravan");
-    SimpleExecutor managedExecutor = SimpleExecutor.create("managed-base");
-    File caravanPath = new File(caravanRoot);
-    caravanPath.mkdir();
-    File walRoot = new File(caravanPath, "wal");
-    File dataRoot = new File(caravanPath, "data");
-    walRoot.mkdir();
-    dataRoot.mkdir();
-    File storePath = new File(dataRoot, "store");
-    DurableListStore store = new DurableListStore(new DurableListStoreMetrics(metricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
-    Finder finder = new Finder(dataBase, region);
-    CaravanDataService caravanDataService = new CaravanDataService(s3, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
-    Base managedBase = new Base(finder, caravanDataService, region, identity.ip + ":" + port, managedExecutor, 2 * 60 * 1000);
-    ManagedDataService dataService = new ManagedDataService(managedBase);
-    AtomicBoolean alive = new AtomicBoolean(true);
-    Thread flusher = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        while (alive.get()) {
-          try {
-            Thread.sleep(0, 800000);
-            caravanDataService.flush(false).await(1000, TimeUnit.MILLISECONDS);
-          } catch (InterruptedException ie) {
-            return;
-          }
-        }
-      }
-    });
-    flusher.start();
-    Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
-      @Override
-      public void run() throws Exception {
-        alive.set(false);
-      }
-    })));
-    return dataService;
-  }
-
   public static void serviceBackend(Config config) throws Exception {
     MachineHeat.install();
     int port = config.get_int("adama_port", 8001);
     int gossipPort = config.get_int("gossip_backend_port", 8002);
     int monitoringPort = config.get_int("monitoring_backend_port", 8003);
     PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
-    int dataThreads = config.get_int("data_thread_count", 32);
     int coreThreads = config.get_int("service_thread_count", 8);
     String identityFileName = config.get_string("identity_filename", "me.identity");
     String billingRootPath = config.get_string("billing_path", "billing");
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
+    String machine = identity.ip + ":" + port;
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.Node);
     engine.start();
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
-    DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(prometheusMetricsFactory, "backend"));
-    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(prometheusMetricsFactory, "deployed"));
+    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(prometheusMetricsFactory, "backend"));
     ScheduledExecutorService databasePings = Executors.newSingleThreadScheduledExecutor();
     databasePings.scheduleAtFixedRate(() -> {
       try {
-        Health.pingDataBase(dataBaseDeployments);
-        Health.pingDataBase(dataBaseBackend);
+        Health.pingDataBase(dataBase);
       } catch (Exception ex) {
         LOGGER.error("health-check-failure-database", ex);
       }
     }, 30000, 30000, TimeUnit.MILLISECONDS);
 
-    DataService data = caravan(identity, config, prometheusMetricsFactory, dataBaseBackend);
+    final DataService data;
+    final Finder finder;
+    {
+      String caravanRoot = config.get_string("caravan_root", "caravan");
+      String region = config.get_string("region", null);
+      AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
+      AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
+      S3 s3 = new S3(awsConfig, awsMetrics);
+      SimpleExecutor caravanExecutor = SimpleExecutor.create("caravan");
+      SimpleExecutor managedExecutor = SimpleExecutor.create("managed-base");
+      File caravanPath = new File(caravanRoot);
+      caravanPath.mkdir();
+      File walRoot = new File(caravanPath, "wal");
+      File dataRoot = new File(caravanPath, "data");
+      walRoot.mkdir();
+      dataRoot.mkdir();
+      File storePath = new File(dataRoot, "store");
+      DurableListStore store = new DurableListStore(new DurableListStoreMetrics(prometheusMetricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
+      finder = new Finder(dataBase, region);
+      CaravanDataService caravanDataService = new CaravanDataService(s3, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
+      Base managedBase = new Base(finder, caravanDataService, region, machine, managedExecutor, 2 * 60 * 1000);
+      data = new ManagedDataService(managedBase);
+      AtomicBoolean alive = new AtomicBoolean(true);
+      Thread flusher = new Thread(new Runnable() {
+        @Override
+        public void run() {
+          while (alive.get()) {
+            try {
+              Thread.sleep(0, 800000);
+              caravanDataService.flush(false).await(1000, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException ie) {
+              return;
+            }
+          }
+        }
+      });
+      flusher.start();
+      Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
+        @Override
+        public void run() throws Exception {
+          alive.set(false);
+        }
+      })));
+    }
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
     CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), data, TimeSource.REAL_TIME, coreThreads);
+
+    finder.list(machine, new Callback<List<Key>>() {
+      @Override
+      public void success(List<Key> keys) {
+        for (Key key : keys) {
+          service.load(key);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        System.exit(-1);
+      }
+    });
 
     engine.newApp("adama", port, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
@@ -249,7 +256,7 @@ public class Service {
     Consumer<String> scanForDeployments = (space) -> {
       try {
         if ("*".equals(space)) {
-          ArrayList<Deployment> deployments = Deployments.listSpacesOnTarget(dataBaseDeployments, identity.ip + ":" + port);
+          ArrayList<Deployment> deployments = Deployments.listSpacesOnTarget(dataBase, identity.ip + ":" + port);
           for (Deployment deployment : deployments) {
             try {
               deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {
@@ -264,7 +271,7 @@ public class Service {
             }
           }
         } else {
-          Deployment deployment = Deployments.get(dataBaseDeployments, identity.ip + ":" + port, space);
+          Deployment deployment = Deployments.get(dataBase, identity.ip + ":" + port, space);
           deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {
           }));
           service.deploy(deploymentMonitor);
@@ -286,6 +293,7 @@ public class Service {
       }
       return true;
     });
+
 
     // prime the host with spaces
     scanForDeployments.accept("*");

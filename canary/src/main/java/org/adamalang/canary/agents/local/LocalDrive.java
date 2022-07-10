@@ -26,6 +26,7 @@ import org.adamalang.runtime.sys.metering.MeteringPubSub;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +61,7 @@ public class LocalDrive {
         }
 
         @Override
-        public void bind(Key key, String region, String machine, Callback<Void> callback) {
+        public void bind(Key key, String machine, Callback<Void> callback) {
 
         }
 
@@ -76,6 +77,11 @@ public class LocalDrive {
 
         @Override
         public void delete(Key key, String machineOn, Callback<Void> callback) {
+        }
+
+        @Override
+        public void list(String machine, Callback<List<Key>> callback) {
+
         }
       };
       Cloud cloud = new Cloud() {
