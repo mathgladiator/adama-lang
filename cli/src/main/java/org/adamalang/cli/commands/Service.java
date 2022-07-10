@@ -220,11 +220,12 @@ public class Service {
     CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
     CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), data, TimeSource.REAL_TIME, coreThreads);
 
+    // list all the documents on this machine, and spin them up
     finder.list(machine, new Callback<List<Key>>() {
       @Override
       public void success(List<Key> keys) {
         for (Key key : keys) {
-          service.load(key);
+          service.startupLoad(key);
         }
       }
 

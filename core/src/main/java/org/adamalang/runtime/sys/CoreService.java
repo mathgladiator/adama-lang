@@ -443,19 +443,17 @@ public class CoreService {
     });
   }
 
-  public void load(Key key) {
-    load(key, new Callback<DurableLivingDocument>() {
-      @Override
-      public void success(DurableLivingDocument value) {
-
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-
-      }
-    });
+  public void startupLoad(Key key) {
+    load(key, metrics.document_load_startup.wrap(DONT_CARE_DOCUMENT));
   }
+
+  public static Callback<DurableLivingDocument> DONT_CARE_DOCUMENT = new Callback<DurableLivingDocument>() {
+    @Override
+    public void success(DurableLivingDocument value) {}
+
+    @Override
+    public void failure(ErrorCodeException ex) {}
+  };
 
   /** execute a web put against the document */
   public void webPut(NtClient who, Key key, WebPutRaw request, Callback<WebResponse> callback) {
