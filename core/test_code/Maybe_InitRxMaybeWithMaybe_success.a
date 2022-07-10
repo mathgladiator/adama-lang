@@ -1,0 +1,2 @@
+public maybe<double> xyz = 1 / 0;
+public maybe<double> abc = 1 / 2;

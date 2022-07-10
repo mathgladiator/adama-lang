@@ -163,24 +163,35 @@ public class CodeGenRecords {
         classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, fdInOrder.defaultValueOverride, environment)).append(";").writeNewline();
       } else if (fieldType instanceof TyReactiveMaybe) {
         var doImmediateGet = false;
+        boolean doSetDefaultValueOverride = false;
         final var elementType = ((DetailContainsAnEmbeddedType) fieldType).getEmbeddedType(environment);
         classConstructorX.append(fieldName).append(" = new RxMaybe<>(this, (RxParent __parent) -> ");
         if (elementType instanceof TyReactiveRecord) {
           classConstructorX.append("new ").append(elementType.getJavaConcreteType(environment)).append("(__parent)");
         } else if (elementType instanceof DetailInventDefaultValueExpression && elementType instanceof IsReactiveValue) {
           var defaultValue = ((DetailInventDefaultValueExpression) elementType).inventDefaultValueExpression(fieldType);
-          if (fdInOrder.defaultValueOverride != null) {
-            doImmediateGet = true;
-            defaultValue = fdInOrder.defaultValueOverride;
-          }
           if (defaultValue != null) {
             defaultValue.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+          }
+          if (fdInOrder.defaultValueOverride != null) {
+            TyType valueOverrideType = fdInOrder.defaultValueOverride.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+            if (valueOverrideType != null && environment.rules.IsMaybe(valueOverrideType, true)) {
+              doSetDefaultValueOverride = true;
+            } else {
+              doImmediateGet = true;
+              defaultValue = fdInOrder.defaultValueOverride;
+            }
           }
           classConstructorX.append("new " + elementType.getJavaConcreteType(environment) + "(__parent, ");
           defaultValue.writeJava(classConstructorX, environment.scopeWithComputeContext(ComputeContext.Computation));
           classConstructorX.append(")");
         }
         classConstructorX.append(");").writeNewline();
+        if (doSetDefaultValueOverride) {
+          classConstructorX.append(fieldName).append(".set(");
+          fdInOrder.defaultValueOverride.writeJava(classConstructorX, environment.scopeWithComputeContext(ComputeContext.Computation));
+          classConstructorX.append(");").writeNewline();
+        }
         if (doImmediateGet) {
           classConstructorX.append(fieldName).append(".make();").writeNewline();
         }
