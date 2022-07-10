@@ -201,7 +201,9 @@ public class RxTextTests {
     Assert.assertTrue(text.append(3, new NtDynamic(PATCH_3)));
     Assert.assertFalse(text.append(3, new NtDynamic(PATCH_3)));
     Assert.assertTrue(text.append(4, new NtDynamic(PATCH_4)));
+    Assert.assertEquals(511, text.__memory());
     text.compact(0.8);
+    Assert.assertEquals(305, text.__memory());
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
     text.__commit("x", redo, undo);
@@ -210,6 +212,7 @@ public class RxTextTests {
     text.__dump(c);
     Assert.assertEquals("{\"fragments\":{\"a7\":\"z/* adama adama */x\"},\"order\":{\"0\":\"a7\"},\"changes\":{\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":4}", c.toString());
     Assert.assertEquals("z/*  */x", text.get());
+    Assert.assertEquals(313, text.__memory());
   }
 
   @Test

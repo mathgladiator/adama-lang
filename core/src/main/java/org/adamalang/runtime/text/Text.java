@@ -41,7 +41,7 @@ public class Text {
     this.copy = null;
   }
 
-  /** make a value copy of the backup, and clean the backup */
+  /** make a value copy of the backup */
   public Text(Text other) {
     this.fragments = new HashMap<>(other.fragments);
     this.order = new HashMap<>(other.order);
@@ -51,8 +51,13 @@ public class Text {
     this.upgraded = other.upgraded;
     this.gen = other.gen;
     this.copy = null;
-    other.uncommitedChanges.clear();
 
+  }
+
+  public Text forkValue() {
+    Text newValue = new Text(this);
+    uncommitedChanges.clear();
+    return newValue;
   }
 
   /** read from JSON */
@@ -283,5 +288,25 @@ public class Text {
       copy = new SeqString(at, result.get());
     }
     return copy;
+  }
+
+  public long memory() {
+    long mem = 40;
+    if (copy != null) {
+      mem += 40 + copy.value.length();
+    }
+    for (Map.Entry<String, String> frag : fragments.entrySet()) {
+      mem += frag.getKey().length() + frag.getValue().length() + 40;
+    }
+    for (Map.Entry<Integer, String> e : order.entrySet()) {
+      mem += e.getValue().length() + 40;
+    }
+    for (Map.Entry<Integer, String> e : changes.entrySet()) {
+      mem += e.getValue().length() + 40;
+    }
+    for (Map.Entry<Integer, String> e : uncommitedChanges.entrySet()) {
+      mem += e.getValue().length() + 40;
+    }
+    return mem;
   }
 }

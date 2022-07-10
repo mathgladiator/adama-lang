@@ -162,9 +162,10 @@ public class RxText extends RxBase {
   @Override
   public void __patch(JsonStreamReader reader) {
     if (value == backup) {
-      value = new Text(backup);
+      value = backup.forkValue();
     }
     value.patch(reader, gen.bumpUpPost());
+    __raiseDirty();
   }
 
   @Override
@@ -185,7 +186,7 @@ public class RxText extends RxBase {
 
   public void set(String str) {
     if (value == backup) {
-      value = new Text(backup);
+      value = backup.forkValue();
     }
     this.value.set(str, gen.bumpUpPost());
     __raiseDirty();
@@ -193,7 +194,7 @@ public class RxText extends RxBase {
 
   public void compact(double ratio) {
     if (value == backup) {
-      value = new Text(backup);
+      value = backup.forkValue();
     }
     value.compact(ratio);
     __raiseDirty();
@@ -205,7 +206,10 @@ public class RxText extends RxBase {
 
   @Override
   public long __memory() {
-    // TODO
-    return super.__memory();
+    if (backup == value) {
+      return super.__memory() + value.memory();
+    } else {
+      return super.__memory() + value.memory() + backup.memory();
+    }
   }
 }
