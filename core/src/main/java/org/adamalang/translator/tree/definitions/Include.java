@@ -25,7 +25,6 @@ public class Include extends Definition {
     this.semicolon = semicolon;
   }
 
-
   @Override
   public void emit(Consumer<Token> yielder) {
     yielder.accept(include);
