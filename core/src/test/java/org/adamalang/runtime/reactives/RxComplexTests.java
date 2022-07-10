@@ -25,6 +25,31 @@ public class RxComplexTests {
   }
 
   @Test
+  public void math() {
+    final var parent = new MockRxParent();
+    final var d = new RxComplex(parent, new NtComplex(1, 2));
+    d.set(0.0);
+    d.opAddTo(1);
+    d.opAddTo(2L);
+    d.opAddTo(3.14);
+    d.opAddTo(new NtComplex(10.0, 10.0));
+    Assert.assertTrue(Math.abs(d.get().real - 16.14) < 0.001);
+    Assert.assertTrue(Math.abs(d.get().imaginary - 10.0) < 0.001);
+    d.opMultBy(1.5);
+    Assert.assertTrue(Math.abs(d.get().real - 24.21) < 0.001);
+    Assert.assertTrue(Math.abs(d.get().imaginary - 15.0) < 0.001);
+    d.opMultBy(new NtComplex(0.0, 1.0));
+    Assert.assertTrue(Math.abs(d.get().real - -15) < 0.001);
+    Assert.assertTrue(Math.abs(d.get().imaginary - 24.21) < 0.001);
+    d.opMultBy(new NtComplex(1.0, 0.0));
+    Assert.assertTrue(Math.abs(d.get().real - -15) < 0.001);
+    Assert.assertTrue(Math.abs(d.get().imaginary - 24.21) < 0.001);
+    d.opSubFrom(new NtComplex(1, 1));
+    Assert.assertTrue(Math.abs(d.get().real - -16) < 0.001);
+    Assert.assertTrue(Math.abs(d.get().imaginary - 23.21) < 0.001);
+  }
+
+  @Test
   public void dirty_and_commit() {
     final var parent = new MockRxParent();
     final var d = new RxComplex(parent, new NtComplex(1, 2));

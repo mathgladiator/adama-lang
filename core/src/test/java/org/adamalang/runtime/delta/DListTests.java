@@ -65,5 +65,6 @@ public class DListTests {
       Assert.assertEquals("null", stream.toString());
       Assert.assertEquals(128, list.__memory());
     }
+    list.clear();
   }
 }

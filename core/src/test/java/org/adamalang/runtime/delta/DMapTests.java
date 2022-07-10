@@ -66,5 +66,6 @@ public class DMapTests {
       Assert.assertEquals("null", stream.toString());
       Assert.assertEquals(40, map.__memory());
     }
+    map.clear();
   }
 }

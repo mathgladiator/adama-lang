@@ -36,5 +36,6 @@ public class DStringTests {
     db.show("e", writer);
     Assert.assertEquals("\"a\"\"b\"\"c\"null\"d\"\"e\"", stream.toString());
     Assert.assertEquals(42, db.__memory());
+    db.clear();
   }
 }

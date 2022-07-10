@@ -79,6 +79,17 @@ public class SelectoRxTObjectListTests {
   }
 
   @Test
+  public void table_iterate_just_limit() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    table.__insert(
+        new JsonStreamReader("{\"4\":{\"index\":13},\"5\":{\"index\":13},\"6\":{\"index\":13}}"));
+    new Random(0);
+    final var list = table.iterate(false).limit(true, 1);
+    Assert.assertEquals(4, list.lookup(0).get().__id());
+  }
+
+  @Test
   public void table_iterate_lookup() {
     final var document = doc(8);
     final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);

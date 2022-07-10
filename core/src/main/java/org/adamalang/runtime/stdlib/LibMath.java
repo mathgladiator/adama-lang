@@ -12,6 +12,7 @@ package org.adamalang.runtime.stdlib;
 import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.translator.reflect.Extension;
+import org.adamalang.translator.reflect.HiddenType;
 
 import java.util.function.BiFunction;
 
@@ -92,7 +93,7 @@ public class LibMath {
     return Math.sqrt(x.real * x.real + x.imaginary * x.imaginary);
   }
 
-  public static boolean isTrue(NtMaybe<Boolean> x) {
+  public static boolean isTrue(@HiddenType(clazz=Boolean.class) NtMaybe<Boolean> x) {
     if (x.has()) {
       return x.get();
     }

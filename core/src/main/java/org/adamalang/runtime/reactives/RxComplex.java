@@ -109,7 +109,7 @@ public class RxComplex extends RxBase implements CanGetAndSet<NtComplex> {
   }
 
   public void opMultBy(NtComplex x) {
-    this.value = new NtComplex(value.real + x.real - value.imaginary * x.imaginary, value.imaginary * x.real + value.real * x.imaginary);
+    this.value = new NtComplex(value.real * x.real - value.imaginary * x.imaginary, value.imaginary * x.real + value.real * x.imaginary);
     __raiseDirty();
   }
 

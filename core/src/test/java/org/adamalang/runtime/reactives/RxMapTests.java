@@ -28,6 +28,23 @@ public class RxMapTests {
     Assert.assertEquals(304, m.__memory());
   }
 
+  @Test
+  public void memoryStr() {
+    final var m = new RxMap<String, RxInt32>(
+        new MockRxParent(),
+        new RxMap.StringCodec<RxInt32>() {
+          @Override
+          public RxInt32 make(RxParent maker) {
+            return new RxInt32(maker, 40);
+          }
+        });
+    Assert.assertEquals(168, m.__memory());
+    m.getOrCreate("42").set(52);
+    Assert.assertEquals(240, m.__memory());
+    m.getOrCreate("50").set(52);
+    Assert.assertEquals(312, m.__memory());
+  }
+
   private RxMap<Integer, RxInt32> map() {
     return new RxMap<Integer, RxInt32>(
         new MockRxParent(),

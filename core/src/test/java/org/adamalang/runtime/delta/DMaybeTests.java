@@ -31,5 +31,6 @@ public class DMaybeTests {
     Assert.assertTrue(a != c);
     Assert.assertEquals("null", stream.toString());
     Assert.assertEquals(80, db.__memory());
+    db.clear();
   }
 }

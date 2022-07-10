@@ -23,8 +23,10 @@ public class RxDynamicTests {
 
   @Test
   public void memory() {
-    Assert.assertEquals(8, A.memory());
-    Assert.assertEquals(10, B.memory());
+    final var a = new RxDynamic(null, A);
+    final var b = new RxDynamic(null, B);
+    Assert.assertEquals(72, a.__memory());
+    Assert.assertEquals(76, b.__memory());
   }
 
   @Test

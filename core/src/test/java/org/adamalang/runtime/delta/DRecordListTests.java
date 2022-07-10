@@ -106,6 +106,7 @@ public class DRecordListTests {
     Assert.assertEquals(
         "{\"0\":true,\"5\":true,\"6\":true,\"@o\":[0,[0,3],5,6]}",
         process.apply(new Integer[] {0, 1, 2, 3, 4, 5, 6}));
+    list.clear();
   }
 
   @Test
