@@ -23,6 +23,8 @@ public class Include extends Definition {
     this.include = include;
     this.resource = resource;
     this.semicolon = semicolon;
+    ingest(include);
+    ingest(semicolon);
   }
 
   @Override
