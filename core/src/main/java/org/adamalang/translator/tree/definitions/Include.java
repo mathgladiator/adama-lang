@@ -15,9 +15,9 @@ import org.adamalang.translator.parser.token.Token;
 import java.util.function.Consumer;
 
 public class Include extends Definition {
-  public final Token include;
+  private final Token include;
   public final Token resource;
-  public final Token semicolon;
+  private final Token semicolon;
 
   public Include(Token include, Token resource, Token semicolon) {
     this.include = include;
