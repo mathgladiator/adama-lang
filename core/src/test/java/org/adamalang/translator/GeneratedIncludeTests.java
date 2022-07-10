@@ -47,7 +47,7 @@ public class GeneratedIncludeTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Include_Bad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Inclusion of 'bad' resulted in an error; 'Parser was expecting an identifier, but got a Symbol:; instead. {Token: `;` @ (0,10) -> (0,11): Symbol}' (DocumentInclude)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":0,\"character\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Inclusion of 'bad' resulted in an error; 'Parser was expecting an identifier, but got a Symbol:; instead. {Token: `;` @ (0,10) -> (0,11): Symbol}' (DocumentInclude)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -588,7 +588,7 @@ public class GeneratedIncludeTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Include_NotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Failed to include 'howdy' as it was not bound to the deployment (DocumentInclude)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":0,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Failed to include 'howdy' as it was not bound to the deployment (DocumentInclude)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
