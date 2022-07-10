@@ -24,7 +24,7 @@ import java.util.HashMap;
 /** parses a deployment plan and constructs a safe plan which has yet to be compiled */
 public class DeploymentPlan {
   public final String hash;
-  public final HashMap<String, String> versions;
+  public final HashMap<String, DeployedVersion> versions;
   public final ArrayList<Stage> stages;
   public final String defaultVersion;
 
@@ -44,8 +44,7 @@ public class DeploymentPlan {
               if (reader.startObject()) {
                 while (reader.notEndOfObject()) {
                   String version = reader.fieldName();
-                  String code = reader.readString();
-                  versions.put(version, code);
+                  versions.put(version, new DeployedVersion(reader));
                 }
               } else {
                 throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_PLAN_VERSIONS_MUST_BE_OBJECT);

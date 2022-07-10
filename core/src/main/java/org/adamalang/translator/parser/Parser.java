@@ -490,6 +490,13 @@ public class Parser {
     }
   }
 
+  public Consumer<TopLevelDocumentHandler> execute_include(Token includeToken) throws AdamaLangException {
+    Token what = id();
+    Token semicolon = consumeExpectedSymbol(";");
+    Include include = new Include(includeToken, what, semicolon);
+    return (doc) -> doc.add(include);
+  }
+
   public Consumer<TopLevelDocumentHandler> define() throws AdamaLangException {
     // define a state machine transition
     var op = tokens.popIf(Token::isLabel);
@@ -497,12 +504,14 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block());
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached", "@static", "@can_attach", "@web"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached", "@static", "@can_attach", "@web", "@include"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch"));
     }
     if (op != null) {
       switch (op.text) {
+        case "@include":
+          return execute_include(op);
         case "enum":
           return define_enum_trailer(op);
         case "dispatch":

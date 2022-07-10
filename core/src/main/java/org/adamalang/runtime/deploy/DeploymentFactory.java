@@ -49,7 +49,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
   public DeploymentFactory(String name, String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan) throws ErrorCodeException {
     this.name = name;
     this.factories = new HashMap<>();
-    for (Map.Entry<String, String> entry : plan.versions.entrySet()) {
+    for (Map.Entry<String, DeployedVersion> entry : plan.versions.entrySet()) {
       LivingDocumentFactory factory = null;
       if (prior != null) {
         if (prior.plan.versions.containsKey(entry.getKey())) {
@@ -59,21 +59,21 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
         }
       }
       if (factory == null) {
-        factory = compile(spacePrefix + newClassId.getAndIncrement(), entry.getValue());
+        factory = compile(name, spacePrefix + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes);
       }
       factories.put(entry.getKey(), factory);
     }
     this.plan = plan;
   }
 
-  public static LivingDocumentFactory compile(String className, final String code) throws ErrorCodeException {
+  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes) throws ErrorCodeException {
     try {
       final var options = CompilerOptions.start().make();
       final var globals = GlobalObjectPool.createPoolWithStdLib();
       final var state = new EnvironmentState(globals, options);
       final var document = new Document();
       document.setClassName(className);
-      final var tokenEngine = new TokenEngine("<direct code>", code.codePoints().iterator());
+      final var tokenEngine = new TokenEngine(spaceName, code.codePoints().iterator());
       final var parser = new Parser(tokenEngine);
       parser.document().accept(document);
       if (!document.check(state)) {

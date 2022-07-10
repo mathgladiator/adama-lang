@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.DocumentPosition;
 
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class PhaseValidate {
@@ -26,6 +27,10 @@ public class PhaseValidate {
     final var state = new EnvironmentState(globals, options);
     final var document = new Document();
     document.addSearchPath(inputRoot.toFile());
+    HashMap<String, String> inc = new HashMap<>();
+    inc.put("std", "public int std_here = 123;");
+    inc.put("bad", "public int;");
+    document.setIncludes(inc);
     document.importFile(path.toString(), DocumentPosition.ZERO);
     document.setClassName(className);
     document.check(state);

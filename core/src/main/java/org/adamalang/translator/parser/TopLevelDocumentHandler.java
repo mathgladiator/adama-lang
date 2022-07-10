@@ -54,4 +54,6 @@ public interface TopLevelDocumentHandler {
   void add(DefineWebGet dwg);
 
   void add(DefineWebPut dwp);
+
+  void add(Include in);
 }

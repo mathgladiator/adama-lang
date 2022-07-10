@@ -26,6 +26,27 @@ public class DeploymentPlanTests {
   }
 
   @Test
+  public void includes_1() throws Exception {
+    new DeploymentPlan(
+        "{\"versions\":{\"x\":{\"main\":\"@include x;\",\"includes\":{\"x\":\"\"}}},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
+        (t, errorCode) -> {});
+  }
+
+  @Test
+  public void includes_skip() throws Exception {
+    new DeploymentPlan(
+        "{\"versions\":{\"x\":{\"main\":\"\",\"includes\":123}},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
+        (t, errorCode) -> {});
+  }
+
+  @Test
+  public void includes_2() throws Exception {
+    new DeploymentPlan(
+        "{\"versions\":{\"x\":{\"main\":\"@include x;\",\"includes\":{\"x\":\"@include y;\",\"y\":\"\"}}},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
+        (t, errorCode) -> {});
+  }
+
+  @Test
   public void happy() throws Exception {
     new DeploymentPlan(
         "{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",

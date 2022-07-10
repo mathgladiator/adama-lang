@@ -39,6 +39,7 @@ import org.junit.Assert;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -61,7 +62,7 @@ public class TestBed implements AutoCloseable {
   public final ClientConfig clientConfig;
 
   public TestBed(int port, String code) throws Exception {
-    DeploymentFactory.compile("X", code);
+    DeploymentFactory.compile("<direct>", "X", code, new HashMap<>());
     this.base = new NetBase(MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
     this.port = port;
     clientExecutor = SimpleExecutor.create("client-executor");

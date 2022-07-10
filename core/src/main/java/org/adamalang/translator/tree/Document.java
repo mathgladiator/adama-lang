@@ -15,6 +15,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.TopLevelDocumentHandler;
+import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.exceptions.ParseException;
 import org.adamalang.translator.parser.exceptions.ScanException;
 import org.adamalang.translator.parser.token.Token;
@@ -72,6 +73,7 @@ public class Document implements TopLevelDocumentHandler {
   private String className;
   public final UriTable webGet;
   public final UriTable webPut;
+  private final HashMap<String, String> includes;
 
   public Document() {
     autoClassId = 0;
@@ -98,6 +100,11 @@ public class Document implements TopLevelDocumentHandler {
     types.put("__ViewerType", viewerType);
     webGet = new UriTable();
     webPut = new UriTable();
+    includes = new HashMap<>();
+  }
+
+  public void setIncludes(HashMap<String, String> include) {
+    this.includes.putAll(include);
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
@@ -203,6 +210,26 @@ public class Document implements TopLevelDocumentHandler {
   public void add(final DefineDocumentEvent dce) {
     typeCheckOrder.add(env -> dce.typing(env.scopeAsPolicy()));
     events.add(dce);
+  }
+
+  @Override
+  public void add(Include in) {
+    String codeToParseIntoDoc = includes.get(in.resource.text);
+    if (codeToParseIntoDoc == null) {
+      typeCheckOrder.add(env -> {
+        env.document.createError(in, String.format("Failed to include '%s' as it was not bound to the deployment", in.resource.text), "DocumentInclude");
+      });
+    } else {
+      final var tokenEngine = new TokenEngine(in.resource.text, codeToParseIntoDoc.codePoints().iterator());
+      final var parser = new Parser(tokenEngine);
+      try {
+        parser.document().accept(this);
+      } catch (AdamaLangException ale) {
+        typeCheckOrder.add(env -> {
+          env.document.createError(in, String.format("Inclusion of '%s' resulted in an error; '%s'", in.resource.text, ale.getMessage()), "DocumentInclude");
+        });
+      }
+    }
   }
 
   @Override
