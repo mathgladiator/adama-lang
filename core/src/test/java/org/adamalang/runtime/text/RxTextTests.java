@@ -38,8 +38,8 @@ public class RxTextTests {
       JsonStreamWriter undo = new JsonStreamWriter();
       text.__commit("x", redo, undo);
       Assert.assertEquals("Howdy", text.get());
-      Assert.assertEquals("\"x\":{\"fragments\":{\"42\":\"Howdy\"},\"order\":{\"0\":\"42\"},\"changes\":{},\"gen\":1}", redo.toString());
-      Assert.assertEquals("\"x\":{\"fragments\":{\"42\":null},\"order\":{\"0\":null},\"changes\":{},\"gen\":0}", undo.toString());
+      Assert.assertEquals("\"x\":{\"fragments\":{\"1\":\"Howdy\"},\"order\":{\"0\":\"1\"},\"changes\":{},\"gen\":1}", redo.toString());
+      Assert.assertEquals("\"x\":{\"fragments\":{\"1\":null},\"order\":{\"0\":null},\"changes\":{},\"gen\":0}", undo.toString());
     }
     text.set("Yo");
     {
@@ -47,8 +47,8 @@ public class RxTextTests {
       JsonStreamWriter undo = new JsonStreamWriter();
       text.__commit("x", redo, undo);
       Assert.assertEquals("Yo", text.get());
-      Assert.assertEquals("\"x\":{\"fragments\":{\"b3\":\"Yo\",\"42\":null},\"order\":{\"0\":\"b3\"},\"changes\":{},\"gen\":2}", redo.toString());
-      Assert.assertEquals("\"x\":{\"fragments\":{\"b3\":null,\"42\":\"Howdy\"},\"order\":{\"0\":\"42\"},\"changes\":{},\"gen\":1}", undo.toString());
+      Assert.assertEquals("\"x\":{\"fragments\":{\"2\":\"Yo\",\"1\":null},\"order\":{\"0\":\"2\"},\"changes\":{},\"gen\":2}", redo.toString());
+      Assert.assertEquals("\"x\":{\"fragments\":{\"2\":null,\"1\":\"Howdy\"},\"order\":{\"0\":\"1\"},\"changes\":{},\"gen\":1}", undo.toString());
     }
   }
 
@@ -103,8 +103,8 @@ public class RxTextTests {
     text.append(4, new NtDynamic(PATCH_4));
     text.compact(0.7);
     text.__commit("x", redo, undo);
-    Assert.assertEquals("\"x\":{\"fragments\":{\"68\":\"z/* adama */x\"},\"order\":{\"0\":\"68\"},\"changes\":{\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\",\"3\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}\"},\"seq\":3}", redo.toString());
-    Assert.assertEquals("\"x\":{\"fragments\":{\"68\":null},\"order\":{\"0\":null},\"changes\":{\"4\":null,\"3\":null},\"seq\":0}", undo.toString());
+    Assert.assertEquals("\"x\":{\"fragments\":{\"t\":\"z/* adama */x\"},\"order\":{\"0\":\"t\"},\"changes\":{\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\",\"3\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}\"},\"seq\":3}", redo.toString());
+    Assert.assertEquals("\"x\":{\"fragments\":{\"t\":null},\"order\":{\"0\":null},\"changes\":{\"4\":null,\"3\":null},\"seq\":0}", undo.toString());
     Assert.assertEquals("z/*  */x", text.get());
   }
 
@@ -166,7 +166,7 @@ public class RxTextTests {
     Assert.assertTrue(text.append(4, new NtDynamic(PATCH_4)));
     text.current().compact(0.7);
     text.__dump(c);
-    Assert.assertEquals("{\"fragments\":{\"68\":\"z/* adama */x\"},\"order\":{\"0\":\"68\"},\"changes\":{\"3\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":3}", c.toString());
+    Assert.assertEquals("{\"fragments\":{\"t\":\"z/* adama */x\"},\"order\":{\"0\":\"t\"},\"changes\":{\"3\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":3}", c.toString());
     Assert.assertEquals("z/*  */x", text.get());
   }
 
@@ -203,16 +203,16 @@ public class RxTextTests {
     Assert.assertTrue(text.append(4, new NtDynamic(PATCH_4)));
     Assert.assertEquals(511, text.__memory());
     text.compact(0.8);
-    Assert.assertEquals(305, text.__memory());
+    Assert.assertEquals(303, text.__memory());
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
     text.__commit("x", redo, undo);
-    Assert.assertEquals("\"x\":{\"fragments\":{\"a7\":\"z/* adama adama */x\"},\"order\":{\"0\":\"a7\"},\"changes\":{\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\"},\"seq\":4}", redo.toString());
-    Assert.assertEquals("\"x\":{\"fragments\":{\"a7\":null},\"order\":{\"0\":null},\"changes\":{\"4\":null},\"seq\":0}", undo.toString());
+    Assert.assertEquals("\"x\":{\"fragments\":{\"2\":\"z/* adama adama */x\"},\"order\":{\"0\":\"2\"},\"changes\":{\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\"},\"seq\":4}", redo.toString());
+    Assert.assertEquals("\"x\":{\"fragments\":{\"2\":null},\"order\":{\"0\":null},\"changes\":{\"4\":null},\"seq\":0}", undo.toString());
     text.__dump(c);
-    Assert.assertEquals("{\"fragments\":{\"a7\":\"z/* adama adama */x\"},\"order\":{\"0\":\"a7\"},\"changes\":{\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":4}", c.toString());
+    Assert.assertEquals("{\"fragments\":{\"2\":\"z/* adama adama */x\"},\"order\":{\"0\":\"2\"},\"changes\":{\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":4}", c.toString());
     Assert.assertEquals("z/*  */x", text.get());
-    Assert.assertEquals(313, text.__memory());
+    Assert.assertEquals(311, text.__memory());
   }
 
   @Test

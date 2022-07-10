@@ -24,12 +24,7 @@ public class Range implements Operand {
 
   @Override
   public String get() {
-    int len = base.length();
-    String toUse = base.get();
-    if (len == at + length) {
-      return toUse.substring(at);
-    }
-    return toUse.substring(at, length);
+    return base.get().substring(at, at + length);
   }
 
   @Override

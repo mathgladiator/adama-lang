@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.text;
 
+import org.adamalang.common.HashKey;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.text.ot.Operand;
@@ -51,9 +52,9 @@ public class Text {
     this.upgraded = other.upgraded;
     this.gen = other.gen;
     this.copy = null;
-
   }
 
+  /** treat this Text as a backup, create a new value with the uncommitted changes and nuke the uncommited changes in this version */
   public Text forkValue() {
     Text newValue = new Text(this);
     uncommitedChanges.clear();
@@ -71,6 +72,7 @@ public class Text {
     patch(reader, gen);
   }
 
+  /** execute a patch and integrate data */
   public void patch(JsonStreamReader reader, int gen) {
     this.copy = null;
     this.gen = gen;
@@ -130,11 +132,13 @@ public class Text {
     }
   }
 
+  /** commit the uncommited changes to commited */
   public void commit() {
     changes.putAll(uncommitedChanges);
     uncommitedChanges.clear();
   }
 
+  /** internal: reformulate the string as a series of maps; only touches fragments and order */
   private void setBase(String str) {
     HashMap<String, String> inverse = new HashMap<>();
     for (Map.Entry<String, String> prior : fragments.entrySet()) {
@@ -146,7 +150,7 @@ public class Text {
     for (String ln : str.split(Pattern.quote("\n"), -1)) {
       String key = inverse.get(ln);
       if (key == null) {
-        key = keyFor(ln, inverse);
+        key = HashKey.keyOf(ln, fragments);
         inverse.put(ln, key);
       }
       fragments.put(key, ln);
@@ -155,6 +159,7 @@ public class Text {
     }
   }
 
+  /** set the value of the string to the value provided using the gen marker to denote uniqueness */
   public void set(String str, int gen) {
     setBase(str);
     changes.clear();
@@ -162,18 +167,6 @@ public class Text {
     this.seq = 0;
     this.gen = gen;
     this.copy = new SeqString(seq, str);
-  }
-
-  public static String keyFor(String ln, HashMap<String, String> inverse) {
-    while (true) {
-      String candidate = Integer.toString(Math.abs(ln.hashCode()), 16) + "X" + Integer.toString(Math.abs(ln.hashCode()), 16) + "Y" + (long) (System.currentTimeMillis() * Math.random());
-      for (int k = 2; k < candidate.length(); k++) {
-        String test = candidate.substring(0, k);
-        if (!inverse.containsKey(test)) {
-          return test;
-        }
-      }
-    }
   }
 
   /** write the text entirely to the given writer */
