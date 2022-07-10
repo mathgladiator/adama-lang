@@ -9,11 +9,14 @@
  */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.RemoteDocumentUpdate;
+import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
@@ -73,6 +76,26 @@ public class ServiceTemporalTests {
     return (Integer)
         ((HashMap<String, Object>) ((HashMap<String, Object>) reader.readJavaTree()).get("data"))
             .get("x");
+  }
+
+  @Test
+  public void drive_after_load() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_BOUNCER);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    MockInstantDataService dataService = new MockInstantDataService();
+    Runnable latch = dataService.latchLogAt(10);
+
+    RemoteDocumentUpdate init = new RemoteDocumentUpdate(0, 1, NtClient.NO_ONE, "{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"1\"}", "{\"__state\":\"bounce\",\"__constructed\":true,\"__next_time\":\"50\",\"__entropy\":\"-4964420948893066024\",\"__messages\":null,\"__seq\":1}", "{\"__seq\":0,\"__entropy\":\"-4276096898218380257\",\"__state\":\"\",\"__constructed\":false,\"__next_time\":\"0\"}", true, 0, 0L, UpdateType.AddUserData);
+    dataService.initialize(KEY, init, Callback.DONT_CARE_VOID);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, TimeSource.REAL_TIME, 3);
+    service.tune((base) -> base.setMillisecondsForCleanupCheck(50));
+    try {
+      service.startupLoad(KEY);
+      latch.run();
+    } finally {
+      service.shutdown();
+    }
   }
 
   @Test

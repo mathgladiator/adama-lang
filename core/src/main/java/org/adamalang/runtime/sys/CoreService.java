@@ -324,7 +324,7 @@ public class CoreService {
                       base.executor.schedule(new NamedRunnable("post-load-reconcile") {
                         @Override
                         public void execute() throws Exception {
-                          document.reconcileClients();
+                          document.afterLoad();
                         }
                       }, base.getMillisecondsAfterLoadForReconciliation());
                     }

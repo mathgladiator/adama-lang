@@ -412,7 +412,6 @@ public class DurableLivingDocument {
           base.executor.execute(new NamedRunnable("execute-now-patch-callback") {
             @Override
             public void execute() throws Exception {
-
               happy.run();
               if (shouldCleanUp && document.__canRemoveFromMemory()) {
                 scheduleCleanup();
@@ -693,9 +692,12 @@ public class DurableLivingDocument {
     return writer.toString();
   }
 
-  public void reconcileClients() {
+  public void afterLoad() {
     for (NtClient client : document.__reconcileClientsToForceDisconnect()) {
       disconnect(client, Callback.DONT_CARE_INTEGER);
+    }
+    if (document.__state.has() && !document.__blocked.get()) {
+      invalidate(Callback.DONT_CARE_INTEGER);
     }
   }
 

@@ -1049,8 +1049,6 @@ public abstract class LivingDocument implements RxParent {
         task.execute();
       }
       __time.set(timeBackup);
-      if (__state.get().length() > 0) {
-      }
       // execute the state
       if (__state.has() && __next_time.get() <= __time.get()) {
         final var stateToExecute = __state.get();
