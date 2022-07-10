@@ -12,6 +12,7 @@ package org.adamalang.runtime.text;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.reactives.RxInt32;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,13 +25,13 @@ public class RxTextTests {
 
   @Test
   public void memory() {
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     text.__memory();
   }
 
   @Test
   public void commit_set() {
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     text.set("Howdy");
     {
       JsonStreamWriter redo = new JsonStreamWriter();
@@ -55,7 +56,7 @@ public class RxTextTests {
   public void commit_no_change() {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     text.__commit("x", redo, undo);
     Assert.assertEquals("", redo.toString());
     Assert.assertEquals("", undo.toString());
@@ -65,15 +66,15 @@ public class RxTextTests {
   public void commit_change() {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     text.append(0, new NtDynamic(PATCH_0));
     text.append(1, new NtDynamic(PATCH_1));
     text.append(2, new NtDynamic(PATCH_2));
     text.append(3, new NtDynamic(PATCH_3));
     text.append(4, new NtDynamic(PATCH_4));
     text.__commit("x", redo, undo);
-    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}\",\"1\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}\",\"2\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}\",\"3\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}\",\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\"}}", redo.toString());
-    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":null,\"1\":null,\"2\":null,\"3\":null,\"4\":null}}", undo.toString());
+    Assert.assertEquals("\"x\":{\"changes\":{\"0\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]},\"1\":{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]},\"2\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]},\"3\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}}}", redo.toString());
+    Assert.assertEquals("\"x\":{\"changes\":{\"0\":null,\"1\":null,\"2\":null,\"3\":null,\"4\":null}}", undo.toString());
     Assert.assertEquals("z/*  */x", text.get());
   }
 
@@ -81,12 +82,12 @@ public class RxTextTests {
   public void commit_change_batch() {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     Assert.assertEquals("", text.get());
     text.append(0, new NtDynamic("[" + PATCH_0 + "," + PATCH_1 + "," + PATCH_2 + "," + PATCH_3 + "," + PATCH_4 + "]"));
     text.__commit("x", redo, undo);
-    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}\",\"1\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}\",\"2\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}\",\"3\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}\",\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\"}}", redo.toString());
-    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":null,\"1\":null,\"2\":null,\"3\":null,\"4\":null}}", undo.toString());
+    Assert.assertEquals("\"x\":{\"changes\":{\"0\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]},\"1\":{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]},\"2\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]},\"3\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}}}", redo.toString());
+    Assert.assertEquals("\"x\":{\"changes\":{\"0\":null,\"1\":null,\"2\":null,\"3\":null,\"4\":null}}", undo.toString());
     Assert.assertEquals("z/*  */x", text.get());
   }
 
@@ -94,13 +95,13 @@ public class RxTextTests {
   public void commit_change_compact() {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     text.append(0, new NtDynamic(PATCH_0));
     text.append(1, new NtDynamic(PATCH_1));
     text.append(2, new NtDynamic(PATCH_2));
     text.append(3, new NtDynamic(PATCH_3));
     text.append(4, new NtDynamic(PATCH_4));
-    text.current().compact(0.7);
+    text.compact(0.7);
     text.__commit("x", redo, undo);
     Assert.assertEquals("\"x\":{\"fragments\":{\"68\":\"z/* adama */x\"},\"order\":{\"0\":\"68\"},\"changes\":{\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\",\"3\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}\"},\"seq\":3}", redo.toString());
     Assert.assertEquals("\"x\":{\"fragments\":{\"68\":null},\"order\":{\"0\":null},\"changes\":{\"4\":null,\"3\":null},\"seq\":0}", undo.toString());
@@ -111,7 +112,7 @@ public class RxTextTests {
   public void revert() {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     text.append(0, new NtDynamic(PATCH_0));
     text.append(1, new NtDynamic(PATCH_1));
     text.append(2, new NtDynamic(PATCH_2));
@@ -127,7 +128,7 @@ public class RxTextTests {
   public void revert_compat() {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     text.append(0, new NtDynamic(PATCH_0));
     text.append(1, new NtDynamic(PATCH_1));
     text.append(2, new NtDynamic(PATCH_2));
@@ -143,7 +144,7 @@ public class RxTextTests {
   @Test
   public void dump_pre_commit() {
     JsonStreamWriter c = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     Assert.assertTrue(text.append(0, new NtDynamic(PATCH_0)));
     Assert.assertTrue(text.append(1, new NtDynamic(PATCH_1)));
     Assert.assertTrue(text.append(2, new NtDynamic(PATCH_2)));
@@ -157,7 +158,7 @@ public class RxTextTests {
   @Test
   public void dump_compact() {
     JsonStreamWriter c = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     Assert.assertTrue(text.append(0, new NtDynamic(PATCH_0)));
     Assert.assertTrue(text.append(1, new NtDynamic(PATCH_1)));
     Assert.assertTrue(text.append(2, new NtDynamic(PATCH_2)));
@@ -172,7 +173,7 @@ public class RxTextTests {
   @Test
   public void dump_post_commit() {
     JsonStreamWriter c = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     Assert.assertTrue(text.append(0, new NtDynamic(PATCH_0)));
     Assert.assertTrue(text.append(1, new NtDynamic(PATCH_1)));
     Assert.assertTrue(text.append(2, new NtDynamic(PATCH_2)));
@@ -182,10 +183,32 @@ public class RxTextTests {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
     text.__commit("x", redo, undo);
-    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}\",\"1\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}\",\"2\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}\",\"3\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}\",\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\"}}", redo.toString());
-    Assert.assertEquals("\"x\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":null,\"1\":null,\"2\":null,\"3\":null,\"4\":null}}", undo.toString());
+    Assert.assertEquals("\"x\":{\"changes\":{\"0\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]},\"1\":{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]},\"2\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]},\"3\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}}}", redo.toString());
+    Assert.assertEquals("\"x\":{\"changes\":{\"0\":null,\"1\":null,\"2\":null,\"3\":null,\"4\":null}}", undo.toString());
     text.__dump(c);
     Assert.assertEquals("{\"fragments\":{},\"order\":{},\"changes\":{\"0\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]},\"1\":{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]},\"2\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]},\"3\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":0}", c.toString());
+    Assert.assertEquals("z/*  */x", text.get());
+  }
+
+
+  @Test
+  public void dump_post_compact_commit() {
+    JsonStreamWriter c = new JsonStreamWriter();
+    RxText text = new RxText(null, new RxInt32(null, 0));
+    Assert.assertTrue(text.append(0, new NtDynamic(PATCH_0)));
+    Assert.assertTrue(text.append(1, new NtDynamic(PATCH_1)));
+    Assert.assertTrue(text.append(2, new NtDynamic(PATCH_2)));
+    Assert.assertTrue(text.append(3, new NtDynamic(PATCH_3)));
+    Assert.assertFalse(text.append(3, new NtDynamic(PATCH_3)));
+    Assert.assertTrue(text.append(4, new NtDynamic(PATCH_4)));
+    text.compact(0.8);
+    JsonStreamWriter redo = new JsonStreamWriter();
+    JsonStreamWriter undo = new JsonStreamWriter();
+    text.__commit("x", redo, undo);
+    Assert.assertEquals("\"x\":{\"fragments\":{\"a7\":\"z/* adama adama */x\"},\"order\":{\"0\":\"a7\"},\"changes\":{\"4\":\"{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}\"},\"seq\":4}", redo.toString());
+    Assert.assertEquals("\"x\":{\"fragments\":{\"a7\":null},\"order\":{\"0\":null},\"changes\":{\"4\":null},\"seq\":0}", undo.toString());
+    text.__dump(c);
+    Assert.assertEquals("{\"fragments\":{\"a7\":\"z/* adama adama */x\"},\"order\":{\"0\":\"a7\"},\"changes\":{\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":4}", c.toString());
     Assert.assertEquals("z/*  */x", text.get());
   }
 
@@ -193,13 +216,13 @@ public class RxTextTests {
   public void insert() {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     Assert.assertEquals("", text.get());
     text.append(0, new NtDynamic("[" + PATCH_0 + "," + PATCH_1 + "," + PATCH_2 + "," + PATCH_3 + "," + PATCH_4 + "]"));
     text.__commit("x", redo, undo);
     JsonStreamWriter writer = new JsonStreamWriter();
     text.__dump(writer); {
-      RxText clone = new RxText(null);
+      RxText clone = new RxText(null, new RxInt32(null, 0));
       clone.__insert(new JsonStreamReader(writer.toString()));
       Assert.assertEquals("z/*  */x", clone.get());
     }
@@ -209,7 +232,7 @@ public class RxTextTests {
   public void patchViaUndoJustChanges() {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     Assert.assertEquals("", text.get());
     text.append(0, new NtDynamic("[" + PATCH_0 + "," + PATCH_1 + "," + PATCH_2 + "," + PATCH_3 + "," + PATCH_4 + "]"));
     text.__commit("x", redo, undo);
@@ -222,10 +245,10 @@ public class RxTextTests {
   public void patchViaUndoCompacted() {
     JsonStreamWriter redo = new JsonStreamWriter();
     JsonStreamWriter undo = new JsonStreamWriter();
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     Assert.assertEquals("", text.get());
     text.append(0, new NtDynamic("[" + PATCH_0 + "," + PATCH_1 + "," + PATCH_2 + "," + PATCH_3 + "," + PATCH_4 + "]"));
-    text.current().compact(0.7);
+    text.compact(0.7);
     text.__commit("x", redo, undo);
     Assert.assertEquals("z/*  */x", text.get());
     text.__patch(new JsonStreamReader(undo.toString().substring(4)));

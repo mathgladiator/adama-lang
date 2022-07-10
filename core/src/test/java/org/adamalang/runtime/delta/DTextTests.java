@@ -14,6 +14,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.reactives.RxInt32;
 import org.adamalang.runtime.text.RxText;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import org.junit.Test;
 public class DTextTests {
   @Test
   public void flow() {
-    RxText text = new RxText(null);
+    RxText text = new RxText(null, new RxInt32(null, 0));
     DText dt = new DText();
     final var stream = new JsonStreamWriter();
     final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, TestKey.ENCODER);

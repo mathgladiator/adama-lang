@@ -43,6 +43,7 @@ public abstract class LivingDocument implements RxParent {
   public final LivingDocument __self;
   protected final RxInt32 __auto_future_id;
   protected final RxInt32 __auto_table_row_id;
+  protected final RxInt32 __auto_gen;
   protected final RxBoolean __blocked;
   protected final RxInt32 __connection_id;
   protected final RxBoolean __constructed;
@@ -93,6 +94,7 @@ public abstract class LivingDocument implements RxParent {
     __goodwillBudget = 100000;
     __goodwillLimitOfBudget = 100000;
     __dedupe = new HashMap<>();
+    __auto_gen = new RxInt32(this, 0);
   }
 
   /** generate a new auto key for a table; all tables share the space id space */

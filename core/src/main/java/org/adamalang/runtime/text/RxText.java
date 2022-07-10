@@ -14,6 +14,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.reactives.RxBase;
+import org.adamalang.runtime.reactives.RxInt32;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,13 +22,15 @@ import java.util.Map;
 
 /** a text field within a document */
 public class RxText extends RxBase {
+  private final RxInt32 gen;
   private Text backup;
   private Text value;
 
-  public RxText(final RxParent parent) {
+  public RxText(final RxParent parent, RxInt32 gen) {
     super(parent);
-    this.backup = new Text();
-    this.value = new Text();
+    this.gen = gen;
+    this.backup = new Text(gen.bumpUpPost());
+    this.value = this.backup;
   }
 
   public Text current() {
@@ -152,7 +155,7 @@ public class RxText extends RxBase {
 
   @Override
   public void __insert(JsonStreamReader reader) {
-    backup = new Text(reader);
+    backup = new Text(reader, gen.bumpUpPost());
     value = backup;
   }
 
@@ -161,7 +164,14 @@ public class RxText extends RxBase {
     if (value == backup) {
       value = new Text(backup);
     }
-    value.patch(reader);
+    value.patch(reader, gen.bumpUpPost());
+  }
+
+  public void compact(double ratio) {
+    if (value == backup) {
+      value = new Text(backup);
+    }
+    value.compact(ratio);
   }
 
   @Override
@@ -184,7 +194,7 @@ public class RxText extends RxBase {
     if (value == backup) {
       value = new Text(backup);
     }
-    this.value.set(str);
+    this.value.set(str, gen.bumpUpPost());
     __raiseDirty();
   }
 

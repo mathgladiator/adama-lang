@@ -30,18 +30,18 @@ public class Text {
   private SeqString copy;
 
   /** fresh Text */
-  public Text() {
+  public Text(int gen) {
     this.fragments = new HashMap<>();
     this.order = new HashMap<>();
     this.changes = new HashMap<>();
     this.uncommitedChanges = new HashMap<>();
     this.seq = 0;
-    this.gen = 0;
+    this.gen = gen;
     this.upgraded = false;
     this.copy = null;
   }
 
-  /** shallow copy as all values in maps are immutable */
+  /** make a value copy of the backup, and clean the backup */
   public Text(Text other) {
     this.fragments = new HashMap<>(other.fragments);
     this.order = new HashMap<>(other.order);
@@ -51,22 +51,24 @@ public class Text {
     this.upgraded = other.upgraded;
     this.gen = other.gen;
     this.copy = null;
+    other.uncommitedChanges.clear();
+
   }
 
   /** read from JSON */
-  public Text(JsonStreamReader reader) {
+  public Text(JsonStreamReader reader, int gen) {
     this.fragments = new HashMap<>();
     this.order = new HashMap<>();
     this.changes = new HashMap<>();
     this.uncommitedChanges = new HashMap<>();
     this.seq = 0;
-    this.gen = 0;
     this.upgraded = false;
-    patch(reader);
+    patch(reader, gen);
   }
 
-  public void patch(JsonStreamReader reader) {
+  public void patch(JsonStreamReader reader, int gen) {
     this.copy = null;
+    this.gen = gen;
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         switch (reader.fieldName()) {
@@ -115,13 +117,10 @@ public class Text {
           case "seq":
             seq = reader.readInteger();
             break;
-          case "gen":
-            gen = reader.readInteger();
-            break;
         }
       }
     } else {
-      set(reader.readString());
+      set(reader.readString(), gen);
       upgraded = true;
     }
   }
@@ -151,12 +150,12 @@ public class Text {
     }
   }
 
-  public void set(String str) {
+  public void set(String str, int gen) {
     setBase(str);
     changes.clear();
     uncommitedChanges.clear();
     this.seq = 0;
-    this.gen ++;
+    this.gen = gen;
     this.copy = new SeqString(seq, str);
   }
 
@@ -203,12 +202,6 @@ public class Text {
     writer.writeObjectFieldIntro("seq");
     writer.writeInteger(seq);
     writer.endObject();
-  }
-
-  private void internalAppend(int seq, String change) {
-    if (copy != null) {
-      copy = new SeqString(copy.seq + 1, Operand.apply(new Raw(copy.value), change).get());
-    }
   }
 
   public boolean append(int seq, String change) {

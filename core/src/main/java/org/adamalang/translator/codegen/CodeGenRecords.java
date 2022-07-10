@@ -100,7 +100,7 @@ public class CodeGenRecords {
       result.append("\", (RxParent __parent) -> new RTx").append(((TyReactiveTable) fieldType).recordName);
       result.append("(__parent), ").append(numberIndicies).append(")");
     } else if (fieldType instanceof TyReactiveText) {
-      result.append("new RxText(").append(parent).append(")");
+      result.append("new RxText(").append(parent).append(",__auto_gen)");
     } else if (fieldType instanceof TyReactiveRecord) {
       result.append("new ").append(fieldType.getJavaConcreteType(environment)).append("(").append(parent).append(")");
     } else if (fieldType instanceof TyReactiveMap) {
@@ -408,7 +408,7 @@ public class CodeGenRecords {
     sb.append("__goodwillBudget = ").append(environment.state.options.goodwillBudget + ";").writeNewline();
     sb.append("__goodwillLimitOfBudget = ").append(environment.state.options.goodwillBudget + ";").tabDown().writeNewline();
     sb.append("}").writeNewline();
-    writeCommitAndRevert(storage, sb, environment, true, "__state", "__constructed", "__next_time", "__last_expire_time", "__blocked", "__seq", "__entropy", "__auto_future_id", "__connection_id", "__message_id", "__time", "__auto_table_row_id");
+    writeCommitAndRevert(storage, sb, environment, true, "__state", "__constructed", "__next_time", "__last_expire_time", "__blocked", "__seq", "__entropy", "__auto_future_id", "__connection_id", "__message_id", "__time", "__auto_table_row_id", "__auto_gen");
     CodeGenDeltaClass.writeRecordDeltaClass(storage, sb, environment, environment.document.getClassName(), true);
     sb.append("@Override").writeNewline();
     sb.append("public Set<String> __get_intern_strings() {").tabUp().writeNewline();

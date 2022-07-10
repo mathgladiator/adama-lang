@@ -154,6 +154,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__auto_gen\":");
+    gold.append("\n            __auto_gen.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -220,6 +223,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__auto_gen\":");
+    gold.append("\n            __auto_gen.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -268,6 +274,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __time.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
+    gold.append("\n    __auto_gen.__dump(__writer);");
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
@@ -287,6 +295,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
+    gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    z.__commit(\"z\", __forward, __reverse);");
     gold.append("\n    count.__commit(\"count\", __forward, __reverse);");
     gold.append("\n    count_after_delete.__commit(\"count_after_delete\", __forward, __reverse);");
@@ -306,6 +315,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
+    gold.append("\n    __auto_gen.__revert();");
     gold.append("\n    z.__revert();");
     gold.append("\n    count.__revert();");
     gold.append("\n    count_after_delete.__revert();");
@@ -618,10 +628,10 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:1086");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"z\":42,\"count\":3,\"count_after_delete\":2,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0}");
+    gold.append("\n{\"z\":42,\"count\":3,\"count_after_delete\":2,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"z\":42,\"count\":3,\"count_after_delete\":2,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0}");
-    gold.append("\n{\"z\":42,\"count\":3,\"count_after_delete\":2,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0}");
+    gold.append("\n{\"z\":42,\"count\":3,\"count_after_delete\":2,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0}");
+    gold.append("\n{\"z\":42,\"count\":3,\"count_after_delete\":2,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -910,6 +920,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__auto_gen\":");
+    gold.append("\n            __auto_gen.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -988,6 +1001,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__auto_gen\":");
+    gold.append("\n            __auto_gen.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -1044,6 +1060,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __time.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
+    gold.append("\n    __auto_gen.__dump(__writer);");
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
@@ -1063,6 +1081,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
+    gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    my_map1.__commit(\"my_map1\", __forward, __reverse);");
     gold.append("\n    my_map2.__commit(\"my_map2\", __forward, __reverse);");
     gold.append("\n    v.__commit(\"v\", __forward, __reverse);");
@@ -1086,6 +1105,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
+    gold.append("\n    __auto_gen.__revert();");
     gold.append("\n    my_map1.__revert();");
     gold.append("\n    my_map2.__revert();");
     gold.append("\n    v.__revert();");
@@ -1709,10 +1729,10 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":9}");
     gold.append("\nMEMORY:3428");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"my_map1\":{\"42\":24,\"500\":424242,\"1000\":9999},\"my_map2\":{\"hi\":{\"u\":42,\"v\":50,\"id\":0}},\"v\":100500,\"w\":92,\"sz\":3,\"my_map3\":{},\"crazy\":{\"100\":{\"100\":42}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":9,\"__entropy\":\"-652523483647487500\",\"__auto_future_id\":0,\"__connection_id\":2,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}}");
+    gold.append("\n{\"my_map1\":{\"42\":24,\"500\":424242,\"1000\":9999},\"my_map2\":{\"hi\":{\"u\":42,\"v\":50,\"id\":0}},\"v\":100500,\"w\":92,\"sz\":3,\"my_map3\":{},\"crazy\":{\"100\":{\"100\":42}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":9,\"__entropy\":\"-652523483647487500\",\"__auto_future_id\":0,\"__connection_id\":2,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"my_map1\":{\"42\":24,\"500\":424242,\"1000\":9999},\"my_map2\":{\"hi\":{\"u\":42,\"v\":50,\"id\":0}},\"v\":100500,\"w\":92,\"sz\":3,\"my_map3\":{},\"crazy\":{\"100\":{\"100\":42}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":9,\"__entropy\":\"-652523483647487500\",\"__auto_future_id\":0,\"__connection_id\":2,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}}");
-    gold.append("\n{\"my_map1\":{\"42\":24,\"500\":424242,\"1000\":9999},\"my_map2\":{\"hi\":{\"u\":42,\"v\":50,\"id\":0}},\"v\":100500,\"w\":92,\"sz\":3,\"my_map3\":{},\"crazy\":{\"100\":{\"100\":42}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":9,\"__entropy\":\"-652523483647487500\",\"__auto_future_id\":0,\"__connection_id\":2,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}}");
+    gold.append("\n{\"my_map1\":{\"42\":24,\"500\":424242,\"1000\":9999},\"my_map2\":{\"hi\":{\"u\":42,\"v\":50,\"id\":0}},\"v\":100500,\"w\":92,\"sz\":3,\"my_map3\":{},\"crazy\":{\"100\":{\"100\":42}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":9,\"__entropy\":\"-652523483647487500\",\"__auto_future_id\":0,\"__connection_id\":2,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}}");
+    gold.append("\n{\"my_map1\":{\"42\":24,\"500\":424242,\"1000\":9999},\"my_map2\":{\"hi\":{\"u\":42,\"v\":50,\"id\":0}},\"v\":100500,\"w\":92,\"sz\":3,\"my_map3\":{},\"crazy\":{\"100\":{\"100\":42}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":9,\"__entropy\":\"-652523483647487500\",\"__auto_future_id\":0,\"__connection_id\":2,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -1863,6 +1883,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__auto_gen\":");
+    gold.append("\n            __auto_gen.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -1932,6 +1955,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__auto_gen\":");
+    gold.append("\n            __auto_gen.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -1982,6 +2008,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __time.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
+    gold.append("\n    __auto_gen.__dump(__writer);");
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
@@ -2001,6 +2029,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
+    gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    t.__commit(\"t\", __forward, __reverse);");
     gold.append("\n    x1.__commit(\"x1\", __forward, __reverse);");
     gold.append("\n    x2.__commit(\"x2\", __forward, __reverse);");
@@ -2021,6 +2050,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
+    gold.append("\n    __auto_gen.__revert();");
     gold.append("\n    t.__revert();");
     gold.append("\n    x1.__revert();");
     gold.append("\n    x2.__revert();");
@@ -2577,10 +2607,10 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:1988");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"t\":{\"1\":{\"x\":1,\"v\":1,\"id\":1},\"2\":{\"x\":2,\"v\":5,\"id\":2},\"3\":{\"x\":3,\"v\":10,\"id\":3},\"4\":{\"x\":2,\"v\":10,\"id\":4},\"5\":{\"x\":3,\"v\":100,\"id\":5},\"6\":{\"x\":3,\"v\":1000,\"id\":6}},\"x1\":1,\"x2\":15,\"x3\":1110,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6}");
+    gold.append("\n{\"t\":{\"1\":{\"x\":1,\"v\":1,\"id\":1},\"2\":{\"x\":2,\"v\":5,\"id\":2},\"3\":{\"x\":3,\"v\":10,\"id\":3},\"4\":{\"x\":2,\"v\":10,\"id\":4},\"5\":{\"x\":3,\"v\":100,\"id\":5},\"6\":{\"x\":3,\"v\":1000,\"id\":6}},\"x1\":1,\"x2\":15,\"x3\":1110,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6,\"__auto_gen\":0}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"t\":{\"1\":{\"x\":1,\"v\":1,\"id\":1},\"2\":{\"x\":2,\"v\":5,\"id\":2},\"3\":{\"x\":3,\"v\":10,\"id\":3},\"4\":{\"x\":2,\"v\":10,\"id\":4},\"5\":{\"x\":3,\"v\":100,\"id\":5},\"6\":{\"x\":3,\"v\":1000,\"id\":6}},\"x1\":1,\"x2\":15,\"x3\":1110,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6}");
-    gold.append("\n{\"t\":{\"1\":{\"x\":1,\"v\":1,\"id\":1},\"2\":{\"x\":2,\"v\":5,\"id\":2},\"3\":{\"x\":3,\"v\":10,\"id\":3},\"4\":{\"x\":2,\"v\":10,\"id\":4},\"5\":{\"x\":3,\"v\":100,\"id\":5},\"6\":{\"x\":3,\"v\":1000,\"id\":6}},\"x1\":1,\"x2\":15,\"x3\":1110,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6}");
+    gold.append("\n{\"t\":{\"1\":{\"x\":1,\"v\":1,\"id\":1},\"2\":{\"x\":2,\"v\":5,\"id\":2},\"3\":{\"x\":3,\"v\":10,\"id\":3},\"4\":{\"x\":2,\"v\":10,\"id\":4},\"5\":{\"x\":3,\"v\":100,\"id\":5},\"6\":{\"x\":3,\"v\":1000,\"id\":6}},\"x1\":1,\"x2\":15,\"x3\":1110,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6,\"__auto_gen\":0}");
+    gold.append("\n{\"t\":{\"1\":{\"x\":1,\"v\":1,\"id\":1},\"2\":{\"x\":2,\"v\":5,\"id\":2},\"3\":{\"x\":3,\"v\":10,\"id\":3},\"4\":{\"x\":2,\"v\":10,\"id\":4},\"5\":{\"x\":3,\"v\":100,\"id\":5},\"6\":{\"x\":3,\"v\":1000,\"id\":6}},\"x1\":1,\"x2\":15,\"x3\":1110,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6,\"__auto_gen\":0}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
