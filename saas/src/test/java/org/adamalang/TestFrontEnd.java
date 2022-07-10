@@ -127,7 +127,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     File cloudPath = new File(caravanPath, "archive");
     File storePath = new File(dataRoot, "store");
     this.store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), storePath, walRoot, 64 * 1024 * 1024, 64 * 1024, 1024 * 1024);
-    Finder finder = new Finder(dataBase);
+    Finder finder = new Finder(dataBase, "test-region");
     Cloud cloud = new Cloud() {
       @Override
       public File path() {

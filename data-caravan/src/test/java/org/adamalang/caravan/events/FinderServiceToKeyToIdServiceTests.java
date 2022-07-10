@@ -17,6 +17,7 @@ import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -37,7 +38,7 @@ public class FinderServiceToKeyToIdServiceTests {
       }
 
       @Override
-      public void bind(Key key, String region, String machine, Callback<Void> callback) {
+      public void bind(Key key, String machine, Callback<Void> callback) {
 
       }
 
@@ -54,6 +55,10 @@ public class FinderServiceToKeyToIdServiceTests {
       @Override
       public void delete(Key key, String machineOn, Callback<Void> callback) {
 
+      }
+
+      @Override
+      public void list(String machine, Callback<List<Key>> callback) {
       }
     };
     FinderServiceToKeyToIdService service = new FinderServiceToKeyToIdService(real);

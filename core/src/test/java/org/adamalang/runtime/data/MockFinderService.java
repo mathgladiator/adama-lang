@@ -15,6 +15,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +28,7 @@ public class MockFinderService implements FinderService {
 
   private Runnable slowFind;
   private CountDownLatch slowFindLatch;
+  private String region = "test-region";
 
   public Runnable latchOnSlowFind() {
     slowFindLatch = new CountDownLatch(1);
@@ -65,7 +67,7 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void bind(Key key, String region, String machine, Callback<Void> callback) {
+  public void bind(Key key, String machine, Callback<Void> callback) {
     if (key.key.contains("cant-bind")) {
       callback.failure(new ErrorCodeException(-1234));
       return;
@@ -88,7 +90,7 @@ public class MockFinderService implements FinderService {
   }
 
   public void bindLocal(Key key) {
-    bind(key, "test-region", "test-machine", Callback.DONT_CARE_VOID);
+    bind(key,  "test-machine", Callback.DONT_CARE_VOID);
   }
 
   public void bindArchive(Key key, String archiveKey) {
@@ -96,7 +98,7 @@ public class MockFinderService implements FinderService {
   }
 
   public void bindOtherMachine(Key key) {
-    map.put(key, new Result(1, Location.Machine, "test-region", "other-machine", ""));
+    map.put(key, new Result(1, Location.Machine, region, "other-machine", ""));
   }
 
   @Override
@@ -156,5 +158,10 @@ public class MockFinderService implements FinderService {
     }
     map.remove(key);
     callback.success(null);
+  }
+
+  @Override
+  public void list(String machine, Callback<List<Key>> callback) {
+    callback.failure(new ErrorCodeException(-123));
   }
 }

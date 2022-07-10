@@ -11,6 +11,8 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 
+import java.util.List;
+
 /** an interface to describe how to find a specific document by key */
 public interface FinderService {
 
@@ -18,7 +20,7 @@ public interface FinderService {
   void find(Key key, Callback<Result> callback);
 
   /** take over for the key */
-  void bind(Key key, String region, String machine, Callback<Void> callback);
+  void bind(Key key, String machine, Callback<Void> callback);
 
   /** release the machine for the given key */
   void free(Key key, String machineOn, Callback<Void> callback);
@@ -28,6 +30,9 @@ public interface FinderService {
 
   /** delete the key */
   void delete(Key key, String machineOn, Callback<Void> callback);
+
+  /** list all items on a host */
+  void list(String machine, Callback<List<Key>> callback);
 
   /** where a document may be */
   enum Location {

@@ -204,7 +204,7 @@ public class Machine {
         base.data.restore(key, archiveKey, new Callback<Void>() {
           @Override
           public void success(Void value) {
-            base.finder.bind(key, base.region, base.target, new Callback<Void>() {
+            base.finder.bind(key, base.target, new Callback<Void>() {
               @Override
               public void success(Void value) {
                 find_FoundMachine(base.target, true);

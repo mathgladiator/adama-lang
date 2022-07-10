@@ -34,7 +34,7 @@ public class ManagedDataService implements DataService {
 
   @Override
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
-    base.finder.bind(key, base.region, base.target, new Callback<Void>() {
+    base.finder.bind(key, base.target, new Callback<Void>() {
       @Override
       public void success(Void value) {
         base.on(key, (machine) -> {

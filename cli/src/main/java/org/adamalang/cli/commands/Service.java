@@ -168,7 +168,7 @@ public class Service {
     dataRoot.mkdir();
     File storePath = new File(dataRoot, "store");
     DurableListStore store = new DurableListStore(new DurableListStoreMetrics(metricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
-    Finder finder = new Finder(dataBase);
+    Finder finder = new Finder(dataBase, region);
     CaravanDataService caravanDataService = new CaravanDataService(s3, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
     Base managedBase = new Base(finder, caravanDataService, region, identity.ip + ":" + port, managedExecutor, 2 * 60 * 1000);
     ManagedDataService dataService = new ManagedDataService(managedBase);
@@ -387,7 +387,7 @@ public class Service {
     AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
     S3 s3 = new S3(awsConfig, awsMetrics);
 
-    Finder finder = new Finder(dataBaseFront);
+    Finder finder = new Finder(dataBaseFront, region);
     ClientRouter router = ClientRouter.FINDER(metrics, finder, region);
     Client client = new Client(netBase, clientConfig, metrics, router, null);
     Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();

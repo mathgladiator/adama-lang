@@ -9,6 +9,8 @@
  */
 package org.adamalang.mysql.finder;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
@@ -23,6 +25,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class FinderTests {
   private final Key KEY1 = new Key("space-1", "key-1");
@@ -35,7 +40,7 @@ public class FinderTests {
       FinderInstaller installer = new FinderInstaller(dataBase);
       try {
         installer.install();
-        Finder machine = new Finder(dataBase);
+        Finder machine = new Finder(dataBase, "region");
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
@@ -53,7 +58,7 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "region", "machineB:523", callback);
+          machine.bind(KEY1, "machineB:523", callback);
           callback.assertSuccess();
         }
         {
@@ -63,7 +68,7 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "region", "machineB:523", callback);
+          machine.bind(KEY1, "machineB:523", callback);
           callback.assertSuccess();
         }
         {
@@ -78,12 +83,12 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "region", "machineA:124", callback);
+          machine.bind(KEY1, "machineA:124", callback);
           callback.assertFailure(667658);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "region", "machineB:523", callback);
+          machine.bind(KEY1, "machineB:523", callback);
           callback.assertSuccess();
         }
         BackupResult result1 = new BackupResult("new-achive-key", 0, 1, 4);
@@ -118,6 +123,23 @@ public class FinderTests {
           machine.find(KEY1, cb);
           cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key-old");
         }
+        CountDownLatch listFinished = new CountDownLatch(1);
+        machine.list("machineB:523", new Callback<List<Key>>() {
+          @Override
+          public void success(List<Key> value) {
+            for (Key result : value) {
+              Assert.assertEquals(result, KEY1);
+            }
+            Assert.assertEquals(1, value.size());
+            listFinished.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            ex.printStackTrace();
+          }
+        });
+        Assert.assertTrue(listFinished.await(5000, TimeUnit.MILLISECONDS));
         {
           SimpleMockCallback callback = new SimpleMockCallback();
           machine.backup(KEY1, result2, "machineB:523", callback);
@@ -128,6 +150,7 @@ public class FinderTests {
           machine.find(KEY1, cb);
           cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key-old");
         }
+
         {
           SimpleMockCallback callback = new SimpleMockCallback();
           machine.free(KEY1,  "machineB:523", callback);
@@ -136,7 +159,6 @@ public class FinderTests {
         HashMap<String, Long> inventory = FinderOperations.inventoryStorage(dataBase);
         Assert.assertEquals(1, inventory.size());
         Assert.assertEquals(5, (long) inventory.get(KEY1.space));
-
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
@@ -144,7 +166,7 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "region", "targetNew", callback);
+          machine.bind(KEY1, "targetNew", callback);
           callback.assertSuccess();
         }
         {
