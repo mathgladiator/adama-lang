@@ -167,13 +167,6 @@ public class RxText extends RxBase {
     value.patch(reader, gen.bumpUpPost());
   }
 
-  public void compact(double ratio) {
-    if (value == backup) {
-      value = new Text(backup);
-    }
-    value.compact(ratio);
-  }
-
   @Override
   public void __revert() {
     if (__isDirty()) {
@@ -195,6 +188,14 @@ public class RxText extends RxBase {
       value = new Text(backup);
     }
     this.value.set(str, gen.bumpUpPost());
+    __raiseDirty();
+  }
+
+  public void compact(double ratio) {
+    if (value == backup) {
+      value = new Text(backup);
+    }
+    value.compact(ratio);
     __raiseDirty();
   }
 
