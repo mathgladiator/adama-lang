@@ -74,6 +74,7 @@ public class Document implements TopLevelDocumentHandler {
   public final UriTable webGet;
   public final UriTable webPut;
   private final HashMap<String, String> includes;
+  private final ArrayList<DefineService> services;
 
   public Document() {
     autoClassId = 0;
@@ -101,6 +102,7 @@ public class Document implements TopLevelDocumentHandler {
     webGet = new UriTable();
     webPut = new UriTable();
     includes = new HashMap<>();
+    services = new ArrayList<>();
   }
 
   public void setIncludes(HashMap<String, String> include) {
@@ -230,6 +232,14 @@ public class Document implements TopLevelDocumentHandler {
         });
       }
     }
+  }
+
+  @Override
+  public void add(DefineService ds) {
+    services.add(ds);
+    typeCheckOrder.add((env) -> {
+      ds.typing(env);
+    });
   }
 
   @Override

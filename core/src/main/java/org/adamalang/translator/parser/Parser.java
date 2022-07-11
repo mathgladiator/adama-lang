@@ -497,6 +497,25 @@ public class Parser {
     return (doc) -> doc.add(include);
   }
 
+  public Consumer<TopLevelDocumentHandler> define_service(Token serviceToken) throws AdamaLangException {
+    Token name = id();
+    Token open = consumeExpectedSymbol("{");
+    ArrayList<DefineService.ServiceAspect> aspects = new ArrayList<>();
+    var nextOrClose = tokens.pop();
+    while (!nextOrClose.isSymbolWithTextEq("}")) {
+      if (!nextOrClose.isIdentifier()) {
+        throw new ParseException("Service was expecting an identifier", tokens.getLastTokenIfAvailable());
+      }
+      Token equals = consumeExpectedSymbol("=");
+      Expression val = expression();
+      Token semicolon = consumeExpectedSymbol(";");
+      aspects.add(new DefineService.ServiceAspect(nextOrClose, equals, val, semicolon));
+      nextOrClose = tokens.pop();
+    }
+    DefineService ds = new DefineService(serviceToken, name, open, aspects, nextOrClose);
+    return (doc) -> doc.add(ds);
+  }
+
   public Consumer<TopLevelDocumentHandler> define() throws AdamaLangException {
     // define a state machine transition
     var op = tokens.popIf(Token::isLabel);
@@ -504,7 +523,7 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block());
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached", "@static", "@can_attach", "@web", "@include"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached", "@static", "@can_attach", "@web", "@include", "@service"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch"));
     }
@@ -544,6 +563,8 @@ public class Parser {
           return define_static(op);
         case "@web":
           return define_web(op);
+        case "@service":
+          return define_service(op);
         case "view": {
           final var ntype = native_type();
           final var name = id();

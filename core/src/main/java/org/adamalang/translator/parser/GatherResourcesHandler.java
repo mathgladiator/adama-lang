@@ -141,4 +141,8 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
       errors.add("could not resolve: " + in.resource.text);
     }
   }
+
+  @Override
+  public void add(DefineService ds) {
+  }
 }

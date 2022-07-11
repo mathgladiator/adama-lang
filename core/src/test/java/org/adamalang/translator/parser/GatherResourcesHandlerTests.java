@@ -60,5 +60,6 @@ public class GatherResourcesHandlerTests {
     Assert.assertEquals(1, gi.errors.size());
     gi.add(new Include(null, Token.WRAP("bad"), null));
     Assert.assertEquals(2, gi.errors.size());
+    gi.add((DefineService) null);
   }
 }
