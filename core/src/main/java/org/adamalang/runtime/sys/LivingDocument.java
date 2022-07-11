@@ -29,6 +29,7 @@ import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
+import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebPutRaw;
@@ -116,6 +117,8 @@ public abstract class LivingDocument implements RxParent {
   public void __setKey(String key) {
     this.__key = key;
   }
+
+  protected abstract void __link(ServiceRegistry registry);
 
   /** Document.key(); */
   public String __getKey() {

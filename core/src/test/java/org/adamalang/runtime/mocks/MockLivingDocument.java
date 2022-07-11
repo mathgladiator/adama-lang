@@ -21,6 +21,7 @@ import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.TestReportBuilder;
+import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
@@ -53,6 +54,10 @@ public class MockLivingDocument extends LivingDocument {
 
   @Override
   protected void __handle_direct(NtClient who, String channel, Object message) throws AbortMessageException {
+  }
+
+  @Override
+  protected void __link(ServiceRegistry registry) {
   }
 
   @Override

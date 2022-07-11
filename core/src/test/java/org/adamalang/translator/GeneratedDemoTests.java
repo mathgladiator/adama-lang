@@ -67,6 +67,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -474,6 +475,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  private void handleChannelMessage_notify(NtClient __who, RTxNotifyWrite message) throws AbortMessageException {");
     gold.append("\n    NtClient who = __who;");
     gold.append("\n    __code_cost += 2;");
@@ -692,6 +695,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -1408,6 +1412,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  private void handleChannelMessage_publish(NtClient __who, RTxPublishMessage message) throws AbortMessageException {");
     gold.append("\n    __code_cost += 4;");
     gold.append("\n    __track(0);");
@@ -1663,6 +1669,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -2014,6 +2021,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -2238,6 +2247,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -3031,6 +3041,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  private void handleChannelMessage_say(NtClient __who, RTxSay what) throws AbortMessageException {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
@@ -3321,6 +3333,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -5036,6 +5049,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  private final Sink<RTxLeaderActionMessage> __queue_leader = new Sink<>(\"leader\");");
     gold.append("\n  private final NtChannel<RTxLeaderActionMessage> leader = new NtChannel<>(__futures, __queue_leader);");
     gold.append("\n  private final Sink<RTxCardDecision[]> __queue_pass_channel = new Sink<>(\"pass_channel\");");
@@ -6802,6 +6817,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -7631,6 +7647,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  private void handleChannelMessage_create_new_add_on(NtClient __who, RTxAddAddOn arg) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
@@ -7894,6 +7912,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -8434,6 +8453,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  private void handleChannelMessage_square(NtClient __who, RTxNothing n) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
@@ -8702,6 +8723,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -9109,6 +9131,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  private void handleChannelMessage_change(NtClient __who, RTxM m) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
@@ -9320,6 +9344,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -9775,6 +9800,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -9998,6 +10025,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -10909,6 +10937,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __track(3);");
     gold.append("\n    __transitionStateMachine(\"end\", 0);");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  private final Sink<RTxPlay> __queue_play = new Sink<>(\"play\");");
     gold.append("\n  private final NtChannel<RTxPlay> play = new NtChannel<>(__futures, __queue_play);");
     gold.append("\n  @Override");
@@ -11409,6 +11439,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -12125,6 +12156,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  private void handleChannelMessage_say(NtClient __who, RTxSay what) throws AbortMessageException {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");

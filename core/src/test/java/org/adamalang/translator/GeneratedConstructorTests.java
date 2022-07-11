@@ -107,6 +107,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -522,6 +523,8 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -694,6 +697,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -1026,6 +1030,8 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -1196,6 +1202,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -1598,6 +1605,8 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -1768,6 +1777,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -2087,6 +2097,8 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -2253,6 +2265,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -2668,6 +2681,8 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -2850,6 +2865,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
     gold.append("\nimport org.adamalang.runtime.ops.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
@@ -3464,6 +3480,8 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");

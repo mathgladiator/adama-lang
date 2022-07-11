@@ -74,7 +74,7 @@ public class Document implements TopLevelDocumentHandler {
   public final UriTable webGet;
   public final UriTable webPut;
   private final HashMap<String, String> includes;
-  private final ArrayList<DefineService> services;
+  public final ArrayList<DefineService> services;
 
   public Document() {
     autoClassId = 0;
@@ -539,6 +539,7 @@ public class Document implements TopLevelDocumentHandler {
       }
     }
     CodeGenFunctions.writeFunctionsJava(sb, environment);
+    CodeGenServices.writeServices(sb, environment);
     CodeGenMessageHandling.writeMessageHandlers(sb, environment);
     CodeGenWeb.writeWebHandlers(sb, environment);
     CodeGenStateMachine.writeStateMachine(sb, environment);
