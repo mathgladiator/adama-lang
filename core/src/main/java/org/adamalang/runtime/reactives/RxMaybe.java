@@ -11,6 +11,7 @@ package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxChild;
+import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -30,6 +31,14 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
     this.value = null;
     this.maker = maker;
     this.priorValue = null;
+  }
+
+  @Override
+  public boolean __isAlive() {
+    if (__parent != null) {
+      return __parent.__isAlive();
+    }
+    return true;
   }
 
   @Override
@@ -120,6 +129,9 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
 
   public void delete() {
     if (value != null) {
+      if (value instanceof RxKillable) {
+        ((RxKillable) value).__kill();
+      }
       value = null;
       __raiseDirty();
     }

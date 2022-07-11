@@ -7,13 +7,11 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.contracts;
+package org.adamalang.runtime.remote;
 
-/** the parent (or data owner) of a reactive data type */
-public interface RxParent {
-  /** make this item dirty */
-  void __raiseDirty();
-
-  /** is the parent alive */
-  boolean __isAlive();
+public class RemoteResult {
+  private String result;
+  private Object cached;
+  private boolean failure;
+  private int attempts;
 }

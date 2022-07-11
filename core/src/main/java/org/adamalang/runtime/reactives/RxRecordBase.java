@@ -10,10 +10,11 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.RxChild;
+import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
 
 /** the base object for generated record types */
-public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase implements Comparable<Ty>, RxParent, RxChild {
+public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase implements Comparable<Ty>, RxParent, RxChild, RxKillable {
   protected boolean __isDying;
   private boolean __alive;
 
@@ -48,6 +49,7 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
     return __isDying;
   }
 
+  @Override
   public void __kill() {
     __isDying = true;
     __alive = false;
@@ -58,6 +60,16 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
   @Override
   public boolean __raiseInvalid() {
     __invalidateSubscribers();
+    return __alive;
+  }
+
+  @Override
+  public boolean __isAlive() {
+    if (__parent != null) {
+      if (!__parent.__isAlive()) {
+        return false;
+      }
+    }
     return __alive;
   }
 

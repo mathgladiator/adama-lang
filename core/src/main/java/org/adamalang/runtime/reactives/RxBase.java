@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 /** the base class of any reactive object */
 public abstract class RxBase {
-  private final RxParent __parent;
+  protected final RxParent __parent;
   private boolean __dirty;
   private ArrayList<RxChild> __subscribers;
 

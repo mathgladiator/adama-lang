@@ -55,6 +55,14 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   }
 
   @Override
+  public boolean __isAlive() {
+    if (__parent != null) {
+      return __parent.__isAlive();
+    }
+    return true;
+  }
+
+  @Override
   public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
       forwardDelta.writeObjectFieldIntro(name);

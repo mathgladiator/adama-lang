@@ -7,13 +7,13 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.contracts;
+package org.adamalang.runtime.remote;
 
-/** the parent (or data owner) of a reactive data type */
-public interface RxParent {
-  /** make this item dirty */
-  void __raiseDirty();
+/** A callback for a remote service */
+public interface RemoteCallback {
+  /** the remote call was successful; the result is a json object or array */
+  public void success(String result);
 
-  /** is the parent alive */
-  boolean __isAlive();
+  /** the remote call was a failure; the code is useful for code, and the message is useful for humans */
+  public void failure(int code, String message);
 }

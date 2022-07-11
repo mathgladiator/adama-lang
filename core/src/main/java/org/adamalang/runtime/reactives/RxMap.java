@@ -10,6 +10,7 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.RxChild;
+import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -36,6 +37,14 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   }
 
   @Override
+  public boolean __isAlive() {
+    if (__parent != null) {
+      return __parent.__isAlive();
+    }
+    return true;
+  }
+
+  @Override
   public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
       forwardDelta.writeObjectFieldIntro(name);
@@ -43,6 +52,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
       reverseDelta.writeObjectFieldIntro(name);
       reverseDelta.beginObject();
       for (final Map.Entry<DomainTy, RangeTy> entry : deleted.entrySet()) {
+        if (entry.getValue() instanceof RxKillable) {
+          ((RxKillable) entry.getValue()).__kill();
+        }
         String key = codec.toStr(entry.getKey());
         final var value = entry.getValue();
         forwardDelta.writeObjectFieldIntro(key);

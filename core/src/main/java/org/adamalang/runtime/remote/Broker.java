@@ -7,13 +7,15 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.contracts;
+package org.adamalang.runtime.remote;
 
-/** the parent (or data owner) of a reactive data type */
-public interface RxParent {
-  /** make this item dirty */
-  void __raiseDirty();
+import java.util.ArrayList;
+import java.util.TreeMap;
 
-  /** is the parent alive */
-  boolean __isAlive();
+public class Broker {
+  private final TreeMap<RemoteInvocation, RemoteResult> inflight;
+
+  public Broker() {
+    this.inflight = new TreeMap<>();
+  }
 }

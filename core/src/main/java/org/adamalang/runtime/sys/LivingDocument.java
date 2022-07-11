@@ -597,6 +597,11 @@ public abstract class LivingDocument implements RxParent {
   /** code generated: route the given message */
   protected abstract void __route(AsyncTask task);
 
+  /** for the reactive children, the root is always alive */
+  public boolean __isAlive() {
+    return true;
+  }
+
   /**
    * available to the test runner... me thinks this can be done... mucho better (requires precommit)
    */

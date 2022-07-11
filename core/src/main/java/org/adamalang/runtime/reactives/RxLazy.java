@@ -57,6 +57,9 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   public boolean __raiseInvalid() {
     invalid = true;
     __invalidateSubscribers();
+    if (__parent != null) {
+      return __parent.__isAlive();
+    }
     return true;
   }
 

@@ -14,9 +14,11 @@ import org.junit.Assert;
 
 public class MockRxParent implements RxParent {
   public int dirtyCount;
+  public boolean alive;
 
   public MockRxParent() {
     dirtyCount = 0;
+    alive = true;
   }
 
   @Override
@@ -26,5 +28,10 @@ public class MockRxParent implements RxParent {
 
   public void assertDirtyCount(final int expected) {
     Assert.assertEquals(expected, dirtyCount);
+  }
+
+  @Override
+  public boolean __isAlive() {
+    return alive;
   }
 }
