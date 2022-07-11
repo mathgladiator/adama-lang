@@ -1,0 +1,3 @@
+@service sms {
+  method<SendRequest, SendResponse> send;
+}

@@ -28,6 +28,7 @@ public class EnvironmentState {
   private boolean isPolicy;
   private boolean isBubble;
   private boolean isWeb;
+  private String cacheObject;
 
   private EnvironmentState(final EnvironmentState prior) {
     autoId = prior.autoId;
@@ -45,6 +46,7 @@ public class EnvironmentState {
     isPolicy = prior.isPolicy;
     isBubble = prior.isBubble;
     isWeb = prior.isWeb;
+    cacheObject = prior.cacheObject;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -63,6 +65,7 @@ public class EnvironmentState {
     isPolicy = false;
     isBubble = false;
     isWeb = false;
+    cacheObject = null;
   }
 
   public boolean hasNoCost() {
@@ -83,6 +86,10 @@ public class EnvironmentState {
 
   public boolean isWeb() {
     return isWeb;
+  }
+
+  public String getCacheObject() {
+    return cacheObject;
   }
 
   public boolean isContextComputation() {
@@ -173,6 +180,12 @@ public class EnvironmentState {
   public EnvironmentState scopeReadonly() {
     final var next = new EnvironmentState(this);
     next.readonly = true;
+    return next;
+  }
+
+  public EnvironmentState scopeWithCache(String cacheObject) {
+    final var next = new EnvironmentState(this);
+    next.cacheObject = cacheObject;
     return next;
   }
 

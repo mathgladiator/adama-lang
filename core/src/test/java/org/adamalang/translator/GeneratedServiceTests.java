@@ -12,43 +12,123 @@ package org.adamalang.translator;
 import org.junit.Test;
 
 public class GeneratedServiceTests extends GeneratedBase {
-  private String cached_Play_1 = null;
-  private String get_Play_1() {
-    if (cached_Play_1 != null) {
-      return cached_Play_1;
+  private String cached_AlreadyExists_1 = null;
+  private String get_AlreadyExists_1() {
+    if (cached_AlreadyExists_1 != null) {
+      return cached_AlreadyExists_1;
     }
-    cached_Play_1 = generateTestOutput(true, "Play_1", "./test_code/Service_Play_success.a");
-    return cached_Play_1;
+    cached_AlreadyExists_1 = generateTestOutput(false, "AlreadyExists_1", "./test_code/Service_AlreadyExists_failure.a");
+    return cached_AlreadyExists_1;
+  }
+
+  @Test
+  public void testAlreadyExistsFailure() {
+    assertLiveFail(get_AlreadyExists_1());
+  }
+
+  @Test
+  public void testAlreadyExistsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_AlreadyExists_1());
+  }
+
+  @Test
+  public void testAlreadyExistsExceptionFree() {
+    assertExceptionFree(get_AlreadyExists_1());
+  }
+
+  @Test
+  public void testAlreadyExistsTODOFree() {
+    assertTODOFree(get_AlreadyExists_1());
+  }
+
+  @Test
+  public void stable_AlreadyExists_1() {
+    String live = get_AlreadyExists_1();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Service_AlreadyExists_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"'internal' was already defined as an aspect within the service. (ServiceDefine)\"},{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"'send' was already defined as a method within the service. (ServiceDefine)\"},{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"The service '{' was already defined. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_MethodHasTypeNotFound_2 = null;
+  private String get_MethodHasTypeNotFound_2() {
+    if (cached_MethodHasTypeNotFound_2 != null) {
+      return cached_MethodHasTypeNotFound_2;
+    }
+    cached_MethodHasTypeNotFound_2 = generateTestOutput(false, "MethodHasTypeNotFound_2", "./test_code/Service_MethodHasTypeNotFound_failure.a");
+    return cached_MethodHasTypeNotFound_2;
+  }
+
+  @Test
+  public void testMethodHasTypeNotFoundFailure() {
+    assertLiveFail(get_MethodHasTypeNotFound_2());
+  }
+
+  @Test
+  public void testMethodHasTypeNotFoundNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_MethodHasTypeNotFound_2());
+  }
+
+  @Test
+  public void testMethodHasTypeNotFoundExceptionFree() {
+    assertExceptionFree(get_MethodHasTypeNotFound_2());
+  }
+
+  @Test
+  public void testMethodHasTypeNotFoundTODOFree() {
+    assertTODOFree(get_MethodHasTypeNotFound_2());
+  }
+
+  @Test
+  public void stable_MethodHasTypeNotFound_2() {
+    String live = get_MethodHasTypeNotFound_2();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Service_MethodHasTypeNotFound_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'SendRequest' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'SendResponse' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_Play_3 = null;
+  private String get_Play_3() {
+    if (cached_Play_3 != null) {
+      return cached_Play_3;
+    }
+    cached_Play_3 = generateTestOutput(true, "Play_3", "./test_code/Service_Play_success.a");
+    return cached_Play_3;
   }
 
   @Test
   public void testPlayEmission() {
-    assertEmissionGood(get_Play_1());
+    assertEmissionGood(get_Play_3());
   }
 
   @Test
   public void testPlaySuccess() {
-    assertLivePass(get_Play_1());
+    assertLivePass(get_Play_3());
   }
 
   @Test
   public void testPlayGoodWillHappy() {
-    assertGoodWillHappy(get_Play_1());
+    assertGoodWillHappy(get_Play_3());
   }
 
   @Test
   public void testPlayExceptionFree() {
-    assertExceptionFree(get_Play_1());
+    assertExceptionFree(get_Play_3());
   }
 
   @Test
   public void testPlayTODOFree() {
-    assertTODOFree(get_Play_1());
+    assertTODOFree(get_Play_3());
   }
 
   @Test
-  public void stable_Play_1() {
-    String live = get_Play_1();
+  public void stable_Play_3() {
+    String live = get_Play_3();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_Play_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -81,13 +161,13 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Play_1 extends LivingDocument {");
+    gold.append("\npublic class Play_3 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Play_1(DocumentMonitor __monitor) {");
+    gold.append("\n  public Play_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -280,9 +360,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __auto_gen.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaPlay_1 implements DeltaNode {");
+    gold.append("\n  private class DeltaPlay_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaPlay_1() {");
+    gold.append("\n    private DeltaPlay_3() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -290,7 +370,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Play_1 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Play_3 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -318,8 +398,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Play_1 __self = this;");
-    gold.append("\n    DeltaPlay_1 __state = new DeltaPlay_1();");
+    gold.append("\n    Play_3 __self = this;");
+    gold.append("\n    DeltaPlay_3 __state = new DeltaPlay_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -369,6 +449,135 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      return __sum;");
     gold.append("\n    }");
     gold.append("\n    public void show(RTx__ViewerType __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
+    gold.append("\n      if (__obj.end()) {");
+    gold.append("\n        __emitted = true;");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void clear() {");
+    gold.append("\n      __code_cost += 0;");
+    gold.append("\n    }");
+    gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      if (__emitted) {");
+    gold.append("\n        clear();");
+    gold.append("\n        __emitted = false;");
+    gold.append("\n        __writer.writeNull();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  private static class RTxSendRequest implements NtMessageBase {");
+    gold.append("\n    private String message = \"\";");
+    gold.append("\n    private String phone = \"\";");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"message\");");
+    gold.append("\n      __hash.hashString(this.message);");
+    gold.append("\n      __hash.hashString(\"phone\");");
+    gold.append("\n      __hash.hashString(this.phone);");
+    gold.append("\n      __hash.hashString(\"SendRequest\");");
+    gold.append("\n    }");
+    gold.append("\n    private RTxSendRequest(JsonStreamReader __reader) {");
+    gold.append("\n      __ingest(__reader);");
+    gold.append("\n    }");
+    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n      if (__reader.startObject()) {");
+    gold.append("\n        while (__reader.notEndOfObject()) {");
+    gold.append("\n          String __fieldName = __reader.fieldName();");
+    gold.append("\n          switch (__fieldName) {");
+    gold.append("\n            case \"message\":");
+    gold.append("\n              this.message = __reader.readString();");
+    gold.append("\n              break;");
+    gold.append("\n            case \"phone\":");
+    gold.append("\n              this.phone = __reader.readString();");
+    gold.append("\n              break;");
+    gold.append("\n            default:");
+    gold.append("\n              __reader.skipValue();");
+    gold.append("\n          }");
+    gold.append("\n        }");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeOut(JsonStreamWriter __writer) {");
+    gold.append("\n      __writer.beginObject();");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"message\");");
+    gold.append("\n      __writer.writeString(message);");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"phone\");");
+    gold.append("\n      __writer.writeString(phone);");
+    gold.append("\n      __writer.endObject();");
+    gold.append("\n    }");
+    gold.append("\n    private RTxSendRequest() {}");
+    gold.append("\n    private RTxSendRequest(String message, String phone) {");
+    gold.append("\n      this.message = message;");
+    gold.append("\n      this.phone = phone;");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  private class DeltaRTxSendRequest implements DeltaNode {");
+    gold.append("\n    private DString __dphone;");
+    gold.append("\n    private DString __dmessage;");
+    gold.append("\n    private boolean __emitted;");
+    gold.append("\n    private DeltaRTxSendRequest() {");
+    gold.append("\n      __dphone = new DString();");
+    gold.append("\n      __dmessage = new DString();");
+    gold.append("\n      __emitted = false;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() {");
+    gold.append("\n      long __sum = 40;");
+    gold.append("\n      __sum += __dphone.__memory();");
+    gold.append("\n      __sum += __dmessage.__memory();");
+    gold.append("\n      return __sum;");
+    gold.append("\n    }");
+    gold.append("\n    public void show(RTxSendRequest __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
+    gold.append("\n      __dphone.show(__item.phone, __obj.planField(\"phone\"));");
+    gold.append("\n      __dmessage.show(__item.message, __obj.planField(\"message\"));");
+    gold.append("\n      if (__obj.end()) {");
+    gold.append("\n        __emitted = true;");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void clear() {");
+    gold.append("\n      __dphone.clear();");
+    gold.append("\n      __dmessage.clear();");
+    gold.append("\n      __code_cost += 2;");
+    gold.append("\n    }");
+    gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      if (__emitted) {");
+    gold.append("\n        clear();");
+    gold.append("\n        __emitted = false;");
+    gold.append("\n        __writer.writeNull();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  private static class RTxSendResponse implements NtMessageBase {");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"SendResponse\");");
+    gold.append("\n    }");
+    gold.append("\n    private RTxSendResponse(JsonStreamReader __reader) {");
+    gold.append("\n      __ingest(__reader);");
+    gold.append("\n    }");
+    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n      __reader.skipValue();");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeOut(JsonStreamWriter __writer) {");
+    gold.append("\n      __writer.beginObject();");
+    gold.append("\n      __writer.endObject();");
+    gold.append("\n    }");
+    gold.append("\n    private RTxSendResponse() {}");
+    gold.append("\n  }");
+    gold.append("\n  private class DeltaRTxSendResponse implements DeltaNode {");
+    gold.append("\n    private boolean __emitted;");
+    gold.append("\n    private DeltaRTxSendResponse() {");
+    gold.append("\n      __emitted = false;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() {");
+    gold.append("\n      long __sum = 40;");
+    gold.append("\n      return __sum;");
+    gold.append("\n    }");
+    gold.append("\n    public void show(RTxSendResponse __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
@@ -469,7 +678,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\nBegin");
     gold.append("\nEnd");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"SendRequest\":{\"nature\":\"native_message\",\"name\":\"SendRequest\",\"anonymous\":false,\"fields\":{\"phone\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"},\"privacy\":\"public\"},\"message\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"},\"privacy\":\"public\"}}},\"SendResponse\":{\"nature\":\"native_message\",\"name\":\"SendResponse\",\"anonymous\":false,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");

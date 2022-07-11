@@ -9,5 +9,34 @@
  */
 package org.adamalang.runtime.remote;
 
-public class RxCache {
+import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.reactives.RxBase;
+
+public class RxCache extends RxBase {
+  protected RxCache(RxParent __parent) {
+    super(__parent);
+  }
+
+  @Override
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
+  }
+
+  @Override
+  public void __dump(JsonStreamWriter writer) {
+  }
+
+  @Override
+  public void __insert(JsonStreamReader reader) {
+  }
+
+  @Override
+  public void __patch(JsonStreamReader reader) {
+  }
+
+  @Override
+  public void __revert() {
+
+  }
 }

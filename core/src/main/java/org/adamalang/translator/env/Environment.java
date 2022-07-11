@@ -11,9 +11,11 @@ package org.adamalang.translator.env;
 
 import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.definitions.DefineService;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.Rules;
+import org.adamalang.translator.tree.types.natives.TyNativeService;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -136,10 +138,16 @@ public class Environment {
       }
     }
 
-    // Ok, it must be a global object
+    // Ok, maybe it is a global object
     final var globalObject = state.globals.get(name);
     if (globalObject != null) {
       return globalObject;
+    }
+
+    // Or, a service?
+    DefineService ds = document.services.get(name);
+    if (ds != null) {
+      return new TyNativeService(ds).withPosition(position);
     }
 
     return result;
@@ -221,6 +229,11 @@ public class Environment {
   /** create a new environment which is for static methods (i.e. policy methods) */
   public Environment scopeStatic() {
     return new Environment(document, state.scopeStatic(), this);
+  }
+
+  /** create a new environment which is for leveraging the cache */
+  public Environment scopeWithCache(String cacheObject) {
+    return new Environment(document, state.scopeWithCache(cacheObject), this);
   }
 
   /** set the return type of the given scope */

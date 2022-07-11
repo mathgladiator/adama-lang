@@ -47,7 +47,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_CantMixChannelAndFunctions_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":0},\"end\":{\"line\":7,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The function 'foo' was already defined as a channel. (DocumentDefine)\"},{\"range\":{\"start\":{\"line\":13,\"character\":0},\"end\":{\"line\":13,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Handler 'goo' was already defined as a function. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":0},\"end\":{\"line\":7,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The function 'foo' was already defined. (DocumentDefine)\"},{\"range\":{\"start\":{\"line\":13,\"character\":0},\"end\":{\"line\":13,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Handler 'goo' was already defined. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

@@ -74,7 +74,8 @@ public class Document implements TopLevelDocumentHandler {
   public final UriTable webGet;
   public final UriTable webPut;
   private final HashMap<String, String> includes;
-  public final ArrayList<DefineService> services;
+  public final LinkedHashMap<String, DefineService> services;
+  private final HashSet<String> defined;
 
   public Document() {
     autoClassId = 0;
@@ -102,7 +103,8 @@ public class Document implements TopLevelDocumentHandler {
     webGet = new UriTable();
     webPut = new UriTable();
     includes = new HashMap<>();
-    services = new ArrayList<>();
+    services = new LinkedHashMap<>();
+    defined = new HashSet<>();
   }
 
   public void setIncludes(HashMap<String, String> include) {
@@ -236,7 +238,13 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(DefineService ds) {
-    services.add(ds);
+    if (defined.contains(ds.name.text)) {
+      typeCheckOrder.add(env -> {
+        env.document.createError(ds, String.format("The service '%s' was already defined.", ds.name.text), "DocumentDefine");
+      });
+    }
+    services.put(ds.name.text, ds);
+    defined.add(ds.name.text);
     typeCheckOrder.add((env) -> {
       ds.typing(env);
     });
@@ -244,12 +252,12 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(final DefineFunction func) {
-    functionsDefines.add(func.name);
-    if (channelsThatAreFutures.contains(func.name)) {
+    if (defined.contains(func.name)) {
       typeCheckOrder.add(env -> {
-        env.document.createError(func, String.format("The %s '%s' was already defined as a channel.", func.specialization == FunctionSpecialization.Pure ? "function" : "procedure", func.name), "DocumentDefine");
+        env.document.createError(func, String.format("The %s '%s' was already defined.", func.specialization == FunctionSpecialization.Pure ? "function" : "procedure", func.name), "DocumentDefine");
       });
     }
+    functionsDefines.add(func.name);
     functionDefinitions.add(func);
     typeCheckOrder.add(env -> {
       func.typing(env);
@@ -263,9 +271,10 @@ public class Document implements TopLevelDocumentHandler {
     if (handler.behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
       if (functionsDefines.contains(handler.channel)) {
         typeCheckOrder.add(env -> {
-          env.document.createError(handler, String.format("Handler '%s' was already defined as a function.", handler.channel), "DocumentDefine");
+          env.document.createError(handler, String.format("Handler '%s' was already defined.", handler.channel), "DocumentDefine");
         });
       }
+      defined.add(handler.channel);
       channelsThatAreFutures.add(handler.channel);
     }
     typeCheckOrder.add(env -> {
@@ -291,12 +300,13 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(final FieldDefinition fd) {
-    if (root.storage.has(fd.name)) {
+    if (root.storage.has(fd.name) || defined.contains(fd.name)) {
       typeCheckOrder.add(env -> {
         env.document.createError(fd, String.format("Global field '%s' was already defined", fd.nameToken.text), "GlobalDefine");
       });
       return;
     }
+    defined.add(fd.name);
     root.storage().add(fd, typeCheckOrder);
   }
 
@@ -347,6 +357,12 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(AugmentViewerState avs) {
+    if (defined.contains(avs.name.text)) {
+      typeCheckOrder.add(env -> {
+        env.document.createError(avs, String.format("View field '%s' was already defined.", avs.name.text), "GlobalDefine");
+      });
+    }
+    defined.add(avs.name.text);
     viewerType.storage.add(new FieldDefinition(null, null, avs.type, avs.name, null, null, null, avs.semicolon));
     typeCheckOrder.add((env) -> avs.typing(env));
   }

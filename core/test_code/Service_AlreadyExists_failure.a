@@ -8,6 +8,12 @@ message SendResponse {
 
 @service sms {
   internal = "twilio.com";
+  internal = "twilio.com";
 
   method<SendRequest, SendResponse> send;
+  method<SendResponse, SendRequest> send;
+
+}
+@service sms {
+  internal = "twilio.com";
 }

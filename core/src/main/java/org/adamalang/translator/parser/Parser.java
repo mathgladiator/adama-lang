@@ -501,18 +501,36 @@ public class Parser {
     Token name = id();
     Token open = consumeExpectedSymbol("{");
     ArrayList<DefineService.ServiceAspect> aspects = new ArrayList<>();
+    ArrayList<DefineService.ServiceMethod> methods = new ArrayList<>();
+    ArrayList<Consumer<Consumer<Token>>> emissions = new ArrayList<>();
     var nextOrClose = tokens.pop();
     while (!nextOrClose.isSymbolWithTextEq("}")) {
       if (!nextOrClose.isIdentifier()) {
         throw new ParseException("Service was expecting an identifier", tokens.getLastTokenIfAvailable());
       }
-      Token equals = consumeExpectedSymbol("=");
-      Expression val = expression();
-      Token semicolon = consumeExpectedSymbol(";");
-      aspects.add(new DefineService.ServiceAspect(nextOrClose, equals, val, semicolon));
+      if (nextOrClose.isIdentifier("method")) {
+        Token pairOpen = consumeExpectedSymbol("<");
+        Token inputTypeName = id();
+        Token comma = consumeExpectedSymbol(",");
+        Token outputTypeName = id();
+        Token outputArrayExt = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("[]"));
+        Token pairClose = consumeExpectedSymbol(">");
+        Token methodName = id();
+        Token semicolon = consumeExpectedSymbol(";");
+        DefineService.ServiceMethod method = new DefineService.ServiceMethod(nextOrClose, pairOpen, inputTypeName, comma, outputTypeName, outputArrayExt, pairClose, methodName, semicolon);
+        methods.add(method);
+        emissions.add((y) -> method.emit(y));
+      } else {
+        Token equals = consumeExpectedSymbol("=");
+        Expression val = expression();
+        Token semicolon = consumeExpectedSymbol(";");
+        DefineService.ServiceAspect aspect = new DefineService.ServiceAspect(nextOrClose, equals, val, semicolon);
+        emissions.add((y) -> aspect.emit(y));
+        aspects.add(aspect);
+      }
       nextOrClose = tokens.pop();
     }
-    DefineService ds = new DefineService(serviceToken, name, open, aspects, nextOrClose);
+    DefineService ds = new DefineService(serviceToken, name, open, aspects, methods, nextOrClose, emissions);
     return (doc) -> doc.add(ds);
   }
 
