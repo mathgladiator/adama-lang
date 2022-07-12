@@ -1177,6 +1177,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Publish\";");
     gold.append("\n    }");
@@ -2761,6 +2763,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Line\";");
     gold.append("\n    }");
@@ -4280,6 +4284,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Card\";");
     gold.append("\n    }");
@@ -4545,6 +4551,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Player\";");
@@ -7371,6 +7379,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"AddOn\";");
@@ -10682,6 +10692,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Square\";");
     gold.append("\n    }");
@@ -11920,6 +11932,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Line\";");

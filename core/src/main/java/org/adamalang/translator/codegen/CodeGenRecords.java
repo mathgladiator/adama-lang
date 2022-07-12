@@ -16,8 +16,6 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
-import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.DefineMethod;
@@ -28,12 +26,19 @@ import org.adamalang.translator.tree.types.traits.IsReactiveValue;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /** responsible for writing the code for records */
 public class CodeGenRecords {
   private static boolean isCommitRevertable(final TyType fieldType) {
     return fieldType instanceof TySimpleReactive || fieldType instanceof TyReactiveMaybe || fieldType instanceof TyReactiveTable || fieldType instanceof TyReactiveRef || fieldType instanceof TyReactiveRecord || fieldType instanceof TyReactiveMap || fieldType instanceof TyReactiveText;
+  }
+  private static boolean isCommitCache(final FieldDefinition fd, TyType fieldType) {
+    if (fieldType instanceof TyReactiveLazy) {
+      return fd.servicesToWatch.size() > 0;
+    }
+    return false;
   }
 
   public static void writeCommitAndRevert(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot, final String... others) {
@@ -51,11 +56,16 @@ public class CodeGenRecords {
     for (final String other : others) {
       sb.append(other).append(".__commit(\"").append(other).append("\", __forward, __reverse);").writeNewline();
     }
+    ArrayList<String> fieldsToKill = new ArrayList<>();
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
       if (isCommitRevertable(fieldType)) {
         sb.append(fieldName).append(".__commit(\"").append(fieldName).append("\", __forward, __reverse);").writeNewline();
+      }
+      if (isCommitCache(fdInOrder, fieldType)) {
+        fieldsToKill.add("__c" + fieldName);
+        sb.append("__c").append(fieldName).append(".__commit(\"__c").append(fieldName).append("\", __forward, __reverse);").writeNewline();
       }
     }
     if (!isRoot) {
@@ -82,6 +92,9 @@ public class CodeGenRecords {
       if (isCommitRevertable(fieldType)) {
         sb.append(fieldName).append(".__revert();").writeNewline();
       }
+      if (isCommitCache(fdInOrder, fieldType)) {
+        sb.append("__c").append(fieldName).append(".__revert();").writeNewline();
+      }
     }
     if (!isRoot) {
       sb.append("__lowerDirtyRevert();").tabDown().writeNewline();
@@ -90,6 +103,24 @@ public class CodeGenRecords {
       sb.append("/* root */").tabDown().writeNewline();
     }
     sb.append("}").writeNewline();
+    if (!isRoot) {
+      sb.append("@Override").writeNewline();
+      int n = fieldsToKill.size();
+      if (n > 0) {
+        sb.append("public void __killFields() {").tabUp().writeNewline();
+        for (String fieldToKill : fieldsToKill) {
+          sb.append(fieldToKill).append(".__kill();");
+          n--;
+          if (n == 0) {
+            sb.tabDown();
+          }
+          sb.writeNewline();
+        }
+        sb.append("}").writeNewline();
+      } else {
+        sb.append("public void __killFields() {}").writeNewline();
+      }
+    }
   }
 
   public static String make(String parent, String className, TyType fieldType, Expression valueOverride, Environment environment) {
@@ -140,15 +171,20 @@ public class CodeGenRecords {
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
       if (fieldType instanceof TyReactiveLazy && fdInOrder.computeExpression != null) {
         final var lazyType = ((TyReactiveLazy) fieldType).getEmbeddedType(environment);
-        if (lazyType != null) {
-          classFields.append("private final RxLazy<" + lazyType.getJavaBoxType(environment) + "> " + fieldName + ";").writeNewline();
+        classFields.append("private final RxLazy<" + lazyType.getJavaBoxType(environment) + "> " + fieldName + ";").writeNewline();
+        if (!fdInOrder.servicesToWatch.isEmpty()) {
+          classFields.append("private final RxCache __c").append(fieldName).append(";");
+          classConstructorX.append("__c").append(fieldName).append(" = new RxCache(LivingDocument.this, this);").writeNewline();
         }
         classConstructorX.append(fieldName).append(" = new RxLazy<").append(lazyType.getJavaBoxType(environment)).append(">(this, () -> (");
-        fdInOrder.computeExpression.writeJava(classConstructorX, environment.scopeWithComputeContext(ComputeContext.Computation));
+        fdInOrder.computeExpression.writeJava(classConstructorX, environment.scopeWithCache("__c" + fieldName).scopeWithComputeContext(ComputeContext.Computation));
         classConstructorX.append("));").writeNewline();
         environment.define(fieldName, new TyReactiveLazy(lazyType), false, fdInOrder);
         for (final String watched : fdInOrder.variablesToWatch) {
           classConstructorX.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
+        }
+        if (!fdInOrder.servicesToWatch.isEmpty()) {
+          classConstructorX.append("__c").append(fieldName).append(".__subscribe(").append(fieldName).append(");").writeNewline();
         }
         if (injectRootObject) {
           classConstructorX.append(fieldName).append(".__subscribe(this);").writeNewline();
@@ -271,6 +307,11 @@ public class CodeGenRecords {
         sb.append(fieldName).append(".__insert(__reader);").writeNewline();
         sb.append("break;").tabDown().writeNewline();
       }
+      if (isCommitCache(fdInOrder, fieldType)) {
+        sb.append("case \"__c").append(fieldName).append("\":").tabUp().writeNewline();
+        sb.append("__c").append(fieldName).append(".__insert(__reader);").writeNewline();
+        sb.append("break;").tabDown().writeNewline();
+      }
     }
     for (final String other : others) {
       sb.append("case \"").append(other).append("\":").tabUp().writeNewline();
@@ -308,6 +349,12 @@ public class CodeGenRecords {
         sb.append("case \"").append(fieldName).append("\":").tabUp().writeNewline();
         sb.append(fieldName).append(".__patch(__reader);").writeNewline();
         sb.append("break;").tabDown().writeNewline();
+      }
+      if (isCommitCache(fdInOrder, fieldType)) {
+        sb.append("case \"__c").append(fieldName).append("\":").tabUp().writeNewline();
+        sb.append("__c").append(fieldName).append(".__patch(__reader);").writeNewline();
+        sb.append("break;").tabDown().writeNewline();
+
       }
     }
     for (final String other : others) {
@@ -384,6 +431,10 @@ public class CodeGenRecords {
       if (isCommitRevertable(fieldType)) {
         sb.append("__writer.writeObjectFieldIntro(\"").append(fieldName).append("\");").writeNewline();
         sb.append(fieldName).append(".__dump(__writer);").writeNewline();
+      }
+      if (isCommitCache(fdInOrder, fieldType)) {
+        sb.append("__writer.writeObjectFieldIntro(\"__c").append(fieldName).append("\");").writeNewline();
+        sb.append("__c").append(fieldName).append(".__dump(__writer);").writeNewline();
       }
     }
     for (final String otherField : others) {

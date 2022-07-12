@@ -33,6 +33,7 @@ public class BubbleDefinition extends StructureComponent {
   public final Token nameToken;
   public final Token openClient;
   public final Token semicolonToken;
+  public final LinkedHashSet<String> servicesToWatch;
   public final LinkedHashSet<String> variablesToWatch;
   public TyType expressionType;
 
@@ -50,6 +51,7 @@ public class BubbleDefinition extends StructureComponent {
     clientType = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVar);
     ingest(bubbleToken);
     ingest(semicolonToken);
+    servicesToWatch = new LinkedHashSet<>();
     variablesToWatch = new LinkedHashSet<>();
   }
 

@@ -10,15 +10,14 @@
 package org.adamalang.runtime.remote;
 
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtMessageBase;
+import org.adamalang.runtime.natives.NtResult;
+
+import java.util.function.Function;
 
 /** a service is responsible for executing a method with a message */
 public interface Service {
 
-  /**
-   * @param agent who is executing the method
-   * @param method the method being executed
-   * @param message the input message (JSON)
-   * @param callback a callback which returns either a failure
-   */
-  public void execute(NtClient agent, String method, String message, RemoteCallback callback);
+  /** invoke the given method */
+  public <T> NtResult<T> invoke(String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result);
 }

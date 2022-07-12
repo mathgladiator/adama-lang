@@ -18,10 +18,7 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
-import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
-import org.adamalang.translator.tree.types.natives.TyNativeList;
-import org.adamalang.translator.tree.types.natives.TyNativeVoid;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeAggregateFunctional;
@@ -130,6 +127,24 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
     if (functionInstance != null) {
       final var childEnv = environment.scopeWithComputeContext(ComputeContext.Computation);
       switch (functionStyle) {
+        case RemoteCall: {
+          expression.writeJava(sb, environment);
+          sb.append(".invoke(\"");
+          sb.append(functionInstance.javaFunction).append("\", ").append(environment.state.getCacheObject());
+          final var temp = new StringBuilder();
+          CodeGenFunctions.writeArgsJava(temp, childEnv, false, args, functionInstance);
+          sb.append(temp);
+          TyNativeResult resultType = (TyNativeResult) (functionInstance.returnType);
+          if (resultType.tokenElementType.item instanceof TyNativeArray) {
+            TyNativeMessage msgType = (TyNativeMessage) (((TyNativeArray) resultType.tokenElementType.item).elementType);
+            sb.append(", (__json) -> Utility.readArray(new JsonStreamReader(__json), (__reader) -> new RTx")
+                .append(msgType.name).append("(__reader), (__n) -> new RTx")
+                .append(msgType.name).append("[__n]))");
+          } else {
+            TyNativeMessage msgType = (TyNativeMessage) (resultType.tokenElementType.item);
+            sb.append(", (__json) -> new RTx").append(msgType.name).append("(new JsonStreamReader(__json)))");
+          }
+        } break;
         case ExpressionThenNameWithArgs:
         case ExpressionThenArgs:
           expression.writeJava(sb, environment);

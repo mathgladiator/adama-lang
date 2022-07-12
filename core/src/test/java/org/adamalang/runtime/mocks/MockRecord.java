@@ -51,6 +51,11 @@ public class MockRecord extends RxRecordBase<MockRecord> {
   }
 
   @Override
+  public void __killFields() {
+
+  }
+
+  @Override
   public void __commit(
       final String name, final JsonStreamWriter writer, final JsonStreamWriter reverse) {
     if (__isDirty()) {

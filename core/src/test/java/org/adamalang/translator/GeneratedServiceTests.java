@@ -47,7 +47,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_AlreadyExists_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"'internal' was already defined as an aspect within the service. (ServiceDefine)\"},{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"'send' was already defined as a method within the service. (ServiceDefine)\"},{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"The service '{' was already defined. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":0},\"end\":{\"line\":15,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"'internal' was already defined as an aspect within the service. (ServiceDefine)\"},{\"range\":{\"start\":{\"line\":8,\"character\":0},\"end\":{\"line\":15,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"'send' was already defined as a method within the service. (ServiceDefine)\"},{\"range\":{\"start\":{\"line\":16,\"character\":0},\"end\":{\"line\":18,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The service 'sms' was already defined. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -87,7 +87,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_MethodHasTypeNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'SendRequest' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'SendResponse' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2},\"end\":{\"line\":1,\"character\":41}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'SendRequest' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2},\"end\":{\"line\":1,\"character\":41}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'SendResponse' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -595,8 +595,10 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  protected Service sms;");
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {");
+    gold.append("\n    sms = new ServiceFailure();");
     gold.append("\n     /* not done yet */");
     gold.append("\n  }");
     gold.append("\n  @Override");

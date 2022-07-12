@@ -523,6 +523,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Thing\";");
     gold.append("\n    }");

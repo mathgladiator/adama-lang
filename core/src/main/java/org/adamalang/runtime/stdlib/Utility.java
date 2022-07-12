@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.stdlib;
 
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtMaybe;
 
 import java.util.ArrayList;
@@ -67,5 +68,15 @@ public class Utility {
       maybe.set(arr[k]);
     }
     return maybe;
+  }
+
+  public <T> T[] readArray(JsonStreamReader reader, Function<JsonStreamReader, T> transform, Function<Integer, T[]> makeArray) {
+    ArrayList<T> items = new ArrayList<T>();
+    if (reader.startArray()) {
+      while (reader.notEndOfArray()) {
+        items.add(transform.apply(reader));
+      }
+    }
+    return items.toArray(makeArray.apply(items.size()));
   }
 }

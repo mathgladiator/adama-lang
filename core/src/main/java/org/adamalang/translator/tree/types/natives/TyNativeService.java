@@ -13,15 +13,19 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.definitions.DefineService;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class TyNativeService extends TyType implements DetailTypeHasMethods {
-  private final DefineService service;
+  public final DefineService service;
   public TyNativeService(final DefineService service) {
     super(TypeBehavior.ReadOnlyNativeValue);
     this.service = service;
@@ -69,7 +73,24 @@ public class TyNativeService extends TyType implements DetailTypeHasMethods {
 
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
-
+    DefineService.ServiceMethod method = service.methodsMap.get(name);
+    if (method != null) {
+      ArrayList<TyType> argTypes = new ArrayList<>();
+      {
+        TyType inputType = environment.rules.FindMessageStructure(method.inputTypeName.text, this, true);
+        argTypes.add(new TyNativeClient(TypeBehavior.ReadWriteNative, null, null));
+        argTypes.add(inputType);
+      }
+      TyType outputType = environment.rules.FindMessageStructure(method.outputTypeName.text, this, true);
+      if (method.outputArrayExt != null) {
+        outputType = new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, outputType, method.outputArrayExt);
+      }
+      outputType = new TyNativeResult(TypeBehavior.ReadOnlyNativeValue, null, method.methodToken, new TokenizedItem<>(outputType)).withPosition(this);
+      return new TyNativeFunctional(name,
+          FunctionOverloadInstance.WRAP(
+              new FunctionOverloadInstance(name, outputType, argTypes, true, false)),
+          FunctionStyleJava.RemoteCall);
+    }
     return null;
   }
 }

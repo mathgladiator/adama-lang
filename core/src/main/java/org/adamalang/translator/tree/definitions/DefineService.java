@@ -16,11 +16,12 @@ import org.adamalang.translator.tree.expressions.Expression;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
 /** Define a service */
 public class DefineService extends Definition {
-  public static class ServiceAspect {
+  public static class ServiceAspect extends Definition {
     public final Token name;
     public final Token equals;
     public final Expression expression;
@@ -31,17 +32,25 @@ public class DefineService extends Definition {
       this.equals = equals;
       this.expression = expression;
       this.semicolon = semicolon;
+      ingest(name);
+      ingest(semicolon);
     }
 
+    @Override
     public void emit(Consumer<Token> yielder) {
       yielder.accept(name);
       yielder.accept(equals);
       expression.emit(yielder);
       yielder.accept(semicolon);
     }
+
+    @Override
+    public void typing(Environment environment) {
+      expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+    }
   }
 
-  public static class ServiceMethod {
+  public static class ServiceMethod extends Definition {
     public final Token methodToken;
     public final Token pairOpen;
     public final Token inputTypeName;
@@ -62,8 +71,11 @@ public class DefineService extends Definition {
       this.pairClose = pairClose;
       this.name = name;
       this.semicolon = semicolon;
+      ingest(methodToken);
+      ingest(semicolon);
     }
 
+    @Override
     public void emit(Consumer<Token> yielder) {
       yielder.accept(methodToken);
       yielder.accept(pairOpen);
@@ -77,31 +89,49 @@ public class DefineService extends Definition {
       yielder.accept(name);
       yielder.accept(semicolon);
     }
+
+    @Override
+    public void typing(Environment environment) {
+      environment.rules.FindMessageStructure(inputTypeName.text, this, false);
+      environment.rules.FindMessageStructure(outputTypeName.text, this, false);
+    }
   }
 
   public final Token serviceToken;
-  public final Token open;
   public final Token name;
+  public final Token open;
   public final ArrayList<ServiceAspect> aspects;
+  public final TreeMap<String, ServiceAspect> aspectsMap;
   public final ArrayList<ServiceMethod> methods;
+  public final TreeMap<String, ServiceMethod> methodsMap;
   public final ArrayList<Consumer<Consumer<Token>>> emission;
   public final Token close;
 
-  public DefineService(Token serviceToken, Token open, Token name, ArrayList<ServiceAspect> aspects, ArrayList<ServiceMethod> methods, Token close, ArrayList<Consumer<Consumer<Token>>> emission) {
+  public DefineService(Token serviceToken, Token name, Token open, ArrayList<ServiceAspect> aspects, ArrayList<ServiceMethod> methods, Token close, ArrayList<Consumer<Consumer<Token>>> emission) {
     this.serviceToken = serviceToken;
-    this.open = open;
     this.name = name;
+    this.open = open;
     this.aspects = aspects;
     this.methods = methods;
     this.emission = emission;
     this.close = close;
+    ingest(serviceToken);
+    ingest(close);
+    aspectsMap = new TreeMap<>();
+    methodsMap = new TreeMap<>();
+    for (ServiceMethod sm : methods) {
+      methodsMap.put(sm.name.text, sm);
+    }
+    for (ServiceAspect sa : aspects) {
+      aspectsMap.put(sa.name.text, sa);
+    }
   }
 
   @Override
   public void emit(Consumer<Token> yielder) {
     yielder.accept(serviceToken);
-    yielder.accept(open);
     yielder.accept(name);
+    yielder.accept(open);
     for (Consumer<Consumer<Token>> e : emission) {
       e.accept(yielder);
     }
@@ -116,7 +146,7 @@ public class DefineService extends Definition {
         environment.document.createError(this, String.format("'%s' was already defined as an aspect within the service.", aspect.name.text), "ServiceDefine");
       }
       alreadyDefinedAspects.add(aspect.name.text);
-      aspect.expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+      aspect.typing(environment);
     }
     HashSet<String> alreadyDefinedMethods = new HashSet<>();
     for (ServiceMethod method : methods) {
@@ -124,8 +154,7 @@ public class DefineService extends Definition {
         environment.document.createError(this, String.format("'%s' was already defined as a method within the service.", method.name.text), "ServiceDefine");
       }
       alreadyDefinedMethods.add(method.name.text);
-      environment.rules.FindMessageStructure(method.inputTypeName.text, this, false);
-      environment.rules.FindMessageStructure(method.outputTypeName.text, this, false);
+      method.typing(environment);
     }
   }
 }

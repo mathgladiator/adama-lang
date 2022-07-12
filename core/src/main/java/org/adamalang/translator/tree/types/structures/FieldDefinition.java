@@ -32,6 +32,8 @@ public class FieldDefinition extends StructureComponent {
   public final Policy policy;
   public final Token semicolonToken;
   public final LinkedHashSet<String> variablesToWatch;
+  public final LinkedHashSet<String> servicesToWatch;
+
   public TyType type;
 
   public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token semicolonToken) {
@@ -62,6 +64,7 @@ public class FieldDefinition extends StructureComponent {
     if (semicolonToken != null) {
       ingest(semicolonToken);
     }
+    servicesToWatch = new LinkedHashSet<>();
     variablesToWatch = new LinkedHashSet<>();
   }
 

@@ -53,7 +53,10 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
   public void __kill() {
     __isDying = true;
     __alive = false;
+    __killFields();
   }
+
+  public abstract void __killFields();
 
   public abstract String __name();
 

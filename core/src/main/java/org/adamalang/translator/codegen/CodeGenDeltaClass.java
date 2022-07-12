@@ -233,6 +233,8 @@ public class CodeGenDeltaClass {
       } else {
         writeShowDListNonRecord(sb, deltaObject, sourceData, elementType, targetObjectWriter, environment, tabDown);
       }
+    } else if (sourceType instanceof TyNativeResult) {
+      writeShowDResult(sb, deltaObject, sourceData, ((TyNativeResult) sourceType).getEmbeddedType(environment), targetObjectWriter, environment, tabDown);
     } else if (sourceType instanceof TyNativeMaybe) {
       writeShowDMaybe(sb, deltaObject, sourceData, ((TyNativeMaybe) sourceType).getEmbeddedType(environment), targetObjectWriter, environment, tabDown);
     } else if (sourceType instanceof TyNativeMap) {
@@ -365,6 +367,27 @@ public class CodeGenDeltaClass {
     sb.append("} else {").tabUp().writeNewline();
     sb.append(deltaObject).append(".hide(").append(targetObjectWriter).append(");").tabDown().writeNewline();
     sb.append("}");
+    if (tabDown) {
+      sb.tabDown();
+    }
+    sb.writeNewline();
+  }
+
+  private static void writeShowDResult(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyType elementType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
+    final var childWriter = "__resultWriter" + environment.autoVariable();
+    final var elementDeltaType = ((DetailHasDeltaType) elementType).getDeltaType(environment);
+    final var childElementType = elementType.getJavaBoxType(environment);
+    final var childElementVar = "__resultChild" + environment.autoVariable();
+    final var deltaElementVar = "__resultDeltaElement" + environment.autoVariable();
+    sb.append("PrivateLazyDeltaWriter ").append(childWriter).append(" = ").append(deltaObject).append(".show(").append(sourceData).append(",").append(targetObjectWriter).append(");").writeNewline();
+    sb.append("if (").append(sourceData).append(".has()) {").tabUp().writeNewline();
+    sb.append(childElementType).append(" ").append(childElementVar).append(" = (").append(childElementType).append(")(").append(sourceData).append(".get());").writeNewline();
+    sb.append(elementDeltaType).append(" ").append(deltaElementVar).append(" = ").append(deltaObject).append(".get(() -> new ").append(elementDeltaType).append("());").writeNewline();
+    writeShowData(sb, deltaElementVar, childElementVar, elementType, childWriter, environment, true);
+    sb.append("} else {").tabUp().writeNewline();
+    sb.append(deltaObject).append(".hide(").append(childWriter).append(");").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+    sb.append(childWriter).append(".end();");
     if (tabDown) {
       sb.tabDown();
     }

@@ -18,6 +18,7 @@ import org.adamalang.translator.tree.privacy.PrivatePolicy;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
+import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
 import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
@@ -104,10 +105,14 @@ public class StructureStorage extends DocumentPosition {
     add(bd, typeCheckOrder);
   }
 
-  private BiConsumer<String, TyType> watcher(Environment env, LinkedHashSet<String> variablesToWatch) {
+  private BiConsumer<String, TyType> watcher(Environment env, LinkedHashSet<String> variablesToWatch, LinkedHashSet<String> services) {
     return (name, type) -> {
       TyType resolved = env.rules.Resolve(type, true);
       if (resolved instanceof TyNativeGlobalObject) return;
+      if (resolved instanceof TyNativeService) {
+        services.add(((TyNativeService) resolved).service.name.text);
+        return;
+      }
       if (!env.document.functionTypes.containsKey(name)) {
         variablesToWatch.add(name);
       }
@@ -118,7 +123,7 @@ public class StructureStorage extends DocumentPosition {
     emissions.add(emit -> bd.emit(emit));
     ingest(bd);
     order.add(env -> {
-      bd.typing(env.watch(watcher(env, bd.variablesToWatch)));
+      bd.typing(env.watch(watcher(env, bd.variablesToWatch, bd.servicesToWatch)));
     });
     if (has(bd.nameToken.text)) {
       order.add(env -> {
@@ -168,7 +173,7 @@ public class StructureStorage extends DocumentPosition {
       fieldsWithDefaults.add(fd.name);
     }
     order.add(env -> {
-      fd.typing(env.watch(watcher(env, fd.variablesToWatch)), this);
+      fd.typing(env.watch(watcher(env, fd.variablesToWatch, fd.servicesToWatch)), this);
       env.define(fd.name, fd.type, false, fd);
     });
     fields.put(fd.name, fd);

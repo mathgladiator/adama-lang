@@ -122,7 +122,42 @@ public class LivingDocumentTests {
       RealDocumentSetup setup = new RealDocumentSetup(
           "public text document; @construct {}",
           "{}");
-      System.err.println(setup.code);
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+    }
+  }
+
+  @Test
+  public void service() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup(
+          "@connected { return true; }" +
+              "message From { string phone; string msg; }" +
+              "message Res { }" +
+              "@service sms { method<From, Res> send; }" +
+              "public string msg = \"123\";" +
+              "public formula transmit = sms.send(@no_one, {phone:\"123\",  msg:msg}  );" +
+              "",
+          null);
+      RealDocumentSetup.GotView gv = new RealDocumentSetup.GotView();
+      ArrayList<String> list = new ArrayList<>();
+      Perspective linked =
+          new Perspective() {
+            @Override
+            public void data(String data) {
+              list.add(data);
+            }
+
+            @Override
+            public void disconnect() {}
+          };
+
+      setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      for (String item : list) {
+        System.err.println(item);
+      }
+
     } catch (RuntimeException re) {
       re.printStackTrace();
     }

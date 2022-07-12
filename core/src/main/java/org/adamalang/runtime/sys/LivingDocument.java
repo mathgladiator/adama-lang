@@ -114,8 +114,10 @@ public abstract class LivingDocument implements RxParent {
     }
   }
 
-  public void __setKey(String key) {
+  public void __lateBind(String key, LivingDocumentFactory factory) {
     this.__key = key;
+    __link(null);
+    // The factory needs to have a common service registry
   }
 
   protected abstract void __link(ServiceRegistry registry);

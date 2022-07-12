@@ -12,6 +12,7 @@ package org.adamalang.translator.tree.types.natives.functions;
 public enum FunctionStyleJava {
   ExpressionThenArgs(false), //
   ExpressionThenNameWithArgs(true), //
+  RemoteCall(true),
   InjectName(true), InjectNameThenArgs(true), //
   InjectNameThenExpressionAndArgs(true), //
   None(false), //
