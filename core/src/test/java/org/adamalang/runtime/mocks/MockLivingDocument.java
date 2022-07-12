@@ -61,6 +61,10 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  protected void __executeServiceCalls(boolean cancel) {
+  }
+
+  @Override
   public Set<String> __get_intern_strings() {
     return new HashSet<>();
   }

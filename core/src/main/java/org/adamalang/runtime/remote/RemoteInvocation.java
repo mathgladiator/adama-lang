@@ -9,24 +9,53 @@
  */
 package org.adamalang.runtime.remote;
 
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
 
 import java.util.Objects;
 
-/** the inputs into an invocation */
+/** the inputs of a service call */
 public class RemoteInvocation implements Comparable<RemoteInvocation> {
-  public final String scope;
   public final String service;
   public final String method;
   public final NtClient who;
   public final String parameter;
 
-  public RemoteInvocation(String scope, String service, String method, NtClient who, String parameter) {
-    this.scope = scope;
+  public RemoteInvocation(String service, String method, NtClient who, String parameter) {
     this.service = service;
     this.method = method;
     this.who = who;
     this.parameter = parameter;
+  }
+
+  public RemoteInvocation(JsonStreamReader reader) {
+    String _service = null;
+    String _method = null;
+    NtClient _who = null;
+    String _parameter = null;
+    if (reader.startObject()) {
+      while (reader.notEndOfObject()) {
+        switch (reader.fieldName()) {
+          case "service":
+            _service = reader.readString();
+            break;
+          case "method":
+            _method = reader.readString();
+            break;
+          case "who":
+            _who = reader.readNtClient();
+            break;
+          case "parameter":
+            _parameter = reader.skipValueIntoJson();
+            break;
+        }
+      }
+    }
+    this.service = _service;
+    this.method = _method;
+    this.who = _who;
+    this.parameter = _parameter;
   }
 
   @Override
@@ -34,21 +63,17 @@ public class RemoteInvocation implements Comparable<RemoteInvocation> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     RemoteInvocation that = (RemoteInvocation) o;
-    return Objects.equals(scope, that.scope) && Objects.equals(service, that.service) && Objects.equals(method, that.method) && Objects.equals(who, that.who) && Objects.equals(parameter, that.parameter);
+    return Objects.equals(service, that.service) && Objects.equals(method, that.method) && Objects.equals(who, that.who) && Objects.equals(parameter, that.parameter);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(scope, service, method, who, parameter);
+    return Objects.hash(service, method, who, parameter);
   }
 
   @Override
   public int compareTo(RemoteInvocation o) {
-    int delta = scope.compareTo(o.scope);
-    if (delta != 0) {
-      return delta;
-    }
-    delta = service.compareTo(o.service);
+    int delta = delta = service.compareTo(o.service);
     if (delta != 0) {
       return delta;
     }
@@ -61,5 +86,18 @@ public class RemoteInvocation implements Comparable<RemoteInvocation> {
       return delta;
     }
     return parameter.compareTo(o.parameter);
+  }
+
+  public void write(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("service");
+    writer.writeString(service);
+    writer.writeObjectFieldIntro("method");
+    writer.writeString(method);
+    writer.writeObjectFieldIntro("who");
+    writer.writeNtClient(who);
+    writer.writeObjectFieldIntro("parameter");
+    writer.injectJson(parameter);
+    writer.endObject();
   }
 }

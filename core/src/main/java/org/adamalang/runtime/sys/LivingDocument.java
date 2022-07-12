@@ -29,6 +29,8 @@ import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
+import org.adamalang.runtime.remote.RemoteResult;
+import org.adamalang.runtime.remote.RxCache;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
@@ -45,6 +47,7 @@ public abstract class LivingDocument implements RxParent {
   protected final RxInt32 __auto_future_id;
   protected final RxInt32 __auto_table_row_id;
   protected final RxInt32 __auto_gen;
+  protected final RxInt32 __auto_cache_id;
   protected final RxBoolean __blocked;
   protected final RxInt32 __connection_id;
   protected final RxBoolean __constructed;
@@ -69,6 +72,7 @@ public abstract class LivingDocument implements RxParent {
   protected ArrayList<Integer> __trace;
   private String __preemptedStateOnNextComputeBlocked = null;
   private String __key;
+  private final TreeMap<Integer, RxCache> __routing;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -86,6 +90,7 @@ public abstract class LivingDocument implements RxParent {
     __time = new RxInt64(this, 0L);
     __next_time = new RxInt64(this, 0L);
     __last_expire_time = new RxInt64(this, 0L);
+    __auto_cache_id = new RxInt32(this, 0);
     __queue = new ArrayList<>();
     __futures = new OutstandingFutureTracker(__auto_future_id);
     __trackedViews = new HashMap<>();
@@ -96,6 +101,23 @@ public abstract class LivingDocument implements RxParent {
     __goodwillLimitOfBudget = 100000;
     __dedupe = new HashMap<>();
     __auto_gen = new RxInt32(this, 0);
+    __routing = new TreeMap<>();
+  }
+
+  /** bind a route from the document to a cache */
+  public int __bindRoute(RxCache cache) {
+    int id = __auto_cache_id.bumpUpPre();
+    __routing.put(id, cache);
+    return id;
+  }
+
+  public boolean __route(int id, RemoteResult result) {
+    RxCache fetched = __routing.get(id);
+    if (fetched != null) {
+      return fetched.deliver(id, result);
+    } else {
+      return false;
+    }
   }
 
   /** generate a new auto key for a table; all tables share the space id space */
@@ -121,6 +143,8 @@ public abstract class LivingDocument implements RxParent {
   }
 
   protected abstract void __link(ServiceRegistry registry);
+
+  protected abstract void __executeServiceCalls(boolean cancel);
 
   /** Document.key(); */
   public String __getKey() {
