@@ -18,6 +18,7 @@ import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
@@ -225,8 +226,9 @@ public class ServiceDeploymentTests {
                   "public static boolean __onCanInvent(CoreRequestContext who) { return false; } " +
                   "public static boolean __onCanSendWhileDisconnected(CoreRequestContext who) { return false; } " +
                   "public static HashMap<String, Object> __config() { return new HashMap<>(); }" +
+                  "public static HashMap<String, HashMap<String, Object>> __services() { return new HashMap<>(); }" +
                   "}",
-              "{}"));
+              "{}", Deliverer.FAILURE));
       CountDownLatch deployed = new CountDownLatch(1);
       service.deploy(
           new DeploymentMonitor() {

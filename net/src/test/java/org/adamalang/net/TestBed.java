@@ -31,6 +31,7 @@ import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
@@ -62,7 +63,7 @@ public class TestBed implements AutoCloseable {
   public final ClientConfig clientConfig;
 
   public TestBed(int port, String code) throws Exception {
-    DeploymentFactory.compile("<direct>", "X", code, new HashMap<>());
+    DeploymentFactory.compile("<direct>", "X", code, new HashMap<>(), Deliverer.FAILURE);
     this.base = new NetBase(MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
     this.port = port;
     clientExecutor = SimpleExecutor.create("client-executor");

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentPlan;
+import org.adamalang.runtime.remote.Deliverer;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,6 +22,6 @@ public class ValidatePlan {
 
   public static void validate(ObjectNode node) throws ErrorCodeException {
     DeploymentPlan localPlan = new DeploymentPlan(node.toString(), (t, c) -> t.printStackTrace());
-    new DeploymentFactory("name", "prefix", validationClassId, null, localPlan);
+    new DeploymentFactory("name", "prefix", validationClassId, null, localPlan, Deliverer.FAILURE);
   }
 }

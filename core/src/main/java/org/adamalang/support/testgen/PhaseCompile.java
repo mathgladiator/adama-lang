@@ -9,6 +9,7 @@
  */
 package org.adamalang.support.testgen;
 
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.io.ByteArrayOutputStream;
@@ -25,7 +26,7 @@ public class PhaseCompile {
     try {
       outputFile.append("--JAVA COMPILE RESULTS-----------------------------").append("\n");
       System.err.println("Begin");
-      factory = new LivingDocumentFactory(className, java, "{}");
+      factory = new LivingDocumentFactory(className, java, "{}", Deliverer.FAILURE);
       System.err.println("End");
     } finally {
       ps.flush();

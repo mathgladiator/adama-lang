@@ -12,6 +12,7 @@ package org.adamalang.translator.jvm;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class LivingDocumentFactoryTests {
         new LivingDocumentFactory(
             "Foo",
             "import java.util.HashMap; \nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;import org.adamalang.runtime.sys.*;\n public class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(CoreRequestContext who) { return false; } public static boolean __onCanInvent(CoreRequestContext who) { return false; } public static boolean __onCanSendWhileDisconnected(CoreRequestContext who) { return false; } public static HashMap<String, Object> __config() { return new HashMap<>(); } public static HashMap<String, HashMap<String, Object>> __services() { return new HashMap<>(); } } ",
-            "{}");
+            "{}", Deliverer.FAILURE);
     var success = false;
     try {
       compiler.create(null);
@@ -40,7 +41,7 @@ public class LivingDocumentFactoryTests {
       new LivingDocumentFactory(
           "Foo",
           "import org.adamalang.runtime.reactives.RxObject;\n class Foo { public Foo(}",
-          "{}");
+          "{}", Deliverer.FAILURE);
       failed = false;
     } catch (final ErrorCodeException nsme) {
       Assert.assertEquals(180258, nsme.code);
@@ -54,7 +55,7 @@ public class LivingDocumentFactoryTests {
         new LivingDocumentFactory(
             "Foo",
             "import java.util.HashMap; \nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*; import org.adamalang.runtime.sys.*;\n public class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(CoreRequestContext who) { return false; }  public static boolean __onCanInvent(CoreRequestContext who) { return false; } public static boolean __onCanSendWhileDisconnected(CoreRequestContext who) { return false; } public static HashMap<String, Object> __config() { return new HashMap<>(); } public static HashMap<String, HashMap<String, Object>> __services() { return new HashMap<>(); } }",
-            "{}");
+            "{}", Deliverer.FAILURE);
     var success = false;
     try {
       compiler.create(null);
@@ -80,7 +81,7 @@ public class LivingDocumentFactoryTests {
               "public static HashMap<String, HashMap<String, Object>> __services() { return new HashMap<>(); }" +
               "public static HashMap<String, Object> __config() { return new HashMap<>(); }" +
               "}",
-          "{}");
+          "{}", Deliverer.FAILURE);
       Assert.fail();
     } catch (final ErrorCodeException nsme) {
       Assert.assertEquals(198174, nsme.code);
@@ -100,7 +101,7 @@ public class LivingDocumentFactoryTests {
             "public static HashMap<String, HashMap<String, Object>> __services() { return new HashMap<>(); }" +
             "public static HashMap<String, Object> __config() { return new HashMap<>(); }" +
             "}",
-        "{}");
+        "{}", Deliverer.FAILURE);
 
     Assert.assertEquals(10000, factory.maximum_history);
     try {
@@ -136,7 +137,7 @@ public class LivingDocumentFactoryTests {
             "public static HashMap<String, Object> __config() { HashMap<String, Object> map = new HashMap<>(); map.put(\"maximum_history\", 150); return map; }" +
             "public static HashMap<String, HashMap<String, Object>> __services() { return new HashMap<>(); }" +
             "}",
-        "{}");
+        "{}", Deliverer.FAILURE);
     Assert.assertEquals(150, factory.maximum_history);
   }
 
@@ -153,7 +154,7 @@ public class LivingDocumentFactoryTests {
             "public static HashMap<String, Object> __config() { HashMap<String, Object> map = new HashMap<>(); map.put(\"maximum_history\", 150); return map; }" +
             "public static HashMap<String, HashMap<String, Object>> __services() { HashMap<String, HashMap<String, Object>> map = new HashMap<>(); map.put(\"test\", new HashMap<>()); return map; }" +
             "}",
-        "{}");
+        "{}", Deliverer.FAILURE);
     Assert.assertTrue(factory.registry.contains("test"));
   }
 
@@ -163,7 +164,7 @@ public class LivingDocumentFactoryTests {
       new LivingDocumentFactory(
           "Foo",
           "import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} }",
-          "{}");
+          "{}", Deliverer.FAILURE);
       Assert.fail();
     } catch (final ErrorCodeException nsme) {
       Assert.assertEquals(198174, nsme.code);
@@ -176,7 +177,7 @@ public class LivingDocumentFactoryTests {
       new LivingDocumentFactory(
           "Foo",
           "import org.adamalang.runtime.natives.*; import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { throw new NullPointerException(); } }",
-          "{}");
+          "{}", Deliverer.FAILURE);
       Assert.fail();
     } catch (final ErrorCodeException nsme) {
       Assert.assertEquals(198174, nsme.code);
@@ -189,7 +190,7 @@ public class LivingDocumentFactoryTests {
       new LivingDocumentFactory(
           "Foo",
           "import org.adamalang.runtime.natives.*; import org.adamalang.runtime.sys.*; import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(CoreRequestContext who) { throw new NullPointerException(); } public static boolean __onCanSendWhileDisconnected(NtClient who) { throw new NullPointerException(); } }",
-          "{}");
+          "{}", Deliverer.FAILURE);
       Assert.fail();
     } catch (final ErrorCodeException nsme) {
       Assert.assertEquals(198174, nsme.code);

@@ -21,6 +21,8 @@ import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPutRaw;
@@ -40,7 +42,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /** The core service enables consumers to manage an in-process Adama */
-public class CoreService {
+public class CoreService implements Deliverer {
   private static final Logger LOGGER = LoggerFactory.getLogger(CoreService.class);
   public final DataService dataService;
   private final CoreMetrics metrics;
@@ -94,6 +96,24 @@ public class CoreService {
     for (int kThread = 0; kThread < bases.length; kThread++) {
       latches[kThread].await(1000, TimeUnit.MILLISECONDS);
     }
+  }
+
+  @Override
+  public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callbackReal) {
+    Callback<Integer> callback = metrics.deliver.wrap(callbackReal);
+    int threadId = key.hashCode() % bases.length;
+    DocumentThreadBase base = bases[threadId];;
+    load(key, new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument value) {
+        value.deliver(agent, id, result, callback);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   /** reflect on the document's schema */

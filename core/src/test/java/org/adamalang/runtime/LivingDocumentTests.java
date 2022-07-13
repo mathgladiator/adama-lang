@@ -22,6 +22,7 @@ import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.ops.TestReportBuilder;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
@@ -63,7 +64,7 @@ public class LivingDocumentTests {
     final var java = document.compileJava(state);
     var cached = compilerCache.get(java);
     if (cached == null) {
-      cached = new LivingDocumentFactory("MeCode", java, reflection.toString());
+      cached = new LivingDocumentFactory("MeCode", java, reflection.toString(), Deliverer.FAILURE);
       compilerCache.put(java, cached);
     }
     return cached;

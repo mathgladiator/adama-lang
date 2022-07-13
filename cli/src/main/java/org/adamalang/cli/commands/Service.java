@@ -219,6 +219,7 @@ public class Service {
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
     CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), data, TimeSource.REAL_TIME, coreThreads);
+    deploymentFactoryBase.attachDeliverer(service);
 
     // list all the documents on this machine, and spin them up
     finder.list(machine, new Callback<List<Key>>() {

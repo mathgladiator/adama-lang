@@ -15,6 +15,9 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -38,6 +41,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
   public final String name;
   public final DeploymentPlan plan;
   private final HashMap<String, LivingDocumentFactory> factories;
+  private final Deliverer deliverer;
 
   /**
    * @param spacePrefix - used for debugging by generating a relevant class name
@@ -46,8 +50,9 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
    * @param plan - the plan to compile
    * @throws ErrorCodeException
    */
-  public DeploymentFactory(String name, String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan) throws ErrorCodeException {
+  public DeploymentFactory(String name, String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan, Deliverer deliverer) throws ErrorCodeException {
     this.name = name;
+    this.deliverer = deliverer;
     this.factories = new HashMap<>();
     for (Map.Entry<String, DeployedVersion> entry : plan.versions.entrySet()) {
       LivingDocumentFactory factory = null;
@@ -59,20 +64,22 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
         }
       }
       if (factory == null) {
-        factory = compile(name, spacePrefix + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes);
+        factory = compile(name, spacePrefix + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes, deliverer);
       }
       factories.put(entry.getKey(), factory);
     }
     this.plan = plan;
   }
 
-  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes) throws ErrorCodeException {
+
+  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer) throws ErrorCodeException {
     try {
       final var options = CompilerOptions.start().make();
       final var globals = GlobalObjectPool.createPoolWithStdLib();
       final var state = new EnvironmentState(globals, options);
       final var document = new Document();
       document.setClassName(className);
+      document.setIncludes(includes);
       final var tokenEngine = new TokenEngine(spaceName, code.codePoints().iterator());
       final var parser = new Parser(tokenEngine);
       parser.document().accept(document);
@@ -82,7 +89,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
       final var java = document.compileJava(state);
       JsonStreamWriter reflection = new JsonStreamWriter();
       document.writeTypeReflectionJson(reflection);
-      return new LivingDocumentFactory(className, java, reflection.toString());
+      return new LivingDocumentFactory(className, java, reflection.toString(), deliverer);
     } catch (AdamaLangException ex) {
       throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_PARSE_LANGUAGE, ex);
     }

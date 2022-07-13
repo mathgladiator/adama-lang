@@ -17,7 +17,7 @@ import java.util.Objects;
 /** a version of an Adama script with imports included */
 public class DeployedVersion {
   public final String main;
-  public HashMap<String, String> includes;
+  public final HashMap<String, String> includes;
 
   public DeployedVersion(JsonStreamReader reader) {
     String _main = "";

@@ -17,6 +17,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.TestReportBuilder;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.LivingDocument;
@@ -40,8 +41,9 @@ public class LivingDocumentFactory {
   public final int maximum_history;
   public final boolean delete_on_close;
   public final ServiceRegistry registry;
+  public final Deliverer deliver;
 
-  public LivingDocumentFactory(final String className, final String javaSource, String reflection) throws ErrorCodeException {
+  public LivingDocumentFactory(final String className, final String javaSource, String reflection, Deliverer deliver) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
     final var diagnostics = new DiagnosticCollector<JavaFileObject>();
     final var fileManager = new ByteArrayJavaFileManager(compiler.getStandardFileManager(null, null, null));
@@ -54,6 +56,7 @@ public class LivingDocumentFactory {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_COMPILE_JAVA_CODE, report.toString());
     }
     try {
+      this.deliver = deliver;
       final var classBytes = fileManager.getClasses();
       fileManager.close();
       final var loader = new ByteArrayClassLoader(classBytes);

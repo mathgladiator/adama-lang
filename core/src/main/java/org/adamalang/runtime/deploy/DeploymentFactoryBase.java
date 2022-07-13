@@ -14,6 +14,9 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.Collection;
@@ -21,13 +24,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /** this is the base for all spaces to resolve against */
-public class DeploymentFactoryBase implements LivingDocumentFactoryFactory {
+public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deliverer {
   private final AtomicInteger newClassId;
   private final ConcurrentHashMap<String, DeploymentFactory> spaces;
+  private Deliverer deliverer;
 
   public DeploymentFactoryBase() {
     this.newClassId = new AtomicInteger(0);
     this.spaces = new ConcurrentHashMap<>();
+    this.deliverer = Deliverer.FAILURE;
+  }
+
+  public void attachDeliverer(Deliverer deliverer) {
+    this.deliverer = deliverer;
   }
 
   public String hashOf(String space) {
@@ -38,8 +47,13 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory {
     return null;
   }
 
+  @Override
+  public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
+    deliverer.deliver(agent, key, id, result, callback);
+  }
+
   public void deploy(String space, DeploymentPlan plan) throws ErrorCodeException {
-    spaces.put(space, new DeploymentFactory(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan));
+    spaces.put(space, new DeploymentFactory(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan, this));
   }
 
   /** issue #108; expose this internal bit for others to use to keep sanity in check */
