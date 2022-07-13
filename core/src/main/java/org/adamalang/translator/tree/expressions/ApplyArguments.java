@@ -129,7 +129,7 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       switch (functionStyle) {
         case RemoteCall: {
           expression.writeJava(sb, environment);
-          sb.append(".invoke(\"");
+          sb.append(".invoke(__self, \"");
           sb.append(functionInstance.javaFunction).append("\", ").append(environment.state.getCacheObject());
           final var temp = new StringBuilder();
           CodeGenFunctions.writeArgsJava(temp, childEnv, false, args, functionInstance);

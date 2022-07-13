@@ -708,6 +708,10 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n        return value - 1;");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
+    gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
@@ -1357,6 +1361,10 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n      return __IND_DISPATCH_0_foo__1(__value, z);");
     gold.append("\n    }");
     gold.append("\n    return __IND_DISPATCH_0_foo__0(__value, z);");
+    gold.append("\n  }");
+    gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
+    gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
@@ -2019,6 +2027,10 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n      return __IND_DISPATCH_1_foo__1(__value, z);");
     gold.append("\n    }");
     gold.append("\n    return __IND_DISPATCH_1_foo__0(__value, z);");
+    gold.append("\n  }");
+    gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
+    gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");

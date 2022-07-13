@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.remote;
 
+import java.util.HashMap;
 import java.util.TreeMap;
 
 /** a service registry maps service names to services */
@@ -36,6 +37,19 @@ public class ServiceRegistry {
     if (local == null && parent != null) {
       return parent.find(name);
     }
+    if (local == null) {
+      return new ServiceFailure();
+    }
     return local;
+  }
+
+  public boolean contains(String name) {
+    return services.containsKey(name);
+  }
+
+  public void resolve(HashMap<String, HashMap<String, Object>> servicesConfig) {
+    for (String key : servicesConfig.keySet()) {
+      services.put(key, new ServiceFailure());
+    }
   }
 }

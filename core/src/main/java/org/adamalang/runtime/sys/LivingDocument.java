@@ -29,6 +29,7 @@ import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
+import org.adamalang.runtime.remote.Caller;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.remote.RxCache;
 import org.adamalang.runtime.remote.ServiceRegistry;
@@ -41,7 +42,7 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 import java.util.*;
 
 /** The central class for a living document (i.e. a tiny VM) */
-public abstract class LivingDocument implements RxParent {
+public abstract class LivingDocument implements RxParent, Caller {
   public final DocumentMonitor __monitor;
   public final LivingDocument __self;
   protected final RxInt32 __auto_future_id;
@@ -71,8 +72,10 @@ public abstract class LivingDocument implements RxParent {
   protected Random __random;
   protected ArrayList<Integer> __trace;
   private String __preemptedStateOnNextComputeBlocked = null;
+  private String __space;
   private String __key;
   private final TreeMap<Integer, RxCache> __routing;
+  private long lastRouteCreated;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -106,18 +109,15 @@ public abstract class LivingDocument implements RxParent {
 
   /** bind a route from the document to a cache */
   public int __bindRoute(RxCache cache) {
+    lastRouteCreated = __timeNow();
     int id = __auto_cache_id.bumpUpPre();
     __routing.put(id, cache);
     return id;
   }
 
-  public boolean __route(int id, RemoteResult result) {
-    RxCache fetched = __routing.get(id);
-    if (fetched != null) {
-      return fetched.deliver(id, result);
-    } else {
-      return false;
-    }
+  /** is the given route id in-flight */
+  public boolean __isRouteInflight(int routeId) {
+    return __routing.containsKey(routeId);
   }
 
   /** generate a new auto key for a table; all tables share the space id space */
@@ -136,10 +136,10 @@ public abstract class LivingDocument implements RxParent {
     }
   }
 
-  public void __lateBind(String key, LivingDocumentFactory factory) {
+  public void __lateBind(String space, String key, LivingDocumentFactory factory) {
+    this.__space = space;
     this.__key = key;
-    __link(null);
-    // The factory needs to have a common service registry
+    __link(factory.registry);
   }
 
   protected abstract void __link(ServiceRegistry registry);
@@ -147,8 +147,15 @@ public abstract class LivingDocument implements RxParent {
   protected abstract void __executeServiceCalls(boolean cancel);
 
   /** Document.key(); */
+  @Override
   public String __getKey() {
     return __key;
+  }
+
+  /** Document.space(); */
+  @Override
+  public String __getSpace() {
+    return __space;
   }
 
   /** Document.seq() */
@@ -724,6 +731,8 @@ public abstract class LivingDocument implements RxParent {
       String patch = null;
       String entropy = null;
       String marker = null;
+      Integer delivery_id = null;
+      RemoteResult result = null;
       NtAsset asset = null;
       String origin = null;
       String ip = null;
@@ -768,6 +777,12 @@ public abstract class LivingDocument implements RxParent {
               break;
             case "put":
               put = WebPutRaw.read(reader);
+              break;
+            case "delivery_id":
+              delivery_id = reader.readInteger();
+              break;
+            case "result":
+              result = new RemoteResult(reader);
               break;
             case "message":
               message = __parse_message(channel, reader);
@@ -842,6 +857,14 @@ public abstract class LivingDocument implements RxParent {
           }
           CoreRequestContext context = new CoreRequestContext(who, origin, ip, key);
           return __transaction_send(context, requestJson, who, marker, channel, timestamp, message, factory);
+        case "deliver":
+          if (delivery_id == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_DELIVERY_ID);
+          }
+          if (result == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_RESULT);
+          }
+          return __transaction_deliver(requestJson, delivery_id, result);
         case "expire":
           if (limit == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_LIMIT);
@@ -867,6 +890,31 @@ public abstract class LivingDocument implements RxParent {
       throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND);
     } catch (GoodwillExhaustedException gee) {
       throw new ErrorCodeException(ErrorCodes.API_GOODWILL_EXCEPTION, gee);
+    }
+  }
+
+  private LivingDocumentChange __transaction_deliver(final String request, int deliveryId, RemoteResult result) throws ErrorCodeException {
+    final var startedTime = System.nanoTime();
+    boolean exception = true;
+    if (__monitor != null) {
+      __monitor.push("TransactionWebPut");
+    }
+    try {
+      RxCache route = __routing.get(deliveryId);
+      if (route == null) {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ROUTE_DOCUMENT);
+      }
+      if (!route.deliver(deliveryId, result)) {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ROUTE_CACHE);
+      }
+      return __simple_commit(NtClient.NO_ONE, request, null);
+    } finally {
+      if (exception) {
+        __revert();
+      }
+      if (__monitor != null) {
+        __monitor.pop(System.nanoTime() - startedTime, exception);
+      }
     }
   }
 

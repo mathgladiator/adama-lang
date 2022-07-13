@@ -474,6 +474,10 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private void __FUNC_2_dope() {}");
     gold.append("\n  private void __FUNC_3_dope(int z) {}");
+    gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
+    gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
@@ -1042,6 +1046,10 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n        __writer.writeNull();");
     gold.append("\n      }");
     gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
+    gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
@@ -1697,6 +1705,10 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n        __writer.writeNull();");
     gold.append("\n      }");
     gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
+    gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");

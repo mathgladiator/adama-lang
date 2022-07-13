@@ -21,7 +21,7 @@ public class RemoteSite {
 
   public RemoteSite(RemoteInvocation invocation) {
     this.invocation = invocation;
-    this.backup =  new RemoteResult(null, null);
+    this.backup =  RemoteResult.NULL;
     this.value = backup;
     this.cached = null;
   }

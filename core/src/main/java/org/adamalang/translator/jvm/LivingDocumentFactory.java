@@ -17,6 +17,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.TestReportBuilder;
+import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.LivingDocument;
 
@@ -38,6 +39,7 @@ public class LivingDocumentFactory {
   private final Method canSendWhileDisconnectPolicyMethod;
   public final int maximum_history;
   public final boolean delete_on_close;
+  public final ServiceRegistry registry;
 
   public LivingDocumentFactory(final String className, final String javaSource, String reflection) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
@@ -64,6 +66,9 @@ public class LivingDocumentFactory {
       maximum_history = extractMaximumHistory(config);
       delete_on_close = extractDeleteOnClose(config);
       this.reflection = reflection;
+
+      this.registry = new ServiceRegistry(null);
+      this.registry.resolve((HashMap<String, HashMap<String, Object>>) (clazz.getMethod("__services").invoke(null)));
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
     }

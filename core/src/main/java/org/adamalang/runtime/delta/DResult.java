@@ -19,10 +19,14 @@ import java.util.function.Supplier;
 public class DResult<dTy extends DeltaNode> implements DeltaNode {
   private dTy cache;
   private Boolean failed;
+  private String message;
+  private Integer code;
 
   public DResult() {
     this.cache = null;
     this.failed = null;
+    this.message = null;
+    this.code = null;
   }
 
   /** get or make the cached delta (see CodeGenDeltaClass) */
@@ -36,10 +40,17 @@ public class DResult<dTy extends DeltaNode> implements DeltaNode {
   /** start showing the result(s) */
   public PrivateLazyDeltaWriter show(NtResult<?> result, PrivateLazyDeltaWriter writer) {
     final var obj = writer.planObject();
-    // note; we don't send the name as that may leak private information from the uploader
     if (failed == null || result.failed() != failed) {
       obj.planField("failed").writeBool(result.failed());
       this.failed = result.failed();
+    }
+    if (message == null || !result.message().equals(message)) {
+      obj.planField("message").writeString(result.message());
+      this.message = result.message();
+    }
+    if (code == null || result.code() != code) {
+      obj.planField("code").writeInt(result.code());
+      this.code = result.code();
     }
     return obj.planField("result");
   }

@@ -45,6 +45,7 @@ public class GlobalObjectPool {
     document.functions.put("destroy", generateInternalDocumentFunction("__destroyDocument", new TyNativeVoid()));
     document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeVoid()));
     document.functions.put("key", generateInternalDocumentFunction("__getKey", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    document.functions.put("space", generateInternalDocumentFunction("__getSpace", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null)));
     document.functions.put("seq", generateInternalDocumentFunction("__getSeq", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
     pool.add(document);
     final var random = new TyNativeGlobalObject("Random", null, false);

@@ -9,15 +9,11 @@
  */
 package org.adamalang.runtime.remote;
 
-import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.natives.NtMessageBase;
-import org.adamalang.runtime.natives.NtResult;
+/** Just enough information about the caller to be dangerous */
+public interface Caller {
+  /** the key of the document making the call */
+  String __getKey();
 
-import java.util.function.Function;
-
-/** a service is responsible for executing a method with a message */
-public interface Service {
-
-  /** invoke the given method */
-  public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result);
+  /** the space of the document making the call */
+  public String __getSpace();
 }
