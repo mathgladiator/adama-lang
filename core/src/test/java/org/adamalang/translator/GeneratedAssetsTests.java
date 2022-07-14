@@ -331,9 +331,6 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    latest.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -1025,9 +1022,6 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    latest.__revert();");
     gold.append("\n    te.__revert();");
     gold.append("\n    /* root */");

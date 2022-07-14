@@ -307,9 +307,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    tbl.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -1215,9 +1212,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    x1.__revert();");
     gold.append("\n    x2.__revert();");
     gold.append("\n    /* root */");
@@ -2116,9 +2110,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    mr.__revert();");
     gold.append("\n    got.__revert();");
     gold.append("\n    /* root */");
@@ -3013,9 +3004,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    maaaap.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -3959,9 +3947,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    v.__revert();");
     gold.append("\n    tbl.__revert();");
     gold.append("\n    /* root */");
@@ -5075,9 +5060,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    tbl.__revert();");
     gold.append("\n    last_id1.__revert();");
     gold.append("\n    last_id2.__revert();");
@@ -5917,9 +5899,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    v.__revert();");
     gold.append("\n    tbl.__revert();");
     gold.append("\n    /* root */");

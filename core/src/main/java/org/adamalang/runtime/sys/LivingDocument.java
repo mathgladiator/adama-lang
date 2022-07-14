@@ -131,7 +131,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** remove a route id */
-  public void __remoteRoute(int routeId) {
+  public void __removeRoute(int routeId) {
     __routing.remove(routeId);
   }
 

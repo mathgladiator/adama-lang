@@ -295,9 +295,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaAssignments_1 implements DeltaNode {");
@@ -1349,9 +1346,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaAtomicsEmptyArray_15 implements DeltaNode {");
@@ -1937,9 +1931,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaAtomics_16 implements DeltaNode {");
@@ -3127,9 +3118,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaBlockEmpty_26 implements DeltaNode {");
@@ -3656,9 +3644,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaBlockSingleStatement_27 implements DeltaNode {");
@@ -4190,9 +4175,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaChannels_28 implements DeltaNode {");
@@ -4856,9 +4838,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaCommentsWithin_29 implements DeltaNode {");
@@ -5388,9 +5367,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -5931,9 +5907,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    s.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -6554,9 +6527,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaConversion_32 implements DeltaNode {");
@@ -7268,9 +7238,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaDefineConstructor_34 implements DeltaNode {");
@@ -7833,9 +7800,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaDefineFunction_35 implements DeltaNode {");
@@ -8368,9 +8332,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -8911,9 +8872,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -9743,9 +9701,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaDispatch_42 implements DeltaNode {");
@@ -10690,9 +10645,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaEnumLazy_52 implements DeltaNode {");
@@ -11258,9 +11210,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaEnumNoisy_54 implements DeltaNode {");
@@ -11803,9 +11752,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaEnumPrefix_55 implements DeltaNode {");
@@ -12348,9 +12294,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaEnumSetDefault_56 implements DeltaNode {");
@@ -12876,9 +12819,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaEnumWithHexValue_57 implements DeltaNode {");
@@ -13420,9 +13360,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    result.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -14109,9 +14046,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    value.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -14668,9 +14602,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
     gold.append("\n    /* root */");
@@ -15352,9 +15283,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaIf_67 implements DeltaNode {");
@@ -16076,9 +16004,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    result.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -16887,9 +16812,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaJustComments_78 implements DeltaNode {");
@@ -17450,9 +17372,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -18538,9 +18457,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaLoops_80 implements DeltaNode {");
@@ -19130,9 +19046,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaMaps_81 implements DeltaNode {");
@@ -19652,9 +19565,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaMathAndLogic_82 implements DeltaNode {");
@@ -20299,9 +20209,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    v0.__revert();");
     gold.append("\n    name.__revert();");
     gold.append("\n    /* root */");
@@ -20877,9 +20784,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaNativeTypes_86 implements DeltaNode {");
@@ -21681,9 +21585,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    v.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -22281,9 +22182,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRPC_94 implements DeltaNode {");
@@ -22982,9 +22880,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -23670,9 +23565,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -24335,9 +24227,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRecordPolicies_97 implements DeltaNode {");
@@ -25114,9 +25003,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaReturnEmpty_98 implements DeltaNode {");
@@ -25661,9 +25547,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    ptr.__revert();");
     gold.append("\n    /* root */");
@@ -26366,9 +26249,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaStringEscaping_104 implements DeltaNode {");
@@ -26902,9 +26782,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -27433,9 +27310,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -28051,9 +27925,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
@@ -28714,9 +28585,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaTupleHappy_111 implements DeltaNode {");
@@ -29334,9 +29202,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaUnicodeInString_112 implements DeltaNode {");
@@ -29857,9 +29722,6 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaViewerCompute_113 implements DeltaNode {");

@@ -307,9 +307,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    status.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -1013,9 +1010,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaDuplicateHandlers_2 implements DeltaNode {");
@@ -1564,9 +1558,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaEsotericMessages_3 implements DeltaNode {");
@@ -2454,9 +2445,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaHandlerLegacy_4 implements DeltaNode {");
@@ -3105,9 +3093,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaMessageHasEnum_5 implements DeltaNode {");

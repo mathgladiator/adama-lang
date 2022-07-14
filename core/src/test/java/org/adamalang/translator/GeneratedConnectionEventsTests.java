@@ -335,9 +335,6 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaHappy_2 implements DeltaNode {");
@@ -870,9 +867,6 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaLegacy_3 implements DeltaNode {");

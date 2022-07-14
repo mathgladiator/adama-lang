@@ -359,9 +359,6 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    sz.__revert();");
     gold.append("\n    wz.__revert();");
     gold.append("\n    /* root */");
@@ -1203,9 +1200,6 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    sz1.__revert();");
     gold.append("\n    sz2.__revert();");
     gold.append("\n    sz3.__revert();");
@@ -1946,9 +1940,6 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    sz.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");

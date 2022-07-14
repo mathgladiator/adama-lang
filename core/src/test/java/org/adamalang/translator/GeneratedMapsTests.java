@@ -334,9 +334,6 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    z.__revert();");
     gold.append("\n    count.__revert();");
     gold.append("\n    count_after_delete.__revert();");
@@ -1153,9 +1150,6 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    my_map1.__revert();");
     gold.append("\n    my_map2.__revert();");
     gold.append("\n    v.__revert();");
@@ -2129,9 +2123,6 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    __auto_gen.__revert();");
-    gold.append("\n    __auto_cache_id.__revert();");
-    gold.append("\n    __cache.__revert();");
     gold.append("\n    t.__revert();");
     gold.append("\n    x1.__revert();");
     gold.append("\n    x2.__revert();");

@@ -12,6 +12,8 @@ package org.adamalang.runtime.remote;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
+import java.util.Objects;
+
 /** the output of a service call */
 public class RemoteResult {
   public static RemoteResult NULL = new RemoteResult(null, null, null);
@@ -57,18 +59,37 @@ public class RemoteResult {
 
   public void write(JsonStreamWriter writer) {
     writer.beginObject();
+    writer.writeObjectFieldIntro("result");
     if (result != null) {
-      writer.writeObjectFieldIntro("result");
       writer.injectJson(result);
+    } else {
+      writer.writeNull();
     }
+    writer.writeObjectFieldIntro("failure");
     if (failure != null) {
-      writer.writeObjectFieldIntro("failure");
       writer.writeString(failure);
+    } else {
+      writer.writeNull();
     }
+    writer.writeObjectFieldIntro("failure_code");
     if (failureCode != null) {
-      writer.writeObjectFieldIntro("failure_code");
       writer.writeInteger(failureCode);
+    } else {
+      writer.writeNull();
     }
     writer.endObject();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(result, failure, failureCode);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    RemoteResult that = (RemoteResult) o;
+    return Objects.equals(result, that.result) && Objects.equals(failure, that.failure) && Objects.equals(failureCode, that.failureCode);
   }
 }

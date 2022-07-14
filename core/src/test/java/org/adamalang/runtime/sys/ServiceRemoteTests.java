@@ -10,6 +10,7 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -39,21 +40,91 @@ import java.util.function.Function;
 public class ServiceRemoteTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
-  private static final String SIMPLE_CODE =
+  private static final String SIMPLE_CODE_1 =
       "@static { create { return true; } }" +
           "@connected { return true; }" +
           "message M { int x; }" +
-          "@service s { std=\"sqr\"; method<M, M> square; }" +
+          "@service s { std=\"sqr1\"; method<M, M> square; }" +
+          "public int x = 4;" +
+          "public formula y = s.square(@no_one, {x:x});" +
+          "channel foo(M y) { x += y.x; }";
+  private static final String SIMPLE_CODE_2 =
+      "@static { create { return true; } }" +
+          "@connected { return true; }" +
+          "message M { int x; }" +
+          "@service s { std=\"sqr2\"; method<M, M> square; }" +
           "public int x = 4;" +
           "public formula y = s.square(@no_one, {x:x});" +
           "channel foo(M y) { x += y.x; }";
 
   @Test
+  public void service_failure() throws Exception {
+    ArrayList<Runnable> actions = new ArrayList<>();
+
+    ServiceRegistry.REGISTRY.put("sqr1", (properties) -> {
+      return new SimpleService("sqr1", NtClient.NO_ONE) {
+        @Override
+        public void request(String method, String request, Callback<String> callback) {
+          actions.add(() -> {
+            callback.failure(new ErrorCodeException(403, "Fire-bidden"));
+          });
+        }
+      };
+    });
+    AtomicReference<Deliverer> latent = new AtomicReference<>(null);
+    Deliverer lazy = new Deliverer() {
+      @Override
+      public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
+        latent.get().deliver(agent, key, id, result, callback);
+      }
+    };
+
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_1, lazy);
+
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    latent.set(service);
+    try {
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      created.await_success();
+      MockStreamback streamback = new MockStreamback();
+      Runnable latch1 = streamback.latchAt(2);
+      Runnable latch2 = streamback.latchAt(3);
+      Runnable latch3 = streamback.latchAt(4);
+      Runnable latch4 = streamback.latchAt(5);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      streamback.await_began();
+      latch1.run();
+      Assert.assertEquals("STATUS:Connected", streamback.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":4,\"y\":{\"failed\":false,\"message\":\"waiting...\",\"code\":0},\"seq\":4}", streamback.get(1));
+      Assert.assertEquals(1, actions.size());
+      actions.remove(0).run();
+      latch2.run();
+      Assert.assertEquals("{\"data\":{\"y\":{\"failed\":true,\"message\":\"Fire-bidden\",\"code\":403},\"seq\":4}", streamback.get(2));
+      LatchCallback cb1 = new LatchCallback();
+      streamback.get().send("foo", null, "{\"x\":8}", cb1);
+      cb1.await_success(5);
+      latch3.run();
+      Assert.assertEquals("{\"data\":{\"x\":12,\"y\":{\"failed\":false,\"message\":\"waiting...\",\"code\":0},\"seq\":5}", streamback.get(3));
+      Assert.assertEquals(1, actions.size());
+      actions.remove(0).run();
+      latch4.run();
+      Assert.assertEquals("{\"data\":{\"y\":{\"failed\":true,\"message\":\"Fire-bidden\",\"code\":403},\"seq\":5}", streamback.get(4));
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
   public void service_invoke() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr", (properties) -> {
-      return new SimpleService("sqr", NtClient.NO_ONE) {
+    ServiceRegistry.REGISTRY.put("sqr2", (properties) -> {
+      return new SimpleService("sqr2", NtClient.NO_ONE) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
           int _x = 1;
@@ -84,7 +155,7 @@ public class ServiceRemoteTests {
       }
     };
 
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, lazy);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_2, lazy);
 
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);

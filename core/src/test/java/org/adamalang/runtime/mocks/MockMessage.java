@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.mocks;
 
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.natives.algo.HashBuilder;
@@ -20,6 +21,28 @@ public class MockMessage implements NtMessageBase {
   public MockMessage() {
     x = 42;
     y = 13;
+  }
+
+  public MockMessage(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  public MockMessage(JsonStreamReader reader) {
+    if (reader.startObject()) {
+      while (reader.notEndOfObject()) {
+        switch (reader.fieldName()) {
+          case "x":
+            x = reader.readInteger();
+            break;
+          case "y":
+            y = reader.readInteger();
+            break;
+          default:
+            reader.skipValue();
+        }
+      }
+    }
   }
 
   @Override
@@ -36,5 +59,12 @@ public class MockMessage implements NtMessageBase {
   public void __hash(HashBuilder __hash) {
     __hash.hashInteger(x);
     __hash.hashInteger(y);
+  }
+
+  @Override
+  public String toString() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    __writeOut(writer);
+    return writer.toString();
   }
 }

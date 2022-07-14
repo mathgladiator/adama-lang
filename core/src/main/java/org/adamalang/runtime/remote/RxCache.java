@@ -106,8 +106,8 @@ public class RxCache extends RxBase implements RxKillable {
   /** deliver a result to the cache */
   public boolean deliver(int id, RemoteResult result) {
     RemoteSite site = sites.get(id);
-    root.__remoteRoute(id);
     if (site != null) {
+      root.__removeRoute(id);
       site.deliver(result);
       __raiseDirty();
       return true;
@@ -139,13 +139,15 @@ public class RxCache extends RxBase implements RxKillable {
         }
       }
       sites.putAll(additions);
+      additions.clear();
       for (Map.Entry<Integer, RemoteSite> entry : removals.entrySet()) {
         forwardDelta.writeObjectFieldIntro(entry.getKey());
         forwardDelta.writeNull();
         reverseDelta.writeObjectFieldIntro(entry.getKey());
-        entry.getValue().dump(forwardDelta);
+        entry.getValue().dump(reverseDelta);
         sites.remove(entry.getKey());
       }
+      removals.clear();
       forwardDelta.endObject();
       reverseDelta.endObject();
       __lowerDirtyCommit();
@@ -186,6 +188,7 @@ public class RxCache extends RxBase implements RxKillable {
 
   @Override
   public void __patch(JsonStreamReader reader) {
+    boolean dirty = false;
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         int key = Integer.parseInt(reader.fieldName());
@@ -193,15 +196,21 @@ public class RxCache extends RxBase implements RxKillable {
         if (prior != null) {
           if (reader.testLackOfNull()) {
             prior.patch(reader);
+            dirty = true;
           } else {
             sites.remove(key);
             removals.put(key, prior);
+            dirty = true;
           }
         } else {
           if (reader.testLackOfNull()) {
             additions.put(key, new RemoteSite(key, reader));
+            dirty = true;
           } // otherwise, nothing
         }
+      }
+      if (dirty) {
+        __raiseDirty();
       }
       index();
     }

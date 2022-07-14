@@ -73,7 +73,7 @@ public class RemoteInvocation implements Comparable<RemoteInvocation> {
 
   @Override
   public int compareTo(RemoteInvocation o) {
-    int delta = delta = service.compareTo(o.service);
+    int delta = service.compareTo(o.service);
     if (delta != 0) {
       return delta;
     }

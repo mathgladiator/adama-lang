@@ -13,6 +13,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtResult;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 /** the binding site where inputs are connected to outputs within a differential state machine */
@@ -108,5 +109,18 @@ public class RemoteSite {
 
   public void revert() {
     value = backup;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, invocation, backup, value, cached);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    RemoteSite that = (RemoteSite) o;
+    return id == that.id && Objects.equals(invocation, that.invocation) && Objects.equals(backup, that.backup) && Objects.equals(value, that.value) && Objects.equals(cached, that.cached);
   }
 }

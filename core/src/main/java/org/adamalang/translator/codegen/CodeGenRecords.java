@@ -41,6 +41,19 @@ public class CodeGenRecords {
     return false;
   }
 
+  private static boolean canRevertOther(String other) {
+    if ("__auto_gen".equals(other)) {
+      return false;
+    }
+    if ("__auto_cache_id".equals(other)) {
+      return false;
+    }
+    if ("__cache".equals(other)) {
+      return false;
+    }
+    return true;
+  }
+
   public static void writeCommitAndRevert(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot, final String... others) {
     writeInsert(storage, sb, environment, isRoot, others);
     writerDump(storage, sb, environment, isRoot, others);
@@ -85,7 +98,9 @@ public class CodeGenRecords {
       sb.append("__isDying = false;").writeNewline();
     }
     for (final String other : others) {
-      sb.append(other).append(".__revert();").writeNewline();
+      if (canRevertOther(other)) {
+        sb.append(other).append(".__revert();").writeNewline();
+      }
     }
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
