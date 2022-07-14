@@ -20,6 +20,7 @@ import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
@@ -37,7 +38,7 @@ public class ServiceTemporalTests {
 
   @Test
   public void transitions_happy_on_time() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockInstantDataService dataService = new MockInstantDataService();
@@ -80,7 +81,7 @@ public class ServiceTemporalTests {
 
   @Test
   public void drive_after_load() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_BOUNCER);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_BOUNCER, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockInstantDataService dataService = new MockInstantDataService();
@@ -100,7 +101,7 @@ public class ServiceTemporalTests {
 
   @Test
   public void load_after_create_pause() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockInstantDataService dataService = new MockInstantDataService();

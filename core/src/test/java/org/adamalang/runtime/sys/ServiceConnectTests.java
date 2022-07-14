@@ -21,6 +21,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
@@ -45,7 +46,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_super_happy_connect() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -79,7 +80,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_crash() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(CONNECT_CRASH);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(CONNECT_CRASH, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -99,7 +100,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_crash_invalidation() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(CONNECT_CRASH_2);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(CONNECT_CRASH_2, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -119,7 +120,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_super_happy_load() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -164,7 +165,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_attach_nope() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -198,7 +199,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_view_failure() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -222,7 +223,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_attach_yay() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_ATTACH);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_ATTACH, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -262,7 +263,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_view_update() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(MIRROR);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(MIRROR, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -293,7 +294,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_twice_series() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -333,7 +334,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_twice_parallel() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -388,7 +389,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_failed_connect() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -412,7 +413,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_failed_load() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -429,7 +430,7 @@ public class ServiceConnectTests {
 
   @Test
   public void connect_failed_create_view() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();

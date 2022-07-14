@@ -18,6 +18,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebResponse;
@@ -38,7 +39,7 @@ public class ServiceCleanupTests {
 
   @Test
   public void cleanup_happens() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockTime time = new MockTime();
@@ -98,7 +99,7 @@ public class ServiceCleanupTests {
 
   @Test
   public void cleanup_happens_just_load() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockTime time = new MockTime();

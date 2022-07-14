@@ -21,6 +21,7 @@ import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.data.LocalDocumentChange;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
@@ -41,7 +42,7 @@ public class ServiceCompactingTests {
 
   @Test
   public void super_compact() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SUPER_COMPACT);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SUPER_COMPACT, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -90,7 +91,7 @@ public class ServiceCompactingTests {
 
   @Test
   public void moderate_compact() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(MODERATE_COMPACT);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(MODERATE_COMPACT, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -141,7 +142,7 @@ public class ServiceCompactingTests {
 
   @Test
   public void compact_turned_off_and_on() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(MODERATE_COMPACT);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(MODERATE_COMPACT, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();

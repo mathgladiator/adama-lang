@@ -45,7 +45,7 @@ public class LivingDocumentTests {
   private static NtClient B = new NtClient("B", "TEST");
   private static HashMap<String, LivingDocumentFactory> compilerCache = new HashMap<>();
 
-  public static LivingDocumentFactory compile(final String code) throws Exception {
+  public static LivingDocumentFactory compile(final String code, Deliverer deliverer) throws Exception {
     CompilerOptions.Builder opts = CompilerOptions.start().enableCodeCoverage();
     opts.packageName = "P";
     final var options = opts.noCost().make();
@@ -64,7 +64,7 @@ public class LivingDocumentTests {
     final var java = document.compileJava(state);
     var cached = compilerCache.get(java);
     if (cached == null) {
-      cached = new LivingDocumentFactory("MeCode", java, reflection.toString(), Deliverer.FAILURE);
+      cached = new LivingDocumentFactory("MeCode", java, reflection.toString(), deliverer);
       compilerCache.put(java, cached);
     }
     return cached;
@@ -135,7 +135,7 @@ public class LivingDocumentTests {
           "@connected { return true; }" +
               "message From { string phone; string msg; }" +
               "message Res { }" +
-              "@service sms { method<From, Res> send; }" +
+              "@service sms { class=\"demo\"; method<From, Res> send; }" +
               "public string msg = \"123\";" +
               "public formula transmit = sms.send(@no_one, {phone:\"123\",  msg:msg}  );" +
               "",

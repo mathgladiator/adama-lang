@@ -19,6 +19,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
@@ -35,7 +36,7 @@ public class ServiceImplicitCreateTests {
 
   @Test
   public void ideal() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -60,7 +61,7 @@ public class ServiceImplicitCreateTests {
 
   @Test
   public void race_cause_create_storm_but_both_work() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -94,7 +95,7 @@ public class ServiceImplicitCreateTests {
 
   @Test
   public void race_cause_retry_but_no_factory_next_time() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactoryReal =
         new MockInstantLivingDocumentFactoryFactory(factory);
     AtomicInteger countDownUntilFailure = new AtomicInteger(2);
@@ -128,7 +129,7 @@ public class ServiceImplicitCreateTests {
 
   @Test
   public void one_fails_during_race() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();

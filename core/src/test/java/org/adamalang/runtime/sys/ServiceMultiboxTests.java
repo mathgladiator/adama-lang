@@ -17,6 +17,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
@@ -31,7 +32,7 @@ public class ServiceMultiboxTests {
 
   @Test
   public void seq_conflict_at_data_service() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -78,7 +79,7 @@ public class ServiceMultiboxTests {
 
   @Test
   public void too_many_conflicts() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -113,7 +114,7 @@ public class ServiceMultiboxTests {
 
   @Test
   public void splitBrainMultiBoxSync() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();

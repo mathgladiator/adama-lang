@@ -15,6 +15,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
@@ -28,7 +29,7 @@ public class ServiceBlogTests {
 
   @Test
   public void test20220202_pubsub() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(PUBSUB_CODE);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(PUBSUB_CODE, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockTime time = new MockTime();
@@ -68,7 +69,7 @@ public class ServiceBlogTests {
 
   @Test
   public void test20220202_maxseq() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(MAXSEQ_CODE);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(MAXSEQ_CODE, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockTime time = new MockTime();

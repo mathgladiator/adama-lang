@@ -19,6 +19,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
 import org.adamalang.runtime.sys.mocks.NullCallbackLatch;
@@ -39,7 +40,7 @@ public class ServiceWebTests {
 
   @Test
   public void web_basic() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();

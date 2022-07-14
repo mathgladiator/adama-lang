@@ -16,6 +16,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
 import org.adamalang.runtime.sys.mocks.MockStreamback;
@@ -39,7 +40,7 @@ public class ServiceCrashCreationTests {
 
   @Test
   public void cant_create_reject() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(REJECT);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(REJECT, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -56,7 +57,7 @@ public class ServiceCrashCreationTests {
 
   @Test
   public void cant_invent_reject() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(REJECT);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(REJECT, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -73,7 +74,7 @@ public class ServiceCrashCreationTests {
 
   @Test
   public void cant_create1() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR1);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR1, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -90,7 +91,7 @@ public class ServiceCrashCreationTests {
 
   @Test
   public void cant_create2() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR2);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR2, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -107,7 +108,7 @@ public class ServiceCrashCreationTests {
 
   @Test
   public void cant_create3() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR3);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR3, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -124,7 +125,7 @@ public class ServiceCrashCreationTests {
 
   @Test
   public void cant_create4() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR4);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR4, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -141,7 +142,7 @@ public class ServiceCrashCreationTests {
 
   @Test
   public void cant_invent1() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR1);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR1, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -158,7 +159,7 @@ public class ServiceCrashCreationTests {
 
   @Test
   public void cant_invent2() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR2);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR2, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -175,7 +176,7 @@ public class ServiceCrashCreationTests {
 
   @Test
   public void cant_invent3() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR3);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR3, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
@@ -192,7 +193,7 @@ public class ServiceCrashCreationTests {
 
   @Test
   public void cant_invent4() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR4);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_VAR4, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();

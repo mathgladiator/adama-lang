@@ -19,6 +19,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
@@ -34,7 +35,7 @@ public class ServiceBadCodeTests {
 
   @Test
   public void bad_code() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(BAD_CODE);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(BAD_CODE, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();

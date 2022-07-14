@@ -21,6 +21,8 @@ import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
+import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
@@ -30,12 +32,13 @@ import org.junit.Assert;
 
 import java.util.ArrayList;
 
-public class RealDocumentSetup {
+public class RealDocumentSetup implements Deliverer {
   public final LivingDocumentFactory factory;
   public final MockTime time;
   public final DurableLivingDocument document;
   private DurableLivingDocument mirror;
   public final String code;
+  private Deliverer deliver = Deliverer.FAILURE;
 
   public RealDocumentSetup(final String code) throws Exception {
     this(code, null);
@@ -48,6 +51,11 @@ public class RealDocumentSetup {
   public RealDocumentSetup(final String code, final String json, final boolean stdout)
       throws Exception {
     this(code, json, stdout, new MockTime());
+  }
+
+  @Override
+  public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
+    this.deliver.deliver(agent, key, id, result, callback);
   }
 
   public RealDocumentSetup(
@@ -67,7 +75,7 @@ public class RealDocumentSetup {
             });
     DocumentThreadBase base = new DocumentThreadBase(dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
     dds.setData(json);
-    factory = LivingDocumentTests.compile(code);
+    factory = LivingDocumentTests.compile(code, deliver);
     this.code = code;
     DumbDataService.DumbDurableLivingDocumentAcquire acquireReal =
         new DumbDataService.DumbDurableLivingDocumentAcquire();

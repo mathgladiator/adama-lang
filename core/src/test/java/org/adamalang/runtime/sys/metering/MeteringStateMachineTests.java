@@ -16,6 +16,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
@@ -123,7 +124,7 @@ public class MeteringStateMachineTests {
       bases[k].setInventoryMillisecondsSchedule(10, 5);
       bases[k].kickOffInventory();
     }
-    LivingDocumentFactory factory = LivingDocumentTests.compile("public int x = 123; @construct { transition #foo in 2; } #foo { transition #foo in 2; }");
+    LivingDocumentFactory factory = LivingDocumentTests.compile("public int x = 123; @construct { transition #foo in 2; } #foo { transition #foo in 2; }", Deliverer.FAILURE);
     {
       CountDownLatch latch = new CountDownLatch(1);
       DurableLivingDocument.fresh(new Key("space", "key"), factory, NtClient.NO_ONE, "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
@@ -216,7 +217,7 @@ public class MeteringStateMachineTests {
               TimeSource.REAL_TIME);
       bases[k].kickOffInventory();
     }
-    LivingDocumentFactory factory = LivingDocumentTests.compile("public int x = 123;");
+    LivingDocumentFactory factory = LivingDocumentTests.compile("public int x = 123;", Deliverer.FAILURE);
     AtomicReference<HashMap<String, PredictiveInventory.MeteringSample>> billing = new AtomicReference<>(null);
     {
       CountDownLatch latch = new CountDownLatch(1);
