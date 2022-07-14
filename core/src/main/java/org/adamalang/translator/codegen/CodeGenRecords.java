@@ -64,6 +64,7 @@ public class CodeGenRecords {
         sb.append(fieldName).append(".__commit(\"").append(fieldName).append("\", __forward, __reverse);").writeNewline();
       }
       if (isCommitCache(fdInOrder, fieldType)) {
+        sb.append(fieldName).append(".get();").writeNewline();
         fieldsToKill.add("__c" + fieldName);
         sb.append("__c").append(fieldName).append(".__commit(\"__c").append(fieldName).append("\", __forward, __reverse);").writeNewline();
       }
@@ -93,6 +94,7 @@ public class CodeGenRecords {
         sb.append(fieldName).append(".__revert();").writeNewline();
       }
       if (isCommitCache(fdInOrder, fieldType)) {
+        sb.append(fieldName).append(".get();").writeNewline();
         sb.append("__c").append(fieldName).append(".__revert();").writeNewline();
       }
     }
@@ -362,7 +364,6 @@ public class CodeGenRecords {
         sb.append("case \"__c").append(fieldName).append("\":").tabUp().writeNewline();
         sb.append("__c").append(fieldName).append(".__patch(__reader);").writeNewline();
         sb.append("break;").tabDown().writeNewline();
-
       }
     }
     for (final String other : others) {

@@ -41,9 +41,9 @@ public class LivingDocumentFactory {
   public final int maximum_history;
   public final boolean delete_on_close;
   public final ServiceRegistry registry;
-  public final Deliverer deliver;
+  public final Deliverer deliverer;
 
-  public LivingDocumentFactory(final String className, final String javaSource, String reflection, Deliverer deliver) throws ErrorCodeException {
+  public LivingDocumentFactory(final String className, final String javaSource, String reflection, Deliverer deliverer) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
     final var diagnostics = new DiagnosticCollector<JavaFileObject>();
     final var fileManager = new ByteArrayJavaFileManager(compiler.getStandardFileManager(null, null, null));
@@ -56,7 +56,7 @@ public class LivingDocumentFactory {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_COMPILE_JAVA_CODE, report.toString());
     }
     try {
-      this.deliver = deliver;
+      this.deliverer = deliverer;
       final var classBytes = fileManager.getClasses();
       fileManager.close();
       final var loader = new ByteArrayClassLoader(classBytes);
@@ -69,7 +69,6 @@ public class LivingDocumentFactory {
       maximum_history = extractMaximumHistory(config);
       delete_on_close = extractDeleteOnClose(config);
       this.reflection = reflection;
-
       this.registry = new ServiceRegistry();
       this.registry.resolve((HashMap<String, HashMap<String, Object>>) (clazz.getMethod("__services").invoke(null)));
     } catch (final Exception ex) {

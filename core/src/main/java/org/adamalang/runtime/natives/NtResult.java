@@ -36,6 +36,11 @@ public class NtResult<T> {
     }
   }
 
+  /** is the result a failure */
+  public boolean finished() {
+    return value != null || failed;
+  }
+
   /** is it available */
   public boolean has() {
     return value != null;

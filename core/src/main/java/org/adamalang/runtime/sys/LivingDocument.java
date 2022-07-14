@@ -29,10 +29,7 @@ import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
-import org.adamalang.runtime.remote.Caller;
-import org.adamalang.runtime.remote.RemoteResult;
-import org.adamalang.runtime.remote.RxCache;
-import org.adamalang.runtime.remote.ServiceRegistry;
+import org.adamalang.runtime.remote.*;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebPutRaw;
@@ -77,6 +74,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private final TreeMap<Integer, RxCache> __routing;
   private long lastRouteCreated;
   protected final RxCache __cache;
+  private Deliverer __deliverer;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -107,14 +105,19 @@ public abstract class LivingDocument implements RxParent, Caller {
     __dedupe = new HashMap<>();
     __auto_gen = new RxInt32(this, 0);
     __routing = new TreeMap<>();
+    __deliverer = Deliverer.FAILURE;
   }
 
-  /** bind a route from the document to a cache */
-  public int __bindRoute(RxCache cache) {
-    lastRouteCreated = __timeNow();
-    int id = __auto_cache_id.bumpUpPre();
+  /** bind a route to a cache */
+  public int __bindRoute(int id, RxCache cache) {
     __routing.put(id, cache);
     return id;
+  }
+
+  /** create a route id */
+  public int __createRouteId() {
+    lastRouteCreated = __timeNow();
+    return __auto_cache_id.bumpUpPre();
   }
 
   /** is the given route id in-flight */
@@ -138,15 +141,22 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
-  public void __lateBind(String space, String key, LivingDocumentFactory factory) {
+  public void __lateBind(String space, String key, Deliverer deliverer, ServiceRegistry registry) {
     this.__space = space;
     this.__key = key;
-    __link(factory.registry);
+    this.__deliverer = deliverer;
+    __link(registry);
   }
 
   protected abstract void __link(ServiceRegistry registry);
 
   protected abstract void __executeServiceCalls(boolean cancel);
+
+  /** for Caller */
+  @Override
+  public Deliverer __getDeliverer() {
+    return __deliverer;
+  }
 
   /** Document.key(); */
   @Override

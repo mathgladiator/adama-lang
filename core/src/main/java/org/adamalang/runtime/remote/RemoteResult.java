@@ -34,7 +34,7 @@ public class RemoteResult {
         switch (reader.fieldName()) {
           case "result":
             if (reader.testLackOfNull()) {
-              _result = reader.readString();
+              _result = reader.skipValueIntoJson();
             }
             break;
           case "failure":

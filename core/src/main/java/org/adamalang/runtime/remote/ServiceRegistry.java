@@ -9,7 +9,6 @@
  */
 package org.adamalang.runtime.remote;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -17,13 +16,9 @@ import java.util.function.Function;
 
 /** a service registry maps service names to services */
 public class ServiceRegistry {
-  private static TreeMap<String, Function<HashMap<String, Object>, Service>> REGISTRY;
+  public static TreeMap<String, Function<HashMap<String, Object>, Service>> REGISTRY = new TreeMap<>();
   private final TreeMap<String, Service> services;
 
-  /** we scope the registry such that there are
-   * (1) global services that are internal,
-   * (2) user defined services per space
-   */
   public ServiceRegistry() {
     this.services = new TreeMap<>();
   }
@@ -61,4 +56,15 @@ public class ServiceRegistry {
       services.put(entry.getKey(), resolved);
     }
   }
+
+  public static ServiceRegistry NOT_READY = new ServiceRegistry() {
+    @Override
+    public Service find(String name) {
+      return Service.NOT_READY;
+    }
+
+    @Override
+    public void resolve(HashMap<String, HashMap<String, Object>> servicesConfig) {
+    }
+  };
 }

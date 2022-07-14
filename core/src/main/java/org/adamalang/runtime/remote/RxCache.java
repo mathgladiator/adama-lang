@@ -13,17 +13,21 @@ import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtMessageBase;
+import org.adamalang.runtime.natives.NtResult;
 import org.adamalang.runtime.reactives.RxBase;
 import org.adamalang.runtime.sys.LivingDocument;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 /** a cache of service calls */
 public class RxCache extends RxBase implements RxKillable {
   private final LivingDocument root;
-  private final TreeMap<RemoteInvocation, RemoteSite> cache;
+  private final TreeMap<RemoteInvocation, RemoteSite> mapping;
   private final TreeMap<Integer, RemoteSite> additions;
   private final TreeMap<Integer, RemoteSite> sites;
   private final TreeMap<Integer, RemoteSite> removals;
@@ -32,16 +36,9 @@ public class RxCache extends RxBase implements RxKillable {
     super(__parent);
     this.root = __root;
     this.sites = new TreeMap<>();
-    this.cache = new TreeMap<>();
+    this.mapping = new TreeMap<>();
     this.removals = new TreeMap<>();
     this.additions = new TreeMap<>();
-  }
-
-  public int bind(RemoteInvocation invocation) {
-    int id = root.__bindRoute(this);
-    additions.put(id, new RemoteSite(invocation));
-    __raiseDirty();
-    return id;
   }
 
   public <Tx> Supplier<Tx> wrap(Supplier<Tx> supplier) {
@@ -51,6 +48,41 @@ public class RxCache extends RxBase implements RxKillable {
       sweep();
       return result;
     };
+  }
+
+  public <Tx> NtResult<Tx> answer(String service, String method, NtClient who, NtMessageBase request, Function<String, Tx> parser, BiConsumer<Integer, String> execute) {
+    // create the invocation
+    JsonStreamWriter writer = new JsonStreamWriter();
+    request.__writeOut(writer);
+    String parameters = writer.toString();
+    RemoteInvocation invocation = new RemoteInvocation(service, method, who, parameters);
+
+    // see if we have the invocation available
+    RemoteSite site = mapping.get(invocation);
+
+    // we don't, so let's create it
+    if (site == null) {
+      // ask the document for a document unique id
+      int id = root.__createRouteId();
+      site = new RemoteSite(id, invocation);
+      additions.put(id, site);
+      mapping.put(site.invocation(), site);
+      __raiseDirty();
+    }
+
+    // create the result
+    NtResult<Tx> result = site.of(parser);
+
+
+    // if not done
+    if (!result.finished()) {
+      // and we don't have a route established, then execute the request
+      if (!root.__isRouteInflight(site.id)) {
+        root.__bindRoute(site.id, this);
+        execute.accept(site.id, parameters);
+      }
+    }
+    return result;
   }
 
   private void mark() {
@@ -63,6 +95,7 @@ public class RxCache extends RxBase implements RxKillable {
     RemoteSite site = sites.get(id);
     if (site != null) {
       site.deliver(result);
+      __raiseDirty();
       return true;
     }
     return false;
@@ -102,6 +135,17 @@ public class RxCache extends RxBase implements RxKillable {
       forwardDelta.endObject();
       reverseDelta.endObject();
       __lowerDirtyCommit();
+      index();
+    }
+  }
+
+  private void index() {
+    mapping.clear();
+    for (Map.Entry<Integer, RemoteSite> entry : sites.entrySet()) {
+      mapping.put(entry.getValue().invocation(), entry.getValue());
+    }
+    for (Map.Entry<Integer, RemoteSite> entry : additions.entrySet()) {
+      mapping.put(entry.getValue().invocation(), entry.getValue());
     }
   }
 
@@ -133,8 +177,9 @@ public class RxCache extends RxBase implements RxKillable {
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         int key = Integer.parseInt(reader.fieldName());
-        sites.put(key, new RemoteSite(reader));
+        sites.put(key, new RemoteSite(key, reader));
       }
+      index();
     }
   }
 
@@ -153,10 +198,11 @@ public class RxCache extends RxBase implements RxKillable {
           }
         } else {
           if (reader.testLackOfNull()) {
-            additions.put(key, new RemoteSite(reader));
+            additions.put(key, new RemoteSite(key, reader));
           } // otherwise, nothing
         }
       }
+      index();
     }
   }
 

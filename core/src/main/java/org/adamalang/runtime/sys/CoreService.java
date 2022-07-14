@@ -101,9 +101,7 @@ public class CoreService implements Deliverer {
   @Override
   public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callbackReal) {
     Callback<Integer> callback = metrics.deliver.wrap(callbackReal);
-    int threadId = key.hashCode() % bases.length;
-    DocumentThreadBase base = bases[threadId];;
-    load(key, new Callback<DurableLivingDocument>() {
+    load(key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument value) {
         value.deliver(agent, id, result, callback);

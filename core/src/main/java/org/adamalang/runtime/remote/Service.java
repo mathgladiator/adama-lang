@@ -27,4 +27,11 @@ public interface Service {
       return new NtResult<>(null, true, 500, "Service failed to resolve");
     }
   };
+
+  public static final Service NOT_READY = new Service() {
+    @Override
+    public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result) {
+      return new NtResult<>(null, true, 500, "Document is creating");
+    }
+  };
 }

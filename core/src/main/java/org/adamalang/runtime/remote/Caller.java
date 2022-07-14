@@ -11,6 +11,9 @@ package org.adamalang.runtime.remote;
 
 /** Just enough information about the caller to be dangerous */
 public interface Caller {
+  /** get the pathway to deliver a message */
+  Deliverer __getDeliverer();
+
   /** the key of the document making the call */
   String __getKey();
 

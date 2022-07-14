@@ -11,24 +11,49 @@ package org.adamalang.runtime.remote;
 
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtResult;
+
+import java.util.function.Function;
 
 /** the binding site where inputs are connected to outputs within a differential state machine */
 public class RemoteSite {
+  public final int id;
   private RemoteInvocation invocation;
   private RemoteResult backup;
   private RemoteResult value;
   private Object cached;
 
-  public RemoteSite(RemoteInvocation invocation) {
+  public RemoteSite(int id, RemoteInvocation invocation) {
+    this.id = id;
     this.invocation = invocation;
     this.backup =  RemoteResult.NULL;
     this.value = backup;
     this.cached = null;
   }
 
-  public RemoteSite(JsonStreamReader reader) {
+  public RemoteSite(int id, JsonStreamReader reader) {
+    this.id = id;
     patch(reader);
     this.backup = this.value;
+  }
+
+  public RemoteInvocation invocation() {
+    return this.invocation;
+  }
+
+  public <T> NtResult<T> of(Function<String, T> parser) {
+    if (cached == null && this.value.result != null) {
+      cached = parser.apply(this.value.result);
+    }
+    if (cached != null) {
+      return new NtResult<>((T) cached, false, 0, "OK");
+    } else {
+      if (this.value.failure != null) {
+        return new NtResult<>(null, true, this.value.failureCode, this.value.failure);
+      } else {
+        return new NtResult<>(null, false, 0, "In progress");
+      }
+    }
   }
 
   public void deliver(RemoteResult result) {
