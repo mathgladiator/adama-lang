@@ -10,6 +10,7 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.common.Callback;
+import org.adamalang.common.Json;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.ContextSupport;
@@ -43,8 +44,9 @@ public class ServiceRemoteTests {
           "@connected { return true; }" +
           "message M { int x; }" +
           "@service s { std=\"sqr\"; method<M, M> square; }" +
-          "public int x = 400;" +
-          "public formula y = s.square(@no_one, {x:x});";
+          "public int x = 4;" +
+          "public formula y = s.square(@no_one, {x:x});" +
+          "channel foo(M y) { x += y.x; }";
 
   @Test
   public void service_invoke() throws Exception {
@@ -54,8 +56,22 @@ public class ServiceRemoteTests {
       return new SimpleService("sqr", NtClient.NO_ONE) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
+          int _x = 1;
+          JsonStreamReader reader = new JsonStreamReader(request);
+          if (reader.startObject()) {
+            while (reader.notEndOfObject()) {
+              switch (reader.fieldName()) {
+                case "x":
+                  _x = reader.readInteger();
+                  break;
+                default:
+                  reader.skipValue();
+              }
+            }
+          }
+          int x = _x;
           actions.add(() -> {
-            callback.success("{\"x\":1000}");
+            callback.success("{\"x\":" + (x * x)+"}");
           });
         }
       };
@@ -80,22 +96,29 @@ public class ServiceRemoteTests {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
       created.await_success();
-
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
+      Runnable latch4 = streamback.latchAt(5);
       service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
-
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
-      Assert.assertEquals("{\"data\":{\"x\":400,\"y\":{\"failed\":false,\"message\":\"waiting...\",\"code\":0},\"seq\":4}", streamback.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":4,\"y\":{\"failed\":false,\"message\":\"waiting...\",\"code\":0},\"seq\":4}", streamback.get(1));
       Assert.assertEquals(1, actions.size());
-      Runnable action = actions.remove(0);
-      action.run();
+      actions.remove(0).run();
       latch2.run();
-      Assert.assertEquals("{\"data\":{\"y\":{\"message\":\"OK\",\"result\":{\"x\":1000}},\"seq\":4}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"y\":{\"message\":\"OK\",\"result\":{\"x\":16}},\"seq\":4}", streamback.get(2));
+      LatchCallback cb1 = new LatchCallback();
+      streamback.get().send("foo", null, "{\"x\":8}", cb1);
+      cb1.await_success(5);
+      latch3.run();
+      Assert.assertEquals("{\"data\":{\"x\":12,\"y\":{\"message\":\"waiting...\",\"result\":null},\"seq\":5}", streamback.get(3));
+      Assert.assertEquals(1, actions.size());
+      actions.remove(0).run();
+      latch4.run();
+      Assert.assertEquals("{\"data\":{\"y\":{\"message\":\"OK\",\"result\":{\"x\":144}},\"seq\":5}", streamback.get(4));
     } finally {
       service.shutdown();
     }
