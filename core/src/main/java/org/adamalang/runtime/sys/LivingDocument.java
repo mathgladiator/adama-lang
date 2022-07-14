@@ -125,6 +125,11 @@ public abstract class LivingDocument implements RxParent, Caller {
     return __routing.containsKey(routeId);
   }
 
+  /** remove a route id */
+  public void __remoteRoute(int routeId) {
+    __routing.remove(routeId);
+  }
+
   /** generate a new auto key for a table; all tables share the space id space */
   public int __genNextAutoKey() {
     return __auto_table_row_id.bumpUpPre();

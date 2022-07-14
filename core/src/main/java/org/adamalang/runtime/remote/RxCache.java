@@ -19,6 +19,8 @@ import org.adamalang.runtime.natives.NtResult;
 import org.adamalang.runtime.reactives.RxBase;
 import org.adamalang.runtime.sys.LivingDocument;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
@@ -32,6 +34,7 @@ public class RxCache extends RxBase implements RxKillable {
   private final TreeMap<Integer, RemoteSite> additions;
   private final TreeMap<Integer, RemoteSite> sites;
   private final TreeMap<Integer, RemoteSite> removals;
+  private final HashSet<Integer> keep;
 
   public RxCache(LivingDocument __root, RxParent __parent) {
     super(__parent);
@@ -40,23 +43,31 @@ public class RxCache extends RxBase implements RxKillable {
     this.mapping = new TreeMap<>();
     this.removals = new TreeMap<>();
     this.additions = new TreeMap<>();
+    this.keep = new HashSet<>();
   }
 
+  /** wrap a supplier to monitor the cache and keep the cache clean */
   public <Tx> Supplier<Tx> wrap(Supplier<Tx> supplier) {
     return () -> {
-      mark();
+      keep.clear();
       Tx result = supplier.get();
-      sweep();
+      {
+        ArrayList<Integer> axe = new ArrayList<>();
+        for (Map.Entry<Integer, RemoteSite> entry : sites.entrySet()) {
+          int id = entry.getValue().id;
+          if (!keep.contains(id)) {
+            axe.add(id);
+          }
+        }
+        for (int id : axe) {
+          removals.put(id, sites.remove(id));
+        }
+      }
       return result;
     };
   }
 
-  private void mark() {
-  }
-
-  private void sweep() {
-  }
-
+  /** try to answer a service request against the cache, and emit an execution if we need to do some work */
   public <Tx> NtResult<Tx> answer(String service, String method, NtClient who, NtMessageBase request, Function<String, Tx> parser, BiConsumer<Integer, String> execute) {
     // create the invocation
     JsonStreamWriter writer = new JsonStreamWriter();
@@ -76,10 +87,10 @@ public class RxCache extends RxBase implements RxKillable {
       mapping.put(site.invocation(), site);
       __raiseDirty();
     }
+    keep.add(site.id);
 
     // create the result
     NtResult<Tx> result = site.of(parser);
-
 
     // if not done
     if (!result.finished()) {
@@ -92,8 +103,10 @@ public class RxCache extends RxBase implements RxKillable {
     return result;
   }
 
+  /** deliver a result to the cache */
   public boolean deliver(int id, RemoteResult result) {
     RemoteSite site = sites.get(id);
+    root.__remoteRoute(id);
     if (site != null) {
       site.deliver(result);
       __raiseDirty();
