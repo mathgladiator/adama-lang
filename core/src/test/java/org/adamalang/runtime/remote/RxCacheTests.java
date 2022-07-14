@@ -131,7 +131,6 @@ public class RxCacheTests {
     // coverage bits
     cache.__kill();
     Assert.assertFalse(cache.deliver(1000, null));
-
     {
       JsonStreamWriter dump = new JsonStreamWriter();
       cache.__dump(dump);
@@ -155,7 +154,6 @@ public class RxCacheTests {
       Assert.assertEquals("\"X\":{\"3\":null,\"4\":null}", redo2.toString());
       Assert.assertEquals("\"X\":{\"3\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":42}},\"result\":{\"result\":{\"x\":250,\"y\":42},\"failure\":null,\"failure_code\":null}},\"4\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":50}},\"result\":{\"result\":{\"x\":250,\"y\":50},\"failure\":null,\"failure_code\":null}}}", undo2.toString());
     }
-
     {
       JsonStreamWriter dump = new JsonStreamWriter();
       cache.__dump(dump);
@@ -171,6 +169,35 @@ public class RxCacheTests {
       JsonStreamWriter redo = new JsonStreamWriter();
       JsonStreamWriter undo = new JsonStreamWriter();
       clone2.__commit("X", redo, undo);
+      Assert.assertEquals("", redo.toString());
+      Assert.assertEquals("", undo.toString());
+    }
+    {
+      cache.clear();
+      JsonStreamWriter redo = new JsonStreamWriter();
+      JsonStreamWriter undo = new JsonStreamWriter();
+      cache.__commit("X", redo, undo);
+      Assert.assertEquals("\"X\":{\"3\":null,\"4\":null}", redo.toString());
+      Assert.assertEquals("\"X\":{\"3\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":42}},\"result\":{\"result\":{\"x\":250,\"y\":42},\"failure\":null,\"failure_code\":null}},\"4\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":50}},\"result\":{\"result\":{\"x\":250,\"y\":50},\"failure\":null,\"failure_code\":null}}}", undo.toString());
+    }
+
+    Assert.assertEquals("X:null|null", func.get());
+    Assert.assertEquals(2, tasks.size());
+    {
+      JsonStreamWriter redo = new JsonStreamWriter();
+      JsonStreamWriter undo = new JsonStreamWriter();
+      cache.__commit("X", redo, undo);
+      Assert.assertEquals("\"X\":{\"5\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":42}},\"result\":{\"result\":null,\"failure\":null,\"failure_code\":null}},\"6\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":50}},\"result\":{\"result\":null,\"failure\":null,\"failure_code\":null}}}", redo.toString());
+      Assert.assertEquals("\"X\":{\"5\":null,\"6\":null}", undo.toString());
+    }
+    tasks.remove(0).run();
+    tasks.remove(0).run();
+    deliverer.deliverAllTo(cache);
+    cache.__revert();
+    {
+      JsonStreamWriter redo = new JsonStreamWriter();
+      JsonStreamWriter undo = new JsonStreamWriter();
+      cache.__commit("X", redo, undo);
       Assert.assertEquals("", redo.toString());
       Assert.assertEquals("", undo.toString());
     }

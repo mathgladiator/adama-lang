@@ -234,7 +234,11 @@ public class RxCache extends RxBase implements RxKillable {
   }
 
   public void clear() {
+    additions.clear();
     removals.putAll(sites);
     sites.clear();
+    if (removals.size() > 0) {
+      __raiseDirty();
+    }
   }
 }

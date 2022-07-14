@@ -23,5 +23,6 @@ public class ServiceRegistryTests {
     config.put("xyz", new HashMap<>());
     registry.resolve(config);
     Assert.assertTrue(registry.contains("xyz"));
+    Assert.assertTrue(registry.find("nooop") == Service.FAILURE);
   }
 }
