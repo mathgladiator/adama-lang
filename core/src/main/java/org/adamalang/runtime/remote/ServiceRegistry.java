@@ -49,10 +49,6 @@ public class ServiceRegistry {
         return cons.apply(config);
       }
     }
-    Object http = config.get("http");
-    if (http != null && http instanceof String) {
-      // TODO: construct an Http Service
-    }
     return null;
   }
 
