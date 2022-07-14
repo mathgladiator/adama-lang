@@ -11,10 +11,10 @@ package org.adamalang.runtime.remote;
 
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtResult;
 
 /** the output of a service call */
 public class RemoteResult {
+  public static RemoteResult NULL = new RemoteResult(null, null, null);
   public final String result;
   public final String failure;
   public final Integer failureCode;
@@ -71,6 +71,4 @@ public class RemoteResult {
     }
     writer.endObject();
   }
-
-  public static RemoteResult NULL = new RemoteResult(null, null, null);
 }

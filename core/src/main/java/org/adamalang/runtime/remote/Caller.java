@@ -18,5 +18,5 @@ public interface Caller {
   String __getKey();
 
   /** the space of the document making the call */
-  public String __getSpace();
+  String __getSpace();
 }

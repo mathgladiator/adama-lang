@@ -19,8 +19,6 @@ public abstract class SimpleService implements Service {
     this.agent = agent;
   }
 
-  public abstract void request(String method, String request, Callback<String> callback);
-
   @Override
   public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient who, NtMessageBase request, Function<String, T> parser) {
     return cache.answer(name, method, who, request, parser, (id, json) -> {
@@ -42,4 +40,6 @@ public abstract class SimpleService implements Service {
       });
     });
   }
+
+  public abstract void request(String method, String request, Callback<String> callback);
 }

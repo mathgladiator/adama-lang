@@ -18,12 +18,12 @@ import org.adamalang.runtime.natives.NtClient;
 /** how results are delivered from services */
 public interface Deliverer {
 
-  public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback);
-
-  public static final Deliverer FAILURE = new Deliverer() {
+  Deliverer FAILURE = new Deliverer() {
     @Override
     public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
       callback.failure(new ErrorCodeException(ErrorCodes.DELIVERER_FAILURE_NOT_SET));
     }
   };
+
+  void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback);
 }

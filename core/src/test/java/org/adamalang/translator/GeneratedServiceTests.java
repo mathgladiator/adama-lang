@@ -346,6 +346,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    m.__commit(\"m\", __forward, __reverse);");
+    gold.append("\n    x.get();");
     gold.append("\n    __cx.__commit(\"__cx\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -367,6 +368,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __auto_cache_id.__revert();");
     gold.append("\n    __cache.__revert();");
     gold.append("\n    m.__revert();");
+    gold.append("\n    x.get();");
     gold.append("\n    __cx.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -731,12 +733,12 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\nMEMORY:524");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
-    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"m\":\"Hello World\",\"x\":{\"failed\":true,\"message\":\"Service failed to resolve\",\"code\":500},\"seq\":3}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"m\":\"Hello World\",\"x\":{\"failed\":true,\"message\":\"Document is creating\",\"code\":500},\"seq\":3}");
     gold.append("\nNO_ONE|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__time\":\"75\"} need:false in:-75");
     gold.append("\nRANDO: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":4}");
-    gold.append("\n+ RANDO DELTA:{\"data\":{\"m\":\"Hello World\",\"x\":{\"failed\":true,\"message\":\"Service failed to resolve\",\"code\":500},\"seq\":4}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{\"m\":\"Hello World\",\"x\":{\"failed\":true,\"message\":\"Document is creating\",\"code\":500},\"seq\":4}");
     gold.append("\nRANDO|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__time\":\"100\"} need:false in:-100");
     gold.append("\nRANDO|SUCCESS:5");

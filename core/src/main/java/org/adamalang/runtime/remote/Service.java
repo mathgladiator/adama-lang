@@ -18,20 +18,19 @@ import java.util.function.Function;
 /** a service is responsible for executing a method with a message */
 public interface Service {
 
-  /** invoke the given method */
-  public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result);
-
-  public static final Service FAILURE = new Service() {
+  Service FAILURE = new Service() {
     @Override
     public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result) {
       return new NtResult<>(null, true, 500, "Service failed to resolve");
     }
   };
-
-  public static final Service NOT_READY = new Service() {
+  Service NOT_READY = new Service() {
     @Override
     public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result) {
       return new NtResult<>(null, true, 500, "Document is creating");
     }
   };
+
+  /** invoke the given method */
+  <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result);
 }

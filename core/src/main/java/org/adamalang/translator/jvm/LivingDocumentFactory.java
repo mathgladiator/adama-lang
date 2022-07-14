@@ -130,6 +130,7 @@ public class LivingDocumentFactory {
 
   private LivingDocument prepareTestCandidate(final DocumentMonitor monitor, final String entropy) throws Exception {
     final var candidate = create(monitor);
+    candidate.__lateBind("space", "key", Deliverer.FAILURE, ServiceRegistry.NOT_READY);
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.beginObject();
     writer.writeObjectFieldIntro("command");

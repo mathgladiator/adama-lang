@@ -26,7 +26,7 @@ public class RemoteSite {
   public RemoteSite(int id, RemoteInvocation invocation) {
     this.id = id;
     this.invocation = invocation;
-    this.backup =  RemoteResult.NULL;
+    this.backup = RemoteResult.NULL;
     this.value = backup;
     this.cached = null;
   }
@@ -35,6 +35,21 @@ public class RemoteSite {
     this.id = id;
     patch(reader);
     this.backup = this.value;
+  }
+
+  public void patch(JsonStreamReader reader) {
+    if (reader.startObject()) {
+      while (reader.notEndOfObject()) {
+        switch (reader.fieldName()) {
+          case "invoke":
+            invocation = new RemoteInvocation(reader);
+            break;
+          case "result":
+            value = new RemoteResult(reader);
+            break;
+        }
+      }
+    }
   }
 
   public RemoteInvocation invocation() {
@@ -58,21 +73,6 @@ public class RemoteSite {
 
   public void deliver(RemoteResult result) {
     this.value = result;
-  }
-
-  public void patch(JsonStreamReader reader) {
-    if (reader.startObject()) {
-      while (reader.notEndOfObject()) {
-        switch (reader.fieldName()) {
-          case "invoke":
-            invocation = new RemoteInvocation(reader);
-            break;
-          case "result":
-            value = new RemoteResult(reader);
-            break;
-        }
-      }
-    }
   }
 
   public void dump(JsonStreamWriter writer) {

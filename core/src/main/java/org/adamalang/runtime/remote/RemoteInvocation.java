@@ -59,16 +59,16 @@ public class RemoteInvocation implements Comparable<RemoteInvocation> {
   }
 
   @Override
+  public int hashCode() {
+    return Objects.hash(service, method, who, parameter);
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     RemoteInvocation that = (RemoteInvocation) o;
     return Objects.equals(service, that.service) && Objects.equals(method, that.method) && Objects.equals(who, that.who) && Objects.equals(parameter, that.parameter);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(service, method, who, parameter);
   }
 
   @Override

@@ -13,7 +13,6 @@ import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.natives.NtResult;
@@ -22,7 +21,9 @@ import org.adamalang.runtime.sys.LivingDocument;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /** a cache of service calls */
 public class RxCache extends RxBase implements RxKillable {
@@ -48,6 +49,12 @@ public class RxCache extends RxBase implements RxKillable {
       sweep();
       return result;
     };
+  }
+
+  private void mark() {
+  }
+
+  private void sweep() {
   }
 
   public <Tx> NtResult<Tx> answer(String service, String method, NtClient who, NtMessageBase request, Function<String, Tx> parser, BiConsumer<Integer, String> execute) {
@@ -83,12 +90,6 @@ public class RxCache extends RxBase implements RxKillable {
       }
     }
     return result;
-  }
-
-  private void mark() {
-  }
-
-  private void sweep() {
   }
 
   public boolean deliver(int id, RemoteResult result) {
@@ -150,19 +151,6 @@ public class RxCache extends RxBase implements RxKillable {
   }
 
   @Override
-  public void __revert() {
-    if (__isDirty()) {
-      additions.clear();
-      sites.putAll(removals);
-      removals.clear();
-      for (Map.Entry<Integer, RemoteSite> entry : sites.entrySet()) {
-        entry.getValue().revert();
-      }
-      __lowerDirtyRevert();
-    }
-  }
-
-  @Override
   public void __dump(JsonStreamWriter writer) {
     writer.beginObject();
     for (Map.Entry<Integer, RemoteSite> entry : sites.entrySet()) {
@@ -203,6 +191,19 @@ public class RxCache extends RxBase implements RxKillable {
         }
       }
       index();
+    }
+  }
+
+  @Override
+  public void __revert() {
+    if (__isDirty()) {
+      additions.clear();
+      sites.putAll(removals);
+      removals.clear();
+      for (Map.Entry<Integer, RemoteSite> entry : sites.entrySet()) {
+        entry.getValue().revert();
+      }
+      __lowerDirtyRevert();
     }
   }
 

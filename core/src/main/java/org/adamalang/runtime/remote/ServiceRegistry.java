@@ -17,6 +17,16 @@ import java.util.function.Function;
 /** a service registry maps service names to services */
 public class ServiceRegistry {
   public static TreeMap<String, Function<HashMap<String, Object>, Service>> REGISTRY = new TreeMap<>();
+  public static ServiceRegistry NOT_READY = new ServiceRegistry() {
+    @Override
+    public Service find(String name) {
+      return Service.NOT_READY;
+    }
+
+    @Override
+    public void resolve(HashMap<String, HashMap<String, Object>> servicesConfig) {
+    }
+  };
   private final TreeMap<String, Service> services;
 
   public ServiceRegistry() {
@@ -36,17 +46,6 @@ public class ServiceRegistry {
     return services.containsKey(name);
   }
 
-  private Service resolveService(HashMap<String, Object> config) {
-    Object std = config.get("std");
-    if (std != null && std instanceof String) {
-      Function<HashMap<String, Object>, Service> cons = REGISTRY.get((String) std);
-      if (cons != null) {
-        return cons.apply(config);
-      }
-    }
-    return null;
-  }
-
   public void resolve(HashMap<String, HashMap<String, Object>> servicesConfig) {
     for (Map.Entry<String, HashMap<String, Object>> entry : servicesConfig.entrySet()) {
       Service resolved = resolveService(entry.getValue());
@@ -57,14 +56,14 @@ public class ServiceRegistry {
     }
   }
 
-  public static ServiceRegistry NOT_READY = new ServiceRegistry() {
-    @Override
-    public Service find(String name) {
-      return Service.NOT_READY;
+  private Service resolveService(HashMap<String, Object> config) {
+    Object std = config.get("std");
+    if (std != null && std instanceof String) {
+      Function<HashMap<String, Object>, Service> cons = REGISTRY.get((String) std);
+      if (cons != null) {
+        return cons.apply(config);
+      }
     }
-
-    @Override
-    public void resolve(HashMap<String, HashMap<String, Object>> servicesConfig) {
-    }
-  };
+    return null;
+  }
 }
