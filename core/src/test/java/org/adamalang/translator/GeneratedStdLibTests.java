@@ -194,6 +194,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          case \"__auto_cache_id\":");
     gold.append("\n            __auto_cache_id.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__cache\":");
+    gold.append("\n            __cache.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -284,6 +287,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          case \"__auto_cache_id\":");
     gold.append("\n            __auto_cache_id.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__cache\":");
+    gold.append("\n            __cache.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -348,6 +354,8 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_gen.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_cache_id\");");
     gold.append("\n    __auto_cache_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__cache\");");
+    gold.append("\n    __cache.__dump(__writer);");
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
@@ -369,6 +377,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
+    gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    x1.__commit(\"x1\", __forward, __reverse);");
     gold.append("\n    x2.__commit(\"x2\", __forward, __reverse);");
     gold.append("\n    x3.__commit(\"x3\", __forward, __reverse);");
@@ -396,6 +405,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __auto_gen.__revert();");
     gold.append("\n    __auto_cache_id.__revert();");
+    gold.append("\n    __cache.__revert();");
     gold.append("\n    x1.__revert();");
     gold.append("\n    x2.__revert();");
     gold.append("\n    x3.__revert();");
@@ -960,10 +970,10 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:2392");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"x1\":\"\\\"\",\"x2\":\" \",\"x3\":\"A\",\"x4\":\"nope\",\"z1\":0.0015926529164868282,\"z2\":\"123\",\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3}},\"d1\":6,\"d2\":12.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0}");
+    gold.append("\n{\"x1\":\"\\\"\",\"x2\":\" \",\"x3\":\"A\",\"x4\":\"nope\",\"z1\":0.0015926529164868282,\"z2\":\"123\",\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3}},\"d1\":6,\"d2\":12.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"x1\":\"\\\"\",\"x2\":\" \",\"x3\":\"A\",\"x4\":\"nope\",\"z1\":0.0015926529164868282,\"z2\":\"123\",\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3}},\"d1\":6,\"d2\":12.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0}");
-    gold.append("\n{\"x1\":\"\\\"\",\"x2\":\" \",\"x3\":\"A\",\"x4\":\"nope\",\"z1\":0.0015926529164868282,\"z2\":\"123\",\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3}},\"d1\":6,\"d2\":12.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0}");
+    gold.append("\n{\"x1\":\"\\\"\",\"x2\":\" \",\"x3\":\"A\",\"x4\":\"nope\",\"z1\":0.0015926529164868282,\"z2\":\"123\",\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3}},\"d1\":6,\"d2\":12.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"x1\":\"\\\"\",\"x2\":\" \",\"x3\":\"A\",\"x4\":\"nope\",\"z1\":0.0015926529164868282,\"z2\":\"123\",\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3}},\"d1\":6,\"d2\":12.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -1187,6 +1197,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          case \"__auto_cache_id\":");
     gold.append("\n            __auto_cache_id.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__cache\":");
+    gold.append("\n            __cache.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -1295,6 +1308,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          case \"__auto_cache_id\":");
     gold.append("\n            __auto_cache_id.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__cache\":");
+    gold.append("\n            __cache.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -1371,6 +1387,8 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_gen.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_cache_id\");");
     gold.append("\n    __auto_cache_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__cache\");");
+    gold.append("\n    __cache.__dump(__writer);");
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
@@ -1392,6 +1410,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
+    gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    rows.__commit(\"rows\", __forward, __reverse);");
     gold.append("\n    y1.__commit(\"y1\", __forward, __reverse);");
     gold.append("\n    y2.__commit(\"y2\", __forward, __reverse);");
@@ -1425,6 +1444,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __auto_gen.__revert();");
     gold.append("\n    __auto_cache_id.__revert();");
+    gold.append("\n    __cache.__revert();");
     gold.append("\n    rows.__revert();");
     gold.append("\n    y1.__revert();");
     gold.append("\n    y2.__revert();");
@@ -1991,10 +2011,10 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:2634");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3},\"4\":{\"x\":4,\"y\":100.0,\"id\":4},\"5\":{\"x\":5,\"y\":23.0,\"id\":5},\"6\":{\"x\":6,\"y\":452.45,\"id\":6}},\"y1\":611.45,\"y2\":26.0,\"y3\":452.45,\"y4\":1.0,\"y5\":1.0,\"y6\":452.45,\"y7\":101.90833333333335,\"x1\":21,\"x2\":3,\"x3\":6,\"x4\":1,\"x5\":1,\"x6\":6,\"x7\":3.5,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6,\"__auto_gen\":0,\"__auto_cache_id\":0}");
+    gold.append("\n{\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3},\"4\":{\"x\":4,\"y\":100.0,\"id\":4},\"5\":{\"x\":5,\"y\":23.0,\"id\":5},\"6\":{\"x\":6,\"y\":452.45,\"id\":6}},\"y1\":611.45,\"y2\":26.0,\"y3\":452.45,\"y4\":1.0,\"y5\":1.0,\"y6\":452.45,\"y7\":101.90833333333335,\"x1\":21,\"x2\":3,\"x3\":6,\"x4\":1,\"x5\":1,\"x6\":6,\"x7\":3.5,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3},\"4\":{\"x\":4,\"y\":100.0,\"id\":4},\"5\":{\"x\":5,\"y\":23.0,\"id\":5},\"6\":{\"x\":6,\"y\":452.45,\"id\":6}},\"y1\":611.45,\"y2\":26.0,\"y3\":452.45,\"y4\":1.0,\"y5\":1.0,\"y6\":452.45,\"y7\":101.90833333333335,\"x1\":21,\"x2\":3,\"x3\":6,\"x4\":1,\"x5\":1,\"x6\":6,\"x7\":3.5,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6,\"__auto_gen\":0,\"__auto_cache_id\":0}");
-    gold.append("\n{\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3},\"4\":{\"x\":4,\"y\":100.0,\"id\":4},\"5\":{\"x\":5,\"y\":23.0,\"id\":5},\"6\":{\"x\":6,\"y\":452.45,\"id\":6}},\"y1\":611.45,\"y2\":26.0,\"y3\":452.45,\"y4\":1.0,\"y5\":1.0,\"y6\":452.45,\"y7\":101.90833333333335,\"x1\":21,\"x2\":3,\"x3\":6,\"x4\":1,\"x5\":1,\"x6\":6,\"x7\":3.5,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6,\"__auto_gen\":0,\"__auto_cache_id\":0}");
+    gold.append("\n{\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3},\"4\":{\"x\":4,\"y\":100.0,\"id\":4},\"5\":{\"x\":5,\"y\":23.0,\"id\":5},\"6\":{\"x\":6,\"y\":452.45,\"id\":6}},\"y1\":611.45,\"y2\":26.0,\"y3\":452.45,\"y4\":1.0,\"y5\":1.0,\"y6\":452.45,\"y7\":101.90833333333335,\"x1\":21,\"x2\":3,\"x3\":6,\"x4\":1,\"x5\":1,\"x6\":6,\"x7\":3.5,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"rows\":{\"1\":{\"x\":1,\"y\":29.0,\"id\":1},\"2\":{\"x\":2,\"y\":6.0,\"id\":2},\"3\":{\"x\":3,\"y\":1.0,\"id\":3},\"4\":{\"x\":4,\"y\":100.0,\"id\":4},\"5\":{\"x\":5,\"y\":23.0,\"id\":5},\"6\":{\"x\":6,\"y\":452.45,\"id\":6}},\"y1\":611.45,\"y2\":26.0,\"y3\":452.45,\"y4\":1.0,\"y5\":1.0,\"y6\":452.45,\"y7\":101.90833333333335,\"x1\":21,\"x2\":3,\"x3\":6,\"x4\":1,\"x5\":1,\"x6\":6,\"x7\":3.5,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":6,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -2188,6 +2208,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          case \"__auto_cache_id\":");
     gold.append("\n            __auto_cache_id.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__cache\":");
+    gold.append("\n            __cache.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -2281,6 +2304,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          case \"__auto_cache_id\":");
     gold.append("\n            __auto_cache_id.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__cache\":");
+    gold.append("\n            __cache.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__dedupe\":");
     gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
@@ -2347,6 +2373,8 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_gen.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_cache_id\");");
     gold.append("\n    __auto_cache_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__cache\");");
+    gold.append("\n    __cache.__dump(__writer);");
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
@@ -2368,6 +2396,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
+    gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    x1.__commit(\"x1\", __forward, __reverse);");
     gold.append("\n    x2.__commit(\"x2\", __forward, __reverse);");
     gold.append("\n    x3.__commit(\"x3\", __forward, __reverse);");
@@ -2396,6 +2425,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __auto_gen.__revert();");
     gold.append("\n    __auto_cache_id.__revert();");
+    gold.append("\n    __cache.__revert();");
     gold.append("\n    x1.__revert();");
     gold.append("\n    x2.__revert();");
     gold.append("\n    x3.__revert();");
@@ -2698,10 +2728,10 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:2222");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"x1\":\"321\",\"x2\":\"mmmm\",\"x3\":\"mmmmzmmmmz\",\"x4\":\"mm\",\"x5\":\"212121212121\",\"x6\":\"NOPE\",\"x7\":\"NOPE\",\"x8\":\"KO\",\"x9\":\"b\",\"x10\":\"BCD\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0}");
+    gold.append("\n{\"x1\":\"321\",\"x2\":\"mmmm\",\"x3\":\"mmmmzmmmmz\",\"x4\":\"mm\",\"x5\":\"212121212121\",\"x6\":\"NOPE\",\"x7\":\"NOPE\",\"x8\":\"KO\",\"x9\":\"b\",\"x10\":\"BCD\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"x1\":\"321\",\"x2\":\"mmmm\",\"x3\":\"mmmmzmmmmz\",\"x4\":\"mm\",\"x5\":\"212121212121\",\"x6\":\"NOPE\",\"x7\":\"NOPE\",\"x8\":\"KO\",\"x9\":\"b\",\"x10\":\"BCD\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0}");
-    gold.append("\n{\"x1\":\"321\",\"x2\":\"mmmm\",\"x3\":\"mmmmzmmmmz\",\"x4\":\"mm\",\"x5\":\"212121212121\",\"x6\":\"NOPE\",\"x7\":\"NOPE\",\"x8\":\"KO\",\"x9\":\"b\",\"x10\":\"BCD\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0}");
+    gold.append("\n{\"x1\":\"321\",\"x2\":\"mmmm\",\"x3\":\"mmmmzmmmmz\",\"x4\":\"mm\",\"x5\":\"212121212121\",\"x6\":\"NOPE\",\"x7\":\"NOPE\",\"x8\":\"KO\",\"x9\":\"b\",\"x10\":\"BCD\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"x1\":\"321\",\"x2\":\"mmmm\",\"x3\":\"mmmmzmmmmz\",\"x4\":\"mm\",\"x5\":\"212121212121\",\"x6\":\"NOPE\",\"x7\":\"NOPE\",\"x8\":\"KO\",\"x9\":\"b\",\"x10\":\"BCD\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");

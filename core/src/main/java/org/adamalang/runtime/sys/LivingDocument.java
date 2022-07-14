@@ -76,6 +76,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private String __key;
   private final TreeMap<Integer, RxCache> __routing;
   private long lastRouteCreated;
+  protected final RxCache __cache;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -97,6 +98,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __queue = new ArrayList<>();
     __futures = new OutstandingFutureTracker(__auto_future_id);
     __trackedViews = new HashMap<>();
+    __cache = new RxCache(this, this);
     __code_cost = 0;
     __trace = new ArrayList<>();
     __clients = new TreeMap<>();

@@ -18,6 +18,7 @@ import org.adamalang.runtime.sys.LivingDocument;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 
 /** a cache of service calls */
 public class RxCache extends RxBase implements RxKillable {
@@ -41,6 +42,21 @@ public class RxCache extends RxBase implements RxKillable {
     additions.put(id, new RemoteSite(invocation));
     __raiseDirty();
     return id;
+  }
+
+  public <Tx> Supplier<Tx> wrap(Supplier<Tx> supplier) {
+    return () -> {
+      mark();
+      Tx result = supplier.get();
+      sweep();
+      return result;
+    };
+  }
+
+  private void mark() {
+  }
+
+  private void sweep() {
   }
 
   public boolean deliver(int id, RemoteResult result) {
