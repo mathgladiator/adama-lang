@@ -31,6 +31,16 @@ public class DList<dTy extends DeltaNode> implements DeltaNode {
     this.emittedSize = 0;
   }
 
+  /** memory usage */
+  @Override
+  public long __memory() {
+    long memory = 128;
+    for (dTy item : cachedDeltas) {
+      memory += item.__memory();
+    }
+    return memory;
+  }
+
   /** the list is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (emittedSize > 0) {
@@ -61,15 +71,5 @@ public class DList<dTy extends DeltaNode> implements DeltaNode {
       writer.planField("@s").writeInt(size);
       emittedSize = cachedDeltas.size();
     }
-  }
-
-  /** memory usage */
-  @Override
-  public long __memory() {
-    long memory = 128;
-    for (dTy item : cachedDeltas) {
-      memory += item.__memory();
-    }
-    return memory;
   }
 }

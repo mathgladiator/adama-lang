@@ -34,17 +34,17 @@ public class DDynamic implements DeltaNode {
     prior = null;
   }
 
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return (prior != null ? prior.memory() : 0) + 32;
+  }
+
   /** the dynamic tree is visible, so show changes */
   public void show(final NtDynamic value, final PrivateLazyDeltaWriter writer) {
     if (value == null || !value.equals(prior)) {
       writer.injectJson(value.json);
     }
     prior = value;
-  }
-
-  /** memory usage */
-  @Override
-  public long __memory() {
-    return (prior != null ? prior.memory() : 0) + 32;
   }
 }

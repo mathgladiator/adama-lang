@@ -54,13 +54,6 @@ public class Text {
     this.copy = null;
   }
 
-  /** treat this Text as a backup, create a new value with the uncommitted changes and nuke the uncommited changes in this version */
-  public Text forkValue() {
-    Text newValue = new Text(this);
-    uncommitedChanges.clear();
-    return newValue;
-  }
-
   /** read from JSON */
   public Text(JsonStreamReader reader, int gen) {
     this.fragments = new HashMap<>();
@@ -132,10 +125,14 @@ public class Text {
     }
   }
 
-  /** commit the uncommited changes to commited */
-  public void commit() {
-    changes.putAll(uncommitedChanges);
+  /** set the value of the string to the value provided using the gen marker to denote uniqueness */
+  public void set(String str, int gen) {
+    setBase(str);
+    changes.clear();
     uncommitedChanges.clear();
+    this.seq = 0;
+    this.gen = gen;
+    this.copy = new SeqString(seq, str);
   }
 
   /** internal: reformulate the string as a series of maps; only touches fragments and order */
@@ -159,14 +156,17 @@ public class Text {
     }
   }
 
-  /** set the value of the string to the value provided using the gen marker to denote uniqueness */
-  public void set(String str, int gen) {
-    setBase(str);
-    changes.clear();
+  /** treat this Text as a backup, create a new value with the uncommitted changes and nuke the uncommited changes in this version */
+  public Text forkValue() {
+    Text newValue = new Text(this);
     uncommitedChanges.clear();
-    this.seq = 0;
-    this.gen = gen;
-    this.copy = new SeqString(seq, str);
+    return newValue;
+  }
+
+  /** commit the uncommited changes to commited */
+  public void commit() {
+    changes.putAll(uncommitedChanges);
+    uncommitedChanges.clear();
   }
 
   /** write the text entirely to the given writer */
@@ -235,7 +235,7 @@ public class Text {
 
   public void compact(double ratio) {
     StringBuilder sb = new StringBuilder();
-    for(int k = 0; k < order.size(); k++) {
+    for (int k = 0; k < order.size(); k++) {
       if (k > 0) {
         sb.append("\n");
       }
@@ -261,7 +261,7 @@ public class Text {
   public SeqString get() {
     if (copy == null) {
       StringBuilder sb = new StringBuilder();
-      for(int k = 0; k < order.size(); k++) {
+      for (int k = 0; k < order.size(); k++) {
         if (k > 0) {
           sb.append("\n");
         }

@@ -34,6 +34,12 @@ public class DAsset implements DeltaNode {
     prior = null;
   }
 
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return (prior != null ? prior.memory() : 0) + 32;
+  }
+
   /** the asset is visible, so show changes */
   public void show(final NtAsset value, final PrivateLazyDeltaWriter writer) {
     if (writer.assetIdEncoder != null) {
@@ -49,11 +55,5 @@ public class DAsset implements DeltaNode {
       }
     }
     prior = value;
-  }
-
-  /** memory usage */
-  @Override
-  public long __memory() {
-    return (prior != null ? prior.memory() : 0) + 32;
   }
 }

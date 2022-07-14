@@ -19,7 +19,8 @@ import java.util.Map;
 
 public class LibDynamic {
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> str(NtDynamic dyn, String field) {
+  public static @HiddenType(clazz = String.class)
+  NtMaybe<String> str(NtDynamic dyn, String field) {
     if (dyn.cached() instanceof Map) {
       Object value = ((Map<?, ?>) dyn.cached()).get(field);
       if (value instanceof String) {
@@ -30,7 +31,8 @@ public class LibDynamic {
   }
 
   @Extension
-  public static @HiddenType(clazz = NtDynamic.class) NtMaybe<NtDynamic> toDynamic(String json) {
+  public static @HiddenType(clazz = NtDynamic.class)
+  NtMaybe<NtDynamic> toDynamic(String json) {
     try {
       return new NtMaybe<>(new JsonStreamReader(json).readNtDynamic());
     } catch (Exception ex) {

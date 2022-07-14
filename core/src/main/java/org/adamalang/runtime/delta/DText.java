@@ -43,6 +43,12 @@ public class DText implements DeltaNode {
     gen = 0;
   }
 
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return 1024;
+  }
+
   public void show(final RxText value, final PrivateLazyDeltaWriter writer) {
     if (value.current().gen != gen) {
       this.init = false;
@@ -72,11 +78,5 @@ public class DText implements DeltaNode {
       seq = val.seq;
     }
     obj.end();
-  }
-
-  /** memory usage */
-  @Override
-  public long __memory() {
-    return 1024;
   }
 }

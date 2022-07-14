@@ -33,17 +33,17 @@ public class DDouble implements DeltaNode {
     prior = null;
   }
 
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return 40;
+  }
+
   /** the double is visible, so show changes */
   public void show(final double value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || value != prior) {
       writer.writeDouble(value);
     }
     prior = value;
-  }
-
-  /** memory usage */
-  @Override
-  public long __memory() {
-    return 40;
   }
 }

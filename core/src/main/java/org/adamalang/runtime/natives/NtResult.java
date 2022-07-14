@@ -11,10 +11,10 @@ package org.adamalang.runtime.natives;
 
 /** a result for an async operation */
 public class NtResult<T> {
-  private T value;
-  private boolean failed;
-  private int failureCode;
-  private String message;
+  private final T value;
+  private final boolean failed;
+  private final int failureCode;
+  private final String message;
 
   public NtResult(final T value, boolean failed, int failureCode, String message) {
     this.value = value;

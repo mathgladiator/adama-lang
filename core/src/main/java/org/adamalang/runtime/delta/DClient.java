@@ -34,6 +34,12 @@ public class DClient implements DeltaNode {
     prior = null;
   }
 
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return (prior != null ? prior.memory() : 0) + 32;
+  }
+
   /** the client is visible, so show changes */
   public void show(final NtClient value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || !value.equals(prior)) {
@@ -44,11 +50,5 @@ public class DClient implements DeltaNode {
       obj.end();
     }
     prior = value;
-  }
-
-  /** memory usage */
-  @Override
-  public long __memory() {
-    return (prior != null ? prior.memory() : 0) + 32;
   }
 }

@@ -20,15 +20,6 @@ public class Join implements Operand {
   }
 
   @Override
-  public String get() {
-    StringBuilder sb = new StringBuilder();
-    for (Operand op : children) {
-      sb.append(op.get());
-    }
-    return sb.toString();
-  }
-
-  @Override
   public void transposeRangeIntoJoin(int at, int length, Join join) {
     int curAt = 0;
     for (Operand child : children) {
@@ -40,6 +31,15 @@ public class Join implements Operand {
       }
       curAt += curLen;
     }
+  }
+
+  @Override
+  public String get() {
+    StringBuilder sb = new StringBuilder();
+    for (Operand op : children) {
+      sb.append(op.get());
+    }
+    return sb.toString();
   }
 
   @Override

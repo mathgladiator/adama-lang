@@ -43,6 +43,15 @@ import java.util.function.Consumer;
 public class DurableLivingDocument {
   public static final int MAGIC_MAXIMUM_DOCUMENT_QUEUE = 256;
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(DurableLivingDocument.class);
+  private static final Callback<LivingDocumentChange> DONT_CARE_CHANGE = new Callback<LivingDocumentChange>() {
+    @Override
+    public void success(LivingDocumentChange value) {
+    }
+
+    @Override
+    public void failure(ErrorCodeException ex) {
+    }
+  };
   public final DocumentThreadBase base;
   public final Key key;
   private final ArrayDeque<IngestRequest> pending;
@@ -114,6 +123,12 @@ public class DurableLivingDocument {
     return forge(command, who, true);
   }
 
+  private String forgeInvalidate() {
+    final var request = forge("invalidate", null);
+    request.endObject();
+    return request.toString();
+  }
+
   public JsonStreamWriter forge(final String command, final NtClient who, boolean activity) {
     if (activity) {
       this.lastActivityMS = base.time.nowMilliseconds();
@@ -129,12 +144,6 @@ public class DurableLivingDocument {
       writer.writeNtClient(who);
     }
     return writer;
-  }
-
-  private String forgeInvalidate() {
-    final var request = forge("invalidate", null);
-    request.endObject();
-    return request.toString();
   }
 
   public static void load(final Key key, final LivingDocumentFactory factory, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
@@ -154,6 +163,20 @@ public class DurableLivingDocument {
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, EXLOGGER));
     }
+  }
+
+  private static Callback<LivingDocumentChange> JUST_SEQ(Callback<Integer> callback) {
+    return new Callback<LivingDocumentChange>() {
+      @Override
+      public void success(LivingDocumentChange value) {
+        callback.success(value.update.seqEnd);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    };
   }
 
   public JsonStreamWriter forgeWithContext(final String command, final CoreRequestContext context) {
@@ -735,28 +758,4 @@ public class DurableLivingDocument {
       return attempts++ < 5;
     }
   }
-
-  private static Callback<LivingDocumentChange> JUST_SEQ(Callback<Integer> callback) {
-    return new Callback<LivingDocumentChange>() {
-      @Override
-      public void success(LivingDocumentChange value) {
-        callback.success(value.update.seqEnd);
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    };
-  }
-
-  private static final Callback<LivingDocumentChange> DONT_CARE_CHANGE = new Callback<LivingDocumentChange>() {
-    @Override
-    public void success(LivingDocumentChange value) {
-    }
-
-    @Override
-    public void failure(ErrorCodeException ex) {
-    }
-  };
 }

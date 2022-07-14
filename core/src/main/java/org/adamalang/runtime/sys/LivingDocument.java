@@ -58,9 +58,11 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final RxInt32 __seq;
   protected final RxString __state;
   protected final RxInt64 __time;
+  protected final RxCache __cache;
   private final TreeMap<NtClient, Integer> __clients;
   private final HashMap<NtClient, ArrayList<PrivateView>> __trackedViews;
   private final HashMap<String, Long> __dedupe;
+  private final TreeMap<Integer, RxCache> __routing;
   protected int __assertionFailures = 0;
   protected int __assertionTotal = 0;
   protected int __code_cost;
@@ -71,9 +73,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private String __preemptedStateOnNextComputeBlocked = null;
   private String __space;
   private String __key;
-  private final TreeMap<Integer, RxCache> __routing;
   private long lastRouteCreated;
-  protected final RxCache __cache;
   private Deliverer __deliverer;
 
   public LivingDocument(final DocumentMonitor __monitor) {
@@ -118,6 +118,11 @@ public abstract class LivingDocument implements RxParent, Caller {
   public int __createRouteId() {
     lastRouteCreated = __timeNow();
     return __auto_cache_id.bumpUpPre();
+  }
+
+  /** exposed: get the current time */
+  protected long __timeNow() {
+    return __time.get().longValue();
   }
 
   /** is the given route id in-flight */
@@ -601,6 +606,11 @@ public abstract class LivingDocument implements RxParent, Caller {
   public void __raiseDirty() {
   }
 
+  /** for the reactive children, the root is always alive */
+  public boolean __isAlive() {
+    return true;
+  }
+
   /** the code will vomit up a signal to destroy itself. This must be caught at a higher level. */
   protected void __destroyDocument() {
     throw new PerformDocumentDeleteException();
@@ -649,11 +659,6 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   /** code generated: route the given message */
   protected abstract void __route(AsyncTask task);
-
-  /** for the reactive children, the root is always alive */
-  public boolean __isAlive() {
-    return true;
-  }
 
   /**
    * available to the test runner... me thinks this can be done... mucho better (requires precommit)
@@ -722,11 +727,6 @@ public abstract class LivingDocument implements RxParent, Caller {
       __blocked.set(true);
       __test_progress();
     }
-  }
-
-  /** exposed: get the current time */
-  protected long __timeNow() {
-    return __time.get().longValue();
   }
 
   /** exposed: for code coverage */

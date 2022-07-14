@@ -33,17 +33,17 @@ public class DInt64 implements DeltaNode {
     prior = null;
   }
 
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return 40;
+  }
+
   /** the int64 is visible, so show changes */
   public void show(final long value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || value != prior.longValue()) {
       writer.writeFastString("" + value);
     }
     prior = value;
-  }
-
-  /** memory usage */
-  @Override
-  public long __memory() {
-    return 40;
   }
 }

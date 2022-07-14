@@ -23,10 +23,8 @@ public class LivingDocumentChange {
 
   /** the data change */
   public final RemoteDocumentUpdate update;
-
-  private final List<Broadcast> broadcasts;
-
   public final Object response;
+  private final List<Broadcast> broadcasts;
 
   /** wrap both the update and broadcasts into a nice package */
   public LivingDocumentChange(RemoteDocumentUpdate update, List<Broadcast> broadcasts, Object response) {

@@ -29,25 +29,6 @@ public class WebPutRaw {
     this.bodyJson = bodyJson;
   }
 
-  public void writeBody(JsonStreamWriter writer) {
-    writer.writeObjectFieldIntro("put");
-    writer.beginObject();
-    writer.writeObjectFieldIntro("uri");
-    writer.writeString(uri);
-    writer.writeObjectFieldIntro("headers");
-    writer.beginObject();
-    for (Map.Entry<String, String> entry : headers.entrySet()) {
-      writer.writeObjectFieldIntro(entry.getKey());
-      writer.writeString(entry.getValue());
-    }
-    writer.endObject();
-    writer.writeObjectFieldIntro("parameters");
-    writer.writeNtDynamic(parameters);
-    writer.writeObjectFieldIntro("bodyJson");
-    writer.writeNtDynamic(new NtDynamic(bodyJson));
-    writer.endObject();
-  }
-
   public static WebPutRaw read(JsonStreamReader reader) {
     String uri = null;
     NtDynamic parameters = null;
@@ -84,5 +65,24 @@ public class WebPutRaw {
       return new WebPutRaw(uri, headers, parameters, bodyJson);
     }
     return null;
+  }
+
+  public void writeBody(JsonStreamWriter writer) {
+    writer.writeObjectFieldIntro("put");
+    writer.beginObject();
+    writer.writeObjectFieldIntro("uri");
+    writer.writeString(uri);
+    writer.writeObjectFieldIntro("headers");
+    writer.beginObject();
+    for (Map.Entry<String, String> entry : headers.entrySet()) {
+      writer.writeObjectFieldIntro(entry.getKey());
+      writer.writeString(entry.getValue());
+    }
+    writer.endObject();
+    writer.writeObjectFieldIntro("parameters");
+    writer.writeNtDynamic(parameters);
+    writer.writeObjectFieldIntro("bodyJson");
+    writer.writeNtDynamic(new NtDynamic(bodyJson));
+    writer.endObject();
   }
 }

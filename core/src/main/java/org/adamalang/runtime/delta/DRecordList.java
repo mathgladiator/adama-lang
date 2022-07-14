@@ -31,6 +31,16 @@ public class DRecordList<dRecordTy extends DeltaNode> implements DeltaNode {
     this.cache.clear();
   }
 
+  /** memory usage */
+  @Override
+  public long __memory() {
+    long memory = order.size() * 32;
+    for (Map.Entry<Integer, dRecordTy> entry : cache.entrySet()) {
+      memory += 40 + entry.getValue().__memory();
+    }
+    return memory;
+  }
+
   /** start walking the records */
   public Walk begin() {
     return new Walk();
@@ -53,16 +63,6 @@ public class DRecordList<dRecordTy extends DeltaNode> implements DeltaNode {
       cache.clear();
       writer.writeNull();
     }
-  }
-
-  /** memory usage */
-  @Override
-  public long __memory() {
-    long memory = order.size() * 32;
-    for (Map.Entry<Integer, dRecordTy> entry : cache.entrySet()) {
-      memory += 40 + entry.getValue().__memory();
-    }
-    return memory;
   }
 
   public class Walk {

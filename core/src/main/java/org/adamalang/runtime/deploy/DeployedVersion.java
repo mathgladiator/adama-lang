@@ -49,15 +49,15 @@ public class DeployedVersion {
   }
 
   @Override
+  public int hashCode() {
+    return Objects.hash(main, includes);
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     DeployedVersion deployedVersion = (DeployedVersion) o;
     return Objects.equals(main, deployedVersion.main) && Objects.equals(includes, deployedVersion.includes);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(main, includes);
   }
 }

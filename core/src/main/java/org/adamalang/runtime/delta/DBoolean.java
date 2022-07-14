@@ -33,17 +33,17 @@ public class DBoolean implements DeltaNode {
     prior = null;
   }
 
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return 40;
+  }
+
   /** the boolean is visible, so show changes */
   public void show(final boolean value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || value != prior.booleanValue()) {
       writer.writeBool(value);
     }
     prior = value;
-  }
-
-  /** memory usage */
-  @Override
-  public long __memory() {
-    return 40;
   }
 }

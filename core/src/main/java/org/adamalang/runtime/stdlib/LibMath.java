@@ -93,7 +93,7 @@ public class LibMath {
     return Math.sqrt(x.real * x.real + x.imaginary * x.imaginary);
   }
 
-  public static boolean isTrue(@HiddenType(clazz=Boolean.class) NtMaybe<Boolean> x) {
+  public static boolean isTrue(@HiddenType(clazz = Boolean.class) NtMaybe<Boolean> x) {
     if (x.has()) {
       return x.get();
     }

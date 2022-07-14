@@ -18,13 +18,13 @@ public class Raw implements Operand {
   }
 
   @Override
-  public String get() {
-    return str;
+  public void transposeRangeIntoJoin(int at, int length, Join join) {
+    join.children.add(new Range(this, at, length));
   }
 
   @Override
-  public void transposeRangeIntoJoin(int at, int length, Join join) {
-    join.children.add(new Range(this, at, length));
+  public String get() {
+    return str;
   }
 
   @Override

@@ -72,30 +72,6 @@ public class RxText extends RxBase {
     reverseDelta.endObject();
   }
 
-  private static <T> void __commitDiffMap(HashMap<T, String> prior, HashMap<T, String> next, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
-    HashSet<T> nuke = new HashSet<>(prior.keySet());
-    for (Map.Entry<T, String> entryNew : next.entrySet()) {
-      nuke.remove(entryNew.getKey());
-      String old = prior.get(entryNew.getKey());
-      if (!entryNew.getValue().equals(old)) {
-        forwardDelta.writeObjectFieldIntro(entryNew.getKey());
-        forwardDelta.writeString(entryNew.getValue());
-        reverseDelta.writeObjectFieldIntro(entryNew.getKey());
-        if (old == null) {
-          reverseDelta.writeNull();
-        } else {
-          reverseDelta.writeString(old);
-        }
-      }
-    }
-    for (T nukeKey : nuke) {
-      forwardDelta.writeObjectFieldIntro(nukeKey);
-      forwardDelta.writeNull();
-      reverseDelta.writeObjectFieldIntro(nukeKey);
-      reverseDelta.writeString(prior.get(nukeKey));
-    }
-  }
-
   private void __commitFullDiff(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     forwardDelta.writeObjectFieldIntro(name);
     forwardDelta.beginObject();
@@ -148,6 +124,30 @@ public class RxText extends RxBase {
     backup = value;
   }
 
+  private static <T> void __commitDiffMap(HashMap<T, String> prior, HashMap<T, String> next, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
+    HashSet<T> nuke = new HashSet<>(prior.keySet());
+    for (Map.Entry<T, String> entryNew : next.entrySet()) {
+      nuke.remove(entryNew.getKey());
+      String old = prior.get(entryNew.getKey());
+      if (!entryNew.getValue().equals(old)) {
+        forwardDelta.writeObjectFieldIntro(entryNew.getKey());
+        forwardDelta.writeString(entryNew.getValue());
+        reverseDelta.writeObjectFieldIntro(entryNew.getKey());
+        if (old == null) {
+          reverseDelta.writeNull();
+        } else {
+          reverseDelta.writeString(old);
+        }
+      }
+    }
+    for (T nukeKey : nuke) {
+      forwardDelta.writeObjectFieldIntro(nukeKey);
+      forwardDelta.writeNull();
+      reverseDelta.writeObjectFieldIntro(nukeKey);
+      reverseDelta.writeString(prior.get(nukeKey));
+    }
+  }
+
   @Override
   public void __dump(JsonStreamWriter writer) {
     value.write(writer);
@@ -173,6 +173,15 @@ public class RxText extends RxBase {
     if (__isDirty()) {
       value = backup;
       __lowerDirtyRevert();
+    }
+  }
+
+  @Override
+  public long __memory() {
+    if (backup == value) {
+      return super.__memory() + value.memory();
+    } else {
+      return super.__memory() + value.memory() + backup.memory();
     }
   }
 
@@ -202,14 +211,5 @@ public class RxText extends RxBase {
 
   public String get() {
     return value.get().value;
-  }
-
-  @Override
-  public long __memory() {
-    if (backup == value) {
-      return super.__memory() + value.memory();
-    } else {
-      return super.__memory() + value.memory() + backup.memory();
-    }
   }
 }

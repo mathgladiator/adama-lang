@@ -33,17 +33,17 @@ public class DComplex implements DeltaNode {
     prior = null;
   }
 
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return (prior != null ? prior.memory() : 0) + 32;
+  }
+
   /** the double is visible, so show changes */
   public void show(final NtComplex value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || !value.equals(prior)) {
       writer.writeNtComplex(value);
     }
     prior = value;
-  }
-
-  /** memory usage */
-  @Override
-  public long __memory() {
-    return (prior != null ? prior.memory() : 0) + 32;
   }
 }

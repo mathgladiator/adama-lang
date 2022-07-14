@@ -23,17 +23,17 @@ public class Range implements Operand {
   }
 
   @Override
-  public String get() {
-    return base.get().substring(at, at + length);
-  }
-
-  @Override
   public void transposeRangeIntoJoin(int at, int length, Join join) {
     if (at == 0 && this.length == length) {
       join.children.add(this);
     } else {
       join.children.add(new Range(base, this.at + at, length));
     }
+  }
+
+  @Override
+  public String get() {
+    return base.get().substring(at, at + length);
   }
 
   @Override

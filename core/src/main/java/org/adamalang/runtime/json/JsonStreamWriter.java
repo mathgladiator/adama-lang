@@ -92,6 +92,12 @@ public class JsonStreamWriter {
     push_need_comma();
   }
 
+  public <T> void writeObjectFieldIntro(final T fieldName) {
+    maybe_comma();
+    sb.append("\"").append(fieldName).append("\":");
+    commaStateMachine = CommaStateMachine.FirstItemSkipComma;
+  }
+
   public void writeDouble(final double d) {
     maybe_comma();
     sb.append(d);
@@ -250,12 +256,6 @@ public class JsonStreamWriter {
     } else {
       throw new RuntimeException("unexpected object: " + tree);
     }
-  }
-
-  public <T> void writeObjectFieldIntro(final T fieldName) {
-    maybe_comma();
-    sb.append("\"").append(fieldName).append("\":");
-    commaStateMachine = CommaStateMachine.FirstItemSkipComma;
   }
 
   public enum CommaStateMachine {

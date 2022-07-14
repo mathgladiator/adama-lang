@@ -61,6 +61,10 @@ public class DocumentThreadBase {
     return millisecondsInactivityBeforeCleanup;
   }
 
+  public void setMillisecondsInactivityBeforeCleanup(int ms) {
+    this.millisecondsInactivityBeforeCleanup = ms;
+  }
+
   public void kickOffInventory() {
     executor.schedule(new NamedRunnable("base-inventory") {
       @Override
@@ -145,7 +149,6 @@ public class DocumentThreadBase {
     }, millisecondsToPerformInventory + rng.nextInt(millisecondsToPerformInventoryJitter) + rng.nextInt(millisecondsToPerformInventoryJitter));
   }
 
-
   public int getMillisecondsForCleanupCheck() {
     return millisecondsForCleanupCheck;
   }
@@ -165,9 +168,5 @@ public class DocumentThreadBase {
   public void setInventoryMillisecondsSchedule(int period, int jitter) {
     this.millisecondsToPerformInventory = period;
     this.millisecondsToPerformInventoryJitter = jitter;
-  }
-
-  public void setMillisecondsInactivityBeforeCleanup(int ms) {
-    this.millisecondsInactivityBeforeCleanup = ms;
   }
 }

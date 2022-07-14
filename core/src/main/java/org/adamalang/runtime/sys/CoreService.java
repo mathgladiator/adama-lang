@@ -44,6 +44,15 @@ import java.util.function.Function;
 /** The core service enables consumers to manage an in-process Adama */
 public class CoreService implements Deliverer {
   private static final Logger LOGGER = LoggerFactory.getLogger(CoreService.class);
+  public static Callback<DurableLivingDocument> DONT_CARE_DOCUMENT = new Callback<DurableLivingDocument>() {
+    @Override
+    public void success(DurableLivingDocument value) {
+    }
+
+    @Override
+    public void failure(ErrorCodeException ex) {
+    }
+  };
   public final DataService dataService;
   private final CoreMetrics metrics;
   private final LivingDocumentFactoryFactory livingDocumentFactoryFactory;
@@ -110,6 +119,93 @@ public class CoreService implements Deliverer {
       @Override
       public void failure(ErrorCodeException ex) {
         callback.failure(ex);
+      }
+    });
+  }
+
+  private void load(Key key, Callback<DurableLivingDocument> callbackReal) {
+    Callback<DurableLivingDocument> callbackToQueue = metrics.serviceLoad.wrap(callbackReal);
+
+    // bind to the thread
+    int threadId = key.hashCode() % bases.length;
+    DocumentThreadBase base = bases[threadId];
+
+    // jump into thread
+    base.executor.execute(new NamedRunnable("load", key.space, key.key) {
+      @Override
+      public void execute() throws Exception {
+
+        // is document already loaded?
+        DurableLivingDocument documentFetch = base.map.get(key);
+        if (documentFetch != null) {
+          callbackToQueue.success(documentFetch);
+          return;
+        }
+
+        ArrayList<Callback<DurableLivingDocument>> callbacks = base.mapInsertsInflight.get(key);
+        if (callbacks == null) {
+          callbacks = new ArrayList<>();
+          callbacks.add(callbackToQueue);
+          base.mapInsertsInflight.put(key, callbacks);
+
+          Consumer<ErrorCodeException> failure = (ex) -> {
+            base.executor.execute(new NamedRunnable("document-load-failure") {
+              @Override
+              public void execute() throws Exception {
+                for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
+                  callbackToSignal.failure(ex);
+                }
+              }
+            });
+          };
+
+          // let's load the factory and pull from source
+          livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchLoad.wrap(new Callback<>() {
+            @Override
+            public void success(LivingDocumentFactory factory) {
+              // pull from data source
+              DurableLivingDocument.load(key, factory, null, base, metrics.documentLoad.wrap(new Callback<>() {
+                @Override
+                public void success(DurableLivingDocument documentToAttemptPut) {
+                  // it was found, let's try to put it into memory
+                  base.executor.execute(new NamedRunnable("document-made") {
+                    @Override
+                    public void execute() throws Exception {
+                      DurableLivingDocument priorDocumentFound = base.map.putIfAbsent(key, documentToAttemptPut);
+                      if (priorDocumentFound != null) {
+                        metrics.document_collision.run();
+                        CoreService.LOGGER.error("found-prior-value, using it: {}", key.key);
+                      }
+                      DurableLivingDocument document = priorDocumentFound == null ? documentToAttemptPut : priorDocumentFound;
+                      metrics.inflight_documents.up();
+                      for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
+                        callbackToSignal.success(document);
+                      }
+                      base.executor.schedule(new NamedRunnable("post-load-reconcile") {
+                        @Override
+                        public void execute() throws Exception {
+                          document.afterLoad();
+                        }
+                      }, base.getMillisecondsAfterLoadForReconciliation());
+                    }
+                  });
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  failure.accept(ex);
+                }
+              }));
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              failure.accept(ex);
+            }
+          }));
+        } else {
+          callbacks.add(metrics.documentPiggyBack.wrap(callbackToQueue));
+        }
       }
     });
   }
@@ -281,93 +377,6 @@ public class CoreService implements Deliverer {
     });
   }
 
-  private void load(Key key, Callback<DurableLivingDocument> callbackReal) {
-    Callback<DurableLivingDocument> callbackToQueue = metrics.serviceLoad.wrap(callbackReal);
-
-    // bind to the thread
-    int threadId = key.hashCode() % bases.length;
-    DocumentThreadBase base = bases[threadId];
-
-    // jump into thread
-    base.executor.execute(new NamedRunnable("load", key.space, key.key) {
-      @Override
-      public void execute() throws Exception {
-
-        // is document already loaded?
-        DurableLivingDocument documentFetch = base.map.get(key);
-        if (documentFetch != null) {
-          callbackToQueue.success(documentFetch);
-          return;
-        }
-
-        ArrayList<Callback<DurableLivingDocument>> callbacks = base.mapInsertsInflight.get(key);
-        if (callbacks == null) {
-          callbacks = new ArrayList<>();
-          callbacks.add(callbackToQueue);
-          base.mapInsertsInflight.put(key, callbacks);
-
-          Consumer<ErrorCodeException> failure = (ex) -> {
-            base.executor.execute(new NamedRunnable("document-load-failure") {
-              @Override
-              public void execute() throws Exception {
-                for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
-                  callbackToSignal.failure(ex);
-                }
-              }
-            });
-          };
-
-          // let's load the factory and pull from source
-          livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchLoad.wrap(new Callback<>() {
-            @Override
-            public void success(LivingDocumentFactory factory) {
-              // pull from data source
-              DurableLivingDocument.load(key, factory, null, base, metrics.documentLoad.wrap(new Callback<>() {
-                @Override
-                public void success(DurableLivingDocument documentToAttemptPut) {
-                  // it was found, let's try to put it into memory
-                  base.executor.execute(new NamedRunnable("document-made") {
-                    @Override
-                    public void execute() throws Exception {
-                      DurableLivingDocument priorDocumentFound = base.map.putIfAbsent(key, documentToAttemptPut);
-                      if (priorDocumentFound != null) {
-                        metrics.document_collision.run();
-                        CoreService.LOGGER.error("found-prior-value, using it: {}", key.key);
-                      }
-                      DurableLivingDocument document = priorDocumentFound == null ? documentToAttemptPut : priorDocumentFound;
-                      metrics.inflight_documents.up();
-                      for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
-                        callbackToSignal.success(document);
-                      }
-                      base.executor.schedule(new NamedRunnable("post-load-reconcile") {
-                        @Override
-                        public void execute() throws Exception {
-                          document.afterLoad();
-                        }
-                      }, base.getMillisecondsAfterLoadForReconciliation());
-                    }
-                  });
-                }
-
-                @Override
-                public void failure(ErrorCodeException ex) {
-                  failure.accept(ex);
-                }
-              }));
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              failure.accept(ex);
-            }
-          }));
-        } else {
-          callbacks.add(metrics.documentPiggyBack.wrap(callbackToQueue));
-        }
-      }
-    });
-  }
-
   /** internal: send connection to the document if not joined, then join */
   private void connectDirectMustBeInDocumentBase(CoreRequestContext context, DurableLivingDocument document, Streamback stream, JsonStreamReader viewerState, AssetIdEncoder assetIdEncoder) {
     PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
@@ -440,54 +449,6 @@ public class CoreService implements Deliverer {
     }
   }
 
-  /** execute a web get against the document */
-  public void webGet(Key key, WebGet request, Callback<WebResponse> callback) {
-    load(key, new Callback<DurableLivingDocument>() {
-      @Override
-      public void success(DurableLivingDocument document) {
-        document.registerActivity();
-        WebResponse response = document.document().__get(request);
-        if (response != null) {
-          callback.success(response);
-        } else {
-          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_GET_NOT_FOUND));
-        }
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    });
-  }
-
-  public void startupLoad(Key key) {
-    load(key, metrics.document_load_startup.wrap(DONT_CARE_DOCUMENT));
-  }
-
-  public static Callback<DurableLivingDocument> DONT_CARE_DOCUMENT = new Callback<DurableLivingDocument>() {
-    @Override
-    public void success(DurableLivingDocument value) {}
-
-    @Override
-    public void failure(ErrorCodeException ex) {}
-  };
-
-  /** execute a web put against the document */
-  public void webPut(NtClient who, Key key, WebPutRaw request, Callback<WebResponse> callback) {
-    load(key, new Callback<>() {
-      @Override
-      public void success(DurableLivingDocument document) {
-        document.webPut(who, request, callback);
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    });
-  }
-
   /** internal: deploy a specific document */
   private void deploy(DocumentThreadBase base, Key key, DurableLivingDocument document, DeploymentMonitor monitor) {
     livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchDeploy.wrap(new Callback<>() {
@@ -523,5 +484,45 @@ public class CoreService implements Deliverer {
         monitor.witnessException(ex);
       }
     }));
+  }
+
+  /** execute a web get against the document */
+  public void webGet(Key key, WebGet request, Callback<WebResponse> callback) {
+    load(key, new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        document.registerActivity();
+        WebResponse response = document.document().__get(request);
+        if (response != null) {
+          callback.success(response);
+        } else {
+          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_GET_NOT_FOUND));
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
+  public void startupLoad(Key key) {
+    load(key, metrics.document_load_startup.wrap(DONT_CARE_DOCUMENT));
+  }
+
+  /** execute a web put against the document */
+  public void webPut(NtClient who, Key key, WebPutRaw request, Callback<WebResponse> callback) {
+    load(key, new Callback<>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        document.webPut(who, request, callback);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 }
