@@ -20,4 +20,11 @@ public interface Service {
 
   /** invoke the given method */
   public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result);
+
+  public static final Service FAILURE = new Service() {
+    @Override
+    public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result) {
+      return new NtResult<>(null, true, 500, "Service failed to resolve");
+    }
+  };
 }

@@ -70,7 +70,7 @@ public class LivingDocumentFactory {
       delete_on_close = extractDeleteOnClose(config);
       this.reflection = reflection;
 
-      this.registry = new ServiceRegistry(null);
+      this.registry = new ServiceRegistry();
       this.registry.resolve((HashMap<String, HashMap<String, Object>>) (clazz.getMethod("__services").invoke(null)));
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);

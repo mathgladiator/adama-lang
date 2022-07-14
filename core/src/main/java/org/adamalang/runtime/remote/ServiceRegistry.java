@@ -9,36 +9,30 @@
  */
 package org.adamalang.runtime.remote;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 /** a service registry maps service names to services */
 public class ServiceRegistry {
-  private final ServiceRegistry parent;
+  private static TreeMap<String, Function<HashMap<String, Object>, Service>> REGISTRY;
   private final TreeMap<String, Service> services;
 
   /** we scope the registry such that there are
    * (1) global services that are internal,
    * (2) user defined services per space
    */
-  public ServiceRegistry(ServiceRegistry parent) {
-    this.parent = parent;
+  public ServiceRegistry() {
     this.services = new TreeMap<>();
-  }
-
-  /** add the service to this registry */
-  public void add(String name, Service service) {
-    services.put(name, service);
   }
 
   /** find a service */
   public Service find(String name) {
     Service local = services.get(name);
-    if (local == null && parent != null) {
-      return parent.find(name);
-    }
     if (local == null) {
-      return new ServiceFailure();
+      return Service.FAILURE;
     }
     return local;
   }
@@ -47,9 +41,28 @@ public class ServiceRegistry {
     return services.containsKey(name);
   }
 
+  private Service resolveService(HashMap<String, Object> config) {
+    Object std = config.get("std");
+    if (std != null && std instanceof String) {
+      Function<HashMap<String, Object>, Service> cons = REGISTRY.get((String) std);
+      if (cons != null) {
+        return cons.apply(config);
+      }
+    }
+    Object http = config.get("http");
+    if (http != null && http instanceof String) {
+      // TODO: construct an Http Service
+    }
+    return null;
+  }
+
   public void resolve(HashMap<String, HashMap<String, Object>> servicesConfig) {
-    for (String key : servicesConfig.keySet()) {
-      services.put(key, new ServiceFailure());
+    for (Map.Entry<String, HashMap<String, Object>> entry : servicesConfig.entrySet()) {
+      Service resolved = resolveService(entry.getValue());
+      if (resolved == null) {
+        resolved = Service.FAILURE;
+      }
+      services.put(entry.getKey(), resolved);
     }
   }
 }
