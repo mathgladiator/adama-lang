@@ -29,6 +29,7 @@ public class EnvironmentState {
   private boolean isBubble;
   private boolean isWeb;
   private String cacheObject;
+  private boolean readonlyEnv;
 
   private EnvironmentState(final EnvironmentState prior) {
     autoId = prior.autoId;
@@ -40,13 +41,14 @@ public class EnvironmentState {
     isMessageHandler = prior.isMessageHandler;
     isStateMachineTransition = prior.isStateMachineTransition;
     computationContext = prior.computationContext;
-    readonly = prior.readonly;
     reactiveExpression = prior.reactiveExpression;
     isStatic = prior.isStatic;
     isPolicy = prior.isPolicy;
     isBubble = prior.isBubble;
     isWeb = prior.isWeb;
     cacheObject = prior.cacheObject;
+    readonly = false;
+    readonlyEnv = prior.readonlyEnv;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -119,6 +121,10 @@ public class EnvironmentState {
     return readonly;
   }
 
+  public boolean isReadonlyEnvironment() {
+    return readonlyEnv;
+  }
+
   /** is the current environment for state machine transition code */
   public boolean isStateMachineTransition() {
     return isStateMachineTransition;
@@ -181,6 +187,7 @@ public class EnvironmentState {
   public EnvironmentState scopeReadonly() {
     final var next = new EnvironmentState(this);
     next.readonly = true;
+    next.readonlyEnv = true;
     return next;
   }
 

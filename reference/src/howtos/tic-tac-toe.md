@@ -31,23 +31,31 @@ Once you have completed the installation process, run the code below in your ter
 java -version
 ```   
 It should return something similar to the code below.
+
 ```shell  
 openjdk version "11.0.13" 2021-10-19
 OpenJDK Runtime Environment (build 11.0.13+8-Ubuntu-0ubuntu1.20.04)
 OpenJDK 64-Bit Server VM (build 11.0.13+8-Ubuntu-0ubuntu1.20.04, mixed mode, sharing)
 ```    
-Next, download the latest Adama jar file from GitHub by running this code.4
+
+Next, download the latest Adama jar file from GitHub by running this code.
+
 ```shell
 wget https://github.com/mathgladiator/adama-lang/releases/download/nightly/adama.jar
 ```  
+
 Create an Adama developer account by running the code below. Read through the information and supply your email address. Enter the verification code sent to your email in your terminal.  
+
 ```shell
 java -jar adama.jar init
 ```  
+
 Run the code below to create a space for your Adama document. Adama space is similar to buckets in AWS. It is the container for your Adama documents.   
+
 ```shell 
 java -jar adama.jar space create --space <your_space_name>
 ```    
+
 Congratulations! You've just created a space for your Adama document. You can now start creating the backend for the Tic Tac Toe game.  
 
 ## Building the backend for your Tic Tac Toe game   
@@ -200,7 +208,8 @@ procedure test_placed_for_victory(SquareState placed) -> bool {
     }
   }
   // diagonals
-  if ( (iterate _squares where y == x && state == placed).size() == 3 || (iterate _squares where y == 2 - x && state == placed).size() == 3 ) {
+  if ( (iterate _squares where y == x && state == placed).size() == 3 ||
+       (iterate _squares where y == 2 - x && state == placed).size() == 3 ) {
     return true;
   }
   return false;

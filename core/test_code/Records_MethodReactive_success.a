@@ -1,0 +1,15 @@
+record Card {
+  method one() -> int readonly {
+    return 1;
+  }
+  public formula boom = one();
+}
+
+public Card card;
+
+@connected {
+  return true;
+}
+
+@construct {
+}

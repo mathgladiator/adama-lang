@@ -98,13 +98,18 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       exprType.typing(environmentToUse);
       functionStyle = ((TyNativeFunctional) exprType).style;
       if (functionStyle == FunctionStyleJava.RemoteCall) {
-        if (environmentToUse.state.getCacheObject() == null) {
-          environmentToUse.document.createError(expression, String.format("Remove invocation not available in this scope"), "FunctionInvoke");
+        if (environmentToUse.state.isReadonlyEnvironment() || environmentToUse.state.isPure()) {
+          environmentToUse.document.createError(expression, String.format("Services can not be invoked in read-only or pure functional context"), "FunctionInvoke");
+        } else if (environmentToUse.state.getCacheObject() == null) {
+          environmentToUse.document.createError(expression, String.format("Remote invocation not available in this scope"), "FunctionInvoke");
         }
       }
       functionInstance = ((TyNativeFunctional) exprType).find(expression, argTypes, environmentToUse);
       if (environmentToUse.state.isPure() && !functionInstance.pure) {
         environmentToUse.document.createError(expression, String.format("Pure functions can only call other pure functions"), "FunctionInvoke");
+      }
+      if (environmentToUse.state.isReadonlyEnvironment() && !functionInstance.pure) {
+        environmentToUse.document.createError(expression, String.format("Read only methods can only call other read-only methods or pure functions"), "FunctionInvoke");
       }
       if (environmentToUse.state.isReactiveExpression() && !functionInstance.pure) {
         environmentToUse.document.createError(expression, String.format("Reactive expressions can only invoke pure functions"), "FunctionInvoke");

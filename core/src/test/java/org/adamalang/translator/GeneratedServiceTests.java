@@ -87,7 +87,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_CantDoInPolicy_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":16,\"character\":2},\"end\":{\"line\":16,\"character\":10}},\"severity\":1,\"source\":\"error\",\"message\":\"Remove invocation not available in this scope (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":16,\"character\":2},\"end\":{\"line\":16,\"character\":10}},\"severity\":1,\"source\":\"error\",\"message\":\"Remote invocation not available in this scope (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

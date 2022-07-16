@@ -20,7 +20,6 @@ import org.adamalang.translator.tree.types.natives.TyNativeService;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /** Defines the environment within */
@@ -74,7 +73,7 @@ public class Environment {
 
   /** create a new environment which enforces a readonly barrier to all mutations prior it */
   public Environment scopeAsReadOnlyBoundary() {
-    return new Environment(document, state, new Environment(document, state.scopeReadonly(), this));
+    return new Environment(document, state.scopeReadonly(), this).scope();
   }
 
   /** when we need to create a variable, let's make it globally unique */

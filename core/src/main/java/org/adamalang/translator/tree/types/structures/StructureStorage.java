@@ -38,6 +38,7 @@ public class StructureStorage extends DocumentPosition {
   public final ArrayList<IndexDefinition> indices;
   public final ArrayList<DefineMethod> methods;
   public final HashMap<String, TyNativeFunctional> methodTypes;
+  public final HashMap<String, TyNativeFunctional> internalMethods;
   public final Token openBraceToken;
   public final TreeMap<String, DefineCustomPolicy> policies;
   public final ArrayList<String> policiesForVisibility;
@@ -63,6 +64,7 @@ public class StructureStorage extends DocumentPosition {
     indices = new ArrayList<>();
     indexSet = new HashSet<>();
     methodTypes = new HashMap<>();
+    internalMethods = new HashMap<>();
     fieldsWithDefaults = new HashSet<>();
     ingest(openBraceToken);
     typedAlready = false;
@@ -109,6 +111,7 @@ public class StructureStorage extends DocumentPosition {
     return (name, type) -> {
       TyType resolved = env.rules.Resolve(type, true);
       if (resolved instanceof TyNativeGlobalObject) return;
+      if (resolved instanceof TyNativeFunctional) return;
       if (resolved instanceof TyNativeService) {
         services.add(((TyNativeService) resolved).service.name.text);
         return;
@@ -144,13 +147,20 @@ public class StructureStorage extends DocumentPosition {
     ingest(dm);
     methods.add(dm);
     typeCheckOrder.add(env -> {
-      final var foi = dm.typing(env);
-      var functional = methodTypes.get(dm.name);
-      if (functional == null) {
-        functional = new TyNativeFunctional(dm.name, new ArrayList<>(), FunctionStyleJava.ExpressionThenNameWithArgs);
-        methodTypes.put(dm.name, functional);
-      }
-      functional.overloads.add(foi);
+        final var foi = dm.typing(env);
+        var functional = methodTypes.get(dm.name);
+        if (functional == null) {
+          functional = new TyNativeFunctional(dm.name, new ArrayList<>(), FunctionStyleJava.ExpressionThenNameWithArgs);
+          methodTypes.put(dm.name, functional);
+        }
+        functional.overloads.add(foi);
+        var interFunctional = internalMethods.get(dm.name);
+        if (interFunctional == null) {
+          interFunctional = new TyNativeFunctional(dm.name, new ArrayList<>(), FunctionStyleJava.InjectNameThenArgs);
+          internalMethods.put(dm.name, interFunctional);
+          env.define(dm.name, interFunctional, false, dm);
+        }
+        interFunctional.overloads.add(foi);
     });
   }
 

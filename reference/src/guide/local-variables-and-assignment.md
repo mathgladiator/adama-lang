@@ -1,6 +1,6 @@
 # Local variables and assignment
 
-While [document variables](./document-layout-and-types.md) are persisted, variables can be defined locally within code blocks (like [constructors](static-policies-document-events.md) to be used to compute things. 
+While [document variables](./document.md) are persisted, variables can be defined locally within code blocks (like [constructors](static-policies-document-events.md) to be used to compute things. 
 
 ```adama
 private int score;

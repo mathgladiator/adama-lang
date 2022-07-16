@@ -30,6 +30,10 @@ There are a variety of ways to conjure up constants. The following table illustr
 | maybe(?) | @maybe(Expr) | @maybe(123) |
 | complex | @i | 1 + @i |
 
+
+## who is executing
+The ```@who``` constant refers to the client that is executing the current code.
+
 ## String escaping
 
 A character following a backslash (\\) is an escape sequence within a string, and it is an escape for the parser to inject special characters. For instance, if you are parsing a string initiated by double quotes, then how does one get a double quote into the string? Well, that's what the escape is for. Adama's strings support the following escape sequences:

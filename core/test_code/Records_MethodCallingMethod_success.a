@@ -1,0 +1,15 @@
+record Card {
+  method one() -> int {
+    return 1;
+  }
+  method two() -> int {
+   return one() + one();
+  }
+}
+
+@connected {
+  return true;
+}
+
+@construct {
+}

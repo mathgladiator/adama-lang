@@ -3,7 +3,7 @@
 In [static policies and document events](./static-policies-document-events.md), you will learn how to authorize and allow people to connect to documents.
 
 
-- [Document layout with types](./document-layout-and-types.md)
+- [Document layout](./document.md)
 - [Comments are good for your health](./comments.md)
 - [Constants](./constants.md)
 - [Records and Messages](./records-and-messages.md)

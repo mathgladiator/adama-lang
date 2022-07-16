@@ -5,7 +5,7 @@ A document will contain state, and it is vital to protect that state from unauth
 * Who can invent documents? And what does document invention mean?
 * Who can connect to documents?
 * Who can attach resources (i.e. files) to documents?
-* What resource got attached?
+* What resource got attached? And when do assets get deleted?
 
 Unlike other document stores, access control is done within the platform at the lowest level.
 This is the first step in building anything with Adama because access control and privacy are important.
@@ -196,6 +196,7 @@ Once the asset is durable stored, the ```@attached``` event is run with the asse
 
 ```adama
 public asset most_recent_file;
+
 @attached (what) {
   most_recent_file = what;
 }
@@ -203,10 +204,17 @@ public asset most_recent_file;
 
 The type of the ```what``` variable is ```asset``` which has the following methods.
 
-| method | return type |what it is |
+| method | type |what it is |
 | --- | --- | --- |
 | name() | string | The name provided by the uploader (i.e. file name) |
 | id() | string | A unique id to denote the asset |
 | size() | long | The number of bytes of the asset |
 | type() | string | The [Content type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) of the asset ( |
 | valid() | bool | The asset is real or not. The default value for an asset is ```@nothing``` |
+
+> Note: at this time, using assets is a pain. See [issue #120](https://github.com/mathgladiator/adama-lang/issues/120)
+
+### Answer: How do assets leave
+Since there is a maximum history for the lifetime of a document, assets are periodically collected and then garbage collected. Once an asset object leaves the document and the stored history, the associated bytes are cleaned up.
+
+> Note: this is not true at this time. See [issue #121](https://github.com/mathgladiator/adama-lang/issues/121)

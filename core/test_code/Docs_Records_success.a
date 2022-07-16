@@ -1,0 +1,47 @@
+record R {
+  public int score;
+
+  method zero() {
+    score = 0;
+  }
+}
+
+record R2 {
+  public int score;
+
+  method double_score() -> int readonly {
+    return score * 2;
+  }
+
+  public formula ds = double_score();
+}
+
+record R3 {
+  private client owner;
+
+  policy is_owner {
+    return owner == @who;
+  }
+}
+
+record R4 {
+  private client owner;
+
+  use_policy<is_owner> int balance;
+
+  policy is_owner {
+    return owner == @who;
+  }
+}
+
+record R5 {
+  private client owner;
+
+  public int balance;
+
+  policy is_owner {
+    return owner == @who;
+  }
+
+  require is_owner;
+}
