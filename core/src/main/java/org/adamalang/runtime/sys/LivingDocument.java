@@ -194,12 +194,12 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.writeNull();
     reverse.beginObject();
     __dumpMessages(reverse);
-
     __blocked.set(false);
     __seq.bumpUpPre();
     __entropy.set(Long.toString(__random.nextLong()));
     __futures.commit();
     __queue.clear();
+    __cache.clear();
     __reset_future_queues();
     __cache.__commit("__cache", forward, reverse);
     __commit(null, forward, reverse);

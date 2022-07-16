@@ -276,4 +276,93 @@ public class ServiceRemoteTests {
     }
   }
 
+  @Test
+  public void service_invoke_state_machine() throws Exception {
+    ArrayList<Runnable> actions = new ArrayList<>();
+
+    ServiceRegistry.REGISTRY.put("sqr3", (properties) -> {
+      return new SimpleService("sqr3", NtClient.NO_ONE) {
+        @Override
+        public void request(String method, String request, Callback<String> callback) {
+          int _x = 1;
+          JsonStreamReader reader = new JsonStreamReader(request);
+          if (reader.startObject()) {
+            while (reader.notEndOfObject()) {
+              switch (reader.fieldName()) {
+                case "x":
+                  _x = reader.readInteger();
+                  break;
+                default:
+                  reader.skipValue();
+              }
+            }
+          }
+          int x = _x;
+          actions.add(() -> {
+            callback.success("{\"x\":" + (x * x)+"}");
+          });
+        }
+      };
+    });
+    AtomicReference<Deliverer> latent = new AtomicReference<>(null);
+    Deliverer lazy = new Deliverer() {
+      @Override
+      public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
+        latent.get().deliver(agent, key, id, result, callback);
+      }
+    };
+
+    LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
+        "@connected { return true; }" +
+        "message M { int x; }" +
+        "@service s { std=\"sqr3\"; method<M, M> square; }" +
+        "public int x = 4;" +
+        "@construct { transition #gogo; }" +
+        "#gogo {" + //
+        " x += s.square(@no_one, {x:x}).await().x;" + //
+        " x += s.square(@no_one, {x:x}).await().x;" + //
+        "}", lazy);
+
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    latent.set(service);
+    try {
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      created.await_success();
+      MockStreamback streamback = new MockStreamback();
+      Runnable latch1 = streamback.latchAt(2);
+      Runnable latch2 = streamback.latchAt(3);
+      Runnable latch3 = streamback.latchAt(4);
+      Runnable latch4 = streamback.latchAt(5);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      streamback.await_began();
+      latch1.run();
+      Assert.assertEquals("STATUS:Connected", streamback.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":4},\"seq\":2}", streamback.get(1));
+
+      Assert.assertEquals(1, actions.size());
+      actions.remove(0).run();
+      latch2.run();
+      Assert.assertEquals("{\"data\":{\"x\":20},\"seq\":4}", streamback.get(2));
+
+      Assert.assertEquals(1, actions.size());
+      actions.remove(0).run();
+      latch3.run();
+      Assert.assertEquals("{\"data\":{\"x\":420},\"seq\":7}", streamback.get(3));
+
+      dataService.assertLogAt(0, "INIT:space/key:0->{\"__state\":\"gogo\",\"__constructed\":true}");
+      dataService.assertLogAt(1, "LOAD:space/key");
+
+      dataService.assertLogAtContains(5, "\"__cache\":{\"1\":{\"result\":{\"result\":{\"x\":16},\"failure\":null,\"failure_code\":null}}");
+      dataService.assertLogAtContains(6, "\"__cache\":{\"2\":{\"invoke\":{\"service\":\"sqr3\",\"method\":\"square\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"");
+      dataService.assertLogAtContains(7, "\"__cache\":{\"1\":null,\"2\":null}");
+    } finally {
+      service.shutdown();
+    }
+  }
+
 }

@@ -186,6 +186,10 @@ public class MockInstantDataService implements DataService {
     Assert.assertEquals(expected, log.get(k));
   }
 
+  public synchronized void assertLogAtContains(int k, String expected) {
+    Assert.assertTrue(log.get(k).contains(expected));
+  }
+
   public synchronized void assertLogAtStartsWith(int k, String prefix) {
     Assert.assertTrue(log.get(k).startsWith(prefix));
   }
