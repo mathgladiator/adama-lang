@@ -118,7 +118,7 @@ public class FieldDefinition extends StructureComponent {
       type = environment.rules.Resolve(type, false);
     }
     if (type == null && computeExpression != null) {
-      type = computeExpression.typing(environment.scopeReactiveExpression().scopeWithComputeContext(ComputeContext.Computation), null /* no suggestion makes sense */);
+      type = computeExpression.typing(environment.scopeReactiveExpression().scopeWithCache("__c" + name).scopeWithComputeContext(ComputeContext.Computation), null /* no suggestion makes sense */);
       if (type != null) {
         type = new TyReactiveLazy(type).withPosition(type);
       }

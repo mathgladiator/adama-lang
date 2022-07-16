@@ -187,6 +187,9 @@ public class Document implements TopLevelDocumentHandler {
       return;
     }
     root.storage.policies.put(customPolicy.name.text, customPolicy);
+    typeCheckOrder.add(env -> {
+      customPolicy.typeCheck(env);
+    });
   }
 
   @Override

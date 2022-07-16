@@ -97,6 +97,11 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       }
       exprType.typing(environmentToUse);
       functionStyle = ((TyNativeFunctional) exprType).style;
+      if (functionStyle == FunctionStyleJava.RemoteCall) {
+        if (environmentToUse.state.getCacheObject() == null) {
+          environmentToUse.document.createError(expression, String.format("Remove invocation not available in this scope"), "FunctionInvoke");
+        }
+      }
       functionInstance = ((TyNativeFunctional) exprType).find(expression, argTypes, environmentToUse);
       if (environmentToUse.state.isPure() && !functionInstance.pure) {
         environmentToUse.document.createError(expression, String.format("Pure functions can only call other pure functions"), "FunctionInvoke");

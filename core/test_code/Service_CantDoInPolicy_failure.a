@@ -1,0 +1,19 @@
+message SendRequest {
+  string phone;
+  string message;
+}
+
+message SendResponse {
+}
+
+@service sms {
+  internal = "twilio.com";
+
+  method<SendRequest, SendResponse> send;
+
+}
+
+policy p {
+  sms.send(@no_one, {phone:"911",message:"Help!"});
+  return false;
+}
