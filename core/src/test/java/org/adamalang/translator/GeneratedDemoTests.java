@@ -501,7 +501,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
     gold.append("\n  private void handleChannelMessage_notify(NtClient __who, RTxNotifyWrite message) throws AbortMessageException {");
-    gold.append("\n    NtClient who = __who;");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    if (message.db_seq > max_db_seq.get()) {");

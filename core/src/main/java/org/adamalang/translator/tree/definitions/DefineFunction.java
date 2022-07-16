@@ -114,7 +114,7 @@ public class DefineFunction extends Definition {
       if (readOnlyToken != null) {
         toUse = environment.scopeAsReadOnlyBoundary(); // what makes procedure so dirty
       } else {
-        toUse = environment.scope();
+        toUse = environment.scopeWithCache("__cache");
       }
     }
     for (final FunctionArg arg : args) {
