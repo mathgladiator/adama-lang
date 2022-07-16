@@ -1,0 +1,43 @@
+private int score;
+
+@construct {
+  int temp = 123;
+  temp = 42;
+}
+
+#transition1 {
+  int local;
+  local = 42;
+  string str = "hello";
+}
+
+#transition2 {
+  readonly int local = 42;
+}
+
+#transition3 {
+  let local = 42;
+}
+
+#transition4 {
+  int x = 3; // 3
+  x *= 4; // 12
+  x--; // 11
+  x += 10; // 21
+  x *= 2; // 42, the cosmos are revealed
+  x++;
+}
+
+record R {
+  int x;
+}
+
+table<R> _records;
+
+procedure reset() {
+  (iterate _records).x = 0;
+}
+
+procedure bump() {
+  (iterate _records).x++;
+}

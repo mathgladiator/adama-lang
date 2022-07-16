@@ -1,5 +1,3 @@
-enum E { A, B }
-
 message X {
   int val;
   method succ() -> int {
@@ -7,7 +5,8 @@ message X {
   }
 }
 
-channel<X> foo;
+public dynamic z;
 
 @construct {
+  z = @convert<X>({val:32}).to_dynamic();
 }

@@ -370,7 +370,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
-    gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
@@ -378,7 +378,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.skipValue();");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -609,7 +610,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTx_AnonObjConvert_0 implements NtMessageBase {");
+    gold.append("\n  private static class RTx_AnonObjConvert_0 extends NtMessageBase {");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -622,7 +623,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTx_AnonObjConvert_0(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -693,7 +695,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord6 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord6 extends NtMessageBase {");
     gold.append("\n    private int z = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"z\");");
@@ -703,7 +705,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord6(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -757,7 +760,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord16 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord16 extends NtMessageBase {");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
     gold.append("\n    private double z = 0.0;");
@@ -773,7 +776,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord16(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -1366,7 +1370,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
-    gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
@@ -1374,7 +1378,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.skipValue();");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1412,7 +1417,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord4 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord4 extends NtMessageBase {");
     gold.append("\n    private int x = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"x\");");
@@ -1422,7 +1427,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord4(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -1476,7 +1482,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord9 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord9 extends NtMessageBase {");
     gold.append("\n    private NtMaybe<Integer> x = new NtMaybe<Integer>();");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"x\");");
@@ -1488,7 +1494,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord9(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -1550,7 +1557,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord24 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord24 extends NtMessageBase {");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -1563,7 +1570,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord24(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -1623,7 +1631,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord25 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord25 extends NtMessageBase {");
     gold.append("\n    private RTxAutoMaxRecord24 x = new RTxAutoMaxRecord24();");
     gold.append("\n    private int y = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -1636,7 +1644,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord25(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -1697,7 +1706,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord34 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord34 extends NtMessageBase {");
     gold.append("\n    private NtMaybe<Integer> x = new NtMaybe<Integer>();");
     gold.append("\n    private int[] y = new int[]{};");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -1714,7 +1723,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord34(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -1795,7 +1805,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTx_AnonObjConvert_35 implements NtMessageBase {");
+    gold.append("\n  private static class RTx_AnonObjConvert_35 extends NtMessageBase {");
     gold.append("\n    private int z1 = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"z1\");");
@@ -1805,7 +1815,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTx_AnonObjConvert_35(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -1865,7 +1876,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord42 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord42 extends NtMessageBase {");
     gold.append("\n    private NtMaybe<RTx_AnonObjConvert_35> x = new NtMaybe<RTx_AnonObjConvert_35>();");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"x\");");
@@ -1877,7 +1888,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord42(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -1940,7 +1952,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord58 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord58 extends NtMessageBase {");
     gold.append("\n    private int z1 = 0;");
     gold.append("\n    private int z2 = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -1953,7 +1965,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord58(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -2013,7 +2026,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord59 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord59 extends NtMessageBase {");
     gold.append("\n    private RTxAutoMaxRecord58[] x = new RTxAutoMaxRecord58[]{};");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"x\");");
@@ -2025,7 +2038,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord59(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -2572,7 +2586,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
-    gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
@@ -2580,7 +2594,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.skipValue();");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2635,7 +2650,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n        return value - 1;");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord4 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord4 extends NtMessageBase {");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -2648,7 +2663,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord4(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");
@@ -2708,7 +2724,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord17 implements NtMessageBase {");
+    gold.append("\n  private static class RTxAutoMaxRecord17 extends NtMessageBase {");
     gold.append("\n    private boolean b = false;");
     gold.append("\n    private double d = 0.0;");
     gold.append("\n    private int e = 0;");
@@ -2733,7 +2749,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    private RTxAutoMaxRecord17(JsonStreamReader __reader) {");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while (__reader.notEndOfObject()) {");
     gold.append("\n          String __fieldName = __reader.fieldName();");

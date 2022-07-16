@@ -67,7 +67,7 @@ public class TyNativeMessage extends TyType implements IsStructure, //
     for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
       fields.add(e.getValue());
     }
-    sb.append("private static class RTx" + name + " implements NtMessageBase {").tabUp().writeNewline();
+    sb.append("private static class RTx" + name + " extends NtMessageBase {").tabUp().writeNewline();
     for (final FieldDefinition fd : fields) {
       sb.append("private ").append(fd.type.getJavaConcreteType(environment)).append(" ").append(fd.name);
       final var fieldType = environment.rules.Resolve(fd.type, false);
@@ -212,6 +212,15 @@ public class TyNativeMessage extends TyType implements IsStructure, //
 
   @Override
   public TyNativeFunctional lookupMethod(String name, Environment environment) {
+    if ("to_dynamic".equals(name)) {
+      return new TyNativeFunctional("to_dynamic", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("to_dynamic", new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
+    if ("ingest_dynamic".equals(name)) {
+      ArrayList<TyType> args = new ArrayList<>();
+      args.add(new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, null));
+      return new TyNativeFunctional("ingest_dynamic", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("ingest_dynamic",
+          new TyNativeVoid(), args, true, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
     return storage.methodTypes.get(name);
   }
 }

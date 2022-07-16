@@ -13,6 +13,7 @@ import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.async.Sink;
 import org.adamalang.runtime.exceptions.ComputeBlockedException;
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.algo.HashBuilder;
 import org.adamalang.runtime.reactives.RxInt32;
@@ -25,6 +26,11 @@ public class NtChannelTests {
     public void __writeOut(JsonStreamWriter writer) {
       writer.beginObject();
       writer.endObject();
+    }
+
+    @Override
+    public void __ingest(JsonStreamReader reader) {
+      reader.skipValue();
     }
 
     @Override

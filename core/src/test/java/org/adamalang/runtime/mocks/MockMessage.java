@@ -14,7 +14,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.natives.algo.HashBuilder;
 
-public class MockMessage implements NtMessageBase {
+public class MockMessage extends NtMessageBase {
   public int x;
   public int y;
 
@@ -29,6 +29,11 @@ public class MockMessage implements NtMessageBase {
   }
 
   public MockMessage(JsonStreamReader reader) {
+    __ingest(reader);
+  }
+
+  @Override
+  public void __ingest(JsonStreamReader reader) {
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         switch (reader.fieldName()) {

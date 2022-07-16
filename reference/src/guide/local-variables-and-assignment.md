@@ -13,7 +13,7 @@ private int score;
 
 ### Define by type
 
-Each native type can be defined within a code block:
+Native [types](./types.md) can be defined within code without a value as many of them have defaults:
 
 ```adama
 #transition {
@@ -23,7 +23,7 @@ Each native type can be defined within a code block:
 }
 ```
 
-Many of the [types used by records and messages](./types.md) can used within code, and many of the types have a default value:
+The default values follow [the principle of least surprise](https://en.wikipedia.org/wiki/Principle_of_least_astonishment).
 
 | type | default value |
 | --- | --- |
@@ -47,11 +47,11 @@ A local variable can be annotated as readonly, meaning it can not be assigned.
 }
 ```
 
-This is fairly verbose!
+This is fairly verbose, so we introduce the **let** keyword.
 
 ### Define via the "let" keyword and type inference
 
-Instead of leading with the **readonly** and the type, you can simply say "let" and allow the translator to precisely infer the type and market the variable as readonly.
+Instead of leading with the **readonly** and the type, you can simply say "let" and allow the translator to precisely infer the type and mark the variable as readonly.
 
 ```adama
 #transition {
@@ -59,6 +59,38 @@ Instead of leading with the **readonly** and the type, you can simply say "let" 
 }
 ```
 
+This simplifies the code and the aesthetics.
+
 ### Math-based assignment, increment, decrement
 
-Numerical types provide the ability to add, subtract, and multiply the value by a right hand side.
+Numerical types provide the ability to add, subtract, and multiply the value by a right-hand side. Please note: division and modulus are not available as there is the potential for division by zero, and division by zero is bad.
+
+```adama
+#transition {
+  int x = 3; // 3
+  x *= 4; // 12
+  x--; // 11
+  x += 10; // 21
+  x *= 2; // 42, the cosmos are revealed
+  x++;  
+}
+```
+
+### List-based bulk assignment
+
+Lists derived from [tables](./tables-linq.md) within the document provide a bulk assignment via '=' and the various math based assignments (+=, -=, *=, ++, --).
+
+```adama
+record R {
+  int x;
+}
+table<R> _records;
+
+procedure reset() {
+  (iterate _records).x = 0;
+}
+
+procedure bump() {
+  (iterate _records).x++;
+}
+```

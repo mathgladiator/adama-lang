@@ -77,7 +77,8 @@ public class CodeGenMessage {
       if (isViewerType) {
         sb.append("public int __DATA_GENERATION = 1;").writeNewline();
       }
-      sb.append("private void __ingest(JsonStreamReader __reader) {").tabUp().writeNewline(); // UP
+      sb.append("@Override").writeNewline();
+      sb.append("public void __ingest(JsonStreamReader __reader) {").tabUp().writeNewline(); // UP
       if (storage.fields.size() == 0) {
         sb.append("__reader.skipValue();").tabDown().writeNewline();
       } else {
