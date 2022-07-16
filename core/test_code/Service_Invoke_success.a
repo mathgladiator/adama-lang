@@ -6,7 +6,7 @@ message SendRequest {
 message SendResponse {
 }
 
-@service sms {
+service sms {
   internal = "twilio.com";
 
   method<SendRequest, SendResponse> send;

@@ -189,7 +189,7 @@ public class LivingDocumentTests {
           "@connected { return true; }" +
               "message From { string phone; string msg; }" +
               "message Res { }" +
-              "@service sms { class=\"demo\"; method<From, Res> send; }" +
+              "service sms { class=\"demo\"; method<From, Res> send; }" +
               "public string msg = \"123\";" +
               "public formula transmit = sms.send(@no_one, {phone:\"123\",  msg:msg}  );" +
               "",

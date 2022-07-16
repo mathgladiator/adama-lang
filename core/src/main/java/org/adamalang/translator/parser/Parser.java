@@ -541,9 +541,9 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block());
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached", "@static", "@can_attach", "@web", "@include", "@service"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached", "@static", "@can_attach", "@web", "@include"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch"));
+      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service"));
     }
     if (op != null) {
       switch (op.text) {
@@ -581,7 +581,7 @@ public class Parser {
           return define_static(op);
         case "@web":
           return define_web(op);
-        case "@service":
+        case "service":
           return define_service(op);
         case "view": {
           final var ntype = native_type();
