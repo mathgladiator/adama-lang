@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.natives;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.runtime.exceptions.ComputeBlockedException;
 
 /** a result for an async operation */
@@ -63,10 +64,11 @@ public class NtResult<T> {
     return failureCode;
   }
 
-  public T await() {
-    if (value == null) {
+  public NtMaybe<T> await() {
+    boolean retry = failed && failureCode == ErrorCodes.DOCUMENT_NOT_READY;
+    if (!finished() || retry) {
       throw new ComputeBlockedException();
     }
-    return value;
+    return as_maybe();
   }
 }

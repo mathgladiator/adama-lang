@@ -11,21 +11,14 @@ package org.adamalang.runtime.sys;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Json;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.data.RemoteDocumentUpdate;
-import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.json.JsonStreamReader;
-import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.mocks.MockTime;
-import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.natives.NtMessageBase;
-import org.adamalang.runtime.natives.NtResult;
 import org.adamalang.runtime.remote.*;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -33,9 +26,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 
 public class ServiceRemoteTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
@@ -234,7 +225,8 @@ public class ServiceRemoteTests {
         "public int x = 4;" +
         "channel foo(M m) {" + //
         " x += m.x;" + //
-        " x += s.square(@no_one, {x:x}).await().x;" + //
+        " if (s.square(@no_one, {x:x}).await() as zz) { x += zz.x; }" +
+        " if (s.square(@no_one, {x:x}).await() as zz) { x += zz.x; }" +
         " x += m.x;" + //
         "}", lazy);
 
@@ -258,19 +250,19 @@ public class ServiceRemoteTests {
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"x\":4},\"seq\":4}", streamback.get(1));
-
-
       LatchCallback cb1 = new LatchCallback();
       streamback.get().send("foo", null, "{\"x\":10}", cb1);
       cb1.await_success(5);
       latch2.run();
       Assert.assertEquals("{\"data\":{\"x\":14},\"seq\":5}", streamback.get(2));
-
       Assert.assertEquals(1, actions.size());
       actions.remove(0).run();
       latch3.run();
-
-      Assert.assertEquals("{\"data\":{\"x\":220},\"seq\":8}", streamback.get(3));
+      Assert.assertEquals("{\"data\":{\"x\":210},\"seq\":7}", streamback.get(3));
+      Assert.assertEquals(1, actions.size());
+      actions.remove(0).run();
+      latch4.run();
+      Assert.assertEquals("{\"data\":{\"x\":44320},\"seq\":10}", streamback.get(4));
     } finally {
       service.shutdown();
     }
@@ -319,8 +311,8 @@ public class ServiceRemoteTests {
         "public int x = 4;" +
         "@construct { transition #gogo; }" +
         "#gogo {" + //
-        " x += s.square(@no_one, {x:x}).await().x;" + //
-        " x += s.square(@no_one, {x:x}).await().x;" + //
+        "   if (s.square(@no_one, {x:x}).await() as zz) { x += zz.x; }" + //
+        "   if (s.square(@no_one, {x:x}).await() as zz) { x += zz.x; }" + //
         "}", lazy);
 
     MockInstantLivingDocumentFactoryFactory factoryFactory =
@@ -342,12 +334,10 @@ public class ServiceRemoteTests {
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"x\":4},\"seq\":2}", streamback.get(1));
-
       Assert.assertEquals(1, actions.size());
       actions.remove(0).run();
       latch2.run();
       Assert.assertEquals("{\"data\":{\"x\":20},\"seq\":4}", streamback.get(2));
-
       Assert.assertEquals(1, actions.size());
       actions.remove(0).run();
       latch3.run();
@@ -400,8 +390,8 @@ public class ServiceRemoteTests {
         "public int x = 4;" +
         "@construct { transition #gogo; }" +
         "procedure go() {" +
-        " x += s.square(@no_one, {x:x}).await().x;" + //
-        " x += s.square(@no_one, {x:x}).await().x;" + //
+        "   if (s.square(@no_one, {x:x}).await() as zz) { x += zz.x; }" + //
+        "   if (s.square(@no_one, {x:x}).await() as zz) { x += zz.x; }" + //
         "}" +
         "#gogo {" + //
         "go();" +
@@ -426,12 +416,10 @@ public class ServiceRemoteTests {
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"x\":4},\"seq\":2}", streamback.get(1));
-
       Assert.assertEquals(1, actions.size());
       actions.remove(0).run();
       latch2.run();
       Assert.assertEquals("{\"data\":{\"x\":20},\"seq\":4}", streamback.get(2));
-
       Assert.assertEquals(1, actions.size());
       actions.remove(0).run();
       latch3.run();
@@ -484,8 +472,8 @@ public class ServiceRemoteTests {
         "record R {" +
         "  public int x = 4;" +
         "  method go() {" +
-        "   x += s.square(@no_one, {x:x}).await().x;" + //
-        "   x += s.square(@no_one, {x:x}).await().x;" + //
+        "   if (s.square(@no_one, {x:x}).await() as zz) { x += zz.x; }" + //
+        "   if (s.square(@no_one, {x:x}).await() as zz) { x += zz.x; }" + //
         "  }" +
         "}" +
         "public R r;" +
@@ -513,12 +501,10 @@ public class ServiceRemoteTests {
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"r\":{\"x\":4}},\"seq\":2}", streamback.get(1));
-
       Assert.assertEquals(1, actions.size());
       actions.remove(0).run();
       latch2.run();
       Assert.assertEquals("{\"data\":{\"r\":{\"x\":20}},\"seq\":4}", streamback.get(2));
-
       Assert.assertEquals(1, actions.size());
       actions.remove(0).run();
       latch3.run();

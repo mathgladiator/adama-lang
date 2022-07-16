@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.remote;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.natives.NtResult;
@@ -28,7 +29,7 @@ public interface Service {
   Service NOT_READY = new Service() {
     @Override
     public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result) {
-      return new NtResult<>(null, true, 500, "Document is creating");
+      return new NtResult<>(null, true, ErrorCodes.DOCUMENT_NOT_READY, "Document is creating");
     }
   };
 

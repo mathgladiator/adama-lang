@@ -186,6 +186,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** code generate: get strings that are part of the document */
   public abstract Set<String> __get_intern_strings();
 
+  /** commit the variables that were excluded in CodeGenRecords::canRevertOther */
   private void __internalCommit(JsonStreamWriter forward, JsonStreamWriter reverse) {
     __cache.__commit("__cache", forward, reverse);
     __auto_cache_id.__commit("__auto_cache_id", forward, reverse);
@@ -942,7 +943,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       forward.endObject();
       reverse.endObject();
       RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
-      return new LivingDocumentChange(update, new ArrayList<>(), null);
+      return new LivingDocumentChange(update, null, null);
     } finally {
       if (exception) {
         __revert();
