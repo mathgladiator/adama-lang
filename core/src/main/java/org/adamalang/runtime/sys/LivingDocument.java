@@ -186,6 +186,12 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** code generate: get strings that are part of the document */
   public abstract Set<String> __get_intern_strings();
 
+  private void __internalCommit(JsonStreamWriter forward, JsonStreamWriter reverse) {
+    __cache.__commit("__cache", forward, reverse);
+    __auto_cache_id.__commit("__auto_cache_id", forward, reverse);
+    __auto_gen.__commit("__auto_gen", forward, reverse);
+  }
+
   private LivingDocumentChange __invalidate_trailer(NtClient who, final String request) {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
@@ -201,7 +207,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __queue.clear();
     __cache.clear();
     __reset_future_queues();
-    __cache.__commit("__cache", forward, reverse);
+    __internalCommit(forward, reverse);
     __commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
@@ -216,7 +222,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.beginObject();
     reverse.beginObject();
     __commit(null, forward, reverse);
-    __cache.__commit("__cache", forward, reverse);
+    __internalCommit(forward, reverse);
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
@@ -932,7 +938,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       forward.beginObject();
       reverse.beginObject();
       __commit(null, forward, reverse);
-      __cache.__commit("__cache", forward, reverse);
+      __internalCommit(forward, reverse);
       forward.endObject();
       reverse.endObject();
       RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
@@ -1188,7 +1194,7 @@ public abstract class LivingDocument implements RxParent, Caller {
           forward.writeObjectFieldIntro("__blocked_on");
           forward.writeFastString(blockedOn.channel);
         }
-        __cache.__commit("__cache", forward, reverse);
+        __internalCommit(forward, reverse);
         __commit(null, forward, reverse);
         forward.endObject();
         reverse.endObject();
@@ -1213,7 +1219,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       rpe.failedTask.dump(reverse);
       reverse.endObject();
       __seq.bumpUpPre();
-      __cache.__commit("__cache", forward, reverse);
+      __internalCommit(forward, reverse);
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
