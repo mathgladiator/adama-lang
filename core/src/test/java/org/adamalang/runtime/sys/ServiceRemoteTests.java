@@ -337,7 +337,6 @@ public class ServiceRemoteTests {
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      Runnable latch4 = streamback.latchAt(5);
       service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       latch1.run();
@@ -422,7 +421,6 @@ public class ServiceRemoteTests {
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      Runnable latch4 = streamback.latchAt(5);
       service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       latch1.run();
@@ -438,6 +436,93 @@ public class ServiceRemoteTests {
       actions.remove(0).run();
       latch3.run();
       Assert.assertEquals("{\"data\":{\"x\":420},\"seq\":7}", streamback.get(3));
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void service_invoke_state_machine_method() throws Exception {
+    ArrayList<Runnable> actions = new ArrayList<>();
+
+    ServiceRegistry.REGISTRY.put("sqr6", (properties) -> {
+      return new SimpleService("sqr6", NtClient.NO_ONE) {
+        @Override
+        public void request(String method, String request, Callback<String> callback) {
+          int _x = 1;
+          JsonStreamReader reader = new JsonStreamReader(request);
+          if (reader.startObject()) {
+            while (reader.notEndOfObject()) {
+              switch (reader.fieldName()) {
+                case "x":
+                  _x = reader.readInteger();
+                  break;
+                default:
+                  reader.skipValue();
+              }
+            }
+          }
+          int x = _x;
+          actions.add(() -> {
+            callback.success("{\"x\":" + (x * x)+"}");
+          });
+        }
+      };
+    });
+    AtomicReference<Deliverer> latent = new AtomicReference<>(null);
+    Deliverer lazy = new Deliverer() {
+      @Override
+      public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
+        latent.get().deliver(agent, key, id, result, callback);
+      }
+    };
+
+    LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
+        "@connected { return true; }" +
+        "message M { int x; }" +
+        "@service s { std=\"sqr6\"; method<M, M> square; }" +
+        "record R {" +
+        "  public int x = 4;" +
+        "  method go() {" +
+        "   x += s.square(@no_one, {x:x}).await().x;" + //
+        "   x += s.square(@no_one, {x:x}).await().x;" + //
+        "  }" +
+        "}" +
+        "public R r;" +
+        "@construct { transition #gogo; }" +
+        "#gogo {" + //
+        "r.go();" +
+        "}", lazy);
+
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    latent.set(service);
+    try {
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      created.await_success();
+      MockStreamback streamback = new MockStreamback();
+      Runnable latch1 = streamback.latchAt(2);
+      Runnable latch2 = streamback.latchAt(3);
+      Runnable latch3 = streamback.latchAt(4);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      streamback.await_began();
+      latch1.run();
+      Assert.assertEquals("STATUS:Connected", streamback.get(0));
+      Assert.assertEquals("{\"data\":{\"r\":{\"x\":4}},\"seq\":2}", streamback.get(1));
+
+      Assert.assertEquals(1, actions.size());
+      actions.remove(0).run();
+      latch2.run();
+      Assert.assertEquals("{\"data\":{\"r\":{\"x\":20}},\"seq\":4}", streamback.get(2));
+
+      Assert.assertEquals(1, actions.size());
+      actions.remove(0).run();
+      latch3.run();
+      Assert.assertEquals("{\"data\":{\"r\":{\"x\":420}},\"seq\":7}", streamback.get(3));
     } finally {
       service.shutdown();
     }

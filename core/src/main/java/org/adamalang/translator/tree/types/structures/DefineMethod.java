@@ -105,10 +105,7 @@ public class DefineMethod extends StructureComponent {
 
   /** prepare the environment for execution */
   private Environment prepareEnvironment(final Environment environment) {
-    var toUse = environment.scope();
-    if (tokenReadonly != null) {
-      toUse = environment.scopeAsReadOnlyBoundary();
-    }
+    var toUse = tokenReadonly != null ? environment.scopeAsReadOnlyBoundary() : environment.scopeWithCache("__cache");
     for (final FunctionArg arg : args) {
       toUse.define(arg.argName, arg.type, true, arg.type);
     }
