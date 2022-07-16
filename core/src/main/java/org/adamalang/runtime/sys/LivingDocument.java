@@ -203,7 +203,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __futures.commit();
     __queue.clear();
     __reset_future_queues();
-
+    __cache.__commit("__cache", forward, reverse);
     __commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
@@ -1155,7 +1155,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         __invoke_label(stateToExecute);
       }
       return __invalidate_trailer(who, request);
-    } catch (final ComputeBlockedException cbe) {
+    } catch (final ComputeBlockedException blockedOn) {
       if (__preemptedStateOnNextComputeBlocked != null) {
         __state.set(__preemptedStateOnNextComputeBlocked);
         __next_time.set(__time.get());
@@ -1172,10 +1172,11 @@ public abstract class LivingDocument implements RxParent, Caller {
         final var reverse = new JsonStreamWriter();
         forward.beginObject();
         reverse.beginObject();
-        if (cbe.channel != null) {
+        if (blockedOn.channel != null) {
           forward.writeObjectFieldIntro("__blocked_on");
-          forward.writeFastString(cbe.channel);
+          forward.writeFastString(blockedOn.channel);
         }
+        __cache.__commit("__cache", forward, reverse);
         __commit(null, forward, reverse);
         forward.endObject();
         reverse.endObject();
@@ -1200,6 +1201,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       rpe.failedTask.dump(reverse);
       reverse.endObject();
       __seq.bumpUpPre();
+      __cache.__commit("__cache", forward, reverse);
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();

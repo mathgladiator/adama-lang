@@ -9,6 +9,8 @@
  */
 package org.adamalang.runtime.natives;
 
+import org.adamalang.runtime.exceptions.ComputeBlockedException;
+
 /** a result for an async operation */
 public class NtResult<T> {
   private final T value;
@@ -59,5 +61,12 @@ public class NtResult<T> {
   /** the failure code of the result */
   public int code() {
     return failureCode;
+  }
+
+  public T await() {
+    if (value == null) {
+      throw new ComputeBlockedException();
+    }
+    return value;
   }
 }

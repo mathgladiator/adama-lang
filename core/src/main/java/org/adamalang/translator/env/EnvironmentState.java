@@ -132,6 +132,7 @@ public class EnvironmentState {
   public EnvironmentState scopeMessageHandler() {
     final var next = new EnvironmentState(this);
     next.isMessageHandler = true;
+    next.cacheObject = "__cache";
     return next;
   }
 
@@ -192,6 +193,7 @@ public class EnvironmentState {
   public EnvironmentState scopeStateMachineTransition() {
     final var next = new EnvironmentState(this);
     next.isStateMachineTransition = true;
+    next.cacheObject = "__cache";
     return next;
   }
 

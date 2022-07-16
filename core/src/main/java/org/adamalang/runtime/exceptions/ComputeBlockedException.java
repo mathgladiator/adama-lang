@@ -20,4 +20,9 @@ public class ComputeBlockedException extends RuntimeException {
     this.client = client;
     this.channel = channel;
   }
+
+  public ComputeBlockedException() {
+    this.client = null;
+    this.channel = null;
+  }
 }

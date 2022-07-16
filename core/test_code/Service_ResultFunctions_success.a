@@ -1,0 +1,20 @@
+message SendRequest {
+  string phone;
+  string message;
+}
+
+message SendResponse {
+}
+
+@service sms {
+  internal = "twilio.com";
+
+  method<SendRequest, SendResponse> send;
+}
+
+public formula foo = sms.send(@no_one, {phone:"913",message:"M"});
+public formula f_has = foo.has();
+public formula f_code = foo.code();
+public formula f_finished = foo.finished();
+public formula f_failed = foo.failed();
+public formula f_message = foo.message();

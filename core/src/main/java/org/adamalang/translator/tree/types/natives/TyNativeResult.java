@@ -130,6 +130,24 @@ public class TyNativeResult extends TyType implements DetailContainsAnEmbeddedTy
 
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
+    if ("has".equals(name)) {
+      return new TyNativeFunctional("has", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("has", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
+    if ("failed".equals(name)) {
+      return new TyNativeFunctional("failed", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("failed", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
+    if ("finished".equals(name)) {
+      return new TyNativeFunctional("finished", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("finished", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
+    if ("code".equals(name)) {
+      return new TyNativeFunctional("code", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("code", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
+    if ("message".equals(name)) {
+      return new TyNativeFunctional("message", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("message", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
+    if ("await".equals(name)) {
+      return new TyNativeFunctional("await", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("await", tokenElementType.item, new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
     return null;
   }
 }

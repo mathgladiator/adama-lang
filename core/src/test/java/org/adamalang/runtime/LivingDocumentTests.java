@@ -129,6 +129,60 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void message_blocked_by_await() throws Exception {
+    try {
+    RealDocumentSetup setup = new RealDocumentSetup(
+        "@connected { return true; }" + //
+            "message M { int x; }" + //
+            "public int x = 123;" + //
+            "channel<M> aq;" + //
+            "channel foo(M m) {" + //
+            " x += m.x;" + //
+            " x += aq.fetch(@no_one).await().x;" + //
+            " x += m.x;" + //
+            "}" + //
+            "", //
+        null);
+      RealDocumentSetup.GotView gv = new RealDocumentSetup.GotView();
+      ArrayList<String> list = new ArrayList<>();
+      Perspective linked =
+          new Perspective() {
+            @Override
+            public void data(String data) {
+              list.add(data);
+            }
+
+            @Override
+            public void disconnect() {}
+          };
+      setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(2));
+      setup.document.createPrivateView(NtClient.NO_ONE, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+
+      setup.document.send(
+          ContextSupport.WRAP(NtClient.NO_ONE),
+          null,
+          "foo",
+          "{\"x\":100}",
+          new RealDocumentSetup.AssertInt(5));
+
+      setup.document.send(
+          ContextSupport.WRAP(NtClient.NO_ONE),
+          null,
+          "aq",
+          "{\"x\":10000}",
+          new RealDocumentSetup.AssertInt(7));
+
+      Assert.assertEquals(3, list.size());
+      Assert.assertEquals("{\"data\":{\"x\":123},\"seq\":4}", list.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":223},\"outstanding\":[{\"id\":1,\"channel\":\"aq\",\"array\":false},{\"id\":2,\"channel\":\"aq\",\"array\":false}],\"blockers\":[{\"agent\":\"?\",\"authority\":\"?\"}],\"seq\":5}", list.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":10323},\"outstanding\":[],\"blockers\":[],\"seq\":8}", list.get(2));
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      Assert.fail();
+    }
+  }
+
+  @Test
   public void service() throws Exception {
     try {
       RealDocumentSetup setup = new RealDocumentSetup(
@@ -161,6 +215,7 @@ public class LivingDocumentTests {
 
     } catch (RuntimeException re) {
       re.printStackTrace();
+      Assert.fail();
     }
   }
 
