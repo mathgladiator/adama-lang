@@ -1,0 +1,3 @@
+#sm {
+  let ip = @context.ip;
+}

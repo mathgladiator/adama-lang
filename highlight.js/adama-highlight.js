@@ -129,9 +129,7 @@ hljs.registerLanguage("adama", (() => {
         "future" // <
     ];
 
-    const BUILT_IN_VARIABLES = [
-        "who"
-    ];
+    const BUILT_IN_VARIABLES = [];
 
     const KEYWORDS = {
         $pattern: IDENT_RE,

@@ -1,6 +1,12 @@
 # Static policies and document events
 
-A document will contain state, but we need some ceremony to create documents, connect to documents, and to configure the system in which the document lives. This is the first step in building anything with Adama because access control is important.
+A document will contain state, and it is vital to protect that state from unauthorized access or malicous actors. In this section, we will go through the details of access control:
+* Who can create documents?
+* Who can invent documents? And what does document invention mean?
+* Who can connect to documents?
+* Who can attach resources (i.e. files) to documents?
+
+This is the first step in building anything with Adama because access control and privacy are important.
 
 ## Static policies
 
@@ -23,6 +29,31 @@ The above policy allows anyone to create a document within your space (#rude), s
   }
 }
 ```
+
+We can also validate the user is one of your people using [a public key you provided via authorities](../reference/auth.md).
+
+```adama
+@static {
+  create {
+    return @who.fromAuthority("Z2YISR3YMJN29XZ2");
+  }
+}
+```
+
+The static policy also has a context which provides location about where the user is connecting from using ```@context``` constant.
+
+```adama
+@static {
+  create {
+    return @who.isAdamaDeveloper() &&
+           @context.origin == "https://www.adama-platform.com";
+  }
+}
+```
+
+From a security perspective, origin can't be trusted from malicious actors writing bots as they can forge the Origin header.
+
+
 
 > This clearly needs a lot of work! The key limits being the lack of data besides who the person is.
 > If we add the ability to know the origin or key, then the possibilities open up.

@@ -19,16 +19,16 @@ import java.util.HashMap;
 /** responsible for writing event handlers */
 public class CodeGenEventHandlers {
   private static void writeBody(DefineDocumentEvent dce, StringBuilderWithTabs sb, final Environment environment) {
+    sb.append("{");
+    sb.tabUp().writeNewline();
     if (dce.clientVarToken != null) {
-      sb.append("{");
-      sb.tabUp().writeNewline();
       sb.append("NtClient ").append(dce.clientVarToken.text).append(" = __who;").writeNewline();
-      dce.code.specialWriteJava(sb, environment, false, true);
-      sb.append("}").writeNewline();
-    } else {
-      dce.code.writeJava(sb, environment);
-      sb.writeNewline();
     }
+    if (dce.which.isStaticPolicy && dce.contextVariable != null) {
+      sb.append("CoreRequestContext ").append(dce.contextVariable).append(" = __context;").writeNewline();
+    }
+    dce.code.specialWriteJava(sb, environment, false, true);
+    sb.append("}").writeNewline();
   }
 
   private static class EventShred {
@@ -41,9 +41,8 @@ public class CodeGenEventHandlers {
     }
 
     public void consider(DefineDocumentEvent dce, StringBuilderWithTabs sb, Environment environment) {
-      String contextName = dce.contextVariable != null ? dce.contextVariable : "__context";
       if (event.isStaticPolicy) {
-        sb.append("public static boolean ").append(event.prefix).append("__" + count).append("(StaticState __static_state, NtClient __who, CoreRequestContext ").append(contextName).append(") ");
+        sb.append("public static boolean ").append(event.prefix).append("__" + count).append("(StaticState __static_state, NtClient __who, CoreRequestContext __context) ");
         writeBody(dce, sb, dce.nextEnvironment(environment));
       } else {
         if (event.hasParameter) {

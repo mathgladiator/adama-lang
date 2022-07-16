@@ -1,6 +1,8 @@
 # Creating a space
 
-Spaces are globally named, so you may need to be a bit clever with how you name them.
+Fundamentally, a space is a namespace/container for Adama documents which share a common document script.
+
+Spaces are global resources, so you may need to be a bit clever with how you name them as conflicts between other developers can happen.
 This is the rough spot of the tutorial since I can't tell you exactly what to type as you will have to invent a name.
 However, I can provide an example of creating a space.
 

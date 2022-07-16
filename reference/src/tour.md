@@ -25,17 +25,18 @@ However, a human viewer (such as yourself or myself) of the document will only s
 {"name":"You"}
 ```
 
-This is because the **score** field is defined with the private modifier. By modifying a field with **private**, only the code within the document can operate on the **score** field. This is useful, for example, to define secrets in a game. A key function in board games is the need for secrets (i.e. the contents of your hand) or an unrevealed state of objects such as the ordering of cards within a deck.
+This is because the **score** field is defined with the **private** modifier. By modifying a field with **private**, only the code within the document can operate on the **score** field. This is useful, for example, to define secrets in a game. A key function in board games is the need for secrets (i.e. the contents of your hand) or an unrevealed state of objects such as the ordering of cards within a deck.
 
 The following diagram visualizes the Adama environment and architecture:
 
-![Architecture diagram showing you, the data you see, how it connects to a store which runs the Adama code](/img/20200613_diagram_entire_thing_story.png)
+![Architecture diagram showing you, the data you see, how it connects to a store which runs the Adama code](https://www.adama-platform.com/i/20200613-diagram-entire-thing-story.png)
 
 Here is a brief overview of the Adama working environment:
 
-- Connect (via a client) to the Adama Document Store with a persistent connection. 
-- The store will then send to you a private version of the document. 
-- This private version is tailored for you based on directives from the Adama code provided to the store (e.g., the **private** modifier sets the **score** variable as private in the above example). 
+- People connect (via a client) to the Adama Platform with a persistent connection.
+- Adama will then send to you a private and personalized version of the document.
+- People send messages to the document, and Adama will run code on the message to validate and change the document.
+- Adama will send updates while respecting the privacy based on directives (e.g., the **private** modifier sets the **score** variable as private in the above example). 
 
 Adama is not only a data-centric programming language, but a privacy-focused language such that secrets between players (i.e. individual hands) and the universe (i.e. decks) are not disclosed. This environment is essential for games requiring secrets so that other gamers do not gain an unfair advantage from "hacking" environment variables. 
 
@@ -88,7 +89,7 @@ The above code will construct the state of the document representing a typical d
 public formula deck_size = deck.size();
 ```
 
-The above **formula** variable represents Adama's [reactive programming language](https://en.wikipedia.org/wiki/Reactive_programming). As the deck undergoes changes during gameplay, the formula variables depending on that deck will be recomputed and updates will be sent to viewers such as players in the game.
+The above **formula** variable represents Adama's [reactive programming language](https://en.wikipedia.org/wiki/Reactive_programming). As the deck undergoes changes during gameplay, the formula variables depending on that deck will be recomputed and updates will be sent to viewers such as players in the game. For efficiency, this is done once message processing stops.
 
 Because Adama continually updates the state of document, the connection from your device to the Adama Document Store uses a socket. The socket provides a way for the server to know the state of the client, and then minimize the compute overhead on the server. This enables small data changes to manifest in small compute changes that translate to less network usage. Less network usage translates to less client device compute overhead, and this manifests into less battery consumption for the end-user. Board games can last for hours when they leverage Adama's reduction in battery power consumption.
 
@@ -118,7 +119,7 @@ The bubble is special type of **formula** which allows data to be computed based
 
 ## Messages from Devices to the Document
 
-Change events on documents trigger using messages.
+Changing the document is done via people sending messages to the document.
 
 Adama acts as a message receiver of messages sent by the client. We can model a **message** similar to a **record**. For instance, we can design a message that says "I wish to draw $count cards" demonstrated below:
 
@@ -136,7 +137,7 @@ channel draw_cards(Draw d) {
 }
 ```
 
-This channel will allow messages of type **Draw** to flow from the client to the code outlined above. In this case, the code uses a LINQ query to find at most **$d.count** available random cards to associate to the Draw message sender.
+This channel will allow messages of type **Draw** to flow from the client to the code outlined above. In this case, the code uses a LINQ query to find at most **d.count** available random cards to associate to the Draw message sender.
 
 Messages alone create a nice theoretical framework, but they may not be practical for games. This messaging works great for things like chat, but it offloads a great deal of burden to both the message handler and the client. For instance, in a game, when can someone draw cards? Can they draw cards at any time? Or during a specific game phase?
 

@@ -38,8 +38,8 @@
   - [The glorious state machine](./guide/state-machine.md)
   - [Reactive formulas](./guide/formulas.md)
   - [Privacy and bubbles](./guide/privacy-and-bubbles.md)
-  - [Web processing](./guide/web.md)-
-  - [Interacting with remote services](./guide/services.md)-
+  - [Web processing](./guide/web.md)
+  - [Interacting with remote services](./guide/services.md)
 - [Detailed Reference](./reference/start.md)
   - [Standard Library](./reference/stdlib.md)
     - [String](./reference/stdlib-strings.md)

@@ -1,9 +1,9 @@
-@static(context) {
+@static {
   create {
-    return context.ip == "127.0.0.1" && context.origin == "internal://" || context.who == @who;
+    return @context.ip == "127.0.0.1" && @context.origin == "internal://" || @context.who == @who;
   }
   invent {
-    return @who == context.who;
+    return @who == @context.who;
   }
   maximum_history = 1 + 1;
   delete_on_close = false;
