@@ -148,6 +148,9 @@ public class TyNativeResult extends TyType implements DetailContainsAnEmbeddedTy
     if ("await".equals(name)) {
       return new TyNativeFunctional("await", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("await", tokenElementType.item, new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
     }
+    if ("as_maybe".equals(name)) {
+      return new TyNativeFunctional("as_maybe", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("as_maybe", new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, tokenElementType), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
     return null;
   }
 }

@@ -18,3 +18,4 @@ public formula f_code = foo.code();
 public formula f_finished = foo.finished();
 public formula f_failed = foo.failed();
 public formula f_message = foo.message();
+public formula f_maybe = foo.as_maybe();

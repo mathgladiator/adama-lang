@@ -1552,6 +1552,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n  private final RxLazy<Boolean> f_finished;");
     gold.append("\n  private final RxLazy<Boolean> f_failed;");
     gold.append("\n  private final RxLazy<String> f_message;");
+    gold.append("\n  private final RxLazy<NtMaybe<RTxSendResponse>> f_maybe;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -1561,6 +1562,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __sum += f_finished.__memory();");
     gold.append("\n    __sum += f_failed.__memory();");
     gold.append("\n    __sum += f_message.__memory();");
+    gold.append("\n    __sum += f_maybe.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
     gold.append("\n  public ResultFunctions_6(DocumentMonitor __monitor) {");
@@ -1578,6 +1580,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    foo.__subscribe(f_failed);");
     gold.append("\n    f_message = new RxLazy<String>(this, () -> (foo.get().message()));");
     gold.append("\n    foo.__subscribe(f_message);");
+    gold.append("\n    f_maybe = new RxLazy<NtMaybe<RTxSendResponse>>(this, () -> (foo.get().as_maybe()));");
+    gold.append("\n    foo.__subscribe(f_maybe);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -1811,6 +1815,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    private DBoolean __df_failed;");
     gold.append("\n    private int __gf_message;");
     gold.append("\n    private DString __df_message;");
+    gold.append("\n    private int __gf_maybe;");
+    gold.append("\n    private DMaybe<DeltaRTxSendResponse> __df_maybe;");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaResultFunctions_6() {");
     gold.append("\n      __gfoo = -1;");
@@ -1825,6 +1831,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __df_failed = new DBoolean();");
     gold.append("\n      __gf_message = -1;");
     gold.append("\n      __df_message = new DString();");
+    gold.append("\n      __gf_maybe = -1;");
+    gold.append("\n      __df_maybe = new DMaybe<DeltaRTxSendResponse>();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1836,10 +1844,11 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __sum += __df_finished.__memory();");
     gold.append("\n      __sum += __df_failed.__memory();");
     gold.append("\n      __sum += __df_message.__memory();");
+    gold.append("\n      __sum += __df_maybe.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
     gold.append("\n    public void show(ResultFunctions_6 __item, PrivateLazyDeltaWriter __writer) {");
-    gold.append("\n      __code_cost += 6;");
+    gold.append("\n      __code_cost += 7;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__gfoo != __item.foo.getGeneration()) {");
@@ -1874,6 +1883,16 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n        __df_message.show(__item.f_message.get(), __obj.planField(\"f_message\"));");
     gold.append("\n        __gf_message = __item.f_message.getGeneration();");
     gold.append("\n      }");
+    gold.append("\n      if (__gf_maybe != __item.f_maybe.getGeneration()) {");
+    gold.append("\n        if (__item.f_maybe.get().has()) {");
+    gold.append("\n          RTxSendResponse __maybeElement4 = (RTxSendResponse)(__item.f_maybe.get().get());");
+    gold.append("\n          DeltaRTxSendResponse __maybeDeltaElement5 = __df_maybe.get(() -> new DeltaRTxSendResponse());");
+    gold.append("\n          __maybeDeltaElement5.show(__maybeElement4, __obj.planField(\"f_maybe\"));");
+    gold.append("\n        } else {");
+    gold.append("\n          __df_maybe.hide(__obj.planField(\"f_maybe\"));");
+    gold.append("\n        }");
+    gold.append("\n        __gf_maybe = __item.f_maybe.getGeneration();");
+    gold.append("\n      }");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
@@ -1886,7 +1905,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __df_finished.clear();");
     gold.append("\n      __df_failed.clear();");
     gold.append("\n      __df_message.clear();");
-    gold.append("\n      __code_cost += 6;");
+    gold.append("\n      __df_maybe.clear();");
+    gold.append("\n      __code_cost += 7;");
     gold.append("\n    }");
     gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      if (__emitted) {");
@@ -2196,12 +2216,12 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\nBegin");
     gold.append("\nEnd");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"foo\":{\"type\":{\"nature\":\"native_result\",\"type\":{\"nature\":\"native_message\",\"name\":\"SendResponse\",\"anonymous\":false,\"fields\":{}}},\"privacy\":\"public\"},\"f_has\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"},\"f_code\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"f_finished\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"},\"f_failed\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"},\"f_message\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"SendRequest\":{\"nature\":\"native_message\",\"name\":\"SendRequest\",\"anonymous\":false,\"fields\":{\"phone\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"},\"privacy\":\"public\"},\"message\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"},\"privacy\":\"public\"}}},\"SendResponse\":{\"nature\":\"native_message\",\"name\":\"SendResponse\",\"anonymous\":false,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"foo\":{\"type\":{\"nature\":\"native_result\",\"type\":{\"nature\":\"native_message\",\"name\":\"SendResponse\",\"anonymous\":false,\"fields\":{}}},\"privacy\":\"public\"},\"f_has\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"},\"f_code\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"f_finished\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"},\"f_failed\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"},\"f_message\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"},\"privacy\":\"public\"},\"f_maybe\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_message\",\"name\":\"SendResponse\",\"anonymous\":false,\"fields\":{}}},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"SendRequest\":{\"nature\":\"native_message\",\"name\":\"SendRequest\",\"anonymous\":false,\"fields\":{\"phone\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"},\"privacy\":\"public\"},\"message\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"},\"privacy\":\"public\"}}},\"SendResponse\":{\"nature\":\"native_message\",\"name\":\"SendResponse\",\"anonymous\":false,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:624");
+    gold.append("\nMEMORY:664");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"foo\":{\"failed\":true,\"message\":\"Document is creating\",\"code\":500,\"f_has\":false,\"f_code\":500,\"f_finished\":true,\"f_failed\":true,\"f_message\":\"Document is creating\"},\"seq\":3}");
@@ -2215,7 +2235,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:1302");
+    gold.append("\nMEMORY:1422");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__cfoo\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
