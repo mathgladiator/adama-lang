@@ -1,16 +1,20 @@
 # Static policies and document events
 
-A document will contain state, and it is vital to protect that state from unauthorized access or malicous actors. In this section, we will go through the details of access control:
+A document will contain state, and it is vital to protect that state from unauthorized access or malicous actors. In this section, we will go through the details of access control and answer these questions:
 * Who can create documents?
 * Who can invent documents? And what does document invention mean?
 * Who can connect to documents?
 * Who can attach resources (i.e. files) to documents?
+* What resource got attached?
 
+Unlike other document stores, access control is done within the platform at the lowest level.
 This is the first step in building anything with Adama because access control and privacy are important.
 
 ## Static policies
 
-Static policies are evaluated without any state precisely because that state is not available. For instance, the ability to create a document requires a polices, so we introduce the ```@static {}``` construct which denotes a block of policies. Within the ```@static``` block are policies like ```create``` and ```invent```.
+Static policies are evaluated without any state precisely because that state is not available. For instance, the ability to create a document requires a policy, so we introduce the ```@static {}``` construct which denotes a block of policies. Within the ```@static``` block are policies like ```create``` and ```invent```.
+
+### Answer: Who can create documents within your space?
 
 ```adama
 @static {
@@ -40,7 +44,7 @@ We can also validate the user is one of your people using [a public key you prov
 }
 ```
 
-The static policy also has a context which provides location about where the user is connecting from using ```@context``` constant.
+The static policy also has context which provides location about where the user is connecting from using ```@context``` constant.
 
 ```adama
 @static {
@@ -52,30 +56,31 @@ The static policy also has a context which provides location about where the use
 ```
 
 From a security perspective, origin can't be trusted from malicious actors writing bots as they can forge the Origin header.
+However, the origin header is sufficient for preventing XSS attacks and limiting accidental usage across the web.
 
+### Answer: What is invention and who can invent documents within your space?
 
+Document invention happens when a user attempts to connect to a document that doesn't exist.
+If the document requires no [constructor](#construction) then the ```invent``` policy is evaluated.
+If then ```invent``` policy returns true, then the document is created and the connect request is tried again.
+This is useful for introducing real-time scenarios to an already mature user-base as construction can happen on-demand.
 
-> This clearly needs a lot of work! The key limits being the lack of data besides who the person is.
-> If we add the ability to know the origin or key, then the possibilities open up.
-> See [github issue #97](https://github.com/mathgladiator/adama-lang/issues/97) for more details.
-
-Similar to the ```create``` policy function, there is the ```invent``` policy which works similar to ```create``` except works only when a connection fails to establish due to a lack of a document.
-That is, if a document is not found, then we internally create it if the invention policy allows it and there is no message required for construction.
+The ```invent``` policy works similar to ```create```.
 
 ```adama
 @static {
-  create {
-    return false;
-  }
   invent {
     return who.isAdamaDeveloper();
   }
 }
 ```
 
+The logic within ```invent``` can mirror that of ```create```.
+
 ## Static properties
 
-With the ```@static``` block, we can also configure fixed properties that balance cost versus features. For instance, the ```maximum_history``` property will inform the system how much history to preserve.
+With the ```@static``` block, we can also configure fixed properties that balance cost versus features or enable new modes.
+For instance, the ```maximum_history``` property will inform the system how much history to preserve.
 
 ```adama
 @static {
@@ -84,17 +89,22 @@ With the ```@static``` block, we can also configure fixed properties that balanc
 ```
 
 Here, at least 500 changes to the document will be kept active.
+We also have ```delete_on_close``` which will automatically delete the document once the document is closed.
+This is useful for ephemeral experiences like typing indicators.
 
-> There are some interesting opportunities to tune the system.
-> For example, latency could be traded off for durability.
-> For enterprise applications, this is a bad idea; however, for a game this may be great for low-latency experience.
-> See [github issue #98](https://github.com/mathgladiator/adama-lang/issues/98)
+```adama
+@static {
+  delete_on_close = true;
+}
+```
 
 ## Document events
 
 Document events are evaluated against a specific instance of a document. These events happen when a document is created, when a client connects or disconnects to a document, and when an attachment is added to a document.
 
-### Construction
+> Note: at this time, document events don't support @context. See [issue #118](https://github.com/mathgladiator/adama-lang/issues/118)
+
+### Construction: How to initialize a document?
 
 Fields within a document can be initialized with a default value or via code within the ```@construct``` event.
 
@@ -103,32 +113,20 @@ Fields within a document can be initialized with a default value or via code wit
 public int y = 42;
 // x has a default value = 0
 public int x;
+// who owns the document
+public client owner;
 
 @construct {
+  owner = @who;
   // overwrite the default value of x with 42
   x = 42;
 }
 ```
 
+From a security perspective, it is exceptionally important to capture the creator (via the ```@who``` constant) for access control towards establishing an owner of the document as this enables more stringent access control policies.
+
 The ```@construct``` event will fire exactly once when the document is constructed.
-Constructors can also accept a ```client``` and a single message argument.
-For instance, the following is a more representative constructor.
-
-```adama
-message Arg {
-  int init;
-}
-
-public int x;
-public client owner;
-
-@construct (client who, Arg arg) {
-  owner = who;
-  x = arg.init;
-}
-```
-
-As documents can only be constructed once, this enables games and documents to have an authoritative owner and initial state which can be used within [privacy policies](privacy-and-bubbles.md).
+As documents can only be constructed once, this enables documents to have an authoritative owner which can be used within [privacy policies](privacy-and-bubbles.md) and [access control](#connected-and-disconnected).
 
 ### Connected and Disconnected
 
@@ -136,24 +134,79 @@ The primary mechanism for users to get access to the document is via a persisten
 Before messages can be sent, the connection must be authorized by the document and this is done via the ```@connected``` event.
 
 ```adama
-@connected(who) {
+@connected {
   return true;
 }
 ```
 
-This code is run when a person connects to the document, and if the return value is true then the connection is established.
+The ```@connected``` event is the primary place to enforce document-level access control. For example, we can combine the constructor with the ```@connected``` event.
+
+```adama
+public client owner;
+public bool open_to_public;
+
+@construct {
+  owner = @who;
+  open_to_public = false;
+}
+
+@connected {
+  if (owner == @who) {
+    return true;
+  }
+  return open_to_public;
+}
+```
+
+If the return value is true then the connection is established.
+Since the ```@connected``` event runs within the document scope, it can both mutate the document and lookup data within the document.
+A more stringent policy would have [a table](tables-linq.md) with who can access the document.
+Above, we always allow the owner to connect and a boolean controls whether a random person can connect.
+
 Not only can they connect, but they also naturally disconnect (either on purpose or due to technical difficulties).
 The disconnect signal is an informational event only, and is available via the ```@disconnected``` event.
 
 ```adama
-@disconnected (who) {	
+@disconnected {	
 }
 ```
 
-In both of these events, the **who** variable has a type of ```client``` which is the user. As a rule, only connected clients can:
-* send messages
-* read the document
+This allows us to mutate the document on a person disconnecting.
 
-This makes ```@connected``` the access control mechanism for authorizing people to see the document. For private documents, this places a great deal of burden on [the constructor](/docs/reference-constructor) to initialize the state with an owning ```client```.
+### Asset Attachments
 
-### Attachments
+Adama allows you to attach assets to documents.
+Assets are essentially files or binary blobs that are associated with the document.
+Since the storage and association of assets is non-trivial, there are two document events for assets.
+
+### Answer: Who can attach a file to your document?
+
+The ```@can_attach``` document event works much like ```@connnected``` in that the code is ran and the person attempting to upload is validated.
+If the event returns true, then the user is allowed to attach the file.
+
+```@can_attach {
+  return @who.isAdamaDeveloper();
+}
+```
+
+This event primarily exists to protect user devices from erroneously uploading attachments. After this event returns true, the user will begin the upload which will durably store the file as an asset.
+
+### Answer: What resource was attached
+Once the asset is durable stored, the ```@attached``` event is run with the asset as a parameter.
+
+```adama
+public asset most_recent_file;
+@attached (what) {
+  most_recent_file = what;
+}
+```
+
+The type of the ```what``` variable is ```asset``` which has the following methods.
+
+| method | return type |what it is |
+| --- | --- | --- |
+| name() | string | The name provided by the uploader (i.e. file name) |
+| id() | string | A unique id to denote the asset |
+| size() | long | The number of bytes of the asset |
+| type() | string | The [Content type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) of the asset ( |
+| valid() | bool | The asset is real or not. The default value for an asset is ```@nothing``` |

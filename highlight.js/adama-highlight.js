@@ -64,6 +64,14 @@ hljs.registerLanguage("adama", (() => {
         className: 'keyword',
         begin: '@who'
     };
+    const KEYWORD_CONTEXT = {
+        className: 'keyword',
+        begin: '@context'
+    };
+    const KEYWORD_VIEWER = {
+        className: 'keyword',
+        begin: '@viewer'
+    };
     const KEYWORD_PARAMETERS = {
         className: 'keyword',
         begin: '@parameters'
@@ -140,7 +148,7 @@ hljs.registerLanguage("adama", (() => {
     };
 
     return e => ({
-        aliases: ["ad", "adama"],
+        aliases: ["a", "adama"],
         keywords: KEYWORDS,
         contains: [
             LITERAL_NO_ONE,
@@ -155,6 +163,8 @@ hljs.registerLanguage("adama", (() => {
             KEYWORD_STATIC,
             KEYWORD_WEB,
             KEYWORD_WHO,
+            KEYWORD_CONTEXT,
+            KEYWORD_VIEWER,
             KEYWORD_PARAMETERS,
             KEYWORD_HEADERS,
             KEYWORD_CONSTRUCT,
