@@ -73,7 +73,6 @@ public abstract class LivingDocument implements RxParent, Caller {
   private String __preemptedStateOnNextComputeBlocked = null;
   private String __space;
   private String __key;
-  private long lastRouteCreated;
   private Deliverer __deliverer;
 
   public LivingDocument(final DocumentMonitor __monitor) {
@@ -116,7 +115,6 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   /** create a route id */
   public int __createRouteId() {
-    lastRouteCreated = __timeNow();
     return __auto_cache_id.bumpUpPre();
   }
 
@@ -218,6 +216,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.beginObject();
     reverse.beginObject();
     __commit(null, forward, reverse);
+    __cache.__commit("__cache", forward, reverse);
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
@@ -875,13 +874,16 @@ public abstract class LivingDocument implements RxParent, Caller {
           CoreRequestContext context = new CoreRequestContext(who, origin, ip, key);
           return __transaction_send(context, requestJson, who, marker, channel, timestamp, message, factory);
         case "deliver":
+          if (who == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+          }
           if (delivery_id == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_DELIVERY_ID);
           }
           if (result == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_RESULT);
           }
-          return __transaction_deliver(requestJson, delivery_id, result);
+          return __transaction_deliver(requestJson, who, delivery_id, result);
         case "expire":
           if (limit == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_LIMIT);
@@ -910,7 +912,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
-  private LivingDocumentChange __transaction_deliver(final String request, int deliveryId, RemoteResult result) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_deliver(final String request, NtClient who, int deliveryId, RemoteResult result) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     boolean exception = true;
     if (__monitor != null) {
@@ -924,7 +926,17 @@ public abstract class LivingDocument implements RxParent, Caller {
       if (!route.deliver(deliveryId, result)) {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ROUTE_CACHE);
       }
-      return __simple_commit(NtClient.NO_ONE, request, null);
+      __seq.bumpUpPre();
+      final var forward = new JsonStreamWriter();
+      final var reverse = new JsonStreamWriter();
+      forward.beginObject();
+      reverse.beginObject();
+      __commit(null, forward, reverse);
+      __cache.__commit("__cache", forward, reverse);
+      forward.endObject();
+      reverse.endObject();
+      RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
+      return new LivingDocumentChange(update, new ArrayList<>(), null);
     } finally {
       if (exception) {
         __revert();
