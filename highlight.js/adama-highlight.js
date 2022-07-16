@@ -4,6 +4,7 @@ hljs.registerLanguage("adama", (() => {
     const IDENT_RE = '[A-Za-z$_][0-9A-Za-z_]*';
     const KEYWORD_LIST = [
         "enum", "dispatch", "record", "message", "channel", "rpc",
+        "service",
         "function", "procedure", "test",
         "import", "view", "bubble", "policy",
         "require", "index", "method",
