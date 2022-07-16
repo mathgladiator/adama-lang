@@ -9,6 +9,8 @@
   - [Writing and deploying Adama code to a space](./tutorial/04-space.md)
   - [Using the JavaScript client](./tutorial/05-js-client.md)
 - [Language Tour](./tour.md)
+- [How-to Guides](./howtos/intro.md)
+  - [Tic-Tac-Toe](./howtos/tic-tac-toe.md)
 - [Examples to get playful with](./examples/start.md)
   - [Tic-Tac-Toe](./examples/tic-tac-toe.md)
   - [Durable PubSub](./examples/pubsub.md)
