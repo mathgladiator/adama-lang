@@ -1,6 +1,6 @@
 # Local variables and assignment
 
-While [document variables](./document.md) are persisted, variables can be defined locally within code blocks (like [constructors](static-policies-document-events.md) to be used to compute things. 
+While [document variables](./document.md) are persisted, variables can be defined locally within code blocks (like [constructors](static-policies-document-events.md) to be used to compute things. These variables are only used to compute.
 
 ```adama
 private int score;
@@ -11,11 +11,10 @@ private int score;
 }
 ```
 
-## Diving Into Details
-
 ### Define by type
 
 Each native type can be defined within a code block:
+
 ```adama
 #transition {
   int local;
@@ -24,7 +23,7 @@ Each native type can be defined within a code block:
 }
 ```
 
-Note, many types have a default value.
+Many of the [types used by records and messages](./types.md) can used within code, and many of the types have a default value:
 
 | type | default value |
 | --- | --- |
@@ -33,18 +32,10 @@ Note, many types have a default value.
 | long | 0L |
 | double | 0.0 |
 | string | "" |
-
-TODO: what about lists, arrays, ... etc...
-
-### Define via the "let" keyword and type inference
-
-Instead of leading with the type, you can simply say "let" and allow the translator to precisely infer the type.
-
-```adama
-#transition {
-  let local = 42;
-}
-```
+| list&lt;T&gt; | empty list |
+| table&lt;T&gt; | empty table |
+| maybe&lt;T&gt; | unset maybe |
+| T[] | empty array |
 
 ### readonly keyword
 
@@ -56,17 +47,18 @@ A local variable can be annotated as readonly, meaning it can not be assigned.
 }
 ```
 
-Note: readonly and let do not mix at this time... TODO
+This is fairly verbose!
 
-### Math-based Assignment
+### Define via the "let" keyword and type inference
 
-#### Add To (+=)
+Instead of leading with the **readonly** and the type, you can simply say "let" and allow the translator to precisely infer the type and market the variable as readonly.
 
-#### Subtract From (-=)
+```adama
+#transition {
+  let local = 42;
+}
+```
 
-#### Multiply By (\*=)
+### Math-based assignment, increment, decrement
 
-#### Divide By (/=)
-
-#### Mod (%=)
-
+Numerical types provide the ability to add, subtract, and multiply the value by a right hand side.

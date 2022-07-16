@@ -293,15 +293,16 @@ public class StructureStorage extends DocumentPosition {
     return !thisIt.hasNext() && !thisOther.hasNext();
   }
 
-  public void typing(Environment environment) {
+  public void typing(Environment envParent) {
     if (typedAlready) {
       return;
     }
+    Environment envToUse = specialization == StorageSpecialization.Message ? envParent.scopeMessage() : envParent;
     for (final Consumer<Environment> type : typeCheckOrder) {
-      type.accept(environment);
+      type.accept(envToUse);
     }
     for (final TyNativeFunctional functional : methodTypes.values()) {
-      functional.typing(environment);
+      functional.typing(envToUse);
     }
     typedAlready = true;
   }

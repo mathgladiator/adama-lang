@@ -24,10 +24,10 @@ This simple re-use becomes the foundation for building composite types and colle
 See:
 * [types](./types.md) for more information on which types can go within records.
 * [privacy policies](./privacy-and-bubbles.md) for how privacy per field is specified within a record.
-* [bubbles](./privacy-and-bubbles.md) for how data is exposed based on the viewer
+* [bubbles](./privacy-and-bubbles.md) for how data is exposed based on the viewer from the record.
 * [reactive formulas](./formulas.md) for how to expose reactively compute data to the viewer of record.
 
-Records also have [#methods](#methods), can [declare privacy policies](#policies), and [hint at indexing](#indexing-tables) for [tables](./tables-linq.md).
+Records also have [methods](#methods), can [declare privacy policies](#policies), and [hint at indexing](#indexing-tables) for [tables](./tables-linq.md).
 If a record is used within a table, an implicit field called ```id``` is created with integer type.
 Since communication is done with [messages](./messages.md), [conversion to a message](#easily-convert-to-a-message-for-communication) is provided as a free helper.
 
@@ -105,11 +105,19 @@ record R {
 
 ## Indexing tables
 
-The best mental model for a record is a row within a table. By default, a row has a primary key index on ```id``` which has a type of int.
+The best mental model for a record is a row within a table. By default, a row has a primary key index on ```id``` which has a type of int. Additional fields within a record can be indexed to speed up [queries](./tables-linq.md).
 
+```adama
+record R {
+  private int key;
+  
+  index key;
+}
 
+table<R> _table;
+```
 
-
+The **index** keyword will inform _table that it can group records by the **key** field to reduce the number of candiates considered during a **where** clause. This will introduce both memory and computational overhead to maintain.
 
 ## Easily convert to a message for communication
 
@@ -129,4 +137,4 @@ message M {
 }
 ```
 
-The usefulness of this conversion will become clear when [channels and futures are outlined](./async.md).
+This conversion is useful with [channels and futures are outlined](./async.md) as we sometimes want to present people with a list of options derived from a table. It is also useful for sending records to [another service](./services.md).

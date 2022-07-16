@@ -230,6 +230,11 @@ public class Environment {
     return new Environment(document, state.scopeStatic(), this);
   }
 
+  /** create a new environment which is for static methods (i.e. policy methods) */
+  public Environment scopeMessage() {
+    return new Environment(document, state.scopeStatic().scopePure(), null);
+  }
+
   /** create a new environment which is for leveraging the cache */
   public Environment scopeWithCache(String cacheObject) {
     return new Environment(document, state.scopeWithCache(cacheObject), this);

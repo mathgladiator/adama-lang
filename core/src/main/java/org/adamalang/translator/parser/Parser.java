@@ -860,14 +860,19 @@ public class Parser {
     final var storage = new StructureStorage(StorageSpecialization.Message, false, consumeExpectedSymbol("{"));
     var endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
     while (endBrace == null) {
-      final var type = native_type();
-      final var field = id();
-      final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
-      Expression defaultValueOverride = null;
-      if (equalsToken != null) {
-        defaultValueOverride = expression();
+      Token methodToken = tokens.popIf((t) -> t.isIdentifier("method"));
+      if (methodToken != null) {
+        storage.add(define_method_trailer(methodToken));
+      } else {
+        final var type = native_type();
+        final var field = id();
+        final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
+        Expression defaultValueOverride = null;
+        if (equalsToken != null) {
+          defaultValueOverride = expression();
+        }
+        storage.add(new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, consumeExpectedSymbol(";")));
       }
-      storage.add(new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, consumeExpectedSymbol(";")));
       endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
     }
     storage.end(endBrace);
@@ -1233,14 +1238,8 @@ public class Parser {
   }
 
   public TyType native_type_base() throws AdamaLangException {
-    var readonlyToken = tokens.peek();
-    final var readonly = readonlyToken != null && readonlyToken.isIdentifier("readonly");
-    if (readonly) {
-      readonlyToken = tokens.pop();
-    } else {
-      readonlyToken = null;
-    }
-    return native_type_base_with_behavior(readonly, readonlyToken);
+    var readonlyToken = tokens.popIf((t) -> t.isIdentifier("readonly"));
+    return native_type_base_with_behavior(readonlyToken != null, readonlyToken);
   }
 
   public TyNativeTuple native_tuple(final TypeBehavior behavior, final Token readonlyToken, final Token tupleToken) throws AdamaLangException {

@@ -22,6 +22,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
+import org.adamalang.translator.tree.types.structures.DefineMethod;
 import org.adamalang.translator.tree.types.structures.IndexDefinition;
 import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
@@ -95,7 +96,9 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
     sb.tabUp().writeNewline();
     sb.append(classConstructorStripped);
     sb.append("").tabDown().writeNewline().append("}").writeNewline();
-    CodeGenRecords.writeMethods(storage, sb, environment);
+    for (final DefineMethod dm : storage.methods) {
+      dm.writeFunctionJava(sb, environment);
+    }
     CodeGenRecords.writePrivacyCommonBetweenRecordAndRoot(storage, sb, environment);
     CodeGenRecords.writeIndices(name, storage, sb, environment);
     CodeGenRecords.writeCommitAndRevert(storage, sb, environment, false);

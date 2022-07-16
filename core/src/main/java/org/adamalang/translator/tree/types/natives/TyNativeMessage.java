@@ -21,15 +21,17 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.InjectExpression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
+import org.adamalang.translator.tree.types.structures.DefineMethod;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
+import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.CanBeNativeArray;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNativeOnlyForSet;
-import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
-import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
-import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
-import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
+import org.adamalang.translator.tree.types.traits.details.*;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -40,6 +42,7 @@ public class TyNativeMessage extends TyType implements IsStructure, //
     DetailHasDeltaType, //
     DetailInventDefaultValueExpression, //
     CanBeNativeArray, //
+    DetailTypeHasMethods, //
     DetailNativeDeclarationIsNotStandard, //
     AssignmentViaNativeOnlyForSet {
   public Token messageToken;
@@ -87,6 +90,9 @@ public class TyNativeMessage extends TyType implements IsStructure, //
     }
     CodeGenMessage.generateHashers(name, storage, sb, environment);
     CodeGenMessage.generateJsonReaders(name, storage, sb, environment);
+    for (final DefineMethod dm : storage.methods) {
+      dm.writeFunctionJava(sb, environment.scopeStatic());
+    }
     { // CLOSE UP THE MESSAGE WITH A CONSTRUCTOR FOR ANONYMOUS OBJECTS
       sb.append("private RTx" + name + "() {}");
       if (storage.fields.size() == 0) {
@@ -202,5 +208,10 @@ public class TyNativeMessage extends TyType implements IsStructure, //
   @Override
   public StructureStorage storage() {
     return storage;
+  }
+
+  @Override
+  public TyNativeFunctional lookupMethod(String name, Environment environment) {
+    return storage.methodTypes.get(name);
   }
 }

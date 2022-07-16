@@ -1,6 +1,8 @@
 # Messages
 
-A message is similar to a [record](./records.md) except without any privacy awareness or privacy concerns. All fields within a message are public, and the expectation is that messages come from users. The following defines a real-world message:
+A message is similar to a [record](./records.md) except without any privacy awareness or privacy concerns. Unlike records, messages lack formulas and bubbles and have a limited form of [methods](#methods).
+
+All fields within a message are public, and the expectation is that messages come from users. The following defines a real-world message:
 
 ```adama
 message JoinGroup {
@@ -8,8 +10,10 @@ message JoinGroup {
 }
 ```
 
-Most types that can be defined within code can be defined within a message. The exceptions are channels and futures.
+Most types that can be defined within code can be defined within a message.
+Some exceptions are channels, services, and futures; spiritually, all data defined within a message must be complete in a serialized form.
 Messages can also be constructed anonymously on the fly.
+
 ```adama
 #yo {
   let msg = {x:1, y:2};  
@@ -27,6 +31,19 @@ message M {
 
 @construct {
   M m = {x:1, y:1};
+}
+```
+
+## Methods
+
+Messages may have methods, but they are more constrained as they can only reference data from within the message as messages.
+
+```adama
+message X {
+  int val;
+  method succ() -> int {
+    return val + 1;
+  }
 }
 ```
 

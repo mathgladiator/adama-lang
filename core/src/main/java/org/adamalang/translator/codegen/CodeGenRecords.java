@@ -405,12 +405,6 @@ public class CodeGenRecords {
     sb.append("}").writeNewline();
   }
 
-  public static void writeMethods(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
-    for (final DefineMethod dm : storage.methods) {
-      dm.writeFunctionJava(sb, environment);
-    }
-  }
-
   public static void writePrivacyCommonBetweenRecordAndRoot(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
     final var policyRoot = environment.scopeAsReadOnlyBoundary();
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {

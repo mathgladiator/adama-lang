@@ -19,7 +19,6 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
-import org.adamalang.translator.tree.types.natives.TyNativeComplex;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.natives.TyNativeReactiveRecordPtr;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
@@ -28,14 +27,13 @@ import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclaratio
 
 import java.util.function.Consumer;
 
-/** type var = expr; */
+/** type var = expr; | let var = expr; */
 public class DefineVariable extends Statement {
   public final String name;
   public final Token nameToken;
   public final Token preludeToken;
   private final Token endToken;
   private final Token equalToken;
-  private final boolean isReadonly;
   private TyType type;
   private Expression value;
 
@@ -60,7 +58,6 @@ public class DefineVariable extends Statement {
     if (endToken != null) {
       ingest(endToken);
     }
-    isReadonly = false;
   }
 
   @Override
@@ -118,7 +115,7 @@ public class DefineVariable extends Statement {
     }
     if (type != null) {
       type.typing(environment);
-      environment.define(name, type.makeCopyWithNewPosition(this, type.behavior), isReadonly, type);
+      environment.define(name, type.makeCopyWithNewPosition(this, type.behavior), type.behavior == TypeBehavior.ReadOnlyNativeValue, type);
     }
     return ControlFlow.Open;
   }
@@ -126,7 +123,8 @@ public class DefineVariable extends Statement {
   @Override
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
     if (type != null) {
-      if (type.behavior == TypeBehavior.ReadOnlyNativeValue) {
+      boolean isReadOnly = type.behavior == TypeBehavior.ReadOnlyNativeValue;
+      if (isReadOnly) {
         sb.append("final ");
       }
       sb.append(type.getJavaConcreteType(environment)).append(" " + name);
@@ -146,7 +144,7 @@ public class DefineVariable extends Statement {
         }
         sb.append(";");
       }
-      environment.define(name, type, isReadonly, type);
+      environment.define(name, type, isReadOnly, type);
     }
   }
 }

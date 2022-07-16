@@ -1,0 +1,13 @@
+enum E { A, B }
+
+message X {
+  int val;
+  method succ() -> int {
+    return val + 1;
+  }
+}
+
+channel<X> foo;
+
+@construct {
+}
