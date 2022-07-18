@@ -56,7 +56,7 @@ public class LinearConnectionStateMachine {
 
       @Override
       public void onMachine(String machine) {
-        base.mesh.find(target, new Callback<InstanceClient>() {
+        base.mesh.find(machine, new Callback<InstanceClient>() {
           @Override
           public void success(InstanceClient value) {
             value.connect(ip, origin, agent, authority, key.space, key.key, viewerState, assetKey, new Events() {
