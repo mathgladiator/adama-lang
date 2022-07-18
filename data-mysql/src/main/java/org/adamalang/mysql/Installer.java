@@ -1,3 +1,12 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See http://www.adama-lang.org/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
+ */
 package org.adamalang.mysql;
 
 import java.sql.Connection;
@@ -162,6 +171,29 @@ public class Installer {
         .append(" DEFAULT CHARACTER SET = utf8mb4;") //
         .toString();
 
+    String createWebHostsTableSQL = new StringBuilder() //
+        .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`web_hosts` (") //
+        .append("  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,") //
+        .append("  `region` VARCHAR(64) NOT NULL,") //
+        .append("  `machine` VARCHAR(512) NOT NULL,") //
+        .append("  `public_key` LONGTEXT NOT NULL,")
+        .append("  PRIMARY KEY (`id`),") //
+        .append("  INDEX `m` (`machine`))") //
+        .append(" ENGINE = InnoDB") //
+        .append(" DEFAULT CHARACTER SET = utf8mb4;") //
+        .toString();
+
+    String createSecretsTableSQL = new StringBuilder() //
+        .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`secrets` (") //
+        .append("  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,") //
+        .append("  `space` VARCHAR(128) NOT NULL,") //
+        .append("  `encrypted_private_key` LONGTEXT NOT NULL,")
+        .append("  PRIMARY KEY (`id`),") //
+        .append("  INDEX `space` (`space`))") //
+        .append(" ENGINE = InnoDB") //
+        .append(" DEFAULT CHARACTER SET = utf8mb4;") //
+        .toString();
+
     Connection connection = dataBase.pool.getConnection();
     try {
       DataBase.execute(connection, createDatabaseSQL);
@@ -175,6 +207,8 @@ public class Installer {
       DataBase.execute(connection, createAuthoritiesTableSQL);
       DataBase.execute(connection, createMeteringTableSQL);
       DataBase.execute(connection, createBillingTableSQL);
+      DataBase.execute(connection, createWebHostsTableSQL);
+      DataBase.execute(connection, createSecretsTableSQL);
     } finally {
       connection.close();
     }
@@ -193,6 +227,8 @@ public class Installer {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`bills`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`directory`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`deployed`;").toString());
+      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`web_hosts`;").toString());
+      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`secrets`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP DATABASE IF EXISTS `").append(dataBase.databaseName).append("`;").toString());
     } finally {
       connection.close();

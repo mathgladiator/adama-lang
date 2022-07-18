@@ -38,13 +38,13 @@ import java.util.function.Consumer;
 public class Workpad {
 
   public static DataBaseConfig getLocalIntegrationConfig() throws Exception {
-    return new DataBaseConfig(new ConfigObject(Json.parseJsonObject(Files.readString(new File("./overlord/test.mysql.json").toPath()))), "any");
+    return new DataBaseConfig(new ConfigObject(Json.parseJsonObject(Files.readString(new File("./overlord/test.mysql.json").toPath()))));
   }
 
   public static void main(String[] args) throws Exception {
     NoOpMetricsFactory metrics = new NoOpMetricsFactory();
     MachineIdentity identity = MachineIdentity.fromFile(OverlordTests.prefixForLocalhost());
-    DataBase db = new DataBase(getLocalIntegrationConfig(), new DataBaseMetrics(metrics, "wordpad"));
+    DataBase db = new DataBase(getLocalIntegrationConfig(), new DataBaseMetrics(metrics));
 
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(Collections.singleton("127.0.0.1:8002")), 8100, 8101, new GossipMetricsImpl(metrics), EngineRole.Node);
     engine.start();
