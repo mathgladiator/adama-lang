@@ -7,18 +7,20 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.backend.data;
+package org.adamalang.mysql.data;
 
-public class DocumentIndex {
-  public final String key;
+public class SpaceListingItem {
+  public final String name;
+  public final String callerRole;
   public final String created;
-  public final String updated;
-  public final int seq;
+  public final boolean enabled;
+  public final long storageBytes;
 
-  public DocumentIndex(String key, String created, String updated, int seq) {
-    this.key = key;
+  public SpaceListingItem(String name, String callerRole, String created, boolean enabled, long storageBytes) {
+    this.name = name;
+    this.callerRole = callerRole;
     this.created = created;
-    this.updated = updated;
-    this.seq = seq;
+    this.enabled = enabled;
+    this.storageBytes = storageBytes;
   }
 }

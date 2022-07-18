@@ -7,14 +7,15 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.frontend.data;
+package org.adamalang.mysql.data;
 
-public class IdHashPairing {
-  public final int id;
+/** the raw data stored within the spaces table for a deployment */
+public class InternalDeploymentPlan {
+  public final String plan;
   public final String hash;
 
-  public IdHashPairing(int id, String hash) {
-    this.id = id;
+  public InternalDeploymentPlan(String plan, String hash) {
+    this.plan = plan;
     this.hash = hash;
   }
 }

@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.frontend.data;
+package org.adamalang.mysql.data;
 
 /** the resources metered within an hour and their associated user cost */
 public class MeteredWindowSummary {

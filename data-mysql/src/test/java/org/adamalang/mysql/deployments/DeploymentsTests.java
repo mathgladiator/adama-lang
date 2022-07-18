@@ -12,7 +12,7 @@ package org.adamalang.mysql.deployments;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
-import org.adamalang.mysql.deployments.data.Deployment;
+import org.adamalang.mysql.data.Deployment;
 import org.junit.Assert;
 import org.junit.Test;
 

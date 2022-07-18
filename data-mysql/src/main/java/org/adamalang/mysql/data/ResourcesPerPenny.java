@@ -7,24 +7,22 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.frontend.data;
+package org.adamalang.mysql.data;
 
-public class BillingUsage {
-  public final int hour;
-  public final long cpu;
-  public final long memory;
-  public final int connections;
-  public final int documents;
-  public final int messages;
-  public final long storageBytes;
+public class ResourcesPerPenny {
+  public double cpu;
+  public double messages;
+  public double count;
+  public double memory;
+  public double connections;
+  public long storage;
 
-  public BillingUsage(int hour, long cpu, long memory, int connections, int documents, int messages, long storageBytes) {
-    this.hour = hour;
+  public ResourcesPerPenny(double cpu, double messages, double count, double memory, double connections, long storage) {
     this.cpu = cpu;
+    this.messages = messages;
+    this.count = count;
     this.memory = memory;
     this.connections = connections;
-    this.documents = documents;
-    this.messages = messages;
-    this.storageBytes = storageBytes;
+    this.storage = storage;
   }
 }

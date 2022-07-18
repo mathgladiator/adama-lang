@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.frontend.data;
+package org.adamalang.mysql.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.adamalang.runtime.json.JsonStreamWriter;

@@ -13,10 +13,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.frontend.data.BillingUsage;
-import org.adamalang.mysql.frontend.data.MeteredWindowSummary;
-import org.adamalang.mysql.frontend.data.MeteringSpaceSummary;
-import org.adamalang.mysql.frontend.data.ResourcesPerPenny;
+import org.adamalang.mysql.data.BillingUsage;
+import org.adamalang.mysql.data.MeteredWindowSummary;
+import org.adamalang.mysql.data.MeteringSpaceSummary;
+import org.adamalang.mysql.data.ResourcesPerPenny;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

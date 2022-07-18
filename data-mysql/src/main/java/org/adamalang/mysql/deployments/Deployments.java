@@ -12,7 +12,7 @@ package org.adamalang.mysql.deployments;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.deployments.data.Deployment;
+import org.adamalang.mysql.data.Deployment;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

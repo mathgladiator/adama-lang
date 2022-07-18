@@ -10,7 +10,7 @@
 package org.adamalang.mysql.finder;
 
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.backend.data.DocumentIndex;
+import org.adamalang.mysql.data.DocumentIndex;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

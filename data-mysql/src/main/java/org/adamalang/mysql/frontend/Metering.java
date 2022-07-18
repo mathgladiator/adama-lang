@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.frontend.data.MeteringSpaceSummary;
+import org.adamalang.mysql.data.MeteringSpaceSummary;
 import org.adamalang.mysql.frontend.metrics.MeteringMetrics;
 
 import java.sql.Connection;

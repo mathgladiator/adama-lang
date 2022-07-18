@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.deployments.data;
+package org.adamalang.mysql.data;
 
 public class Deployment {
   public final String space;

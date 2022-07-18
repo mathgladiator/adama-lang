@@ -11,7 +11,10 @@ package org.adamalang.mysql.frontend;
 
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
-import org.adamalang.mysql.frontend.data.*;
+import org.adamalang.mysql.data.BillingUsage;
+import org.adamalang.mysql.data.MeteredWindowSummary;
+import org.adamalang.mysql.data.MeteringSpaceSummary;
+import org.adamalang.mysql.data.ResourcesPerPenny;
 import org.adamalang.mysql.frontend.metrics.MeteringMetrics;
 import org.junit.Assert;
 import org.junit.Test;

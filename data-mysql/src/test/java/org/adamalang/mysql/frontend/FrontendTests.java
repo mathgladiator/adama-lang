@@ -13,7 +13,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
-import org.adamalang.mysql.frontend.data.*;
+import org.adamalang.mysql.data.*;
 import org.junit.Assert;
 import org.junit.Test;
 

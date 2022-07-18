@@ -9,7 +9,7 @@
  */
 package org.adamalang.transforms.results;
 
-import org.adamalang.mysql.frontend.data.SpaceInfo;
+import org.adamalang.mysql.data.SpaceInfo;
 
 import java.util.Set;
 

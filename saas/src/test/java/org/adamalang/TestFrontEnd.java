@@ -28,7 +28,7 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.Installer;
 import org.adamalang.mysql.deployments.Deployments;
-import org.adamalang.mysql.deployments.data.Deployment;
+import org.adamalang.mysql.data.Deployment;
 import org.adamalang.mysql.finder.Finder;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;

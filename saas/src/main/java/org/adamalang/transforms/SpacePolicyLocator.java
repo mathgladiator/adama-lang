@@ -16,7 +16,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Spaces;
-import org.adamalang.mysql.frontend.data.SpaceInfo;
+import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.transforms.results.SpacePolicy;
 
 import java.util.concurrent.ConcurrentHashMap;
