@@ -23,23 +23,19 @@ public class ExternNexus {
   public final FrontendConfig config;
   public final Email email;
   public final AssetUploader uploader;
-  public final DataBase dataBaseManagement;
-  public final DataBase dataBaseDeployments;
-  public final DataBase dataBaseBackend;
+  public final DataBase dataBase;
   public final Client client;
   public final ApiMetrics metrics;
   public final File attachmentRoot;
   public final JsonLogger accessLogger;
   public final AssetDownloader downloader;
 
-  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBaseManagement, DataBase dataBaseDeployments, DataBase dataBaseBackend, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger) {
+  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBase, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger) {
     this.config = config;
     this.email = email;
     this.uploader = uploader;
     this.downloader = downloader;
-    this.dataBaseManagement = dataBaseManagement;
-    this.dataBaseDeployments = dataBaseDeployments;
-    this.dataBaseBackend = dataBaseBackend;
+    this.dataBase = dataBase;
     this.client = client;
     this.metrics = new ApiMetrics(metricsFactory);
     this.attachmentRoot = attachmentRoot;
@@ -48,8 +44,7 @@ public class ExternNexus {
   }
 
   public void close() throws Exception {
-    dataBaseDeployments.close();
-    dataBaseManagement.close();
+    dataBase.close();
     client.shutdown();
   }
 }

@@ -39,7 +39,7 @@ public class Business {
   public static void addBalance(Config config, String[] args) throws Exception {
     String email = Util.extractOrCrash("--email", "-e", args);
     int change = Integer.parseInt(Util.extractOrCrash("--pennies", "-p", args));
-    DataBase db = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
+    DataBase db = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
     int userId = Users.getOrCreateUserId(db, email);
     System.out.println("Balance Before: " + Util.prefix("" + Users.getBalance(db, userId), Util.ANSI.Green));
     Users.addToBalance(db, userId, change);

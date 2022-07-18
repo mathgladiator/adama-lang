@@ -10,10 +10,7 @@
 package org.adamalang.mysql.frontend;
 
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.DataBaseConfig;
-import org.adamalang.mysql.DataBaseConfigTests;
-import org.adamalang.mysql.DataBaseMetrics;
+import org.adamalang.mysql.*;
 import org.adamalang.mysql.frontend.data.*;
 import org.adamalang.mysql.frontend.metrics.MeteringMetrics;
 import org.junit.Assert;
@@ -26,8 +23,8 @@ public class MeteringSampleTests {
   @Test
   public void lateEarly() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
-      FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
+      Installer installer = new Installer(dataBase);
       try {
         MeteringMetrics metrics = new MeteringMetrics(new NoOpMetricsFactory());
         installer.install();
@@ -88,8 +85,8 @@ public class MeteringSampleTests {
   @Test
   public void batches() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
-      FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
+      Installer installer = new Installer(dataBase);
       try {
         MeteringMetrics metrics = new MeteringMetrics(new NoOpMetricsFactory());
         installer.install();

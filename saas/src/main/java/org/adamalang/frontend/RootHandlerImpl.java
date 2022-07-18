@@ -76,7 +76,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         String hash = SCryptUtil.scrypt(request.password, 16384, 8, 1);
-        Users.setPasswordHash(nexus.dataBaseManagement, request.who.id, hash);
+        Users.setPasswordHash(nexus.dataBase, request.who.id, hash);
         responder.complete();
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SET_PASSWORD_ONLY_ADAMA_DEV_EXCEPTION));
@@ -89,11 +89,11 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, AccountLoginRequest request, InitiationResponder responder) {
     try {
-      String hash = Users.getPasswordHash(nexus.dataBaseManagement, request.userId);
+      String hash = Users.getPasswordHash(nexus.dataBase, request.userId);
       if (SCryptUtil.check(request.password, hash)) {
         KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
         String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-        Users.addKey(nexus.dataBaseManagement, request.userId, publicKey, System.currentTimeMillis() + 14 * 24 * 60 * 60000);
+        Users.addKey(nexus.dataBase, request.userId, publicKey, System.currentTimeMillis() + 14 * 24 * 60 * 60000);
         responder.complete(Jwts.builder().setSubject("" + request.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SET_PASSWORD_INVALID));
@@ -108,7 +108,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       String generatedCode = generateCode();
       String hash = SCryptUtil.scrypt(generatedCode, 16384, 8, 1);
-      Users.addInitiationPair(nexus.dataBaseManagement, request.userId, hash, System.currentTimeMillis() + 15 * 60000);
+      Users.addInitiationPair(nexus.dataBase, request.userId, hash, System.currentTimeMillis() + 15 * 60000);
       nexus.email.sendCode(request.email, generatedCode);
       responder.complete();
     } catch (Exception ex) {
@@ -119,17 +119,17 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, InitCompleteAccountRequest request, InitiationResponder responder) {
     try {
-      for (IdHashPairing idHash : Users.listInitiationPairs(nexus.dataBaseManagement, request.userId)) {
+      for (IdHashPairing idHash : Users.listInitiationPairs(nexus.dataBase, request.userId)) {
         if (SCryptUtil.check(request.code, idHash.hash)) {
           KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
           String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
           if (request.revoke != null && request.revoke) {
-            Users.removeAllKeys(nexus.dataBaseManagement, request.userId);
+            Users.removeAllKeys(nexus.dataBase, request.userId);
           }
-          Users.addKey(nexus.dataBaseManagement, request.userId, publicKey, System.currentTimeMillis() + 14 * 24 * 60 * 60000);
+          Users.addKey(nexus.dataBase, request.userId, publicKey, System.currentTimeMillis() + 14 * 24 * 60 * 60000);
           responder.complete(Jwts.builder().setSubject("" + request.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
-          Users.validateUser(nexus.dataBaseManagement, request.userId);
-          Users.deleteInitiationPairing(nexus.dataBaseManagement, idHash.id);
+          Users.validateUser(nexus.dataBase, request.userId);
+          Users.deleteInitiationPairing(nexus.dataBase, idHash.id);
           return;
         }
       }
@@ -161,7 +161,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         String authority = ProtectedUUID.generate();
-        Authorities.createAuthority(nexus.dataBaseManagement, request.who.id, authority);
+        Authorities.createAuthority(nexus.dataBase, request.who.id, authority);
         responder.complete(authority);
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
@@ -176,7 +176,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: setKeystore validates ownership
-        Authorities.setKeystore(nexus.dataBaseManagement, request.who.id, request.authority, request.keyStore.toString());
+        Authorities.setKeystore(nexus.dataBase, request.who.id, request.authority, request.keyStore.toString());
         responder.complete();
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SET_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
@@ -191,7 +191,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: getKeystorePublic validates ownership
-        responder.complete(Json.parseJsonObject(Authorities.getKeystorePublic(nexus.dataBaseManagement, request.who.id, request.authority)));
+        responder.complete(Json.parseJsonObject(Authorities.getKeystorePublic(nexus.dataBase, request.who.id, request.authority)));
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_GET_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
       }
@@ -204,7 +204,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, AuthorityListRequest request, AuthorityListingResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
-        for (String authority : Authorities.list(nexus.dataBaseManagement, request.who.id)) {
+        for (String authority : Authorities.list(nexus.dataBase, request.who.id)) {
           responder.next(authority);
         }
         responder.finish();
@@ -221,7 +221,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: deleteAuthority validates ownership
-        Authorities.deleteAuthority(nexus.dataBaseManagement, request.who.id, request.authority);
+        Authorities.deleteAuthority(nexus.dataBase, request.who.id, request.authority);
         responder.complete();
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_DELETE_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
@@ -234,7 +234,7 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SpaceCreateRequest request, SimpleResponder responder) {
     try {
-      Spaces.createSpace(nexus.dataBaseManagement, request.who.id, request.space);
+      Spaces.createSpace(nexus.dataBase, request.who.id, request.space);
       responder.complete();
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_UNKNOWN_EXCEPTION, ex, LOGGER));
@@ -245,7 +245,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, SpaceUsageRequest request, BillingUsageResponder responder) {
     try {
       if (request.policy.canUserGetBillingUsage(request.who)) {
-        for (BillingUsage usage : Billing.usageReport(nexus.dataBaseManagement, request.policy.id, request.limit != null ? request.limit.intValue() : 336)) {
+        for (BillingUsage usage : Billing.usageReport(nexus.dataBase, request.policy.id, request.limit != null ? request.limit.intValue() : 336)) {
           responder.next(usage.hour, usage.cpu, usage.memory, usage.connections, usage.documents, usage.messages, usage.storageBytes);
         }
         responder.finish();
@@ -261,7 +261,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, SpaceGetRequest request, PlanResponder responder) {
     try {
       if (request.policy.canUserGetPlan(request.who)) {
-        responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.dataBaseManagement, request.policy.id)));
+        responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.dataBase, request.policy.id)));
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_PLAN_NO_PERMISSION_TO_EXECUTE));
       }
@@ -280,12 +280,12 @@ public class RootHandlerImpl implements RootHandler {
         digest.digest(planJson.getBytes(StandardCharsets.UTF_8));
         String hash = Hashing.finishAndEncode(digest);
         // Change the master plan
-        Spaces.setPlan(nexus.dataBaseManagement, request.policy.id, planJson, hash);
+        Spaces.setPlan(nexus.dataBase, request.policy.id, planJson, hash);
         // iterate the targets with this space loaded
         nexus.client.getDeploymentTargets(request.space, (target) -> {
           try {
             // persist the deployment binding
-            Deployments.deploy(nexus.dataBaseDeployments, request.space, target, hash, planJson);
+            Deployments.deploy(nexus.dataBase, request.space, target, hash, planJson);
             // notify the client of an update
             nexus.client.notifyDeployment(target, request.space);
           } catch (Exception ex) {
@@ -311,13 +311,13 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, SpaceDeleteRequest request, SimpleResponder responder) {
     try {
       if (request.policy.canUserDeleteSpace(request.who)) {
-        if (FinderOperations.list(nexus.dataBaseBackend, request.space, null, 1).size() > 0) {
+        if (FinderOperations.list(nexus.dataBase, request.space, null, 1).size() > 0) {
           responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NOT_EMPTY));
           return;
         }
-        Spaces.changePrimaryOwner(nexus.dataBaseBackend, request.policy.id, request.policy.owner, 0);
+        Spaces.changePrimaryOwner(nexus.dataBase, request.policy.id, request.policy.owner, 0);
         // remove all machines handling this
-        Deployments.undeployAll(nexus.dataBaseDeployments, request.space);
+        Deployments.undeployAll(nexus.dataBase, request.space);
         responder.complete();
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NO_PERMISSION));
@@ -332,7 +332,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       Role role = Role.from(request.role);
       if (request.policy.canUserSetRole(request.who)) {
-        Spaces.setRole(nexus.dataBaseManagement, request.policy.id, request.userId, role);
+        Spaces.setRole(nexus.dataBase, request.policy.id, request.userId, role);
         responder.complete();
       } else {
         throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_ROLE_NO_PERMISSION_TO_EXECUTE);
@@ -365,7 +365,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, SpaceListRequest request, SpaceListingResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
-        for (SpaceListingItem spaceListingItem : Spaces.list(nexus.dataBaseManagement, request.who.id, request.marker, request.limit == null ? 100 : request.limit)) {
+        for (SpaceListingItem spaceListingItem : Spaces.list(nexus.dataBase, request.who.id, request.marker, request.limit == null ? 100 : request.limit)) {
           responder.next(spaceListingItem.name, spaceListingItem.callerRole, spaceListingItem.created, spaceListingItem.enabled, spaceListingItem.storageBytes);
         }
         responder.finish();
@@ -400,7 +400,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder) {
     try {
       if (request.policy.canUserSeeKeyListing(request.who)) {
-        for (DocumentIndex item : FinderOperations.list(nexus.dataBaseBackend, request.space, request.marker, request.limit != null ? request.limit : 100)) {
+        for (DocumentIndex item : FinderOperations.list(nexus.dataBase, request.space, request.marker, request.limit != null ? request.limit : 100)) {
           responder.next(item.key, item.created, item.updated, item.seq);
         }
         responder.finish();

@@ -12,10 +12,7 @@ package org.adamalang.mysql.finder;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.DataBaseConfig;
-import org.adamalang.mysql.DataBaseConfigTests;
-import org.adamalang.mysql.DataBaseMetrics;
+import org.adamalang.mysql.*;
 import org.adamalang.mysql.mocks.SimpleFinderCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
 import org.adamalang.runtime.data.BackupResult;
@@ -36,8 +33,8 @@ public class FinderTests {
   @Test
   public void flow() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
-      FinderInstaller installer = new FinderInstaller(dataBase);
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
+      Installer installer = new Installer(dataBase);
       try {
         installer.install();
         Finder machine = new Finder(dataBase, "region");

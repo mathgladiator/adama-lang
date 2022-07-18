@@ -43,7 +43,7 @@ public class BlockingDataServiceTests {
   @Test
   public void flow_1() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
       BackendDataServiceInstaller installer = new BackendDataServiceInstaller(dataBase);
       try {
         // make sure the database and tables are all proper and set
@@ -135,7 +135,7 @@ public class BlockingDataServiceTests {
   @Test
   public void compact() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
       BackendDataServiceInstaller installer = new BackendDataServiceInstaller(dataBase);
       try {
         // make sure the database and tables are all proper and set

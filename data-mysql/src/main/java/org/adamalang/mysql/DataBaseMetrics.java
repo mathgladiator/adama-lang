@@ -9,14 +9,13 @@
  */
 package org.adamalang.mysql;
 
-import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 
 public class DataBaseMetrics {
   public RequestResponseMonitor transaction;
 
-  public DataBaseMetrics(MetricsFactory factory, String role) {
-    transaction = factory.makeRequestResponseMonitor("database_" + role + "_transaction");
+  public DataBaseMetrics(MetricsFactory factory) {
+    transaction = factory.makeRequestResponseMonitor("database_transaction");
   }
 }

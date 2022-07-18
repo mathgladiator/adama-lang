@@ -12,10 +12,7 @@ package org.adamalang.mysql.frontend;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.DataBaseConfig;
-import org.adamalang.mysql.DataBaseConfigTests;
-import org.adamalang.mysql.DataBaseMetrics;
+import org.adamalang.mysql.*;
 import org.adamalang.mysql.frontend.data.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +25,7 @@ public class FrontendTests {
   @Test
   public void health() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
       Assert.assertTrue(Health.pingDataBase(dataBase));
     }
   }
@@ -36,8 +33,8 @@ public class FrontendTests {
   @Test
   public void users() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
-      FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
+      Installer installer = new Installer(dataBase);
       try {
         installer.install();
         Assert.assertEquals(0, Users.countUsers(dataBase));
@@ -82,8 +79,8 @@ public class FrontendTests {
   @Test
   public void initiations() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
-      FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
+      Installer installer = new Installer(dataBase);
       try {
         installer.install();
         Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
@@ -106,8 +103,8 @@ public class FrontendTests {
   @Test
   public void authorities() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
-      FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
+      Installer installer = new Installer(dataBase);
       try {
         installer.install();
         int failures = 0;
@@ -200,8 +197,8 @@ public class FrontendTests {
   @Test
   public void spaces() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
-      FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
+      Installer installer = new Installer(dataBase);
       try {
         installer.install();
         Assert.assertNull(Spaces.getLatestBillingHourCode(dataBase));

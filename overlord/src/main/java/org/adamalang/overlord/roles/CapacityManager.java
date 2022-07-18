@@ -30,9 +30,9 @@ import java.util.Date;
 public class CapacityManager {
   private static final Logger LOGGER = LoggerFactory.getLogger(CapacityManager.class);
 
-  public static void kickOffReturnHotTargetEvent(OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase, ConcurrentCachedHttpHandler handler, HeatTable heatTable) {
+  public static void kickOffReturnHotTargetEvent(OverlordMetrics metrics, Client client, DataBase dataBase, ConcurrentCachedHttpHandler handler, HeatTable heatTable) {
     SimpleExecutor executor = SimpleExecutor.create("capacity-management");
-    CoreCapacityManagementTask task = new CoreCapacityManagementTask(executor, metrics, client, deploymentsDatabase, frontendDatabase, handler);
+    CoreCapacityManagementTask task = new CoreCapacityManagementTask(executor, metrics, client, dataBase, handler);
     executor.schedule(task, 1000);
     heatTable.setHeatWarning((target) -> {
       executor.execute(new NamedRunnable("found-hot-target") {
@@ -48,18 +48,16 @@ public class CapacityManager {
     private final SimpleExecutor executor;
     private final OverlordMetrics metrics;
     private final Client client;
-    private final DataBase deploymentsDatabase;
-    private final DataBase frontendDatabase;
+    private final DataBase dataBase;
     private final ConcurrentCachedHttpHandler handler;
     private final FixedHtmlStringLoggerTable tableLogger;
 
-    public CoreCapacityManagementTask(SimpleExecutor executor, OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase, ConcurrentCachedHttpHandler handler) {
+    public CoreCapacityManagementTask(SimpleExecutor executor, OverlordMetrics metrics, Client client, DataBase dataBase, ConcurrentCachedHttpHandler handler) {
       super("capacity-management");
       this.executor = executor;
       this.metrics = metrics;
       this.client = client;
-      this.deploymentsDatabase = deploymentsDatabase;
-      this.frontendDatabase = frontendDatabase;
+      this.dataBase = dataBase;
       this.handler = handler;
       this.tableLogger = new FixedHtmlStringLoggerTable(1024, "space", "act", "activity", "time");
     }
@@ -73,8 +71,8 @@ public class CapacityManager {
         StringBuilder sb = new StringBuilder();
         int targets = 0;
         boolean append = false;
-        ArrayList<Deployment> deployments = Deployments.listTargetsOnSpace(deploymentsDatabase, space);
-        InternalDeploymentPlan plan = Spaces.getPlanByNameForInternalDeployment(frontendDatabase, space);
+        ArrayList<Deployment> deployments = Deployments.listTargetsOnSpace(dataBase, space);
+        InternalDeploymentPlan plan = Spaces.getPlanByNameForInternalDeployment(dataBase, space);
         for (Deployment deployment : deployments) {
           if (append) {
             sb.append(", ");
@@ -85,7 +83,7 @@ public class CapacityManager {
             metrics.capacity_monitor_found_inconsistent_deployment.run();
             sb.append(" [FIXED]");
             tableLogger.row(space, "deploy", deployment.target, new Date().toString());
-            Deployments.deploy(deploymentsDatabase, space, deployment.target, plan.hash, plan.plan);
+            Deployments.deploy(dataBase, space, deployment.target, plan.hash, plan.plan);
             metrics.capacity_monitor_fixed_inconsistent_deployment.run();
             client.notifyDeployment(deployment.target, space);
           }
@@ -97,7 +95,7 @@ public class CapacityManager {
           client.getDeploymentTargets(space, (target) -> {
             try {
               tableLogger.row(space, "deploy", target, new Date().toString());
-              Deployments.deploy(deploymentsDatabase, space, target, plan.hash, plan.plan);
+              Deployments.deploy(dataBase, space, target, plan.hash, plan.plan);
               client.notifyDeployment(target, space);
             } catch (Exception ex) {
               tableLogger.row(space, "deploy-exception", ex.getMessage(), new Date().toString());
@@ -126,7 +124,7 @@ public class CapacityManager {
       int delay = 2000;
       try {
         metrics.capacity_monitor_sweep.run();
-        for (final String spaceName : Spaces.listAllSpaceNames(frontendDatabase)) {
+        for (final String spaceName : Spaces.listAllSpaceNames(dataBase)) {
           metrics.capacity_monitor_queue_space.run();
           executor.schedule(new NamedRunnable("inspecting", spaceName) {
             final String spaceToCheck = spaceName;

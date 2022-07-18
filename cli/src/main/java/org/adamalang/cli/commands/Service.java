@@ -162,7 +162,7 @@ public class Service {
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.Node);
     engine.start();
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
-    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(prometheusMetricsFactory, "backend"));
+    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(prometheusMetricsFactory));
     ScheduledExecutorService databasePings = Executors.newSingleThreadScheduledExecutor();
     databasePings.scheduleAtFixedRate(() -> {
       try {
@@ -326,9 +326,7 @@ public class Service {
     int overlordPort  = config.get_int("overlord_port", 8015);
     String scanPath = config.get_string("scan_path", "web_root");
     PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
-    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(prometheusMetricsFactory, "deployed"));
-    DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(prometheusMetricsFactory, "frontend"));
-    DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(prometheusMetricsFactory, "backend"));
+    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(prometheusMetricsFactory));
 
     String identityFileName = config.get_string("identity_filename", "me.identity");
     File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
@@ -339,7 +337,7 @@ public class Service {
 
     System.err.println("running overlord web");
 
-    HttpHandler handler = Overlord.execute(identity, engine, overlordPort, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront, dataBaseBackend, scanPath);
+    HttpHandler handler = Overlord.execute(identity, engine, overlordPort, prometheusMetricsFactory, targetsPath, dataBase, scanPath);
 
     ConfigObject co = new ConfigObject(config.get_or_create_child("overlord_web"));
     co.intOf("http_port", 8081);
@@ -369,21 +367,17 @@ public class Service {
     int monitoringPort = config.get_int("monitoring_frontend_port", 8005);
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
     PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
-    DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(prometheusMetricsFactory, "frontend"));
-    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(prometheusMetricsFactory, "deployed"));
-    DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(prometheusMetricsFactory, "backend"));
+    DataBase database = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(prometheusMetricsFactory));
     ScheduledExecutorService databasePings = Executors.newSingleThreadScheduledExecutor();
     databasePings.scheduleAtFixedRate(() -> {
       try {
-        Health.pingDataBase(dataBaseFront);
-        Health.pingDataBase(dataBaseDeployments);
-        Health.pingDataBase(dataBaseBackend);
+        Health.pingDataBase(database);
       } catch (Exception ex) {
         LOGGER.error("health-check-failure-database", ex);
       }
     }, 30000, 30000, TimeUnit.MILLISECONDS);
 
-    System.err.println("using databases: " + dataBaseFront.databaseName + ", " + dataBaseDeployments.databaseName + ", and " + dataBaseBackend.databaseName);
+    System.err.println("using database: " + database.databaseName);
     System.err.println("identity: " + identity.ip);
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.Node);
     engine.start();
@@ -397,7 +391,7 @@ public class Service {
     AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
     S3 s3 = new S3(awsConfig, awsMetrics);
 
-    Finder finder = new Finder(dataBaseFront, region);
+    Finder finder = new Finder(database, region);
     ClientRouter router = ClientRouter.FINDER(metrics, finder, region);
     Client client = new Client(netBase, clientConfig, metrics, router, null);
     Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
@@ -485,7 +479,7 @@ public class Service {
     Email email = new SES(awsConfig, awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
-    ExternNexus nexus = new ExternNexus(frontendConfig, email, s3, s3, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory, new File("inflight"), (item) -> {
+    ExternNexus nexus = new ExternNexus(frontendConfig, email, s3, s3, database, client, prometheusMetricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
     });
     System.err.println("nexus constructed");
@@ -538,9 +532,7 @@ public class Service {
     metricsFactory.page("backend", "The Data Service");
     new BackendMetrics(metricsFactory);
     metricsFactory.page("database", "Database");
-    new DataBaseMetrics(metricsFactory, "frontend");
-    new DataBaseMetrics(metricsFactory, "backend");
-    new DataBaseMetrics(metricsFactory, "deployed");
+    new DataBaseMetrics(metricsFactory);
     metricsFactory.page("disk", "Disk");
     new DurableListStoreMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));

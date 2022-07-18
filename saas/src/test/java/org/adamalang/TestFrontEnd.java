@@ -15,7 +15,6 @@ import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DurableListStoreMetrics;
 import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.common.*;
-import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.ServerHandle;
@@ -27,13 +26,10 @@ import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseMetrics;
-import org.adamalang.mysql.backend.BackendDataServiceInstaller;
-import org.adamalang.mysql.deployments.DeployedInstaller;
+import org.adamalang.mysql.Installer;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
 import org.adamalang.mysql.finder.Finder;
-import org.adamalang.mysql.finder.FinderInstaller;
-import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
@@ -42,7 +38,6 @@ import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
-import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.ManagedDataService;
 import org.adamalang.runtime.data.managed.Base;
@@ -83,10 +78,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public final ServiceBase frontend;
   public final ConnectionContext context;
   public final ServiceConnection connection;
-  public final FrontendManagementInstaller installerFront;
-  public final BackendDataServiceInstaller installerBack;
-  public final DeployedInstaller installDeploy;
-  public final FinderInstaller installFinder;
+  public final Installer installer;
   public final File attachmentRoot;
   public final SimpleExecutor clientExecutor;
   public final DeploymentFactoryBase deploymentFactoryBase;
@@ -102,15 +94,9 @@ public class TestFrontEnd implements AutoCloseable, Email {
     int port = 10000;
     codesSentToEmail = new ConcurrentHashMap<>();
     String config = Files.readString(new File("./test.mysql.json").toPath());
-    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(Json.parseJsonObject(config)), "any"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
-    this.installerFront = new FrontendManagementInstaller(dataBase);
-    this.installerFront.install();
-    this.installerBack = new BackendDataServiceInstaller(dataBase);
-    this.installerBack.install();
-    this.installDeploy = new DeployedInstaller(dataBase);
-    this.installDeploy.install();
-    this.installFinder = new FinderInstaller(dataBase);
-    this.installFinder.install();
+    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(Json.parseJsonObject(config))), new DataBaseMetrics(new NoOpMetricsFactory()));
+    this.installer = new Installer(dataBase);
+    this.installer.install();
     this.alive = new AtomicBoolean(true);
     MachineIdentity identity = MachineIdentity.fromFile("localhost.identity");
 
@@ -229,7 +215,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
       }
     };
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
-    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, dataBase, dataBase, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp);
+    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp);
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);
     connection = this.frontend.establish(context);
@@ -238,8 +224,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
   }
 
   public void kill(String table) throws Exception {
-    try (Connection connection = nexus.dataBaseManagement.pool.getConnection()) {
-      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(nexus.dataBaseManagement.databaseName).append("`.`").append(table).append("`;").toString());
+    try (Connection connection = nexus.dataBase.pool.getConnection()) {
+      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(nexus.dataBase.databaseName).append("`.`").append(table).append("`;").toString());
     }
   }
 
@@ -247,10 +233,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public void close() throws Exception {
     alive.set(false);
     threadDeath.await(5000, TimeUnit.MILLISECONDS);
-    installerFront.uninstall();
-    installerBack.uninstall();
-    installDeploy.uninstall();
-    installFinder.uninstall();
+    installer.uninstall();
     connection.kill();
     nexus.close();
     clientExecutor.shutdown();

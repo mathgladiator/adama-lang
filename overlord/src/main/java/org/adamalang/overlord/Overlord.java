@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 public class Overlord {
   private static final Logger LOGGER = LoggerFactory.getLogger(Overlord.class);
 
-  public static HttpHandler execute(MachineIdentity identity, Engine engine, int overlordPort, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront, DataBase dataBaseBackend, String scanPath) throws Exception {
+  public static HttpHandler execute(MachineIdentity identity, Engine engine, int overlordPort, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath) throws Exception {
     // the HTTP web server will render data that has been put/cached in this handler
     ConcurrentCachedHttpHandler handler = new ConcurrentCachedHttpHandler();
 
@@ -46,7 +46,7 @@ public class Overlord {
     PrometheusTargetMaker.kickOff(metrics, engine, targetsDestination, handler);
 
     // make sure that we remove deployments from dead hosts
-    DeploymentReconciliation.kickOff(metrics, engine, deploymentsDatabase, handler);
+    DeploymentReconciliation.kickOff(metrics, engine, dataBase, handler);
 
     // we will be monitoring the heat on each host within this table
     HeatTable heatTable = new HeatTable(handler);
@@ -64,16 +64,16 @@ public class Overlord {
     engine.subscribe(adamaRole, client.getTargetPublisher());
 
     // kick off capacity management will will add/remove capacity per space
-    CapacityManager.kickOffReturnHotTargetEvent(metrics, client, deploymentsDatabase, dataBaseFront, handler, heatTable);
+    CapacityManager.kickOffReturnHotTargetEvent(metrics, client, dataBase, handler, heatTable);
 
     // start aggregating bills from hosts and write them to database
-    MeteringAggregator.kickOff(metrics, client, dataBaseFront, handler);
+    MeteringAggregator.kickOff(metrics, client, dataBase, handler);
 
     // make a table of a dump of all gossip
     GossipDumper.kickOff(metrics, engine, handler);
 
     // start doing the accounting work
-    HourlyAccountant.kickOff(metrics, dataBaseFront, dataBaseBackend, handler);
+    HourlyAccountant.kickOff(metrics, dataBase, handler);
 
     engine.newApp("overlord", overlordPort, new Consumer<Runnable>() {
       @Override

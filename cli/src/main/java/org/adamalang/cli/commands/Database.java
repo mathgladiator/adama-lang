@@ -17,10 +17,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
-import org.adamalang.mysql.backend.BackendDataServiceInstaller;
-import org.adamalang.mysql.deployments.DeployedInstaller;
-import org.adamalang.mysql.finder.FinderInstaller;
-import org.adamalang.mysql.frontend.FrontendManagementInstaller;
+import org.adamalang.mysql.Installer;
 
 public class Database {
   public static void execute(Config config, String[] args) throws Exception {
@@ -35,31 +32,8 @@ public class Database {
         databaseConfigure(config);
         return;
       }
-      case "install-all": {
-        new FrontendManagementInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))).install();
-        new DeployedInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))).install();
-        new BackendDataServiceInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))).install();
-        new FinderInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "finder"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))).install();
-        return;
-      }
-      case "install-frontend": {
-        DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
-        new FrontendManagementInstaller(dataBase).install();
-        return;
-      }
-      case "install-finder": {
-        DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "finder"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
-        new FinderInstaller(dataBase).install();
-        return;
-      }
-      case "install-deployed": {
-        DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
-        new DeployedInstaller(dataBase).install();
-        return;
-      }
-      case "install-backend": {
-        DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
-        new BackendDataServiceInstaller(dataBase).install();
+      case "install": {
+        new Installer(new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(new NoOpMetricsFactory()))).install();
         return;
       }
       case "help":
@@ -79,11 +53,7 @@ public class Database {
     System.out.println();
     System.out.println(Util.prefix("DATABASESUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("configure", Util.ANSI.Green) + "         Update the configuration " + Util.prefix("(interactive)", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("install-all", Util.ANSI.Green) + "       Install all the tables on a monolithic database");
-    System.out.println("    " + Util.prefix("install-frontend", Util.ANSI.Green) + "  Install the tables for usage by the front end WebSocket");
-    System.out.println("    " + Util.prefix("install-backend", Util.ANSI.Green) + "   Install the tables for usage by the gRPC compute/storage Adama tier");
-    System.out.println("    " + Util.prefix("install-deployed", Util.ANSI.Green) + "  Install the tables for usage where code is pulled by host");
-    System.out.println("    " + Util.prefix("install-finder", Util.ANSI.Green) + "    Install the tables for directory table");
+    System.out.println("    " + Util.prefix("install", Util.ANSI.Green) + "           Install the tables on a monolithic database");
   }
 
   public static void databaseConfigure(Config config) throws Exception {

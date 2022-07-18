@@ -24,8 +24,8 @@ public class DataBaseConfig {
   public final int minPoolSize;
   public final int initialPoolSize;
 
-  public DataBaseConfig(ConfigObject config, String role) {
-    ConfigObject roleConfig = config.childSearchMustExist("role was not found", role, "any");
+  public DataBaseConfig(ConfigObject config) {
+    ConfigObject roleConfig = config.childSearchMustExist("role was not found", "db", "any");
     this.jdbcUrl = roleConfig.strOfButCrash("jdbc_url", "jdbc_url was not present in config");
     this.user = roleConfig.strOfButCrash("user", "user was not present in config");
     this.password = roleConfig.strOfButCrash("password", "password was not present in config");

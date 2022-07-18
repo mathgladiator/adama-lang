@@ -20,7 +20,7 @@ public class DataBaseTests {
   @Test
   public void failure_coverage() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
       Connection connection = dataBase.pool.getConnection();
       try {
         DataBase.execute(connection, "INSERT");

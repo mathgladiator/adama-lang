@@ -62,7 +62,7 @@ public class Authenticator {
       ParsedToken parsedToken = new ParsedToken(identity);
       if ("adama".equals(parsedToken.iss)) {
         int userId = Integer.parseInt(parsedToken.sub);
-        for (String publicKey64 : Users.listKeys(nexus.dataBaseManagement, userId)) {
+        for (String publicKey64 : Users.listKeys(nexus.dataBase, userId)) {
           byte[] publicKey = Base64.getDecoder().decode(publicKey64);
           X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
           KeyFactory kf = KeyFactory.getInstance("EC");
@@ -82,7 +82,7 @@ public class Authenticator {
         }
         callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_FINDING_DEVELOPER_KEY));
       } else {
-        String keystoreJson = Authorities.getKeystoreInternal(nexus.dataBaseManagement, parsedToken.iss);
+        String keystoreJson = Authorities.getKeystoreInternal(nexus.dataBase, parsedToken.iss);
         Keystore keystore = Keystore.parse(keystoreJson);
         NtClient who = keystore.validate(parsedToken.iss, identity);
         AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who);
