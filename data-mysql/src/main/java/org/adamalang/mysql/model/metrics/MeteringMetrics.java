@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.frontend.metrics;
+package org.adamalang.mysql.model.metrics;
 
 import org.adamalang.common.metrics.MetricsFactory;
 

@@ -15,7 +15,7 @@ import org.adamalang.common.*;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.frontend.Spaces;
+import org.adamalang.mysql.model.Spaces;
 import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.transforms.results.SpacePolicy;
 

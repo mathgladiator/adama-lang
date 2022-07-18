@@ -16,7 +16,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
-import org.adamalang.mysql.frontend.Users;
+import org.adamalang.mysql.model.Users;
 
 public class Business {
   public static void execute(Config config, String[] args) throws Exception {

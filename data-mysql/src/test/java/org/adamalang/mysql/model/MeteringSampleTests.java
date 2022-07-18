@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.frontend;
+package org.adamalang.mysql.model;
 
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
@@ -15,7 +15,7 @@ import org.adamalang.mysql.data.BillingUsage;
 import org.adamalang.mysql.data.MeteredWindowSummary;
 import org.adamalang.mysql.data.MeteringSpaceSummary;
 import org.adamalang.mysql.data.ResourcesPerPenny;
-import org.adamalang.mysql.frontend.metrics.MeteringMetrics;
+import org.adamalang.mysql.model.metrics.MeteringMetrics;
 import org.junit.Assert;
 import org.junit.Test;
 

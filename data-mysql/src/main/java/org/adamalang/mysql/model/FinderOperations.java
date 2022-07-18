@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.finder;
+package org.adamalang.mysql.model;
 
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.DocumentIndex;

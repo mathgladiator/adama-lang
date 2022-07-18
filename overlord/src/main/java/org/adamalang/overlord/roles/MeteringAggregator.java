@@ -12,7 +12,7 @@ package org.adamalang.overlord.roles;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.frontend.Metering;
+import org.adamalang.mysql.model.Metering;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.overlord.OverlordMetrics;

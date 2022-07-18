@@ -10,7 +10,7 @@
 package org.adamalang.overlord;
 
 import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.mysql.frontend.metrics.MeteringMetrics;
+import org.adamalang.mysql.model.metrics.MeteringMetrics;
 
 public class OverlordMetrics {
   public final Runnable targets_watcher_fired;

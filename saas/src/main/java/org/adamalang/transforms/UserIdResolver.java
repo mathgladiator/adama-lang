@@ -15,7 +15,7 @@ import org.adamalang.common.*;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.frontend.Users;
+import org.adamalang.mysql.model.Users;
 
 public class UserIdResolver {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(UserIdResolver.class);

@@ -7,16 +7,19 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.frontend;
+package org.adamalang.mysql.model;
 
-import org.junit.Test;
+import org.adamalang.mysql.DataBase;
 
-public class TrivialTests {
-  @Test
-  public void coverage() {
-    new Authorities();
-    new MeteringSampleTests();
-    new Spaces();
-    new Users();
+import java.sql.Connection;
+import java.sql.Statement;
+
+public class Health {
+  public static boolean pingDataBase(DataBase dataBase) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      try (Statement statement = connection.createStatement()) {
+        return statement.execute("SELECT 1");
+      }
+    }
   }
 }
