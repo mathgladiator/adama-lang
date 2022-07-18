@@ -20,6 +20,7 @@ import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.client.sm.ConnectionBase;
+import org.adamalang.net.client.sm.LinearConnectionStateMachine;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
@@ -284,6 +285,14 @@ public class Client {
   public Connection connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
     ConnectionBase base = new ConnectionBase(config, metrics, router.routerForDocuments, clientFinder, executors[rng.nextInt(executors.length)]);
     Connection connection = new Connection(base, ip, origin, agent, authority, space, key, viewerState, assetKey, events);
+    connection.open();
+    return connection;
+  }
+
+  /** Experimental: simplified connection state machine */
+  public LinearConnectionStateMachine simpleConnect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
+    ConnectionBase base = new ConnectionBase(config, metrics, router.routerForDocuments, clientFinder, executors[rng.nextInt(executors.length)]);
+    LinearConnectionStateMachine connection = new LinearConnectionStateMachine(base, ip, origin, agent, authority, space, key, viewerState, assetKey, events);
     connection.open();
     return connection;
   }
