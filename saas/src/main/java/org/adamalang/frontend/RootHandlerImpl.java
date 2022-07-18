@@ -418,7 +418,7 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void bind() {
-        connection = nexus.client.connect("ip", "origin", request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", session.getAssetKey(), new SimpleEvents() {
+        connection = nexus.client.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", session.getAssetKey(), new SimpleEvents() {
           @Override
           public void connected() {
           }
