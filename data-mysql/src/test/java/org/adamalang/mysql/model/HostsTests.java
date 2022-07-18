@@ -24,9 +24,9 @@ public class HostsTests {
         installer.install();
         Hosts.initializeWebHost(dataBase, "region", "machine1", "pubKey123");
         Hosts.initializeWebHost(dataBase, "region", "machine2", "pubKey42");
-        Assert.assertEquals("pubKey123", Hosts.getPublicKey(dataBase, "region", "machine1"));
-        Assert.assertEquals("pubKey42", Hosts.getPublicKey(dataBase, "region", "machine2"));
-        Assert.assertNull(Hosts.getPublicKey(dataBase, "r", "ma"));
+        Assert.assertEquals("pubKey123", Hosts.getWebHostPublicKey(dataBase, "region", "machine1"));
+        Assert.assertEquals("pubKey42", Hosts.getWebHostPublicKey(dataBase, "region", "machine2"));
+        Assert.assertNull(Hosts.getWebHostPublicKey(dataBase, "r", "ma"));
       } finally {
         installer.uninstall();
       }

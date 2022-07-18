@@ -36,7 +36,7 @@ public class Hosts {
   }
 
   /** get the public key for a machine within a region */
-  public static String getPublicKey(DataBase dataBase, String region, String machine) throws Exception {
+  public static String getWebHostPublicKey(DataBase dataBase, String region, String machine) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = new StringBuilder().append("SELECT `public_key` FROM `").append(dataBase.databaseName).append("`.`web_hosts` WHERE `region`=? AND `machine`=?").toString();
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
