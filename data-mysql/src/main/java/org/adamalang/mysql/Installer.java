@@ -105,6 +105,9 @@ public class Installer {
         .append("  `enabled` BOOLEAN DEFAULT TRUE,") //
         .append("  `storage_bytes` INT(8) DEFAULT 0,") //
         .append("  `unbilled_storage_bytes_hours` BIGINT DEFAULT 0,") //
+        .append("  `unbilled_bandwidth_hours` BIGINT DEFAULT 0,") //
+        .append("  `unbilled_first_party_service_calls` INT(4) DEFAULT 0,") //
+        .append("  `unbilled_third_party_service_calls` INT(4) DEFAULT 0,") //
         .append("  `latest_billing_hour` INT(4) UNSIGNED DEFAULT 0,") //
         .append("  `plan` TEXT NOT NULL,") //
         .append("  `hash` VARCHAR(256) NOT NULL,") //

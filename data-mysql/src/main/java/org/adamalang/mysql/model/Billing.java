@@ -13,10 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.data.BillingUsage;
-import org.adamalang.mysql.data.MeteredWindowSummary;
-import org.adamalang.mysql.data.MeteringSpaceSummary;
-import org.adamalang.mysql.data.ResourcesPerPenny;
+import org.adamalang.mysql.data.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,7 +24,7 @@ import java.util.Map;
 
 public class Billing {
 
-  public static void mergeStorageIntoSummaries(HashMap<String, MeteringSpaceSummary> summaries, HashMap<String, Long> inventory, HashMap<String, Long> unbilled) {
+  public static void mergeStorageIntoSummaries(HashMap<String, MeteringSpaceSummary> summaries, HashMap<String, Long> inventory, HashMap<String, UnbilledResources> unbilled) {
     for (Map.Entry<String, Long> entry : inventory.entrySet()) {
       if (entry.getValue() > 0) {
         MeteringSpaceSummary summary = summaries.get(entry.getKey());
@@ -38,10 +35,10 @@ public class Billing {
         summary.setStorageBytes(entry.getValue());
       }
     }
-    for (Map.Entry<String, Long> entry : unbilled.entrySet()) {
+    for (Map.Entry<String, UnbilledResources> entry : unbilled.entrySet()) {
       MeteringSpaceSummary summary = summaries.get(entry.getKey());
       if (summary != null) {
-        summary.setUnbilledStorageByteHours(entry.getValue());
+        summary.setUnbilled(entry.getValue());
       }
     }
   }
@@ -97,11 +94,21 @@ public class Billing {
                   statementInsertLog.execute();
                   pennies_billed += summary.pennies;
                 }
-                String sqlUpdateSpace = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `latest_billing_hour`=?, `storage_bytes`=?, `unbilled_storage_bytes_hours`=`unbilled_storage_bytes_hours`+? WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
+               String sqlUpdateSpace = new StringBuilder().append("UPDATE `").append(dataBase.databaseName)
+                   .append("`.`spaces` SET `latest_billing_hour`=?, `storage_bytes`=?," +
+                    "`unbilled_storage_bytes_hours`=`unbilled_storage_bytes_hours`+?" +
+                    ", `unbilled_bandwidth_hours`=`unbilled_bandwidth_hours`+?" +
+                    ", `unbilled_first_party_service_calls`=`unbilled_first_party_service_calls`+?" +
+                    ", `unbilled_third_party_service_calls`=`unbilled_third_party_service_calls`+?" + //
+                    " WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
+
                 try (PreparedStatement statementUpdateSpace = connection.prepareStatement(sqlUpdateSpace)) {
                   statementUpdateSpace.setInt(1, hour);
                   statementUpdateSpace.setLong(2, summary.storageBytes);
-                  statementUpdateSpace.setLong(3, summary.changeUnbilledStorageByteHours);
+                  statementUpdateSpace.setLong(3, summary.changeUnbilled.storage);
+                  statementUpdateSpace.setLong(4, summary.changeUnbilled.bandwidth);
+                  statementUpdateSpace.setLong(5, summary.changeUnbilled.first_party_service_calls);
+                  statementUpdateSpace.setLong(6, summary.changeUnbilled.third_party_service_calls);
                   statementUpdateSpace.execute();
                 }
                 String sqlUpdateDeveloperBalance = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`emails` SET `balance`=`balance`-").append(summary.pennies).append(" WHERE `id`=").append(ownerId).append(" LIMIT 1").toString();

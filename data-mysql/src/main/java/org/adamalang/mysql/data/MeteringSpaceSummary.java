@@ -20,7 +20,7 @@ public class MeteringSpaceSummary {
   private long cpuTicks;
   private long messages;
   private long storageBytes;
-  private long unbilledStorageByteHours;
+  private UnbilledResources unbilledResources;
   private long bandwidth;
   private long first_party_service_calls;
   private long third_party_service_calls;
@@ -29,7 +29,7 @@ public class MeteringSpaceSummary {
     this.targets = new HashMap<>();
     this.cpuTicks = 0;
     this.storageBytes = 0;
-    this.unbilledStorageByteHours = 0;
+    this.unbilledResources = new UnbilledResources(0, 0, 0, 0);
     this.bandwidth = 0;
     this.first_party_service_calls = 0;
     this.third_party_service_calls = 0;
@@ -39,8 +39,8 @@ public class MeteringSpaceSummary {
     this.storageBytes = storageBytes;
   }
 
-  public void setUnbilledStorageByteHours(long unbilledStorageByteHours) {
-    this.unbilledStorageByteHours = unbilledStorageByteHours;
+  public void setUnbilled(UnbilledResources unbilledResources) {
+    this.unbilledResources = unbilledResources;
   }
 
   public void include(String target, JsonNode node) {
@@ -122,10 +122,29 @@ public class MeteringSpaceSummary {
       writer.writeLong(third_party_service_calls);
     }
     writer.endObject();
-    long totalStorageByteHours = storageBytes + unbilledStorageByteHours;
-    // TODO: sort this out
-    int pennies = (int) Math.ceil(max(messages / rates.messages, count / rates.count, memory / rates.memory, connections / rates.connections, cpuTicks / rates.cpu)) + (int) (totalStorageByteHours / rates.storage);
-    return new MeteredWindowSummary(writer.toString(), pennies, storageBytes, (totalStorageByteHours % rates.storage) - unbilledStorageByteHours);
+
+    long totalStorageByteHours = storageBytes + unbilledResources.storage;
+    long totalBandwidth = bandwidth + unbilledResources.bandwidth;
+    long totalFirstPartyCalls = first_party_service_calls + unbilledResources.first_party_service_calls;
+    long totalThirdPartyCalls = third_party_service_calls + unbilledResources.third_party_service_calls;
+
+    int brickPennies = (int) Math.ceil(max(//
+        messages / rates.messages, //
+        count / rates.count, //
+        memory / rates.memory, //
+        connections / rates.connections, //
+        cpuTicks / rates.cpu)); //
+    int storagePennies = (int) (totalStorageByteHours / rates.storage);
+    int bandwidthPennies = (int) (totalBandwidth / rates.bandwidth);
+    int firstPartyPennies = (int) (totalFirstPartyCalls / rates.first_party_service_calls);
+    int thirdPartyPennies = (int) (totalThirdPartyCalls / rates.third_party_service_calls);
+    int pennies = brickPennies + storagePennies + bandwidthPennies + firstPartyPennies + thirdPartyPennies;
+    UnbilledResources change = new UnbilledResources(
+        (totalStorageByteHours % rates.storage) - unbilledResources.storage,
+        (totalBandwidth % rates.bandwidth) - unbilledResources.bandwidth,
+        (totalFirstPartyCalls % rates.first_party_service_calls) - unbilledResources.first_party_service_calls,
+        (totalThirdPartyCalls % rates.third_party_service_calls) - unbilledResources.third_party_service_calls);
+    return new MeteredWindowSummary(writer.toString(), pennies, storageBytes, change);
   }
 
   private static double max(double... values) {

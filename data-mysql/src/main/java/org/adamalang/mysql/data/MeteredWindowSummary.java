@@ -14,12 +14,12 @@ public class MeteredWindowSummary {
   public String resources;
   public int pennies;
   public long storageBytes;
-  public long changeUnbilledStorageByteHours;
+  public UnbilledResources changeUnbilled;
 
-  public MeteredWindowSummary(String resources, int pennies, long storageBytes, long changeUnbilledStorageByteHours) {
+  public MeteredWindowSummary(String resources, int pennies, long storageBytes, UnbilledResources changeUnbilled) {
     this.resources = resources;
     this.pennies = pennies;
     this.storageBytes = storageBytes;
-    this.changeUnbilledStorageByteHours = changeUnbilledStorageByteHours;
+    this.changeUnbilled = changeUnbilled;
   }
 }

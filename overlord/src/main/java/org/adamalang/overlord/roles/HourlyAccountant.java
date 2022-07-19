@@ -12,6 +12,7 @@ package org.adamalang.overlord.roles;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.data.UnbilledResources;
 import org.adamalang.mysql.model.FinderOperations;
 import org.adamalang.mysql.model.Billing;
 import org.adamalang.mysql.model.Metering;
@@ -111,10 +112,10 @@ public class HourlyAccountant {
       HashMap<String, MeteringSpaceSummary> summaries = Metering.summarizeWindow(dataBase, metrics.metering_metrics, fromMs, toMs);
       // TODO: need a more formal rate structure as this is B.S.
       // 2 penny per GB/mo is
-      ResourcesPerPenny rates = new ResourcesPerPenny(1000 * 1000, 1000, 50, 1000 * 1000, 200, 386547056640L);
+      ResourcesPerPenny rates = new ResourcesPerPenny(1000 * 1000, 1000, 50, 1000 * 1000, 200, 386547056640L, 1000 * 1000 * 1000L, 1000, 5000);
       // add storage to the summary
       HashMap<String, Long> inventory = FinderOperations.inventoryStorage(dataBase);
-      HashMap<String, Long> unbilled = Spaces.collectUnbilledStorage(dataBase);
+      HashMap<String, UnbilledResources> unbilled = Spaces.collectUnbilledStorage(dataBase);
       Billing.mergeStorageIntoSummaries(summaries, inventory, unbilled);
       long pennies = Billing.transcribeSummariesAndUpdateBalances(dataBase, forHour, summaries, rates);
       accountantTable.row("transcribe-summary", "pennies:" + pennies, "at:" + forHour);

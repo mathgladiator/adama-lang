@@ -12,21 +12,18 @@ package org.adamalang.mysql.model;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.data.InternalDeploymentPlan;
-import org.adamalang.mysql.data.Role;
-import org.adamalang.mysql.data.SpaceInfo;
-import org.adamalang.mysql.data.SpaceListingItem;
+import org.adamalang.mysql.data.*;
 
 import java.sql.*;
 import java.util.*;
 
 public class Spaces {
-  public static HashMap<String, Long> collectUnbilledStorage(DataBase dataBase) throws Exception {
+  public static HashMap<String, UnbilledResources> collectUnbilledStorage(DataBase dataBase) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      HashMap<String, Long> byteHours = new HashMap<>();
-      String sql = new StringBuilder("SELECT `name`, `unbilled_storage_bytes_hours`  FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE `unbilled_storage_bytes_hours` > 0").toString();
+      HashMap<String, UnbilledResources> byteHours = new HashMap<>();
+      String sql = new StringBuilder("SELECT `name`, `unbilled_storage_bytes_hours`, `unbilled_bandwidth_hours`, `unbilled_first_party_service_calls`, `unbilled_third_party_service_calls`  FROM `").append(dataBase.databaseName).append("`.`spaces`").toString();
       DataBase.walk(connection, (rs) -> {
-        byteHours.put(rs.getString(1), rs.getLong(2));
+        byteHours.put(rs.getString(1), new UnbilledResources(rs.getLong(2), rs.getLong(3), rs.getLong(4), rs.getLong(5)));
       }, sql);
       return byteHours;
     }
