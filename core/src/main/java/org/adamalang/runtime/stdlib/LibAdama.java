@@ -50,7 +50,7 @@ public class LibAdama {
       final var tokenEngine = new TokenEngine("<direct code>", code.codePoints().iterator());
       final var parser = new Parser(tokenEngine);
       parser.document().accept(document);
-      if (!document.check(state)) {
+      if (document.check(state)) {
         JsonStreamWriter writer = new JsonStreamWriter();
         document.writeTypeReflectionJson(writer);
         return new NtDynamic(writer.toString());
