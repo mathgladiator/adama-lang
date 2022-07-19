@@ -15,6 +15,7 @@ import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DurableListStoreMetrics;
 import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.common.*;
+import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.ServerHandle;
@@ -215,7 +216,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
       }
     };
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
-    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp);
+    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey());
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);
     connection = this.frontend.establish(context);

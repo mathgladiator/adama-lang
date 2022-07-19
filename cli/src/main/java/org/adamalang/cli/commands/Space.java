@@ -16,6 +16,7 @@ import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.common.Json;
 import org.adamalang.common.Validators;
+import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
@@ -23,6 +24,7 @@ import org.adamalang.runtime.remote.Deliverer;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.security.KeyPair;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Space {
@@ -58,6 +60,12 @@ public class Space {
       case "usage":
         spaceUsage(config, next);
         return;
+      case "generate-key":
+        spaceGenerateKey(config, next);
+        return;
+      case "encrypt-secret":
+        spaceEncryptSecret(config, next);
+        return;
       case "help":
         spaceHelp(next);
         return;
@@ -84,6 +92,8 @@ public class Space {
     System.out.println("    " + Util.prefix("download", Util.ANSI.Green) + "          Download a space's plan");
     System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List spaces available to your account");
     System.out.println("    " + Util.prefix("set-role", Util.ANSI.Green) + "          Share/unshare a space with another developer");
+    System.out.println("    " + Util.prefix("generate-key", Util.ANSI.Green) + "      Generate a server-side key to use for storing secrets");
+    System.out.println("    " + Util.prefix("encrypt-secret", Util.ANSI.Green) + "    Encrypt a secret to store within code");
     System.out.println("    " + Util.prefix("help", Util.ANSI.Green) + "              Show this helpful message");
   }
 
@@ -254,5 +264,55 @@ public class Space {
         System.err.println(response.toPrettyString());
       }
     }
+  }
+
+  private static void spaceGenerateKey(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/generate-key");
+        request.put("identity", identity);
+        request.put("space", space);
+        ObjectNode response = connection.execute(request);
+        config.manipulate((node) -> {
+          ObjectNode keys = null;
+          if (!node.has("space-keys")) {
+            keys = (ObjectNode) node.get("space-keys");
+          } else {
+            keys = node.putObject("space-keys");
+          }
+          keys.set(space, response);
+        });
+        System.err.println("Server Key Created");
+      }
+    }
+  }
+
+  private static void spaceEncryptSecret(Config config, String[] args) throws Exception {
+    ObjectNode keys = config.get_or_create_child("space-keys");
+    String space = Util.extractOrCrash("--space", "-s", args);
+    if (!keys.has(space)) {
+      System.err.println("Config doesn't have space-keys configured; we lack the public key for the space!");
+      return;
+    }
+    ObjectNode response = (ObjectNode) keys.get(space);
+    String publicKey = response.get("publicKey").textValue();
+    int keyId = response.get("keyId").intValue();
+
+    KeyPair ephemeral = PublicPrivateKeyPartnership.genKeyPair();
+    byte[] sharedSecret = PublicPrivateKeyPartnership.secretFrom( //
+        PublicPrivateKeyPartnership.keyPairFrom(publicKey, //
+            PublicPrivateKeyPartnership.privateKeyOf(ephemeral))); //
+
+    System.out.print(Util.prefix("Secret/Token:", Util.ANSI.Red));
+    String secret = new String(System.console().readPassword());
+    String cipher = PublicPrivateKeyPartnership.encrypt(sharedSecret, secret);
+    String encrypted = keyId + ";" + PublicPrivateKeyPartnership.publicKeyOf(ephemeral) + ";" + cipher;
+    System.out.println("SECRET:");
+    System.out.println("------------------");
+    System.out.println(encrypted);
+    System.out.println("------------------");
   }
 }

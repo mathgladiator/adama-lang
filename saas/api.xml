@@ -345,6 +345,18 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="key-id" type="int">
+        <documentation>
+            ID of the public-key
+        </documentation>
+    </field-definition>
+
+    <field-definition name="public-key" type="string">
+        <documentation>
+            Public Key to encrypted
+        </documentation>
+    </field-definition>
+
     <responder name="asset-key">
         <field name="asset-key"/>
     </responder>
@@ -356,8 +368,9 @@
         <field name="seq"/>
     </responder>
 
-    <responder name="key">
-        <field name="key"/>
+    <responder name="key-pair">
+        <field name="key-id"/>
+        <field name="public-key"/>
     </responder>
 
     <responder name="space-listing" stream="true">
@@ -503,7 +516,7 @@
         </documentation>
     </method>
 
-    <method name="space/generate-key" responder="key">
+    <method name="space/generate-key" responder="key-pair">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>

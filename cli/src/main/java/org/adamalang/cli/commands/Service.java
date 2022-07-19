@@ -362,6 +362,7 @@ public class Service {
     System.err.println("starting frontend");
     String identityFileName = config.get_string("identity_filename", "me.identity");
     String region = config.get_string("region", null);
+    String masterKey = config.get_string("master-key", null);
     int gossipPort = config.get_int("gossip_frontend_port", 8004);
     int monitoringPort = config.get_int("monitoring_frontend_port", 8005);
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
@@ -480,7 +481,7 @@ public class Service {
     Logger accessLog = LoggerFactory.getLogger("access");
     ExternNexus nexus = new ExternNexus(frontendConfig, email, s3, s3, database, client, prometheusMetricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
-    });
+    }, masterKey);
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus, http);
     // TODO: have some sense of health checking in the web package

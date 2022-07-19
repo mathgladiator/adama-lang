@@ -43,8 +43,8 @@ public class GeneratedResponderErrorProxyTest {
     new ClaimResultResponder(responder).error(new ErrorCodeException(4));
     new DataResponder(responder).error(new ErrorCodeException(5));
     new InitiationResponder(responder).error(new ErrorCodeException(6));
-    new KeyResponder(responder).error(new ErrorCodeException(7));
-    new KeyListingResponder(responder).error(new ErrorCodeException(8));
+    new KeyListingResponder(responder).error(new ErrorCodeException(7));
+    new KeyPairResponder(responder).error(new ErrorCodeException(8));
     new KeystoreResponder(responder).error(new ErrorCodeException(9));
     new PlanResponder(responder).error(new ErrorCodeException(10));
     new ProgressResponder(responder).error(new ErrorCodeException(11));

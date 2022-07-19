@@ -29,8 +29,9 @@ public class ExternNexus {
   public final File attachmentRoot;
   public final JsonLogger accessLogger;
   public final AssetDownloader downloader;
+  public final String masterKey;
 
-  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBase, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger) {
+  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBase, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey) {
     this.config = config;
     this.email = email;
     this.uploader = uploader;
@@ -40,6 +41,7 @@ public class ExternNexus {
     this.metrics = new ApiMetrics(metricsFactory);
     this.attachmentRoot = attachmentRoot;
     this.accessLogger = accessLogger;
+    this.masterKey = masterKey;
     attachmentRoot.mkdir();
   }
 

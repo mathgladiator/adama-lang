@@ -265,7 +265,7 @@ public class ConnectionRouter {
                 @Override
                 public void success(SpaceGenerateKeyRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new KeyResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(nexus.session, resolved, new KeyPairResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {

@@ -15,16 +15,17 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.web.io.*;
 
-public class KeyResponder {
+public class KeyPairResponder {
   public final JsonResponder responder;
 
-  public KeyResponder(JsonResponder responder) {
+  public KeyPairResponder(JsonResponder responder) {
     this.responder = responder;
   }
 
-  public void complete(String key) {
+  public void complete(Integer keyId, String publicKey) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
-    _obj.put("key", key);
+    _obj.put("keyId", keyId);
+    _obj.put("publicKey", publicKey);
     responder.finish(_obj.toString());
   }
 

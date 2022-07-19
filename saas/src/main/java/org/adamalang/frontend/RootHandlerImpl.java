@@ -17,15 +17,12 @@ import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
+import org.adamalang.common.keys.MasterKey;
+import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.data.DocumentIndex;
-import org.adamalang.mysql.model.Deployments;
-import org.adamalang.mysql.model.FinderOperations;
-import org.adamalang.mysql.model.Authorities;
-import org.adamalang.mysql.model.Billing;
-import org.adamalang.mysql.model.Spaces;
-import org.adamalang.mysql.model.Users;
+import org.adamalang.mysql.model.*;
 import org.adamalang.mysql.data.BillingUsage;
 import org.adamalang.mysql.data.IdHashPairing;
 import org.adamalang.mysql.data.Role;
@@ -412,9 +409,15 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(Session session, SpaceGenerateKeyRequest request, KeyResponder responder) {
-    // TODO: generate a space key, save it to database, return the id+key as a opaque blob
-    responder.error(new ErrorCodeException(0));
+  public void handle(Session session, SpaceGenerateKeyRequest request, KeyPairResponder responder) {
+    try {
+      KeyPair pair = PublicPrivateKeyPartnership.genKeyPair();
+      String privateKeyEncrypted = MasterKey.encrypt(nexus.masterKey, PublicPrivateKeyPartnership.privateKeyOf(pair));
+      int keyId = Secrets.insertSecretKey(nexus.dataBase, request.space, privateKeyEncrypted);
+      responder.complete(keyId, PublicPrivateKeyPartnership.publicKeyOf(pair));
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_GENERATE_KEY_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
   }
 
   @Override
