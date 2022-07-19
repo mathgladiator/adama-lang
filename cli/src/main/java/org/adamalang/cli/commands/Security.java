@@ -13,9 +13,11 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.keys.MasterKey;
+import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.security.KeyPair;
 
 public class Security {
 
@@ -29,6 +31,9 @@ public class Security {
     switch (command) {
       case "generate-mk":
         generateMK(next);
+        return;
+      case "sanity-check":
+        sanityCheck(next);
         return;
       case "generate-ca":
         generateCA(next);
@@ -54,7 +59,21 @@ public class Security {
     System.out.println(Util.prefix("SECURITYSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("generate-mk", Util.ANSI.Green) + "       Generates a master key");
     System.out.println("    " + Util.prefix("generate-ca", Util.ANSI.Green) + "       Generates a new CA");
+    System.out.println("    " + Util.prefix("sanity-check", Util.ANSI.Green) + "      Sanity check that the JVM has the appropriate security support");
     System.out.println("    " + Util.prefix("new-server", Util.ANSI.Green) + "        Generates a new private key for a gRPC server");
+  }
+
+  private static void sanityCheck(String[] args) throws Exception {
+    String master = MasterKey.generateMasterKey();
+    if ("secret".equals(MasterKey.decrypt(master, MasterKey.encrypt(master, "secret")))) {
+      System.out.println("+" + Util.prefix("master key support", Util.ANSI.Green));
+    }
+    KeyPair keyPair = PublicPrivateKeyPartnership.genKeyPair();
+    KeyPair clone = PublicPrivateKeyPartnership.keyPairFrom(PublicPrivateKeyPartnership.publicKeyOf(keyPair), PublicPrivateKeyPartnership.privateKeyOf(keyPair));
+    byte[] secret = PublicPrivateKeyPartnership.secretFrom(clone);
+    if ("secret".equals(PublicPrivateKeyPartnership.decrypt(secret, PublicPrivateKeyPartnership.encrypt(secret, "secret")))) {
+      System.out.println("+" + Util.prefix("public-private partnership intact", Util.ANSI.Green));
+    }
   }
 
   private static void generateMK(String[] args) throws Exception {
