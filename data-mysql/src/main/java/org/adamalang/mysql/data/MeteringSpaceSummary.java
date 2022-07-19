@@ -21,12 +21,18 @@ public class MeteringSpaceSummary {
   private long messages;
   private long storageBytes;
   private long unbilledStorageByteHours;
+  private long bandwidth;
+  private long first_party_service_calls;
+  private long third_party_service_calls;
 
   public MeteringSpaceSummary() {
     this.targets = new HashMap<>();
     this.cpuTicks = 0;
     this.storageBytes = 0;
     this.unbilledStorageByteHours = 0;
+    this.bandwidth = 0;
+    this.first_party_service_calls = 0;
+    this.third_party_service_calls = 0;
   }
 
   public void setStorageBytes(long storageBytes) {
@@ -43,9 +49,25 @@ public class MeteringSpaceSummary {
       byTarget = new MeteringSummaryPartialPerTarget();
       targets.put(target, byTarget);
     }
-    cpuTicks += node.get("cpu").asLong();
-    messages += node.get("messages").asLong();
-    byTarget.include(node.get("count_p95").asLong(), node.get("memory_p95").asLong(), node.get("connections_p95").asLong());
+    if (node.has("cpu")) {
+      cpuTicks += node.get("cpu").asLong();
+    }
+    if (node.has("messages")) {
+      messages += node.get("messages").asLong();
+    }
+    if (node.has("bandwidth")) {
+      bandwidth += node.get("bandwidth").asLong();
+    }
+    if (node.has("first_party_service_calls")) {
+      first_party_service_calls += node.get("first_party_service_calls").asLong();
+    }
+    if (node.has("third_party_service_calls")) {
+      third_party_service_calls += node.get("third_party_service_calls").asLong();
+    }
+    byTarget.include(
+        node.has("count_p95") ? node.get("count_p95").asLong() : 0, //
+        node.has("memory_p95") ? node.get("memory_p95").asLong() : 0, //
+        node.has("connections_p95") ? node.get("connections_p95").asLong() : 0);
   }
 
   public MeteredWindowSummary summarize(ResourcesPerPenny rates) {
@@ -75,6 +97,10 @@ public class MeteringSpaceSummary {
       writer.writeObjectFieldIntro("memory");
       writer.writeLong(memory);
     }
+    if (bandwidth > 0) {
+      writer.writeObjectFieldIntro("bandwidth");
+      writer.writeLong(bandwidth);
+    }
     if (connections > 0) {
       writer.writeObjectFieldIntro("connections");
       writer.writeLong(connections);
@@ -83,8 +109,21 @@ public class MeteringSpaceSummary {
       writer.writeObjectFieldIntro("storageBytes");
       writer.writeLong(storageBytes);
     }
+    if (bandwidth > 0) {
+      writer.writeObjectFieldIntro("bandwidth");
+      writer.writeLong(bandwidth);
+    }
+    if (first_party_service_calls > 0) {
+      writer.writeObjectFieldIntro("first_party_service_calls");
+      writer.writeLong(first_party_service_calls);
+    }
+    if (third_party_service_calls > 0) {
+      writer.writeObjectFieldIntro("third_party_service_calls");
+      writer.writeLong(third_party_service_calls);
+    }
     writer.endObject();
     long totalStorageByteHours = storageBytes + unbilledStorageByteHours;
+    // TODO: sort this out
     int pennies = (int) Math.ceil(max(messages / rates.messages, count / rates.count, memory / rates.memory, connections / rates.connections, cpuTicks / rates.cpu)) + (int) (totalStorageByteHours / rates.storage);
     return new MeteredWindowSummary(writer.toString(), pennies, storageBytes, (totalStorageByteHours % rates.storage) - unbilledStorageByteHours);
   }

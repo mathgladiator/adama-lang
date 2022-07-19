@@ -37,8 +37,8 @@ public class MeteringSampleTests {
         int spaceId = Spaces.createSpace(dataBase, userId, "space");
         Assert.assertEquals(0, (int) Spaces.getLatestBillingHourCode(dataBase));
         long now = System.currentTimeMillis();
-        Metering.recordBatch(dataBase, "target1", "{\"time\":\"" + (now - 100000000) + "\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":29}}}", now);
-        Metering.recordBatch(dataBase, "target2", "{\"time\":\"" + (now + 100000000) + "\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":19}}}", now);
+        Metering.recordBatch(dataBase, "target1", "{\"time\":\"" + (now - 100000000) + "\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":29,\"bandwidth\":\"540\",\"third_party_service_calls\":10000}}}", now);
+        Metering.recordBatch(dataBase, "target2", "{\"time\":\"" + (now + 100000000) + "\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":19,\"first_party_service_calls\":17}}}", now);
         Assert.assertNotNull(Metering.getEarliestRecordTimeOfCreation(dataBase));
         HashMap<String, MeteringSpaceSummary> summary1 = Metering.summarizeWindow(dataBase, metrics, now - 100000, now + 100000);
         Assert.assertEquals(1, summary1.size());
@@ -51,7 +51,7 @@ public class MeteringSampleTests {
         ResourcesPerPenny rates = new ResourcesPerPenny(1000000, 2000, 50, 1024, 500, 1000000000);
         {
           MeteredWindowSummary summarySpace = summary1.get("space").summarize(rates);
-          Assert.assertEquals("{\"cpu\":\"29625809720\",\"messages\":\"5660000\",\"count\":\"8\",\"memory\":\"2000\",\"connections\":\"48\",\"storageBytes\":\"1024\"}", summarySpace.resources);
+          Assert.assertEquals("{\"cpu\":\"29625809720\",\"messages\":\"5660000\",\"count\":\"8\",\"memory\":\"2000\",\"bandwidth\":\"540\",\"connections\":\"48\",\"storageBytes\":\"1024\",\"bandwidth\":\"540\",\"first_party_service_calls\":\"17\",\"third_party_service_calls\":\"10000\"}", summarySpace.resources);
           Assert.assertEquals(1024, summarySpace.storageBytes);
           Assert.assertEquals(1024, summarySpace.changeUnbilledStorageByteHours);
           Assert.assertEquals(29626, summarySpace.pennies);

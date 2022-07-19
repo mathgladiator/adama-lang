@@ -298,13 +298,11 @@ public class ClientTests {
         }
 
         CountDownLatch finished = new CountDownLatch(1);
-        bed.batchMaker.write(new MeterReading(0, System.currentTimeMillis(), "space", "hash", new PredictiveInventory.MeteringSample(0, 1, 2, 3, 4)));
+        bed.batchMaker.write(new MeterReading(0, System.currentTimeMillis(), "space", "hash", new PredictiveInventory.MeteringSample(0, 1, 2, 3, 4, 5, 6, 7)));
         bed.batchMaker.flush(finished);
         Assert.assertTrue(finished.await(5000, TimeUnit.MILLISECONDS));
         String id = bed.batchMaker.getNextAvailableBatchId();
         Assert.assertNotNull(id);
-
-
         {
           MockMeteringFlow mock = new MockMeteringFlow();
           Runnable latch = mock.latchAt(2);
@@ -313,8 +311,6 @@ public class ClientTests {
           mock.assertWrite(0, "HANDLE!");
           mock.assertWrite(1, "FINISHED");
         }
-
-
       } finally{
         client.shutdown();
       }

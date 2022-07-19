@@ -73,11 +73,5 @@ public class MeteringAggregator {
         });
       }
     }, 1000 * 5);
-
-
-    // TODO: ROLE #3.B: when a hot host appears, use billing information to find hottest space, and then make a decision to act on it
-    // TODO: ROLE #3.C: adama should inform which spaces on a hot host are oversubscribed... this is an interesting challenge
-
-
   }
 }
