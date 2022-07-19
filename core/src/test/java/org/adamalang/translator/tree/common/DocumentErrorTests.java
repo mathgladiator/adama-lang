@@ -34,7 +34,7 @@ public class DocumentErrorTests {
 
   @Test
   public void toLSP() {
-    final var error = new DocumentError(new DocumentPosition().ingest(42, 4), "something", null);
+    final var error = new DocumentError(new DocumentPosition().ingest(42, 4, 10), "something", null);
     error.json();
   }
 }

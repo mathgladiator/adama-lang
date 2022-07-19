@@ -44,7 +44,7 @@ public class TokenTests {
 
   @Test
   public void isKeyword() {
-    Token t = new Token("source", "key", MajorTokenType.Keyword, null, 0, 0, 0, 0);
+    Token t = new Token("source", "key", MajorTokenType.Keyword, null, 0, 0, 0, 0, 0, 0);
     Assert.assertTrue(t.isKeyword());
   }
 }

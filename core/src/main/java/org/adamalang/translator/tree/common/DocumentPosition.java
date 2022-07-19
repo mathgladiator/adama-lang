@@ -15,23 +15,27 @@ import org.adamalang.translator.parser.token.Token;
 
 /** Defines a position within a document. Usually, this is a construct within the document */
 public class DocumentPosition {
-  public static final DocumentPosition ZERO = new DocumentPosition().ingest(0, 0);
+  public static final DocumentPosition ZERO = new DocumentPosition().ingest(0, 0, 0);
   private int endLineIndex;
   private int endLinePosition;
   private int startLineIndex;
   private int startLinePosition;
+  private int startByte;
+  private int endByte;
 
   /** initialize with a non-sense position */
   public DocumentPosition() {
     startLineIndex = Integer.MAX_VALUE;
     startLinePosition = Integer.MAX_VALUE;
+    startByte = Integer.MAX_VALUE;
+    endByte = 0;
     endLineIndex = 0;
     endLinePosition = 0;
   }
 
   /** convert the document position to a token with an identifier type */
   public Token asIdentiferToken(String sourceName, String name) {
-    return new Token(sourceName, name, MajorTokenType.Identifier, null, startLineIndex, startLinePosition,  endLineIndex, endLinePosition);
+    return new Token(sourceName, name, MajorTokenType.Identifier, null, startLineIndex, startLinePosition,  endLineIndex, endLinePosition, startByte, endByte);
   }
 
   /** aggregate the positions together */
@@ -48,14 +52,20 @@ public class DocumentPosition {
   /** @param other another document position to ingest */
   public DocumentPosition ingest(final DocumentPosition other) {
     if (other != null) {
-      ingest(other.startLineIndex, other.startLinePosition);
-      ingest(other.endLineIndex, other.endLinePosition);
+      ingest(other.startLineIndex, other.startLinePosition, other.startByte);
+      ingest(other.endLineIndex, other.endLinePosition, other.endByte);
     }
     return this;
   }
 
   /** ingest the given (line, position) pair */
-  public DocumentPosition ingest(final int line, final int position) {
+  public DocumentPosition ingest(final int line, final int position, final int bytePos) {
+    if (bytePos < startByte) {
+      startByte = bytePos;
+    }
+    if (bytePos > endByte) {
+      endByte = bytePos;
+    }
     if (line < startLineIndex) {
       startLineIndex = line;
       startLinePosition = position;
@@ -79,8 +89,8 @@ public class DocumentPosition {
     if (tokens != null) {
       for (final Token token : tokens) {
         if (token != null) {
-          ingest(token.lineStart, token.charStart);
-          ingest(token.lineEnd, token.charEnd);
+          ingest(token.lineStart, token.charStart, token.byteStart);
+          ingest(token.lineEnd, token.charEnd, token.byteEnd);
         }
       }
     }
@@ -116,6 +126,8 @@ public class DocumentPosition {
     writer.writeInteger(startLineIndex);
     writer.writeObjectFieldIntro("character");
     writer.writeInteger(startLinePosition);
+    writer.writeObjectFieldIntro("byte");
+    writer.writeInteger(startByte);
     writer.endObject();
 
     writer.writeObjectFieldIntro("end");
@@ -124,6 +136,8 @@ public class DocumentPosition {
     writer.writeInteger(endLineIndex);
     writer.writeObjectFieldIntro("character");
     writer.writeInteger(endLinePosition);
+    writer.writeObjectFieldIntro("byte");
+    writer.writeInteger(endByte);
     writer.endObject();
 
     writer.endObject();

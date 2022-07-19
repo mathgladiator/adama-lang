@@ -15,19 +15,24 @@ import java.util.Objects;
 /** a granular unit of a file, a string sequence */
 public class Token implements Comparable<Token> {
   /**
-   * 0-offset character within the source indicating the end character within the ending line of the
-   * token
-   */
-  public final int charEnd;
-  /**
    * 0-offset character within the source indicating the start character within the starting line of
    * the token
    */
   public final int charStart;
-  /** 0-offset line within the source indicating the end of the token */
-  public final int lineEnd;
+  /**
+   * 0-offset character within the source indicating the end character within the ending line of the
+   * token
+   */
+  public final int charEnd;
   /** 0-offset line within the source indicating the start of the token */
   public final int lineStart;
+  /** 0-offset line within the source indicating the end of the token */
+  public final int lineEnd;
+  /** 0-offset byte when the token starts */
+  public final int byteStart;
+  /** 0-offset byte when the token ends */
+  public final int byteEnd;
+
   /** the major type of the token */
   public final MajorTokenType majorType;
   /** the minor type of the token (if available) */
@@ -42,7 +47,7 @@ public class Token implements Comparable<Token> {
   public ArrayList<Token> nonSemanticTokensPrior;
 
   /** construct a token */
-  public Token(final String sourceName, final String text, final MajorTokenType majorType, final MinorTokenType minorType, final int lineStart, final int charStart, final int lineEnd, final int charEnd) {
+  public Token(final String sourceName, final String text, final MajorTokenType majorType, final MinorTokenType minorType, final int lineStart, final int charStart, final int lineEnd, final int charEnd, int byteStart, int byteEnd) {
     this.sourceName = sourceName;
     this.text = text;
     this.majorType = majorType;
@@ -51,25 +56,27 @@ public class Token implements Comparable<Token> {
     this.charStart = charStart;
     this.lineEnd = lineEnd;
     this.charEnd = charEnd;
+    this.byteStart = byteStart;
+    this.byteEnd = byteEnd;
     nonSemanticTokensPrior = null;
     nonSemanticTokensAfter = null;
   }
 
   /** helper for merging two adjacent tokens */
   public static Token mergeAdjacentTokens(final Token left, final Token right, final MajorTokenType newMajorType, final MinorTokenType newMinorType) {
-    final var token = new Token(left.sourceName, left.text + right.text, newMajorType, newMinorType, left.lineStart, left.charStart, right.lineEnd, right.charEnd);
+    final var token = new Token(left.sourceName, left.text + right.text, newMajorType, newMinorType, left.lineStart, left.charStart, right.lineEnd, right.charEnd, left.byteStart, right.byteEnd);
     token.nonSemanticTokensPrior = left.nonSemanticTokensPrior;
     token.nonSemanticTokensAfter = right.nonSemanticTokensAfter;
     return token;
   }
 
   public static Token WRAP(final String text) {
-    return new Token(null, text, null, null, 0, 0, 0, 0);
+    return new Token(null, text, null, null, 0, 0, 0, 0, 0, 0);
   }
 
   /** clone the token with new text */
   public Token cloneWithNewText(String newText) {
-    return new Token(sourceName, newText, majorType, minorType, lineStart, charStart, lineEnd, charEnd);
+    return new Token(sourceName, newText, majorType, minorType, lineStart, charStart, lineEnd, charEnd, byteStart, byteEnd);
   }
 
   /** internal: adds a hidden token after this token */
@@ -93,20 +100,16 @@ public class Token implements Comparable<Token> {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(sourceName, text, lineStart, lineEnd, charStart, charEnd);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Token token = (Token) o;
+    return charStart == token.charStart && charEnd == token.charEnd && lineStart == token.lineStart && lineEnd == token.lineEnd && byteStart == token.byteStart && byteEnd == token.byteEnd && majorType == token.majorType && minorType == token.minorType && Objects.equals(sourceName, token.sourceName) && Objects.equals(text, token.text) && Objects.equals(nonSemanticTokensAfter, token.nonSemanticTokensAfter) && Objects.equals(nonSemanticTokensPrior, token.nonSemanticTokensPrior);
   }
 
   @Override
-  public boolean equals(final Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    final var token = (Token) o;
-    return lineStart == token.lineStart && lineEnd == token.lineEnd && charStart == token.charStart && charEnd == token.charEnd && Objects.equals(sourceName, token.sourceName) && Objects.equals(text, token.text);
+  public int hashCode() {
+    return Objects.hash(charStart, charEnd, lineStart, lineEnd, byteStart, byteEnd, majorType, minorType, sourceName, text, nonSemanticTokensAfter, nonSemanticTokensPrior);
   }
 
   @Override

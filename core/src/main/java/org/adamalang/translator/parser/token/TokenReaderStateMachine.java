@@ -26,6 +26,7 @@ class TokenReaderStateMachine {
   private final String sourceName;
   private int currentCharNo;
   private int currentLineNo;
+  private int currentByte;
   private MajorTokenType currentMajorTokenType;
   private MinorTokenType currentMinorTokenType;
   private int escapeHexCharsLeft;
@@ -33,6 +34,7 @@ class TokenReaderStateMachine {
   private ScannerState scanState;
   private int startCharNo;
   private int startLineNo;
+  private int startByte;
 
   TokenReaderStateMachine(final String sourceName, final Consumer<Token> output) {
     this.sourceName = sourceName;
@@ -45,6 +47,8 @@ class TokenReaderStateMachine {
     currentMajorTokenType = null;
     currentMinorTokenType = null;
     deduper = new HashMap<>();
+    currentByte = 0;
+    startByte = 0;
   }
 
   public void consume(final int codepoint) throws AdamaLangException {
@@ -184,6 +188,7 @@ class TokenReaderStateMachine {
         scanState = ScannerState.Unknown;
       }
     } while (doCutThenRetry);
+    currentByte++;
     if ('\n' == codepoint) {
       currentLineNo++;
       currentCharNo = 0;
@@ -216,14 +221,15 @@ class TokenReaderStateMachine {
     if (currentMajorTokenType == MajorTokenType.Symbol && text.length() > 1) {
       for (var k = 0; k < text.length(); k++) {
         final var symbol = dedupe(text.substring(k, k + 1), currentMajorTokenType);
-        output.accept(new Token(sourceName, symbol, currentMajorTokenType, currentMinorTokenType, startLineNo, startCharNo + k, startLineNo, startCharNo + k + symbol.length()));
+        output.accept(new Token(sourceName, symbol, currentMajorTokenType, currentMinorTokenType, startLineNo, startCharNo + k, startLineNo, startCharNo + k + symbol.length(), startByte + k, startByte + k + symbol.length()));
       }
     } else {
       text = dedupe(text, currentMajorTokenType);
-      output.accept(new Token(sourceName, text, currentMajorTokenType, currentMinorTokenType, startLineNo, startCharNo, currentLineNo, currentCharNo));
+      output.accept(new Token(sourceName, text, currentMajorTokenType, currentMinorTokenType, startLineNo, startCharNo, currentLineNo, currentCharNo, startByte, currentByte));
     }
     startLineNo = currentLineNo;
     startCharNo = currentCharNo;
+    startByte = currentByte;
     currentTokenBuffer.setLength(0);
     currentMajorTokenType = null;
     currentMinorTokenType = null;
@@ -231,7 +237,7 @@ class TokenReaderStateMachine {
 
   public DocumentPosition position() {
     final var position = new DocumentPosition();
-    position.ingest(currentLineNo, currentCharNo);
+    position.ingest(currentLineNo, currentCharNo, currentByte);
     return position;
   }
 
