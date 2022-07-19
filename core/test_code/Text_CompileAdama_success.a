@@ -7,6 +7,7 @@
 public text document;
 public formula document_str = document.get();
 public formula issues = Adama.validate(document_str);
+public formula reflection = Adama.reflect(document_str);
 
 @construct {
   if (("[{\"clientID\":\"zzztop\",\"changes\":[[0,\"public string x = 123;\"]]}]").toDynamic() as a) {
