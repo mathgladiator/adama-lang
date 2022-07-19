@@ -25,12 +25,7 @@ public class DocumentPosition {
 
   /** initialize with a non-sense position */
   public DocumentPosition() {
-    startLineIndex = Integer.MAX_VALUE;
-    startLinePosition = Integer.MAX_VALUE;
-    startByte = Integer.MAX_VALUE;
-    endByte = 0;
-    endLineIndex = 0;
-    endLinePosition = 0;
+    reset();
   }
 
   /** convert the document position to a token with an identifier type */
@@ -100,6 +95,8 @@ public class DocumentPosition {
   public void reset() {
     startLineIndex = Integer.MAX_VALUE;
     startLinePosition = Integer.MAX_VALUE;
+    startByte = Integer.MAX_VALUE;
+    endByte = 0;
     endLineIndex = 0;
     endLinePosition = 0;
   }
@@ -119,7 +116,6 @@ public class DocumentPosition {
 
   public void dump(JsonStreamWriter writer) {
     writer.beginObject();
-
     writer.writeObjectFieldIntro("start");
     writer.beginObject();
     writer.writeObjectFieldIntro("line");
@@ -129,7 +125,6 @@ public class DocumentPosition {
     writer.writeObjectFieldIntro("byte");
     writer.writeInteger(startByte);
     writer.endObject();
-
     writer.writeObjectFieldIntro("end");
     writer.beginObject();
     writer.writeObjectFieldIntro("line");
@@ -139,7 +134,6 @@ public class DocumentPosition {
     writer.writeObjectFieldIntro("byte");
     writer.writeInteger(endByte);
     writer.endObject();
-
     writer.endObject();
   }
 }
