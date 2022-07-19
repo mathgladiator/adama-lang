@@ -31,4 +31,13 @@ public class PublicPrivateKeyPartnershipTests {
 
     Assert.assertEquals(x, y);
   }
+
+  @Test
+  public void cipher() throws Exception {
+    KeyPair x = PublicPrivateKeyPartnership.genKeyPair();
+    byte[] secret = PublicPrivateKeyPartnership.secretFrom(x);
+    String encrypted = PublicPrivateKeyPartnership.encrypt(secret, "This is a secret, yo");
+    System.err.println(encrypted);
+    System.err.println(PublicPrivateKeyPartnership.decrypt(secret, encrypted));
+  }
 }

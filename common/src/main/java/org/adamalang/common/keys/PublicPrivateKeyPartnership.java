@@ -9,8 +9,13 @@
  */
 package org.adamalang.common.keys;
 
+import javax.crypto.Cipher;
 import javax.crypto.KeyAgreement;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.interfaces.XECPrivateKey;
 import java.security.interfaces.XECPublicKey;
@@ -53,5 +58,31 @@ public class PublicPrivateKeyPartnership {
     ka.init(pair.getPrivate());
     ka.doPhase(pair.getPublic(), true);
     return ka.generateSecret();
+  }
+
+  /** basic AES encryption */
+  public static String encrypt(byte[] secret, String plaintext) throws Exception {
+    Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+    SecretKeySpec key = new SecretKeySpec(secret, "AES");
+    ByteArrayOutputStream memory = new ByteArrayOutputStream();
+    byte[] iv = new byte[16];
+    new SecureRandom().nextBytes(iv);
+    cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
+    memory.write(iv);
+    memory.write(cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8)));
+    memory.flush();
+    memory.close();
+    return Base64.getEncoder().encodeToString(memory.toByteArray());
+  }
+
+  /** basic AES decryption */
+  public static String decrypt(byte[] secret, String encrypted) throws Exception {
+    Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+    SecretKeySpec key = new SecretKeySpec(secret, "AES");
+    byte[] memory = Base64.getDecoder().decode(encrypted.getBytes(StandardCharsets.UTF_8));
+    byte[] iv = new byte[16];
+    System.arraycopy(memory, 0, iv, 0, 16);
+    cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+    return new String(cipher.doFinal(memory, 16, memory.length - 16), StandardCharsets.UTF_8);
   }
 }
