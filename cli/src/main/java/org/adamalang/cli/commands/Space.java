@@ -310,7 +310,7 @@ public class Space {
     String secret = new String(System.console().readPassword());
     String cipher = PublicPrivateKeyPartnership.encrypt(sharedSecret, secret);
     String encrypted = keyId + ";" + PublicPrivateKeyPartnership.publicKeyOf(ephemeral) + ";" + cipher;
-    System.out.println("SECRET:");
+    System.out.println("Encrypted Secret:");
     System.out.println("------------------");
     System.out.println(encrypted);
     System.out.println("------------------");
