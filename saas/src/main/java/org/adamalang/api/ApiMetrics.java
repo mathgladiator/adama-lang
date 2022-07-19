@@ -24,6 +24,7 @@ public class ApiMetrics {
   public final RequestResponseMonitor monitor_AuthorityList;
   public final RequestResponseMonitor monitor_AuthorityDestroy;
   public final RequestResponseMonitor monitor_SpaceCreate;
+  public final RequestResponseMonitor monitor_SpaceGenerateKey;
   public final RequestResponseMonitor monitor_SpaceUsage;
   public final RequestResponseMonitor monitor_SpaceGet;
   public final RequestResponseMonitor monitor_SpaceSet;
@@ -54,6 +55,7 @@ public class ApiMetrics {
     this.monitor_AuthorityList = factory.makeRequestResponseMonitor("authority/list");
     this.monitor_AuthorityDestroy = factory.makeRequestResponseMonitor("authority/destroy");
     this.monitor_SpaceCreate = factory.makeRequestResponseMonitor("space/create");
+    this.monitor_SpaceGenerateKey = factory.makeRequestResponseMonitor("space/generate-key");
     this.monitor_SpaceUsage = factory.makeRequestResponseMonitor("space/usage");
     this.monitor_SpaceGet = factory.makeRequestResponseMonitor("space/get");
     this.monitor_SpaceSet = factory.makeRequestResponseMonitor("space/set");

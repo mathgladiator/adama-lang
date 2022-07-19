@@ -479,6 +479,15 @@ export interface InitiationResponder {
   failure(reason: number): void;
 }
 
+export interface KeyPayload {
+  key: string;
+}
+
+export interface KeyResponder {
+  success(data: KeyPayload): void;
+  failure(reason: number): void;
+}
+
 export interface KeyListingPayload {
   key: string;
   created: string;
@@ -985,6 +994,16 @@ export class Connection {
       id: parId,
       responder: responder,
       request: {"method":"space/create", "id":parId, "identity": identity, "space": space}
+    });
+  }
+  SpaceGenerateKey(identity: string, space: string, responder: KeyResponder) {
+    var self = this;
+    self.nextId++;
+    var parId = self.nextId;
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"space/generate-key", "id":parId, "identity": identity, "space": space}
     });
   }
   SpaceUsage(identity: string, space: string, limit: number, responder: BillingUsageResponder) {

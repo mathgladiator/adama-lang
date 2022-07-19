@@ -34,6 +34,8 @@ public interface RootHandler {
 
   public void handle(Session session, SpaceCreateRequest request, SimpleResponder responder);
 
+  public void handle(Session session, SpaceGenerateKeyRequest request, KeyResponder responder);
+
   public void handle(Session session, SpaceUsageRequest request, BillingUsageResponder responder);
 
   public void handle(Session session, SpaceGetRequest request, PlanResponder responder);

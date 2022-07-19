@@ -12,6 +12,7 @@ package org.adamalang.cli.commands;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.keys.MasterKey;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -26,6 +27,9 @@ public class Security {
     String command = Util.normalize(args[0]);
     String[] next = Util.tail(args);
     switch (command) {
+      case "generate-mk":
+        generateMK(next);
+        return;
       case "generate-ca":
         generateCA(next);
         return;
@@ -48,8 +52,15 @@ public class Security {
     System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
     System.out.println();
     System.out.println(Util.prefix("SECURITYSUBCOMMAND:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("generate-mk", Util.ANSI.Green) + "       Generates a master key");
     System.out.println("    " + Util.prefix("generate-ca", Util.ANSI.Green) + "       Generates a new CA");
     System.out.println("    " + Util.prefix("new-server", Util.ANSI.Green) + "        Generates a new private key for a gRPC server");
+  }
+
+  private static void generateMK(String[] args) throws Exception {
+    System.err.println("-------------------------------------------------------");
+    System.err.println("Master Key:" + MasterKey.generateMasterKey());
+    System.err.println("-------------------------------------------------------");
   }
 
   private static void generateCA(String[] args) throws Exception {

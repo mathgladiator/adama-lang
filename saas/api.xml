@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<api output-path="./saas/src/main/java/org/adamalang/api" test-output-path="./saas/src/test/java/org/adamalang/api" package="org.adamalang.api" docs="./apikit/docs/src/reference.md" client="./client/src/index.ts">
+<api output-path="./saas/src/main/java/org/adamalang/api" test-output-path="./saas/src/test/java/org/adamalang/api" package="org.adamalang.api" docs="./reference/src/reference/api.md" client="./client/src/index.ts">
     <parameter-definition name="identity" type="string" missing-error="458759">
         <documentation>
             Identity is a token passed to the Authenticator which has the job of producing an agent (i.e. who is this
@@ -356,6 +356,10 @@
         <field name="seq"/>
     </responder>
 
+    <responder name="key">
+        <field name="key"/>
+    </responder>
+
     <responder name="space-listing" stream="true">
         <field name="space"/>
         <field name="role"/>
@@ -493,6 +497,13 @@
     </method>
 
     <method name="space/create" responder="simple">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="space/generate-key" responder="key">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>

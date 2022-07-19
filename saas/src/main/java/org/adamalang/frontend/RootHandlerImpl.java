@@ -412,6 +412,12 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
+  public void handle(Session session, SpaceGenerateKeyRequest request, KeyResponder responder) {
+    // TODO: generate a space key, save it to database, return the id+key as a opaque blob
+    responder.error(new ErrorCodeException(0));
+  }
+
+  @Override
   public DocumentStreamHandler handle(Session session, ConnectionCreateRequest request, DataResponder responder) {
     return new DocumentStreamHandler() {
       private Connection connection;
