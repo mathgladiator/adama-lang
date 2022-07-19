@@ -278,7 +278,7 @@ public class Space {
         ObjectNode response = connection.execute(request);
         config.manipulate((node) -> {
           ObjectNode keys = null;
-          if (!node.has("space-keys")) {
+          if (node.has("space-keys")) {
             keys = (ObjectNode) node.get("space-keys");
           } else {
             keys = node.putObject("space-keys");

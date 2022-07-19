@@ -1,12 +1,3 @@
-/*
- * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
- *
- * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
- *
- * See http://www.adama-lang.org/ for more information.
- *
- * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
- */
 package org.adamalang;
 
 import java.util.HashMap;
@@ -70,8 +61,18 @@ public class ErrorTable {
     descriptions.put(184333, "no description of error (yet)");
     names.put(122896, "LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO");
     descriptions.put(122896, "no description of error (yet)");
+    names.put(129727, "LIVING_DOCUMENT_TRANSACTION_NO_PUT");
+    descriptions.put(129727, "no description of error (yet)");
     names.put(146448, "LIVING_DOCUMENT_TRANSACTION_NO_LIMIT");
     descriptions.put(146448, "no description of error (yet)");
+    names.put(187586, "LIVING_DOCUMENT_TRANSACTION_NO_DELIVERY_ID");
+    descriptions.put(187586, "no description of error (yet)");
+    names.put(127169, "LIVING_DOCUMENT_TRANSACTION_NO_RESULT");
+    descriptions.put(127169, "no description of error (yet)");
+    names.put(197827, "LIVING_DOCUMENT_TRANSACTION_NO_ROUTE_DOCUMENT");
+    descriptions.put(197827, "no description of error (yet)");
+    names.put(168131, "LIVING_DOCUMENT_TRANSACTION_NO_ROUTE_CACHE");
+    descriptions.put(168131, "no description of error (yet)");
     names.put(196624, "LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG");
     descriptions.put(196624, "no description of error (yet)");
     names.put(143889, "LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP");
@@ -104,6 +105,12 @@ public class ErrorTable {
     descriptions.put(146558, "no description of error (yet)");
     names.put(144416, "CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION");
     descriptions.put(144416, "no description of error (yet)");
+    names.put(146115, "DOCUMENT_SHEDDING_LOAD");
+    descriptions.put(146115, "no description of error (yet)");
+    names.put(133308, "DOCUMENT_WEB_GET_NOT_FOUND");
+    descriptions.put(133308, "no description of error (yet)");
+    names.put(114881, "DOCUMENT_WEB_PUT_NOT_FOUND");
+    descriptions.put(114881, "no description of error (yet)");
     names.put(130092, "SERVICE_DOCUMENT_ALREADY_CREATED");
     descriptions.put(130092, "The document is already created, so please try connecting instead. This happens when two create calls are executed");
     userspace.add(130092);
@@ -134,6 +141,8 @@ public class ErrorTable {
     descriptions.put(159869, "no description of error (yet)");
     names.put(146569, "CORE_STREAM_CAN_ATTACH_UNKNOWN_EXCEPTION");
     descriptions.put(146569, "no description of error (yet)");
+    names.put(194752, "DOCUMENT_NOT_READY");
+    descriptions.put(194752, "no description of error (yet)");
     names.put(295116, "UNCAUGHT_EXCEPTION_WEB_SOCKET");
     descriptions.put(295116, "no description of error (yet)");
     names.put(213711, "ONLY_ACCEPTS_TEXT_FRAMES");
@@ -191,6 +200,8 @@ public class ErrorTable {
     descriptions.put(626691, "no description of error (yet)");
     names.put(654339, "FRONTEND_AUTHORITY_DELETE_NOT_FOUND_OR_INCORRECT");
     descriptions.put(654339, "no description of error (yet)");
+    names.put(161987, "DELIVERER_FAILURE_NOT_SET");
+    descriptions.put(161987, "no description of error (yet)");
     names.put(117818, "DEPLOYMENT_PLAN_MUST_BE_ROOT_OBJECT");
     descriptions.put(117818, "The deployment plan must be a object");
     userspace.add(117818);
@@ -232,6 +243,10 @@ public class ErrorTable {
     descriptions.put(684039, "no description of error (yet)");
     names.put(605208, "USER_NOT_FOUND_GET_BALANCE");
     descriptions.put(605208, "no description of error (yet)");
+    names.put(662552, "USER_FAILED_TO_COUNT");
+    descriptions.put(662552, "no description of error (yet)");
+    names.put(643100, "PRIVATE_KEY_NOT_FOUND");
+    descriptions.put(643100, "no description of error (yet)");
     names.put(966671, "AUTH_FAILED_FINDING_DEVELOPER_KEY");
     descriptions.put(966671, "no description of error (yet)");
     names.put(916531, "AUTH_FAILED_VALIDATING_AGAINST_KEYSTORE");
@@ -382,6 +397,14 @@ public class ErrorTable {
     descriptions.put(950322, "no description of error (yet)");
     names.put(919601, "API_ASSET_FAILED_BIND");
     descriptions.put(919601, "no description of error (yet)");
+    names.put(901251, "API_ASSET_DOWNLOAD_FAILED");
+    descriptions.put(901251, "no description of error (yet)");
+    names.put(904348, "API_CLOUD_RESTORE_FAILED");
+    descriptions.put(904348, "no description of error (yet)");
+    names.put(904343, "API_CLOUD_BACKUP_FAILED");
+    descriptions.put(904343, "no description of error (yet)");
+    names.put(928915, "API_CLOUD_DELETE_FAILED");
+    descriptions.put(928915, "no description of error (yet)");
     names.put(999472, "API_ASSET_CHUNK_BAD_DIGEST");
     descriptions.put(999472, "Corruption between client and server caused a chunk fail an integrity check");
     names.put(994352, "API_ASSET_CHUNK_UNKNOWN_EXCEPTION");
@@ -403,6 +426,10 @@ public class ErrorTable {
     descriptions.put(904285, "no description of error (yet)");
     names.put(998495, "API_SPACE_DELETE_NOT_EMPTY");
     descriptions.put(998495, "no description of error (yet)");
+    names.put(925840, "API_GENERATE_KEY_UNKNOWN_EXCEPTION");
+    descriptions.put(925840, "no description of error (yet)");
+    names.put(908435, "API_GENERATE_KEY_NO_PERMISSION");
+    descriptions.put(908435, "no description of error (yet)");
     names.put(909436, "API_METERING_FAILED_FINDING_RANDOM_HOST");
     descriptions.put(909436, "no description of error (yet)");
     names.put(998480, "API_METERING_TIMEOUT");
@@ -481,14 +508,6 @@ public class ErrorTable {
     descriptions.put(790544, "no description of error (yet)");
     names.put(725039, "DISK_COMPUTE_HEADPATCH_NOTHING_TO_DO");
     descriptions.put(725039, "no description of error (yet)");
-    names.put(773164, "DISK_COMPUTE_HEADPATCH_IOEXCEPTION");
-    descriptions.put(773164, "no description of error (yet)");
-    names.put(783395, "DISK_COMPUTE_REWIND_NOTHING_TO_DO");
-    descriptions.put(783395, "no description of error (yet)");
-    names.put(724012, "DISK_COMPUTE_REWIND_IOEXCEPTION");
-    descriptions.put(724012, "no description of error (yet)");
-    names.put(705583, "DISK_COMPUTE_INVALID_METHOD");
-    descriptions.put(705583, "no description of error (yet)");
     names.put(753699, "NET_FAILED_INITIATION");
     descriptions.put(753699, "no description of error (yet)");
     names.put(773155, "NET_DISCONNECT");
@@ -499,12 +518,24 @@ public class ErrorTable {
     descriptions.put(798756, "no description of error (yet)");
     names.put(724001, "NET_CONNECT_FAILED_TO_CONNECT");
     descriptions.put(724001, "no description of error (yet)");
+    names.put(705583, "NET_FINDER_GAVE_UP");
+    descriptions.put(705583, "no description of error (yet)");
+    names.put(724012, "NET_FINDER_ROUTER_REGION_NOT_EXPECTED");
+    descriptions.put(724012, "no description of error (yet)");
+    names.put(783395, "NET_FINDER_ROUTER_NULL_MACHINE");
+    descriptions.put(783395, "no description of error (yet)");
     names.put(773152, "ADAMA_NET_PING_TIMEOUT");
     descriptions.put(773152, "no description of error (yet)");
     names.put(786466, "ADAMA_NET_PING_REJECTED");
     descriptions.put(786466, "no description of error (yet)");
     names.put(720955, "ADAMA_NET_CREATE_TIMEOUT");
     descriptions.put(720955, "no description of error (yet)");
+    names.put(717952, "ADAMA_NET_CREATE_FOUND_REGION_RATHER_THAN_MACHINE");
+    descriptions.put(717952, "no description of error (yet)");
+    names.put(797824, "ADAMA_NET_WEBGET_FOUND_REGION_RATHER_THAN_MACHINE");
+    descriptions.put(797824, "no description of error (yet)");
+    names.put(703539, "ADAMA_NET_WEBPUT_FOUND_REGION_RATHER_THAN_MACHINE");
+    descriptions.put(703539, "no description of error (yet)");
     names.put(737336, "ADAMA_NET_CREATE_REJECTED");
     descriptions.put(737336, "no description of error (yet)");
     names.put(788543, "ADAMA_NET_CLOSE_TIMEOUT");
@@ -523,6 +554,14 @@ public class ErrorTable {
     descriptions.put(718908, "no description of error (yet)");
     names.put(702524, "ADAMA_NET_CONNECT_DOCUMENT_REJECTED");
     descriptions.put(702524, "no description of error (yet)");
+    names.put(783411, "ADAMA_NET_WEBGET_TIMEOUT");
+    descriptions.put(783411, "no description of error (yet)");
+    names.put(724019, "ADAMA_NET_WEBGET_REJECTED");
+    descriptions.put(724019, "no description of error (yet)");
+    names.put(792631, "ADAMA_NET_WEBPUT_TIMEOUT");
+    descriptions.put(792631, "no description of error (yet)");
+    names.put(732208, "ADAMA_NET_WEBPUT_REJECTED");
+    descriptions.put(732208, "no description of error (yet)");
     names.put(769085, "ADAMA_NET_CONNECTION_DONE");
     descriptions.put(769085, "no description of error (yet)");
     retry.add(769085);
@@ -532,16 +571,6 @@ public class ErrorTable {
     descriptions.put(753724, "no description of error (yet)");
     names.put(797755, "ADAMA_NET_FAILED_FINDING_SUBID");
     descriptions.put(797755, "no description of error (yet)");
-    names.put(783411, "CARAVAN_DISK_GET_IOEXCEPTION");
-    descriptions.put(783411, "no description of error (yet)");
-    names.put(724019, "CARAVAN_DISK_CANT_LOAD_IOEXCEPTION");
-    descriptions.put(724019, "no description of error (yet)");
-    names.put(703539, "CARAVAN_DISK_LOGGER_SHUTDOWN");
-    descriptions.put(703539, "no description of error (yet)");
-    names.put(792631, "CARAVAN_DISK_LOGGER_IOEXCEPTION");
-    descriptions.put(792631, "no description of error (yet)");
-    names.put(732208, "CARAVAN_DISK_COMPUTE_METHOD_NOT_FOUND");
-    descriptions.put(732208, "no description of error (yet)");
     names.put(707675, "CARAVAN_KEY_NOT_LOADED_PATCH");
     descriptions.put(707675, "no description of error (yet)");
     names.put(790622, "CARAVAN_KEY_NOT_LOADED_COMPUTE");
@@ -562,13 +591,17 @@ public class ErrorTable {
     descriptions.put(788560, "no description of error (yet)");
     names.put(773242, "CARAVAN_OUT_OF_SPACE_INITIALIZE");
     descriptions.put(773242, "no description of error (yet)");
-    names.put(786509, "FINDER_SERVICE_MYSQL_CANT_TAKEOVER");
-    descriptions.put(786509, "no description of error (yet)");
-    names.put(716879, "FINDER_SERVICE_MYSQL_TAKEOVER_EXCEPTION");
-    descriptions.put(716879, "no description of error (yet)");
-    names.put(735308, "FINDER_SERVICE_MYSQL_CANT_ARCHIVE");
-    descriptions.put(735308, "no description of error (yet)");
-    names.put(771139, "FINDER_SERVICE_MYSQL_ARCHIVE_EXCEPTION");
+    names.put(789645, "CARAVAN_LOAD_FAILURE_EXCEPTION");
+    descriptions.put(789645, "no description of error (yet)");
+    names.put(793742, "CARAVAN_CANT_BACKUP_EXCEPTION");
+    descriptions.put(793742, "no description of error (yet)");
+    names.put(739471, "CARAVAN_CANT_RESTORE_EXCEPTION");
+    descriptions.put(739471, "no description of error (yet)");
+    names.put(733327, "CARAVAN_CANT_RESTORE_CANT_READ");
+    descriptions.put(733327, "no description of error (yet)");
+    names.put(720012, "CARAVAN_CANT_MERGE_RESTORE_OUT_OF_SPACE");
+    descriptions.put(720012, "no description of error (yet)");
+    names.put(771139, "FINDER_SERVICE_MYSQL_FREE_EXCEPTION");
     descriptions.put(771139, "no description of error (yet)");
     names.put(707651, "FINDER_SERVICE_MYSQL_CANT_UPDATE");
     descriptions.put(707651, "no description of error (yet)");
@@ -578,13 +611,27 @@ public class ErrorTable {
     descriptions.put(792643, "no description of error (yet)");
     names.put(785528, "FINDER_SERVICE_MYSQL_FIND_EXCEPTION");
     descriptions.put(785528, "no description of error (yet)");
+    names.put(735364, "FINDER_SERVICE_MYSQL_LIST_EXCEPTION");
+    descriptions.put(735364, "no description of error (yet)");
     names.put(777331, "FINDER_SERVICE_MYSQL_DELETE_EXCEPTION");
     descriptions.put(777331, "no description of error (yet)");
+    names.put(722034, "FINDER_SERVICE_MYSQL_CANT_BACKUP");
+    descriptions.put(722034, "no description of error (yet)");
+    names.put(716912, "FINDER_SERVICE_MYSQL_BACKUP_EXCEPTION");
+    descriptions.put(716912, "no description of error (yet)");
     names.put(736347, "PROXY_TIMEOUT");
     descriptions.put(736347, "no description of error (yet)");
     names.put(799836, "PROXY_REJECTED");
     descriptions.put(799836, "no description of error (yet)");
     names.put(788607, "STORAGE_TIER_FAILED_TO_APPLY_GOTO");
     descriptions.put(788607, "no description of error (yet)");
+    names.put(735344, "MANAGED_STORAGE_WRONG_MACHINE");
+    descriptions.put(735344, "no description of error (yet)");
+    names.put(734320, "MANAGED_STORAGE_WRITE_FAILED_CLOSED");
+    descriptions.put(734320, "no description of error (yet)");
+    names.put(768112, "MANAGED_STORAGE_READ_FAILED_CLOSED");
+    descriptions.put(768112, "no description of error (yet)");
+    names.put(791691, "MANAGED_STORAGE_CLOSED_BEFORE_FOUND");
+    descriptions.put(791691, "no description of error (yet)");
   }
 }

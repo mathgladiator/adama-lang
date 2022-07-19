@@ -41,7 +41,7 @@ public class RxCacheTests {
       @Override
       public void accept(Integer id, String s) {
         tasks.add(() -> {
-          deliverer.deliver(NtClient.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), Callback.DONT_CARE_INTEGER);
+          deliverer.deliver(NtClient.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
         });
       }
     };

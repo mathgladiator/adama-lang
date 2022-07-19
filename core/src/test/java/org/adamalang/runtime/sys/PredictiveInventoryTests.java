@@ -64,8 +64,8 @@ public class PredictiveInventoryTests {
 
   @Test
   public void add() {
-    PredictiveInventory.MeteringSample a = new PredictiveInventory.MeteringSample(100, 1000, 5, 100, 41);
-    PredictiveInventory.MeteringSample b = new PredictiveInventory.MeteringSample(1100, 21000, 51, 1100, 91);
+    PredictiveInventory.MeteringSample a = new PredictiveInventory.MeteringSample(100, 1000, 5, 100, 41, 123, 456, 789);
+    PredictiveInventory.MeteringSample b = new PredictiveInventory.MeteringSample(1100, 21000, 51, 1100, 91, 123, 456, 789);
     PredictiveInventory.MeteringSample s = PredictiveInventory.MeteringSample.add(a, b);
     Assert.assertEquals(1200, s.memory);
     Assert.assertEquals(22000, s.cpu);

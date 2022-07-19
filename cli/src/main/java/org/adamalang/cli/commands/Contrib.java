@@ -9,11 +9,13 @@
  */
 package org.adamalang.cli.commands;
 
+import org.adamalang.GenerateTables;
 import org.adamalang.apikit.Tool;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.DefaultCopyright;
 import org.adamalang.support.GenerateLanguageTests;
+import org.adamalang.web.service.BundleJavaScriptClient;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -32,6 +34,12 @@ public class Contrib {
         return;
       case "make-api":
         Tool.build("saas/api.xml", new File("."));
+        return;
+      case "bundle-js":
+        BundleJavaScriptClient.main(next);
+        return;
+      case "make-et":
+        GenerateTables.main(next);
         return;
       case "copyright":
         copyright();
@@ -54,6 +62,8 @@ public class Contrib {
     System.out.println(Util.prefix("CONTRIBSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("generate", Util.ANSI.Green) + "          Generates the core test files from scripts.");
     System.out.println("    " + Util.prefix("make-api", Util.ANSI.Green) + "          Produces api files for SaaS and documentation for the WebSocket low level API.");
+    System.out.println("    " + Util.prefix("bundle-js", Util.ANSI.Green) + "         Bundles the libadama.js into the webserver");
+    System.out.println("    " + Util.prefix("make-et", Util.ANSI.Green) + "           Generates the error table which provides useful insight to issues");
     System.out.println("    " + Util.prefix("copyright", Util.ANSI.Green) + "         Sprinkle Jeff's name everywhere.");
   }
 

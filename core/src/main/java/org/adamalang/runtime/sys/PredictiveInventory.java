@@ -22,6 +22,9 @@ public class PredictiveInventory {
   private long messages;
   private long count;
   private long connections;
+  private long bandwidth;
+  private long first_party_service_calls;
+  private long third_party_service_calls;
 
   public PredictiveInventory() {
     this.memory = 0;
@@ -32,10 +35,13 @@ public class PredictiveInventory {
     this.count = 0;
     this.snapshots = new Snapshot[4];
     this.connections = 0;
+    this.bandwidth = 0;
+    this.first_party_service_calls = 0;
+    this.third_party_service_calls = 0;
   }
 
   public MeteringSample sample() {
-    MeteringSample meteringSample = new MeteringSample(memory, ticks, count, messages, connections);
+    MeteringSample meteringSample = new MeteringSample(memory, ticks, count, messages, connections, bandwidth, first_party_service_calls, third_party_service_calls);
     messages = 0;
     return meteringSample;
   }
@@ -85,23 +91,48 @@ public class PredictiveInventory {
     this.connections++;
   }
 
+  public void bandwidth(long bytes) {
+    this.bandwidth += bytes;
+  }
+
+  public void first_party_service_call() {
+    this.first_party_service_calls++;
+  }
+
+  public void third_party_service_call() {
+    this.third_party_service_calls++;
+  }
+
   public static class MeteringSample {
     public final long memory;
     public final long cpu;
     public final long count;
     public final long messages;
     public final long connections;
+    public final long bandwidth;
+    public final long first_party_service_calls;
+    public final long third_party_service_calls;
 
-    public MeteringSample(long memory, long cpu, long count, long messages, long connections) {
+    public MeteringSample(long memory, long cpu, long count, long messages, long connections, long bandwidth, long first_party_service_calls, long third_party_service_calls) {
       this.memory = memory;
       this.cpu = cpu;
       this.count = count;
       this.messages = messages;
       this.connections = connections;
+      this.bandwidth = bandwidth;
+      this.first_party_service_calls = first_party_service_calls;
+      this.third_party_service_calls = third_party_service_calls;
     }
 
     public static MeteringSample add(MeteringSample a, MeteringSample b) {
-      return new MeteringSample(a.memory + b.memory, a.cpu + b.cpu, a.count + b.count, a.messages + b.messages, a.connections + b.connections);
+      return new MeteringSample(a.memory + b.memory, //
+          a.cpu + b.cpu, //
+          a.count + b.count, //
+          a.messages + b.messages, //
+          a.connections + b.connections, //
+          a.bandwidth + b.bandwidth, //
+          a.first_party_service_calls + b.first_party_service_calls, //
+          a.third_party_service_calls + b.third_party_service_calls);
     }
   }
 
@@ -110,12 +141,18 @@ public class PredictiveInventory {
     public long ticks;
     public int count;
     public long connections;
+    public long bandwidth;
+    public long first_party_service_calls;
+    public long third_party_service_calls;
 
     public PreciseSnapshotAccumulator() {
       this.memory = 0;
       this.ticks = 0;
       this.count = 0;
       this.connections = 0;
+      this.bandwidth = 0;
+      this.first_party_service_calls = 0;
+      this.third_party_service_calls = 0;
     }
   }
 

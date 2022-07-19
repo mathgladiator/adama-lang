@@ -54,8 +54,8 @@ public class RealDocumentSetup implements Deliverer {
   }
 
   @Override
-  public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
-    this.deliver.deliver(agent, key, id, result, callback);
+  public void deliver(NtClient agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
+    this.deliver.deliver(agent, key, id, result, firstParty, callback);
   }
 
   public RealDocumentSetup(

@@ -25,13 +25,15 @@ public class MockDeliverer implements Deliverer  {
     public final Key key;
     public final int id;
     public final RemoteResult result;
+    public final boolean firstParty;
     public final Callback<Integer> callback;
 
-    public Delivery(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
+    public Delivery(NtClient agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
       this.agent = agent;
       this.key = key;
       this.id = id;
       this.result = result;
+      this.firstParty = firstParty;
       this.callback = callback;
     }
   }
@@ -51,7 +53,7 @@ public class MockDeliverer implements Deliverer  {
   }
 
   @Override
-  public synchronized void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
-    this.deliveries.add(new Delivery(agent, key, id, result, callback));
+  public synchronized void deliver(NtClient agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
+    this.deliveries.add(new Delivery(agent, key, id, result, firstParty, callback));
   }
 }

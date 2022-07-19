@@ -32,12 +32,20 @@ public class ServiceRemoteTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
 
+  private static Deliverer BIND_LAZY(AtomicReference<Deliverer> latent) {
+    return new Deliverer() {
+      @Override
+      public void deliver(NtClient agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
+        latent.get().deliver(agent, key, id, result, firstParty, callback);
+      }
+    };
+  }
   @Test
   public void service_failure() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     ServiceRegistry.REGISTRY.put("sqr1", (properties) -> {
-      return new SimpleService("sqr1", NtClient.NO_ONE) {
+      return new SimpleService("sqr1", NtClient.NO_ONE, true) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
           actions.add(() -> {
@@ -47,12 +55,7 @@ public class ServiceRemoteTests {
       };
     });
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
-    Deliverer lazy = new Deliverer() {
-      @Override
-      public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
-        latent.get().deliver(agent, key, id, result, callback);
-      }
-    };
+    Deliverer lazy = BIND_LAZY(latent);
 
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +
@@ -105,7 +108,7 @@ public class ServiceRemoteTests {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     ServiceRegistry.REGISTRY.put("sqr2", (properties) -> {
-      return new SimpleService("sqr2", NtClient.NO_ONE) {
+      return new SimpleService("sqr2", NtClient.NO_ONE, true) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
           int _x = 1;
@@ -129,12 +132,7 @@ public class ServiceRemoteTests {
       };
     });
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
-    Deliverer lazy = new Deliverer() {
-      @Override
-      public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
-        latent.get().deliver(agent, key, id, result, callback);
-      }
-    };
+    Deliverer lazy = BIND_LAZY(latent);
 
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +
@@ -187,7 +185,7 @@ public class ServiceRemoteTests {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     ServiceRegistry.REGISTRY.put("sqr3", (properties) -> {
-      return new SimpleService("sqr3", NtClient.NO_ONE) {
+      return new SimpleService("sqr3", NtClient.NO_ONE, false) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
           int _x = 1;
@@ -211,12 +209,7 @@ public class ServiceRemoteTests {
       };
     });
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
-    Deliverer lazy = new Deliverer() {
-      @Override
-      public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
-        latent.get().deliver(agent, key, id, result, callback);
-      }
-    };
+    Deliverer lazy = BIND_LAZY(latent);
 
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +
@@ -273,7 +266,7 @@ public class ServiceRemoteTests {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     ServiceRegistry.REGISTRY.put("sqr4", (properties) -> {
-      return new SimpleService("sqr4", NtClient.NO_ONE) {
+      return new SimpleService("sqr4", NtClient.NO_ONE, false) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
           int _x = 1;
@@ -297,12 +290,7 @@ public class ServiceRemoteTests {
       };
     });
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
-    Deliverer lazy = new Deliverer() {
-      @Override
-      public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
-        latent.get().deliver(agent, key, id, result, callback);
-      }
-    };
+    Deliverer lazy = BIND_LAZY(latent);
 
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +
@@ -352,7 +340,7 @@ public class ServiceRemoteTests {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     ServiceRegistry.REGISTRY.put("sqr5", (properties) -> {
-      return new SimpleService("sqr5", NtClient.NO_ONE) {
+      return new SimpleService("sqr5", NtClient.NO_ONE, false) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
           int _x = 1;
@@ -376,12 +364,7 @@ public class ServiceRemoteTests {
       };
     });
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
-    Deliverer lazy = new Deliverer() {
-      @Override
-      public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
-        latent.get().deliver(agent, key, id, result, callback);
-      }
-    };
+    Deliverer lazy = BIND_LAZY(latent);
 
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +
@@ -434,7 +417,7 @@ public class ServiceRemoteTests {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     ServiceRegistry.REGISTRY.put("sqr6", (properties) -> {
-      return new SimpleService("sqr6", NtClient.NO_ONE) {
+      return new SimpleService("sqr6", NtClient.NO_ONE, true) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
           int _x = 1;
@@ -458,12 +441,7 @@ public class ServiceRemoteTests {
       };
     });
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
-    Deliverer lazy = new Deliverer() {
-      @Override
-      public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
-        latent.get().deliver(agent, key, id, result, callback);
-      }
-    };
+    Deliverer lazy = BIND_LAZY(latent);
 
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +

@@ -22,10 +22,12 @@ import java.util.function.Function;
 public abstract class SimpleService implements Service {
   private final String name;
   private final NtClient agent;
+  private final boolean firstParty;
 
-  public SimpleService(String name, NtClient agent) {
+  public SimpleService(String name, NtClient agent, boolean firstParty) {
     this.name = name;
     this.agent = agent;
+    this.firstParty = firstParty;
   }
 
   @Override
@@ -44,7 +46,7 @@ public abstract class SimpleService implements Service {
 
         public void deliver(RemoteResult result) {
           Key key = new Key(caller.__getSpace(), caller.__getKey());
-          caller.__getDeliverer().deliver(agent, key, id, result, Callback.DONT_CARE_INTEGER);
+          caller.__getDeliverer().deliver(agent, key, id, result, firstParty, Callback.DONT_CARE_INTEGER);
         }
       });
     });

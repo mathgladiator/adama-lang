@@ -53,6 +53,9 @@ public class MeterReducer {
     space.memorySamples.add(meterReading.memory);
     space.countSamples.add(meterReading.count);
     space.connectionsSamples.add(meterReading.connections);
+    space.sumBandwidth += meterReading.bandwidth;
+    space.sumFirstPartyServiceCalls += meterReading.first_party_service_calls;
+    space.sumThirdPartyServiceCalls += meterReading.third_party_service_calls;
   }
 
   public String toJson() {
@@ -80,6 +83,9 @@ public class MeterReducer {
     private final ArrayList<Long> connectionsSamples;
     private long sumCPU;
     private long sumMessages;
+    private long sumBandwidth;
+    private long sumFirstPartyServiceCalls;
+    private long sumThirdPartyServiceCalls;
 
     private PerSpaceReducer() {
       this.sumCPU = 0;
@@ -87,6 +93,9 @@ public class MeterReducer {
       this.memorySamples = new ArrayList<>();
       this.countSamples = new ArrayList<>();
       this.connectionsSamples = new ArrayList<>();
+      this.sumBandwidth = 0;
+      this.sumFirstPartyServiceCalls = 0;
+      this.sumThirdPartyServiceCalls = 0;
     }
 
     private String reduce() {
@@ -94,20 +103,20 @@ public class MeterReducer {
       countSamples.sort(Long::compareTo);
       JsonStreamWriter writer = new JsonStreamWriter();
       writer.beginObject();
-      writer.writeObjectFieldIntro("cpu");
-      writer.writeLong(sumCPU);
       if (sumCPU != 0) {
+        writer.writeObjectFieldIntro("cpu");
+        writer.writeLong(sumCPU);
         notZero = true;
       }
-      writer.writeObjectFieldIntro("messages");
-      writer.writeLong(sumMessages);
       if (sumMessages != 0) {
+        writer.writeObjectFieldIntro("messages");
+        writer.writeLong(sumMessages);
         notZero = true;
       }
-      writer.writeObjectFieldIntro("count_p95");
       long count95 = estimateP95(countSamples);
-      writer.writeLong(count95);
       if (count95 != 0) {
+        writer.writeObjectFieldIntro("count_p95");
+        writer.writeLong(count95);
         notZero = true;
       }
       writer.writeObjectFieldIntro("memory_p95");
@@ -116,12 +125,30 @@ public class MeterReducer {
       if (memory95 != 0) {
         notZero = true;
       }
-      writer.writeObjectFieldIntro("connections_p95");
       long connections95 = estimateP95(connectionsSamples);
-      writer.writeLong(connections95);
       if (connections95 != 0) {
+        writer.writeObjectFieldIntro("connections_p95");
+        writer.writeLong(connections95);
         notZero = true;
       }
+      if (sumBandwidth != 0) {
+        writer.writeObjectFieldIntro("bandwidth");
+        writer.writeLong(sumBandwidth);
+        notZero = true;
+      }
+
+      if (sumFirstPartyServiceCalls != 0) {
+        writer.writeObjectFieldIntro("first_party_service_calls");
+        writer.writeLong(sumFirstPartyServiceCalls);
+        notZero = true;
+      }
+
+      if (sumThirdPartyServiceCalls != 0) {
+        writer.writeObjectFieldIntro("third_party_service_calls");
+        writer.writeLong(sumThirdPartyServiceCalls);
+        notZero = true;
+      }
+
       writer.endObject();
       if (notZero) {
         return writer.toString();

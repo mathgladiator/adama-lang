@@ -108,12 +108,18 @@ public class CoreService implements Deliverer {
   }
 
   @Override
-  public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callbackReal) {
+  public void deliver(NtClient agent, Key key, int id, RemoteResult result, boolean firstParty,  Callback<Integer> callbackReal) {
     Callback<Integer> callback = metrics.deliver.wrap(callbackReal);
     load(key, new Callback<>() {
       @Override
-      public void success(DurableLivingDocument value) {
-        value.deliver(agent, id, result, callback);
+      public void success(DurableLivingDocument document) {
+        PredictiveInventory inventory = document.base.getOrCreateInventory(key.space);
+        if (firstParty) {
+          inventory.first_party_service_call();
+        } else {
+          inventory.third_party_service_call();
+        }
+        document.deliver(agent, id, result, callback);
       }
 
       @Override
@@ -387,6 +393,7 @@ public class CoreService implements Deliverer {
           @Override
           public void data(String data) {
             stream.next(data);
+            inventory.bandwidth(data.length());
             inventory.message();
           }
 
@@ -491,9 +498,11 @@ public class CoreService implements Deliverer {
     load(key, new Callback<DurableLivingDocument>() {
       @Override
       public void success(DurableLivingDocument document) {
+        PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
         document.registerActivity();
         WebResponse response = document.document().__get(request);
         if (response != null) {
+          response.account(inventory);
           callback.success(response);
         } else {
           callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_GET_NOT_FOUND));
@@ -516,7 +525,24 @@ public class CoreService implements Deliverer {
     load(key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
-        document.webPut(who, request, callback);
+        PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
+        document.webPut(who, request, new Callback<WebResponse>() {
+          @Override
+          public void success(WebResponse response) {
+            document.base.executor.execute(new NamedRunnable("web-put-accounting") {
+              @Override
+              public void execute() throws Exception {
+                response.account(inventory);
+              }
+            });
+            callback.success(response);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
       }
 
       @Override

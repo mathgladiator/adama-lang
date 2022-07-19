@@ -12,6 +12,7 @@ package org.adamalang.runtime.sys.web;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtMessageBase;
+import org.adamalang.runtime.sys.PredictiveInventory;
 
 public class WebResponse {
   public String contentType;
@@ -42,5 +43,14 @@ public class WebResponse {
     this.contentType = asset.contentType;
     this.asset = asset;
     return this;
+  }
+
+  public void account(PredictiveInventory inventory) {
+    if (this.body != null) {
+      inventory.bandwidth(body.length());
+    }
+    if (this.asset != null) {
+      inventory.bandwidth(this.asset.size);
+    }
   }
 }

@@ -31,6 +31,16 @@ public class SpacePolicy {
     return false;
   }
 
+  public boolean canUserGeneratePrivateKey(AuthenticatedUser user) {
+    if (user.source == AuthenticatedUser.Source.Adama) {
+      if (user.id == owner) {
+        return true;
+      }
+      return developers.contains(user.id);
+    }
+    return false;
+  }
+
   public boolean canUserSetRole(AuthenticatedUser user) {
     if (user.source == AuthenticatedUser.Source.Adama) {
       return user.id == owner;

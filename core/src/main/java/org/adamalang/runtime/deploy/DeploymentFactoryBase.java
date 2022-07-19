@@ -48,8 +48,8 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deli
   }
 
   @Override
-  public void deliver(NtClient agent, Key key, int id, RemoteResult result, Callback<Integer> callback) {
-    deliverer.deliver(agent, key, id, result, callback);
+  public void deliver(NtClient agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
+    deliverer.deliver(agent, key, id, result, firstParty, callback);
   }
 
   public void deploy(String space, DeploymentPlan plan) throws ErrorCodeException {

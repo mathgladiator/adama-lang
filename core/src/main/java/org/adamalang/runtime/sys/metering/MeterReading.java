@@ -27,6 +27,9 @@ public class MeterReading {
   public final long count; // standing --> p95
   public final long messages; // total --> sum
   public final long connections; // standing --> p95
+  public final long bandwidth; // total -> sum
+  public final long first_party_service_calls; // total -> sum
+  public final long third_party_service_calls; // total -> sum
 
   public MeterReading(long time, long timeframe, String space, String hash, PredictiveInventory.MeteringSample meteringSample) {
     this.time = time;
@@ -38,6 +41,9 @@ public class MeterReading {
     this.count = meteringSample.count;
     this.messages = meteringSample.messages;
     this.connections = meteringSample.connections;
+    this.bandwidth = meteringSample.bandwidth;
+    this.first_party_service_calls = meteringSample.first_party_service_calls;
+    this.third_party_service_calls = meteringSample.third_party_service_calls;
   }
 
   public static MeterReading unpack(JsonStreamReader reader) {
@@ -54,8 +60,12 @@ public class MeterReading {
           long count = reader.readLong();
           long messages = reader.readLong();
           long connections = reader.readLong();
+          long bandwidth = reader.readLong();
+          long first_party_service_calls = reader.readLong();
+          long third_party_service_calls = reader.readLong();
+
           if (!reader.notEndOfArray()) {
-            return new MeterReading(time, timeframe, space, hash, new PredictiveInventory.MeteringSample(memory, cpu, count, messages, connections));
+            return new MeterReading(time, timeframe, space, hash, new PredictiveInventory.MeteringSample(memory, cpu, count, messages, connections, bandwidth, first_party_service_calls, third_party_service_calls));
           }
         }
         while (reader.notEndOfArray()) {
@@ -81,6 +91,9 @@ public class MeterReading {
     writer.writeLong(count);
     writer.writeLong(messages);
     writer.writeLong(connections);
+    writer.writeLong(bandwidth);
+    writer.writeLong(first_party_service_calls);
+    writer.writeLong(third_party_service_calls);
     writer.endArray();
     return writer.toString();
   }

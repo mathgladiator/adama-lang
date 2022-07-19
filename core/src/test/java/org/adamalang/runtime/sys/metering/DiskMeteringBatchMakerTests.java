@@ -30,7 +30,7 @@ public class DiskMeteringBatchMakerTests {
               100,
               space,
               "hash",
-              new PredictiveInventory.MeteringSample(1000, 5234242, 4, 1000, 128)));
+              new PredictiveInventory.MeteringSample(1000, 5234242, 4, 1000, 128, 42, 100, 200)));
       time.time += 1000;
     };
   }
@@ -55,7 +55,7 @@ public class DiskMeteringBatchMakerTests {
       String batchId = maker.getNextAvailableBatchId();
       Assert.assertNotNull(batchId);
       Assert.assertEquals(
-          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":\"128\"}}}",
+          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":\"128\",\"bandwidth\":\"151284\",\"first_party_service_calls\":\"360200\",\"third_party_service_calls\":\"720400\"}}}",
           maker.getBatch(batchId));
       maker.deleteBatch(batchId);
       CountDownLatch latchFlush = new CountDownLatch(1);
@@ -101,7 +101,7 @@ public class DiskMeteringBatchMakerTests {
       String batchId = maker.getNextAvailableBatchId();
       Assert.assertNotNull(batchId);
       Assert.assertEquals(
-          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":\"128\"}}}",
+          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":\"128\",\"bandwidth\":\"151284\",\"first_party_service_calls\":\"360200\",\"third_party_service_calls\":\"720400\"}}}",
           maker.getBatch(batchId));
       maker.deleteBatch(batchId);
     } finally {
@@ -170,7 +170,7 @@ public class DiskMeteringBatchMakerTests {
       String batchId = maker.getNextAvailableBatchId();
       Assert.assertNotNull(batchId);
       Assert.assertEquals(
-          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":\"128\"}}}",
+          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":\"128\",\"bandwidth\":\"118860\",\"first_party_service_calls\":\"283000\",\"third_party_service_calls\":\"566000\"}}}",
           maker.getBatch(batchId));
       maker.deleteBatch(batchId);
     } finally {

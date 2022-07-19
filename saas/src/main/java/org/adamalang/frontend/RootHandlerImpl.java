@@ -411,10 +411,14 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SpaceGenerateKeyRequest request, KeyPairResponder responder) {
     try {
-      KeyPair pair = PublicPrivateKeyPartnership.genKeyPair();
-      String privateKeyEncrypted = MasterKey.encrypt(nexus.masterKey, PublicPrivateKeyPartnership.privateKeyOf(pair));
-      int keyId = Secrets.insertSecretKey(nexus.dataBase, request.space, privateKeyEncrypted);
-      responder.complete(keyId, PublicPrivateKeyPartnership.publicKeyOf(pair));
+      if (request.policy.canUserGeneratePrivateKey(request.who)) {
+        KeyPair pair = PublicPrivateKeyPartnership.genKeyPair();
+        String privateKeyEncrypted = MasterKey.encrypt(nexus.masterKey, PublicPrivateKeyPartnership.privateKeyOf(pair));
+        int keyId = Secrets.insertSecretKey(nexus.dataBase, request.space, privateKeyEncrypted);
+        responder.complete(keyId, PublicPrivateKeyPartnership.publicKeyOf(pair));
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_GENERATE_KEY_NO_PERMISSION));
+      }
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_GENERATE_KEY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
