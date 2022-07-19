@@ -771,7 +771,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Channels_DuplicateHandlers_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":0},\"end\":{\"line\":4,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'goo' is already handled (MessageHandlers)\"},{\"range\":{\"start\":{\"line\":5,\"character\":0},\"end\":{\"line\":5,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'goo' is already handled (MessageHandlers)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":0,\"byte\":37},\"end\":{\"line\":4,\"character\":1,\"byte\":58}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'goo' is already handled (MessageHandlers)\"},{\"range\":{\"start\":{\"line\":5,\"character\":0,\"byte\":60},\"end\":{\"line\":5,\"character\":15,\"byte\":75}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'goo' is already handled (MessageHandlers)\"}]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
@@ -4163,7 +4163,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Channels_MessageMethodsScopedStatic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":21},\"end\":{\"line\":7,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":6,\"character\":2},\"end\":{\"line\":8,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"Function 'succ_z' does not return in all cases (MethodDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":21,\"byte\":103},\"end\":{\"line\":7,\"character\":22,\"byte\":104}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":56},\"end\":{\"line\":8,\"character\":3,\"byte\":110}},\"severity\":1,\"source\":\"error\",\"message\":\"Function 'succ_z' does not return in all cases (MethodDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -4203,7 +4203,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Channels_MessageTypeWasRecord_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":0},\"end\":{\"line\":3,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":5,\"character\":0},\"end\":{\"line\":6,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":0,\"byte\":17},\"end\":{\"line\":3,\"character\":15,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":5,\"character\":0,\"byte\":36},\"end\":{\"line\":6,\"character\":1,\"byte\":57}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -4243,7 +4243,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Channels_UndefinedMessage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":0,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":2,\"character\":0},\"end\":{\"line\":3,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":15,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":19},\"end\":{\"line\":3,\"character\":1,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

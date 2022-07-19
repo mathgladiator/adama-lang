@@ -843,7 +843,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_AssignmentIssues_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0},\"end\":{\"line\":4,\"character\":7}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'r<maybe<R>>' is unable to store type 'R'. (TypeCheckReferencesX)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'R' is not applicable for assignment (=) (Assignment)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Reactive pointers must be initialized (DefinePtr)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":27},\"end\":{\"line\":4,\"character\":7,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'r<maybe<R>>' is unable to store type 'R'. (TypeCheckReferencesX)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'R' is not applicable for assignment (=) (Assignment)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Reactive pointers must be initialized (DefinePtr)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -883,7 +883,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_ClientRefNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2},\"end\":{\"line\":1,\"character\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"Field 'c' was not defined within the record (ViewerPolicy)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":14,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Field 'c' was not defined within the record (ViewerPolicy)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2324,7 +2324,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_DuplicateFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2},\"end\":{\"line\":2,\"character\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"Field 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":8,\"character\":2},\"end\":{\"line\":9,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"Function 'foo' does not return in all cases (MethodDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":31},\"end\":{\"line\":2,\"character\":16,\"byte\":45}},\"severity\":1,\"source\":\"error\",\"message\":\"Field 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":102},\"end\":{\"line\":9,\"character\":3,\"byte\":140}},\"severity\":1,\"source\":\"error\",\"message\":\"Function 'foo' does not return in all cases (MethodDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2364,7 +2364,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_DuplicatePolicy_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":9},\"end\":{\"line\":6,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'x' was already defined (RecordMethodDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":9,\"byte\":61},\"end\":{\"line\":6,\"character\":3,\"byte\":90}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'x' was already defined (RecordMethodDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2404,7 +2404,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_DuplicateViewerComputeFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2},\"end\":{\"line\":2,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":3,\"character\":2},\"end\":{\"line\":3,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2},\"end\":{\"line\":5,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'y' was already defined (StructureDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":31},\"end\":{\"line\":2,\"character\":15,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":48},\"end\":{\"line\":3,\"character\":15,\"byte\":61}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":82},\"end\":{\"line\":5,\"character\":15,\"byte\":95}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'y' was already defined (StructureDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2444,7 +2444,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_FailedFindPolicyForView_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2},\"end\":{\"line\":1,\"character\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'p' was not found (CustomPolicy)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":12,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'p' was not found (CustomPolicy)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2484,7 +2484,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_IdMustBeInt_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"id must be type int (Record)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"id must be type int (Record)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2524,7 +2524,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_InvalidFormula_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":21},\"end\":{\"line\":1,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2},\"end\":{\"line\":1,\"character\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":21,\"byte\":33},\"end\":{\"line\":1,\"character\":22,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":27,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -5309,7 +5309,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_MethodCallingMethodReadOnly_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":10},\"end\":{\"line\":5,\"character\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":5,\"character\":18},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":10,\"byte\":104},\"end\":{\"line\":5,\"character\":13,\"byte\":107}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":5,\"character\":18,\"byte\":112},\"end\":{\"line\":5,\"character\":21,\"byte\":115}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -8126,7 +8126,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_PolicyNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2},\"end\":{\"line\":1,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'p' was not found (UseCustomPolicy)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":15,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'p' was not found (UseCustomPolicy)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

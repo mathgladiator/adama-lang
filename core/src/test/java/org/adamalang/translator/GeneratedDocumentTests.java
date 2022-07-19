@@ -47,7 +47,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_CantMixChannelAndFunctions_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":0},\"end\":{\"line\":7,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The function 'foo' was already defined. (DocumentDefine)\"},{\"range\":{\"start\":{\"line\":13,\"character\":0},\"end\":{\"line\":13,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Handler 'goo' was already defined. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":0,\"byte\":37},\"end\":{\"line\":7,\"character\":1,\"byte\":76}},\"severity\":1,\"source\":\"error\",\"message\":\"The function 'foo' was already defined. (DocumentDefine)\"},{\"range\":{\"start\":{\"line\":13,\"character\":0,\"byte\":123},\"end\":{\"line\":13,\"character\":15,\"byte\":138}},\"severity\":1,\"source\":\"error\",\"message\":\"Handler 'goo' was already defined. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -87,7 +87,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_DuplicateComputeFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0},\"end\":{\"line\":1,\"character\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Global field 'x' was already defined (GlobalDefine)\"},{\"range\":{\"start\":{\"line\":3,\"character\":0},\"end\":{\"line\":3,\"character\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Global field 'y' was already defined (GlobalDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":15},\"end\":{\"line\":1,\"character\":13,\"byte\":28}},\"severity\":1,\"source\":\"error\",\"message\":\"Global field 'x' was already defined (GlobalDefine)\"},{\"range\":{\"start\":{\"line\":3,\"character\":0,\"byte\":45},\"end\":{\"line\":3,\"character\":13,\"byte\":58}},\"severity\":1,\"source\":\"error\",\"message\":\"Global field 'y' was already defined (GlobalDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -127,7 +127,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_DuplicateEnums_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0},\"end\":{\"line\":1,\"character\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"The enumeration 'X' was already defined. (DocumentDefine)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":0,\"character\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"The enumeration 'X' was defined here. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":14},\"end\":{\"line\":1,\"character\":12,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"The enumeration 'X' was already defined. (DocumentDefine)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":12,\"byte\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"The enumeration 'X' was defined here. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -167,7 +167,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_DuplicateFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0},\"end\":{\"line\":1,\"character\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Global field 'x' was already defined (GlobalDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":15},\"end\":{\"line\":1,\"character\":13,\"byte\":28}},\"severity\":1,\"source\":\"error\",\"message\":\"Global field 'x' was already defined (GlobalDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -207,7 +207,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_DuplicateMessages_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0},\"end\":{\"line\":6,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The message 'M' was already defined. (DocumentDefine)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The message 'M' was defined here. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":28},\"end\":{\"line\":6,\"character\":1,\"byte\":52}},\"severity\":1,\"source\":\"error\",\"message\":\"The message 'M' was already defined. (DocumentDefine)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"The message 'M' was defined here. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -247,7 +247,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_DuplicatePolicies_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":7},\"end\":{\"line\":6,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Global policy 'foo' was already defined (GlobalDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":7,\"byte\":42},\"end\":{\"line\":6,\"character\":1,\"byte\":66}},\"severity\":1,\"source\":\"error\",\"message\":\"Global policy 'foo' was already defined (GlobalDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -287,7 +287,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_DuplicateRecords_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0},\"end\":{\"line\":6,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The record 'R' was already defined. (DocumentDefine)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The record 'R' was defined here. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":34},\"end\":{\"line\":6,\"character\":1,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"The record 'R' was already defined. (DocumentDefine)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"The record 'R' was defined here. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -1136,7 +1136,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_UnknownType_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":0,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'X' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":0,\"character\":4}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":1,\"byte\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'X' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":4,\"byte\":4}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

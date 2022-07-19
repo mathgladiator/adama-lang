@@ -47,7 +47,7 @@ public class GeneratedBlockTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Block_DeadCode_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2},\"end\":{\"line\":2,\"character\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"This code is unreachable. (Block)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":27},\"end\":{\"line\":2,\"character\":14,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"This code is unreachable. (Block)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -87,7 +87,7 @@ public class GeneratedBlockTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Block_DuplicateVariable_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2},\"end\":{\"line\":2,\"character\":5}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' was already defined (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":26},\"end\":{\"line\":2,\"character\":5,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' was already defined (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

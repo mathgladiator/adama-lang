@@ -47,7 +47,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Globals_FunctionOverloadingIncorrect_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Overloaded function has many identical calls (FunctionOverlap)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":48}},\"severity\":1,\"source\":\"error\",\"message\":\"Overloaded function has many identical calls (FunctionOverlap)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -1255,7 +1255,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Globals_NotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'String' lacks 'foo' (GlobalLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":24},\"end\":{\"line\":1,\"character\":20,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'String' lacks 'foo' (GlobalLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":24},\"end\":{\"line\":1,\"character\":20,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

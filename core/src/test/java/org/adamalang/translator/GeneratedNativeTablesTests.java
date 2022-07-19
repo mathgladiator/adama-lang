@@ -47,7 +47,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:NativeTables_BadMethod_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2},\"end\":{\"line\":6,\"character\":8}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'table<M>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":6,\"character\":2},\"end\":{\"line\":6,\"character\":8}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":53},\"end\":{\"line\":6,\"character\":8,\"byte\":59}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'table<M>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":53},\"end\":{\"line\":6,\"character\":8,\"byte\":59}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -1647,7 +1647,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:NativeTables_NoMessage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":8},\"end\":{\"line\":1,\"character\":9}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'M' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":8,\"byte\":16},\"end\":{\"line\":1,\"character\":9,\"byte\":17}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'M' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

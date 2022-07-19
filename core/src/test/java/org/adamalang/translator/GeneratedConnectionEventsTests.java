@@ -47,7 +47,7 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ConnectionEvents_ConnectMustReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":15},\"end\":{\"line\":1,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @connected handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":15,\"byte\":15},\"end\":{\"line\":1,\"character\":1,\"byte\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"The @connected handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

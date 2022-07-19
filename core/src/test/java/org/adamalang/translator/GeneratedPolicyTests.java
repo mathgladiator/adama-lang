@@ -47,7 +47,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Policy_ContextOutOfStatic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11},\"end\":{\"line\":1,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"@context is only available within static policies (WHO)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11,\"byte\":18},\"end\":{\"line\":1,\"character\":19,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"@context is only available within static policies (WHO)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -87,7 +87,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Policy_ContextVariablesBadTypes_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2},\"end\":{\"line\":1,\"character\":8}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'bool' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":1,\"character\":9},\"end\":{\"line\":3,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'create' policy must return a boolean (DocumentEvents)\"},{\"range\":{\"start\":{\"line\":4,\"character\":2},\"end\":{\"line\":4,\"character\":8}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'bool' is unable to store type 'string'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":4,\"character\":9},\"end\":{\"line\":6,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'invent' policy must return a boolean (DocumentEvents)\"},{\"range\":{\"start\":{\"line\":7,\"character\":20},\"end\":{\"line\":7,\"character\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'int', but the type is actually 'bool' (TypeCheckFailures)\"},{\"range\":{\"start\":{\"line\":8,\"character\":20},\"end\":{\"line\":8,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'bool', but the type is actually 'int' (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":22},\"end\":{\"line\":1,\"character\":8,\"byte\":28}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'bool' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":1,\"character\":9,\"byte\":29},\"end\":{\"line\":3,\"character\":3,\"byte\":51}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'create' policy must return a boolean (DocumentEvents)\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":55},\"end\":{\"line\":4,\"character\":8,\"byte\":61}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'bool' is unable to store type 'string'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":4,\"character\":9,\"byte\":62},\"end\":{\"line\":6,\"character\":3,\"byte\":86}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'invent' policy must return a boolean (DocumentEvents)\"},{\"range\":{\"start\":{\"line\":7,\"character\":20,\"byte\":108},\"end\":{\"line\":7,\"character\":24,\"byte\":112}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'int', but the type is actually 'bool' (TypeCheckFailures)\"},{\"range\":{\"start\":{\"line\":8,\"character\":20,\"byte\":135},\"end\":{\"line\":8,\"character\":22,\"byte\":137}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'bool', but the type is actually 'int' (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -656,7 +656,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Policy_EmptyEnvironment_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":20},\"end\":{\"line\":3,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' was not defined (VariableLookup)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":20,\"byte\":54},\"end\":{\"line\":3,\"character\":21,\"byte\":55}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' was not defined (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

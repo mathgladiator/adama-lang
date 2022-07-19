@@ -739,7 +739,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Aggregates_CantBumpBoolList_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2},\"end\":{\"line\":6,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<r<bool>>' (CanBumpNumeric)\"},{\"range\":{\"start\":{\"line\":7,\"character\":5},\"end\":{\"line\":7,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<r<bool>>' (CanBumpNumeric)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":14},\"end\":{\"line\":6,\"character\":15,\"byte\":70}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<r<bool>>' (CanBumpNumeric)\"},{\"range\":{\"start\":{\"line\":7,\"character\":5,\"byte\":14},\"end\":{\"line\":7,\"character\":18,\"byte\":93}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<r<bool>>' (CanBumpNumeric)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

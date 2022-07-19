@@ -47,7 +47,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Lookup_ByIndexNotInteger_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":12},\"end\":{\"line\":5,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'int', but the type is actually 'string' (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":12,\"byte\":54},\"end\":{\"line\":5,\"character\":15,\"byte\":57}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'int', but the type is actually 'string' (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -87,7 +87,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Lookup_ByIndexNotIterable_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2},\"end\":{\"line\":1,\"character\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must be either an array or list to use index lookup[]; instead got 'int'. (RuleSetIterable)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":12,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must be either an array or list to use index lookup[]; instead got 'int'. (RuleSetIterable)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -894,7 +894,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Lookup_NotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' was not defined (VariableLookup)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":24},\"end\":{\"line\":1,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' was not defined (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

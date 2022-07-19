@@ -47,7 +47,7 @@ public class GeneratedWebTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Web_BadSpecialContext_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"@parameters is only available in web paths (WHO)\"},{\"range\":{\"start\":{\"line\":5,\"character\":10},\"end\":{\"line\":5,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"@headers is only available in web paths (WHO)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":18},\"end\":{\"line\":1,\"character\":21,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"@parameters is only available in web paths (WHO)\"},{\"range\":{\"start\":{\"line\":5,\"character\":10,\"byte\":55},\"end\":{\"line\":5,\"character\":18,\"byte\":63}},\"severity\":1,\"source\":\"error\",\"message\":\"@headers is only available in web paths (WHO)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -87,7 +87,7 @@ public class GeneratedWebTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Web_BadUriTypes_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":9},\"end\":{\"line\":0,\"character\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"The parameter type must be int, long, double, string, or boolean (WebUri)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"},{\"range\":{\"start\":{\"line\":6,\"character\":9},\"end\":{\"line\":6,\"character\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"The parameter type must be int, long, double, string, or boolean (WebUri)\"},{\"range\":{\"start\":{\"line\":6,\"character\":0},\"end\":{\"line\":8,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":9,\"byte\":9},\"end\":{\"line\":0,\"character\":26,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"The parameter type must be int, long, double, string, or boolean (WebUri)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":33}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"},{\"range\":{\"start\":{\"line\":6,\"character\":9,\"byte\":70},\"end\":{\"line\":6,\"character\":26,\"byte\":87}},\"severity\":1,\"source\":\"error\",\"message\":\"The parameter type must be int, long, double, string, or boolean (WebUri)\"},{\"range\":{\"start\":{\"line\":6,\"character\":0,\"byte\":61},\"end\":{\"line\":8,\"character\":1,\"byte\":100}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -127,7 +127,7 @@ public class GeneratedWebTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Web_BadVerb_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":0,\"character\":4}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Web_BadVerb_failure.a' failed to parse: Parser was get or put after @web to indicate a read (i.e. get) or write (i.e. put) request {Token: `@web` @ (0,0) -> (0,4): Keyword} (ParseException)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was get or put after @web to indicate a read (i.e. get) or write (i.e. put) request {Token: `@web` @ (0,0) -> (0,4): Keyword} (ImportIssue)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":4,\"byte\":4}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Web_BadVerb_failure.a' failed to parse: Parser was get or put after @web to indicate a read (i.e. get) or write (i.e. put) request {Token: `@web` @ (0,0) -> (0,4): Keyword} (ParseException)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was get or put after @web to indicate a read (i.e. get) or write (i.e. put) request {Token: `@web` @ (0,0) -> (0,4): Keyword} (ImportIssue)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -903,7 +903,7 @@ public class GeneratedWebTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Web_NoReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":1,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"},{\"range\":{\"start\":{\"line\":5,\"character\":0},\"end\":{\"line\":6,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":1,\"character\":1,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"},{\"range\":{\"start\":{\"line\":5,\"character\":0,\"byte\":55},\"end\":{\"line\":6,\"character\":1,\"byte\":88}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
