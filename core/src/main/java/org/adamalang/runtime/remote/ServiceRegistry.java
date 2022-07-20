@@ -49,7 +49,7 @@ public class ServiceRegistry {
 
   public void resolve(String spaceName, HashMap<String, HashMap<String, Object>> servicesConfig) {
     for (Map.Entry<String, HashMap<String, Object>> entry : servicesConfig.entrySet()) {
-      Service resolved = resolveService(String spaceName, entry.getValue());
+      Service resolved = resolveService(spaceName, entry.getValue());
       if (resolved == null) {
         resolved = Service.FAILURE;
       }
