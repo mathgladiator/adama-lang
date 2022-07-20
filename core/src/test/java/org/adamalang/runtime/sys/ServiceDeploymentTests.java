@@ -218,6 +218,7 @@ public class ServiceDeploymentTests {
       }
       factoryFactory.set(
           new LivingDocumentFactory(
+              "space",
               "Foo",
               "import java.util.HashMap;\nimport org.adamalang.runtime.contracts.DocumentMonitor;" +
                   "import org.adamalang.runtime.natives.*;import org.adamalang.runtime.sys.*;\n" +

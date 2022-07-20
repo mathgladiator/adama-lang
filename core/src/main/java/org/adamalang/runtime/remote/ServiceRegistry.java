@@ -12,11 +12,12 @@ package org.adamalang.runtime.remote;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /** a service registry maps service names to services */
 public class ServiceRegistry {
-  public static TreeMap<String, Function<HashMap<String, Object>, Service>> REGISTRY = new TreeMap<>();
+  public static TreeMap<String, BiFunction<String, HashMap<String, Object>, Service>> REGISTRY = new TreeMap<>();
   public static ServiceRegistry NOT_READY = new ServiceRegistry() {
     @Override
     public Service find(String name) {
@@ -24,7 +25,7 @@ public class ServiceRegistry {
     }
 
     @Override
-    public void resolve(HashMap<String, HashMap<String, Object>> servicesConfig) {
+    public void resolve(String space, HashMap<String, HashMap<String, Object>> servicesConfig) {
     }
   };
   private final TreeMap<String, Service> services;
@@ -46,7 +47,7 @@ public class ServiceRegistry {
     return services.containsKey(name);
   }
 
-  public void resolve(HashMap<String, HashMap<String, Object>> servicesConfig) {
+  public void resolve(String spaceName, HashMap<String, HashMap<String, Object>> servicesConfig) {
     for (Map.Entry<String, HashMap<String, Object>> entry : servicesConfig.entrySet()) {
       Service resolved = resolveService(entry.getValue());
       if (resolved == null) {

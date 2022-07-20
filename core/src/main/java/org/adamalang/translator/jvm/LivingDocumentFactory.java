@@ -43,7 +43,7 @@ public class LivingDocumentFactory {
   public final ServiceRegistry registry;
   public final Deliverer deliverer;
 
-  public LivingDocumentFactory(final String className, final String javaSource, String reflection, Deliverer deliverer) throws ErrorCodeException {
+  public LivingDocumentFactory(final String spaceName, final String className, final String javaSource, String reflection, Deliverer deliverer) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
     final var diagnostics = new DiagnosticCollector<JavaFileObject>();
     final var fileManager = new ByteArrayJavaFileManager(compiler.getStandardFileManager(null, null, null));
@@ -70,7 +70,7 @@ public class LivingDocumentFactory {
       delete_on_close = extractDeleteOnClose(config);
       this.reflection = reflection;
       this.registry = new ServiceRegistry();
-      this.registry.resolve((HashMap<String, HashMap<String, Object>>) (clazz.getMethod("__services").invoke(null)));
+      this.registry.resolve(spaceName, (HashMap<String, HashMap<String, Object>>) (clazz.getMethod("__services").invoke(null)));
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
     }

@@ -44,7 +44,7 @@ public class ServiceRemoteTests {
   public void service_failure() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr1", (properties) -> {
+    ServiceRegistry.REGISTRY.put("sqr1", (space, properties) -> {
       return new SimpleService("sqr1", NtClient.NO_ONE, true) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
@@ -107,7 +107,7 @@ public class ServiceRemoteTests {
   public void service_invoke() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr2", (properties) -> {
+    ServiceRegistry.REGISTRY.put("sqr2", (space, properties) -> {
       return new SimpleService("sqr2", NtClient.NO_ONE, true) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
@@ -184,7 +184,7 @@ public class ServiceRemoteTests {
   public void service_invoke_message_handler() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr3", (properties) -> {
+    ServiceRegistry.REGISTRY.put("sqr3", (space, properties) -> {
       return new SimpleService("sqr3", NtClient.NO_ONE, false) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
@@ -265,7 +265,7 @@ public class ServiceRemoteTests {
   public void service_invoke_state_machine() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr4", (properties) -> {
+    ServiceRegistry.REGISTRY.put("sqr4", (space, properties) -> {
       return new SimpleService("sqr4", NtClient.NO_ONE, false) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
@@ -339,7 +339,7 @@ public class ServiceRemoteTests {
   public void service_invoke_state_machine_func() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr5", (properties) -> {
+    ServiceRegistry.REGISTRY.put("sqr5", (space, properties) -> {
       return new SimpleService("sqr5", NtClient.NO_ONE, false) {
         @Override
         public void request(String method, String request, Callback<String> callback) {
@@ -416,7 +416,7 @@ public class ServiceRemoteTests {
   public void service_invoke_state_machine_method() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr6", (properties) -> {
+    ServiceRegistry.REGISTRY.put("sqr6", (space, properties) -> {
       return new SimpleService("sqr6", NtClient.NO_ONE, true) {
         @Override
         public void request(String method, String request, Callback<String> callback) {

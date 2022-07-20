@@ -21,7 +21,7 @@ public class ServiceRegistryTests {
     Assert.assertFalse(registry.contains("xyz"));
     HashMap<String, HashMap<String, Object>> config = new HashMap<>();
     config.put("xyz", new HashMap<>());
-    registry.resolve(config);
+    registry.resolve("space", config);
     Assert.assertTrue(registry.contains("xyz"));
     Assert.assertTrue(registry.find("nooop") == Service.FAILURE);
   }

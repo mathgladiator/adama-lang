@@ -21,6 +21,7 @@ public class LivingDocumentFactoryTests {
   public void almostOK() throws Exception {
     final var compiler =
         new LivingDocumentFactory(
+            "Space",
             "Foo",
             "import java.util.HashMap; \nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;import org.adamalang.runtime.sys.*;\n public class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(CoreRequestContext who) { return false; } public static boolean __onCanInvent(CoreRequestContext who) { return false; } public static boolean __onCanSendWhileDisconnected(CoreRequestContext who) { return false; } public static HashMap<String, Object> __config() { return new HashMap<>(); } public static HashMap<String, HashMap<String, Object>> __services() { return new HashMap<>(); } } ",
             "{}", Deliverer.FAILURE);
@@ -39,6 +40,7 @@ public class LivingDocumentFactoryTests {
     var failed = true;
     try {
       new LivingDocumentFactory(
+          "Space",
           "Foo",
           "import org.adamalang.runtime.reactives.RxObject;\n class Foo { public Foo(}",
           "{}", Deliverer.FAILURE);
@@ -53,6 +55,7 @@ public class LivingDocumentFactoryTests {
   public void castFailure() throws Exception {
     final var compiler =
         new LivingDocumentFactory(
+            "Space",
             "Foo",
             "import java.util.HashMap; \nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*; import org.adamalang.runtime.sys.*;\n public class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(CoreRequestContext who) { return false; }  public static boolean __onCanInvent(CoreRequestContext who) { return false; } public static boolean __onCanSendWhileDisconnected(CoreRequestContext who) { return false; } public static HashMap<String, Object> __config() { return new HashMap<>(); } public static HashMap<String, HashMap<String, Object>> __services() { return new HashMap<>(); } }",
             "{}", Deliverer.FAILURE);
@@ -70,6 +73,7 @@ public class LivingDocumentFactoryTests {
   public void noConstructor() throws Exception {
     try {
       new LivingDocumentFactory(
+          "Space",
           "Foo",
           "import java.util.HashMap;" +
               "import org.adamalang.runtime.natives.*;" +
@@ -91,6 +95,7 @@ public class LivingDocumentFactoryTests {
   @Test
   public void invalidPolicies() throws Exception {
     LivingDocumentFactory factory = new LivingDocumentFactory(
+        "Space",
         "Foo",
         "import org.adamalang.runtime.contracts.DocumentMonitor; import org.adamalang.runtime.sys.*;" +
             "import java.util.HashMap; import org.adamalang.runtime.natives.*; public class Foo {" +
@@ -127,6 +132,7 @@ public class LivingDocumentFactoryTests {
   @Test
   public void configWorks() throws Exception {
     LivingDocumentFactory factory = new LivingDocumentFactory(
+        "Space",
         "Foo",
         "import org.adamalang.runtime.contracts.DocumentMonitor; import org.adamalang.runtime.sys.*;" +
             "import java.util.HashMap; import org.adamalang.runtime.natives.*; public class Foo {" +
@@ -144,6 +150,7 @@ public class LivingDocumentFactoryTests {
   @Test
   public void servicesWork() throws Exception {
     LivingDocumentFactory factory = new LivingDocumentFactory(
+        "Space",
         "Foo",
         "import org.adamalang.runtime.contracts.DocumentMonitor; import org.adamalang.runtime.sys.*;" +
             "import java.util.HashMap; import org.adamalang.runtime.natives.*; public class Foo {" +
@@ -162,6 +169,7 @@ public class LivingDocumentFactoryTests {
   public void missingPolicy1() throws Exception {
     try {
       new LivingDocumentFactory(
+          "Space",
           "Foo",
           "import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} }",
           "{}", Deliverer.FAILURE);
@@ -175,6 +183,7 @@ public class LivingDocumentFactoryTests {
   public void missingPolicy2() throws Exception {
     try {
       new LivingDocumentFactory(
+          "Space",
           "Foo",
           "import org.adamalang.runtime.natives.*; import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { throw new NullPointerException(); } }",
           "{}", Deliverer.FAILURE);
@@ -188,6 +197,7 @@ public class LivingDocumentFactoryTests {
   public void missingPolicy3() throws Exception {
     try {
       new LivingDocumentFactory(
+          "Space",
           "Foo",
           "import org.adamalang.runtime.natives.*; import org.adamalang.runtime.sys.*; import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(CoreRequestContext who) { throw new NullPointerException(); } public static boolean __onCanSendWhileDisconnected(NtClient who) { throw new NullPointerException(); } }",
           "{}", Deliverer.FAILURE);

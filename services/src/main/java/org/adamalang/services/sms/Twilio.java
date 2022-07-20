@@ -9,5 +9,19 @@
  */
 package org.adamalang.services.sms;
 
-public class Twilio {
+import org.adamalang.common.Callback;
+import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.remote.SimpleService;
+
+import java.util.HashMap;
+
+public class Twilio extends SimpleService {
+  public Twilio(HashMap<String, Object> config) {
+    super("twilio", new NtClient("twilio", "service"), true);
+  }
+
+  @Override
+  public void request(String method, String request, Callback<String> callback) {
+
+  }
 }

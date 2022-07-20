@@ -9,6 +9,8 @@
  */
 package org.adamalang.services;
 
+import org.adamalang.runtime.remote.ServiceRegistry;
+
 public class FirstPartyServices {
   public static void install() {
 

@@ -87,7 +87,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
       final var java = document.compileJava(state);
       JsonStreamWriter reflection = new JsonStreamWriter();
       document.writeTypeReflectionJson(reflection);
-      return new LivingDocumentFactory(className, java, reflection.toString(), deliverer);
+      return new LivingDocumentFactory(spaceName, className, java, reflection.toString(), deliverer);
     } catch (AdamaLangException ex) {
       throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_PARSE_LANGUAGE, ex);
     }
