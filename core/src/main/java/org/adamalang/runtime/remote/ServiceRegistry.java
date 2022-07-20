@@ -49,7 +49,7 @@ public class ServiceRegistry {
 
   public void resolve(String spaceName, HashMap<String, HashMap<String, Object>> servicesConfig) {
     for (Map.Entry<String, HashMap<String, Object>> entry : servicesConfig.entrySet()) {
-      Service resolved = resolveService(entry.getValue());
+      Service resolved = resolveService(String spaceName, entry.getValue());
       if (resolved == null) {
         resolved = Service.FAILURE;
       }
@@ -57,12 +57,12 @@ public class ServiceRegistry {
     }
   }
 
-  private Service resolveService(HashMap<String, Object> config) {
+  private Service resolveService(String spaceName, HashMap<String, Object> config) {
     Object std = config.get("std");
     if (std != null && std instanceof String) {
-      Function<HashMap<String, Object>, Service> cons = REGISTRY.get((String) std);
+      BiFunction<String, HashMap<String, Object>, Service> cons = REGISTRY.get((String) std);
       if (cons != null) {
-        return cons.apply(config);
+        return cons.apply(spaceName, config);
       }
     }
     return null;
