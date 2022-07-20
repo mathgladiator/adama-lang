@@ -58,9 +58,9 @@ public class ServiceRegistry {
   }
 
   private Service resolveService(String spaceName, HashMap<String, Object> config) {
-    Object std = config.get("std");
-    if (std != null && std instanceof String) {
-      BiFunction<String, HashMap<String, Object>, Service> cons = REGISTRY.get((String) std);
+    Object clazz = config.get("class");
+    if (clazz != null && clazz instanceof String) {
+      BiFunction<String, HashMap<String, Object>, Service> cons = REGISTRY.get((String) clazz);
       if (cons != null) {
         return cons.apply(spaceName, config);
       }

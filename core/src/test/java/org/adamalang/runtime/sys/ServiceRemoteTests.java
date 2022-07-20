@@ -60,7 +60,7 @@ public class ServiceRemoteTests {
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +
         "message M { int x; }" +
-        "service s { std=\"sqr1\"; method<M, M> square; }" +
+        "service s { class=\"sqr1\"; method<M, M> square; }" +
         "public int x = 4;" +
         "public formula y = s.square(@no_one, {x:x});" +
         "channel foo(M y) { x += y.x; }", lazy);
@@ -137,7 +137,7 @@ public class ServiceRemoteTests {
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +
         "message M { int x; }" +
-        "service s { std=\"sqr2\"; method<M, M> square; }" +
+        "service s { class=\"sqr2\"; method<M, M> square; }" +
         "public int x = 4;" +
         "public formula y = s.square(@no_one, {x:x});" +
         "channel foo(M y) { x += y.x; }", lazy);
@@ -214,7 +214,7 @@ public class ServiceRemoteTests {
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +
         "message M { int x; }" +
-        "service s { std=\"sqr3\"; method<M, M> square; }" +
+        "service s { class=\"sqr3\"; method<M, M> square; }" +
         "public int x = 4;" +
         "channel foo(M m) {" + //
         " x += m.x;" + //
@@ -295,7 +295,7 @@ public class ServiceRemoteTests {
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +
         "message M { int x; }" +
-        "service s { std=\"sqr4\"; method<M, M> square; }" +
+        "service s { class=\"sqr4\"; method<M, M> square; }" +
         "public int x = 4;" +
         "@construct { transition #gogo; }" +
         "#gogo {" + //
@@ -369,7 +369,7 @@ public class ServiceRemoteTests {
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +
         "message M { int x; }" +
-        "service s { std=\"sqr5\"; method<M, M> square; }" +
+        "service s { class=\"sqr5\"; method<M, M> square; }" +
         "public int x = 4;" +
         "@construct { transition #gogo; }" +
         "procedure go() {" +
@@ -446,7 +446,7 @@ public class ServiceRemoteTests {
     LivingDocumentFactory factory = LivingDocumentTests.compile("@static { create { return true; } }" +
         "@connected { return true; }" +
         "message M { int x; }" +
-        "service s { std=\"sqr6\"; method<M, M> square; }" +
+        "service s { class=\"sqr6\"; method<M, M> square; }" +
         "record R {" +
         "  public int x = 4;" +
         "  method go() {" +
