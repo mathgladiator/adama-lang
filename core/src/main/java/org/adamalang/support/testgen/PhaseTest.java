@@ -3,9 +3,9 @@
  *
  * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
  *
- * See http://www.adama-lang.org/ for more information.
+ * See https://www.adama-platform.com/ for more information.
  *
- * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
+ * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
 package org.adamalang.support.testgen;
 

@@ -60,3 +60,4 @@ if generate:
     os.system("java -jar release/adama.jar contrib make-api")
     os.system("java -jar release/adama.jar contrib make-et")
     os.system("java -jar release/adama.jar contrib bundle-js")
+    os.system("java -jar release/adama.jar contrib copyright")
