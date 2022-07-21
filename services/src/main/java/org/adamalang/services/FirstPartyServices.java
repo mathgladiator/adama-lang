@@ -9,10 +9,32 @@
  */
 package org.adamalang.services;
 
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedThreadFactory;
+import org.adamalang.mysql.DataBase;
+import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
+import org.adamalang.services.sms.Twilio;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class FirstPartyServices {
-  public static void install() {
-
+  public static void install(DataBase dataBase) {
+    ExecutorService executor = Executors.newCachedThreadPool(new NamedThreadFactory("first-party"));
+    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+      @Override
+      public void run() {
+        executor.shutdown();
+      }
+    }));
+    ServiceRegistry.REGISTRY.put("twilio", (space, configRaw) -> {
+      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw);
+      try {
+        return new Twilio(config, executor);
+      } catch (ErrorCodeException ex) {
+        return Service.FAILURE;
+      }
+    });
   }
 }
