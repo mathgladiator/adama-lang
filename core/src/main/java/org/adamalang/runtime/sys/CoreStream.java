@@ -14,6 +14,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
@@ -22,7 +23,7 @@ import org.adamalang.runtime.natives.NtAsset;
  * Represents a stream for the consumer to interact with the document. This simplifies the
  * interaction model such that consumers don't need to think about how threading happens.
  */
-public class CoreStream {
+public class CoreStream implements AdamaStream {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(CoreStream.class);
   private final CoreRequestContext context;
   private final CoreMetrics metrics;
@@ -41,6 +42,11 @@ public class CoreStream {
     metrics.inflight_streams.up();
   }
 
+  @Override
+  public void update(String newViewerState) {
+    updateView(new JsonStreamReader(newViewerState));
+  }
+
   /** update the viewer state */
   public void updateView(JsonStreamReader patch) {
     document.base.executor.execute(new NamedRunnable("core-stream-send") {
@@ -55,6 +61,7 @@ public class CoreStream {
   }
 
   /** send a message to the document */
+  @Override
   public void send(String channel, String marker, String message, Callback<Integer> callback) {
     document.base.executor.execute(new NamedRunnable("core-stream-send") {
       @Override
@@ -65,6 +72,7 @@ public class CoreStream {
     });
   }
 
+  @Override
   public void canAttach(Callback<Boolean> callback) {
     document.base.executor.execute(new NamedRunnable("core-stream-can-attach") {
       @Override
@@ -77,6 +85,16 @@ public class CoreStream {
         }
       }
     });
+  }
+
+  @Override
+  public void attach(String id, String name, String contentType, long size, String md5, String sha384, Callback<Integer> callback) {
+    attach(new NtAsset(id, name, contentType, size, md5, sha384), callback);
+  }
+
+  @Override
+  public void close() {
+    disconnect();
   }
 
   public void attach(NtAsset asset, Callback<Integer> callback) {

@@ -481,7 +481,7 @@ public class Service {
     Email email = new SES(awsConfig, awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
-    ExternNexus nexus = new ExternNexus(frontendConfig, email, s3, s3, database, client, prometheusMetricsFactory, new File("inflight"), (item) -> {
+    ExternNexus nexus = new ExternNexus(frontendConfig, email, s3, s3, database, finder, client, prometheusMetricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
     }, masterKey);
     System.err.println("nexus constructed");

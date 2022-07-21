@@ -216,7 +216,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
       }
     };
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
-    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey());
+    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, finder, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey());
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);
     connection = this.frontend.establish(context);

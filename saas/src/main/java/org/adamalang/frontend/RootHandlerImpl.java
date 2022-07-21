@@ -21,6 +21,7 @@ import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.mysql.data.DocumentIndex;
 import org.adamalang.mysql.model.*;
 import org.adamalang.mysql.data.BillingUsage;
@@ -28,7 +29,6 @@ import org.adamalang.mysql.data.IdHashPairing;
 import org.adamalang.mysql.data.Role;
 import org.adamalang.mysql.data.SpaceListingItem;
 import org.adamalang.net.client.contracts.SimpleEvents;
-import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtAsset;
@@ -278,17 +278,8 @@ public class RootHandlerImpl implements RootHandler {
         // Change the master plan
         Spaces.setPlan(nexus.dataBase, request.policy.id, planJson, hash);
         // iterate the targets with this space loaded
-        nexus.client.getDeploymentTargets(request.space, (target) -> {
-          try {
-            // persist the deployment binding
-            Deployments.deploy(nexus.dataBase, request.space, target, hash, planJson);
-            // notify the client of an update
-            nexus.client.notifyDeployment(target, request.space);
-          } catch (Exception ex) {
-            LOG.error("failed-deployment-write", ex);
-          }
-        });
-        nexus.client.waitForCapacity(request.space, 7500, (found) -> {
+        nexus.adama.deploy(request.space, hash, planJson);
+        nexus.adama.waitForCapacity(request.space, 7500, (found) -> {
           if (found) {
             responder.complete();
           } else {
@@ -341,7 +332,7 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SpaceReflectRequest request, ReflectionResponder responder) {
     if (request.policy.canUserSeeReflection(request.who)) {
-      nexus.client.reflect(request.space, request.key, new Callback<String>() {
+      nexus.adama.reflect(request.space, request.key, new Callback<String>() {
         @Override
         public void success(String value) {
           responder.complete(Json.parseJsonObject(value));
@@ -376,7 +367,7 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder) {
     try {
-      nexus.client.create(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
+      nexus.adama.create(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
         @Override
         public void success(Void value) {
           responder.complete();
@@ -427,11 +418,11 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public DocumentStreamHandler handle(Session session, ConnectionCreateRequest request, DataResponder responder) {
     return new DocumentStreamHandler() {
-      private Connection connection;
+      private AdamaStream connection;
 
       @Override
       public void bind() {
-        connection = nexus.client.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", session.getAssetKey(), new SimpleEvents() {
+        connection = nexus.adama.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", session.getAssetKey(), new SimpleEvents() {
           @Override
           public void connected() {
           }
@@ -496,9 +487,9 @@ public class RootHandlerImpl implements RootHandler {
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder startResponder) {
     AtomicBoolean clean = new AtomicBoolean(false);
     AtomicBoolean killed = new AtomicBoolean(false);
-    AtomicReference<Connection> connection = new AtomicReference<>(null);
+    AtomicReference<AdamaStream> connection = new AtomicReference<>(null);
     Runnable kickOff = () -> {
-      connection.set(nexus.client.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", session.getAssetKey(), new SimpleEvents() {
+      connection.set(nexus.adama.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", session.getAssetKey(), new SimpleEvents() {
         @Override
         public void connected() {
         }

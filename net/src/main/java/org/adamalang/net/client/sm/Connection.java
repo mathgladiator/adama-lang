@@ -23,13 +23,14 @@ import org.adamalang.net.client.contracts.Events;
 import org.adamalang.net.client.contracts.Remote;
 import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.contracts.SimpleEvents;
+import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.Key;
 
 /**
  * a single connection for a document; given the number of outstanding events that can influence the
  * connection; this is s sizeable state machine.
  */
-public class Connection {
+public class Connection implements AdamaStream {
   // these can be put under a base
   private final ConnectionBase base;
   // these are critical to the request (i.e they are the request)
@@ -147,6 +148,7 @@ public class Connection {
   }
 
   /** send the remote peer a message */
+  @Override
   public void send(String channel, String marker, String message, Callback<Integer> callback) {
     send(channel, marker, message, true, callback);
   }
@@ -190,6 +192,7 @@ public class Connection {
     });
   }
 
+  @Override
   public void update(String viewerState) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_update.start();
     base.executor.execute(new NamedRunnable("connection-update") {
@@ -214,6 +217,7 @@ public class Connection {
     queue.add(action);
   }
 
+  @Override
   public void canAttach(Callback<Boolean> callback) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_can_attach.start();
     base.executor.execute(new NamedRunnable("connection-can-attach", key.space, key.key) {
@@ -234,6 +238,7 @@ public class Connection {
     });
   }
 
+  @Override
   public void attach(String id, String name, String contentType, long size, String md5, String sha384, Callback<Integer> callback) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_attach.start();
     base.executor.execute(new NamedRunnable("connection-attach", key.space, key.key, id) {
@@ -254,6 +259,7 @@ public class Connection {
     });
   }
 
+  @Override
   public void close() {
     base.executor.execute(new NamedRunnable("connection-close", key.space, key.key) {
       @Override
