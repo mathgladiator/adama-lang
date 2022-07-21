@@ -26,10 +26,8 @@ public class ExternNexus {
   public final Email email;
   public final AssetUploader uploader;
   public final DataBase dataBase;
-  // public final Client client;
   public final ApiMetrics metrics;
   public final File attachmentRoot;
-  public final Finder finder;
   public final JsonLogger accessLogger;
   public final AssetDownloader downloader;
   public final String masterKey;
@@ -41,8 +39,6 @@ public class ExternNexus {
     this.uploader = uploader;
     this.downloader = downloader;
     this.dataBase = dataBase;
-    this.finder = finder;
-    // this.client = client;
     this.metrics = new ApiMetrics(metricsFactory);
     this.attachmentRoot = attachmentRoot;
     this.accessLogger = accessLogger;
