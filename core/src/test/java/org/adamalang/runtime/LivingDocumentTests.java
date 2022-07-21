@@ -725,13 +725,13 @@ public class LivingDocumentTests {
                 .get("__dedupe"));
     Assert.assertEquals(1, mapSend1.size());
     setup.time.time += 1000;
-    setup.document.expire(2000, new RealDocumentSetup.AssertFailure(131203));
+    setup.document.expire(2000);
     HashMap<String, Object> mapSend2 =
         ((HashMap<String, Object>)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
                 .get("__dedupe"));
     Assert.assertEquals(1, mapSend1.size());
-    setup.document.expire(500, new RealDocumentSetup.AssertInt(5));
+    setup.document.expire(500);
     HashMap<String, Object> mapSend3 =
         ((HashMap<String, Object>)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -747,7 +747,7 @@ public class LivingDocumentTests {
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(2));
     setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
     try {
-      setup.document.expire(-2000, new RealDocumentSetup.AssertInt(7));
+      setup.document.expire(-2000);
       Assert.fail();
     } catch (RuntimeException ece) {
       Assert.assertTrue(ece.getCause() instanceof ErrorCodeException);
@@ -794,9 +794,9 @@ public class LivingDocumentTests {
       }
       setup.time.time += 100;
       if (shouldFail.contains(k)) {
-        setup.document.expire(750, new RealDocumentSetup.AssertFailure(131203));
+        setup.document.expire(750);
       } else {
-        setup.document.expire(750, new RealDocumentSetup.AssertInt(expectedAt - 1));
+        setup.document.expire(750);
         expectedAt += 2;
       }
     }

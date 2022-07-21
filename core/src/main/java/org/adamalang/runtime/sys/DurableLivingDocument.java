@@ -279,7 +279,7 @@ public class DurableLivingDocument {
     long timeSinceLastExpire = base.time.nowMilliseconds() - lastExpire;
     if (timeSinceLastExpire > 60000) {
       lastExpire = base.time.nowMilliseconds();
-      expire(10 * 60 * 1000, Callback.DONT_CARE_INTEGER);
+      expire(10 * 60 * 1000);
     }
   }
 
@@ -602,12 +602,12 @@ public class DurableLivingDocument {
     return document.__memory();
   }
 
-  public void expire(long limit, Callback<Integer> callback) {
+  public void expire(long limit) {
     final var request = forge("expire", null, false);
     request.writeObjectFieldIntro("limit");
     request.writeLong(limit);
     request.endObject();
-    ingest(NtClient.NO_ONE, request.toString(), JUST_SEQ(base.metrics.document_expire.wrap(callback)), true, false);
+    ingest(NtClient.NO_ONE, request.toString(), DONT_CARE_CHANGE, true, false);
   }
 
   public void registerActivity() {
