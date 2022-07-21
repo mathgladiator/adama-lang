@@ -746,12 +746,7 @@ public class LivingDocumentTests {
             "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(2));
     setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
-    try {
-      setup.document.expire(-2000);
-      Assert.fail();
-    } catch (RuntimeException ece) {
-      Assert.assertTrue(ece.getCause() instanceof ErrorCodeException);
-    }
+    setup.document.expire(-2000);
   }
 
   @Test
