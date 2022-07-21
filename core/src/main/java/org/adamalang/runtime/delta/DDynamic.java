@@ -50,7 +50,7 @@ public class DDynamic implements DeltaNode {
   public void show(final NtDynamic value, final PrivateLazyDeltaWriter writer) {
     if (!value.equals(prior)) {
       Object parsedValue = new JsonStreamReader(value.json).readJavaTree();
-      JsonAlgebra.writeDelta(priorParsed, parsedValue, writer.force());
+      JsonAlgebra.writeObjectFieldDelta(priorParsed, parsedValue, writer.force());
       priorParsed = parsedValue;
       prior = value;
     }

@@ -45,8 +45,9 @@ public class JsonAlgebra {
     return patchObject;
   }
 
+  /** Product an object level delta and write it out; note: this doesn't compare items, and only does object fields present/not */
   @SuppressWarnings("unchecked")
-  public static void writeDelta(final Object from, final Object to, JsonStreamWriter writer) {
+  public static void writeObjectFieldDelta(final Object from, final Object to, JsonStreamWriter writer) {
     if (from instanceof HashMap && to instanceof HashMap) {
       HashMap<String, Object> mapFrom = (HashMap<String, Object>) from;
       HashMap<String, Object> mapTo = (HashMap<String, Object>) to;
@@ -55,7 +56,7 @@ public class JsonAlgebra {
         writer.writeObjectFieldIntro(entryTo.getKey());
         Object objFrom = mapFrom.get(entryTo.getKey());
         if (objFrom != null) {
-          writeDelta(objFrom, entryTo.getValue(), writer);
+          writeObjectFieldDelta(objFrom, entryTo.getValue(), writer);
         } else {
           writer.writeTree(entryTo.getValue());
         }

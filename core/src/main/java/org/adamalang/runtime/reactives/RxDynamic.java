@@ -34,8 +34,8 @@ public class RxDynamic extends RxBase implements Comparable<RxDynamic>, CanGetAn
       reverseDelta.writeObjectFieldIntro(name);
       Object from = new JsonStreamReader(backup.json).readJavaTree();
       Object to = new JsonStreamReader(value.json).readJavaTree();
-      JsonAlgebra.writeDelta(from, to, forwardDelta);
-      JsonAlgebra.writeDelta(to, from, reverseDelta);
+      JsonAlgebra.writeObjectFieldDelta(from, to, forwardDelta);
+      JsonAlgebra.writeObjectFieldDelta(to, from, reverseDelta);
       backup = value;
       __lowerDirtyCommit();
     }
