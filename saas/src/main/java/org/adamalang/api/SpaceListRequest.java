@@ -31,7 +31,7 @@ public class SpaceListRequest {
     this.limit = limit;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<SpaceListRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceListRequest> callback) {
     try {
       final BulkLatch<SpaceListRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -39,7 +39,7 @@ public class SpaceListRequest {
       final String marker = request.getString("marker", false, 0);
       final Integer limit = request.getInteger("limit", false, 0);
       _latch.with(() -> new SpaceListRequest(identity, who.get(), marker, limit));
-      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.identityService.execute(session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("spacelist-error") {
         @Override

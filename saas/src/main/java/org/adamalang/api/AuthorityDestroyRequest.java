@@ -29,14 +29,14 @@ public class AuthorityDestroyRequest {
     this.authority = authority;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<AuthorityDestroyRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AuthorityDestroyRequest> callback) {
     try {
       final BulkLatch<AuthorityDestroyRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String authority = request.getString("authority", true, 430095);
       _latch.with(() -> new AuthorityDestroyRequest(identity, who.get(), authority));
-      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.identityService.execute(session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("authoritydestroy-error") {
         @Override

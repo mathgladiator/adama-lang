@@ -33,7 +33,7 @@ public class SpaceDeleteRequest {
     this.policy = policy;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<SpaceDeleteRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceDeleteRequest> callback) {
     try {
       final BulkLatch<SpaceDeleteRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -42,8 +42,8 @@ public class SpaceDeleteRequest {
       ValidateSpace.validate(space);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       _latch.with(() -> new SpaceDeleteRequest(identity, who.get(), space, policy.get()));
-      nexus.identityService.execute(nexus.session, identity, who);
-      nexus.spaceService.execute(nexus.session, space, policy);
+      nexus.identityService.execute(session, identity, who);
+      nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("spacedelete-error") {
         @Override

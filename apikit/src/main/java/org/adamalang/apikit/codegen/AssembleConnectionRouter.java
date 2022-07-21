@@ -36,6 +36,7 @@ public class AssembleConnectionRouter {
     router.append("import java.util.Map;\n");
     router.append("\n");
     router.append("public class ConnectionRouter {\n");
+    router.append("  public final Session session;\n");
     router.append("  public final ConnectionNexus nexus;\n");
     router.append("  public final RootHandler handler;\n");
 
@@ -45,7 +46,8 @@ public class AssembleConnectionRouter {
       }
     }
     router.append("\n");
-    router.append("  public ConnectionRouter(ConnectionNexus nexus, RootHandler handler) {\n");
+    router.append("  public ConnectionRouter(Session session, ConnectionNexus nexus, RootHandler handler) {\n");
+    router.append("    this.session = session;\n");
     router.append("    this.nexus = nexus;\n");
     router.append("    this.handler = handler;\n");
     for (String subHandler : subHandlers) {
@@ -82,7 +84,7 @@ public class AssembleConnectionRouter {
     router.append("      nexus.executor.execute(new NamedRunnable(\"handle\", method) {\n");
     router.append("        @Override\n");
     router.append("        public void execute() throws Exception {\n");
-    router.append("          nexus.session.activity();\n");
+    router.append("          session.activity();\n");
     router.append("          switch (method) {\n");
     for (Method method : methods) {
       router.append("            case \"").append(method.name).append("\": {\n");
@@ -91,7 +93,7 @@ public class AssembleConnectionRouter {
       } else {
         router.append("              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_").append(method.camelName).append(".start();\n");
       }
-      router.append("              ").append(method.camelName).append("Request.resolve(nexus, request, new Callback<>() {\n");
+      router.append("              ").append(method.camelName).append("Request.resolve(session, nexus, request, new Callback<>() {\n");
       router.append("                @Override\n");
       router.append("                public void success(").append(method.camelName).append("Request resolved) {\n");
       router.append("                  resolved.logInto(_accessLogItem);\n");
@@ -109,11 +111,11 @@ public class AssembleConnectionRouter {
         router.append("                  }\n");
       } else {
         if (method.create != null) {
-          router.append("                  ").append(Common.camelize(method.create)).append("Handler handlerMade = handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflight").append(Common.camelize(method.create)).append(", requestId, responder, _accessLogItem, nexus.logger)));\n");
+          router.append("                  ").append(Common.camelize(method.create)).append("Handler handlerMade = handler.handle(session, resolved, new ").append(method.responder.camelName).append("Responder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflight").append(Common.camelize(method.create)).append(", requestId, responder, _accessLogItem, nexus.logger)));\n");
           router.append("                  ").append("inflight").append(Common.camelize(method.create)).append(".put(requestId, handlerMade);\n");
           router.append("                  ").append("handlerMade.bind();\n");
         } else {
-          router.append("                  handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));\n");
+          router.append("                  handler.handle(session, resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));\n");
         }
       }
       router.append("                }\n");

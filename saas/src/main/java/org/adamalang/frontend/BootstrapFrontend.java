@@ -40,15 +40,15 @@ public class BootstrapFrontend {
       @Override
       public ServiceConnection establish(ConnectionContext context) {
         return new ServiceConnection() {
+          final Session session = new Session(context);
           final ConnectionNexus nexus =
-              new ConnectionNexus(new Session(context),
-                  extern.accessLogger, //
+              new ConnectionNexus(extern.accessLogger, //
                   extern.metrics, //
                   executors[randomExecutorIndex.nextInt(executors.length)], //
                   userIdResolver, //
                   new Authenticator(extern), //
                   spacePolicyLocator); //
-          final ConnectionRouter router = new ConnectionRouter(nexus, handler);
+          final ConnectionRouter router = new ConnectionRouter(session, nexus, handler);
 
           @Override
           public void execute(JsonRequest request, JsonResponder responder) {
@@ -57,7 +57,7 @@ public class BootstrapFrontend {
 
           @Override
           public boolean keepalive() {
-            return nexus.session.keepalive();
+            return session.keepalive();
           }
 
           @Override

@@ -36,7 +36,7 @@ public class SpaceSetRequest {
     this.plan = plan;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<SpaceSetRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceSetRequest> callback) {
     try {
       final BulkLatch<SpaceSetRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -47,8 +47,8 @@ public class SpaceSetRequest {
       final ObjectNode plan = request.getObject("plan", true, 425999);
       ValidatePlan.validate(plan);
       _latch.with(() -> new SpaceSetRequest(identity, who.get(), space, policy.get(), plan));
-      nexus.identityService.execute(nexus.session, identity, who);
-      nexus.spaceService.execute(nexus.session, space, policy);
+      nexus.identityService.execute(session, identity, who);
+      nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("spaceset-error") {
         @Override

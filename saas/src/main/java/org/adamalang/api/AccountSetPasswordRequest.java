@@ -29,14 +29,14 @@ public class AccountSetPasswordRequest {
     this.password = password;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<AccountSetPasswordRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AccountSetPasswordRequest> callback) {
     try {
       final BulkLatch<AccountSetPasswordRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String password = request.getString("password", true, 465917);
       _latch.with(() -> new AccountSetPasswordRequest(identity, who.get(), password));
-      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.identityService.execute(session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("accountsetpassword-error") {
         @Override

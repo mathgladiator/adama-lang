@@ -36,7 +36,7 @@ public class SpaceReflectRequest {
     this.key = key;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<SpaceReflectRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceReflectRequest> callback) {
     try {
       final BulkLatch<SpaceReflectRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -47,8 +47,8 @@ public class SpaceReflectRequest {
       final String key = request.getString("key", true, 466947);
       ValidateKey.validate(key);
       _latch.with(() -> new SpaceReflectRequest(identity, who.get(), space, policy.get(), key));
-      nexus.identityService.execute(nexus.session, identity, who);
-      nexus.spaceService.execute(nexus.session, space, policy);
+      nexus.identityService.execute(session, identity, who);
+      nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("spacereflect-error") {
         @Override

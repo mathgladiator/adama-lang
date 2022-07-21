@@ -33,7 +33,7 @@ public class SpaceGetRequest {
     this.policy = policy;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<SpaceGetRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceGetRequest> callback) {
     try {
       final BulkLatch<SpaceGetRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -42,8 +42,8 @@ public class SpaceGetRequest {
       ValidateSpace.validate(space);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       _latch.with(() -> new SpaceGetRequest(identity, who.get(), space, policy.get()));
-      nexus.identityService.execute(nexus.session, identity, who);
-      nexus.spaceService.execute(nexus.session, space, policy);
+      nexus.identityService.execute(session, identity, who);
+      nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("spaceget-error") {
         @Override

@@ -40,7 +40,7 @@ public class AttachmentStartRequest {
     this.contentType = contentType;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<AttachmentStartRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AttachmentStartRequest> callback) {
     try {
       final BulkLatch<AttachmentStartRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -53,8 +53,8 @@ public class AttachmentStartRequest {
       final String filename = request.getString("filename", true, 470028);
       final String contentType = request.getString("content-type", true, 455691);
       _latch.with(() -> new AttachmentStartRequest(identity, who.get(), space, policy.get(), key, filename, contentType));
-      nexus.identityService.execute(nexus.session, identity, who);
-      nexus.spaceService.execute(nexus.session, space, policy);
+      nexus.identityService.execute(session, identity, who);
+      nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("attachmentstart-error") {
         @Override

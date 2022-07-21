@@ -37,7 +37,7 @@ public class DocumentListRequest {
     this.limit = limit;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<DocumentListRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<DocumentListRequest> callback) {
     try {
       final BulkLatch<DocumentListRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -48,8 +48,8 @@ public class DocumentListRequest {
       final String marker = request.getString("marker", false, 0);
       final Integer limit = request.getInteger("limit", false, 0);
       _latch.with(() -> new DocumentListRequest(identity, who.get(), space, policy.get(), marker, limit));
-      nexus.identityService.execute(nexus.session, identity, who);
-      nexus.spaceService.execute(nexus.session, space, policy);
+      nexus.identityService.execute(session, identity, who);
+      nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("documentlist-error") {
         @Override

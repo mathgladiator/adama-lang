@@ -32,7 +32,7 @@ public class AuthoritySetRequest {
     this.keyStore = keyStore;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<AuthoritySetRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AuthoritySetRequest> callback) {
     try {
       final BulkLatch<AuthoritySetRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -41,7 +41,7 @@ public class AuthoritySetRequest {
       final ObjectNode keyStore = request.getObject("key-store", true, 457743);
       ValidateKeystore.validate(keyStore);
       _latch.with(() -> new AuthoritySetRequest(identity, who.get(), authority, keyStore));
-      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.identityService.execute(session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("authorityset-error") {
         @Override

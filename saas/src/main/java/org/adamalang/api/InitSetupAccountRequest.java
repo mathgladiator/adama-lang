@@ -27,14 +27,14 @@ public class InitSetupAccountRequest {
     this.userId = userId;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<InitSetupAccountRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<InitSetupAccountRequest> callback) {
     try {
       final BulkLatch<InitSetupAccountRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String email = request.getString("email", true, 473103);
       ValidateEmail.validate(email);
       final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
       _latch.with(() -> new InitSetupAccountRequest(email, userId.get()));
-      nexus.emailService.execute(nexus.session, email, userId);
+      nexus.emailService.execute(session, email, userId);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("initsetupaccount-error") {
         @Override

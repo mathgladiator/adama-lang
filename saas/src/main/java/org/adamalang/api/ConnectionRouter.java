@@ -21,12 +21,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConnectionRouter {
+  public final Session session;
   public final ConnectionNexus nexus;
   public final RootHandler handler;
   public final HashMap<Long, AttachmentUploadHandler> inflightAttachmentUpload;
   public final HashMap<Long, DocumentStreamHandler> inflightDocumentStream;
 
-  public ConnectionRouter(ConnectionNexus nexus, RootHandler handler) {
+  public ConnectionRouter(Session session, ConnectionNexus nexus, RootHandler handler) {
+    this.session = session;
     this.nexus = nexus;
     this.handler = handler;
     this.inflightAttachmentUpload = new HashMap<>();
@@ -59,15 +61,15 @@ public class ConnectionRouter {
       nexus.executor.execute(new NamedRunnable("handle", method) {
         @Override
         public void execute() throws Exception {
-          nexus.session.activity();
+          session.activity();
           switch (method) {
             case "init/setup-account": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_InitSetupAccount.start();
-              InitSetupAccountRequest.resolve(nexus, request, new Callback<>() {
+              InitSetupAccountRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(InitSetupAccountRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -81,11 +83,11 @@ public class ConnectionRouter {
             } return;
             case "init/complete-account": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_InitCompleteAccount.start();
-              InitCompleteAccountRequest.resolve(nexus, request, new Callback<>() {
+              InitCompleteAccountRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(InitCompleteAccountRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -99,11 +101,11 @@ public class ConnectionRouter {
             } return;
             case "account/set-password": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AccountSetPassword.start();
-              AccountSetPasswordRequest.resolve(nexus, request, new Callback<>() {
+              AccountSetPasswordRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(AccountSetPasswordRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -117,11 +119,11 @@ public class ConnectionRouter {
             } return;
             case "account/login": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AccountLogin.start();
-              AccountLoginRequest.resolve(nexus, request, new Callback<>() {
+              AccountLoginRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(AccountLoginRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -135,11 +137,11 @@ public class ConnectionRouter {
             } return;
             case "probe": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_Probe.start();
-              ProbeRequest.resolve(nexus, request, new Callback<>() {
+              ProbeRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(ProbeRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -153,11 +155,11 @@ public class ConnectionRouter {
             } return;
             case "authority/create": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AuthorityCreate.start();
-              AuthorityCreateRequest.resolve(nexus, request, new Callback<>() {
+              AuthorityCreateRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(AuthorityCreateRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new ClaimResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new ClaimResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -171,11 +173,11 @@ public class ConnectionRouter {
             } return;
             case "authority/set": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AuthoritySet.start();
-              AuthoritySetRequest.resolve(nexus, request, new Callback<>() {
+              AuthoritySetRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(AuthoritySetRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -189,11 +191,11 @@ public class ConnectionRouter {
             } return;
             case "authority/get": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AuthorityGet.start();
-              AuthorityGetRequest.resolve(nexus, request, new Callback<>() {
+              AuthorityGetRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(AuthorityGetRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new KeystoreResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new KeystoreResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -207,11 +209,11 @@ public class ConnectionRouter {
             } return;
             case "authority/list": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AuthorityList.start();
-              AuthorityListRequest.resolve(nexus, request, new Callback<>() {
+              AuthorityListRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(AuthorityListRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new AuthorityListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new AuthorityListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -225,11 +227,11 @@ public class ConnectionRouter {
             } return;
             case "authority/destroy": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AuthorityDestroy.start();
-              AuthorityDestroyRequest.resolve(nexus, request, new Callback<>() {
+              AuthorityDestroyRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(AuthorityDestroyRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -243,11 +245,11 @@ public class ConnectionRouter {
             } return;
             case "space/create": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceCreate.start();
-              SpaceCreateRequest.resolve(nexus, request, new Callback<>() {
+              SpaceCreateRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceCreateRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -261,11 +263,11 @@ public class ConnectionRouter {
             } return;
             case "space/generate-key": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceGenerateKey.start();
-              SpaceGenerateKeyRequest.resolve(nexus, request, new Callback<>() {
+              SpaceGenerateKeyRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceGenerateKeyRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new KeyPairResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new KeyPairResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -279,11 +281,11 @@ public class ConnectionRouter {
             } return;
             case "space/usage": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceUsage.start();
-              SpaceUsageRequest.resolve(nexus, request, new Callback<>() {
+              SpaceUsageRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceUsageRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new BillingUsageResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new BillingUsageResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -297,11 +299,11 @@ public class ConnectionRouter {
             } return;
             case "space/get": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceGet.start();
-              SpaceGetRequest.resolve(nexus, request, new Callback<>() {
+              SpaceGetRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceGetRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new PlanResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new PlanResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -315,11 +317,11 @@ public class ConnectionRouter {
             } return;
             case "space/set": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceSet.start();
-              SpaceSetRequest.resolve(nexus, request, new Callback<>() {
+              SpaceSetRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceSetRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -333,11 +335,11 @@ public class ConnectionRouter {
             } return;
             case "space/delete": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceDelete.start();
-              SpaceDeleteRequest.resolve(nexus, request, new Callback<>() {
+              SpaceDeleteRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceDeleteRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -351,11 +353,11 @@ public class ConnectionRouter {
             } return;
             case "space/set-role": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceSetRole.start();
-              SpaceSetRoleRequest.resolve(nexus, request, new Callback<>() {
+              SpaceSetRoleRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceSetRoleRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -369,11 +371,11 @@ public class ConnectionRouter {
             } return;
             case "space/reflect": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceReflect.start();
-              SpaceReflectRequest.resolve(nexus, request, new Callback<>() {
+              SpaceReflectRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceReflectRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new ReflectionResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new ReflectionResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -387,11 +389,11 @@ public class ConnectionRouter {
             } return;
             case "space/list": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceList.start();
-              SpaceListRequest.resolve(nexus, request, new Callback<>() {
+              SpaceListRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceListRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new SpaceListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SpaceListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -405,11 +407,11 @@ public class ConnectionRouter {
             } return;
             case "document/create": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentCreate.start();
-              DocumentCreateRequest.resolve(nexus, request, new Callback<>() {
+              DocumentCreateRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(DocumentCreateRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -423,11 +425,11 @@ public class ConnectionRouter {
             } return;
             case "document/list": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentList.start();
-              DocumentListRequest.resolve(nexus, request, new Callback<>() {
+              DocumentListRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(DocumentListRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new KeyListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new KeyListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -441,11 +443,11 @@ public class ConnectionRouter {
             } return;
             case "connection/create": {
               StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_ConnectionCreate.start();
-              ConnectionCreateRequest.resolve(nexus, request, new Callback<>() {
+              ConnectionCreateRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(ConnectionCreateRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  DocumentStreamHandler handlerMade = handler.handle(nexus.session, resolved, new DataResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightDocumentStream, requestId, responder, _accessLogItem, nexus.logger)));
+                  DocumentStreamHandler handlerMade = handler.handle(session, resolved, new DataResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightDocumentStream, requestId, responder, _accessLogItem, nexus.logger)));
                   inflightDocumentStream.put(requestId, handlerMade);
                   handlerMade.bind();
                 }
@@ -461,7 +463,7 @@ public class ConnectionRouter {
             } return;
             case "connection/send": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConnectionSend.start();
-              ConnectionSendRequest.resolve(nexus, request, new Callback<>() {
+              ConnectionSendRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(ConnectionSendRequest resolved) {
                   resolved.logInto(_accessLogItem);
@@ -489,7 +491,7 @@ public class ConnectionRouter {
             } return;
             case "connection/update": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConnectionUpdate.start();
-              ConnectionUpdateRequest.resolve(nexus, request, new Callback<>() {
+              ConnectionUpdateRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(ConnectionUpdateRequest resolved) {
                   resolved.logInto(_accessLogItem);
@@ -517,7 +519,7 @@ public class ConnectionRouter {
             } return;
             case "connection/end": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConnectionEnd.start();
-              ConnectionEndRequest.resolve(nexus, request, new Callback<>() {
+              ConnectionEndRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(ConnectionEndRequest resolved) {
                   resolved.logInto(_accessLogItem);
@@ -545,11 +547,11 @@ public class ConnectionRouter {
             } return;
             case "configure/make-or-get-asset-key": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConfigureMakeOrGetAssetKey.start();
-              ConfigureMakeOrGetAssetKeyRequest.resolve(nexus, request, new Callback<>() {
+              ConfigureMakeOrGetAssetKeyRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(ConfigureMakeOrGetAssetKeyRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(nexus.session, resolved, new AssetKeyResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new AssetKeyResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -563,11 +565,11 @@ public class ConnectionRouter {
             } return;
             case "attachment/start": {
               StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_AttachmentStart.start();
-              AttachmentStartRequest.resolve(nexus, request, new Callback<>() {
+              AttachmentStartRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(AttachmentStartRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  AttachmentUploadHandler handlerMade = handler.handle(nexus.session, resolved, new ProgressResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightAttachmentUpload, requestId, responder, _accessLogItem, nexus.logger)));
+                  AttachmentUploadHandler handlerMade = handler.handle(session, resolved, new ProgressResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightAttachmentUpload, requestId, responder, _accessLogItem, nexus.logger)));
                   inflightAttachmentUpload.put(requestId, handlerMade);
                   handlerMade.bind();
                 }
@@ -583,7 +585,7 @@ public class ConnectionRouter {
             } return;
             case "attachment/append": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AttachmentAppend.start();
-              AttachmentAppendRequest.resolve(nexus, request, new Callback<>() {
+              AttachmentAppendRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(AttachmentAppendRequest resolved) {
                   resolved.logInto(_accessLogItem);
@@ -611,7 +613,7 @@ public class ConnectionRouter {
             } return;
             case "attachment/finish": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AttachmentFinish.start();
-              AttachmentFinishRequest.resolve(nexus, request, new Callback<>() {
+              AttachmentFinishRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(AttachmentFinishRequest resolved) {
                   resolved.logInto(_accessLogItem);

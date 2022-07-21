@@ -35,7 +35,7 @@ public class SpaceUsageRequest {
     this.limit = limit;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<SpaceUsageRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceUsageRequest> callback) {
     try {
       final BulkLatch<SpaceUsageRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -45,8 +45,8 @@ public class SpaceUsageRequest {
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final Integer limit = request.getInteger("limit", false, 0);
       _latch.with(() -> new SpaceUsageRequest(identity, who.get(), space, policy.get(), limit));
-      nexus.identityService.execute(nexus.session, identity, who);
-      nexus.spaceService.execute(nexus.session, space, policy);
+      nexus.identityService.execute(session, identity, who);
+      nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("spaceusage-error") {
         @Override

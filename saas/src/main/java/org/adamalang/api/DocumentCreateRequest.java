@@ -40,7 +40,7 @@ public class DocumentCreateRequest {
     this.arg = arg;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<DocumentCreateRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<DocumentCreateRequest> callback) {
     try {
       final BulkLatch<DocumentCreateRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -53,8 +53,8 @@ public class DocumentCreateRequest {
       final String entropy = request.getString("entropy", false, 0);
       final ObjectNode arg = request.getObject("arg", true, 461826);
       _latch.with(() -> new DocumentCreateRequest(identity, who.get(), space, policy.get(), key, entropy, arg));
-      nexus.identityService.execute(nexus.session, identity, who);
-      nexus.spaceService.execute(nexus.session, space, policy);
+      nexus.identityService.execute(session, identity, who);
+      nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("documentcreate-error") {
         @Override

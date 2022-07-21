@@ -26,7 +26,7 @@ public class ConnectionUpdateRequest {
     this.viewerState = viewerState;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<ConnectionUpdateRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<ConnectionUpdateRequest> callback) {
     try {
       final Long connection = request.getLong("connection", true, 405505);
       final ObjectNode viewerState = request.getObject("viewer-state", false, 0);

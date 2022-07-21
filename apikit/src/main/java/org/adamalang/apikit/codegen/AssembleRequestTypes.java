@@ -66,7 +66,7 @@ public class AssembleRequestTypes {
       java.append("  }\n");
       java.append("\n");
 
-      java.append("  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<").append(method.camelName).append("Request> callback) {\n");
+      java.append("  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<").append(method.camelName).append("Request> callback) {\n");
       if (method.parameters.length == 0) {
         java.append("    nexus.executor.execute(new NamedRunnable(\"").append(method.camelName.toLowerCase(Locale.ROOT) + "-error").append("\") {\n");
         java.append("      @Override\n");
@@ -142,7 +142,7 @@ public class AssembleRequestTypes {
         for (ParameterDefinition parameter : method.parameters) {
           Transform transform = parameter.getTransform(method.name);
           if (transform != null) {
-            java.append("      nexus.").append(transform.fieldInputName).append(".execute(nexus.session, ").append(parameter.camelName).append(", ").append(transform.outputName).append(");\n");
+            java.append("      nexus.").append(transform.fieldInputName).append(".execute(session, ").append(parameter.camelName).append(", ").append(transform.outputName).append(");\n");
           }
         }
         java.append("    } catch (ErrorCodeException ece) {\n");

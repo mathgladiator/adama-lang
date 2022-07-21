@@ -20,16 +20,14 @@ public class ConnectionNexus {
   public final JsonLogger logger;
   public final ApiMetrics metrics;
   public final SimpleExecutor executor;
-  public final Session session;
   public final UserIdResolver emailService;
   public final Authenticator identityService;
   public final SpacePolicyLocator spaceService;
 
-  public ConnectionNexus(Session session, JsonLogger logger, ApiMetrics metrics, SimpleExecutor executor, UserIdResolver emailService, Authenticator identityService, SpacePolicyLocator spaceService) {
+  public ConnectionNexus(JsonLogger logger, ApiMetrics metrics, SimpleExecutor executor, UserIdResolver emailService, Authenticator identityService, SpacePolicyLocator spaceService) {
     this.logger = logger;
     this.metrics = metrics;
     this.executor = executor;
-    this.session = session;
     this.emailService = emailService;
     this.identityService = identityService;
     this.spaceService = spaceService;

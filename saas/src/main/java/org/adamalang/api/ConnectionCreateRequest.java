@@ -38,7 +38,7 @@ public class ConnectionCreateRequest {
     this.viewerState = viewerState;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<ConnectionCreateRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<ConnectionCreateRequest> callback) {
     try {
       final BulkLatch<ConnectionCreateRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -50,8 +50,8 @@ public class ConnectionCreateRequest {
       ValidateKey.validate(key);
       final ObjectNode viewerState = request.getObject("viewer-state", false, 0);
       _latch.with(() -> new ConnectionCreateRequest(identity, who.get(), space, policy.get(), key, viewerState));
-      nexus.identityService.execute(nexus.session, identity, who);
-      nexus.spaceService.execute(nexus.session, space, policy);
+      nexus.identityService.execute(session, identity, who);
+      nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("connectioncreate-error") {
         @Override

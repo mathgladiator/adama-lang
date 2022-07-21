@@ -27,13 +27,13 @@ public class AuthorityListRequest {
     this.who = who;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<AuthorityListRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AuthorityListRequest> callback) {
     try {
       final BulkLatch<AuthorityListRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       _latch.with(() -> new AuthorityListRequest(identity, who.get()));
-      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.identityService.execute(session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("authoritylist-error") {
         @Override

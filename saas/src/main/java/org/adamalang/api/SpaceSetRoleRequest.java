@@ -40,7 +40,7 @@ public class SpaceSetRoleRequest {
     this.role = role;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<SpaceSetRoleRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceSetRoleRequest> callback) {
     try {
       final BulkLatch<SpaceSetRoleRequest> _latch = new BulkLatch<>(nexus.executor, 3, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -53,9 +53,9 @@ public class SpaceSetRoleRequest {
       final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
       final String role = request.getString("role", true, 456716);
       _latch.with(() -> new SpaceSetRoleRequest(identity, who.get(), space, policy.get(), email, userId.get(), role));
-      nexus.identityService.execute(nexus.session, identity, who);
-      nexus.spaceService.execute(nexus.session, space, policy);
-      nexus.emailService.execute(nexus.session, email, userId);
+      nexus.identityService.execute(session, identity, who);
+      nexus.spaceService.execute(session, space, policy);
+      nexus.emailService.execute(session, email, userId);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("spacesetrole-error") {
         @Override

@@ -30,7 +30,7 @@ public class SpaceCreateRequest {
     this.space = space;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<SpaceCreateRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceCreateRequest> callback) {
     try {
       final BulkLatch<SpaceCreateRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -38,7 +38,7 @@ public class SpaceCreateRequest {
       final String space = request.getString("space", true, 461828);
       ValidateSpace.validate(space);
       _latch.with(() -> new SpaceCreateRequest(identity, who.get(), space));
-      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.identityService.execute(session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("spacecreate-error") {
         @Override

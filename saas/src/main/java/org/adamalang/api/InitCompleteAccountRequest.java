@@ -38,7 +38,7 @@ public class InitCompleteAccountRequest {
     this.code = code;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<InitCompleteAccountRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<InitCompleteAccountRequest> callback) {
     try {
       final BulkLatch<InitCompleteAccountRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String email = request.getString("email", true, 473103);
@@ -47,7 +47,7 @@ public class InitCompleteAccountRequest {
       final Boolean revoke = request.getBoolean("revoke", false, 0);
       final String code = request.getString("code", true, 455681);
       _latch.with(() -> new InitCompleteAccountRequest(email, userId.get(), revoke, code));
-      nexus.emailService.execute(nexus.session, email, userId);
+      nexus.emailService.execute(session, email, userId);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("initcompleteaccount-error") {
         @Override

@@ -27,13 +27,13 @@ public class AuthorityCreateRequest {
     this.who = who;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<AuthorityCreateRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AuthorityCreateRequest> callback) {
     try {
       final BulkLatch<AuthorityCreateRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       _latch.with(() -> new AuthorityCreateRequest(identity, who.get()));
-      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.identityService.execute(session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("authoritycreate-error") {
         @Override
