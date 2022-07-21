@@ -114,4 +114,9 @@ public class PrivateLazyDeltaWriter {
     manifest();
     writer.injectJson(json);
   }
+
+  public JsonStreamWriter force() {
+    manifest();
+    return writer;
+  }
 }

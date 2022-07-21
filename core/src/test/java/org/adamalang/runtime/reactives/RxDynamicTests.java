@@ -111,4 +111,27 @@ public class RxDynamicTests {
     c.set(B);
     child.assertInvalidateCount(3);
   }
+
+  @Test
+  public void seq() {
+    final var c = new RxDynamic(null, NtDynamic.NULL);
+    c.set(new NtDynamic("{\"x\":123,\"y\":42}"));
+    {
+      JsonStreamWriter redo = new JsonStreamWriter();
+      JsonStreamWriter undo = new JsonStreamWriter();
+      c.__commit("x", redo, undo);
+      Assert.assertEquals("\"x\":{\"x\":123,\"y\":42}", redo.toString());
+      Assert.assertEquals("\"x\":null", undo.toString());
+    }
+    c.set(new NtDynamic("{\"x\":42,\"z\":42}"));
+    {
+      JsonStreamWriter redo = new JsonStreamWriter();
+      JsonStreamWriter undo = new JsonStreamWriter();
+      c.__commit("x", redo, undo);
+      Assert.assertEquals("\"x\":{\"x\":42,\"z\":42,\"y\":null}", redo.toString());
+      Assert.assertEquals("\"x\":{\"x\":123,\"y\":42,\"z\":null}", undo.toString());
+    }
+
+
+  }
 }

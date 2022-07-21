@@ -10,15 +10,19 @@
 package org.adamalang.runtime.delta;
 
 import org.adamalang.runtime.contracts.DeltaNode;
+import org.adamalang.runtime.json.JsonAlgebra;
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 
 /** a dynamic that will respect privacy and sends state to client only on changes */
 public class DDynamic implements DeltaNode {
   private NtDynamic prior;
+  private Object priorParsed;
 
   public DDynamic() {
     prior = null;
+    priorParsed = null;
   }
 
   /** the dynamic tree is no longer visible (was made private) */
@@ -26,25 +30,29 @@ public class DDynamic implements DeltaNode {
     if (prior != null) {
       writer.writeNull();
       prior = null;
+      priorParsed = null;
     }
   }
 
   @Override
   public void clear() {
     prior = null;
+    priorParsed = null;
   }
 
   /** memory usage */
   @Override
   public long __memory() {
-    return (prior != null ? prior.memory() : 0) + 32;
+    return 2 * (prior != null ? prior.memory() : 0) + 32;
   }
 
   /** the dynamic tree is visible, so show changes */
   public void show(final NtDynamic value, final PrivateLazyDeltaWriter writer) {
-    if (value == null || !value.equals(prior)) {
-      writer.injectJson(value.json);
+    if (!value.equals(prior)) {
+      Object parsedValue = new JsonStreamReader(value.json).readJavaTree();
+      JsonAlgebra.writeDelta(priorParsed, parsedValue, writer.force());
+      priorParsed = parsedValue;
+      prior = value;
     }
-    prior = value;
   }
 }

@@ -45,6 +45,33 @@ public class JsonAlgebra {
     return patchObject;
   }
 
+  @SuppressWarnings("unchecked")
+  public static void writeDelta(final Object from, final Object to, JsonStreamWriter writer) {
+    if (from instanceof HashMap && to instanceof HashMap) {
+      HashMap<String, Object> mapFrom = (HashMap<String, Object>) from;
+      HashMap<String, Object> mapTo = (HashMap<String, Object>) to;
+      writer.beginObject();
+      for (Map.Entry<String, Object> entryTo : mapTo.entrySet()) {
+        writer.writeObjectFieldIntro(entryTo.getKey());
+        Object objFrom = mapFrom.get(entryTo.getKey());
+        if (objFrom != null) {
+          writeDelta(objFrom, entryTo.getValue(), writer);
+        } else {
+          writer.writeTree(entryTo.getValue());
+        }
+      }
+      for (Map.Entry<String, Object> entryFrom : mapFrom.entrySet()) {
+        if (!mapTo.containsKey(entryFrom.getKey())) {
+          writer.writeObjectFieldIntro(entryFrom.getKey());
+          writer.writeNull();
+        }
+      }
+      writer.endObject();
+    } else {
+      writer.writeTree(to);
+    }
+  }
+
   /** an accumulator/fold version of merge */
   public static AutoMorphicAccumulator<String> mergeAccumulator() {
     return mergeAccumulator(true);

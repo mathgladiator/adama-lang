@@ -11,6 +11,7 @@ package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
@@ -30,9 +31,11 @@ public class RxDynamic extends RxBase implements Comparable<RxDynamic>, CanGetAn
   public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
       forwardDelta.writeObjectFieldIntro(name);
-      forwardDelta.injectJson(value.json);
       reverseDelta.writeObjectFieldIntro(name);
-      reverseDelta.injectJson(backup.json);
+      Object from = new JsonStreamReader(backup.json).readJavaTree();
+      Object to = new JsonStreamReader(value.json).readJavaTree();
+      JsonAlgebra.writeDelta(from, to, forwardDelta);
+      JsonAlgebra.writeDelta(to, from, reverseDelta);
       backup = value;
       __lowerDirtyCommit();
     }
