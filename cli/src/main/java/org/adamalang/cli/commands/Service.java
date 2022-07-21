@@ -67,6 +67,7 @@ import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
+import org.adamalang.services.FirstPartyServices;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.*;
@@ -162,6 +163,7 @@ public class Service {
     engine.start();
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(prometheusMetricsFactory));
+    FirstPartyServices.install(dataBase);
     ScheduledExecutorService databasePings = Executors.newSingleThreadScheduledExecutor();
     databasePings.scheduleAtFixedRate(() -> {
       try {
