@@ -10,17 +10,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>services</artifactId>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>software.amazon.awssdk</groupId>
-                <artifactId>bom</artifactId>
-                <version>2.17.157</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.adamalang</groupId>
@@ -46,6 +35,12 @@
             <groupId>org.adamalang</groupId>
             <artifactId>net</artifactId>
             <version>0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <properties>

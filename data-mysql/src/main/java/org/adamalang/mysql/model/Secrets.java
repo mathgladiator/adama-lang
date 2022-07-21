@@ -9,6 +9,9 @@
  */
 package org.adamalang.mysql.model;
 
+import io.netty.channel.unix.Errors;
+import org.adamalang.ErrorCodes;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
 
 import java.sql.Connection;
@@ -44,6 +47,6 @@ public class Secrets {
         }
       }
     }
-    return null;
+    throw new ErrorCodeException(ErrorCodes.MYSQL_FAILED_FINDING_SECRET_KEY);
   }
 }
