@@ -42,12 +42,12 @@ public class EndToEnd_DocumentTests {
       Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"zpx\":103},\"seq\":6}}", c6.next());
       Iterator<String> c8 = fe.execute("{\"id\":8,\"method\":\"connection/end\",\"connection\":100}");
       Assert.assertEquals("FINISH:{}", c8.next());
-      Assert.assertEquals("FINISH:{}", c6.next());
+      Assert.assertEquals("FINISH:null", c6.next());
       Iterator<String> c9 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/create\",\"space\":\"nope\",\"key\":\"a\",\"arg\":{}}");
       Assert.assertEquals("ERROR:625678", c9.next());
       Iterator<String> c10 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/list\",\"space\":\"newspace\"}");
       Assert.assertTrue(c10.next().startsWith("STREAM:{\"key\":\"a\",\"created\":"));
-      Assert.assertEquals("FINISH:{}", c10.next());
+      Assert.assertEquals("FINISH:null", c10.next());
       Iterator<String> c11 = fe.execute("{\"id\":8,\"method\":\"connection/send\",\"connection\":100,\"channel\":\"foo\",\"message\":{\"z\":2}}");
       Assert.assertEquals("ERROR:457745", c11.next());
       Assert.assertEquals("ERROR:438302", fe.execute("{\"id\":1000,\"method\":\"connection/update\",\"connection\":1000,\"viewer-state\":{\"z\":100}}").next());

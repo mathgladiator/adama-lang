@@ -281,6 +281,11 @@ public class Attributes {
           .append("','").append(env.val("rx:failure", "sign_in_failed")) //
           .append("','").append(env.val("rx:forward", "/")) //
           .append("');").newline();
+    } else if (action.startsWith("custom:")) { // execute custom logic
+      String customCommandName = action.substring(7).trim();
+      env.writer.tab().append("$.aCC(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'").append(customCommandName).append("');").newline();
     } else if ("adama:sign-up".equalsIgnoreCase(action)) { // sign up as an Adama user
       check_action_sign_up();
       env.writer.tab().append("$.aSU(").append(eVar) //

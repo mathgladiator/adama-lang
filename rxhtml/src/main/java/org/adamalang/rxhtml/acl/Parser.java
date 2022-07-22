@@ -33,6 +33,9 @@ public class Parser {
             commands.add(new Increment(body));
             break;
           }
+          case "custom":
+            commands.add(new Custom(body));
+            break;
           case "decrement":
           case "dec": {
             commands.add(new Decrement(body));

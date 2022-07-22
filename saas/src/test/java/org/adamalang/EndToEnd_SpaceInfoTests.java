@@ -51,10 +51,10 @@ public class EndToEnd_SpaceInfoTests {
       Assert.assertEquals(
           "STREAM:{\"space\":\"spacename\",\"role\":\"owner\",\"created\":\"",
           c2.next().substring(0, 54));
-      Assert.assertEquals("FINISH:{}", c2.next());
+      Assert.assertEquals("FINISH:null", c2.next());
       Iterator<String> c3 =
           fe.execute("{\"id\":3,\"identity\":\"" + bob + "\",\"method\":\"space/list\"}");
-      Assert.assertEquals("FINISH:{}", c3.next());
+      Assert.assertEquals("FINISH:null", c3.next());
       Iterator<String> c4 =
           fe.execute(
               "{\"id\":4,\"identity\":\""
@@ -66,7 +66,7 @@ public class EndToEnd_SpaceInfoTests {
       Assert.assertEquals(
           "STREAM:{\"space\":\"spacename\",\"role\":\"developer\",\"created\":\"",
           c5.next().substring(0, 58));
-      Assert.assertEquals("FINISH:{}", c5.next());
+      Assert.assertEquals("FINISH:null", c5.next());
       Iterator<String> c6 =
           fe.execute(
               "{\"id\":6,\"identity\":\""
@@ -75,7 +75,7 @@ public class EndToEnd_SpaceInfoTests {
       Assert.assertEquals("FINISH:{}", c6.next());
       Iterator<String> c7 =
           fe.execute("{\"id\":7,\"identity\":\"" + bob + "\",\"method\":\"space/list\"}");
-      Assert.assertEquals("FINISH:{}", c7.next());
+      Assert.assertEquals("FINISH:null", c7.next());
       Iterator<String> c8 =
           fe.execute("{\"id\":6,\"method\":\"authority/create\",\"identity\":\"" + bob + "\"}");
       String authorityCreatedLog = c8.next();
@@ -116,10 +116,10 @@ public class EndToEnd_SpaceInfoTests {
       Iterator<String> c19  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/reflect\",\"space\":\"nope\",\"key\":\"k\"}");
       Assert.assertEquals("ERROR:625678", c19.next());
-      // TODO: we should move the billing logic our of overlord and be able to manually trigger it here
+      // TODO: we should move the billing logic out of overlord and be able to manually trigger it here
       Iterator<String> c20  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/usage\",\"space\":\"myspace\"}");
-      Assert.assertEquals("FINISH:{}", c20.next());
+      Assert.assertEquals("FINISH:null", c20.next());
       Iterator<String> c21  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/delete\",\"space\":\"myspace\"}");
       Assert.assertEquals("FINISH:{}", c21.next());
