@@ -148,7 +148,7 @@ public class TokenStream {
 
     public Token(Type type, String base, String... transforms) {
       this.type = type;
-      if (type != Type.Text) {
+      if (type == Type.Condition) {
         if (base.startsWith("#")) {
           this.mod = Modifier.Else;
           this.base = base.substring(1).trim();
