@@ -72,10 +72,10 @@ public class TokenStreamTests {
       assertNextIsVariable(TokenStream.tokenize("{  x  }").iterator(), "x", TokenStream.Modifier.None);
       assertNextIsVariable(TokenStream.tokenize("{! x }").iterator(), "x", TokenStream.Modifier.Not);
       assertNextIsVariable(TokenStream.tokenize("{!x}").iterator(), "x", TokenStream.Modifier.Not);
-      assertNextIsVariable(TokenStream.tokenize("{  # x  }").iterator(), "x", TokenStream.Modifier.Else);
-      assertNextIsVariable(TokenStream.tokenize("{# x}").iterator(), "x", TokenStream.Modifier.Else);
-      assertNextIsVariable(TokenStream.tokenize("{  / x  }").iterator(), "x", TokenStream.Modifier.End);
-      assertNextIsVariable(TokenStream.tokenize("{/ x}").iterator(), "x", TokenStream.Modifier.End);
+      assertNextIsVariable(TokenStream.tokenize("{  # x  }").iterator(), "# x", TokenStream.Modifier.None);
+      assertNextIsVariable(TokenStream.tokenize("{# x}").iterator(), "# x", TokenStream.Modifier.None);
+      assertNextIsVariable(TokenStream.tokenize("{  / x  }").iterator(), "/ x", TokenStream.Modifier.None);
+      assertNextIsVariable(TokenStream.tokenize("{/ x}").iterator(), "/ x", TokenStream.Modifier.None);
     }
   }
 

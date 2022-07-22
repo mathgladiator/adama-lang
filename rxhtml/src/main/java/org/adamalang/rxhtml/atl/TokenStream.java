@@ -148,20 +148,15 @@ public class TokenStream {
 
     public Token(Type type, String base, String... transforms) {
       this.type = type;
-      if (type == Type.Condition) {
-        if (base.startsWith("#")) {
-          this.mod = Modifier.Else;
-          this.base = base.substring(1).trim();
-        } else if (base.startsWith("!")) {
-          this.mod = Modifier.Not;
-          this.base = base.substring(1).trim();
-        } else if (base.startsWith("/")) {
-          this.mod = Modifier.End;
-          this.base = base.substring(1).trim();
-        } else {
-          this.mod = Modifier.None;
-          this.base = base;
-        }
+      if (base.startsWith("#") && type == Type.Condition) {
+        this.mod = Modifier.Else;
+        this.base = base.substring(1).trim();
+      } else if (base.startsWith("!")) {
+        this.mod = Modifier.Not;
+        this.base = base.substring(1).trim();
+      } else if (base.startsWith("/") && type == Type.Condition) {
+        this.mod = Modifier.End;
+        this.base = base.substring(1).trim();
       } else {
         this.mod = Modifier.None;
         this.base = base;
