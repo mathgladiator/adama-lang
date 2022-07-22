@@ -54,7 +54,7 @@ public class FinderServiceRouter implements Router {
       return;
     }
     int backoff = reportFindFailureGetRetryBackoff();
-    if (backoff > 7500) {
+    if (backoff > 2500) {
       callback.failure(new ErrorCodeException(ErrorCodes.NET_FINDER_GAVE_UP));
       return;
     }
