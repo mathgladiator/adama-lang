@@ -29,7 +29,7 @@ public class AuthorityListingResponder {
   }
 
   public void finish() {
-    responder.finish("{}");
+    responder.finish(null);
   }
 
   public void error(ErrorCodeException ex) {

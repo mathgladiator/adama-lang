@@ -97,6 +97,27 @@ public class WebSocketHandlerTests {
         callback.assertDataPrefix(1, "{\"ping\":");
 
         TestClientCallback.Mailbox box = callback.getOrCreate(500);
+        CountDownLatch latch = box.latch(2);
+        b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":500,\"method\":\"cake2\"}"));
+        Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+        box.assertData(0, "{\"deliver\":500,\"done\":false,\"response\":{\"boss\":1}}");
+        box.assertData(1, "{\"deliver\":500,\"done\":true}");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder b =
+            TestClientRequestBuilder.start(group)
+                .server("localhost", webConfig.port)
+                .get("/~s")
+                .withWebSocket();
+        b.execute(callback);
+        callback.awaitFirst();
+        callback.assertData("{\"status\":\"connected\",\"assets\":false}");
+        callback.awaitPing();
+        callback.assertDataPrefix(1, "{\"ping\":");
+
+        TestClientCallback.Mailbox box = callback.getOrCreate(500);
         CountDownLatch latch = box.latch(1);
         b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":500,\"method\":\"ex\"}"));
         Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));

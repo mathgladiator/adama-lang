@@ -65,7 +65,7 @@ public class AssembleResponders {
 
       if (responder.stream && responder.fields.length > 0) {
         java.append("  public void finish() {\n");
-        java.append("    responder.finish(\"{}\");\n");
+        java.append("    responder.finish(null);\n");
         java.append("  }\n\n");
       }
       java.append("  public void error(ErrorCodeException ex) {\n");

@@ -278,6 +278,8 @@ public class ErrorTable {
     descriptions.put(928828, "no description of error (yet)");
     names.put(900104, "API_SPACE_CREATE_UNKNOWN_EXCEPTION");
     descriptions.put(900104, "no description of error (yet)");
+    names.put(909436, "API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION");
+    descriptions.put(909436, "no description of error (yet)");
     names.put(991368, "API_SET_PASSWORD_UNKNOWN_EXCEPTION");
     descriptions.put(991368, "no description of error (yet)");
     names.put(983199, "API_SET_PASSWORD_ONLY_ADAMA_DEV_EXCEPTION");
@@ -336,6 +338,8 @@ public class ErrorTable {
     descriptions.put(913436, "no description of error (yet)");
     names.put(901144, "API_DELETE_AUTHORITY_NO_PERMISSION_TO_EXECUTE");
     descriptions.put(901144, "no description of error (yet)");
+    names.put(995505, "API_CREATE_DOCUMENT_SPACE_RESERVED");
+    descriptions.put(995505, "no description of error (yet)");
     names.put(933907, "API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION");
     descriptions.put(933907, "no description of error (yet)");
     names.put(984080, "API_SEND_TIMEOUT");
@@ -441,8 +445,6 @@ public class ErrorTable {
     descriptions.put(925840, "no description of error (yet)");
     names.put(908435, "API_GENERATE_KEY_NO_PERMISSION");
     descriptions.put(908435, "no description of error (yet)");
-    names.put(909436, "API_METERING_FAILED_FINDING_RANDOM_HOST");
-    descriptions.put(909436, "no description of error (yet)");
     names.put(998480, "API_METERING_TIMEOUT");
     descriptions.put(998480, "no description of error (yet)");
     names.put(998499, "API_METERING_REJECTED");

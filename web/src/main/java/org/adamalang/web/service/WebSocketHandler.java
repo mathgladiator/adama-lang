@@ -163,7 +163,11 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
 
         @Override
         public void finish(String json) {
-          ctx.writeAndFlush(new TextWebSocketFrame("{\"deliver\":" + id + ",\"done\":true,\"response\":" + json + "}"));
+          if (json == null) {
+            ctx.writeAndFlush(new TextWebSocketFrame("{\"deliver\":" + id + ",\"done\":true}"));
+          } else {
+            ctx.writeAndFlush(new TextWebSocketFrame("{\"deliver\":" + id + ",\"done\":true,\"response\":" + json + "}"));
+          }
         }
 
         @Override

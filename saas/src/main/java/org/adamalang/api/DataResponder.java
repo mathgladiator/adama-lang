@@ -29,7 +29,7 @@ public class DataResponder {
   }
 
   public void finish() {
-    responder.finish("{}");
+    responder.finish(null);
   }
 
   public void error(ErrorCodeException ex) {

@@ -40,6 +40,12 @@ public class MockServiceBase implements ServiceBase {
               responder.finish("{\"boss\":2}");
               return;
             }
+            case "cake2":
+            {
+              responder.stream("{\"boss\":1}");
+              responder.finish(null);
+              return;
+            }
             case "empty":
             {
               responder.finish("{}");
