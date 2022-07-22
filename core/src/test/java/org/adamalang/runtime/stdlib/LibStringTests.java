@@ -30,6 +30,24 @@ public class LibStringTests {
   }
 
   @Test
+  public void starts() {
+    Assert.assertTrue(LibString.startsWith("xyz", "xy"));
+    Assert.assertFalse(LibString.startsWith("zxyz", "xy"));
+    Assert.assertTrue(LibString.startsWith(new NtMaybe<>("xyz"), "xy").get());
+    Assert.assertFalse(LibString.startsWith(new NtMaybe<>("zxyz"), "xy").get());
+    Assert.assertFalse(LibString.startsWith(new NtMaybe<>(), "xy").has());
+  }
+
+  @Test
+  public void ends() {
+    Assert.assertTrue(LibString.endsWith("xyz", "yz"));
+    Assert.assertFalse(LibString.endsWith("zxyz", "xy"));
+    Assert.assertTrue(LibString.endsWith(new NtMaybe<>("xyz"), "yz").get());
+    Assert.assertFalse(LibString.endsWith(new NtMaybe<>("zxyz"), "xy").get());
+    Assert.assertFalse(LibString.endsWith(new NtMaybe<>(), "xy").has());
+  }
+
+  @Test
   public void multiply() {
     Assert.assertEquals("xxx", LibString.multiply("x", 3));
     Assert.assertEquals("xxx", LibString.multiply(new NtMaybe<>("x"), 3).get());

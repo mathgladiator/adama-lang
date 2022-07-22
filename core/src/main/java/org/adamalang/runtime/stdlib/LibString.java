@@ -271,6 +271,32 @@ public class LibString {
   }
 
   @Extension
+  public static boolean endsWith(String what, String suffix) {
+    return what.endsWith(suffix);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Boolean.class) NtMaybe<Boolean> endsWith(@HiddenType(clazz = String.class) NtMaybe<String> what, String suffix) {
+    if (what.has()) {
+      return new NtMaybe<>(what.get().endsWith(suffix));
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static boolean startsWith(String what, String suffix) {
+    return what.startsWith(suffix);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Boolean.class) NtMaybe<Boolean> startsWith(@HiddenType(clazz = String.class) NtMaybe<String> what, String suffix) {
+    if (what.has()) {
+      return new NtMaybe<>(what.get().startsWith(suffix));
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
   public static int compare(final String a, final String b) {
     if (a == null && b == null) {
       return 0;
