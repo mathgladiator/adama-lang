@@ -56,7 +56,7 @@ public class Finder implements FinderService {
         }
       }
       throw new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED);
-    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_FIND_EXCEPTION);
+    }, dataBase.metrics.finder_find.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_FIND_EXCEPTION);
   }
 
   @Override
@@ -91,7 +91,7 @@ public class Finder implements FinderService {
         statementInsertIndex.execute();
         return null;
       }
-    }, callback, ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE);
+    }, dataBase.metrics.finder_bind.wrap(callback), ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE);
   }
 
   @Override
@@ -115,7 +115,7 @@ public class Finder implements FinderService {
         }
       }
       throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_BACKUP);
-    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_BACKUP_EXCEPTION);
+    }, dataBase.metrics.finder_backup.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_BACKUP_EXCEPTION);
   }
 
   @Override
@@ -135,7 +135,7 @@ public class Finder implements FinderService {
         statementUpdate.executeUpdate();
       }
       return null;
-    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_FREE_EXCEPTION);
+    }, dataBase.metrics.finder_free.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_FREE_EXCEPTION);
   }
 
   @Override
@@ -154,7 +154,7 @@ public class Finder implements FinderService {
         }
       }
       throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_DELETE);
-    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_DELETE_EXCEPTION);
+    }, dataBase.metrics.finder_delete.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_DELETE_EXCEPTION);
   }
 
   @Override
@@ -178,6 +178,6 @@ public class Finder implements FinderService {
           return results;
         }
       }
-    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_LIST_EXCEPTION);
+    }, dataBase.metrics.finder_list.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_LIST_EXCEPTION);
   }
 }

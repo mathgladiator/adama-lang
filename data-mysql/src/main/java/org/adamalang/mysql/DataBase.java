@@ -107,6 +107,9 @@ public class DataBase implements AutoCloseable {
         boolean validException = ex instanceof java.sql.SQLIntegrityConstraintViolationException;
         if (!validException) {
           LOG.error("database-exception", ex);
+        } else {
+          metrics.valid_exception.run();
+          instance.success();
         }
         if (backoff < 500 && !validException) {
           try {
@@ -117,7 +120,9 @@ public class DataBase implements AutoCloseable {
         } else {
           ErrorCodeException ece = ErrorCodeException.detectOrWrap(failureReason, ex, LOGGER);
           callback.failure(ece);
-          instance.failure(ece.code);
+          if (!validException) {
+            instance.failure(ece.code);
+          }
           return;
         }
       }
