@@ -320,7 +320,7 @@ public class FrontendTests {
           Assert.assertEquals(2, Spaces.list(dataBase, bob, null, 5).size());
           Spaces.delete(dataBase, space1, bob);
           Assert.assertEquals(1, Spaces.list(dataBase, bob, null, 5).size());
-          Assert.assertEquals(6, Spaces.createSpace(dataBase, alice, "space1"));
+          Assert.assertEquals(3, Spaces.createSpace(dataBase, alice, "space1"));
         }
       } finally {
         installer.uninstall();
