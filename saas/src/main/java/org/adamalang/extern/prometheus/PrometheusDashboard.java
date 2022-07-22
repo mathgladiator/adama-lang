@@ -333,6 +333,15 @@ public class PrometheusDashboard implements MetricsFactory {
     current.append("  yTitle: '").append(name).append("'\n");
     current.append("});\n");
     current.append("</script>");
+    if (name.startsWith("alarm_")) {
+      alerts.append("  - alert: ").append(name.substring(6)).append("\n");
+      alerts.append("    expr: inf_").append(name).append("_failure_total[2m]) > 0.05\n");
+      alerts.append("    for: 1m\n");
+      alerts.append("    labels:\n");
+      alerts.append("      severity: page\n");
+      alerts.append("    annotations:\n");
+      alerts.append("      summary: A manual alarm fired - ").append(name).append("\n");
+    }
     return null;
   }
 

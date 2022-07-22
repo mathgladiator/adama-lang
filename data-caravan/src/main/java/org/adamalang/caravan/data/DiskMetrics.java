@@ -22,6 +22,6 @@ public class DiskMetrics {
     this.flush = factory.counter("disk_flush");
     this.total_storage_allocated = factory.inflight("disk_total_storage_allocated_mb");
     this.free_storage_available = factory.inflight("disk_free_storage_available_mb");
-    this.alarm_storage_over_80_percent = factory.inflight("disk_alarm_storage_over_80_percent");
+    this.alarm_storage_over_80_percent = factory.inflight("alarm_storage_over_80_percent");
   }
 }

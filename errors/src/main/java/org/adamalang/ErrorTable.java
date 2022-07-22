@@ -386,6 +386,8 @@ public class ErrorTable {
     descriptions.put(946192, "no description of error (yet)");
     names.put(937076, "API_INVALID_SPACE_EMPTY");
     descriptions.put(937076, "no description of error (yet)");
+    names.put(904364, "API_INVALID_SPACE_INAPPROPRIATE_NAME");
+    descriptions.put(904364, "no description of error (yet)");
     names.put(998515, "API_INVALID_SPACE_NOT_SIMPLE");
     descriptions.put(998515, "no description of error (yet)");
     names.put(998459, "API_KEYSTORE_NOT_JSON");
