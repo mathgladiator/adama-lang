@@ -531,8 +531,6 @@ public class Service {
     new OverlordMetrics(metricsFactory);
     metricsFactory.page("api", "The Public API");
     new ApiMetrics(metricsFactory);
-    metricsFactory.page("backend", "The Data Service");
-    new BackendMetrics(metricsFactory);
     metricsFactory.page("database", "Database");
     new DataBaseMetrics(metricsFactory);
     metricsFactory.page("disk", "Disk");

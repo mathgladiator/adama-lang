@@ -34,6 +34,7 @@ public class PrometheusDashboard implements MetricsFactory {
     this.id = 0;
     this.alerts = new StringBuilder();
     alerts.append("groups:\n");
+    nav.append(" [<a href=\"index.html\">Home</a>] ");
   }
 
   String makeId() {
@@ -50,6 +51,10 @@ public class PrometheusDashboard implements MetricsFactory {
     nav.append(" [<a href=\"adama-").append(name).append(".html").append("\">").append(title).append("</a>] ");
     this.filename = "adama-" + name + ".html";
     this.current = new StringBuilder();
+    begin(title);
+  }
+
+  private void begin(String title) {
     current.append("{{ template \"head\" . }}\n");
     current.append("{{ template \"prom_right_table_head\" }}");
     current.append("##NAV##\n");
@@ -62,6 +67,145 @@ public class PrometheusDashboard implements MetricsFactory {
     if (filename != null) {
       cut();
     }
+    this.filename = "index.html";
+    this.current = new StringBuilder();
+    begin("Index");
+
+    alerts.append("  - alert: jvm_threads_deadlocked\n");
+    alerts.append("    expr: jvm_threads_deadlocked > 0\n");
+    alerts.append("    for: 1m\n");
+    alerts.append("    labels:\n");
+    alerts.append("      severity: page\n");
+    alerts.append("    annotations:\n");
+    alerts.append("      summary: Too many JVM threads are deadlocked\n");
+
+    String graphId = makeId();
+    current.append("<table width=\"100%\"><tr><td width=\"30%\">");
+    current.append("<b> Old Gen Memory </b>\n");
+    current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+    current.append("new PromConsole.Graph({\n");
+    current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+    current.append("  expr: \"avg_over_time(jvm_memory_pool_bytes_used{pool=\\\"G1 Old Gen\\\"}[5m])\",\n");
+    current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+    current.append("  yTitle: ''\n");
+    current.append("});\n");
+    current.append("</script>");
+    current.append("</td><td width=\"30%\">");
+    current.append("<b> GC Pressure </b>\n");
+    graphId = makeId();
+    current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+    current.append("new PromConsole.Graph({\n");
+    current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+    current.append("  expr: \"rate(jvm_gc_collection_seconds_count[5m])\",\n");
+    current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+    current.append("  yTitle: ''\n");
+    current.append("});\n");
+    current.append("</script>");
+    current.append("</td><td width=\"40%\">");
+    current.append("<b> Memory </b>\n");
+    graphId = makeId();
+    current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+    current.append("new PromConsole.Graph({\n");
+    current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+    current.append("  expr: \"process_resident_memory_bytes\",\n");
+    current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+    current.append("  yTitle: ''\n");
+    current.append("});\n");
+    current.append("</script>");
+    current.append("</td></tr></table>");
+
+    current.append("<table width=\"100%\"><tr><td width=\"50%\">");
+    current.append("<b> Send Failure Rates </b>\n");
+    graphId = makeId();
+    current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+    current.append("new PromConsole.Graph({\n");
+    current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+    current.append("  expr: \"rate(rr_connectionsend_failure_total[1m])/rate(rr_connectionsend_start_total[1m])\",\n");
+    current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+    current.append("  yTitle: ''\n");
+    current.append("});\n");
+    current.append("</script>");
+    current.append("</td><td width=\"50%\">");
+    current.append("<b> Connection Failure Rates </b>\n");
+    graphId = makeId();
+    current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+    current.append("new PromConsole.Graph({\n");
+    current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+    current.append("  expr: \"rate(stream_connectioncreate_failure_total[1m])/rate(stream_connectioncreate_start_total[1m])\",\n");
+    current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+    current.append("  yTitle: ''\n");
+    current.append("});\n");
+    current.append("</script>");
+    current.append("</td></tr></table>");
+
+    current.append("<table width=\"100%\"><tr><td width=\"50%\">");
+    current.append("<b> Send Traffic </b>\n");
+    graphId = makeId();
+    current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+    current.append("new PromConsole.Graph({\n");
+    current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+    current.append("  expr: \"rate(rr_connectionsend_start_total[1m])\",\n");
+    current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+    current.append("  yTitle: ''\n");
+    current.append("});\n");
+    current.append("</script>");
+    current.append("</td><td width=\"50%\">");
+    current.append("<b> Connection Traffic </b>\n");
+    graphId = makeId();
+    current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+    current.append("new PromConsole.Graph({\n");
+    current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+    current.append("  expr: \"rate(stream_connectioncreate_start_total[1m])\",\n");
+    current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+    current.append("  yTitle: ''\n");
+    current.append("});\n");
+    current.append("</script>");
+    current.append("</td></tr></table>");
+
+    current.append("<table width=\"100%\"><tr><td width=\"50%\">");
+    current.append("<b> CPU </b>\n");
+    graphId = makeId();
+    current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+    current.append("new PromConsole.Graph({\n");
+    current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+    current.append("  expr: \"rate(process_cpu_seconds_total[1m])\",\n");
+    current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+    current.append("  yTitle: ''\n");
+    current.append("});\n");
+    current.append("</script>");
+    current.append("</td><td width=\"50%\">");
+    current.append("<b> Threads Waiting </b>\n");
+    graphId = makeId();
+    current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+    current.append("new PromConsole.Graph({\n");
+    current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+    current.append("  expr: \"jvm_threads_state{state=\\\"TIMED_WAITING\\\"}\",\n");
+    current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+    current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+    current.append("  yTitle: ''\n");
+    current.append("});\n");
+    current.append("</script>");
+    current.append("</td></tr></table>");
+    cut();
+
+
     for (Map.Entry<String, String> entry : files.entrySet()) {
       File toWrite = new File(consolesDirectory, entry.getKey());
       String data = entry.getValue();
@@ -69,6 +213,8 @@ public class PrometheusDashboard implements MetricsFactory {
       Files.writeString(toWrite.toPath(), data);
     }
     Files.writeString(new File(consolesDirectory.getParentFile(), "adama_rules.yml").toPath(), alerts.toString());
+
+
   }
 
   @Override
@@ -77,6 +223,7 @@ public class PrometheusDashboard implements MetricsFactory {
   }
 
   public void cut() {
+    current.append("\n");
     current.append("{{ template \"prom_content_tail\" . }}\n");
     current.append("{{ template \"tail\" . }}\n");
     files.put(filename, current.toString());
@@ -85,6 +232,15 @@ public class PrometheusDashboard implements MetricsFactory {
   @Override
   public RequestResponseMonitor makeRequestResponseMonitor(String nameRaw) {
     String name = PrometheusMetricsFactory.makeNameCompatibleWithPrometheus(nameRaw);
+    alerts.append("  - alert: FailureRate").append(name).append("\n");
+    alerts.append("    expr: rate(rr_").append(name).append("_failure_total[2m])/rate(rr_").append(name).append("_start_total[2m]) > 0.05\n");
+    alerts.append("    for: 5m\n");
+    alerts.append("    labels:\n");
+    alerts.append("      severity: page\n");
+    alerts.append("    annotations:\n");
+    alerts.append("      summary: High Failure Rate for ").append(name).append("\n");
+
+    current.append("<table width=\"100%\"><tr><td width=\"25%\">");
     {
       String graphId = makeId();
       current.append("<b> Failure Rate:").append(name).append("</b>\n");
@@ -99,13 +255,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
-    alerts.append("  - alert: FailureRate").append(name).append("\n");
-    alerts.append("    expr: rate(rr_").append(name).append("_failure_total[2m])/rate(rr_").append(name).append("_start_total[2m]) > 0.05\n");
-    alerts.append("    for: 5m\n");
-    alerts.append("    labels:\n");
-    alerts.append("      severity: page\n");
-    alerts.append("    annotations:\n");
-    alerts.append("      summary: High Failure Rate for ").append(name).append("\n");
+    current.append("</td><td width=\"25%\">");
     {
       String graphId = makeId();
       current.append("<b> Latency p95:").append(name).append("</b>\n");
@@ -120,6 +270,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td><td width=\"25%\">");
     {
       String graphId = makeId();
       current.append("<b> Successes:").append(name).append("</b>\n");
@@ -134,6 +285,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td><td width=\"25%\">");
     {
       String graphId = makeId();
       current.append("<b>Inflight: ").append(name).append("</b>\n");
@@ -148,12 +300,22 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td></tr></table>");
     return null;
   }
 
   @Override
   public StreamMonitor makeStreamMonitor(String nameRaw) {
     String name = PrometheusMetricsFactory.makeNameCompatibleWithPrometheus(nameRaw);
+    alerts.append("  - alert: FailureRate").append(name).append("\n");
+    alerts.append("    expr: rate(stream_").append(name).append("_failure_total[2m])/rate(stream_").append(name).append("_start_total[2m]) > 0.05\n");
+    alerts.append("    for: 5m\n");
+    alerts.append("    labels:\n");
+    alerts.append("      severity: page\n");
+    alerts.append("    annotations:\n");
+    alerts.append("      summary: High Failure Rate for ").append(name).append("\n");
+
+    current.append("<table width=\"100%\"><tr><td width=\"20%\">");
     {
       String graphId = makeId();
       current.append("<b> Failure Rate:").append(name).append("</b>\n");
@@ -168,13 +330,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
-    alerts.append("  - alert: FailureRate").append(name).append("\n");
-    alerts.append("    expr: rate(stream_").append(name).append("_failure_total[2m])/rate(stream_").append(name).append("_start_total[2m]) > 0.05\n");
-    alerts.append("    for: 5m\n");
-    alerts.append("    labels:\n");
-    alerts.append("      severity: page\n");
-    alerts.append("    annotations:\n");
-    alerts.append("      summary: High Failure Rate for ").append(name).append("\n");
+    current.append("</td><td width=\"20%\">");
     {
       String graphId = makeId();
       current.append("<b> Progress:").append(name).append("</b>\n");
@@ -189,6 +345,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td><td width=\"20%\">");
     {
       String graphId = makeId();
       current.append("<b> Finishes:").append(name).append("</b>\n");
@@ -203,6 +360,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td><td width=\"20%\">");
     {
       String graphId = makeId();
       current.append("<b>Inflight: ").append(name).append("</b>\n");
@@ -217,6 +375,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td><td width=\"20%\">");
     {
       String graphId = makeId();
       current.append("<b> Latency p95:").append(name).append("</b>\n");
@@ -231,11 +390,20 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td></tr></table>");
     return null;
   }
 
   @Override
   public CallbackMonitor makeCallbackMonitor(String name) {
+    alerts.append("  - alert: FailureRate").append(name).append("\n");
+    alerts.append("    expr: rate(cb_").append(name).append("_failure_total[2m])/rate(cb_").append(name).append("_start_total[2m]) > 0.05\n");
+    alerts.append("    for: 5m\n");
+    alerts.append("    labels:\n");
+    alerts.append("      severity: page\n");
+    alerts.append("    annotations:\n");
+    alerts.append("      summary: High Failure Rate for ").append(name).append("\n");
+    current.append("<table width=\"100%\"><tr><td width=\"25%\">");
     {
       String graphId = makeId();
       current.append("<b> Failure Rate:").append(name).append("</b>\n");
@@ -250,13 +418,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
-    alerts.append("  - alert: FailureRate").append(name).append("\n");
-    alerts.append("    expr: rate(cb_").append(name).append("_failure_total[2m])/rate(cb_").append(name).append("_start_total[2m]) > 0.05\n");
-    alerts.append("    for: 5m\n");
-    alerts.append("    labels:\n");
-    alerts.append("      severity: page\n");
-    alerts.append("    annotations:\n");
-    alerts.append("      summary: High Failure Rate for ").append(name).append("\n");
+    current.append("</td><td width=\"25%\">");
     {
       String graphId = makeId();
       current.append("<b> Latency p95:").append(name).append("</b>\n");
@@ -271,6 +433,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td><td width=\"25%\">");
     {
       String graphId = makeId();
       current.append("<b> Successes:").append(name).append("</b>\n");
@@ -285,6 +448,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td><td width=\"25%\">");
     {
       String graphId = makeId();
       current.append("<b>Inflight: ").append(name).append("</b>\n");
@@ -299,6 +463,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td></tr></table>");
     return null;
   }
 
@@ -316,7 +481,7 @@ public class PrometheusDashboard implements MetricsFactory {
     current.append("  yTitle: '").append(name).append("'\n");
     current.append("});\n");
     current.append("</script>");
-     return null;
+    return null;
   }
 
   @Override
@@ -347,6 +512,14 @@ public class PrometheusDashboard implements MetricsFactory {
 
   @Override
   public ItemActionMonitor makeItemActionMonitor(String name) {
+    alerts.append("  - alert: SuccessDrop").append(name).append("\n");
+    alerts.append("    expr: rate(im_").append(name).append("_executed_total[2m])/rate(im_").append(name).append("_start_total[2m]) < 0.95\n");
+    alerts.append("    for: 5m\n");
+    alerts.append("    labels:\n");
+    alerts.append("      severity: page\n");
+    alerts.append("    annotations:\n");
+    alerts.append("      summary: Success Drop for ").append(name).append("\n");
+    current.append("<table width=\"100%\"><tr><td width=\"20%\">");
     {
       String graphId = makeId();
       current.append("<b> Execution Rate:").append(name).append("</b>\n");
@@ -361,13 +534,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
-    alerts.append("  - alert: SuccessDrop").append(name).append("\n");
-    alerts.append("    expr: rate(im_").append(name).append("_executed_total[2m])/rate(im_").append(name).append("_start_total[2m]) < 0.95\n");
-    alerts.append("    for: 5m\n");
-    alerts.append("    labels:\n");
-    alerts.append("      severity: page\n");
-    alerts.append("    annotations:\n");
-    alerts.append("      summary: Success Drop for ").append(name).append("\n");
+    current.append("</td><td width=\"20%\">");
     {
       String graphId = makeId();
       current.append("<b> Latency p95:").append(name).append("</b>\n");
@@ -382,6 +549,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td><td width=\"20%\">");
     {
       String graphId = makeId();
       current.append("<b> Rejected:").append(name).append("</b>\n");
@@ -396,7 +564,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
-
+    current.append("</td><td width=\"20%\">");
     {
       String graphId = makeId();
       current.append("<b> Timeout:").append(name).append("</b>\n");
@@ -411,6 +579,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td><td width=\"20%\">");
     {
       String graphId = makeId();
       current.append("<b>Inflight: ").append(name).append("</b>\n");
@@ -425,6 +594,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    current.append("</td></tr></table>");
     return null;
   }
 }
