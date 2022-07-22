@@ -230,8 +230,22 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SpaceCreateRequest request, SimpleResponder responder) {
     try {
-      Spaces.createSpace(nexus.dataBase, request.who.id, request.space);
-      responder.complete();
+      int spaceId = Spaces.createSpace(nexus.dataBase, request.who.id, request.space);
+      nexus.adama.create(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, "ide", request.space, null, "{}", new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          responder.complete();
+        }
+        @Override
+        public void failure(ErrorCodeException ex) {
+          try {
+            Spaces.delete(nexus.dataBase, spaceId, request.who.id);
+          } catch (Exception failure) {
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION, ex, LOGGER));
+          }
+          responder.error(ex);
+        }
+      });
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -367,6 +381,10 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder) {
     try {
+      if ("ide".equals(request.space)) {
+        responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_DOCUMENT_SPACE_RESERVED));
+        return;
+      }
       nexus.adama.create(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
         @Override
         public void success(Void value) {

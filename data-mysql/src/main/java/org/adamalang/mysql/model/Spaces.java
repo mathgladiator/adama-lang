@@ -53,6 +53,7 @@ public class Spaces {
           if (rs.getInt(1) == userId) {
             return rs.getInt(2);
           }
+          throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_ALREADY_EXISTS);
         }
       }
       String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`spaces` (`owner`, `name`, `plan`, `hash`) VALUES (?,?,'{}', '')").toString();

@@ -9,6 +9,7 @@
  */
 package org.adamalang;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DurableListStore;
@@ -31,9 +32,11 @@ import org.adamalang.mysql.Installer;
 import org.adamalang.mysql.model.Deployments;
 import org.adamalang.mysql.data.Deployment;
 import org.adamalang.mysql.model.Finder;
+import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
@@ -100,7 +103,15 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.installer.install();
     this.alive = new AtomicBoolean(true);
     MachineIdentity identity = MachineIdentity.fromFile("localhost.identity");
-
+    Spaces.createSpace(dataBase, 0, "ide");
+    {
+      ObjectNode plan = Json.newJsonObject();
+      plan.putObject("versions").put("file", "@static { create { return true; } }");
+      plan.put("default", "file");
+      plan.putArray("plan");
+      String planJson = plan.toString();
+      Deployments.deploy(dataBase, "ide", identity.ip + ":" + port, "hash", planJson);
+    }
     this.caravanPath = File.createTempFile("ADAMATEST_", "caravan");
     caravanPath.delete();
     caravanPath.mkdirs();
@@ -190,13 +201,38 @@ public class TestFrontEnd implements AutoCloseable, Email {
         ex.printStackTrace();
       }
     }, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(),  1800000L), port, 2);
-
+    backendNexus.scanForDeployments.accept("ide");
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
     ClientConfig clientConfig = new ClientConfig();
     ClientMetrics clientMetrics =  new ClientMetrics(new NoOpMetricsFactory());
     ClientRouter router = ClientRouter.FINDER(clientMetrics, finder, "test-region");
     Client client = new Client(netBase, clientConfig, clientMetrics, router, null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
+
+    CountDownLatch waitForRouting = new CountDownLatch(1);
+    do {
+      System.err.println("Waiting for routing table to be built...");
+      router.engine.get(new Key("ide", "default"), new RoutingSubscriber() {
+        @Override
+        public void onRegion(String region) {
+        }
+
+        @Override
+        public void onMachine(String machine) {
+          if (machine != null) {
+            waitForRouting.countDown();
+          } else {
+            System.err.println("found null");
+          }
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+        }
+      });
+    } while (!waitForRouting.await(250, TimeUnit.MILLISECONDS));
+
     this.attachmentRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "inflight." + System.currentTimeMillis());
     AssetUploader uploader = new AssetUploader() {
       @Override

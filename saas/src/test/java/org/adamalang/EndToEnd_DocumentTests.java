@@ -54,6 +54,11 @@ public class EndToEnd_DocumentTests {
       Assert.assertEquals("ERROR:474128", fe.execute("{\"id\":1000,\"method\":\"connection/end\",\"connection\":1000}").next());
       Iterator<String> c12 = fe.execute("{\"id\":125,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"newspace\",\"key\":\"a\"}");
       Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":3,\"zpx\":3},\"seq\":11}}", c12.next());
+      Iterator<String> c13 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/create\",\"space\":\"ide\",\"key\":\"a\",\"arg\":{}}");
+      Assert.assertEquals("ERROR:995505", c13.next());
+      Iterator<String> c14 = fe.execute("{\"id\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"ide\",\"key\":\"newspace\"}");
+      Assert.assertEquals("ERROR:184333", c14.next());
+      // LIVING_DOCUMENT_TRANSACTION_CLIENT_REJECTED provdes the document exists
     }
   }
 }
