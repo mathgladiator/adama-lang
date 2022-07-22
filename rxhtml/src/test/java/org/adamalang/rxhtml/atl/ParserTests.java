@@ -31,6 +31,13 @@ public class ParserTests {
   }
 
   @Test
+  public void href_regression() {
+    Tree tree = Parser.parse("/#project/{view:space}/manage");
+    Assert.assertEquals("[TEXT(/#project/),LOOKUP[space],TEXT(/manage)]", tree.debug());
+    Assert.assertEquals("\"/#project/\" + $X['space'] + \"/manage\"", tree.js("$X"));
+  }
+
+  @Test
   public void variable() {
     Tree tree = Parser.parse("hi {first|trim} {last}");
     Assert.assertEquals("[TEXT(hi ),TRANSFORM(LOOKUP[first],trim),TEXT( ),LOOKUP[last]]", tree.debug());
