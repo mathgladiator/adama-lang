@@ -31,11 +31,15 @@ public class ValidateSpace {
     set.add("owa");
     set.add("scripts");
     set.add("vendor");
+    set.add(".aws");
+    set.add("portal");
+    set.add("remote");
+    set.add("d");
     return set;
   }
 
   public static void validate(String space) throws ErrorCodeException {
-    if (INAPPROPRIATE_SPACE_NAMES.contains(space)) {
+    if (INAPPROPRIATE_SPACE_NAMES.contains(space) || space.startsWith(".") || space.contains("..")) {
       throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_INAPPROPRIATE_NAME);
     }
     if (space.length() == 0) {

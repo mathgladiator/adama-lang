@@ -23,6 +23,11 @@ public class WebRequestShield {
     if (x.startsWith("/owa/")) return true;
     if (x.startsWith("/scripts/")) return true;
     if (x.startsWith("/vendor/")) return true;
+
+    if (x.startsWith("/.aws/")) return true;
+    if (x.startsWith("/remote/")) return true;
+    if (x.startsWith("/portal/")) return true;
+    if (x.startsWith("/d/")) return true;
     return false;
   }
 }

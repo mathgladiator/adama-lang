@@ -75,5 +75,23 @@ public class ValidateSpaceInfoTests {
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(904364, ece.code);
     }
+    try {
+      ValidateSpace.validate("..");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(904364, ece.code);
+    }
+    try {
+      ValidateSpace.validate(".aws");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(904364, ece.code);
+    }
+    try {
+      ValidateSpace.validate("d");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(904364, ece.code);
+    }
   }
 }

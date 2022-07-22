@@ -27,5 +27,10 @@ public class WebRequestShieldTests {
     Assert.assertTrue(WebRequestShield.block("/scripts/"));
     Assert.assertTrue(WebRequestShield.block("/vendor/"));
     Assert.assertFalse(WebRequestShield.block("/my/name/is/ninja/"));
+
+    Assert.assertTrue(WebRequestShield.block("/d/"));
+    Assert.assertTrue(WebRequestShield.block("/portal/"));
+    Assert.assertTrue(WebRequestShield.block("/remote/"));
+    Assert.assertTrue(WebRequestShield.block("/.aws/"));
   }
 }
