@@ -54,4 +54,26 @@ public class ValidateSpaceInfoTests {
   public void good() throws Exception {
     ValidateSpace.validate("simple");
   }
+
+  @Test
+  public void inappropriateNamesDueToBadActors() {
+    try {
+      ValidateSpace.validate("api");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(904364, ece.code);
+    }
+    try {
+      ValidateSpace.validate("CSS");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(904364, ece.code);
+    }
+    try {
+      ValidateSpace.validate(".git");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(904364, ece.code);
+    }
+  }
 }

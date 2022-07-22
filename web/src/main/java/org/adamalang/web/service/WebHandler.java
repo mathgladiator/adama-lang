@@ -21,6 +21,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
+import org.adamalang.web.firewall.WebRequestShield;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -167,6 +168,13 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
+    if (WebRequestShield.block(req.uri())) {
+      byte[] content = new byte[0];
+      final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.GONE, Unpooled.wrappedBuffer(content));
+      HttpUtil.setContentLength(res, content.length);
+      sendWithKeepAlive(webConfig, ctx, req, res);
+      return;
+    }
     Callback<HttpHandler.HttpResult> callback = new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {

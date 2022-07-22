@@ -13,8 +13,31 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Validators;
 
+import java.util.HashSet;
+
 public class ValidateSpace {
+  private static HashSet<String> INAPPROPRIATE_SPACE_NAMES = buildInappropriateSpaceNames();
+
+  private static HashSet<String> buildInappropriateSpaceNames() {
+    HashSet<String> set = new HashSet<>();
+    set.add(".git");
+    set.add("CSS");
+    set.add("Portal");
+    set.add("actuator");
+    set.add("api");
+    set.add("cgi-bin");
+    set.add("docs");
+    set.add("ecp");
+    set.add("owa");
+    set.add("scripts");
+    set.add("vendor");
+    return set;
+  }
+
   public static void validate(String space) throws ErrorCodeException {
+    if (INAPPROPRIATE_SPACE_NAMES.contains(space)) {
+      throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_INAPPROPRIATE_NAME);
+    }
     if (space.length() == 0) {
       throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_EMPTY);
     }
