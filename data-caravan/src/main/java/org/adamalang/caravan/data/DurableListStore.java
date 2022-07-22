@@ -18,13 +18,7 @@ import org.adamalang.caravan.entries.OrganizationSnapshot;
 import org.adamalang.caravan.entries.Trim;
 import org.adamalang.caravan.events.EventCodec;
 import org.adamalang.caravan.events.RestoreWalker;
-import org.adamalang.caravan.index.AnnotatedRegion;
-import org.adamalang.caravan.index.Heap;
-import org.adamalang.caravan.index.Index;
-import org.adamalang.caravan.index.Region;
-import org.adamalang.caravan.index.heaps.IndexedHeap;
-import org.adamalang.caravan.index.heaps.LimitHeap;
-import org.adamalang.caravan.index.heaps.SequenceHeap;
+import org.adamalang.caravan.index.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +31,7 @@ import java.util.Iterator;
 public class DurableListStore {
   private static final Logger LOGGER = LoggerFactory.getLogger(DurableListStore.class);
   // the data structures to manage the giant linear space
-  private final DurableListStoreMetrics metrics;
+  private final DiskMetrics metrics;
   private final Index index;
   private final Heap heap;
 
@@ -70,7 +64,7 @@ public class DurableListStore {
    * @param maxLogSize - how big can the log get until we flush and cut the log
    * @throws IOException
    */
-  public DurableListStore(DurableListStoreMetrics metrics, File storeFile, File walRoot, long size, int flushCutOffBytes, long maxLogSize) throws IOException {
+  public DurableListStore(DiskMetrics metrics, File storeFile, File walRoot, long size, int flushCutOffBytes, long maxLogSize) throws IOException {
     this.metrics = metrics;
     this.index = new Index();
     DurableListStoreSizing sizing = new DurableListStoreSizing(size, storeFile);
@@ -97,6 +91,15 @@ public class DurableListStore {
     this.maxLogSize = maxLogSize;
     this.bytesWrittenToLog = 0;
     openLogForWriting();
+  }
+
+  /** build a report of the free disk space available; side-effect: emit metrics */
+  public void report() {
+    Report report = new Report();
+    this.heap.report(report);
+    metrics.total_storage_allocated.set((int) (report.getTotalBytes() / 1000000L));
+    metrics.free_storage_available.set((int) (report.getFreeBytesAvailable() / 1000000L));
+    metrics.alarm_storage_over_80_percent.set(report.alarm(0.2) ? 1 : 0);
   }
 
   /** internal: load and commit the data from the write-ahead log */

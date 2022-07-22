@@ -42,6 +42,17 @@ public class CaravanDataService implements ArchivingDataService {
     this.store = store;
     this.executor = executor;
     this.cache = new HashMap();
+    scheduleReport(0);
+  }
+
+  private void scheduleReport(int offset) {
+    executor.schedule(new NamedRunnable("disk-report") {
+      @Override
+      public void execute() throws Exception {
+        store.report();
+        scheduleReport((int) (30000 + 60000 * Math.random()));
+      }
+    }, offset);
   }
 
   @Override

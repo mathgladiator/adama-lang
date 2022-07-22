@@ -11,7 +11,7 @@ package org.adamalang.caravan;
 
 import org.adamalang.caravan.contracts.KeyToIdService;
 import org.adamalang.caravan.data.DurableListStore;
-import org.adamalang.caravan.data.DurableListStoreMetrics;
+import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.mocks.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.SimpleExecutor;
@@ -54,7 +54,7 @@ public class CaravanDataServiceTests {
       this.root = new File(File.createTempFile("ADAMATEST_", "yyy").getParentFile(), "base-" + System.currentTimeMillis());
       root.delete();
       root.mkdirs();
-      this.store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(root, "STORE"), root, 1024 * 1024, 64 * 1024, 1024 * 1024 * 32);
+      this.store = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), new File(root, "STORE"), root, 1024 * 1024, 64 * 1024, 1024 * 1024 * 32);
       this.keyToIdService = new KeyToIdService() {
         @Override
         public void translate(Key key, Callback<Long> callback) {

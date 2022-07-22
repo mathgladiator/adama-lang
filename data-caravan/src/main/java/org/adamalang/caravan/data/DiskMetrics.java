@@ -9,12 +9,19 @@
  */
 package org.adamalang.caravan.data;
 
+import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 
-public class DurableListStoreMetrics {
+public class DiskMetrics {
   public final Runnable flush;
+  public final Inflight total_storage_allocated;
+  public final Inflight free_storage_available;
+  public final Inflight alarm_storage_over_80_percent;
 
-  public DurableListStoreMetrics(MetricsFactory factory) {
-    this.flush = factory.counter("dls_flush");
+  public DiskMetrics(MetricsFactory factory) {
+    this.flush = factory.counter("disk_flush");
+    this.total_storage_allocated = factory.inflight("disk_total_storage_allocated_mb");
+    this.free_storage_available = factory.inflight("disk_free_storage_available_mb");
+    this.alarm_storage_over_80_percent = factory.inflight("disk_alarm_storage_over_80_percent");
   }
 }

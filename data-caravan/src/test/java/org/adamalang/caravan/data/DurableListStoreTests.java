@@ -31,7 +31,7 @@ public class DurableListStoreTests {
     testRoot.delete();
     testRoot.mkdirs();
     try {
-      DurableListStore store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage"), testRoot, 64 * 1024,  64, 1024);
+      DurableListStore store = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage"), testRoot, 64 * 1024,  64, 1024);
       AtomicInteger count = new AtomicInteger(0);
       Runnable event = () -> { count.incrementAndGet(); };
       Assert.assertFalse(store.exists(42));
@@ -151,7 +151,7 @@ public class DurableListStoreTests {
     testRoot.delete();
     testRoot.mkdirs();
     try {
-      DurableListStore store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage"), testRoot, 64 * 1024, 64, 1024);
+      DurableListStore store = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage"), testRoot, 64 * 1024, 64, 1024);
       AtomicInteger count = new AtomicInteger(0);
       Runnable event = () -> {
         count.incrementAndGet();
@@ -214,7 +214,7 @@ public class DurableListStoreTests {
     try {
       // public DurableListStore(File storeFile, File walRoot, long size, int initialWriteBufferSize, int flushCutOffBytes, long maxLogSize) throws IOException {
       {
-        DurableListStore store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage"), testRoot, 64 * 1024, 1024 * 1024, 32 * 1024 * 1024);
+        DurableListStore store = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage"), testRoot, 64 * 1024, 1024 * 1024, 32 * 1024 * 1024);
         AtomicInteger count = new AtomicInteger(0);
         Runnable event = () -> { count.incrementAndGet(); };
         store.append(42, "XYZ".getBytes(StandardCharsets.UTF_8), 10, 1024, event);
@@ -232,7 +232,7 @@ public class DurableListStoreTests {
         store.shutdown();
       }
       {
-        DurableListStore store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage-two"), testRoot, 64 * 1024, 1024 * 1024, 32 * 1024 * 1024);
+        DurableListStore store = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage-two"), testRoot, 64 * 1024, 1024 * 1024, 32 * 1024 * 1024);
         AtomicInteger count = new AtomicInteger(0);
         Runnable event = () -> { count.incrementAndGet(); };
         {
@@ -255,7 +255,7 @@ public class DurableListStoreTests {
         store.shutdown();
       }
       {
-        DurableListStore store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage"), testRoot, 64 * 1024, 1024 * 1024, 32 * 1024 * 1024);
+        DurableListStore store = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage"), testRoot, 64 * 1024, 1024 * 1024, 32 * 1024 * 1024);
         {
           MockByteArrayStream stream = new MockByteArrayStream();
           store.read(42, stream);

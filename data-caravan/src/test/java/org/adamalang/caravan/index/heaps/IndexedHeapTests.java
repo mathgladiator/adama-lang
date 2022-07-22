@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.caravan.index.Heap;
 import org.adamalang.caravan.index.Region;
+import org.adamalang.caravan.index.Report;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -50,6 +51,12 @@ public class IndexedHeapTests {
     heap.free(a2);
     assetEqualsAfterSnapshot("[7,83)[97,1024)", heap);
     Region r1 = heap.ask(5);
+    {
+      Report report = new Report();
+      heap.report(report);
+      Assert.assertEquals(1024, report.getTotalBytes());
+      Assert.assertEquals(998, report.getFreeBytesAvailable());
+    }
     assetEqualsAfterSnapshot("[12,83)[97,1024)", heap);
     Region r2 = heap.ask(50);
     assetEqualsAfterSnapshot("[62,83)[97,1024)", heap);
@@ -57,6 +64,12 @@ public class IndexedHeapTests {
     assetEqualsAfterSnapshot("[7,12)[62,83)[97,1024)", heap);
     Region az = heap.ask(15);
     assetEqualsAfterSnapshot("[7,12)[77,83)[97,1024)", heap);
+    {
+      Report report = new Report();
+      heap.report(report);
+      Assert.assertEquals(1024, report.getTotalBytes());
+      Assert.assertEquals(938, report.getFreeBytesAvailable());
+    }
     heap.free(a1);
     assetEqualsAfterSnapshot("[0,12)[77,83)[97,1024)", heap);
     heap.free(a3);
@@ -117,5 +130,11 @@ public class IndexedHeapTests {
     assetEqualsAfterSnapshot("[0,1024)", heap);
     Assert.assertNull(heap.ask(2048));
     assetEqualsAfterSnapshot("[0,1024)", heap);
+    {
+      Report report = new Report();
+      heap.report(report);
+      Assert.assertEquals(1024, report.getTotalBytes());
+      Assert.assertEquals(1024, report.getFreeBytesAvailable());
+    }
   }
 }

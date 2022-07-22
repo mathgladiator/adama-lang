@@ -12,6 +12,7 @@ package org.adamalang.caravan.index.heaps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.caravan.index.Region;
+import org.adamalang.caravan.index.Report;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -52,6 +53,12 @@ public class LimitHeapTests {
     heap.free(r1);
     assetEqualsAfterSnapshot("[7,12)[62,83)[97,1024)", heap);
     Region az = heap.ask(15);
+    {
+      Report report = new Report();
+      heap.report(report);
+      Assert.assertEquals(1024, report.getTotalBytes());
+      Assert.assertEquals(938, report.getFreeBytesAvailable());
+    }
     assetEqualsAfterSnapshot("[7,12)[77,83)[97,1024)", heap);
     heap.free(a1);
     assetEqualsAfterSnapshot("[0,12)[77,83)[97,1024)", heap);

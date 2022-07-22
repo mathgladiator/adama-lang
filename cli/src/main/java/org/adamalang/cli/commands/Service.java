@@ -12,7 +12,7 @@ package org.adamalang.cli.commands;
 import org.adamalang.api.ApiMetrics;
 import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.data.DurableListStore;
-import org.adamalang.caravan.data.DurableListStoreMetrics;
+import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
@@ -190,7 +190,7 @@ public class Service {
       walRoot.mkdir();
       dataRoot.mkdir();
       File storePath = new File(dataRoot, "store");
-      DurableListStore store = new DurableListStore(new DurableListStoreMetrics(prometheusMetricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
+      DurableListStore store = new DurableListStore(new DiskMetrics(prometheusMetricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
       finder = new Finder(dataBase, region);
       CaravanDataService caravanDataService = new CaravanDataService(s3, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
       Base managedBase = new Base(finder, caravanDataService, region, machine, managedExecutor, 2 * 60 * 1000);
@@ -536,7 +536,7 @@ public class Service {
     metricsFactory.page("database", "Database");
     new DataBaseMetrics(metricsFactory);
     metricsFactory.page("disk", "Disk");
-    new DurableListStoreMetrics(metricsFactory);
+    new DiskMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));
   }
 }

@@ -12,6 +12,7 @@ package org.adamalang.caravan.index.heaps;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.caravan.index.Heap;
 import org.adamalang.caravan.index.Region;
+import org.adamalang.caravan.index.Report;
 
 /** a passthrough heap which ensures everything allocated from this heap is under a specific size */
 public class LimitHeap implements Heap {
@@ -22,6 +23,11 @@ public class LimitHeap implements Heap {
   public LimitHeap(Heap parent, int sizeLimit) {
     this.parent = parent;
     this.sizeLimit = sizeLimit;
+  }
+
+  @Override
+  public void report(Report report) {
+    parent.report(report);
   }
 
   @Override

@@ -12,7 +12,7 @@ package org.adamalang;
 import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DurableListStore;
-import org.adamalang.caravan.data.DurableListStoreMetrics;
+import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
@@ -113,7 +113,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     dataRoot.mkdir();
     File cloudPath = new File(caravanPath, "archive");
     File storePath = new File(dataRoot, "store");
-    this.store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), storePath, walRoot, 64 * 1024 * 1024, 64 * 1024, 1024 * 1024);
+    this.store = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), storePath, walRoot, 64 * 1024 * 1024, 64 * 1024, 1024 * 1024);
     Finder finder = new Finder(dataBase, "test-region");
     Cloud cloud = new Cloud() {
       @Override

@@ -12,6 +12,7 @@ package org.adamalang.caravan.index.heaps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.caravan.index.Region;
+import org.adamalang.caravan.index.Report;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,6 +47,12 @@ public class SequenceHeapTests {
     assetEqualsAfterSnapshot("Seq{[[9,128), [0,128), [76,1024)]}", heap);
     Region a4 = heap.ask(12);
     assetEqualsAfterSnapshot("Seq{[[9,128), [12,128), [76,1024)]}", heap);
+    {
+      Report report = new Report();
+      heap.report(report);
+      Assert.assertEquals(1280, report.getTotalBytes());
+      Assert.assertEquals(1183, report.getFreeBytesAvailable());
+    }
     heap.free(a2);
     assetEqualsAfterSnapshot("Seq{[[9,128), [12,128), [0,1024)]}", heap);
     Region r1 = heap.ask(5);
@@ -116,5 +123,11 @@ public class SequenceHeapTests {
     assetEqualsAfterSnapshot("Seq{[[0,128), [0,128), [0,1024)]}", heap);
     Assert.assertNull(heap.ask(2048));
     assetEqualsAfterSnapshot("Seq{[[0,128), [0,128), [0,1024)]}", heap);
+    {
+      Report report = new Report();
+      heap.report(report);
+      Assert.assertEquals(1280, report.getTotalBytes());
+      Assert.assertEquals(1280, report.getFreeBytesAvailable());
+    }
   }
 }

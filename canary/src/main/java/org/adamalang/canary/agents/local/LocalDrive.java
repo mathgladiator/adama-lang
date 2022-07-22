@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DurableListStore;
-import org.adamalang.caravan.data.DurableListStoreMetrics;
+import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -53,7 +53,7 @@ public class LocalDrive {
       SimpleExecutor executor = SimpleExecutor.create("wal");
       File storageDirectory = new File("./canary_caravan");
       storageDirectory.mkdirs();
-      DurableListStore dls = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(storageDirectory, "STORE"), storageDirectory, 1800 * 1024 * 1024, 32768, 1024 * 1024 * 1024);
+      DurableListStore dls = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), new File(storageDirectory, "STORE"), storageDirectory, 1800 * 1024 * 1024, 32768, 1024 * 1024 * 1024);
       FinderService finder = new FinderService() {
         @Override
         public void find(Key key, Callback<Result> callback) {

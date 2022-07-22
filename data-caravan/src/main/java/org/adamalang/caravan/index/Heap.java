@@ -30,4 +30,7 @@ public interface Heap {
 
   /** load the heap state from the given byte buffer */
   void load(ByteBuf buf);
+
+  /** report on the heap */
+  void report(Report report);
 }

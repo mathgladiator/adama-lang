@@ -12,6 +12,7 @@ package org.adamalang.caravan.index.heaps;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.caravan.index.Heap;
 import org.adamalang.caravan.index.Region;
+import org.adamalang.caravan.index.Report;
 
 import java.util.*;
 
@@ -21,6 +22,14 @@ public class IndexedHeap implements Heap {
   private final HashMap<Long, FreeSpace> left;
   private final HashMap<Long, FreeSpace> right;
   private final TreeMap<Long, TreeMap<Long, FreeSpace>> sized;
+
+  @Override
+  public void report(Report report) {
+    report.addTotal(maximumSize);
+    for (FreeSpace fs : left.values()) {
+      report.addFree(fs.size);
+    }
+  }
 
   /** construct the heap as empty with the given maximum size available */
   public IndexedHeap(long maximumSize) {

@@ -12,6 +12,7 @@ package org.adamalang.caravan.index.heaps;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.caravan.index.Heap;
 import org.adamalang.caravan.index.Region;
+import org.adamalang.caravan.index.Report;
 
 import java.util.Arrays;
 
@@ -28,6 +29,13 @@ public class SequenceHeap implements Heap {
         _max += heap.max();
       }
       this.max = _max;
+    }
+  }
+
+  @Override
+  public void report(Report report) {
+    for (Heap heap : heaps) {
+      heap.report(report);
     }
   }
 
