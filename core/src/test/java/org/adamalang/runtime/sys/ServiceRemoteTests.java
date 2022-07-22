@@ -40,20 +40,23 @@ public class ServiceRemoteTests {
       }
     };
   }
+
   @Test
   public void service_failure() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr1", (space, properties) -> {
-      return new SimpleService("sqr1", NtClient.NO_ONE, true) {
-        @Override
-        public void request(String method, String request, Callback<String> callback) {
-          actions.add(() -> {
-            callback.failure(new ErrorCodeException(403, "Fire-bidden"));
-          });
-        }
-      };
-    });
+    synchronized (ServiceRegistry.REGISTRY) {
+      ServiceRegistry.REGISTRY.put("sqr1", (space, properties) -> {
+        return new SimpleService("sqr1", NtClient.NO_ONE, true) {
+          @Override
+          public void request(String method, String request, Callback<String> callback) {
+            actions.add(() -> {
+              callback.failure(new ErrorCodeException(403, "Fire-bidden"));
+            });
+          }
+        };
+      });
+    }
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
     Deliverer lazy = BIND_LAZY(latent);
 
@@ -107,30 +110,32 @@ public class ServiceRemoteTests {
   public void service_invoke() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr2", (space, properties) -> {
-      return new SimpleService("sqr2", NtClient.NO_ONE, true) {
-        @Override
-        public void request(String method, String request, Callback<String> callback) {
-          int _x = 1;
-          JsonStreamReader reader = new JsonStreamReader(request);
-          if (reader.startObject()) {
-            while (reader.notEndOfObject()) {
-              switch (reader.fieldName()) {
-                case "x":
-                  _x = reader.readInteger();
-                  break;
-                default:
-                  reader.skipValue();
+    synchronized (ServiceRegistry.REGISTRY) {
+      ServiceRegistry.REGISTRY.put("sqr2", (space, properties) -> {
+        return new SimpleService("sqr2", NtClient.NO_ONE, true) {
+          @Override
+          public void request(String method, String request, Callback<String> callback) {
+            int _x = 1;
+            JsonStreamReader reader = new JsonStreamReader(request);
+            if (reader.startObject()) {
+              while (reader.notEndOfObject()) {
+                switch (reader.fieldName()) {
+                  case "x":
+                    _x = reader.readInteger();
+                    break;
+                  default:
+                    reader.skipValue();
+                }
               }
             }
+            int x = _x;
+            actions.add(() -> {
+              callback.success("{\"x\":" + (x * x) + "}");
+            });
           }
-          int x = _x;
-          actions.add(() -> {
-            callback.success("{\"x\":" + (x * x)+"}");
-          });
-        }
-      };
-    });
+        };
+      });
+    }
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
     Deliverer lazy = BIND_LAZY(latent);
 
@@ -184,30 +189,33 @@ public class ServiceRemoteTests {
   public void service_invoke_message_handler() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr3", (space, properties) -> {
-      return new SimpleService("sqr3", NtClient.NO_ONE, false) {
-        @Override
-        public void request(String method, String request, Callback<String> callback) {
-          int _x = 1;
-          JsonStreamReader reader = new JsonStreamReader(request);
-          if (reader.startObject()) {
-            while (reader.notEndOfObject()) {
-              switch (reader.fieldName()) {
-                case "x":
-                  _x = reader.readInteger();
-                  break;
-                default:
-                  reader.skipValue();
+    synchronized (ServiceRegistry.REGISTRY) {
+      ServiceRegistry.REGISTRY.put("sqr3", (space, properties) -> {
+        return new SimpleService("sqr3", NtClient.NO_ONE, false) {
+          @Override
+          public void request(String method, String request, Callback<String> callback) {
+            int _x = 1;
+            JsonStreamReader reader = new JsonStreamReader(request);
+            if (reader.startObject()) {
+              while (reader.notEndOfObject()) {
+                switch (reader.fieldName()) {
+                  case "x":
+                    _x = reader.readInteger();
+                    break;
+                  default:
+                    reader.skipValue();
+                }
               }
             }
+            int x = _x;
+            actions.add(() -> {
+              callback.success("{\"x\":" + (x * x) + "}");
+            });
           }
-          int x = _x;
-          actions.add(() -> {
-            callback.success("{\"x\":" + (x * x)+"}");
-          });
-        }
-      };
-    });
+        };
+      });
+    }
+
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
     Deliverer lazy = BIND_LAZY(latent);
 
@@ -265,30 +273,32 @@ public class ServiceRemoteTests {
   public void service_invoke_state_machine() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr4", (space, properties) -> {
-      return new SimpleService("sqr4", NtClient.NO_ONE, false) {
-        @Override
-        public void request(String method, String request, Callback<String> callback) {
-          int _x = 1;
-          JsonStreamReader reader = new JsonStreamReader(request);
-          if (reader.startObject()) {
-            while (reader.notEndOfObject()) {
-              switch (reader.fieldName()) {
-                case "x":
-                  _x = reader.readInteger();
-                  break;
-                default:
-                  reader.skipValue();
+    synchronized (ServiceRegistry.REGISTRY) {
+      ServiceRegistry.REGISTRY.put("sqr4", (space, properties) -> {
+        return new SimpleService("sqr4", NtClient.NO_ONE, false) {
+          @Override
+          public void request(String method, String request, Callback<String> callback) {
+            int _x = 1;
+            JsonStreamReader reader = new JsonStreamReader(request);
+            if (reader.startObject()) {
+              while (reader.notEndOfObject()) {
+                switch (reader.fieldName()) {
+                  case "x":
+                    _x = reader.readInteger();
+                    break;
+                  default:
+                    reader.skipValue();
+                }
               }
             }
+            int x = _x;
+            actions.add(() -> {
+              callback.success("{\"x\":" + (x * x) + "}");
+            });
           }
-          int x = _x;
-          actions.add(() -> {
-            callback.success("{\"x\":" + (x * x)+"}");
-          });
-        }
-      };
-    });
+        };
+      });
+    }
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
     Deliverer lazy = BIND_LAZY(latent);
 
@@ -339,30 +349,33 @@ public class ServiceRemoteTests {
   public void service_invoke_state_machine_func() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr5", (space, properties) -> {
-      return new SimpleService("sqr5", NtClient.NO_ONE, false) {
-        @Override
-        public void request(String method, String request, Callback<String> callback) {
-          int _x = 1;
-          JsonStreamReader reader = new JsonStreamReader(request);
-          if (reader.startObject()) {
-            while (reader.notEndOfObject()) {
-              switch (reader.fieldName()) {
-                case "x":
-                  _x = reader.readInteger();
-                  break;
-                default:
-                  reader.skipValue();
+    synchronized (ServiceRegistry.REGISTRY) {
+      ServiceRegistry.REGISTRY.put("sqr5", (space, properties) -> {
+        return new SimpleService("sqr5", NtClient.NO_ONE, false) {
+          @Override
+          public void request(String method, String request, Callback<String> callback) {
+            int _x = 1;
+            JsonStreamReader reader = new JsonStreamReader(request);
+            if (reader.startObject()) {
+              while (reader.notEndOfObject()) {
+                switch (reader.fieldName()) {
+                  case "x":
+                    _x = reader.readInteger();
+                    break;
+                  default:
+                    reader.skipValue();
+                }
               }
             }
+            int x = _x;
+            actions.add(() -> {
+              callback.success("{\"x\":" + (x * x) + "}");
+            });
           }
-          int x = _x;
-          actions.add(() -> {
-            callback.success("{\"x\":" + (x * x)+"}");
-          });
-        }
-      };
-    });
+        };
+      });
+    }
+
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
     Deliverer lazy = BIND_LAZY(latent);
 
@@ -416,30 +429,32 @@ public class ServiceRemoteTests {
   public void service_invoke_state_machine_method() throws Exception {
     ArrayList<Runnable> actions = new ArrayList<>();
 
-    ServiceRegistry.REGISTRY.put("sqr6", (space, properties) -> {
-      return new SimpleService("sqr6", NtClient.NO_ONE, true) {
-        @Override
-        public void request(String method, String request, Callback<String> callback) {
-          int _x = 1;
-          JsonStreamReader reader = new JsonStreamReader(request);
-          if (reader.startObject()) {
-            while (reader.notEndOfObject()) {
-              switch (reader.fieldName()) {
-                case "x":
-                  _x = reader.readInteger();
-                  break;
-                default:
-                  reader.skipValue();
+    synchronized (ServiceRegistry.REGISTRY) {
+      ServiceRegistry.REGISTRY.put("sqr6", (space, properties) -> {
+        return new SimpleService("sqr6", NtClient.NO_ONE, true) {
+          @Override
+          public void request(String method, String request, Callback<String> callback) {
+            int _x = 1;
+            JsonStreamReader reader = new JsonStreamReader(request);
+            if (reader.startObject()) {
+              while (reader.notEndOfObject()) {
+                switch (reader.fieldName()) {
+                  case "x":
+                    _x = reader.readInteger();
+                    break;
+                  default:
+                    reader.skipValue();
+                }
               }
             }
+            int x = _x;
+            actions.add(() -> {
+              callback.success("{\"x\":" + (x * x) + "}");
+            });
           }
-          int x = _x;
-          actions.add(() -> {
-            callback.success("{\"x\":" + (x * x)+"}");
-          });
-        }
-      };
-    });
+        };
+      });
+    }
     AtomicReference<Deliverer> latent = new AtomicReference<>(null);
     Deliverer lazy = BIND_LAZY(latent);
 
