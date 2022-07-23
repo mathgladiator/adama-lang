@@ -82,7 +82,7 @@ public class ParserTests {
   public void condition_eq() {
     Tree tree = Parser.parse("hi [b=xyz]A[#b=xyz]B[/b=xyz] there");
     Assert.assertEquals("[TEXT(hi ),(EQUALS[LOOKUP[b],'xyz']) ? (TEXT(A)) : (TEXT(B)),TEXT( there)]", tree.debug());
-    Assert.assertEquals("\"hi \" + ((($X['b']='xyz')) ? (\"A\") : (\"B\")) + \" there\"", tree.js("$X"));
+    Assert.assertEquals("\"hi \" + ((($X['b']=='xyz')) ? (\"A\") : (\"B\")) + \" there\"", tree.js("$X"));
     Map<String, String> vars = tree.variables();
     Assert.assertEquals(1, vars.size());
     Assert.assertTrue(vars.containsKey("b"));
