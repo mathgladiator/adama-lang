@@ -285,7 +285,9 @@ public class Attributes {
       String customCommandName = action.substring(7).trim();
       env.writer.tab().append("$.aCC(").append(eVar) //
           .append(",").append(env.stateVar) //
-          .append(",'").append(customCommandName).append("');").newline();
+          .append(",'").append(customCommandName) //
+          .append("','").append(env.val("rx:status", "custom_status")) //
+          .append("');").newline();
     } else if ("adama:sign-up".equalsIgnoreCase(action)) { // sign up as an Adama user
       check_action_sign_up();
       env.writer.tab().append("$.aSU(").append(eVar) //
