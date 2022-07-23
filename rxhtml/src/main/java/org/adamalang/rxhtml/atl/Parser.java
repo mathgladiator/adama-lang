@@ -13,6 +13,7 @@ import org.adamalang.rxhtml.atl.tree.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 public class Parser {
 
@@ -52,7 +53,14 @@ public class Parser {
         route(active, it, token);
       }
     }
-    Tree guard_lookup = wrapTransforms(new Lookup(name.base), name);
+    Tree lookup;
+    if (name.base.contains("=")) {
+      String[] parts = name.base.split(Pattern.quote("="));
+      lookup = new Equals(new Lookup(parts[0].trim()), parts[1].trim());
+    } else {
+      lookup = new Lookup(name.base);
+    }
+    Tree guard_lookup = wrapTransforms(lookup, name);
     return new Condition(name.mod == TokenStream.Modifier.Not ? new Negate(guard_lookup) : guard_lookup, of(childrenTrue), of(childrenFalse));
   }
 
