@@ -52,7 +52,7 @@ public class ParserTests {
   public void condition_trailing() {
     Tree tree = Parser.parse("hi [b]active");
     Assert.assertEquals("[TEXT(hi ),(LOOKUP[b]) ? (TEXT(active)) : (EMPTY)]", tree.debug());
-    Assert.assertEquals("\"hi \" + ($X['b']) ? (\"active\") : (\"\")", tree.js("$X"));
+    Assert.assertEquals("\"hi \" + (($X['b']) ? (\"active\") : (\"\"))", tree.js("$X"));
     Map<String, String> vars = tree.variables();
     Assert.assertEquals(1, vars.size());
     Assert.assertTrue(vars.containsKey("b"));
@@ -62,7 +62,7 @@ public class ParserTests {
   public void condition_trailing_negate() {
     Tree tree = Parser.parse("hi [!b]inactive");
     Assert.assertEquals("[TEXT(hi ),(!(LOOKUP[b])) ? (TEXT(inactive)) : (EMPTY)]", tree.debug());
-    Assert.assertEquals("\"hi \" + (!($X['b'])) ? (\"inactive\") : (\"\")", tree.js("$X"));
+    Assert.assertEquals("\"hi \" + ((!($X['b'])) ? (\"inactive\") : (\"\"))", tree.js("$X"));
     Map<String, String> vars = tree.variables();
     Assert.assertEquals(1, vars.size());
     Assert.assertTrue(vars.containsKey("b"));
@@ -72,7 +72,7 @@ public class ParserTests {
   public void condition() {
     Tree tree = Parser.parse("hi [b]A[#b]B[/b] there");
     Assert.assertEquals("[TEXT(hi ),(LOOKUP[b]) ? (TEXT(A)) : (TEXT(B)),TEXT( there)]", tree.debug());
-    Assert.assertEquals("\"hi \" + ($X['b']) ? (\"A\") : (\"B\") + \" there\"", tree.js("$X"));
+    Assert.assertEquals("\"hi \" + (($X['b']) ? (\"A\") : (\"B\")) + \" there\"", tree.js("$X"));
     Map<String, String> vars = tree.variables();
     Assert.assertEquals(1, vars.size());
     Assert.assertTrue(vars.containsKey("b"));

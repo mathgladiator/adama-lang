@@ -40,6 +40,6 @@ public class Condition implements Tree {
 
   @Override
   public String js(String env) {
-    return "(" + guard.js(env) + ") ? (" + branchTrue.js(env) + ") : (" + branchFalse.js(env) + ")";
+    return "((" + guard.js(env) + ") ? (" + branchTrue.js(env) + ") : (" + branchFalse.js(env) + "))";
   }
 }
