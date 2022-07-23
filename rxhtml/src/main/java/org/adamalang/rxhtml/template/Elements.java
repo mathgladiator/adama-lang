@@ -86,4 +86,20 @@ public class Elements {
     }
     env.pool.give(inputVar);
   }
+
+  public static void select(Environment env) {
+    String inputVar = Base.write(env, true);
+    if (env.element.hasAttr("rx:sync")) {
+      String path = env.element.attr("rx:sync");
+      boolean tuned = path.startsWith("view:") | path.startsWith("data:");
+      double ms = 100;
+      try {
+        ms = Double.parseDouble(env.element.attr("rx:debounce"));
+      } catch (NumberFormatException nfe) {
+      }
+      StatePath _path = StatePath.resolve(tuned ? path : ("view:" + path), env.stateVar);
+      env.writer.tab().append("$.SY(").append(inputVar).append(",").append(_path.command).append(",'").append(_path.name).append("',").append("" + ms).append(");").newline();
+    }
+    env.pool.give(inputVar);
+  }
 }
