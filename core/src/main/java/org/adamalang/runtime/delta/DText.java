@@ -16,21 +16,21 @@ import org.adamalang.runtime.text.SeqString;
 
 /** a document synchronized by deltas using CodeMirror's format */
 public class DText implements DeltaNode {
-  private boolean init;
+  private boolean initialized;
   private int seq;
   private int gen;
 
   public DText() {
-    init = false;
+    initialized = false;
     seq = 0;
     gen = 0;
   }
 
   /** the string is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
-    if (init) {
+    if (initialized) {
       writer.writeNull();
-      init = false;
+      initialized = false;
       seq = 0;
       gen = 0;
     }
@@ -38,7 +38,7 @@ public class DText implements DeltaNode {
 
   @Override
   public void clear() {
-    init = false;
+    initialized = false;
     seq = 0;
     gen = 0;
   }
@@ -51,12 +51,12 @@ public class DText implements DeltaNode {
 
   public void show(final RxText value, final PrivateLazyDeltaWriter writer) {
     if (value.current().gen != gen) {
-      this.init = false;
+      this.initialized = false;
       this.seq = 0;
       this.gen = value.current().gen;
     }
     PrivateLazyDeltaWriter obj = writer.planObject();
-    if (init) {
+    if (initialized) {
       int start = seq;
       String change = null;
       while ((change = value.current().changes.get(seq)) != null) {
@@ -71,8 +71,9 @@ public class DText implements DeltaNode {
         obj.planField("$s").writeInt(seq);
       }
     } else {
-      init = true;
+      initialized = true;
       SeqString val = value.current().get();
+      obj.planField("$g").writeInt(gen);;
       obj.planField("$i").writeString(val.value);
       obj.planField("$s").writeInt(val.seq);
       seq = val.seq;
