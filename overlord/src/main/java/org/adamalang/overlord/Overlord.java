@@ -57,8 +57,9 @@ public class Overlord {
     // build a full mesh from overlord to all clients
     String adamaRole = "adama";
     ClientConfig clientConfig = new ClientConfig();
+    ClientMetrics clientMetrics = new ClientMetrics(metricsFactory);
     // TODO: need new client picker, or not... hrmm
-    Client client = new Client(netBase, clientConfig, new ClientMetrics(metricsFactory), ClientRouter.REACTIVE(new ClientMetrics(metricsFactory)), (target, cpu, memory) -> {
+    Client client = new Client(netBase, clientConfig, clientMetrics, ClientRouter.REACTIVE(clientMetrics), (target, cpu, memory) -> {
       heatTable.onSample(target, adamaRole, cpu, memory);
     });
     engine.subscribe(adamaRole, client.getTargetPublisher());
