@@ -35,11 +35,15 @@ public class ValidateSpace {
     set.add("portal");
     set.add("remote");
     set.add("d");
+    set.add("s");
+    set.add("telescope");
+    set.add("idx_config");
+    set.add("console");
     return set;
   }
 
   public static void validate(String space) throws ErrorCodeException {
-    if (INAPPROPRIATE_SPACE_NAMES.contains(space) || space.startsWith(".") || space.contains("..")) {
+    if (INAPPROPRIATE_SPACE_NAMES.contains(space) || space.startsWith(".") || space.contains("..") || space.length() < 3) {
       throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_INAPPROPRIATE_NAME);
     }
     if (space.length() == 0) {

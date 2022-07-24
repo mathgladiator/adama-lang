@@ -28,6 +28,10 @@ public class WebRequestShield {
     if (x.startsWith("/remote/")) return true;
     if (x.startsWith("/portal/")) return true;
     if (x.startsWith("/d/")) return true;
+    if (x.startsWith("/s/")) return true;
+    if (x.startsWith("/telescope/")) return true;
+    if (x.startsWith("/idx_config/")) return true;
+    if (x.startsWith("/console/")) return true;
     return false;
   }
 }
