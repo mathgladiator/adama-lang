@@ -41,11 +41,11 @@ public class ValidateSpace {
   }
 
   public static void validate(String space) throws ErrorCodeException {
-    if (INAPPROPRIATE_SPACE_NAMES.contains(space) || space.startsWith(".") || space.contains("..") || space.length() < 3) {
-      throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_INAPPROPRIATE_NAME);
-    }
     if (space.length() == 0) {
       throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_EMPTY);
+    }
+    if (INAPPROPRIATE_SPACE_NAMES.contains(space) || space.startsWith(".") || space.contains("..") || space.length() < 3) {
+      throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_INAPPROPRIATE_NAME);
     }
     if (!Validators.simple(space, 127)) {
       throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_NOT_SIMPLE);

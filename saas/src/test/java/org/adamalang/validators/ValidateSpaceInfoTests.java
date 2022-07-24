@@ -17,7 +17,8 @@ public class ValidateSpaceInfoTests {
   @Test
   public void tooLong() throws Exception {
     StringBuilder sb = new StringBuilder();
-    for (int k = 0; k < 127; k++) {
+    sb.append("xyz");
+    for (int k = 3; k < 127; k++) {
       sb.append("a");
       ValidateSpace.validate(sb.toString());
     }
@@ -38,12 +39,18 @@ public class ValidateSpaceInfoTests {
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(937076, ece.code);
     }
+    try {
+      ValidateSpace.validate("ab");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(904364, ece.code);
+    }
   }
 
   @Test
   public void tooComplex() {
     try {
-      ValidateSpace.validate("#&");
+      ValidateSpace.validate("#&sds");
       Assert.fail();
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(998515, ece.code);
