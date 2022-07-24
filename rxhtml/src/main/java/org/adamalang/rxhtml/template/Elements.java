@@ -9,6 +9,10 @@
  */
 package org.adamalang.rxhtml.template;
 
+import org.jsoup.nodes.Attribute;
+
+import java.util.ArrayList;
+
 public class Elements {
   public static void template(Environment env) { /* no-op */ }
 
@@ -50,12 +54,7 @@ public class Elements {
     }
   }
 
-  public static void pick(Environment env) {
-    if (!env.element.hasAttr("name")) {
-      env.element.attr("name", "default");
-    }
-    RxObject obj = new RxObject(env, "name");
-    String sVar = env.pool.ask();
+  private static String soloParent(Environment env) {
     final String parentVar;
     if (env.elementAlone) {
       parentVar = env.parentVariable;
@@ -64,6 +63,40 @@ public class Elements {
       env.writer.tab().append("var ").append(parentVar).append("=$.E('div');").newline();
       env.writer.tab().append(env.parentVariable).append(".append(").append(parentVar).append(");").newline();
     }
+    return parentVar;
+  }
+
+  public static void customdata(Environment env) {
+    ArrayList<String> parameters = new ArrayList<>();
+    for (Attribute attr : env.element.attributes()) {
+      if (attr.getKey().startsWith("parameter:")) {
+        parameters.add(attr.getKey());
+      }
+    }
+    RxObject obj = new RxObject(env, parameters.toArray(new String[parameters.size()]));
+    String sVar = env.pool.ask();
+    String parentVar = soloParent(env);
+
+    env.writer.tab().append("$.CUDA(") //
+        .append(parentVar) //
+        .append(",").append(env.stateVar) //
+        .append(",'").append(env.element.attr("src"))
+        .append("',").append(obj.rxObj) //
+        .append(",'").append(env.val("redirect", "/sign-in")) //
+        .append("',function(").append(sVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(sVar).parentVariable(parentVar));
+    env.writer.tabDown().tab().append("});").newline();
+    obj.finish();
+    env.pool.give(sVar);
+  }
+
+  public static void pick(Environment env) {
+    if (!env.element.hasAttr("name")) {
+      env.element.attr("name", "default");
+    }
+    RxObject obj = new RxObject(env, "name");
+    String sVar = env.pool.ask();
+    String parentVar = soloParent(env);
     env.writer.tab().append("$.P(").append(parentVar).append(",").append(env.stateVar).append(",").append(obj.rxObj).append(",function(").append(sVar).append(") {").tabUp().newline();
     Base.children(env.stateVar(sVar).parentVariable(parentVar));
     env.writer.tabDown().tab().append("});").newline();

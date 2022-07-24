@@ -29,9 +29,13 @@ public class RxObject {
     env.writer.tab().append("var ").append(rxObj).append("={};").newline();
     boolean addedUnder = false;
     boolean _delayed = false;
-    for (String name : names) {
-      if (env.element.hasAttr(name)) {
-        String value = env.element.attr(name);
+    for (String attrName : names) {
+      String nameToUse = attrName;
+      if (nameToUse.startsWith("parameter:")) {
+        nameToUse = nameToUse.substring(10);
+      }
+      if (env.element.hasAttr(attrName)) {
+        String value = env.element.attr(attrName);
         Tree tree = Parser.parse(value);
         Map<String, String> vars = tree.variables();
         if (vars.size() > 0) {
@@ -39,21 +43,21 @@ public class RxObject {
             env.writer.tab().append(rxObj).append("._={};").newline();
             addedUnder = true;
           }
-          env.writer.tab().append(rxObj).append("._.").append(name).append("={};").newline();
+          env.writer.tab().append(rxObj).append("._.").append(nameToUse).append("={};").newline();
           env.writer.tab().append(rxObj).append("._._ = function() {").tabUp().newline();
-          env.writer.tab().append(rxObj).append(".").append(name).append("=").append(tree.js(rxObj + "._." + name)).newline();
+          env.writer.tab().append(rxObj).append(".").append(nameToUse).append("=").append(tree.js(rxObj + "._." + nameToUse)).newline();
           env.writer.tab().append(rxObj).append(".__();").tabDown().newline();
           env.writer.tab().append("}").newline();
           for (Map.Entry<String, String> ve : vars.entrySet()) {
             StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);
-            env.writer.tab().append("$.Y(").append(path.command).append(",").append(rxObj).append("._.").append(name).append(",'").append(path.name).append("', ").append(rxObj).append("._._").append(");").newline();
+            env.writer.tab().append("$.Y(").append(path.command).append(",").append(rxObj).append("._.").append(nameToUse).append(",'").append(path.name).append("', ").append(rxObj).append("._._").append(");").newline();
           }
           _delayed = true;
         } else {
-          env.writer.tab().append(rxObj).append(".").append(name).append("='").append(Escapes.escape39(value)).append("';").newline();
+          env.writer.tab().append(rxObj).append(".").append(nameToUse).append("='").append(Escapes.escape39(value)).append("';").newline();
         }
       } else {
-        env.writer.tab().append(rxObj).append(".").append(name).append("=false;").newline();
+        env.writer.tab().append(rxObj).append(".").append(nameToUse).append("=false;").newline();
       }
     }
     this.delayed = _delayed;

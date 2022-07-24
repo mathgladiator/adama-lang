@@ -56,7 +56,7 @@ public class ParameterDefinition {
       case Boolean:
         return "false";
       case String:
-        return "\"x\"";
+        return "\"xzya\"";
       case Integer:
         return "42";
       case Long:

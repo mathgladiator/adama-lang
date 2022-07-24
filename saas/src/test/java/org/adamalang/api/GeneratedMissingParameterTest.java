@@ -39,7 +39,7 @@ public class GeneratedMissingParameterTest {
       node.put("email", "x@x.com");
       Iterator<String> c4 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:455681", c4.next());
-      node.put("code", "x");
+      node.put("code", "xzya");
       //AccountSetPassword
       node = Json.newJsonObject();
       node.put("id", 4);
@@ -49,7 +49,7 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c6 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:465917", c6.next());
-      node.put("password", "x");
+      node.put("password", "xzya");
       //AccountLogin
       node = Json.newJsonObject();
       node.put("id", 6);
@@ -59,7 +59,7 @@ public class GeneratedMissingParameterTest {
       node.put("email", "x@x.com");
       Iterator<String> c8 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:465917", c8.next());
-      node.put("password", "x");
+      node.put("password", "xzya");
       //Probe
       node = Json.newJsonObject();
       node.put("id", 8);
@@ -83,7 +83,7 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c12 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:430095", c12.next());
-      node.put("authority", "x");
+      node.put("authority", "xzya");
       Iterator<String> c13 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:457743", c13.next());
       node.put("key-store", Json.newJsonObject());
@@ -96,7 +96,7 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c15 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:430095", c15.next());
-      node.put("authority", "x");
+      node.put("authority", "xzya");
       //AuthorityList
       node = Json.newJsonObject();
       node.put("id", 15);
@@ -113,7 +113,7 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c18 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:430095", c18.next());
-      node.put("authority", "x");
+      node.put("authority", "xzya");
       //SpaceCreate
       node = Json.newJsonObject();
       node.put("id", 18);
@@ -123,7 +123,7 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c20 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c20.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       //SpaceGenerateKey
       node = Json.newJsonObject();
       node.put("id", 20);
@@ -133,7 +133,7 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c22 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c22.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       //SpaceUsage
       node = Json.newJsonObject();
       node.put("id", 22);
@@ -143,7 +143,7 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c24 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c24.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       //SpaceGet
       node = Json.newJsonObject();
       node.put("id", 24);
@@ -153,7 +153,7 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c26 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c26.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       //SpaceSet
       node = Json.newJsonObject();
       node.put("id", 26);
@@ -163,7 +163,7 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c28 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c28.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       Iterator<String> c29 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:425999", c29.next());
       node.put("plan", Json.newJsonObject());
@@ -176,7 +176,7 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c31 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c31.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       //SpaceSetRole
       node = Json.newJsonObject();
       node.put("id", 31);
@@ -186,13 +186,13 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c33 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c33.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       Iterator<String> c34 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:473103", c34.next());
       node.put("email", "x@x.com");
       Iterator<String> c35 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:456716", c35.next());
-      node.put("role", "x");
+      node.put("role", "xzya");
       //SpaceReflect
       node = Json.newJsonObject();
       node.put("id", 35);
@@ -202,10 +202,10 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c37 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c37.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       Iterator<String> c38 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:466947", c38.next());
-      node.put("key", "x");
+      node.put("key", "xzya");
       //SpaceList
       node = Json.newJsonObject();
       node.put("id", 38);
@@ -222,10 +222,10 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c41 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c41.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       Iterator<String> c42 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:466947", c42.next());
-      node.put("key", "x");
+      node.put("key", "xzya");
       Iterator<String> c43 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461826", c43.next());
       node.put("arg", Json.newJsonObject());
@@ -238,7 +238,7 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c45 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c45.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       //ConnectionCreate
       node = Json.newJsonObject();
       node.put("id", 45);
@@ -248,10 +248,10 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c47 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c47.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       Iterator<String> c48 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:466947", c48.next());
-      node.put("key", "x");
+      node.put("key", "xzya");
       //ConnectionSend
       node = Json.newJsonObject();
       node.put("id", 48);
@@ -261,7 +261,7 @@ public class GeneratedMissingParameterTest {
       node.put("connection", 100L);
       Iterator<String> c50 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:454659", c50.next());
-      node.put("channel", "x");
+      node.put("channel", "xzya");
       Iterator<String> c51 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:425987", c51.next());
       node.put("message", Json.newJsonObject());
@@ -292,16 +292,16 @@ public class GeneratedMissingParameterTest {
       node.put("identity", _identity);
       Iterator<String> c55 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461828", c55.next());
-      node.put("space", "x");
+      node.put("space", "xzya");
       Iterator<String> c56 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:466947", c56.next());
-      node.put("key", "x");
+      node.put("key", "xzya");
       Iterator<String> c57 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:470028", c57.next());
-      node.put("filename", "x");
+      node.put("filename", "xzya");
       Iterator<String> c58 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:455691", c58.next());
-      node.put("content-type", "x");
+      node.put("content-type", "xzya");
       //AttachmentAppend
       node = Json.newJsonObject();
       node.put("id", 58);
@@ -311,10 +311,10 @@ public class GeneratedMissingParameterTest {
       node.put("upload", 100L);
       Iterator<String> c60 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:462859", c60.next());
-      node.put("chunk-md5", "x");
+      node.put("chunk-md5", "xzya");
       Iterator<String> c61 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:409608", c61.next());
-      node.put("base64-bytes", "x");
+      node.put("base64-bytes", "xzya");
       //AttachmentFinish
       node = Json.newJsonObject();
       node.put("id", 61);
