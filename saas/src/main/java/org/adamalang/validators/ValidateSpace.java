@@ -20,7 +20,6 @@ public class ValidateSpace {
 
   private static HashSet<String> buildInappropriateSpaceNames() {
     HashSet<String> set = new HashSet<>();
-    set.add(".git");
     set.add("CSS");
     set.add("Portal");
     set.add("actuator");
@@ -31,7 +30,6 @@ public class ValidateSpace {
     set.add("owa");
     set.add("scripts");
     set.add("vendor");
-    set.add(".aws");
     set.add("portal");
     set.add("remote");
     set.add("d");
