@@ -454,6 +454,7 @@ public class Service {
       }
     });
 
+    // TODO: bring this out, and this whole file is getting CRAZY
     HttpHandler http = new HttpHandler() {
       @Override
       public void handleOptions(String uri, Callback<Boolean> callback) {
