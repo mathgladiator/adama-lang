@@ -13,7 +13,6 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.NamedThreadFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.extern.AssetUploader;
@@ -35,6 +34,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
 
 public class S3 implements AssetUploader, AssetDownloader, Cloud {
   private ExecutorService executors;
@@ -158,5 +158,21 @@ public class S3 implements AssetUploader, AssetDownloader, Cloud {
         instance.failure(ErrorCodes.API_CLOUD_DELETE_FAILED);
       }
     });
+  }
+
+  private static Pattern COMPLETE_LOG = Pattern.compile("[a-z]*\\.[0-9]*-[0-9]*-[0-9]*\\.[0-9]*\\.log");
+
+  public static boolean shouldConsiderForUpload(String name) {
+    return COMPLETE_LOG.matcher(name).matches();
+  }
+
+  public void uploadLogs(File directory, String prefix) throws Exception {
+    for (File file : directory.listFiles()) {
+      if (shouldConsiderForUpload(file.getName())) {
+        PutObjectRequest request = PutObjectRequest.builder().bucket(bucket).key("logs/" + prefix + "/" + file.getName()).build();
+        s3.putObject(request, file.toPath());
+        file.delete();
+      }
+    }
   }
 }

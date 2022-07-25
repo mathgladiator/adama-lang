@@ -36,7 +36,6 @@ import org.adamalang.gossip.GossipMetricsImpl;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
-import org.adamalang.mysql.backend.BackendMetrics;
 import org.adamalang.mysql.model.Deployments;
 import org.adamalang.mysql.data.Deployment;
 import org.adamalang.mysql.model.Finder;
@@ -148,6 +147,26 @@ public class Service {
     }
   }
 
+  private static void startArchivingLogs(S3 s3, String prefix, AtomicBoolean alive) {
+    SimpleExecutor executor = SimpleExecutor.create("s3-archive-logs");
+    executor.schedule(new NamedRunnable("archive-s3") {
+      @Override
+      public void execute() throws Exception {
+        try {
+          s3.uploadLogs(new File("logs"), prefix);
+        } catch (Exception ex) {
+          LOGGER.error("error-uploading-logs", ex);
+        } finally {
+          if (alive.get()) {
+            executor.schedule(this, 60000);
+          } else {
+            executor.shutdown();
+          }
+        }
+      }
+    }, 5000);
+  }
+
   public static void serviceBackend(Config config) throws Exception {
     MachineHeat.install();
     int port = config.get_int("adama_port", 8001);
@@ -175,12 +194,16 @@ public class Service {
 
     final DataService data;
     final Finder finder;
+    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
+    AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
+    S3 s3 = new S3(awsConfig, awsMetrics);
+    AtomicBoolean alive = new AtomicBoolean(true);
+    startArchivingLogs(s3, "adama/" + identity.ip + "_" + gossipPort, alive);
     {
       String caravanRoot = config.get_string("caravan_root", "caravan");
       String region = config.get_string("region", null);
-      AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
-      AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
-      S3 s3 = new S3(awsConfig, awsMetrics);
+
+
       SimpleExecutor caravanExecutor = SimpleExecutor.create("caravan");
       SimpleExecutor managedExecutor = SimpleExecutor.create("managed-base");
       File caravanPath = new File(caravanRoot);
@@ -195,7 +218,6 @@ public class Service {
       CaravanDataService caravanDataService = new CaravanDataService(s3, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
       Base managedBase = new Base(finder, caravanDataService, region, machine, managedExecutor, 2 * 60 * 1000);
       data = new ManagedDataService(managedBase);
-      AtomicBoolean alive = new AtomicBoolean(true);
       Thread flusher = new Thread(new Runnable() {
         @Override
         public void run() {
@@ -333,6 +355,12 @@ public class Service {
     File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
 
+    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
+    AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
+    S3 s3 = new S3(awsConfig, awsMetrics);
+    AtomicBoolean alive = new AtomicBoolean(true);
+    startArchivingLogs(s3, "overlord/" +identity.ip + "_" + gossipPort, alive);
+
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.SuperNode);
     engine.start();
 
@@ -348,11 +376,11 @@ public class Service {
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {
+        alive.set(false);
         System.err.println("shutting down overlord");
         runnable.shutdown();
       }
     }));
-
 
     System.err.println("running overlord web");
     runnable.run();
@@ -392,6 +420,8 @@ public class Service {
     AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
     AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
     S3 s3 = new S3(awsConfig, awsMetrics);
+    AtomicBoolean alive = new AtomicBoolean(true);
+    startArchivingLogs(s3, "web/" + identity.ip + "_" + gossipPort, alive);
 
     Finder finder = new Finder(database, region);
     ClientRouter router = ClientRouter.FINDER(metrics, finder, region);
@@ -503,6 +533,7 @@ public class Service {
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {
+        alive.set(false);
         System.err.println("shutting down frontend");
         runnable.shutdown();
         databasePings.shutdown();
