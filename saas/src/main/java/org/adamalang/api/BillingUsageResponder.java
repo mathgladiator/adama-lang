@@ -22,7 +22,7 @@ public class BillingUsageResponder {
     this.responder = responder;
   }
 
-  public void next(Integer hour, Long cpu, Long memory, Integer connections, Integer documents, Integer messages, Long storageBytes) {
+  public void next(Integer hour, Long cpu, Long memory, Integer connections, Integer documents, Integer messages, Long storageBytes, Long bandwidth, Long firstPartyServiceCalls, Long thirdPartyServiceCalls) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
     _obj.put("hour", hour);
     _obj.put("cpu", cpu);
@@ -31,6 +31,9 @@ public class BillingUsageResponder {
     _obj.put("documents", documents);
     _obj.put("messages", messages);
     _obj.put("storageBytes", storageBytes);
+    _obj.put("bandwidth", bandwidth);
+    _obj.put("firstPartyServiceCalls", firstPartyServiceCalls);
+    _obj.put("thirdPartyServiceCalls", thirdPartyServiceCalls);
     responder.stream(_obj.toString());
   }
 

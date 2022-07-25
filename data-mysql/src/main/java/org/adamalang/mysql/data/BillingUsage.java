@@ -17,8 +17,11 @@ public class BillingUsage {
   public final int documents;
   public final int messages;
   public final long storageBytes;
+  public final long bandwidth;
+  public final long firstPartyServiceCalls;
+  public final long thirdPartyServiceCalls;
 
-  public BillingUsage(int hour, long cpu, long memory, int connections, int documents, int messages, long storageBytes) {
+  public BillingUsage(int hour, long cpu, long memory, int connections, int documents, int messages, long storageBytes, long bandwidth, long firstPartyServiceCalls, long thirdPartyServiceCalls) {
     this.hour = hour;
     this.cpu = cpu;
     this.memory = memory;
@@ -26,5 +29,8 @@ public class BillingUsage {
     this.documents = documents;
     this.messages = messages;
     this.storageBytes = storageBytes;
+    this.bandwidth = bandwidth;
+    this.firstPartyServiceCalls = firstPartyServiceCalls;
+    this.thirdPartyServiceCalls = thirdPartyServiceCalls;
   }
 }

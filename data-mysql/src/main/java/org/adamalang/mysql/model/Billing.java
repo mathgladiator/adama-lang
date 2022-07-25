@@ -64,7 +64,10 @@ public class Billing {
         int documents = (int) usageValueOfZeroIfNotPresentOrNull(resources, "count");
         int messages = (int) usageValueOfZeroIfNotPresentOrNull(resources, "messages");
         long storageBytes = usageValueOfZeroIfNotPresentOrNull(resources, "storageBytes");
-        usage.add(new BillingUsage(hour, cpu, memory, connections, documents, messages, storageBytes));
+        long bandwidth = usageValueOfZeroIfNotPresentOrNull(resources, "bandwidth");
+        long firstPartyServiceCalls = usageValueOfZeroIfNotPresentOrNull(resources, "first_party_service_calls");
+        long thirdPartyServiceCalls = usageValueOfZeroIfNotPresentOrNull(resources, "third_party_service_calls");
+        usage.add(new BillingUsage(hour, cpu, memory, connections, documents, messages, storageBytes, bandwidth, firstPartyServiceCalls, thirdPartyServiceCalls));
       }, sql);
       return usage;
     }

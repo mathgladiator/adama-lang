@@ -32,6 +32,6 @@ public class CoverageBitsThatAreHardTests {
 
       }
     });
-    responder.next(40, 40L, 80L, 160, 320, 640, 0L);
+    responder.next(40, 40L, 80L, 160, 320, 640, 0L, 10L, 123L, 345L);
   }
 }

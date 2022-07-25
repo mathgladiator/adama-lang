@@ -256,7 +256,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.policy.canUserGetBillingUsage(request.who)) {
         for (BillingUsage usage : Billing.usageReport(nexus.dataBase, request.policy.id, request.limit != null ? request.limit.intValue() : 336)) {
-          responder.next(usage.hour, usage.cpu, usage.memory, usage.connections, usage.documents, usage.messages, usage.storageBytes);
+          responder.next(usage.hour, usage.cpu, usage.memory, usage.connections, usage.documents, usage.messages, usage.storageBytes, usage.bandwidth, usage.firstPartyServiceCalls, usage.thirdPartyServiceCalls);
         }
         responder.finish();
       } else {

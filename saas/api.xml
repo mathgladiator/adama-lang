@@ -267,6 +267,24 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="bandwidth" type="long">
+        <documentation>
+            Bytes used to transmit
+        </documentation>
+    </field-definition>
+
+    <field-definition name="first-party-service-calls" type="long">
+        <documentation>
+            Number of services calls made (managed by platform)
+        </documentation>
+    </field-definition>
+
+    <field-definition name="third-party-service-calls" type="long">
+        <documentation>
+            Number of services calls made (managed by developers)
+        </documentation>
+    </field-definition>
+
     <field-definition name="enabled" type="boolean">
         <documentation>
             Is the item in question enabled
@@ -393,6 +411,9 @@
         <field name="documents"/>
         <field name="messages"/>
         <field name="storage-bytes"/>
+        <field name="bandwidth"/>
+        <field name="first-party-service-calls"/>
+        <field name="third-party-service-calls"/>
     </responder>
 
     <responder name="simple">

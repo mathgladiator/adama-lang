@@ -443,6 +443,9 @@ export interface BillingUsagePayload {
   documents: number;
   messages: number;
   storageBytes: string;
+  bandwidth: string;
+  firstPartyServiceCalls: string;
+  thirdPartyServiceCalls: string;
 }
 
 export interface BillingUsageResponder {
