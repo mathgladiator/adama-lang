@@ -95,7 +95,7 @@ public class MockServiceBase implements ServiceBase {
       @Override
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         if ("/foo".equals(uri)){
-          callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", "goo".getBytes(StandardCharsets.UTF_8)));
+          callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", "goo".getBytes(StandardCharsets.UTF_8), true));
           return;
         }
         if ("/crash".equals(uri)) {
@@ -108,7 +108,7 @@ public class MockServiceBase implements ServiceBase {
       @Override
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         if ("/body".equals(uri)){
-          callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", ("body:" + body).getBytes(StandardCharsets.UTF_8)));
+          callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", ("body:" + body).getBytes(StandardCharsets.UTF_8), true));
           return;
         }
         if ("/crash".equals(uri)) {

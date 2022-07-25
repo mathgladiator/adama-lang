@@ -33,12 +33,12 @@ public class ServiceBaseJustHtmlTests {
 
       @Override
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        callback.success(new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8)));
+        callback.success(new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8), true));
       }
 
       @Override
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
-        callback.success(new HttpResult("post", "post".getBytes(StandardCharsets.UTF_8)));
+        callback.success(new HttpResult("post", "post".getBytes(StandardCharsets.UTF_8), true));
       }
     });
     base.establish(null).execute(null, new JsonResponder() {

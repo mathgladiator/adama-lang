@@ -48,6 +48,23 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     this.downloader = downloader;
   }
 
+  /** internal: copy the origin to access control when allowed */
+  private void transferCors(final FullHttpResponse res, final FullHttpRequest req, boolean allow) {
+    String origin = req.headers().get(HttpHeaderNames.ORIGIN);
+    if (origin != null && allow) { // CORS support directly
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
+    }
+  }
+
+  /** handle the pre-flight options request */
+  private void handlePreflight(final ChannelHandlerContext ctx, final FullHttpRequest req, boolean allow) {
+    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(EMPTY_RESPONSE));
+    transferCors(res, req, allow);
+    sendWithKeepAlive(webConfig, ctx, req, res);
+  }
+
+  /** send an immediate data result */
   private void sendImmediate(Runnable metric, FullHttpRequest req, final ChannelHandlerContext ctx, HttpResponseStatus status, byte[] content, String contentType, boolean cors) {
     metric.run();
     final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(content));
@@ -55,14 +72,12 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     if (contentType != null) {
       res.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
     }
-    String origin = req.headers().get(HttpHeaderNames.ORIGIN);
-    if (origin != null && cors) { // CORS support directly
-      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
-    }
+    transferCors(res, req, cors);
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
 
-  private void handleAsset(FullHttpRequest req, final ChannelHandlerContext ctx, AssetRequest assetRequest) {
+  /** handle an asset request */
+  private void handleAsset(FullHttpRequest req, final ChannelHandlerContext ctx, AssetRequest assetRequest, boolean cors) {
     downloader.request(assetRequest, new AssetDownloader.AssetStream() {
       private boolean started = false;
       private String contentType = null;
@@ -79,6 +94,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
           final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(content));
           HttpUtil.setContentLength(res, content.length);
           res.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
+          transferCors(res, req, cors);
           sendWithKeepAlive(webConfig, ctx, req, res);
         } else {
           if (!started) {
@@ -106,13 +122,14 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     });
   }
 
+  /** handle secret and encrypted assets */
   private void handleEncryptedAsset(FullHttpRequest req, final ChannelHandlerContext ctx) {
     String assetKey = AssetRequest.extractAssetKey(req.headers().get(HttpHeaderNames.COOKIE));
     if (assetKey != null) {
       try {
         String encryptedId = req.uri().substring("/~assets/".length());
         metrics.webhandler_assets_start.run();
-        handleAsset(req, ctx, AssetRequest.parse(encryptedId, assetKey));
+        handleAsset(req, ctx, AssetRequest.parse(encryptedId, assetKey), true);
       } catch (Exception err) {
         sendImmediate(metrics.webhandler_assets_failed_start, req, ctx, HttpResponseStatus.OK, ASSET_FAILED_ATTACHMENT, "text/html; charset=UTF-8", false);
       }
@@ -162,7 +179,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     AssetRequest isAsset = AssetRequest.from(httpResult);
     if (isAsset != null) { // the result is an asset
-      handleAsset(req, ctx, isAsset); // TODO: have caching instruction, and transform instruction
+      handleAsset(req, ctx, isAsset, httpResult.cors); // TODO: have caching instruction, and transform instruction
       return;
     }
 
@@ -171,16 +188,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(httpResult.body));
     HttpUtil.setContentLength(res, httpResult.body.length);
     res.headers().set(HttpHeaderNames.CONTENT_TYPE, httpResult.contentType);
-    sendWithKeepAlive(webConfig, ctx, req, res);
-  }
-
-  private void handleCors(final ChannelHandlerContext ctx, final FullHttpRequest req, boolean allow) {
-    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(EMPTY_RESPONSE));
-    String origin = req.headers().get(HttpHeaderNames.ORIGIN);
-    if (origin != null && allow) { // CORS support directly
-      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
-      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
-    }
+    transferCors(res, req, httpResult.cors);
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
 
@@ -220,7 +228,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         metrics.webhandler_options.run();
         httpHandler.handleOptions(wta.uri, new Callback<Boolean>() {
           @Override
-          public void success(Boolean allow) { handleCors(ctx, req, allow); }
+          public void success(Boolean allow) { handlePreflight(ctx, req, allow); }
 
           @Override
           public void failure(ErrorCodeException ex) {
