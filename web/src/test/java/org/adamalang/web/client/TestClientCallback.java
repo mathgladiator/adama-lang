@@ -31,6 +31,7 @@ public class TestClientCallback {
   private Throwable exception;
   private ArrayList<String> writes;
   private HashMap<Integer, Mailbox> mailboxes;
+  public final HashMap<String, String> headers;
 
   public TestClientCallback() {
     this.closeLatch = new CountDownLatch(1);
@@ -42,6 +43,7 @@ public class TestClientCallback {
     this.data = "";
     this.writes = new ArrayList<>();
     this.mailboxes = new HashMap<>();
+    this.headers = new HashMap<>();
   }
 
   public void awaitClosed() throws Exception {

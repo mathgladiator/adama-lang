@@ -456,6 +456,17 @@ public class Service {
 
     HttpHandler http = new HttpHandler() {
       @Override
+      public void handleOptions(String uri, Callback<Boolean> callback) {
+        SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
+        if (skr != null) {
+          // TODO: ask the space for the policy; need a robust cache here
+          callback.success(true);
+        } else {
+          callback.success(false);
+        }
+      }
+
+      @Override
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
         if (skr != null) {

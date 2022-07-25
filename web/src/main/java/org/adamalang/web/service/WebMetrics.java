@@ -22,8 +22,12 @@ public class WebMetrics {
   public final Runnable websockets_end_exception;
   public final Runnable webhandler_get;
   public final Runnable webhandler_post;
+  public final Runnable webhandler_options;
   public final Runnable webhandler_exception;
   public final Runnable webhandler_found;
+  public final Runnable webhandler_notfound;
+  public final Runnable webhandler_wta_crash;
+  public final Runnable webhandler_options_failure;
   public final Runnable webhandler_healthcheck;
   public final Runnable webhandler_client_download;
   public final Runnable webhandler_set_asset_key;
@@ -31,6 +35,8 @@ public class WebMetrics {
   public final Runnable webhandler_assets_invalid_uri;
   public final Runnable webhandler_assets_start;
   public final Runnable webhandler_assets_failed_start;
+  public final Runnable webhandler_firewall;
+  public final Runnable webhandler_asset_failed;
 
   public final Runnable websockets_start;
   public final Runnable websockets_end;
@@ -57,6 +63,12 @@ public class WebMetrics {
     this.webhandler_post = factory.counter("webhandler_post");
     this.webhandler_exception = factory.counter("webhandler_exception");
     this.webhandler_found = factory.counter("webhandler_found");
+    this.webhandler_notfound = factory.counter("webhandler_notfound");
     this.webhandler_healthcheck = factory.counter("webhandler_healthcheck");
+    this.webhandler_firewall = factory.counter("webhandler_firewall");
+    this.webhandler_asset_failed = factory.counter("webhandler_asset_failed");
+    this.webhandler_wta_crash = factory.counter("webhandler_wta_crash");
+    this.webhandler_options = factory.counter("webhandler_options");
+    this.webhandler_options_failure = factory.counter("webhandler_options_failure");
   }
 }

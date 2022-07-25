@@ -29,6 +29,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+  private static final byte[] EMPTY_RESPONSE = new byte[0];
+  private static final byte[] OK_RESPONSE = "OK".getBytes(StandardCharsets.UTF_8);
+  private static final byte[] ASSET_FAILED_ATTACHMENT = ("<html><head><title>Asset Failure</title></head><body>Failure to initiate asset attachment.</body></html>").getBytes(StandardCharsets.UTF_8);
+  private static final byte[] ASSET_COOKIE_LACKING = "<html><head><title>Bad Request</title></head><body>Asset cookie was not set.</body></html>".getBytes(StandardCharsets.UTF_8);
+  private static final byte[] NOT_FOUND_RESPONSE = "<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>".getBytes(StandardCharsets.UTF_8);
+
   private static final Logger LOG = LoggerFactory.getLogger(WebHandler.class);
   private final WebConfig webConfig;
   private final WebMetrics metrics;
@@ -42,117 +48,96 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     this.downloader = downloader;
   }
 
-  private void afterHttpResult(HttpHandler.HttpResult httpResultIncoming, final ChannelHandlerContext ctx, final FullHttpRequest req) {
-    HttpHandler.HttpResult httpResult = httpResultIncoming;
-    if (httpResult != null) {
-      metrics.webhandler_found.run();
-    }
-    boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
-    boolean isAdamaClient = "/libadama.js".equals(req.uri());
-    boolean isSetAssetKey = req.uri().startsWith("/~p");
-    boolean isAssetEncrypted = req.uri().startsWith("/~assets/");
-    boolean isAssetRequestInHttpResult = httpResult != null && httpResult.asset != null;
-    // send the default response for bad or health checks
-    final HttpResponseStatus status;
-    final byte[] content;
-    final String contentType;
-    if (isHealthCheck) {
-      metrics.webhandler_healthcheck.run();
-      status = HttpResponseStatus.OK;
-      content = ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8);
-      contentType = "text/text; charset=UTF-8";
-    } else if (isAdamaClient) {
-      metrics.webhandler_client_download.run();
-      status = HttpResponseStatus.OK;
-      content = JavaScriptClient.ADAMA_JS_CLIENT_BYTES;
-      contentType = "text/javascript; charset=UTF-8";
-    } else if (isSetAssetKey) {
-      metrics.webhandler_set_asset_key.run();
-      status = HttpResponseStatus.OK;
-      content = "OK".getBytes(StandardCharsets.UTF_8);
-      contentType = "text/text; charset=UTF-8";
-    } else if (isAssetEncrypted) {
-      String assetKey = AssetRequest.extractAssetKey(req.headers().get(HttpHeaderNames.COOKIE));
-      if (assetKey != null) {
-        try {
-          String encryptedId = req.uri().substring("/!assets/".length());
-          metrics.webhandler_assets_start.run();
-          AssetRequest assetRequest = AssetRequest.parse(encryptedId, assetKey);
-          downloader.request(assetRequest, new AssetDownloader.AssetStream() {
-            private boolean started = false;
-            private String contentType = null;
-
-            @Override
-            public void headers(long length, String contentType) {
-              this.contentType = contentType;
-            }
-
-            @Override
-            public void body(byte[] chunk, int offset, int length, boolean last) {
-              if (!started && last) {
-                byte[] content = Arrays.copyOfRange(chunk, offset, length);
-                final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(content));
-                HttpUtil.setContentLength(res, content.length);
-                res.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
-                sendWithKeepAlive(webConfig, ctx, req, res);
-              } else {
-                if (!started) {
-                  DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-                  response.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
-                  response.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
-                  ctx.write(response);
-                  started = true;
-                }
-                ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
-                if (last) {
-                  ctx.writeAndFlush(new DefaultLastHttpContent());
-                }
-              }
-            }
-
-            @Override
-            public void failure(int code) {
-              if (started) {
-                ctx.close();
-              } else {
-                byte[] content = ("Download asset failure:" + code).getBytes(StandardCharsets.UTF_8);
-                final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.SERVICE_UNAVAILABLE, Unpooled.wrappedBuffer(content));
-                res.headers().set("x-adama", "" + code);
-                HttpUtil.setContentLength(res, content.length);
-                res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
-                sendWithKeepAlive(webConfig, ctx, req, res);
-              }
-            }
-          });
-          return;
-        } catch (Exception err) {
-          metrics.webhandler_assets_failed_start.run();
-          status = HttpResponseStatus.OK;
-          content = ("<html><head><title>got asset request</title></head><body>Failure to initiate asset attachment.</body></html>").getBytes(StandardCharsets.UTF_8);
-          contentType = "text/html; charset=UTF-8";
-        }
-      } else {
-        metrics.webhandler_assets_no_cookie.run();
-        status = HttpResponseStatus.BAD_REQUEST;
-        content = "<html><head><title>bad request</title></head><body>Asset cookie was not set.</body></html>".getBytes(StandardCharsets.UTF_8);
-        contentType = "text/html; charset=UTF-8";
-      }
-    } else if (httpResult != null) {
-      status = HttpResponseStatus.OK;
-      content = httpResult.body;
-      contentType = httpResult.contentType; //;
-    } else {
-      status = HttpResponseStatus.BAD_REQUEST;
-      content = "<html><head><title>bad request</title></head><body>Greetings, this is primarily a websocket server, so your request made no sense. Sorry!</body></html>".getBytes(StandardCharsets.UTF_8);
-      contentType = "text/html; charset=UTF-8";
-    }
+  private void sendImmediate(Runnable metric, FullHttpRequest req, final ChannelHandlerContext ctx, HttpResponseStatus status, byte[] content, String contentType, boolean cors) {
+    metric.run();
     final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(content));
     HttpUtil.setContentLength(res, content.length);
-    res.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
-    if (isSetAssetKey) {
+    if (contentType != null) {
+      res.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
+    }
+    String origin = req.headers().get(HttpHeaderNames.ORIGIN);
+    if (origin != null && cors) { // CORS support directly
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+    }
+    sendWithKeepAlive(webConfig, ctx, req, res);
+  }
+
+  private void handleAsset(FullHttpRequest req, final ChannelHandlerContext ctx, AssetRequest assetRequest) {
+    downloader.request(assetRequest, new AssetDownloader.AssetStream() {
+      private boolean started = false;
+      private String contentType = null;
+
+      @Override
+      public void headers(long length, String contentType) {
+        this.contentType = contentType;
+      }
+
+      @Override
+      public void body(byte[] chunk, int offset, int length, boolean last) {
+        if (!started && last) {
+          byte[] content = Arrays.copyOfRange(chunk, offset, length);
+          final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(content));
+          HttpUtil.setContentLength(res, content.length);
+          res.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
+          sendWithKeepAlive(webConfig, ctx, req, res);
+        } else {
+          if (!started) {
+            DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+            response.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
+            response.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
+            ctx.write(response);
+            started = true;
+          }
+          ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
+          if (last) {
+            ctx.writeAndFlush(new DefaultLastHttpContent());
+          }
+        }
+      }
+
+      @Override
+      public void failure(int code) {
+        if (started) {
+          ctx.close();
+        } else {
+          sendImmediate(metrics.webhandler_asset_failed, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ("Download asset failure:" + code).getBytes(StandardCharsets.UTF_8), "text/plain", false);
+        }
+      }
+    });
+  }
+
+  private void handleEncryptedAsset(FullHttpRequest req, final ChannelHandlerContext ctx) {
+    String assetKey = AssetRequest.extractAssetKey(req.headers().get(HttpHeaderNames.COOKIE));
+    if (assetKey != null) {
+      try {
+        String encryptedId = req.uri().substring("/~assets/".length());
+        metrics.webhandler_assets_start.run();
+        handleAsset(req, ctx, AssetRequest.parse(encryptedId, assetKey));
+      } catch (Exception err) {
+        sendImmediate(metrics.webhandler_assets_failed_start, req, ctx, HttpResponseStatus.OK, ASSET_FAILED_ATTACHMENT, "text/html; charset=UTF-8", false);
+      }
+    } else {
+      sendImmediate(metrics.webhandler_assets_no_cookie, req, ctx, HttpResponseStatus.OK, ASSET_COOKIE_LACKING, "text/html; charset=UTF-8", false);
+    }
+  }
+
+  private boolean handleInternal(final ChannelHandlerContext ctx, final FullHttpRequest req) {
+    if (webConfig.healthCheckPath.equals(req.uri())) { // health checks
+      sendImmediate(metrics.webhandler_healthcheck, req, ctx, HttpResponseStatus.OK, ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8), "text/text; charset=UTF-8", true);
+      return true;
+    } else if ("/libadama.js".equals(req.uri())) { // in-memory JavaScript library
+      sendImmediate(metrics.webhandler_client_download, req, ctx, HttpResponseStatus.OK, JavaScriptClient.ADAMA_JS_CLIENT_BYTES, "text/javascript; charset=UTF-8", true);
+      return true;
+    } else if (req.uri().startsWith("/~assets/")) { // assets that are encrypted and private to the connection
+      handleEncryptedAsset(req, ctx);
+      return true;
+    } else if (req.uri().startsWith("/~upload")) {
+      // TODO: post upload to an asset
+    } else if (req.uri().startsWith("/~p")) { // set an asset key
+      final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(OK_RESPONSE));
       String value = req.uri().substring(3);
       String origin = req.headers().get(HttpHeaderNames.ORIGIN);
-      if (origin != null) {
+      if (origin != null) { // CORS support directly
         res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
         res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
       }
@@ -162,56 +147,96 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       cookie.setHttpOnly(true);
       cookie.setSecure(true);
       res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
+      sendWithKeepAlive(webConfig, ctx, req, res);
+      return true;
+    }
+    return false;
+  }
+
+  private void handleHttpResult(HttpHandler.HttpResult httpResultIncoming, final ChannelHandlerContext ctx, final FullHttpRequest req) {
+    HttpHandler.HttpResult httpResult = httpResultIncoming;
+    if (httpResult == null) { // no response found
+      sendImmediate(metrics.webhandler_notfound, req, ctx, HttpResponseStatus.NOT_FOUND, NOT_FOUND_RESPONSE, "text/html; charset=UTF-8", true);
+      return;
+    }
+
+    AssetRequest isAsset = AssetRequest.from(httpResult);
+    if (isAsset != null) { // the result is an asset
+      handleAsset(req, ctx, isAsset); // TODO: have caching instruction, and transform instruction
+      return;
+    }
+
+    // otherwise, send the body
+    metrics.webhandler_found.run();
+    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(httpResult.body));
+    HttpUtil.setContentLength(res, httpResult.body.length);
+    res.headers().set(HttpHeaderNames.CONTENT_TYPE, httpResult.contentType);
+    sendWithKeepAlive(webConfig, ctx, req, res);
+  }
+
+  private void handleCors(final ChannelHandlerContext ctx, final FullHttpRequest req, boolean allow) {
+    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(EMPTY_RESPONSE));
+    String origin = req.headers().get(HttpHeaderNames.ORIGIN);
+    if (origin != null && allow) { // CORS support directly
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
     }
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
+    // Step 1: Quick reject anything the shield doesn't like
     if (WebRequestShield.block(req.uri())) {
-      byte[] content = new byte[0];
-      final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.GONE, Unpooled.wrappedBuffer(content));
-      HttpUtil.setContentLength(res, content.length);
-      sendWithKeepAlive(webConfig, ctx, req, res);
+      sendImmediate(metrics.webhandler_firewall, req, ctx, HttpResponseStatus.GONE, EMPTY_RESPONSE, null, false);
       return;
     }
-    Callback<HttpHandler.HttpResult> callback = new Callback<HttpHandler.HttpResult>() {
+
+    // Step 2: Handle internal routing for Adama only stuff
+    if (handleInternal(ctx, req)) {
+      return;
+    }
+
+    // Step 4: Handle the result from the web request
+    Callback<HttpHandler.HttpResult> callback = new Callback<>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         ctx.executor().execute(() -> {
-          afterHttpResult(value, ctx, req);
+          handleHttpResult(value, ctx, req);
         });
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-        LOG.error("failed-handler: {}", ex);
-        ctx.executor().execute(() -> {
-          // this is a giant mess at the moment, fall back
-          afterHttpResult(null, ctx, req);
-        });
+        LOG.error("failed-handler:", ex);
+        handleHttpResult(null, ctx, req);
       }
     };
 
-    final WebToAdama wta;
+    // Step 3: Parse the request and then route to the appropriate handler
     try {
-      wta = new WebToAdama(req);
-    } catch (Exception ex) {
-      LOG.error("failure-to-build-wta:{}", ex);
-      byte[] content = new byte[0];
-      final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.BAD_REQUEST, Unpooled.wrappedBuffer(content));
-      HttpUtil.setContentLength(res, content.length);
-      res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
-      sendWithKeepAlive(webConfig, ctx, req, res);
-      return;
-    }
+      AdamaWebRequest wta = new AdamaWebRequest(req);
+      if (req.method() == HttpMethod.OPTIONS) {
+        metrics.webhandler_options.run();
+        httpHandler.handleOptions(wta.uri, new Callback<Boolean>() {
+          @Override
+          public void success(Boolean allow) { handleCors(ctx, req, allow); }
 
-    if (req.method() == HttpMethod.POST || req.method() == HttpMethod.PUT) {
-      metrics.webhandler_post.run();
-      httpHandler.handlePost(wta.uri, wta.headers, wta.parameters, wta.body, callback);
-    } else {
-      metrics.webhandler_get.run();
-      httpHandler.handleGet(wta.uri, wta.headers, wta.parameters, callback);
+          @Override
+          public void failure(ErrorCodeException ex) {
+            sendImmediate(metrics.webhandler_wta_crash, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, EMPTY_RESPONSE, null, false);
+          }
+        });
+      } else if (req.method() == HttpMethod.POST || req.method() == HttpMethod.PUT) {
+        metrics.webhandler_post.run();
+        httpHandler.handlePost(wta.uri, wta.headers, wta.parameters, wta.body, callback);
+      } else {
+        metrics.webhandler_get.run();
+        httpHandler.handleGet(wta.uri, wta.headers, wta.parameters, callback);
+      }
+    } catch (Exception ex) {
+      LOG.error("failure-to-build-wta:", ex);
+      sendImmediate(metrics.webhandler_wta_crash, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, EMPTY_RESPONSE, null, true);
     }
   }
 

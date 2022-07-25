@@ -17,6 +17,7 @@ import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.web.client.TestClientCallback;
 import org.adamalang.web.client.TestClientRequestBuilder;
 import org.adamalang.web.service.mocks.MockServiceBase;
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.crypto.SecretKey;
@@ -49,7 +50,7 @@ public class WebHandlerTests {
             .get("/x")
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("<html><head><title>bad request</title></head><body>Greetings, this is primarily a websocket server, so your request made no sense. Sorry!</body></html>");
+        callback.assertData("<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>");
       }
 
       {
@@ -59,7 +60,7 @@ public class WebHandlerTests {
             .get("/~assets/space/key/id=123")
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("<html><head><title>bad request</title></head><body>Asset cookie was not set.</body></html>");
+        callback.assertData("<html><head><title>Bad Request</title></head><body>Asset cookie was not set.</body></html>");
       }
 
       {
@@ -70,7 +71,7 @@ public class WebHandlerTests {
             .get("/~assets/space/key/id=123")
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("<html><head><title>got asset request</title></head><body>Failure to initiate asset attachment.</body></html>");
+        callback.assertData("<html><head><title>Asset Failure</title></head><body>Failure to initiate asset attachment.</body></html>");
       }
 
       {
@@ -132,7 +133,7 @@ public class WebHandlerTests {
             .get("/crash")
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("<html><head><title>bad request</title></head><body>Greetings, this is primarily a websocket server, so your request made no sense. Sorry!</body></html>");
+        callback.assertData("<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>");
       }
 
       {
@@ -153,17 +154,43 @@ public class WebHandlerTests {
             .post("/crash", "{}")
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("<html><head><title>bad request</title></head><body>Greetings, this is primarily a websocket server, so your request made no sense. Sorry!</body></html>");
+        callback.assertData("<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
-          .server("localhost", webConfig.port)
-          .post("/body", "{\"x\":{}}")
-          .execute(callback);
+            .server("localhost", webConfig.port)
+            .post("/body", "{\"x\":{}}")
+            .execute(callback);
         callback.awaitFirst();
         callback.assertData("body:{\"x\":{}}");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .options("/nope")
+            .header("Origin", "my-origin")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("");
+        System.err.println("HERE");
+        System.err.println(callback.headers);
+        Assert.assertNull(callback.headers.get("access-control-allow-origin"));
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .options("/ok-cors")
+            .header("Origin", "my-origin")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("");
+        Assert.assertEquals("my-origin", callback.headers.get("access-control-allow-origin"));
       }
 
       {

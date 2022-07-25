@@ -86,6 +86,12 @@ public class MockServiceBase implements ServiceBase {
   @Override
   public HttpHandler http() {
     return new HttpHandler() {
+
+      @Override
+      public void handleOptions(String uri, Callback<Boolean> callback) {
+        callback.success(uri.equalsIgnoreCase("/ok-cors"));
+      }
+
       @Override
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         if ("/foo".equals(uri)){

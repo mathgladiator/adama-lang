@@ -16,6 +16,12 @@ import java.util.TreeMap;
 
 public interface HttpHandler {
   HttpHandler NULL = new HttpHandler() {
+
+    @Override
+    public void handleOptions(String uri, Callback<Boolean> callback) {
+      callback.success(false);
+    }
+
     @Override
     public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
       callback.success(null);
@@ -26,6 +32,8 @@ public interface HttpHandler {
       callback.success(null);
     }
   };
+
+  void handleOptions(String uri, Callback<Boolean> callback);
 
   void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback);
 

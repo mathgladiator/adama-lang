@@ -22,13 +22,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class WebToAdama {
+public class AdamaWebRequest {
   public final String uri;
   public final TreeMap<String, String> headers;
   public final String parameters;
   public final String body;
 
-  public WebToAdama(final FullHttpRequest req) {
+  public AdamaWebRequest(final FullHttpRequest req) {
     headers = new TreeMap<>();
     for (Map.Entry<String, String> entry : req.headers()) {
       String headerName = entry.getKey().toLowerCase(Locale.ROOT);

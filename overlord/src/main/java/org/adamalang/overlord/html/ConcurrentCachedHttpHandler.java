@@ -26,6 +26,11 @@ public class ConcurrentCachedHttpHandler implements HttpHandler {
   }
 
   @Override
+  public void handleOptions(String uri, Callback<Boolean> callback) {
+    callback.success(false);
+  }
+
+  @Override
   public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     callback.success(uris.get(uri));
   }

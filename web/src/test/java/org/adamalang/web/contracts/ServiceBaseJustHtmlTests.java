@@ -25,6 +25,12 @@ public class ServiceBaseJustHtmlTests {
   @Test
   public void coverage() throws Exception {
     ServiceBase base = ServiceBase.JUST_HTTP(new HttpHandler() {
+
+      @Override
+      public void handleOptions(String uri, Callback<Boolean> callback) {
+        callback.success(uri.equalsIgnoreCase("/opt=yes"));
+      }
+
       @Override
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         callback.success(new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8)));
@@ -54,7 +60,19 @@ public class ServiceBaseJustHtmlTests {
     base.establish(null).keepalive();
     base.establish(null).kill();
     base.downloader();
-    CountDownLatch latch = new CountDownLatch(2);
+    CountDownLatch latch = new CountDownLatch(3);
+    base.http().handleOptions("/opt=yes", new Callback<Boolean>() {
+      @Override
+      public void success(Boolean value) {
+        Assert.assertTrue(value);;
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
     base.http().handleGet("x", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {

@@ -12,6 +12,7 @@ package org.adamalang.web.service;
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
+import org.adamalang.web.contracts.HttpHandler;
 
 public class AssetRequest {
   public final String space;
@@ -22,6 +23,13 @@ public class AssetRequest {
     this.space = space;
     this.key = key;
     this.id = id;
+  }
+
+  public static AssetRequest from(HttpHandler.HttpResult result) {
+    if (result.asset != null && result.space != null && result.key != null) {
+      return new AssetRequest(result.space, result.key, result.asset.id);
+    }
+    return null;
   }
 
   public static AssetRequest parse(String uri, String assetKey) {

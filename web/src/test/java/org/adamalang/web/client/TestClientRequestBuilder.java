@@ -25,6 +25,9 @@ import io.netty.handler.timeout.WriteTimeoutHandler;
 import io.netty.util.CharsetUtil;
 
 import java.net.URI;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 public class TestClientRequestBuilder {
   private final DefaultHttpHeaders headers;
@@ -117,6 +120,11 @@ public class TestClientRequestBuilder {
                             final ChannelHandlerContext ctx, final FullHttpResponse msg)
                             throws Exception {
                           System.err.println("read some data");
+                          Iterator<Map.Entry<String, String>> hdrIt = msg.headers().iterator();
+                          while (hdrIt.hasNext()) {
+                            Map.Entry<String, String> hdr = hdrIt.next();
+                            callback.headers.put(hdr.getKey().toLowerCase(Locale.ROOT), hdr.getValue());
+                          }
                           callback.successfulResponse(msg.content().toString(CharsetUtil.UTF_8));
                         }
 
@@ -142,11 +150,11 @@ public class TestClientRequestBuilder {
             if (chFuture.isSuccess()) {
               System.err.println("connection success");
               HttpRequest request;
-              if (method == HttpMethod.POST) {
+              if (method == HttpMethod.POST || method == HttpMethod.PUT) {
                 request =
                     new DefaultFullHttpRequest(
                         HttpVersion.HTTP_1_1,
-                        HttpMethod.POST,
+                        method,
                         uri,
                         postContent,
                         headers,
@@ -158,7 +166,7 @@ public class TestClientRequestBuilder {
                 request =
                     new DefaultFullHttpRequest(
                         HttpVersion.HTTP_1_1,
-                        HttpMethod.GET,
+                        method,
                         uri,
                         Unpooled.buffer(0),
                         headers,
@@ -207,6 +215,12 @@ public class TestClientRequestBuilder {
     method = HttpMethod.POST;
     this.uri = uri;
     postBody = data;
+    return this;
+  }
+
+  public TestClientRequestBuilder options(final String uri) {
+    method = HttpMethod.OPTIONS;
+    this.uri = uri;
     return this;
   }
 
