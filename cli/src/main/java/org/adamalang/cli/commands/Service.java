@@ -465,7 +465,11 @@ public class Service {
             @Override
             public void success(WebResponse value) {
               if (value != null) {
-                callback.success(new HttpResult(value.contentType, value.body.getBytes(StandardCharsets.UTF_8)));
+                if (value.asset != null) {
+                  callback.success(new HttpResult(skr.space, skr.key, value.asset));
+                } else {
+                  callback.success(new HttpResult(value.contentType, value.body.getBytes(StandardCharsets.UTF_8)));
+                }
               } else {
                 callback.success(null);
               }
