@@ -148,7 +148,7 @@ public class ServerMessage {
 
   @TypeId(1721)
   @Flow("Web")
-  public static class WebResponseNet {
+  public static class WebResponseNet { // search commonWebHandle in Handler.java AND commonWebReturn in InstanceClient.java
     @FieldOrder(1)
     public String contentType;
     @FieldOrder(2)
@@ -163,5 +163,11 @@ public class ServerMessage {
     public String assetMD5;
     @FieldOrder(7)
     public String assetSHA384;
+    @FieldOrder(8)
+    public boolean cors;
+    @FieldOrder(9)
+    public int cache_ttl_seconds;
+    @FieldOrder(10)
+    public String asset_transform;
   }
 }

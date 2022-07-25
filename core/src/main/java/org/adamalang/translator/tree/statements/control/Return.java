@@ -80,8 +80,11 @@ public class Return extends Statement {
           body++;
         }
         if (consider("asset", webReturnType, (ty) -> environment.rules.IsAsset(ty, false))) {
+          consider("asset_transform", webReturnType, (ty) -> environment.rules.IsString(ty, false));
           body++;
         }
+        consider("cors", webReturnType, (ty) -> environment.rules.IsBoolean(ty, false));
+        consider("cache_ttl_seconds", webReturnType, (ty) -> environment.rules.IsInteger(ty, false));
         if (body != 1) {
           environment.document.createError(this, String.format("The return statement within a @web expects exactly one field type; got " + body + " instead"), "ReturnFlowWeb");
         }

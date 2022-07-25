@@ -488,6 +488,9 @@ public class ServerCodec {
     o.assetSize = buf.readLongLE();
     o.assetMD5 = Helper.readString(buf);
     o.assetSHA384 = Helper.readString(buf);
+    o.cors = buf.readBoolean();
+    o.cache_ttl_seconds = buf.readIntLE();
+    o.asset_transform = Helper.readString(buf);
     return o;
   }
 
@@ -730,6 +733,9 @@ public class ServerCodec {
     buf.writeLongLE(o.assetSize);
     Helper.writeString(buf, o.assetMD5);;
     Helper.writeString(buf, o.assetSHA384);;
+    buf.writeBoolean(o.cors);
+    buf.writeIntLE(o.cache_ttl_seconds);
+    Helper.writeString(buf, o.asset_transform);;
   }
 
   public static void write(ByteBuf buf, ProxyLocalDataChange o) {

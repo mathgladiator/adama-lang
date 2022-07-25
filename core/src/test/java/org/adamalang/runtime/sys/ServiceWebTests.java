@@ -36,7 +36,16 @@ import java.util.concurrent.TimeUnit;
 public class ServiceWebTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
-  private static final String SIMPLE_CODE_MSG = "@static { create { return true; } } @web get / {\n" + "  return {html:\"root\"};\n" + "}\n" + "\n" + "@web get /fixed {\n" + "  return {html:\"fixed path\"};\n" + "}\n" + "\n" + "@web get /path0/$x:int {\n" + "  return {html:\"path integer:\" + x};\n" + "}\n" + "\n" + "@web get /path1/$x:double {\n" + "  return {html:\"path double:\" + x};\n" + "}\n" + "\n" + "@web get /path2/$x:long {\n" + "  return {html:\"path long without child:\" + x};\n" + "}\n" + "\n" + "@web get /path2/$x:long/child {\n" + "  return {html:\"path long with child: \" + x + \"!\"};\n" + "}\n" + "\n" + "@web get /path3/$a* {\n" + "  return {html:\"tail:\" + a};\n" + "}\n" + "\n" + "@web get /path3/$a:string/child {\n" + "  return {html:\"abort tail and go with direct child:\" + a};\n" + "}";
+  private static final String SIMPLE_CODE_MSG = "@static { create { return true; } }" +
+      "@web get / {\n" + "  return {html:\"root\"};\n" + "}\n" + "\n" + //
+      "@web get /fixed {\n" + "  return {html:\"fixed path\"};\n" + "}\n" + "\n" + //
+      "@web get /path0/$x:int {\n" + "  return {html:\"path integer:\" + x,cache_ttl_seconds:42};\n" + "}\n" + "\n" + //
+      "@web get /path1/$x:double {\n" + "  return {html:\"path double:\" + x};\n" + "}\n" + "\n" + //
+      "@web get /path2/$x:long {\n" + "  return {html:\"path long without child:\" + x};\n" + "}\n" + "\n" + //
+      "@web get /path2/$x:long/child {\n" + "  return {html:\"path long with child: \" + x + \"!\"};\n" + "}\n" + "\n" + //
+      "@web get /path3/$a* {\n" + "  return {html:\"tail:\" + a};\n" + "}\n" + "\n" +
+      "@web get /asset/$a* {\n" + "  return {asset:@nothing,asset_transform:\"foo\"};\n" + "}\n" + "\n" +
+      "@web get /path3/$a:string/child {\n" + "  return {html:\"abort tail and go with direct child:\" + a};\n" + "}";
 
   @Test
   public void web_basic() throws Exception {
@@ -50,12 +59,24 @@ public class ServiceWebTests {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
       created.await_success();
-
-      CountDownLatch latch = new CountDownLatch(3);
+      CountDownLatch latch = new CountDownLatch(5);
       service.webGet(KEY, new WebGet(NtClient.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
           Assert.assertEquals("root", value.body);
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+      service.webGet(KEY, new WebGet(NtClient.NO_ONE, "/path0/14", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.assertEquals("path integer:14", value.body);
+          Assert.assertEquals(42, value.cache_ttl_seconds);
           latch.countDown();
         }
 
@@ -79,6 +100,19 @@ public class ServiceWebTests {
       service.webGet(new Key("nope", "noep"), new WebGet(NtClient.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.assertEquals(625676, ex.code);
+          latch.countDown();
+        }
+      });
+      service.webGet(new Key("nope", "noep"), new WebGet(NtClient.NO_ONE, "/asset", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.assertNotNull(value.asset);
+          Assert.assertEquals("foo", value.asset_transform);
         }
 
         @Override

@@ -172,7 +172,10 @@ public class ClientTests {
     try (TestBed bed =
              new TestBed(
                  12700,
-                 "@static { create { return true; } } @web get / { return {html:\"root\"};\n" + "}  message M { int x; } public int z = 1000; @web put / (M m) { z = m.x; return {html:\"c:\" + z}; } ")) {
+                 "@static { create { return true; } }" +
+                     "@web get / { return {html:\"root\"};\n" + "} " +
+                     "@web get /cors { return {html:\"my-cors\", cors:true, cache_ttl_seconds:42};\n" + "} " +
+                     "message M { int x; } public int z = 1000; @web put / (M m) { z = m.x; return {html:\"c:\" + z}; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
@@ -217,11 +220,26 @@ public class ClientTests {
         });
         Assert.assertTrue(latchCreatedKey.await(5000, TimeUnit.MILLISECONDS));
 
-        CountDownLatch getLatches = new CountDownLatch(2);
+        CountDownLatch getLatches = new CountDownLatch(3);
         client.webGet("space", "key1", new WebGet(NtClient.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("root", value.body);
+            getLatches.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            System.err.println("Ex1:" + ex.code);
+
+          }
+        });
+        client.webGet("space", "key1", new WebGet(NtClient.NO_ONE, "/cors", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+          @Override
+          public void success(WebResponse value) {
+            Assert.assertEquals("my-cors", value.body);
+            Assert.assertTrue(value.cors);
+            Assert.assertEquals(42, value.cache_ttl_seconds);
             getLatches.countDown();
           }
 

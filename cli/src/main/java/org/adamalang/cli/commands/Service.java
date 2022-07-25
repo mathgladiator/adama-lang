@@ -476,11 +476,10 @@ public class Service {
             @Override
             public void success(WebResponse value) {
               if (value != null) {
-                boolean cors = false;
                 if (value.asset != null) {
-                  callback.success(new HttpResult(skr.space, skr.key, value.asset, cors));
+                  callback.success(new HttpResult(skr.space, skr.key, value.asset, value.cors));
                 } else {
-                  callback.success(new HttpResult(value.contentType, value.body.getBytes(StandardCharsets.UTF_8), cors));
+                  callback.success(new HttpResult(value.contentType, value.body.getBytes(StandardCharsets.UTF_8), value.cors));
                 }
               } else {
                 callback.success(null);
@@ -507,8 +506,7 @@ public class Service {
             @Override
             public void success(WebResponse value) {
               if (value != null) {
-                boolean cors = false;
-                callback.success(new HttpResult(value.contentType, value.body.getBytes(StandardCharsets.UTF_8), cors));
+                callback.success(new HttpResult(value.contentType, value.body.getBytes(StandardCharsets.UTF_8), value.cors));
               } else {
                 callback.success(null);
               }

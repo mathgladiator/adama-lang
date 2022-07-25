@@ -220,6 +220,9 @@ public class InstanceClient implements AutoCloseable {
     if (payload.assetId != null) {
       response.asset = new NtAsset(payload.assetId, payload.assetName, payload.contentType, payload.assetSize, payload.assetMD5, payload.assetSHA384);
     }
+    response.cors = payload.cors;
+    response.cache_ttl_seconds = payload.cache_ttl_seconds;
+    response.asset_transform = payload.asset_transform;
     callback.success(response);
   }
 

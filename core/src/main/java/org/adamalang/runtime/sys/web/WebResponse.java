@@ -15,13 +15,31 @@ import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.sys.PredictiveInventory;
 
 public class WebResponse {
-  public String contentType;
-  public String body;
-  public NtAsset asset;
+  public String contentType = null;
+  public String body = null;
+  public NtAsset asset = null;
+  public boolean cors = false;
+  public int cache_ttl_seconds = 0;
+  public String asset_transform = "";
 
   public WebResponse html(String body) {
     this.contentType = "text/html; charset=utf-8";
     this.body = body;
+    return this;
+  }
+
+  public WebResponse cors(boolean cors) {
+    this.cors = cors;
+    return this;
+  }
+
+  public WebResponse cache_ttl_seconds(int cache_ttl_seconds) {
+    this.cache_ttl_seconds = cache_ttl_seconds;
+    return this;
+  }
+
+  public WebResponse asset_transform(String asset_transform) {
+    this.asset_transform = asset_transform;
     return this;
   }
 
