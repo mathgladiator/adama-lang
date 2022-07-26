@@ -88,6 +88,42 @@ public class Users {
     }
   }
 
+  public static String getProfile(DataBase dataBase, int userId) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      {
+        String sql = new StringBuilder("SELECT `profile` FROM `").append(dataBase.databaseName).append("`.`emails` WHERE `id`=").append(userId).toString();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+          try (ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+              String result = rs.getString(1);
+              if (result == null) {
+                return "{}";
+              }
+              return result;
+            } else {
+              throw new ErrorCodeException(ErrorCodes.USER_NOT_FOUND_GET_PROFILE);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  public static void setProfileIf(DataBase dataBase, int userId, String profile, String oldProfile) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      {
+        String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`emails` SET `profile` = ? WHERE `id`=").append(userId).append(" AND (`profile` IS NULL OR `profile`=?)").toString();
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+          statement.setString(1, profile);
+          statement.setString(2, oldProfile);
+          if (statement.executeUpdate() != 1) {
+            throw new ErrorCodeException(ErrorCodes.USER_FAILED_TO_SET_PROFILE);
+          }
+        }
+      }
+    }
+  }
+
   public static int getBalance(DataBase dataBase, int userId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {

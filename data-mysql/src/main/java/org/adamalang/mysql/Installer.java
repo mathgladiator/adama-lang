@@ -59,6 +59,7 @@ public class Installer {
         .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`emails` (") //
         .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
         .append("  `email` VARCHAR(128) NOT NULL,") //
+        .append("  `profile` TEXT,") //
         .append("  `password` TEXT NOT NULL,") //
         .append("  `balance` INT(4) DEFAULT 0,") //
         .append("  `credit_carry_limit` INT(4) DEFAULT -500,") //

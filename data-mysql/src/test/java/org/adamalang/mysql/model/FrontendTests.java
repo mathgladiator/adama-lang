@@ -41,6 +41,23 @@ public class FrontendTests {
         Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
         Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
         Assert.assertEquals(1, Users.countUsers(dataBase));
+        Assert.assertEquals("{}", Users.getProfile(dataBase, 1));
+        try {
+          Users.getProfile(dataBase, 50);
+          Assert.fail();
+        } catch (ErrorCodeException ex) {
+          Assert.assertEquals(674832, ex.code);
+        }
+        Users.setProfileIf(dataBase, 1, "{\"name\":\"ninja\"}", "{}");
+        Assert.assertEquals("{\"name\":\"ninja\"}", Users.getProfile(dataBase, 1));
+        Users.setProfileIf(dataBase, 1, "{\"name\":\"w00t\"}", "{\"name\":\"ninja\"}");
+        Assert.assertEquals("{\"name\":\"w00t\"}", Users.getProfile(dataBase, 1));
+        try {
+          Users.setProfileIf(dataBase, 1, "{\"name\":\"w00t\"}", "{\"name\":\"ninja\"}");
+          Assert.fail();
+        } catch (ErrorCodeException ex) {
+          Assert.assertEquals(634899, ex.code);
+        }
         Users.validateUser(dataBase, 1);
         Users.validateUser(dataBase, 1);
         Users.addKey(dataBase, 1, "key", System.currentTimeMillis() + 1000 * 60);
