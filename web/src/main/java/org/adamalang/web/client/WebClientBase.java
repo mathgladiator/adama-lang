@@ -87,6 +87,7 @@ public class WebClientBase {
             @Override
             public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
               callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_GET_FAILED_EXECUTE, cause, EXLOGGER));
+              ctx.close();
             }
           });
       }
