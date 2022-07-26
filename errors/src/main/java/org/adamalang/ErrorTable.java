@@ -256,6 +256,10 @@ public class ErrorTable {
     descriptions.put(662552, "no description of error (yet)");
     names.put(643100, "PRIVATE_KEY_NOT_FOUND");
     descriptions.put(643100, "no description of error (yet)");
+    names.put(674832, "USER_NOT_FOUND_GET_PROFILE");
+    descriptions.put(674832, "no description of error (yet)");
+    names.put(634899, "USER_FAILED_TO_SET_PROFILE");
+    descriptions.put(634899, "no description of error (yet)");
     names.put(966671, "AUTH_FAILED_FINDING_DEVELOPER_KEY");
     descriptions.put(966671, "no description of error (yet)");
     names.put(916531, "AUTH_FAILED_VALIDATING_AGAINST_KEYSTORE");
@@ -290,6 +294,8 @@ public class ErrorTable {
     descriptions.put(904327, "no description of error (yet)");
     names.put(978099, "API_CONVERT_TOKEN_UNKNOWN_EXCEPTION");
     descriptions.put(978099, "no description of error (yet)");
+    names.put(904383, "API_CONVERT_TOKEN_VALIDATE_EXCEPTION");
+    descriptions.put(904383, "no description of error (yet)");
     names.put(965636, "API_INIT_SETUP_UNKNOWN_EXCEPTION");
     descriptions.put(965636, "no description of error (yet)");
     names.put(946179, "API_INIT_COMPLETE_UNKNOWN_EXCEPTION");

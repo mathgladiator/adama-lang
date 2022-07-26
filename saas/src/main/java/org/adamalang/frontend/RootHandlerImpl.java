@@ -33,6 +33,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.validators.ValidateEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -85,15 +89,50 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, InitConvertGoogleUserRequest request, InitiationResponder responder) {
     try {
-      // TODO: send to request.accessToken to google to get email
-      /*
-      KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
-      String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-      */
+      HashMap<String, String> headers = new HashMap<>();
+      headers.put("Authorization", "Bearer " + request.accessToken);
+      CountDownLatch timeout = new CountDownLatch(1);
+      nexus.webBase.executeGet("https://www.googleapis.com/oauth2/v1/userinfo", headers, new Callback<String>() {
+        @Override
+        public void success(String value) {
+          ObjectNode googleProfile = Json.parseJsonObject(value);
+          try {
+            String email = googleProfile.get("email").textValue();
+            ValidateEmail.validate(email);
+            int userId = Users.getOrCreateUserId(nexus.dataBase, email);
+            String profileOld = Users.getProfile(nexus.dataBase, userId);
+            ObjectNode profile = Json.parseJsonObject(profileOld);
+            boolean changedProfile = false;
+            if (!profile.has("name") && googleProfile.has("name")) {
+              profile.set("name", googleProfile.get("name"));
+              changedProfile = true;
+            }
+            if (!profile.has("picture") && googleProfile.has("picture")) {
+              profile.set("picture", googleProfile.get("picture"));
+              changedProfile = true;
+            }
+            if (!profile.has("locale") && googleProfile.has("locale")) {
+              profile.set("locale", googleProfile.get("locale"));
+              changedProfile = true;
+            }
+            if (changedProfile) {
+              Users.setProfileIf(nexus.dataBase, userId, profile.toString(), profileOld);
+            }
+            KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+            String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+            long expiry = System.currentTimeMillis() + 3 * 24 * 60 * 60000;
+            Users.addKey(nexus.dataBase, userId, publicKey, expiry);
+            responder.complete(Jwts.builder().setSubject("" + userId).setExpiration(new Date(expiry)).setIssuer("adama").signWith(pair.getPrivate()).compact());
+          } catch (Exception ex) {
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CONVERT_TOKEN_VALIDATE_EXCEPTION, ex, LOGGER));
+          }
+        }
 
-//      int userId = Users.getOrCreateUserId(nexus.dataBase, email);
-//      responder.complete(Jwts.builder().setSubject("" + request.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
-
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      });
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CONVERT_TOKEN_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -106,8 +145,9 @@ public class RootHandlerImpl implements RootHandler {
       if (SCryptUtil.check(request.password, hash)) {
         KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
         String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-        Users.addKey(nexus.dataBase, request.userId, publicKey, System.currentTimeMillis() + 14 * 24 * 60 * 60000);
-        responder.complete(Jwts.builder().setSubject("" + request.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
+        long expiry = System.currentTimeMillis() + 14 * 24 * 60 * 60000;
+        Users.addKey(nexus.dataBase, request.userId, publicKey, expiry);
+        responder.complete(Jwts.builder().setSubject("" + request.userId).setExpiration(new Date(expiry)).setIssuer("adama").signWith(pair.getPrivate()).compact());
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SET_PASSWORD_INVALID));
       }
