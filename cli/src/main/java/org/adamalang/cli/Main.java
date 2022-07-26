@@ -13,6 +13,8 @@ import org.adamalang.ErrorTable;
 import org.adamalang.cli.commands.*;
 import org.adamalang.common.ErrorCodeException;
 
+import java.util.Map;
+
 public class Main {
 
   public static void main(String[] preFilteredArgs) throws Exception {
@@ -73,6 +75,11 @@ public class Main {
         case "stress":
           Stress.execute(config, next);
           return;
+        case "dumpenv":
+          for (Map.Entry<String, String> entry : System.getenv().entrySet()) {
+            System.err.println(entry.getKey() + "=" + entry.getValue());
+          }
+          return;
         case "help":
           rootHelp();
           return;
@@ -114,5 +121,6 @@ public class Main {
     System.out.println("    " + Util.prefix("service", Util.ANSI.Green) + "           Launch a service");
     System.out.println("    " + Util.prefix("space", Util.ANSI.Green) + "             Manages spaces");
     System.out.println("    " + Util.prefix("stress", Util.ANSI.Green) + "            Stress test using the canary tool");
+    System.out.println("    " + Util.prefix("dumpenv", Util.ANSI.Yellow) + "          Dump your environment variables");
   }
 }

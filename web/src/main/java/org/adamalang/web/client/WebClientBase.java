@@ -22,7 +22,6 @@ import io.netty.handler.codec.http.websocketx.WebSocketClientProtocolHandler;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import io.netty.util.CharsetUtil;
@@ -38,8 +37,6 @@ import org.adamalang.web.service.WebConfig;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -47,7 +44,6 @@ public class WebClientBase {
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(WebClientBase.class);
   private final WebConfig config;
   private final EventLoopGroup group;
-
   public WebClientBase(WebConfig config) {
     group = new NioEventLoopGroup();
     this.config = config;
@@ -70,9 +66,7 @@ public class WebClientBase {
       @Override
       protected void initChannel(final SocketChannel ch) throws Exception {
         if (secure) {
-          // TODO: Not a fan of using the insecurity trust manager
-          // .trustManager(InsecureTrustManagerFactory.INSTANCE)
-          ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc()));
+          ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc(), host, port));
         }
         ch.pipeline().addLast(new HttpClientCodec());
         ch.pipeline().addLast(new HttpObjectAggregator(2424242));
