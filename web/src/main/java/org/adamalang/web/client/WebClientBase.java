@@ -22,6 +22,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketClientProtocolHandler;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import io.netty.util.CharsetUtil;
@@ -69,6 +70,8 @@ public class WebClientBase {
       @Override
       protected void initChannel(final SocketChannel ch) throws Exception {
         if (secure) {
+          // TODO: Not a fan of using the insecurity trust manager
+          // .trustManager(InsecureTrustManagerFactory.INSTANCE)
           ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc()));
         }
         ch.pipeline().addLast(new HttpClientCodec());
@@ -101,6 +104,7 @@ public class WebClientBase {
         for (Map.Entry<String, String> entry : headersRaw.entrySet()) {
           headers.set(entry.getKey(), entry.getValue());
         }
+        headers.set("Host", host);
         HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, path, Unpooled.buffer(0), headers, new DefaultHttpHeaders(true));
         future.channel().writeAndFlush(request);
       } else {

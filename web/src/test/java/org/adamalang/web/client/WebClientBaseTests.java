@@ -36,11 +36,23 @@ public class WebClientBaseTests {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest5);
     WebClientBase clientBase = new WebClientBase(webConfig);
     try {
-      CountDownLatch latch = new CountDownLatch(2);
+      CountDownLatch latch = new CountDownLatch(3);
       clientBase.executeGet("https://nope.nope.nope.nope.nope.localhost/the-path", new HashMap<>(), new Callback<String>() {
         @Override
         public void success(String value) {
 
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+          latch.countDown();
+        }
+      });
+      clientBase.executeGet("https://www.adama-platform.com", new HashMap<>(), new Callback<String>() {
+        @Override
+        public void success(String value) {
+          latch.countDown();
         }
 
         @Override
