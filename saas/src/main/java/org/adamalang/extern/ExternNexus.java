@@ -16,6 +16,7 @@ import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Finder;
 import org.adamalang.net.client.Client;
+import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.io.JsonLogger;
 
@@ -32,8 +33,9 @@ public class ExternNexus {
   public final AssetDownloader downloader;
   public final String masterKey;
   public final MultiRegionClient adama;
+  public final WebClientBase webBase;
 
-  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBase, Finder finder, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey) {
+  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBase, Finder finder, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase) {
     this.config = config;
     this.email = email;
     this.uploader = uploader;
@@ -44,6 +46,7 @@ public class ExternNexus {
     this.accessLogger = accessLogger;
     this.masterKey = masterKey;
     this.adama = new MultiRegionClient(dataBase, client, finder);
+    this.webBase = webBase;
     attachmentRoot.mkdir();
   }
 

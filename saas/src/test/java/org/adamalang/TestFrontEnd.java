@@ -52,6 +52,7 @@ import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
+import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
@@ -61,6 +62,7 @@ import org.adamalang.web.io.JsonLogger;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
 import org.adamalang.web.service.AssetRequest;
+import org.adamalang.web.service.WebConfig;
 import org.junit.Assert;
 
 import java.io.File;
@@ -92,6 +94,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public final AtomicBoolean alive;
   public final DurableListStore store;
   private final CountDownLatch threadDeath;
+  private final WebClientBase webBase;
 
   public final File caravanPath;
   public TestFrontEnd() throws Exception {
@@ -252,7 +255,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
       }
     };
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
-    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, finder, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey());
+    this.webBase = new WebClientBase(new WebConfig(new ConfigObject(Json.parseJsonObject("{}"))));
+    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, finder, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase);
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);
     connection = this.frontend.establish(context);

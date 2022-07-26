@@ -67,6 +67,7 @@ import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.services.FirstPartyServices;
+import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.*;
@@ -453,6 +454,7 @@ public class Service {
         overlordClient.setTarget(null);
       }
     });
+    WebClientBase webBase = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
 
     // TODO: bring this out, and this whole file is getting CRAZY
     HttpHandler http = new HttpHandler() {
@@ -529,7 +531,7 @@ public class Service {
     Logger accessLog = LoggerFactory.getLogger("access");
     ExternNexus nexus = new ExternNexus(frontendConfig, email, s3, s3, database, finder, client, prometheusMetricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
-    }, masterKey);
+    }, masterKey, webBase);
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus, http);
     // TODO: have some sense of health checking in the web package
@@ -553,6 +555,7 @@ public class Service {
         System.err.println("shutting down frontend");
         runnable.shutdown();
         databasePings.shutdown();
+        webBase.shutdown();
       }
     }));
     System.err.println("running frontend");
