@@ -11,19 +11,28 @@ package org.adamalang.cli.commands;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
+import org.adamalang.ErrorCodes;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ConfigObject;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.transforms.results.Keystore;
 import org.adamalang.validators.ValidateKeystore;
+import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.service.WebConfig;
 
 import java.io.Console;
 import java.io.File;
 import java.nio.file.Files;
 import java.security.PrivateKey;
+import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class Account {
   public static void execute(Config config, String[] args) throws Exception {
@@ -49,6 +58,31 @@ public class Account {
   public static void testGoogleToken(Config config, String[] args) throws Exception {
     System.out.print("Token:");
     String token = new String(System.console().readPassword());
+    WebClientBase base = new WebClientBase(new WebConfig(new ConfigObject(Json.newJsonObject())));
+    try {
+      HashMap<String, String> headers = new HashMap<>();
+      headers.put("Authorization", "Bearer " + token);
+      CountDownLatch timeout = new CountDownLatch(1);
+      base.executeGet("https://www.googleapis.com/oauth2/v1/userinfo", headers, new Callback<String>() {
+        @Override
+        public void success(String value) {
+          System.err.println("Success:" + value);
+          timeout.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          System.err.println("Failure:" + ex.code);
+          System.err.println("       :" + ex.getMessage());
+          if (ex.getCause() != null) {
+            ex.printStackTrace();
+          }
+        }
+      });
+      timeout.await(1250, TimeUnit.MILLISECONDS);
+    } finally {
+      base.shutdown();
+    }
   }
 
   public static void accountSetPassword(Config config, String[] args) throws Exception {

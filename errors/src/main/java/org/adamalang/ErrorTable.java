@@ -288,6 +288,8 @@ public class ErrorTable {
     descriptions.put(985216, "no description of error (yet)");
     names.put(904327, "API_LOGIN_UNKNOWN_EXCEPTION");
     descriptions.put(904327, "no description of error (yet)");
+    names.put(978099, "API_CONVERT_TOKEN_UNKNOWN_EXCEPTION");
+    descriptions.put(978099, "no description of error (yet)");
     names.put(965636, "API_INIT_SETUP_UNKNOWN_EXCEPTION");
     descriptions.put(965636, "no description of error (yet)");
     names.put(946179, "API_INIT_COMPLETE_UNKNOWN_EXCEPTION");
@@ -459,6 +461,12 @@ public class ErrorTable {
     descriptions.put(950384, "The given document ran out of compute tokens. This is most likely due to an infinite loop.");
     names.put(901232, "AWS_EMAIL_SEND_FAILURE");
     descriptions.put(901232, "no description of error (yet)");
+    names.put(966835, "WEB_BASE_GET_FAILED_EXECUTE");
+    descriptions.put(966835, "no description of error (yet)");
+    names.put(949427, "WEB_BASE_GET_FAILED_CONNECT");
+    descriptions.put(949427, "no description of error (yet)");
+    names.put(904383, "WEB_BASE_GET_FAILED_NOT_200");
+    descriptions.put(904383, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");

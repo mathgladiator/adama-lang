@@ -35,6 +35,7 @@ import org.adamalang.web.contracts.WebLifecycle;
 import org.adamalang.web.service.WebConfig;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -81,7 +82,7 @@ public class WebClientBase {
               if (msg.status() == HttpResponseStatus.OK) {
                 callback.success(msg.content().toString(CharsetUtil.UTF_8));
               } else {
-                callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_GET_FAILED_NOT_200));
+                callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_GET_FAILED_NOT_200, msg.content().toString(StandardCharsets.UTF_8)));
               }
               ctx.close();
             }
