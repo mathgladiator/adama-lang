@@ -900,6 +900,16 @@ export class Connection {
       request: {"method":"init/setup-account", "id":parId, "email": email}
     });
   }
+  InitConvertGoogleUser(accessToken: string, responder: InitiationResponder) {
+    var self = this;
+    self.nextId++;
+    var parId = self.nextId;
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"init/convert-google-user", "id":parId, "access-token": accessToken}
+    });
+  }
   InitCompleteAccount(email: string, revoke: boolean, code: string, responder: InitiationResponder) {
     var self = this;
     self.nextId++;

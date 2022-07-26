@@ -81,6 +81,24 @@ public class ConnectionRouter {
                 }
               });
             } return;
+            case "init/convert-google-user": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_InitConvertGoogleUser.start();
+              InitConvertGoogleUserRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(InitConvertGoogleUserRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "init/complete-account": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_InitCompleteAccount.start();
               InitCompleteAccountRequest.resolve(session, nexus, request, new Callback<>() {

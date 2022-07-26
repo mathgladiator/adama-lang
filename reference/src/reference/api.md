@@ -3,6 +3,9 @@
 ## Method: init/setup-account
 This initiates developer machine via email verification.
 
+## Method: init/convert-google-user
+The converts and validates a google token into an Adama token
+
 ## Method: init/complete-account
 This establishes a developer machine via email verification.
 

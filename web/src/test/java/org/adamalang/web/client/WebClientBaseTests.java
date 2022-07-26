@@ -10,6 +10,8 @@
 package org.adamalang.web.client;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.contracts.WebJsonStream;
@@ -22,11 +24,52 @@ import org.adamalang.web.service.mocks.MockServiceBase;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.sql.Time;
+import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class WebClientBaseTests {
+  @Test
+  public void get() throws Exception {
+    WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest5);
+    WebClientBase clientBase = new WebClientBase(webConfig);
+    try {
+      CountDownLatch latch = new CountDownLatch(2);
+      clientBase.executeGet("https://nope.nope.nope.nope.nope.localhost/the-path", new HashMap<>(), new Callback<String>() {
+        @Override
+        public void success(String value) {
+
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+          latch.countDown();
+        }
+      });
+      HashMap<String, String> google = new HashMap<>();
+      google.put("Authorization", "Bearer XYZ");
+      clientBase.executeGet("https://www.googleapis.com/oauth2/v1/userinfo", google, new Callback<String>() {
+        @Override
+        public void success(String value) {
+          System.err.println(value);
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+          latch.countDown();
+        }
+      });
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+
+    } finally {
+      clientBase.shutdown();
+    }
+  }
   @Test
   public void happy() throws Exception {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest1);

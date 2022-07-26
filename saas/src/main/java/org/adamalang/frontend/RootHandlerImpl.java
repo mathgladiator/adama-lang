@@ -83,6 +83,23 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
+  public void handle(Session session, InitConvertGoogleUserRequest request, InitiationResponder responder) {
+    try {
+      // TODO: send to request.accessToken to google to get email
+      /*
+      KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+      String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+      */
+
+//      int userId = Users.getOrCreateUserId(nexus.dataBase, email);
+//      responder.complete(Jwts.builder().setSubject("" + request.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
+
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CONVERT_TOKEN_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
   public void handle(Session session, AccountLoginRequest request, InitiationResponder responder) {
     try {
       String hash = Users.getPasswordHash(nexus.dataBase, request.userId);

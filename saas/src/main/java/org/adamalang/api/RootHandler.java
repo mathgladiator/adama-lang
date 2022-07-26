@@ -14,6 +14,8 @@ import org.adamalang.connection.Session;
 public interface RootHandler {
   public void handle(Session session, InitSetupAccountRequest request, SimpleResponder responder);
 
+  public void handle(Session session, InitConvertGoogleUserRequest request, InitiationResponder responder);
+
   public void handle(Session session, InitCompleteAccountRequest request, InitiationResponder responder);
 
   public void handle(Session session, AccountSetPasswordRequest request, SimpleResponder responder);

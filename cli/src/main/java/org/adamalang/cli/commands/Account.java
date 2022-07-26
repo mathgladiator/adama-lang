@@ -37,10 +37,18 @@ public class Account {
       case "set-password":
         accountSetPassword(config, args);
         return;
+      case "test-gtoken":
+        testGoogleToken(config, args);
+        return;
       case "help":
         accountHelp();
         return;
     }
+  }
+
+  public static void testGoogleToken(Config config, String[] args) throws Exception {
+    System.out.print("Token:");
+    String token = new String(System.console().readPassword());
   }
 
   public static void accountSetPassword(Config config, String[] args) throws Exception {
@@ -78,5 +86,7 @@ public class Account {
     System.out.println();
     System.out.println(Util.prefix("ACCOUNTSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("set-password", Util.ANSI.Green) + "      Create a password to be used on web");
+    System.out.println("    " + Util.prefix("test-gtoken", Util.ANSI.Green) + "       Test a google token converts to an email");
+
   }
 }

@@ -63,7 +63,8 @@ public class WebConfigTests {
     ClientTest1(15100),
     ClientTest2(15101),
     ClientTest3(15102),
-    ClientTest4(15103);
+    ClientTest4(15103),
+    ClientTest5(15104);
 
     public final int port;
 

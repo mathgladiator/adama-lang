@@ -113,6 +113,13 @@
         <validate service="org.adamalang.validators.ValidateEmail"/>
     </parameter-definition>
 
+    <parameter-definition name="access-token" type="string" missing-error="407544">
+        <documentation>
+            'access-token' is an access token to convert to a user
+        </documentation>
+        <validate service="org.adamalang.validators.ValidateToken"/>
+    </parameter-definition>
+
     <parameter-definition name="plan" type="json-object" missing-error="425999">
         <documentation>
             This 'plan' parameter contains multiple Adama scripts all gated on various rules.
@@ -455,6 +462,13 @@
         <parameter name="email"/>
         <documentation>
             This initiates developer machine via email verification.
+        </documentation>
+    </method>
+
+    <method name="init/convert-google-user" responder="initiation">
+        <parameter name="access-token"/>
+        <documentation>
+            The converts and validates a google token into an Adama token
         </documentation>
     </method>
 
@@ -1146,7 +1160,6 @@
 477179
 442363
 410619
-407544
 -->
 
 </api>

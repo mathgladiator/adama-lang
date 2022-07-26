@@ -14,6 +14,7 @@ import org.adamalang.common.metrics.*;
 
 public class ApiMetrics {
   public final RequestResponseMonitor monitor_InitSetupAccount;
+  public final RequestResponseMonitor monitor_InitConvertGoogleUser;
   public final RequestResponseMonitor monitor_InitCompleteAccount;
   public final RequestResponseMonitor monitor_AccountSetPassword;
   public final RequestResponseMonitor monitor_AccountLogin;
@@ -45,6 +46,7 @@ public class ApiMetrics {
 
   public ApiMetrics(MetricsFactory factory) {
     this.monitor_InitSetupAccount = factory.makeRequestResponseMonitor("init/setup-account");
+    this.monitor_InitConvertGoogleUser = factory.makeRequestResponseMonitor("init/convert-google-user");
     this.monitor_InitCompleteAccount = factory.makeRequestResponseMonitor("init/complete-account");
     this.monitor_AccountSetPassword = factory.makeRequestResponseMonitor("account/set-password");
     this.monitor_AccountLogin = factory.makeRequestResponseMonitor("account/login");
