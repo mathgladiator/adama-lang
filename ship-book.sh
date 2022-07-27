@@ -1,2 +1,2 @@
 #!/bin/sh
-surge --domain book.adama-platform.com reference/book
+surge --domain https://book.adama-platform.com reference/book
