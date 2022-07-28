@@ -111,6 +111,20 @@ public class LibStringTests {
     Assert.assertFalse(LibString.indexOf(new NtMaybe<>(), "x").has());
     Assert.assertFalse(LibString.indexOf("x", new NtMaybe<>()).has());
     Assert.assertFalse(LibString.indexOf(new NtMaybe<>(), new NtMaybe<>()).has());
+
+    Assert.assertEquals(2, (int) LibString.indexOf("a needle yo", "need", 1).get());
+    Assert.assertFalse(LibString.indexOf("a needle yo", "ninja", 1).has());
+    Assert.assertEquals(2, (int) LibString.indexOf(new NtMaybe<>("a needle yo"), "need", 1).get());
+    Assert.assertFalse(LibString.indexOf(new NtMaybe<>("a needle yo"), "ninja", 1).has());
+    Assert.assertEquals(2, (int) LibString.indexOf("a needle yo", new NtMaybe<>("need"), 1).get());
+    Assert.assertFalse(LibString.indexOf("a needle yo", new NtMaybe<>("ninja"), 1).has());
+    Assert.assertEquals(
+        2, (int) LibString.indexOf(new NtMaybe<>("a needle yo"), new NtMaybe<>("need"), 1).get());
+    Assert.assertFalse(
+        LibString.indexOf(new NtMaybe<>("a needle yo"), new NtMaybe<>("ninja"), 1).has());
+    Assert.assertFalse(LibString.indexOf(new NtMaybe<>(), "x", 1).has());
+    Assert.assertFalse(LibString.indexOf("x", new NtMaybe<>(), 1).has());
+    Assert.assertFalse(LibString.indexOf(new NtMaybe<>(), new NtMaybe<>(), 1).has());
   }
 
   @Test

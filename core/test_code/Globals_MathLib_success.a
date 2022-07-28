@@ -17,6 +17,6 @@ double zzz;
   int i1 = Math.abs(y);
   double i2 = Math.floor(x);
   double i3 = Math.ceil(x);
-  long i4 = Math.round(x);
-  long i5 = (i3 * 13.5).round();
+  double i4 = Math.round(x);
+  double i5 = (i3 * 13.5).round();
 }

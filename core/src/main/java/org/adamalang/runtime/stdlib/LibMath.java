@@ -29,13 +29,55 @@ public class LibMath {
   }
 
   @Extension
-  public static int ceil(final double x) {
-    return (int) Math.ceil(x);
+  public static double ceil(final double x) {
+    return Math.ceil(x);
   }
 
   @Extension
-  public static int floor(final double x) {
-    return (int) Math.floor(x);
+  public static double floor(final double x) {
+    return Math.floor(x);
+  }
+
+  @Extension
+  public static double ceil(final double x, double precision) {
+    return Math.ceil(x / precision) * precision;
+  }
+
+  @Extension
+  public static double floor(final double x, double precision) {
+    return Math.floor(x / precision) * precision;
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> ceil(final @HiddenType(clazz=Double.class) NtMaybe<Double> x) {
+    if (x.has()) {
+      return new NtMaybe<>(Math.ceil(x.get()));
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> floor(final @HiddenType(clazz=Double.class) NtMaybe<Double> x) {
+    if (x.has()) {
+      return new NtMaybe<>(Math.floor(x.get()));
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> ceil(final @HiddenType(clazz=Double.class) NtMaybe<Double> x, double precision) {
+    if (x.has()) {
+      return new NtMaybe<>(Math.ceil(x.get() / precision) * precision);
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> floor(final @HiddenType(clazz=Double.class) NtMaybe<Double> x, double precision) {
+    if (x.has()) {
+      return new NtMaybe<>(Math.floor(x.get() / precision) * precision);
+    }
+    return new NtMaybe<>();
   }
 
   @Extension
@@ -51,17 +93,17 @@ public class LibMath {
 
   @Extension
   public static boolean near(final NtComplex a, int b) {
-    return near(a.real, b) && near(a.imaginary, b);
+    return near(a.real, b) && near(a.imaginary, 0);
   }
 
   @Extension
   public static boolean near(final NtComplex a, long b) {
-    return near(a.real, b) && near(a.imaginary, b);
+    return near(a.real, b) && near(a.imaginary, 0);
   }
 
   @Extension
   public static boolean near(final NtComplex a, double b) {
-    return near(a.real, b) && near(a.imaginary, b);
+    return near(a.real, b) && near(a.imaginary, 0);
   }
 
   @Extension
@@ -73,8 +115,13 @@ public class LibMath {
   }
 
   @Extension
-  public static int round(final double x) {
+  public static double round(final double x) {
     return (int) Math.round(x);
+  }
+
+  @Extension
+  public static double round(final double x, double precision) {
+    return Math.round(x / precision) * precision;
   }
 
   @Extension
@@ -83,14 +130,54 @@ public class LibMath {
     return Math.round(x * shift) / shift;
   }
 
+
   @Extension
   public static NtComplex conj(final NtComplex x) {
     return new NtComplex(x.real, -x.imaginary);
   }
 
   @Extension
-  public static double len(final NtComplex x) {
+  public static @HiddenType(clazz=NtComplex.class) NtMaybe<NtComplex> conj(final @HiddenType(clazz=NtComplex.class)NtMaybe<NtComplex> x) {
+    if (x.has()) {
+      return new NtMaybe<>(conj(x.get()));
+    }
+    return x;
+  }
+
+  @Extension
+  public static double abs(final double x) {
+    return Math.abs(x);
+  }
+
+  @Extension
+  public static int abs(final int x) {
+    return Math.abs(x);
+  }
+
+  @Extension
+  public static long abs(final long x) {
+    return Math.abs(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> abs(final @HiddenType(clazz=Double.class) NtMaybe<Double> x) {
+    if (x.has()) {
+      return new NtMaybe<>(Math.abs(x.get()));
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static double length(final NtComplex x) {
     return Math.sqrt(x.real * x.real + x.imaginary * x.imaginary);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> length(final @HiddenType(clazz=NtComplex.class) NtMaybe<NtComplex> x) {
+    if (x.has()) {
+      return new NtMaybe<>(length(x.get()));
+    }
+    return new NtMaybe<>();
   }
 
   public static boolean isTrue(@HiddenType(clazz = Boolean.class) NtMaybe<Boolean> x) {

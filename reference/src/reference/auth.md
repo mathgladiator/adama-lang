@@ -1,5 +1,8 @@
-# JavaScript API Reference
+# JavaScript Connection and Authentication
 
+# Linking
+
+# Connecting
 
 ## The built-in tooling
 

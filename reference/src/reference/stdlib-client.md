@@ -1,1 +1,0 @@
-# Principals (i.e. People)

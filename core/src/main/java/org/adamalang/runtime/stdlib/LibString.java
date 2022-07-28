@@ -126,6 +126,44 @@ public class LibString {
   }
 
   @Extension
+  public static @HiddenType(clazz = Integer.class)
+  NtMaybe<Integer> indexOf(final @HiddenType(clazz = String.class) NtMaybe<String> haystack, String needle, int offset) {
+    if (haystack.has()) {
+      return indexOf(haystack.get(), needle, offset);
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Integer.class)
+  NtMaybe<Integer> indexOf(final String haystack, String needle, int offset) {
+    int value = haystack.indexOf(needle, offset);
+    if (value < 0) {
+      return new NtMaybe<>();
+    } else {
+      return new NtMaybe<>(value);
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Integer.class)
+  NtMaybe<Integer> indexOf(final String haystack, final @HiddenType(clazz = String.class) NtMaybe<String> needle, int offset) {
+    if (needle.has()) {
+      return indexOf(haystack, needle.get(), offset);
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Integer.class)
+  NtMaybe<Integer> indexOf(final @HiddenType(clazz = String.class) NtMaybe<String> haystack, final @HiddenType(clazz = String.class) NtMaybe<String> needle, int offset) {
+    if (haystack.has() && needle.has()) {
+      return indexOf(haystack.get(), needle.get(), offset);
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
   public static String trim(String s) {
     return s.strip();
   }
