@@ -9,4 +9,4 @@ Part of access control is also validating that a user is from the right place wh
 | Method | Description | Result type |
 | --- | --- | --- |
 | isAdamaDeveloper() | Returns whether the principal is an Adama Developer | bool |
-| fromAuthority(string authority) | Returns whether the principal was derived from the given authority. See [authentication](./auth) for how to bring your own authentication. | bool | 
+| fromAuthority(string authority) | Returns whether the principal was derived from the given authority. See [authentication](./auth.md) for how to bring your own authentication. | bool | 
