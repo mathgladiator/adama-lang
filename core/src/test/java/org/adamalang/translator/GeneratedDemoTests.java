@@ -8754,7 +8754,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate__0(StaticState __static_state, NtPrincipal __who, CoreRequestContext __context) {");
-    gold.append("\n    return LibClient.isAdamaDeveloper(__who);");
+    gold.append("\n    return LibPrincipal.isAdamaDeveloper(__who);");
     gold.append("\n  }");
     gold.append("\n  public boolean __onConnected__0(NtPrincipal __who) {");
     gold.append("\n    __code_cost += 2;");
