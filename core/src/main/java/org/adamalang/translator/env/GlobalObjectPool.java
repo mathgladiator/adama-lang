@@ -39,7 +39,7 @@ public class GlobalObjectPool {
     pool.add(mathlib);
     pool.add(GlobalFactory.makeGlobal("Adama", LibAdama.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
-    pool.add(GlobalFactory.makeGlobal("Client", LibClient.class, pool.extensions));
+    pool.add(GlobalFactory.makeGlobal("Client", LibPrincipal.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Dynamic", LibDynamic.class, pool.extensions));
     final var document = new TyNativeGlobalObject("Document", null, false);
     document.functions.put("destroy", generateInternalDocumentFunction("__destroyDocument", new TyNativeVoid()));

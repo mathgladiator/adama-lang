@@ -10,16 +10,16 @@
 package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.translator.reflect.Extension;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class LibClient {
-  @Extension
-  public static boolean isAdamaDeveloper(final NtPrincipal client) {
-    return "adama".equals(client.authority);
-  }
-
-  @Extension
-  public static boolean fromAuthority(final NtPrincipal client, String authority) {
-    return authority.equals(client.authority);
+public class LibPrincipalTests {
+  @Test
+  public void is() {
+    NtPrincipal a = new NtPrincipal("jeff", "adama");
+    Assert.assertTrue(LibPrincipal.isAdamaDeveloper(a));
+    Assert.assertFalse(LibPrincipal.isAdamaDeveloper(NtPrincipal.NO_ONE));
+    Assert.assertTrue(LibPrincipal.fromAuthority(a, "adama"));
+    Assert.assertFalse(LibPrincipal.fromAuthority(a, "x"));
   }
 }

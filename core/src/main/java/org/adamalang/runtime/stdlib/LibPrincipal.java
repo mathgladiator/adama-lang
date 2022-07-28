@@ -10,16 +10,17 @@
 package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.junit.Assert;
-import org.junit.Test;
+import org.adamalang.translator.reflect.Extension;
 
-public class LibClientTests {
-  @Test
-  public void is() {
-    NtPrincipal a = new NtPrincipal("jeff", "adama");
-    Assert.assertTrue(LibClient.isAdamaDeveloper(a));
-    Assert.assertFalse(LibClient.isAdamaDeveloper(NtPrincipal.NO_ONE));
-    Assert.assertTrue(LibClient.fromAuthority(a, "adama"));
-    Assert.assertFalse(LibClient.fromAuthority(a, "x"));
+/** Helpful functions around NtPrincipal */
+public class LibPrincipal {
+  @Extension
+  public static boolean isAdamaDeveloper(final NtPrincipal principal) {
+    return "adama".equals(principal.authority);
+  }
+
+  @Extension
+  public static boolean fromAuthority(final NtPrincipal principal, String authority) {
+    return authority.equals(principal.authority);
   }
 }
