@@ -1,10 +1,11 @@
 principal owner;
 int v;
+
 message M {
   int x;
 }
 
 @construct (M m3) {
-  owner = c;
+  owner = @who;
   v = m3.x;
 }
