@@ -249,7 +249,7 @@ public class SillyTypeIssues {
   }
 
   @Test
-  public void ntclient() {
+  public void ntprincipal() {
     new TyNativePrincipal(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
     new TyNativeFuture(null, null, null, new TokenizedItem<>(new TyNativeVoid()))
         .writeTypeReflectionJson(new JsonStreamWriter());

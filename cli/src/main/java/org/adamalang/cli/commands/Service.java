@@ -473,7 +473,7 @@ public class Service {
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
         if (skr != null) {
-          // TODO: need a way to get an NtClient token
+          // TODO: need a way to get an NtPrincipal token
           WebGet get = new WebGet(NtPrincipal.NO_ONE, skr.uri, headers, new NtDynamic(parametersJson));
           client.webGet(skr.space, skr.key, get, new Callback<>() {
             @Override
@@ -503,7 +503,7 @@ public class Service {
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
         if (skr != null) {
-          // TODO: need a way to get an NtClient token
+          // TODO: need a way to get an NtPrincipal token
           WebPut put = new WebPut(NtPrincipal.NO_ONE, new WebPutRaw(skr.uri, headers, new NtDynamic(parametersJson), body));
           client.webPut(skr.space, skr.key, put, new Callback<>() {
             @Override

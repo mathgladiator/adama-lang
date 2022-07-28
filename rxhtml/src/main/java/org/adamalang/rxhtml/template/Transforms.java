@@ -14,9 +14,9 @@ import java.util.Locale;
 public class Transforms {
   public static String of(String transform) {
     switch (transform.trim().toLowerCase(Locale.ROOT)) {
-      case "ntclient.agent":
+      case "principal.agent":
         return "function(x) { return x.agent; }";
-      case "ntclient.authority":
+      case "principal.authority":
         return "function(x) { return x.authority; }";
       case "trim":
         return "function(x) { return ('' + x).trim(); }";
