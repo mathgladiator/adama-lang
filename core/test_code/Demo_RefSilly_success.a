@@ -1,6 +1,6 @@
 // 1/7: Yet another schema l
 
-public client owner;
+public principal owner;
 public string name;
 public string description;
 public int viewers;

@@ -2,7 +2,7 @@
   return @who == @no_one;
 }
 
-private client owner = @no_one;
+private principal owner = @no_one;
 
 policy saneG {
   return @who == @no_one;

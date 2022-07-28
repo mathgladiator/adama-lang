@@ -24,46 +24,29 @@ import java.util.function.Consumer;
 
 /** used within a record to define a custom policy */
 public class DefineCustomPolicy extends DocumentPosition {
-  public final TyNativePrincipal clientType;
-  public final Token clientVar;
   public final Block code;
   public final Token definePolicy;
-  public final Token endParen;
   public final Token name;
-  public final Token openParen;
   public final TyNativeBoolean policyType;
 
-  public DefineCustomPolicy(final Token definePolicy, final Token name, final Token openParen, final Token clientVar, final Token endParen, final Block code) {
+  public DefineCustomPolicy(final Token definePolicy, final Token name, final Block code) {
     this.definePolicy = definePolicy;
     this.name = name;
-    this.openParen = openParen;
-    this.clientVar = clientVar;
-    this.endParen = endParen;
     this.code = code;
     policyType = new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, name);
-    clientType = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, clientVar != null ? clientVar : definePolicy);
-    ingest(name);
+    ingest(definePolicy);
     ingest(code);
-    clientType.ingest(clientVar != null ? clientVar : definePolicy);
     policyType.ingest(name);
   }
 
   public void emit(final Consumer<Token> yielder) {
     yielder.accept(definePolicy);
     yielder.accept(name);
-    if (openParen != null) {
-      yielder.accept(openParen);
-      yielder.accept(clientVar);
-      yielder.accept(endParen);
-    }
     code.emit(yielder);
   }
 
   public Environment scope(final Environment environment, DocumentPosition position) {
     Environment env = environment.scopeAsPolicy().scopeWithComputeContext(ComputeContext.Computation);
-    if (clientVar != null) {
-      env.define(clientVar.text, clientType, true, clientType);
-    }
     TyType returnType = policyType;
     if (position != null) {
       returnType = policyType.makeCopyWithNewPosition(position, policyType.behavior);

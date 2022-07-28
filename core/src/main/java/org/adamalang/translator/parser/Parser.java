@@ -605,27 +605,11 @@ public class Parser {
   }
 
   public BubbleDefinition define_bubble(final Token bubbleToken) throws AdamaLangException {
-
-    final var openClient = tokens.popIf(t -> t.isSymbolWithTextEq("<"));
-    if (openClient != null) {
-      final var clientVar = id();
-      final var comma = tokens.popIf((t) -> t.isSymbolWithTextEq(","));
-      final var viewerStateName = comma != null ? id() : null;
-      final var closeClient = consumeExpectedSymbol(">");
-      final var nameToken = id();
-      final var equalsToken = consumeExpectedSymbol("=");
-      final var expression = expression();
-      final var semicolonToken = consumeExpectedSymbol(";");
-      return new BubbleDefinition(bubbleToken, openClient, clientVar, comma, viewerStateName, closeClient, nameToken, equalsToken, expression, semicolonToken);
-    } else {
-      final var nameToken = id();
-      final var equalsToken = consumeExpectedSymbol("=");
-      final var expression = expression();
-      final var semicolonToken = consumeExpectedSymbol(";");
-      return new BubbleDefinition(bubbleToken, null, null, null, null, null, nameToken, equalsToken, expression, semicolonToken);
-    }
-
-
+    final var nameToken = id();
+    final var equalsToken = consumeExpectedSymbol("=");
+    final var expression = expression();
+    final var semicolonToken = consumeExpectedSymbol(";");
+    return new BubbleDefinition(bubbleToken, nameToken, equalsToken, expression, semicolonToken);
   }
 
   public DefineDocumentEvent define_document_event_raw(final Token eventToken, final DocumentEvent which) throws AdamaLangException {
@@ -868,14 +852,7 @@ public class Parser {
 
   public DefineCustomPolicy define_policy_trailer(final Token definePolicy) throws AdamaLangException {
     final var id = id();
-    final var openParen = tokens.popIf(t -> t.isSymbolWithTextEq("("));
-    if (openParen != null) {
-      final var clientVar = id();
-      final var endParen = consumeExpectedSymbol(")");
-      return new DefineCustomPolicy(definePolicy, id, openParen, clientVar, endParen, block());
-    } else {
-      return new DefineCustomPolicy(definePolicy, id, null, null, null, block());
-    }
+    return new DefineCustomPolicy(definePolicy, id, block());
   }
 
   public Consumer<TopLevelDocumentHandler> define_procedure_trailer(final Token procedureToken) throws AdamaLangException {

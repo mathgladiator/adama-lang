@@ -7,7 +7,7 @@
 }
 
 // 2. the document schema has a creator and an integer named x
-public client creator;
+public principal creator;
 public int x;
 
 // 3. the constructor is a message named by the document

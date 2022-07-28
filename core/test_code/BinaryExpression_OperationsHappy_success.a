@@ -56,7 +56,7 @@ test Logic {
   assert !(false || false);
 }
 
-client other;
+principal other;
 string s;
 
 test Equals {

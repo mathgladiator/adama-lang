@@ -17,7 +17,7 @@ record R2 {
 }
 
 record R3 {
-  private client owner;
+  private principal owner;
 
   policy is_owner {
     return owner == @who;
@@ -25,7 +25,7 @@ record R3 {
 }
 
 record R4 {
-  private client owner;
+  private principal owner;
 
   use_policy<is_owner> int balance;
 
@@ -35,7 +35,7 @@ record R4 {
 }
 
 record R5 {
-  private client owner;
+  private principal owner;
 
   public int balance;
 

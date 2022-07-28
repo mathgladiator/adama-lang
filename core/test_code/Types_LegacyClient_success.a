@@ -1,5 +1,5 @@
-client x;
-client y;
+principal x;
+principal y;
 
 @construct {
   transition #setup;
@@ -13,8 +13,8 @@ client y;
 
 #setup {
   x = y;
-  client z = x;
-  client cake;
+  principal z = x;
+  principal cake;
   cake = z;
   let eq = @no_one == @no_one;
 }

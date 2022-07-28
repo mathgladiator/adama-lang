@@ -3,7 +3,7 @@ enum E { A, B }
 record One {
   public int x;
   public E y;
-  public client z;
+  public principal z;
 
   index x;
 }
@@ -11,7 +11,7 @@ record One {
 record Two {
   public int x;
   public E y;
-  public client z;
+  public principal z;
 
   index y;
   index x;
@@ -32,7 +32,7 @@ table<Issues> itbl;
 record Three {
   public int x;
   public E y;
-  public client z;
+  public principal z;
 
   index z;
   index y;

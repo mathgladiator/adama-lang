@@ -17,7 +17,7 @@ public maybe<bool> maybe_open_bool2;
 public maybe<string> maybe_open_string2;
 public maybe<double> maybe_open_double2;
 
-private client owner = @no_one;
+private principal owner = @no_one;
 
 record X {
   use_policy<sane> int x;

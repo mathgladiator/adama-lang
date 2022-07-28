@@ -1,4 +1,4 @@
-client owner;
+principal owner;
 
 @construct {
   owner = @who;

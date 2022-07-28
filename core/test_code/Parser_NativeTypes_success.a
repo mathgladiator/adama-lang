@@ -10,7 +10,7 @@ procedure drive(future<M> f, M m) {
 
 @construct {
   bool b = false;
-  client c = @no_one;
+  principal c = @no_one;
   double d = 3.14;
   int i = 42;
   string s = "Hello World";

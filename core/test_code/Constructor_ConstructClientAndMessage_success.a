@@ -1,4 +1,4 @@
-client owner;
+principal owner;
 int v;
 message M {
   int x;

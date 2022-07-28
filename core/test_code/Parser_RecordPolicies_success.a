@@ -1,7 +1,7 @@
 record X {
   public int x;
   private int z;
-  private client who;
+  private principal who;
   viewer_is<who> int u;
   use_policy<p1> int v;
   use_policy<p1, p2> int w;

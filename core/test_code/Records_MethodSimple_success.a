@@ -1,6 +1,6 @@
 record Card {
   public int id;
-  private client owner;
+  private principal owner;
   private int ordering;
 
   method reset() {

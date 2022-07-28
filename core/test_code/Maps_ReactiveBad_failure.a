@@ -1,5 +1,5 @@
 // this MAKES a ton of sense, so... perhaps... I need to think about this?
-public map<client, int> my_map1;
+public map<principal, int> my_map1;
 
 @construct {
   // legit failure, but it masks the above thing as good.

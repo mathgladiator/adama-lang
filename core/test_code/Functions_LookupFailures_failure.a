@@ -2,7 +2,7 @@ message M {
   label foo;
 }
 record R {
-  client owner;
+  principal owner;
 }
 
 R x;
@@ -29,7 +29,7 @@ test Natives {
 }
 
 bool rb;
-client rc;
+principal rc;
 double rd;
 E re;
 int ri;

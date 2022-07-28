@@ -2,7 +2,7 @@ record X {
   int z;
   int v;
   bool b;
-  client c;
+  principal c;
 }
 
 table<X> zzz;

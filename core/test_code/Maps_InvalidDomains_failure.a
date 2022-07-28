@@ -2,7 +2,7 @@ message M {
 }
 
 @construct {
-  map<client, int> a;
+  map<principal, int> a;
   map<M, int> b;
   map<int, K> k1;
   map<K, int> k2;

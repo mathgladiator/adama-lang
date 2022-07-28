@@ -5,9 +5,9 @@
 
 enum SquareState { Open, X, O }
 
-client playerX;
-client playerO;
-public client current;
+principal playerX;
+principal playerO;
+public principal current;
 public int wins_X;
 public int wins_O;
 public int stalemates;
