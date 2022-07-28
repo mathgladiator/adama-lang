@@ -12,7 +12,7 @@ package org.adamalang.runtime.delta;
 import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ public class DMaybeTests {
   public void flow() {
     final var db = new DMaybe<DBoolean>();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
     final var a = db.get(DBoolean::new);
     final var b = db.get(DBoolean::new);
     Assert.assertTrue(a == b);

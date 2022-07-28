@@ -1240,7 +1240,8 @@ public class Parser {
       case "bool":
         return new TyNativeBoolean(behavior, readonlyToken, token);
       case "client":
-        return new TyNativeClient(behavior, readonlyToken, token);
+      case "principal":
+        return new TyNativePrincipal(behavior, readonlyToken, token);
       case "asset":
         return new TyNativeAsset(behavior, readonlyToken, token);
       case "dynamic":
@@ -1399,7 +1400,8 @@ public class Parser {
       case "bool":
         return new TyReactiveBoolean(token);
       case "client":
-        return new TyReactiveClient(token);
+      case "principal":
+        return new TyReactivePrincipal(token);
       case "asset":
         return new TyReactiveAsset(token);
       case "dynamic":
@@ -1554,6 +1556,7 @@ public class Parser {
     switch (token.text) {
       case "bool":
       case "client":
+      case "principal":
       case "dynamic":
       case "double":
       case "complex":

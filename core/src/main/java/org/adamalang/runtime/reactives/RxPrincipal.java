@@ -14,14 +14,14 @@ import org.adamalang.runtime.contracts.Indexable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 /** a reactive client */
-public class RxClient extends RxBase implements Comparable<RxClient>, CanGetAndSet<NtClient>, Indexable {
-  private NtClient backup;
-  private NtClient value;
+public class RxPrincipal extends RxBase implements Comparable<RxPrincipal>, CanGetAndSet<NtPrincipal>, Indexable {
+  private NtPrincipal backup;
+  private NtPrincipal value;
 
-  public RxClient(final RxParent parent, final NtClient value) {
+  public RxPrincipal(final RxParent parent, final NtPrincipal value) {
     super(parent);
     backup = value;
     this.value = value;
@@ -31,9 +31,9 @@ public class RxClient extends RxBase implements Comparable<RxClient>, CanGetAndS
   public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
       forwardDelta.writeObjectFieldIntro(name);
-      forwardDelta.writeNtClient(value);
+      forwardDelta.writeNtPrincipal(value);
       reverseDelta.writeObjectFieldIntro(name);
-      reverseDelta.writeNtClient(backup);
+      reverseDelta.writeNtPrincipal(backup);
       backup = value;
       __lowerDirtyCommit();
     }
@@ -41,18 +41,18 @@ public class RxClient extends RxBase implements Comparable<RxClient>, CanGetAndS
 
   @Override
   public void __dump(final JsonStreamWriter writer) {
-    writer.writeNtClient(value);
+    writer.writeNtPrincipal(value);
   }
 
   @Override
   public void __insert(final JsonStreamReader reader) {
-    backup = reader.readNtClient();
+    backup = reader.readNtPrincipal();
     value = backup;
   }
 
   @Override
   public void __patch(JsonStreamReader reader) {
-    set(reader.readNtClient());
+    set(reader.readNtPrincipal());
   }
 
   @Override
@@ -69,17 +69,17 @@ public class RxClient extends RxBase implements Comparable<RxClient>, CanGetAndS
   }
 
   @Override
-  public int compareTo(final RxClient other) {
+  public int compareTo(final RxPrincipal other) {
     return value.compareTo(other.value);
   }
 
   @Override
-  public NtClient get() {
+  public NtPrincipal get() {
     return value;
   }
 
   @Override
-  public void set(final NtClient value) {
+  public void set(final NtPrincipal value) {
     if (!this.value.equals(value)) {
       this.value = value;
       __raiseDirty();

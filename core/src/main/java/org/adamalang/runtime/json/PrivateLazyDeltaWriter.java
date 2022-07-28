@@ -10,11 +10,11 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
 
 public class PrivateLazyDeltaWriter {
-  public final NtClient who;
+  public final NtPrincipal who;
   public final Object viewerState;
   public final AssetIdEncoder assetIdEncoder;
   private final Runnable onEndWithManifest;
@@ -23,7 +23,7 @@ public class PrivateLazyDeltaWriter {
   private final JsonStreamWriter writer;
   private boolean manifested;
 
-  private PrivateLazyDeltaWriter(final NtClient who, final JsonStreamWriter writer, final PrivateLazyDeltaWriter parent, final Runnable onManifest, final Runnable onEndWithManifest, final Object viewerState, final AssetIdEncoder assetIdEncoder) {
+  private PrivateLazyDeltaWriter(final NtPrincipal who, final JsonStreamWriter writer, final PrivateLazyDeltaWriter parent, final Runnable onManifest, final Runnable onEndWithManifest, final Object viewerState, final AssetIdEncoder assetIdEncoder) {
     this.who = who;
     this.writer = writer;
     this.parent = parent;
@@ -34,7 +34,7 @@ public class PrivateLazyDeltaWriter {
     manifested = false;
   }
 
-  public static PrivateLazyDeltaWriter bind(final NtClient who, final JsonStreamWriter writer, Object viewerState, AssetIdEncoder encoder) {
+  public static PrivateLazyDeltaWriter bind(final NtPrincipal who, final JsonStreamWriter writer, Object viewerState, AssetIdEncoder encoder) {
     return new PrivateLazyDeltaWriter(who, writer, null, () -> {
     }, () -> {
     }, viewerState, encoder);

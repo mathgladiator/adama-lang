@@ -15,7 +15,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
 import org.adamalang.runtime.json.JsonAlgebra;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -212,7 +212,7 @@ public class InMemoryDataService implements DataService {
         while (!undo.empty()) {
           mergeUndo.next(undo.pop());
         }
-        RemoteDocumentUpdate newHead = new RemoteDocumentUpdate(0, 0, NtClient.NO_ONE, "{}", mergeRedo.finish(), mergeUndo.finish(), false, 0, assetBytes, UpdateType.CompactedResult);
+        RemoteDocumentUpdate newHead = new RemoteDocumentUpdate(0, 0, NtPrincipal.NO_ONE, "{}", mergeRedo.finish(), mergeUndo.finish(), false, 0, assetBytes, UpdateType.CompactedResult);
         updates.add(0, newHead);
         return toCompact - 1;
       }

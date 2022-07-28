@@ -100,7 +100,7 @@ public class CodeGenWeb {
   }
 
   private void writeGetHandler(StringBuilderWithTabs sb, Environment environment, String name, DefineWebGet get) {
-    sb.append("private WebResponse __get_").append(name).append("(NtClient __who, WebGet __request");
+    sb.append("private WebResponse __get_").append(name).append("(NtPrincipal __who, WebGet __request");
     for (Map.Entry<String, TyType> param : get.parameters().entrySet()) {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
@@ -110,7 +110,7 @@ public class CodeGenWeb {
   }
 
   private void writePutHandler(StringBuilderWithTabs sb, Environment environment, String name, DefineWebPut put) {
-    sb.append("private WebResponse __put_").append(name).append("(NtClient __who, WebPut __request");
+    sb.append("private WebResponse __put_").append(name).append("(NtPrincipal __who, WebPut __request");
     for (Map.Entry<String, TyType> param : put.parameters().entrySet()) {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }

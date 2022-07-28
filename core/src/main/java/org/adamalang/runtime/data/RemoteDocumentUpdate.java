@@ -12,7 +12,7 @@ package org.adamalang.runtime.data;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ public class RemoteDocumentUpdate {
 
 
   /** who was responsible for the update */
-  public final NtClient who;
+  public final NtPrincipal who;
 
   /**
    * this update is incomplete with respect to time, and this will ensure we schedule an
@@ -57,7 +57,7 @@ public class RemoteDocumentUpdate {
   /** what is the type of the update */
   public final UpdateType updateType;
 
-  public RemoteDocumentUpdate(final int seqBegin, final int seqEnd, NtClient who, final String request, final String redo, final String undo, final boolean requiresFutureInvalidation, int whenToInvalidateMilliseconds, long assetBytes, UpdateType updateType) {
+  public RemoteDocumentUpdate(final int seqBegin, final int seqEnd, NtPrincipal who, final String request, final String redo, final String undo, final boolean requiresFutureInvalidation, int whenToInvalidateMilliseconds, long assetBytes, UpdateType updateType) {
     this.seqBegin = seqBegin;
     this.seqEnd = seqEnd;
     this.who = who;

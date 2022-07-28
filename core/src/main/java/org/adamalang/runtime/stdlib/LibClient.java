@@ -9,17 +9,17 @@
  */
 package org.adamalang.runtime.stdlib;
 
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.translator.reflect.Extension;
 
 public class LibClient {
   @Extension
-  public static boolean isAdamaDeveloper(final NtClient client) {
+  public static boolean isAdamaDeveloper(final NtPrincipal client) {
     return "adama".equals(client.authority);
   }
 
   @Extension
-  public static boolean fromAuthority(final NtClient client, String authority) {
+  public static boolean fromAuthority(final NtPrincipal client, String authority) {
     return authority.equals(client.authority);
   }
 }

@@ -114,7 +114,7 @@ public int y = 42;
 // x has a default value = 0
 public int x;
 // who owns the document
-public client owner;
+public principal owner;
 
 @construct {
   owner = @who;
@@ -142,7 +142,7 @@ Before messages can be sent, the connection must be authorized by the document a
 The ```@connected``` event is the primary place to enforce document-level access control. For example, we can combine the constructor with the ```@connected``` event.
 
 ```adama
-public client owner;
+public principal owner;
 public bool open_to_public;
 
 @construct {

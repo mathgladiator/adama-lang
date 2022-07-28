@@ -26,7 +26,7 @@ import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
@@ -201,7 +201,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     for (ClientMessage.Header header : payload.headers) {
       headers.put(header.key, header.value);
     }
-    nexus.service.webPut(new NtClient(payload.agent, payload.authority), key, new WebPutRaw(payload.uri, headers, new NtDynamic(payload.parametersJson), payload.bodyJson), new Callback<>() {
+    nexus.service.webPut(new NtPrincipal(payload.agent, payload.authority), key, new WebPutRaw(payload.uri, headers, new NtDynamic(payload.parametersJson), payload.bodyJson), new Callback<>() {
       @Override
       public void success(WebResponse value) {
         commonWebHandle(value);
@@ -221,7 +221,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     for (ClientMessage.Header header : payload.headers) {
       headers.put(header.key, header.value);
     }
-    WebGet get = new WebGet(new NtClient(payload.agent, payload.authority), payload.uri, headers, new NtDynamic(payload.parametersJson));
+    WebGet get = new WebGet(new NtPrincipal(payload.agent, payload.authority), payload.uri, headers, new NtDynamic(payload.parametersJson));
     nexus.service.webGet(key, get, new Callback<>() {
       @Override
       public void success(WebResponse value) {
@@ -394,7 +394,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.StreamConnect payload) {
     monitorStreamback = nexus.metrics.server_stream.start();
-    CoreRequestContext context = new CoreRequestContext(new NtClient(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
+    CoreRequestContext context = new CoreRequestContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
     nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, payload.assetKey != null ? new AssetIdEncoder(payload.assetKey) : null, this);
   }
 
@@ -468,7 +468,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void handle(ClientMessage.CreateRequest payload) {
-    CoreRequestContext context = new CoreRequestContext(new NtClient(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
+    CoreRequestContext context = new CoreRequestContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
     nexus.service.create(context, new Key(payload.space, payload.key), payload.arg, payload.entropy, nexus.metrics.server_create.wrap(new Callback<Void>() {
       @Override
       public void success(Void value) {

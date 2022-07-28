@@ -17,7 +17,7 @@ import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
@@ -57,10 +57,10 @@ public class ServiceWebTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       CountDownLatch latch = new CountDownLatch(5);
-      service.webGet(KEY, new WebGet(NtClient.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
           Assert.assertEquals("root", value.body);
@@ -72,7 +72,7 @@ public class ServiceWebTests {
 
         }
       });
-      service.webGet(KEY, new WebGet(NtClient.NO_ONE, "/path0/14", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/path0/14", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
           Assert.assertEquals("path integer:14", value.body);
@@ -85,7 +85,7 @@ public class ServiceWebTests {
 
         }
       });
-      service.webGet(KEY, new WebGet(NtClient.NO_ONE, "/nope", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/nope", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
 
@@ -97,7 +97,7 @@ public class ServiceWebTests {
           latch.countDown();
         }
       });
-      service.webGet(new Key("nope", "noep"), new WebGet(NtClient.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(new Key("nope", "noep"), new WebGet(NtPrincipal.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
         }
@@ -108,7 +108,7 @@ public class ServiceWebTests {
           latch.countDown();
         }
       });
-      service.webGet(new Key("nope", "noep"), new WebGet(NtClient.NO_ONE, "/asset", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(new Key("nope", "noep"), new WebGet(NtPrincipal.NO_ONE, "/asset", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
           Assert.assertNotNull(value.asset);

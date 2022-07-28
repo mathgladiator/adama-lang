@@ -81,11 +81,11 @@ enum SquareState { Open, X, O }
 Next, let's declare a public variable representing each player. In Adama, the client keyword is assigned to users and contains information related to the user; @no_one is its default value.   
 ```adama  
 // The two players
-public client playerX;
-public client playerO;
+public principal playerX;
+public principal playerO;
 
 // The current player
-public client current;
+public principal current;
 ```  
 Create another set of variables containing the draws and win in the game.   
 ```adama  

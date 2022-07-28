@@ -21,7 +21,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.model.Authorities;
 import org.adamalang.mysql.model.Users;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.Keystore;
 
@@ -72,7 +72,7 @@ public class Authenticator {
                 .requireIssuer("adama")
                 .build()
                 .parseClaimsJws(identity);
-            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, userId, new NtClient("" + userId, "adama"));
+            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, userId, new NtPrincipal("" + userId, "adama"));
             session.identityCache.put(identity, user);
             callback.success(user);
             return;
@@ -84,7 +84,7 @@ public class Authenticator {
       } else {
         String keystoreJson = Authorities.getKeystoreInternal(nexus.dataBase, parsedToken.iss);
         Keystore keystore = Keystore.parse(keystoreJson);
-        NtClient who = keystore.validate(parsedToken.iss, identity);
+        NtPrincipal who = keystore.validate(parsedToken.iss, identity);
         AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who);
         session.identityCache.put(identity, user);
         callback.success(user);

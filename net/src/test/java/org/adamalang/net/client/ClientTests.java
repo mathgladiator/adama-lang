@@ -20,7 +20,7 @@ import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.mocks.MockMeteringFlow;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.runtime.sys.metering.MeterReading;
@@ -221,7 +221,7 @@ public class ClientTests {
         Assert.assertTrue(latchCreatedKey.await(5000, TimeUnit.MILLISECONDS));
 
         CountDownLatch getLatches = new CountDownLatch(3);
-        client.webGet("space", "key1", new WebGet(NtClient.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        client.webGet("space", "key1", new WebGet(NtPrincipal.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("root", value.body);
@@ -234,7 +234,7 @@ public class ClientTests {
 
           }
         });
-        client.webGet("space", "key1", new WebGet(NtClient.NO_ONE, "/cors", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        client.webGet("space", "key1", new WebGet(NtPrincipal.NO_ONE, "/cors", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("my-cors", value.body);
@@ -251,7 +251,7 @@ public class ClientTests {
         });
         TreeMap<String, String> header1 = new TreeMap<>();
         header1.put("x", "y");
-        client.webGet("space", "key1", new WebGet(NtClient.NO_ONE, "/nope", header1, new NtDynamic("{}")), new Callback<>() {
+        client.webGet("space", "key1", new WebGet(NtPrincipal.NO_ONE, "/nope", header1, new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
           }
@@ -264,7 +264,7 @@ public class ClientTests {
         });
 
         CountDownLatch putLatches = new CountDownLatch(2);
-        client.webPut("space", "key1", new WebPut(NtClient.NO_ONE, new WebPutRaw("/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
+        client.webPut("space", "key1", new WebPut(NtPrincipal.NO_ONE, new WebPutRaw("/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("c:123", value.body);
@@ -276,7 +276,7 @@ public class ClientTests {
           }
         });
 
-        client.webPut("space", "key1", new WebPut(NtClient.NO_ONE, new WebPutRaw("/nope", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
+        client.webPut("space", "key1", new WebPut(NtPrincipal.NO_ONE, new WebPutRaw("/nope", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             System.err.println(value.body);

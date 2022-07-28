@@ -10,19 +10,19 @@
 package org.adamalang.runtime.sys.web;
 
 import org.adamalang.runtime.json.JsonStreamReader;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtMap;
 
 public class WebPut {
-  public final NtClient who;
+  public final NtPrincipal who;
   public final String uri;
   public final WebRouter router;
   public final NtMap<String, String> headers;
   public final NtDynamic parameters;
   public String bodyJson;
 
-  public WebPut(NtClient who, WebPutRaw put) {
+  public WebPut(NtPrincipal who, WebPutRaw put) {
     this.who = who;
     this.uri = put.uri;
     this.router = new WebRouter(put.uri);

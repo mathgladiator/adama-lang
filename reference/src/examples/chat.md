@@ -16,7 +16,7 @@
 
 // the lines of chat
 record Line {
-  public client who;
+  public principal who;
   public string what;
   public long when;
 }

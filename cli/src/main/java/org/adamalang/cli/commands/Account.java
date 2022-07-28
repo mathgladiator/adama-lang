@@ -10,8 +10,6 @@
 package org.adamalang.cli.commands;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.jsonwebtoken.Jwts;
-import org.adamalang.ErrorCodes;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.remote.Connection;
@@ -20,16 +18,10 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
-import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.transforms.results.Keystore;
-import org.adamalang.validators.ValidateKeystore;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.service.WebConfig;
 
-import java.io.Console;
 import java.io.File;
-import java.nio.file.Files;
-import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

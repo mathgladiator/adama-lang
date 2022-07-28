@@ -11,7 +11,7 @@ package org.adamalang.runtime;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPutRaw;
@@ -24,7 +24,7 @@ import java.util.TreeMap;
 public class WebLivingDocumentTests {
 
   private static WebGet simple(String uri) {
-    return new WebGet(NtClient.NO_ONE, uri, new TreeMap<>(), new NtDynamic("{}"));
+    return new WebGet(NtPrincipal.NO_ONE, uri, new TreeMap<>(), new NtDynamic("{}"));
   }
 
   @Test
@@ -84,7 +84,7 @@ public class WebLivingDocumentTests {
   public void put() throws Exception {
     final var setup = new RealDocumentSetup("public int x; message M { int x; } @web put / (M m) { x = m.x; return {html:\"Got it! \" + m.x}; }");
 
-    setup.document.webPut(NtClient.NO_ONE, new WebPutRaw("/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":42}"), new Callback<WebResponse>() {
+    setup.document.webPut(NtPrincipal.NO_ONE, new WebPutRaw("/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":42}"), new Callback<WebResponse>() {
       @Override
       public void success(WebResponse value) {
 

@@ -24,10 +24,10 @@ import org.adamalang.translator.tree.operands.BinaryOp;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
-import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
+import org.adamalang.translator.tree.types.reactive.TyReactivePrincipal;
 import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
 import org.adamalang.translator.tree.types.reactive.TyReactiveInteger;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
@@ -127,7 +127,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       }
       final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
       boolean isIntegral = fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum;
-      if (isIntegral || fieldType instanceof TyReactiveClient) {
+      if (isIntegral || fieldType instanceof TyReactivePrincipal) {
         // Here is where we wrap this to search for <, <=, ==, >=, >
         // This will let us complete #20 for integers and enums
         var indexValue = findIndex(expression, aliasToken != null ? aliasToken.text : null, entry.getKey(), BinaryOp.Equal);
@@ -147,7 +147,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
           intersectModeByName.put(entry.getKey(), indexLookupMode);
           var indexValueString = compileIndexExpr(indexValue, environment);
           if (indexValueString != null) {
-            if (fieldType instanceof TyReactiveClient) {
+            if (fieldType instanceof TyReactivePrincipal) {
               indexValueString += ".hashCode()";
             }
             intersectCodeByName.put(entry.getKey(), indexValueString);
@@ -220,7 +220,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         }
       });
       if (environment.state.isBubble()) {
-        TyNativeClient clientType = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("client"));
+        TyNativePrincipal clientType = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("client"));
         closureTyTypes.put("__who", clientType);
         closureTypes.put("__who", clientType.getJavaConcreteType(environment));
         closureTyTypes.put("__viewer", environment.document.viewerType);

@@ -33,7 +33,7 @@ For a clear example, the below code illustrates valid Adama code which we will t
 }
 
 // 2. the document schema has a creator and an integer named x
-private client creator;
+private principal creator;
 public int x;
 
 // 3. the constructor is a message named by the document

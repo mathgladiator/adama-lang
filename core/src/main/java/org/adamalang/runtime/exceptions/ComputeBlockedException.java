@@ -9,14 +9,14 @@
  */
 package org.adamalang.runtime.exceptions;
 
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 /** the compute was blocked, and we must wait for data from outside */
 public class ComputeBlockedException extends RuntimeException {
   public final String channel;
-  public final NtClient client;
+  public final NtPrincipal client;
 
-  public ComputeBlockedException(final NtClient client, final String channel) {
+  public ComputeBlockedException(final NtPrincipal client, final String channel) {
     this.client = client;
     this.channel = channel;
   }

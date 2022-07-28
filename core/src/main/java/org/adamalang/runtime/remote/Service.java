@@ -10,7 +10,7 @@
 package org.adamalang.runtime.remote;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.natives.NtResult;
 
@@ -21,18 +21,18 @@ public interface Service {
 
   Service FAILURE = new Service() {
     @Override
-    public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result) {
+    public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtPrincipal agent, NtMessageBase request, Function<String, T> result) {
       return new NtResult<>(null, true, 500, "Service failed to resolve");
     }
   };
 
   Service NOT_READY = new Service() {
     @Override
-    public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result) {
+    public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtPrincipal agent, NtMessageBase request, Function<String, T> result) {
       return new NtResult<>(null, true, ErrorCodes.DOCUMENT_NOT_READY, "Document is creating");
     }
   };
 
   /** invoke the given method */
-  <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient agent, NtMessageBase request, Function<String, T> result);
+  <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtPrincipal agent, NtMessageBase request, Function<String, T> result);
 }

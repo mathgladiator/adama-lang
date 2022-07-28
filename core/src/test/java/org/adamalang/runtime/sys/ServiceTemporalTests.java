@@ -19,7 +19,7 @@ import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockTime;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -45,13 +45,13 @@ public class ServiceTemporalTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, TimeSource.REAL_TIME, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -87,7 +87,7 @@ public class ServiceTemporalTests {
     MockInstantDataService dataService = new MockInstantDataService();
     Runnable latch = dataService.latchLogAt(10);
 
-    RemoteDocumentUpdate init = new RemoteDocumentUpdate(0, 1, NtClient.NO_ONE, "{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"1\"}", "{\"__state\":\"bounce\",\"__constructed\":true,\"__next_time\":\"50\",\"__entropy\":\"-4964420948893066024\",\"__messages\":null,\"__seq\":1}", "{\"__seq\":0,\"__entropy\":\"-4276096898218380257\",\"__state\":\"\",\"__constructed\":false,\"__next_time\":\"0\"}", true, 0, 0L, UpdateType.AddUserData);
+    RemoteDocumentUpdate init = new RemoteDocumentUpdate(0, 1, NtPrincipal.NO_ONE, "{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"1\"}", "{\"__state\":\"bounce\",\"__constructed\":true,\"__next_time\":\"50\",\"__entropy\":\"-4964420948893066024\",\"__messages\":null,\"__seq\":1}", "{\"__seq\":0,\"__entropy\":\"-4276096898218380257\",\"__state\":\"\",\"__constructed\":false,\"__next_time\":\"0\"}", true, 0, 0L, UpdateType.AddUserData);
     dataService.initialize(KEY, init, Callback.DONT_CARE_VOID);
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, TimeSource.REAL_TIME, 3);
     service.tune((base) -> base.setMillisecondsForCleanupCheck(50));
@@ -110,19 +110,19 @@ public class ServiceTemporalTests {
     try {
       Runnable latch = dataService.latchLogAt(10);
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", "1", created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", "1", created);
       created.await_success();
       Thread.sleep(100);
       {
         MockStreamback streamback = new MockStreamback();
-        service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+        service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
         streamback.await_began();
         streamback.get().disconnect();
       }
       Thread.sleep(100);
       {
         MockStreamback streamback = new MockStreamback();
-        service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+        service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
         streamback.await_began();
         streamback.get().disconnect();
       }

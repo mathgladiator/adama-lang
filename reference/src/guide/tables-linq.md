@@ -97,7 +97,7 @@ A novel aspect of a reactive list is bulk field assignment, and this allows us t
 record Card {
   public int id;
   public int value;
-  public client owner;
+  public principal owner;
   public int ordering;
 }
 

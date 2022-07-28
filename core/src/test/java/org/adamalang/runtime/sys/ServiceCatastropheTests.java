@@ -15,7 +15,7 @@ import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -24,8 +24,8 @@ import org.junit.Test;
 
 public class ServiceCatastropheTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
-  private static final NtClient ALICE = new NtClient("alice", "test");
-  private static final NtClient BOB = new NtClient("bob", "test");
+  private static final NtPrincipal ALICE = new NtPrincipal("alice", "test");
+  private static final NtPrincipal BOB = new NtPrincipal("bob", "test");
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
       "@static { create { return true; } } public int x; @connected { x += 1; return true; } @disconnected { x -= 1; } message M {} channel foo(M y) { x += 1000; }";
@@ -45,14 +45,14 @@ public class ServiceCatastropheTests {
     try {
       Runnable latch = realDataService.latchLogAt(2);
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", "1", created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", "1", created);
       created.await_success();
       dataService.pause();
       dataService.set(failureDataService);
       dataService.unpause();
 
       MockStreamback streamback1 = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback1);
       streamback1.await_failure(999);
 
       dataService.pause();
@@ -60,7 +60,7 @@ public class ServiceCatastropheTests {
       dataService.unpause();
 
       MockStreamback streamback2 = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback2);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback2);
       streamback2.await_began();
       latch.run();
       realDataService.assertLogAt(0, "INIT:space/key:1->{\"__constructed\":true,\"__entropy\":\"-4964420948893066024\",\"__messages\":null,\"__seq\":1}");

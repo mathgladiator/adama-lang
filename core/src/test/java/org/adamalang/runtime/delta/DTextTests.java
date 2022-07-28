@@ -12,7 +12,7 @@ package org.adamalang.runtime.delta;
 import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.reactives.RxInt32;
 import org.adamalang.runtime.text.RxText;
@@ -25,7 +25,7 @@ public class DTextTests {
     RxText text = new RxText(null, new RxInt32(null, 0));
     DText dt = new DText();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
     dt.show(text, writer);
     text.set("xyz");
     dt.show(text, writer);

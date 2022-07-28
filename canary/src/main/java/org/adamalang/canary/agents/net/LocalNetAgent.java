@@ -16,7 +16,7 @@ import org.adamalang.net.client.Client;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 import java.util.Random;
 import java.util.concurrent.ScheduledExecutorService;
@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class LocalNetAgent implements SimpleEvents {
   private final Client client;
   private final LocalNetCanaryConfig config;
-  private final NtClient who;
+  private final NtPrincipal who;
   private final Key key;
   private final ScheduledExecutorService executor;
   private final Random rng;
@@ -40,7 +40,7 @@ public class LocalNetAgent implements SimpleEvents {
   public LocalNetAgent(Client client, LocalNetCanaryConfig config, int agentId, ScheduledExecutorService executor) {
     this.client = client;
     this.config = config;
-    this.who = new NtClient("agent" + agentId, "canary");
+    this.who = new NtPrincipal("agent" + agentId, "canary");
     int keyId = (int) (config.keyIdMin + (config.keyIdMax - config.keyIdMin + 1) * Math.random());
     this.key = new Key(config.space, config.keyPrefix + keyId);
     this.executor = executor;

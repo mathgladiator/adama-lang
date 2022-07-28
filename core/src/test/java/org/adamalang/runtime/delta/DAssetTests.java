@@ -13,7 +13,7 @@ import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class DAssetTests {
   public void flow() {
     DAsset da = new DAsset();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
     da.show(NtAsset.NOTHING, writer);
     da.hide(writer);
     da.show(new NtAsset("12", "name", "type", 42, "md5", "sha"), writer);
@@ -40,7 +40,7 @@ public class DAssetTests {
   public void flowNoKey() {
     DAsset da = new DAsset();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, null);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, null);
     da.show(NtAsset.NOTHING, writer);
     da.hide(writer);
     da.show(new NtAsset("12", "name", "type", 42, "md5", "sha"), writer);

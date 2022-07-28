@@ -11,7 +11,7 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 
 import java.util.ArrayList;
@@ -126,7 +126,7 @@ public class MockArchiveDataSource implements ArchivingDataService {
       }
       int seq = archiveSeq.get(archiveKey);
       // TODO: sort out a better way to restore an arbitrary data source for testing? This may be good enough with the seq hack
-      data.initialize(key, new RemoteDocumentUpdate(seq, seq, NtClient.NO_ONE, "restore", value, "{}", false, 1, 0, UpdateType.Internal), callback);
+      data.initialize(key, new RemoteDocumentUpdate(seq, seq, NtPrincipal.NO_ONE, "restore", value, "{}", false, 1, 0, UpdateType.Internal), callback);
     });
     println("RESTORE-INIT:" + key.space + "/" + key.key);
   }

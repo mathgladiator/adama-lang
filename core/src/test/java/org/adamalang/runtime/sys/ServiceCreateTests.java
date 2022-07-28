@@ -15,7 +15,7 @@ import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -38,7 +38,7 @@ public class ServiceCreateTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
     } finally {
       service.shutdown();
@@ -56,9 +56,9 @@ public class ServiceCreateTests {
     try {
       NullCallbackLatch created1 = new NullCallbackLatch();
       NullCallbackLatch created2 = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created1);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created1);
       created1.await_success();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created2);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created2);
       created2.await_failure(667658);
     } finally {
       service.shutdown();
@@ -76,13 +76,13 @@ public class ServiceCreateTests {
     try {
       NullCallbackLatch created1 = new NullCallbackLatch();
       NullCallbackLatch created2 = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created1);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created1);
       created1.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
       latch1.run();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created2);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created2);
       created2.await_failure(130092);
     } finally {
       service.shutdown();
@@ -103,8 +103,8 @@ public class ServiceCreateTests {
       Runnable latchTwoCalls = factoryFactory.latchAt(1);
       Runnable latchSecond = factoryFactory.latchAt(2);
 
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created1);
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created2);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created1);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created2);
       latchTwoCalls.run();
       factoryFactory.satisfyAll(KEY, factory);
       latchSecond.run();
@@ -126,7 +126,7 @@ public class ServiceCreateTests {
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       Runnable latchAfter = factoryFactory.latchAt(1);
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       latchAfter.run();
       factoryFactory.satisfyNone(KEY);
       created.await_failure();

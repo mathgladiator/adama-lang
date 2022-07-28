@@ -17,7 +17,7 @@ import org.adamalang.runtime.mocks.MockDeliverer;
 import org.adamalang.runtime.mocks.MockLivingDocument;
 import org.adamalang.runtime.mocks.MockMessage;
 import org.adamalang.runtime.mocks.MockRxParent;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtResult;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,14 +41,14 @@ public class RxCacheTests {
       @Override
       public void accept(Integer id, String s) {
         tasks.add(() -> {
-          deliverer.deliver(NtClient.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
+          deliverer.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
         });
       }
     };
     AtomicInteger x = new AtomicInteger(100);
     Supplier<String> func = cache.wrap(() -> {
-      NtResult<MockMessage> result1 = cache.answer("service", "method", NtClient.NO_ONE, new MockMessage(x.get(), 42), (str) -> new MockMessage(new JsonStreamReader(str)), service);
-      NtResult<MockMessage> result2 = cache.answer("service", "method", NtClient.NO_ONE, new MockMessage(x.get(), 50), (str) -> new MockMessage(new JsonStreamReader(str)), service);
+      NtResult<MockMessage> result1 = cache.answer("service", "method", NtPrincipal.NO_ONE, new MockMessage(x.get(), 42), (str) -> new MockMessage(new JsonStreamReader(str)), service);
+      NtResult<MockMessage> result2 = cache.answer("service", "method", NtPrincipal.NO_ONE, new MockMessage(x.get(), 50), (str) -> new MockMessage(new JsonStreamReader(str)), service);
       return "X:" + result1.get() + "|" + result2.get();
     });
     {

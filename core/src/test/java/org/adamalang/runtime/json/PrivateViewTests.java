@@ -10,7 +10,7 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.contracts.Perspective;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class PrivateViewTests {
     ArrayList<String> list = new ArrayList<>();
     PrivateView pv =
         new PrivateView(
-            NtClient.NO_ONE,
+            NtPrincipal.NO_ONE,
             new Perspective() {
               @Override
               public void data(String data) {
@@ -59,7 +59,7 @@ public class PrivateViewTests {
     ArrayList<String> list = new ArrayList<>();
     PrivateView pv1 =
         new PrivateView(
-            NtClient.NO_ONE,
+            NtPrincipal.NO_ONE,
             new Perspective() {
               @Override
               public void data(String data) {
@@ -86,7 +86,7 @@ public class PrivateViewTests {
         };
 
     PrivateView pv2 =
-        new PrivateView(NtClient.NO_ONE, pv1.perspective, null) {
+        new PrivateView(NtPrincipal.NO_ONE, pv1.perspective, null) {
 
           @Override
           public long memory() {

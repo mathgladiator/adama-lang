@@ -18,13 +18,13 @@ import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 
 import java.util.function.Consumer;
 
 /** used within a record to define a custom policy */
 public class DefineCustomPolicy extends DocumentPosition {
-  public final TyNativeClient clientType;
+  public final TyNativePrincipal clientType;
   public final Token clientVar;
   public final Block code;
   public final Token definePolicy;
@@ -41,7 +41,7 @@ public class DefineCustomPolicy extends DocumentPosition {
     this.endParen = endParen;
     this.code = code;
     policyType = new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, name);
-    clientType = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVar != null ? clientVar : definePolicy);
+    clientType = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, clientVar != null ? clientVar : definePolicy);
     ingest(name);
     ingest(code);
     clientType.ingest(clientVar != null ? clientVar : definePolicy);

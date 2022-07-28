@@ -32,7 +32,7 @@ message AddRecord {
   string name;
 }
 
-channel my_channel(client who, AddRecord msg) {
+channel my_channel(AddRecord msg) {
   my_records <- msg;
 }
 ```

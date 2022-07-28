@@ -16,11 +16,11 @@
 enum SquareState { Open, X, O }
 
 // who are the two players
-public client playerX;
-public client playerO;
+public principal playerX;
+public principal playerO;
 
 // who is the current player
-public client current;
+public principal current;
 
 // how many wins per player
 public int wins_X;

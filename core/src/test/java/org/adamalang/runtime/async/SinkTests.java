@@ -9,7 +9,7 @@
  */
 package org.adamalang.runtime.async;
 
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,38 +17,38 @@ public class SinkTests {
   @Test
   public void flow_in_and_out() {
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "Cake");
-    final var sf = sink.dequeue(NtClient.NO_ONE);
+    sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, "channel", 0, "message"), "Cake");
+    final var sf = sink.dequeue(NtPrincipal.NO_ONE);
     Assert.assertTrue(sf.exists());
     Assert.assertEquals("Cake", sf.await());
-    final var sf2 = sink.dequeue(NtClient.NO_ONE);
+    final var sf2 = sink.dequeue(NtPrincipal.NO_ONE);
     Assert.assertFalse(sf2.exists());
   }
 
   @Test
   public void flow_in_clear_out() {
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "Cake");
+    sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, "channel", 0, "message"), "Cake");
     sink.clear();
-    final var sf2 = sink.dequeue(NtClient.NO_ONE);
+    final var sf2 = sink.dequeue(NtPrincipal.NO_ONE);
     Assert.assertFalse(sf2.exists());
   }
 
   @Test
   public void maybe_out_no_data() {
     final var sink = new Sink<String>("channel");
-    final var sf = sink.dequeueMaybe(NtClient.NO_ONE);
+    final var sf = sink.dequeueMaybe(NtPrincipal.NO_ONE);
     Assert.assertFalse(sf.exists());
   }
 
   @Test
   public void maybe_out_with_data() {
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "Cake");
-    final var sf = sink.dequeueMaybe(NtClient.NO_ONE);
+    sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, "channel", 0, "message"), "Cake");
+    final var sf = sink.dequeueMaybe(NtPrincipal.NO_ONE);
     Assert.assertTrue(sf.exists());
     Assert.assertEquals("Cake", sf.await().get());
-    final var sf2 = sink.dequeue(NtClient.NO_ONE);
+    final var sf2 = sink.dequeue(NtPrincipal.NO_ONE);
     Assert.assertFalse(sf2.exists());
   }
 }

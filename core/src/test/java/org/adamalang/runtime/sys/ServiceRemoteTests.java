@@ -18,7 +18,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockTime;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.*;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -35,7 +35,7 @@ public class ServiceRemoteTests {
   private static Deliverer BIND_LAZY(AtomicReference<Deliverer> latent) {
     return new Deliverer() {
       @Override
-      public void deliver(NtClient agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
+      public void deliver(NtPrincipal agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
         latent.get().deliver(agent, key, id, result, firstParty, callback);
       }
     };
@@ -47,7 +47,7 @@ public class ServiceRemoteTests {
 
     synchronized (ServiceRegistry.REGISTRY) {
       ServiceRegistry.REGISTRY.put("sqr1", (space, properties) -> {
-        return new SimpleService("sqr1", NtClient.NO_ONE, true) {
+        return new SimpleService("sqr1", NtPrincipal.NO_ONE, true) {
           @Override
           public void request(String method, String request, Callback<String> callback) {
             actions.add(() -> {
@@ -76,14 +76,14 @@ public class ServiceRemoteTests {
     latent.set(service);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
       Runnable latch4 = streamback.latchAt(5);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -112,7 +112,7 @@ public class ServiceRemoteTests {
 
     synchronized (ServiceRegistry.REGISTRY) {
       ServiceRegistry.REGISTRY.put("sqr2", (space, properties) -> {
-        return new SimpleService("sqr2", NtClient.NO_ONE, true) {
+        return new SimpleService("sqr2", NtPrincipal.NO_ONE, true) {
           @Override
           public void request(String method, String request, Callback<String> callback) {
             int _x = 1;
@@ -155,14 +155,14 @@ public class ServiceRemoteTests {
     latent.set(service);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
       Runnable latch4 = streamback.latchAt(5);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -191,7 +191,7 @@ public class ServiceRemoteTests {
 
     synchronized (ServiceRegistry.REGISTRY) {
       ServiceRegistry.REGISTRY.put("sqr3", (space, properties) -> {
-        return new SimpleService("sqr3", NtClient.NO_ONE, false) {
+        return new SimpleService("sqr3", NtPrincipal.NO_ONE, false) {
           @Override
           public void request(String method, String request, Callback<String> callback) {
             int _x = 1;
@@ -239,14 +239,14 @@ public class ServiceRemoteTests {
     latent.set(service);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
       Runnable latch4 = streamback.latchAt(5);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -275,7 +275,7 @@ public class ServiceRemoteTests {
 
     synchronized (ServiceRegistry.REGISTRY) {
       ServiceRegistry.REGISTRY.put("sqr4", (space, properties) -> {
-        return new SimpleService("sqr4", NtClient.NO_ONE, false) {
+        return new SimpleService("sqr4", NtPrincipal.NO_ONE, false) {
           @Override
           public void request(String method, String request, Callback<String> callback) {
             int _x = 1;
@@ -321,13 +321,13 @@ public class ServiceRemoteTests {
     latent.set(service);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -351,7 +351,7 @@ public class ServiceRemoteTests {
 
     synchronized (ServiceRegistry.REGISTRY) {
       ServiceRegistry.REGISTRY.put("sqr5", (space, properties) -> {
-        return new SimpleService("sqr5", NtClient.NO_ONE, false) {
+        return new SimpleService("sqr5", NtPrincipal.NO_ONE, false) {
           @Override
           public void request(String method, String request, Callback<String> callback) {
             int _x = 1;
@@ -401,13 +401,13 @@ public class ServiceRemoteTests {
     latent.set(service);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -431,7 +431,7 @@ public class ServiceRemoteTests {
 
     synchronized (ServiceRegistry.REGISTRY) {
       ServiceRegistry.REGISTRY.put("sqr6", (space, properties) -> {
-        return new SimpleService("sqr6", NtClient.NO_ONE, true) {
+        return new SimpleService("sqr6", NtPrincipal.NO_ONE, true) {
           @Override
           public void request(String method, String request, Callback<String> callback) {
             int _x = 1;
@@ -483,13 +483,13 @@ public class ServiceRemoteTests {
     latent.set(service);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));

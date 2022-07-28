@@ -15,7 +15,7 @@ import org.adamalang.net.TestBed;
 import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.junit.Assert;
 
@@ -34,7 +34,7 @@ public class ComplexHelper {
       servers[k] = new TestBed(20005 + k, code);
       CountDownLatch latchMade = new CountDownLatch(1);
       servers[k].coreService.create(
-          new CoreRequestContext(NtClient.NO_ONE, "origin", "ip", "key"),
+          new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", "key"),
           new Key("space", "key"),
           "{}",
           null,

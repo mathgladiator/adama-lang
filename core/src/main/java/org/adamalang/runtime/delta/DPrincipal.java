@@ -11,13 +11,13 @@ package org.adamalang.runtime.delta;
 
 import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 /** a client that will respect privacy and sends state to client only on changes */
-public class DClient implements DeltaNode {
-  private NtClient prior;
+public class DPrincipal implements DeltaNode {
+  private NtPrincipal prior;
 
-  public DClient() {
+  public DPrincipal() {
     prior = null;
   }
 
@@ -41,7 +41,7 @@ public class DClient implements DeltaNode {
   }
 
   /** the client is visible, so show changes */
-  public void show(final NtClient value, final PrivateLazyDeltaWriter writer) {
+  public void show(final NtPrincipal value, final PrivateLazyDeltaWriter writer) {
     if (prior == null || !value.equals(prior)) {
       final var obj = writer.planObject();
       obj.planField("@t").writeInt(1);

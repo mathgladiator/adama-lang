@@ -33,7 +33,7 @@ public class BinaryOperatorTable {
     TyType tyString = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"));
     TyType tyComplex = new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("complex"));
     TyType tyLabel = new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("label"));
-    TyType tyClient = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("client"));
+    TyType tyClient = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("client"));
     TyType tyAsset = new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("asset"));
     TyType tyDynamic = new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("dynamic"));
 

@@ -18,7 +18,6 @@ import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
-import org.adamalang.translator.tree.types.structures.DefineMethod;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
@@ -277,7 +276,7 @@ public class CodeGenRecords {
         continue;
       }
       final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
-      if (fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum || fieldType instanceof TyReactiveClient) {
+      if (fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum || fieldType instanceof TyReactivePrincipal) {
         if (first) {
           first = false;
         } else {
@@ -304,7 +303,7 @@ public class CodeGenRecords {
         continue;
       }
       final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
-      if (fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum || fieldType instanceof TyReactiveClient) {
+      if (fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum || fieldType instanceof TyReactivePrincipal) {
         if (first) {
           first = false;
         } else {
@@ -414,11 +413,11 @@ public class CodeGenRecords {
     }
     for (final Map.Entry<String, DefineCustomPolicy> customPolicyEntry : storage.policies.entrySet()) {
       final var policyExec = customPolicyEntry.getValue().scope(policyRoot, customPolicyEntry.getValue());
-      sb.append("public boolean __POLICY_").append(customPolicyEntry.getKey()).append("(NtClient __who)");
+      sb.append("public boolean __POLICY_").append(customPolicyEntry.getKey()).append("(NtPrincipal __who)");
       customPolicyEntry.getValue().code.typing(policyExec);
       if (customPolicyEntry.getValue().clientVar != null) {
         sb.append("{").tabUp().writeNewline();
-        sb.append("NtClient ").append(customPolicyEntry.getValue().clientVar.text).append(" = __who;").writeNewline();
+        sb.append("NtPrincipal ").append(customPolicyEntry.getValue().clientVar.text).append(" = __who;").writeNewline();
         customPolicyEntry.getValue().code.specialWriteJava(sb, policyExec, false, true);
         sb.append("}").writeNewline();
       } else {
@@ -499,7 +498,7 @@ public class CodeGenRecords {
     sb.append("return __interns;").tabDown().writeNewline();
     sb.append("}").writeNewline();
     sb.append("@Override").writeNewline();
-    sb.append("public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {").tabUp().writeNewline();
+    sb.append("public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {").tabUp().writeNewline();
     sb.append(environment.document.getClassName()).append(" __self = this;").writeNewline();
     sb.append("Delta").append(environment.document.getClassName()).append(" __state = new Delta").append(environment.document.getClassName()).append("();").writeNewline();
     sb.append("RTx__ViewerType __viewerState = new RTx__ViewerType();").writeNewline();

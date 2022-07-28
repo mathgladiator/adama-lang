@@ -10,7 +10,7 @@
 package org.adamalang.runtime.natives.algo;
 
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.junit.Assert;
@@ -29,7 +29,7 @@ public class HashBuilderTests {
     hash.hashNtAsset(NtAsset.NOTHING);
     hash.hashString("xyz");
     hash.hashLong(123451234342L);
-    hash.hashNtClient(NtClient.NO_ONE);
+    hash.hashNtPrincipal(NtPrincipal.NO_ONE);
     Assert.assertEquals("UYoxfE+b51ZODGPUCfJwIne7mNacxQ7YqHWDkO0SLbB3sUqLRzz3S5JNDtAggHf/", hash.finish());
   }
 
@@ -38,7 +38,7 @@ public class HashBuilderTests {
     HashBuilder hash = new HashBuilder();
     hash.hashNtAsset(NtAsset.NOTHING);
     hash.hashLong(123451234342L);
-    hash.hashNtClient(NtClient.NO_ONE);
+    hash.hashNtPrincipal(NtPrincipal.NO_ONE);
     hash.hashDouble(3.14);
     hash.hashInteger(42);
     hash.hashString("xyz");

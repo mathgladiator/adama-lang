@@ -10,7 +10,7 @@
 package org.adamalang.translator.tree.types.natives;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -62,8 +62,8 @@ public class TyInternalReadonlyClass extends TyType {
       Field fType = clazz.getField(field);
       if (fType.getType() == String.class) {
         return new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"));
-      } else if (fType.getType() == NtClient.class) {
-        return new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("client"));
+      } else if (fType.getType() == NtPrincipal.class) {
+        return new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("client"));
       } else {
         environment.document.createError(this, "Field '" + field + "' had a type we didn't recognize in internal type: " + clazz.getSimpleName(), "InternalTypes");
         return null;

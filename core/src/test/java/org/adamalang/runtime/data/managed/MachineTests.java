@@ -12,8 +12,7 @@ package org.adamalang.runtime.data.managed;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.*;
-import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.sys.mocks.LatchCallback;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,7 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class MachineTests {
   public RemoteDocumentUpdate update(int seq, String redo, String undo) {
-    return new RemoteDocumentUpdate(seq, seq, NtClient.NO_ONE, null, redo, undo, false, 0, 0, UpdateType.AddUserData);
+    return new RemoteDocumentUpdate(seq, seq, NtPrincipal.NO_ONE, null, redo, undo, false, 0, 0, UpdateType.AddUserData);
   }
 
   private static final Key KEY = new Key("space", "key");

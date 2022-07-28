@@ -13,7 +13,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.mocks.MockTime;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -112,7 +112,7 @@ public class InMemoryDataServiceTests {
   }
 
   public RemoteDocumentUpdate update(int seq, String redo, String undo) {
-    return new RemoteDocumentUpdate(seq, seq, NtClient.NO_ONE, null, redo, undo, false, 0, 0, UpdateType.AddUserData);
+    return new RemoteDocumentUpdate(seq, seq, NtPrincipal.NO_ONE, null, redo, undo, false, 0, 0, UpdateType.AddUserData);
   }
 
   private static Callback<Void> bumpSuccess(AtomicInteger success) {
@@ -145,7 +145,7 @@ public class InMemoryDataServiceTests {
 
   public RemoteDocumentUpdate updateActive(
       int seq, String redo, String undo, int time) {
-    return new RemoteDocumentUpdate(seq, seq, NtClient.NO_ONE, null, redo, undo, true, time, 0, UpdateType.AddUserData);
+    return new RemoteDocumentUpdate(seq, seq, NtPrincipal.NO_ONE, null, redo, undo, true, time, 0, UpdateType.AddUserData);
   }
 
   @Test

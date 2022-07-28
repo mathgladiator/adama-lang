@@ -46,7 +46,7 @@ record Card {
   public int id;
   public Suit suit;
   public Rank rank;
-  private client owner;
+  private principal owner;
   private int ordering;
   private Place place;
   private auto points = suit == Suit::Hearts ? 1 : (suit == Suit::Spades && rank==Rank::Queen ? 13 : 0);
@@ -81,11 +81,11 @@ bubble my_take = iterate deck where place == Place::Taken && owner == @who;
 // no real constructor
 message Empty {}
 
-client owner;
+principal owner;
 
 record Player {
   public int id;
-  public client link;
+  public principal link;
   private bool playing;
   public int points;
   viewer_is<link> bool leader;
@@ -248,12 +248,12 @@ message CardDecision {
 channel<CardDecision[]> pass_channel;
 
 // this is wanky, need arrays at a top level that are finite to help...
-client player1;
-client player2;
-client player3;
-client player4;
+principal player1;
+principal player2;
+principal player3;
+principal player4;
 
-client current;
+principal current;
 
 #pass {
   if (passing_mode == PassingMode::None) {
@@ -360,7 +360,7 @@ public bool points_played = false;
 public auto in_play = iterate deck where place == Place::InPlay order by rank desc;
 // how to attribute this to a person
 
-public client last_winner;
+public principal last_winner;
 
 #play {
   list<Card> choices = iterate deck where

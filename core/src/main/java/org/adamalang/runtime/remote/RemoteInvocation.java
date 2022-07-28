@@ -11,7 +11,7 @@ package org.adamalang.runtime.remote;
 
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 import java.util.Objects;
 
@@ -19,10 +19,10 @@ import java.util.Objects;
 public class RemoteInvocation implements Comparable<RemoteInvocation> {
   public final String service;
   public final String method;
-  public final NtClient who;
+  public final NtPrincipal who;
   public final String parameter;
 
-  public RemoteInvocation(String service, String method, NtClient who, String parameter) {
+  public RemoteInvocation(String service, String method, NtPrincipal who, String parameter) {
     this.service = service;
     this.method = method;
     this.who = who;
@@ -32,7 +32,7 @@ public class RemoteInvocation implements Comparable<RemoteInvocation> {
   public RemoteInvocation(JsonStreamReader reader) {
     String _service = null;
     String _method = null;
-    NtClient _who = null;
+    NtPrincipal _who = null;
     String _parameter = null;
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
@@ -44,7 +44,7 @@ public class RemoteInvocation implements Comparable<RemoteInvocation> {
             _method = reader.readString();
             break;
           case "who":
-            _who = reader.readNtClient();
+            _who = reader.readNtPrincipal();
             break;
           case "parameter":
             _parameter = reader.skipValueIntoJson();
@@ -95,7 +95,7 @@ public class RemoteInvocation implements Comparable<RemoteInvocation> {
     writer.writeObjectFieldIntro("method");
     writer.writeString(method);
     writer.writeObjectFieldIntro("who");
-    writer.writeNtClient(who);
+    writer.writeNtPrincipal(who);
     writer.writeObjectFieldIntro("parameter");
     writer.injectJson(parameter);
     writer.endObject();

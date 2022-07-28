@@ -10,13 +10,13 @@
 package org.adamalang.runtime.natives;
 
 /** represents who someone is */
-public class NtClient implements Comparable<NtClient> {
-  public static NtClient NO_ONE = new NtClient("?", "?");
+public class NtPrincipal implements Comparable<NtPrincipal> {
+  public static NtPrincipal NO_ONE = new NtPrincipal("?", "?");
   public final String agent;
   public final String authority;
   private final int cachedHash;
 
-  public NtClient(final String agent, final String authority) {
+  public NtPrincipal(final String agent, final String authority) {
     this.agent = agent == null ? "?" : agent;
     this.authority = authority == null ? "?" : authority;
     this.cachedHash = agent.hashCode() * 31 + authority.hashCode();
@@ -29,15 +29,15 @@ public class NtClient implements Comparable<NtClient> {
 
   @Override
   public boolean equals(final Object o) {
-    if (o instanceof NtClient) {
-      NtClient other = (NtClient) o;
-      return other == this || (other.cachedHash == cachedHash && compareTo((NtClient) o) == 0);
+    if (o instanceof NtPrincipal) {
+      NtPrincipal other = (NtPrincipal) o;
+      return other == this || (other.cachedHash == cachedHash && compareTo((NtPrincipal) o) == 0);
     }
     return false;
   }
 
   @Override
-  public int compareTo(final NtClient other) {
+  public int compareTo(final NtPrincipal other) {
     var result = authority.compareTo(other.authority);
     if (result == 0) {
       result = agent.compareTo(other.agent);
@@ -47,7 +47,7 @@ public class NtClient implements Comparable<NtClient> {
 
   @Override
   public String toString() {
-    return "CLIENT<" + agent + "@" + authority + ">";
+    return "NtPrincipal<" + agent + "@" + authority + ">";
   }
 
   public long memory() {

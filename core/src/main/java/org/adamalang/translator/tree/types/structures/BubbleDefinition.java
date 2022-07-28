@@ -16,7 +16,7 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
@@ -48,7 +48,7 @@ public class BubbleDefinition extends StructureComponent {
     this.equalsToken = equalsToken;
     this.expression = expression;
     this.semicolonToken = semicolonToken;
-    clientType = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVar);
+    clientType = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, clientVar);
     ingest(bubbleToken);
     ingest(semicolonToken);
     servicesToWatch = new LinkedHashSet<>();
@@ -89,9 +89,9 @@ public class BubbleDefinition extends StructureComponent {
   }
 
   public void writeSetup(final StringBuilderWithTabs sb, final Environment environment) {
-    sb.append("public ").append(expressionType.getJavaConcreteType(environment)).append(" __COMPUTE_").append(nameToken.text).append("(NtClient __who, RTx__ViewerType __viewer) {").tabUp().writeNewline();
+    sb.append("public ").append(expressionType.getJavaConcreteType(environment)).append(" __COMPUTE_").append(nameToken.text).append("(NtPrincipal __who, RTx__ViewerType __viewer) {").tabUp().writeNewline();
     if (clientVar != null) {
-      sb.append("NtClient ").append(clientVar.text).append(" = __who;").writeNewline();
+      sb.append("NtPrincipal ").append(clientVar.text).append(" = __who;").writeNewline();
     }
     if (viewerStateName != null) {
       sb.append("RTx__ViewerType ").append(viewerStateName.text).append(" = __viewer;").writeNewline();

@@ -10,7 +10,7 @@
 package org.adamalang.runtime.async;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.reactives.RxInt32;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,12 +20,12 @@ public class OutstandingFutureTrackerTests {
   public void caching() {
     final var src = new RxInt32(null, 0);
     final var futures = new OutstandingFutureTracker(src);
-    final var futureA = futures.make("chan", NtClient.NO_ONE);
+    final var futureA = futures.make("chan", NtPrincipal.NO_ONE);
     futures.restore();
-    final var futureB = futures.make("chan", NtClient.NO_ONE);
+    final var futureB = futures.make("chan", NtPrincipal.NO_ONE);
     Assert.assertTrue(futureA == futureB);
     futures.commit();
-    final var futureC = futures.make("chan", NtClient.NO_ONE);
+    final var futureC = futures.make("chan", NtPrincipal.NO_ONE);
     Assert.assertTrue(futureA != futureC);
   }
 
@@ -33,8 +33,8 @@ public class OutstandingFutureTrackerTests {
   public void multi_user_flow() {
     final var src = new RxInt32(null, 0);
     final var futures = new OutstandingFutureTracker(src);
-    final var A = new NtClient("a", "local");
-    final var B = new NtClient("b", "local");
+    final var A = new NtPrincipal("a", "local");
+    final var B = new NtPrincipal("b", "local");
     final var futureA1 = futures.make("chan", A);
     final var futureB1 = futures.make("chan", B);
     final var futureA2 = futures.make("chan", A);

@@ -15,7 +15,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.InMemoryDataService;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.DocumentThreadBase;
@@ -127,14 +127,14 @@ public class MeteringStateMachineTests {
     LivingDocumentFactory factory = LivingDocumentTests.compile("public int x = 123; @construct { transition #foo in 2; } #foo { transition #foo in 2; }", Deliverer.FAILURE);
     {
       CountDownLatch latch = new CountDownLatch(1);
-      DurableLivingDocument.fresh(new Key("space", "key"), factory, NtClient.NO_ONE, "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
+      DurableLivingDocument.fresh(new Key("space", "key"), factory, NtPrincipal.NO_ONE, "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
         @Override
         public void success(DurableLivingDocument value) {
           bases[0].executor.execute(new NamedRunnable("test") {
             @Override
             public void execute() throws Exception {
               bases[0].map.put(new Key("space", "key"), value);
-              value.connect(NtClient.NO_ONE, Callback.DONT_CARE_INTEGER);
+              value.connect(NtPrincipal.NO_ONE, Callback.DONT_CARE_INTEGER);
               latch.countDown();
             }
           });
@@ -221,7 +221,7 @@ public class MeteringStateMachineTests {
     AtomicReference<HashMap<String, PredictiveInventory.MeteringSample>> billing = new AtomicReference<>(null);
     {
       CountDownLatch latch = new CountDownLatch(1);
-      DurableLivingDocument.fresh(new Key("space", "key"), factory, NtClient.NO_ONE, "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
+      DurableLivingDocument.fresh(new Key("space", "key"), factory, NtPrincipal.NO_ONE, "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
         @Override
         public void success(DurableLivingDocument value) {
           bases[0].executor.execute(new NamedRunnable("test") {

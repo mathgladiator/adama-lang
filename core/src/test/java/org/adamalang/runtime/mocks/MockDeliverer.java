@@ -11,24 +11,23 @@ package org.adamalang.runtime.mocks;
 
 import org.adamalang.common.Callback;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.remote.RxCache;
-import org.adamalang.runtime.sys.LivingDocument;
 
 import java.util.ArrayList;
 
 public class MockDeliverer implements Deliverer  {
   private static class Delivery {
-    public final NtClient agent;
+    public final NtPrincipal agent;
     public final Key key;
     public final int id;
     public final RemoteResult result;
     public final boolean firstParty;
     public final Callback<Integer> callback;
 
-    public Delivery(NtClient agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
+    public Delivery(NtPrincipal agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
       this.agent = agent;
       this.key = key;
       this.id = id;
@@ -53,7 +52,7 @@ public class MockDeliverer implements Deliverer  {
   }
 
   @Override
-  public synchronized void deliver(NtClient agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
+  public synchronized void deliver(NtPrincipal agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
     this.deliveries.add(new Delivery(agent, key, id, result, firstParty, callback));
   }
 }

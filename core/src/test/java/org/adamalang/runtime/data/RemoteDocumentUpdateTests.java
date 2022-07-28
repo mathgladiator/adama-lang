@@ -9,12 +9,12 @@
  */
 package org.adamalang.runtime.data;
 
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class RemoteDocumentUpdateTests {
-  private static final RemoteDocumentUpdate UPDATE_1 = new RemoteDocumentUpdate(1, 1, NtClient.NO_ONE, "REQUEST", "{\"x\":1}", "{\"x\":0}", false, 0, 100, UpdateType.AddUserData);
+  private static final RemoteDocumentUpdate UPDATE_1 = new RemoteDocumentUpdate(1, 1, NtPrincipal.NO_ONE, "REQUEST", "{\"x\":1}", "{\"x\":0}", false, 0, 100, UpdateType.AddUserData);
   private static final RemoteDocumentUpdate UPDATE_2 = new RemoteDocumentUpdate(2, 2, null, "REQUEST", "{\"x\":2}", "{\"x\":1}", true, 0, 100, UpdateType.Invalidate);
   private static final RemoteDocumentUpdate UPDATE_3 = new RemoteDocumentUpdate(3, 3, null, "REQUEST", "{\"x\":3}", "{\"x\":2}", true, 0, 100, UpdateType.Invalidate);
   private static final RemoteDocumentUpdate UPDATE_4 = new RemoteDocumentUpdate(4, 4, null, "REQUEST", "{\"x\":4}", "{\"x\":3}", true, 0, 100, UpdateType.AddUserData);

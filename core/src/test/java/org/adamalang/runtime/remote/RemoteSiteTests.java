@@ -11,14 +11,14 @@ package org.adamalang.runtime.remote;
 
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class RemoteSiteTests {
   @Test
   public void flow() {
-    RemoteSite site = new RemoteSite(42, new RemoteInvocation("service", "method", NtClient.NO_ONE, "{\"new\":\"hope\"}"));
+    RemoteSite site = new RemoteSite(42, new RemoteInvocation("service", "method", NtPrincipal.NO_ONE, "{\"new\":\"hope\"}"));
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       site.dump(writer);

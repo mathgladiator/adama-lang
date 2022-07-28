@@ -97,7 +97,7 @@ public class CodeGenMessageHandling {
           dispatch.append(")(__task.message)));").writeNewline();
           dispatch.append("return;").tabDown().writeNewline();
           final var child = handler.prepareEnv(environment, associatedRecordType);
-          sb.append("private void handleChannelMessage_").append(handler.channel).append("(NtClient __who, RTx").append(handler.typeName);
+          sb.append("private void handleChannelMessage_").append(handler.channel).append("(NtPrincipal __who, RTx").append(handler.typeName);
           if (handler.isArray) {
             sb.append("[]");
           }
@@ -128,7 +128,7 @@ public class CodeGenMessageHandling {
       sb.append("}").tabDown().writeNewline();
       sb.append("}").writeNewline();
       sb.append("@Override").writeNewline();
-      sb.append("protected void __handle_direct(NtClient __who, String __channel, Object __message) throws AbortMessageException {").tabUp().writeNewline();
+      sb.append("protected void __handle_direct(NtPrincipal __who, String __channel, Object __message) throws AbortMessageException {").tabUp().writeNewline();
       sb.append("switch (__channel) {").tabUp().writeNewline();
       directCountDownUntilTab = executeDirect.size();
       for (Map.Entry<String, String> entry : executeDirect.entrySet()) {
@@ -148,7 +148,7 @@ public class CodeGenMessageHandling {
       sb.append("return false;").tabDown().writeNewline();
       sb.append("}").writeNewline();
       sb.append("@Override").writeNewline();
-      sb.append("protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {").tabUp().writeNewline();
+      sb.append("protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {").tabUp().writeNewline();
       sb.append("return;").tabDown().writeNewline();
       sb.append("}").writeNewline();
     }

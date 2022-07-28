@@ -24,7 +24,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
@@ -59,8 +59,8 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final RxString __state;
   protected final RxInt64 __time;
   protected final RxCache __cache;
-  private final TreeMap<NtClient, Integer> __clients;
-  private final HashMap<NtClient, ArrayList<PrivateView>> __trackedViews;
+  private final TreeMap<NtPrincipal, Integer> __clients;
+  private final HashMap<NtPrincipal, ArrayList<PrivateView>> __trackedViews;
   private final HashMap<String, Long> __dedupe;
   private final TreeMap<Integer, RxCache> __routing;
   protected int __assertionFailures = 0;
@@ -193,7 +193,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __auto_gen.__commit("__auto_gen", forward, reverse);
   }
 
-  private LivingDocumentChange __invalidate_trailer(NtClient who, final String request) {
+  private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request) {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     forward.beginObject();
@@ -217,7 +217,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     return new LivingDocumentChange(update, broadcasts, null);
   }
 
-  private LivingDocumentChange __simple_commit(NtClient who, final String request, Object response) {
+  private LivingDocumentChange __simple_commit(NtPrincipal who, final String request, Object response) {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     forward.beginObject();
@@ -240,10 +240,10 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** code generated: what happens when the document is constructed */
-  protected abstract void __construct_intern(NtClient who, NtMessageBase message);
+  protected abstract void __construct_intern(NtPrincipal who, NtMessageBase message);
 
   public void __usurp(LivingDocument usurpingDocument) {
-    for (Map.Entry<NtClient, ArrayList<PrivateView>> existing : __trackedViews.entrySet()) {
+    for (Map.Entry<NtPrincipal, ArrayList<PrivateView>> existing : __trackedViews.entrySet()) {
       for (PrivateView pv : existing.getValue()) {
         // create a new view within the usurping document
         PrivateView usurper = usurpingDocument.__createView(existing.getKey(), pv.perspective, pv.assetIdEncoder);
@@ -254,7 +254,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __code_cost = usurpingDocument.__code_cost;
   }
 
-  public PrivateView __createView(final NtClient __who, final Perspective perspective, AssetIdEncoder __encoder) {
+  public PrivateView __createView(final NtPrincipal __who, final Perspective perspective, AssetIdEncoder __encoder) {
     final var view = __createPrivateView(__who, perspective, __encoder);
     var viewsForWho = __trackedViews.get(__who);
     if (viewsForWho == null) {
@@ -266,10 +266,10 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** code generated: create a private view for the given person */
-  public abstract PrivateView __createPrivateView(NtClient __who, Perspective __perspective, AssetIdEncoder __encoder);
+  public abstract PrivateView __createPrivateView(NtPrincipal __who, Perspective __perspective, AssetIdEncoder __encoder);
 
   /** build broadcast for a viewer */
-  public LivingDocumentChange.Broadcast __buildBroadcast(NtClient who, PrivateView pv) {
+  public LivingDocumentChange.Broadcast __buildBroadcast(NtPrincipal who, PrivateView pv) {
     final var writer = new JsonStreamWriter();
     writer.beginObject();
     boolean wroteData = false;
@@ -338,9 +338,9 @@ public abstract class LivingDocument implements RxParent, Caller {
     if (__clients.size() > 0) {
       writer.writeObjectFieldIntro("__clients");
       writer.beginObject();
-      for (final Map.Entry<NtClient, Integer> entry : __clients.entrySet()) {
+      for (final Map.Entry<NtPrincipal, Integer> entry : __clients.entrySet()) {
         writer.writeObjectFieldIntro(entry.getValue());
-        writer.writeNtClient(entry.getKey());
+        writer.writeNtPrincipal(entry.getKey());
       }
       writer.endObject();
     }
@@ -359,7 +359,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** garbage collect the views for the given client; return the number of views for that user */
-  public int __garbageCollectViews(final NtClient __who) {
+  public int __garbageCollectViews(final NtPrincipal __who) {
     final var views = __trackedViews.get(__who);
     var count = 0;
     if (views != null) {
@@ -380,7 +380,7 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   /** nuke the views and disconnect all of them */
   public void __nukeViews() {
-    for (Map.Entry<NtClient, ArrayList<PrivateView>> entry : __trackedViews.entrySet()) {
+    for (Map.Entry<NtPrincipal, ArrayList<PrivateView>> entry : __trackedViews.entrySet()) {
       for (PrivateView pv : entry.getValue()) {
         pv.kill();
         pv.perspective.disconnect();
@@ -412,9 +412,9 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** get a list of clients to disconnect due to not actually being connected */
-  public List<NtClient> __reconcileClientsToForceDisconnect() {
-    ArrayList<NtClient> clientsToDisconnect = new ArrayList<>();
-    for (NtClient connected : __clients.keySet()) {
+  public List<NtPrincipal> __reconcileClientsToForceDisconnect() {
+    ArrayList<NtPrincipal> clientsToDisconnect = new ArrayList<>();
+    for (NtPrincipal connected : __clients.keySet()) {
       if (!__trackedViews.containsKey(connected)) {
         clientsToDisconnect.add(connected);
       }
@@ -435,7 +435,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** get the number of connected clients */
   public int __getConnectionsCount() {
     int sumClients = 0;
-    for (Map.Entry<NtClient, ArrayList<PrivateView>> perClient : __trackedViews.entrySet()) {
+    for (Map.Entry<NtPrincipal, ArrayList<PrivateView>> perClient : __trackedViews.entrySet()) {
       sumClients += perClient.getValue().size();
     }
     return sumClients;
@@ -481,7 +481,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       while (reader.notEndOfObject()) {
         final var key = Integer.parseInt(reader.fieldName());
         if (reader.testLackOfNull()) {
-          __clients.put(reader.readNtClient(), key);
+          __clients.put(reader.readNtPrincipal(), key);
         } else {
           killSet.add(key);
         }
@@ -507,7 +507,7 @@ public abstract class LivingDocument implements RxParent, Caller {
           __queue.clear();
           if (reader.testLackOfNull()) {
             if (reader.startObject()) {
-              NtClient who = null;
+              NtPrincipal who = null;
               String channel = null;
               Object message = null;
               var timestamp = 0L;
@@ -515,7 +515,7 @@ public abstract class LivingDocument implements RxParent, Caller {
                 final var f = reader.fieldName();
                 switch (f) {
                   case "who":
-                    who = reader.readNtClient();
+                    who = reader.readNtPrincipal();
                     break;
                   case "channel":
                     channel = reader.readString();
@@ -549,7 +549,7 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   protected abstract boolean __is_direct_channel(String channel);
 
-  protected abstract void __handle_direct(NtClient who, String channel, Object message) throws AbortMessageException;
+  protected abstract void __handle_direct(NtPrincipal who, String channel, Object message) throws AbortMessageException;
 
   /** code generated: insert data */
   public abstract void __insert(JsonStreamReader __reader);
@@ -583,21 +583,21 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** code generated: respond to a put request */
   protected abstract WebResponse __put_internal(WebPut __put);
 
-  public boolean __isConnected(final NtClient __who) {
+  public boolean __isConnected(final NtPrincipal __who) {
     return __clients.containsKey(__who);
   }
 
   /** code generated: allow the document to accept/reject the client */
-  public abstract boolean __onConnected(NtClient clientValue);
+  public abstract boolean __onConnected(NtPrincipal clientValue);
 
   /** code generated: let the document know of a disconnected client */
-  public abstract void __onDisconnected(NtClient clientValue);
+  public abstract void __onDisconnected(NtPrincipal clientValue);
 
   /** code generate: let the document know an asset was uploaded */
-  public abstract void __onAssetAttached(NtClient __cvalue, NtAsset __asset);
+  public abstract void __onAssetAttached(NtPrincipal __cvalue, NtAsset __asset);
 
   /** code generate: can the client even attach any data */
-  public abstract boolean __onCanAssetAttached(NtClient __cvalue);
+  public abstract boolean __onCanAssetAttached(NtPrincipal __cvalue);
 
   /** code generated: convert the reader into a constructor arg */
   protected abstract NtMessageBase __parse_construct_arg(JsonStreamReader reader);
@@ -690,7 +690,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     for (String dedupeKey : __dedupe.keySet()) {
       memory += dedupeKey.length() * 2 + 16;
     }
-    for (Map.Entry<NtClient, ArrayList<PrivateView>> entry : __trackedViews.entrySet()) {
+    for (Map.Entry<NtPrincipal, ArrayList<PrivateView>> entry : __trackedViews.entrySet()) {
       memory += entry.getKey().memory();
       for (PrivateView view : entry.getValue()) {
         memory += view.memory();
@@ -747,7 +747,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       String command = null;
       Long timestamp = null;
       Long limit = null;
-      NtClient who = null;
+      NtPrincipal who = null;
       Object message = null;
       NtMessageBase arg = null;
       String channel = null;
@@ -787,7 +787,7 @@ public abstract class LivingDocument implements RxParent, Caller {
               limit = reader.readLong();
               break;
             case "who":
-              who = reader.readNtClient();
+              who = reader.readNtPrincipal();
               break;
             case "channel":
               channel = reader.readString();
@@ -919,7 +919,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
-  private LivingDocumentChange __transaction_deliver(final String request, NtClient who, int deliveryId, RemoteResult result) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_deliver(final String request, NtPrincipal who, int deliveryId, RemoteResult result) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     boolean exception = true;
     if (__monitor != null) {
@@ -987,7 +987,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: a person connects to document */
-  private LivingDocumentChange __transaction_attach(final String request, final NtClient who, final NtAsset asset) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_attach(final String request, final NtPrincipal who, final NtAsset asset) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -1014,7 +1014,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: a person connects to document */
-  private LivingDocumentChange __transaction_connect(final String request, final NtClient who) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_connect(final String request, final NtPrincipal who) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -1041,7 +1041,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         forward.writeObjectFieldIntro("__clients");
         forward.beginObject();
         forward.writeObjectFieldIntro(cId);
-        forward.writeNtClient(who);
+        forward.writeNtPrincipal(who);
         forward.endObject();
         forward.endObject();
 
@@ -1068,7 +1068,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: construct the document */
-  private LivingDocumentChange __transaction_construct(final String request, final NtClient who, final NtMessageBase arg, final String entropy) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_construct(final String request, final NtPrincipal who, final NtMessageBase arg, final String entropy) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -1099,7 +1099,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: a person disconnects from the document */
-  private LivingDocumentChange __transaction_disconnect(final String request, final NtClient who) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_disconnect(final String request, final NtPrincipal who) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -1129,7 +1129,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       reverse.writeObjectFieldIntro("__clients");
       reverse.beginObject();
       reverse.writeObjectFieldIntro(id);
-      reverse.writeNtClient(who);
+      reverse.writeNtPrincipal(who);
       reverse.endObject();
       reverse.endObject();
       final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
@@ -1146,14 +1146,14 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: apply a data patch to the document */
-  private LivingDocumentChange __transaction_apply_patch(final String request, final NtClient who, String patch) {
+  private LivingDocumentChange __transaction_apply_patch(final String request, final NtPrincipal who, String patch) {
     __patch(new JsonStreamReader(patch));
     __seq.bumpUpPre();
     return __simple_commit(who, request, null);
   }
 
   /** transaction: an invalidation is happening on the document (no monitor) */
-  private LivingDocumentChange __transaction_invalidate_body(NtClient who, final String request) {
+  private LivingDocumentChange __transaction_invalidate_body(NtPrincipal who, final String request) {
     __preemptedStateOnNextComputeBlocked = null;
     final var seedUsed = Long.parseLong(__entropy.get());
     try {
@@ -1229,7 +1229,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: an invalidation is happening on the document (use monitor) */
-  private LivingDocumentChange __transaction_invalidate_monitored(final NtClient who, final String request) {
+  private LivingDocumentChange __transaction_invalidate_monitored(final NtPrincipal who, final String request) {
     var exception = true;
     final var startedTime = System.nanoTime();
     __monitor.push("TransactionInvalidate");
@@ -1288,7 +1288,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       forward.endObject();
       reverse.endObject();
 
-      final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), NtClient.NO_ONE, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.Internal);
+      final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), NtPrincipal.NO_ONE, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.Internal);
       exception = false;
       return new LivingDocumentChange(result, null, null);
     } finally {
@@ -1298,7 +1298,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
-  private LivingDocumentChange __transaction_send_commit(final String request, final String dedupeKey, final NtClient who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_send_commit(final String request, final String dedupeKey, final NtPrincipal who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     forward.beginObject();
@@ -1320,7 +1320,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     return new LivingDocumentChange(update, broadcasts, null);
   }
 
-  private LivingDocumentChange __transaction_send_enqueue(final String request, final String dedupeKey, final NtClient who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_send_enqueue(final String request, final String dedupeKey, final NtPrincipal who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     // create the delta
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
@@ -1366,7 +1366,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: a person is sending the document a message */
-  private LivingDocumentChange __transaction_send(CoreRequestContext context, final String request, final NtClient who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_send(CoreRequestContext context, final String request, final NtPrincipal who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {

@@ -9,7 +9,7 @@
  */
 package org.adamalang.runtime.async;
 
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 /**
  * This represents a future which has been vended to the runtime.
@@ -20,7 +20,7 @@ import org.adamalang.runtime.natives.NtClient;
 public class OutstandingFuture {
   public final String channel;
   public final int id;
-  public final NtClient who;
+  public final NtPrincipal who;
   public String json;
   private boolean claimed;
   private boolean taken;
@@ -30,7 +30,7 @@ public class OutstandingFuture {
    * @param channel the channel for the future to wait on
    * @param who the client we are waiting on
    */
-  public OutstandingFuture(final int id, final String channel, final NtClient who) {
+  public OutstandingFuture(final int id, final String channel, final NtPrincipal who) {
     this.id = id;
     this.channel = channel;
     this.who = who;
@@ -55,7 +55,7 @@ public class OutstandingFuture {
   }
 
   /** does this future match the given channel and person; that is, can this future pair up */
-  public boolean test(final String testChannel, final NtClient testClientId) {
+  public boolean test(final String testChannel, final NtPrincipal testClientId) {
     if (channel.equals(testChannel) && who.equals(testClientId) && !claimed) {
       claimed = true;
       return true;

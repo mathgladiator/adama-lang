@@ -20,7 +20,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
@@ -108,7 +108,7 @@ public class CoreService implements Deliverer {
   }
 
   @Override
-  public void deliver(NtClient agent, Key key, int id, RemoteResult result, boolean firstParty,  Callback<Integer> callbackReal) {
+  public void deliver(NtPrincipal agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callbackReal) {
     Callback<Integer> callback = metrics.deliver.wrap(callbackReal);
     load(key, new Callback<>() {
       @Override
@@ -521,7 +521,7 @@ public class CoreService implements Deliverer {
   }
 
   /** execute a web put against the document */
-  public void webPut(NtClient who, Key key, WebPutRaw request, Callback<WebResponse> callback) {
+  public void webPut(NtPrincipal who, Key key, WebPutRaw request, Callback<WebResponse> callback) {
     load(key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {

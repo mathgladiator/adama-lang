@@ -1,1 +1,1 @@
-# Client (i.e. People)
+# Principals (i.e. People)

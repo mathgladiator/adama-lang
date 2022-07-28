@@ -14,7 +14,7 @@ import org.adamalang.runtime.data.managed.Base;
 import org.adamalang.runtime.data.mocks.SimpleDataCallback;
 import org.adamalang.runtime.data.mocks.SimpleIntCallback;
 import org.adamalang.runtime.data.mocks.SimpleVoidCallback;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class ManagedDataServiceTests {
 
   private static final RemoteDocumentUpdate UPDATE_1 =
       new RemoteDocumentUpdate(
-          1, 1, NtClient.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0, 100, UpdateType.AddUserData);
+          1, 1, NtPrincipal.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0, 100, UpdateType.AddUserData);
   private static final RemoteDocumentUpdate UPDATE_2 =
       new RemoteDocumentUpdate(
           2, 2, null, "REQUEST", "{\"x\":2}", "{\"x\":1,\"z\":42}", true, 0, 100, UpdateType.AddUserData);

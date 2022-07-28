@@ -9,7 +9,7 @@
  */
 package org.adamalang.translator.reflect;
 
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.junit.Assert;
@@ -27,7 +27,7 @@ public class TypeBridgeTests {
     Assert.assertEquals("string", TypeBridge.getAdamaType(String.class, null).getAdamaType());
     Assert.assertEquals("long", TypeBridge.getAdamaType(Long.class, null).getAdamaType());
     Assert.assertEquals("long", TypeBridge.getAdamaType(long.class, null).getAdamaType());
-    Assert.assertEquals("client", TypeBridge.getAdamaType(NtClient.class, null).getAdamaType());
+    Assert.assertEquals("client", TypeBridge.getAdamaType(NtPrincipal.class, null).getAdamaType());
   }
 
   @Test

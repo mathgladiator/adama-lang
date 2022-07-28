@@ -11,7 +11,7 @@ package org.adamalang.translator.jvm;
 
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.ContextSupport;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.junit.Assert;
 import org.junit.Test;
@@ -110,19 +110,19 @@ public class LivingDocumentFactoryTests {
 
     Assert.assertEquals(10000, factory.maximum_history);
     try {
-      factory.canCreate(ContextSupport.WRAP(NtClient.NO_ONE));
+      factory.canCreate(ContextSupport.WRAP(NtPrincipal.NO_ONE));
       Assert.fail();
     } catch (ErrorCodeException ex) {
       Assert.assertEquals(180858, ex.code);
     }
     try {
-      factory.canInvent(ContextSupport.WRAP(NtClient.NO_ONE));
+      factory.canInvent(ContextSupport.WRAP(NtPrincipal.NO_ONE));
       Assert.fail();
     } catch (ErrorCodeException ex) {
       Assert.assertEquals(146558, ex.code);
     }
     try {
-      factory.canSendWhileDisconnected(ContextSupport.WRAP(NtClient.NO_ONE));
+      factory.canSendWhileDisconnected(ContextSupport.WRAP(NtPrincipal.NO_ONE));
       Assert.fail();
     } catch (ErrorCodeException ex) {
       Assert.assertEquals(148095, ex.code);

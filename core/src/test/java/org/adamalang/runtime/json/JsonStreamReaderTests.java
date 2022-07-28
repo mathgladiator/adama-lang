@@ -10,7 +10,7 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
 import org.junit.Assert;
 import org.junit.Test;
@@ -259,9 +259,9 @@ public class JsonStreamReaderTests {
   }
 
   @Test
-  public void readNtCLient() {
+  public void readNtPrincipal() {
     JsonStreamReader reader = new JsonStreamReader("{\"agent\":\"z\",\"authority\":\"g\"}");
-    NtClient c = reader.readNtClient();
+    NtPrincipal c = reader.readNtPrincipal();
     Assert.assertEquals("z", c.agent);
     Assert.assertEquals("g", c.authority);
   }

@@ -64,7 +64,7 @@ record R {
 Records can express policies which are bits of code associated to the record along with ```@who```. 
 ```adama
 record R {
-  private client owner;
+  private principal owner;
   
   policy is_owner {
     return owner == @who;
@@ -76,7 +76,7 @@ record R {
 A policy can be used to protect fields within a record.
 ```adama
 record R {
-  private client owner;
+  private principal owner;
   
   use_policy<is_owner> int balance;
   
@@ -91,7 +91,7 @@ Alternatively, a policy may be used to protect the entire record.
 
 ```adama
 record R {
-  private client owner;
+  private principal owner;
   
   public int balance;
 

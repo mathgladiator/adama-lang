@@ -99,7 +99,7 @@ A table is an exceptionally powerful tool, and Adama uses [language integrated q
 record Card {
   public int suit;
   public int rank;
-  public client owner;
+  public principal owner;
 }
 ```
 
@@ -175,8 +175,8 @@ public int turn;
 The reason we took this detour is to have a third party be able to use the incomplete channel. For instance, the document somehow learns of two players within a game; these players' associated clients are stored within the document via:
 
 ```adama
-private client player1;
-private client player2;
+private principal player1;
+private principal player2;
 ```
 
 Now, we can define an incomplete channel for the document to ask players for cards.

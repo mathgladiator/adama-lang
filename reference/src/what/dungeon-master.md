@@ -34,8 +34,8 @@ This all manifests from failures and the difficulty of network programming. Netw
 
 ```adama
 // somehow, the document learned of the two people playing the game
-client player1;
-client player2;
+principal player1;
+principal player2;
 
 // scores for the players
 int score_player1;

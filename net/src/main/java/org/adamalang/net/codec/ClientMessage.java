@@ -14,7 +14,7 @@ import org.adamalang.common.codec.Flow;
 import org.adamalang.common.codec.TypeId;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 /** messages from client to server */
 public class ClientMessage {
@@ -212,7 +212,7 @@ public class ClientMessage {
     }
 
     public RemoteDocumentUpdate toRemoteDocumentUpdate() {
-      return new RemoteDocumentUpdate(seq_begin, seq_end, agent != null ? new NtClient(agent, authority) : null, request, redo, undo, active, delay, dAssetBytes, UpdateType.Internal);
+      return new RemoteDocumentUpdate(seq_begin, seq_end, agent != null ? new NtPrincipal(agent, authority) : null, request, redo, undo, active, delay, dAssetBytes, UpdateType.Internal);
     }
   }
 

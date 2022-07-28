@@ -2,7 +2,7 @@
 
 ```adama
 // 1/6: Layout state with a schema
-public client owner;
+public principal owner;
 public string name;
 public string description;
 public int viewers;

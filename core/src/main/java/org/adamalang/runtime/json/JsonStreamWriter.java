@@ -10,7 +10,7 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
 
@@ -208,7 +208,7 @@ public class JsonStreamWriter {
     return x;
   }
 
-  public void writeNtClient(final NtClient c) {
+  public void writeNtPrincipal(final NtPrincipal c) {
     beginObject();
     writeObjectFieldIntro("agent");
     writeFastString(c.agent);

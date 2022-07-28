@@ -15,7 +15,7 @@ import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.ServiceRegistry;
@@ -140,7 +140,7 @@ public class LivingDocumentFactory {
     writer.writeObjectFieldIntro("entropy");
     writer.writeString(entropy);
     writer.writeObjectFieldIntro("who");
-    writer.writeNtClient(NtClient.NO_ONE);
+    writer.writeNtPrincipal(NtPrincipal.NO_ONE);
     writer.writeObjectFieldIntro("arg");
     writer.beginObject();
     writer.endObject();

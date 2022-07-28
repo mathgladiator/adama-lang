@@ -14,7 +14,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.CoreStream;
@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class LocalAgent implements Streamback {
   private final CoreService service;
   private final LocalCanaryConfig config;
-  private final NtClient who;
+  private final NtPrincipal who;
   private final Key key;
   private final ScheduledExecutorService executor;
   private final Random rng;
@@ -40,7 +40,7 @@ public class LocalAgent implements Streamback {
   public LocalAgent(CoreService service, LocalCanaryConfig config, int agentId, ScheduledExecutorService executor) {
     this.service = service;
     this.config = config;
-    this.who = new NtClient("agent" + agentId, "canary");
+    this.who = new NtPrincipal("agent" + agentId, "canary");
     int keyId = (int) (config.keyIdMin + (config.keyIdMax - config.keyIdMin + 1) * Math.random());
     this.key = new Key(config.space, config.keyPrefix + keyId);
     this.executor = executor;

@@ -12,7 +12,7 @@ package org.adamalang.runtime.json;
 import org.adamalang.runtime.json.token.JsonToken;
 import org.adamalang.runtime.json.token.JsonTokenType;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
 
@@ -22,7 +22,7 @@ public class JsonStreamReader {
   private final String json;
   private final int n;
   private final HashMap<String, String> dedupeStrings;
-  private final HashMap<NtClient, NtClient> dedupeClients;
+  private final HashMap<NtPrincipal, NtPrincipal> dedupeClients;
   ArrayDeque<JsonToken> tokens;
   private int index;
 
@@ -32,7 +32,7 @@ public class JsonStreamReader {
     tokens = new ArrayDeque<>();
     this.dedupeStrings = new HashMap<>();
     this.dedupeClients = new HashMap<>();
-    this.dedupeClients.put(NtClient.NO_ONE, NtClient.NO_ONE);
+    this.dedupeClients.put(NtPrincipal.NO_ONE, NtPrincipal.NO_ONE);
   }
 
   public void ingestDedupe(Set<String> strs) {
@@ -111,7 +111,7 @@ public class JsonStreamReader {
     return Long.parseLong(tokens.removeFirst().data);
   }
 
-  public NtClient readNtClient() {
+  public NtPrincipal readNtPrincipal() {
     var agent = "?";
     var authority = "?";
     if (startObject()) {
@@ -127,8 +127,8 @@ public class JsonStreamReader {
       }
     }
 
-    NtClient lookup = new NtClient(agent, authority);
-    NtClient test = dedupeClients.get(lookup);
+    NtPrincipal lookup = new NtPrincipal(agent, authority);
+    NtPrincipal test = dedupeClients.get(lookup);
     if (test == null) {
       dedupeClients.put(lookup, lookup);
       return lookup;

@@ -55,7 +55,7 @@ import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.data.managed.Base;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
@@ -474,7 +474,7 @@ public class Service {
         SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
         if (skr != null) {
           // TODO: need a way to get an NtClient token
-          WebGet get = new WebGet(NtClient.NO_ONE, skr.uri, headers, new NtDynamic(parametersJson));
+          WebGet get = new WebGet(NtPrincipal.NO_ONE, skr.uri, headers, new NtDynamic(parametersJson));
           client.webGet(skr.space, skr.key, get, new Callback<>() {
             @Override
             public void success(WebResponse value) {
@@ -504,7 +504,7 @@ public class Service {
         SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
         if (skr != null) {
           // TODO: need a way to get an NtClient token
-          WebPut put = new WebPut(NtClient.NO_ONE, new WebPutRaw(skr.uri, headers, new NtDynamic(parametersJson), body));
+          WebPut put = new WebPut(NtPrincipal.NO_ONE, new WebPutRaw(skr.uri, headers, new NtDynamic(parametersJson), body));
           client.webPut(skr.space, skr.key, put, new Callback<>() {
             @Override
             public void success(WebResponse value) {

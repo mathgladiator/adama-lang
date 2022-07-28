@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.translator.tree.types.reactive;
+package org.adamalang.translator.tree.types.natives;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
@@ -15,36 +15,61 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.NoOneClientConstant;
-import org.adamalang.translator.tree.types.TySimpleReactive;
+import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
-import org.adamalang.translator.tree.types.traits.IsOrderable;
+import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
-public class TyReactiveClient extends TySimpleReactive implements IsOrderable {
-  public TyReactiveClient(final Token token) {
-    super(token, "RxClient");
+import java.util.function.Consumer;
+
+public class TyNativePrincipal extends TySimpleNative implements DetailHasDeltaType, //
+    DetailTypeHasMethods, //
+    AssignmentViaNative //
+{
+  public final Token readonlyToken;
+  public final Token token;
+
+  public TyNativePrincipal(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+    super(behavior, "NtPrincipal", "NtPrincipal");
+    this.readonlyToken = readonlyToken;
+    this.token = token;
+    ingest(token);
+  }
+
+  @Override
+  public void emitInternal(final Consumer<Token> yielder) {
+    if (readonlyToken != null) {
+      yielder.accept(readonlyToken);
+    }
+    yielder.accept(token);
   }
 
   @Override
   public String getAdamaType() {
-    return "r<client>";
+    return "principal";
   }
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveClient(token).withPosition(position);
+    return new TyNativePrincipal(newBehavior, readonlyToken, token).withPosition(position);
   }
 
   @Override
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
-    writer.writeString("reactive_value");
+    writer.writeString("native_value");
     writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
-    writer.writeString("client");
+    writer.writeString("principal");
     writer.endObject();
+  }
+
+  @Override
+  public String getDeltaType(final Environment environment) {
+    return "DPrincipal";
   }
 
   @Override
@@ -53,7 +78,7 @@ public class TyReactiveClient extends TySimpleReactive implements IsOrderable {
   }
 
   @Override
-  public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, token);
+  public TyNativeFunctional lookupMethod(String name, Environment environment) {
+    return environment.state.globals.findExtension(this, name);
   }
 }

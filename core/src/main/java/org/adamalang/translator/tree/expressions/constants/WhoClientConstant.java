@@ -14,7 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 
 import java.util.function.Consumer;
 
@@ -35,7 +35,7 @@ public class WhoClientConstant extends Expression {
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     if (environment.state.isStatic() || environment.state.isMessageHandler() || environment.state.isPolicy() || environment.state.isBubble() || environment.state.isWeb()) {
       environment.mustBeComputeContext(this);
-      return new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
+      return new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
     } else {
       environment.document.createError(this, "@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers", "WHO");
       return null;

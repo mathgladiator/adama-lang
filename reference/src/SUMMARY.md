@@ -48,7 +48,7 @@
     - [String](./reference/stdlib-strings.md)
     - [Math](./reference/stdlib-math.md)
     - [Statistics](./reference/stdlib-statistics.md)
-    - [Client (i.e. People)](./reference/stdlib-client.md)
+    - [Principals (i.e. People)](./reference/stdlib-client.md)
   - [Authentication](./reference/auth.md)
   - [JavaScript API Reference](./reference/api.md)
 - [History and Motivations behind Adama (i.e. Why!?!)](./history/it-began.md)

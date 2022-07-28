@@ -9,7 +9,7 @@
  */
 package org.adamalang.runtime.async;
 
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMaybe;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class Sink<T> {
   /** the communication channel for the sink */
   public final String channel;
   /** the various queues per users */
-  private final HashMap<NtClient, ClientChannelQueue> queues;
+  private final HashMap<NtPrincipal, ClientChannelQueue> queues;
 
   /** construct the sink for the particular channel */
   public Sink(final String channel) {
@@ -34,7 +34,7 @@ public class Sink<T> {
   }
 
   /** dequeue a message for a particular user; the future may not have a value */
-  public SimpleFuture<T> dequeue(final NtClient who) {
+  public SimpleFuture<T> dequeue(final NtPrincipal who) {
     final var queue = queueFor(who);
     T value = null;
     if (queue.queue.size() > 0) {
@@ -44,7 +44,7 @@ public class Sink<T> {
   }
 
   /** get the queue for the particular user */
-  private ClientChannelQueue queueFor(final NtClient value) {
+  private ClientChannelQueue queueFor(final NtPrincipal value) {
     var queue = queues.get(value);
     if (queue == null) {
       /** create on-demand */
@@ -55,7 +55,7 @@ public class Sink<T> {
   }
 
   /** dequeue a message for a particular user; the future may not have a value */
-  public SimpleFuture<NtMaybe<T>> dequeueMaybe(final NtClient who) {
+  public SimpleFuture<NtMaybe<T>> dequeueMaybe(final NtPrincipal who) {
     final var queue = queueFor(who);
     NtMaybe<T> value = null;
     if (queue.queue.size() > 0) {

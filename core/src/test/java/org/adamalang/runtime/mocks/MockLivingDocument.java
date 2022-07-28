@@ -18,7 +18,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.ServiceRegistry;
@@ -32,8 +32,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MockLivingDocument extends LivingDocument {
-  public final ArrayList<NtClient> connects;
-  public final ArrayList<NtClient> disconnects;
+  public final ArrayList<NtPrincipal> connects;
+  public final ArrayList<NtPrincipal> disconnects;
 
   public MockLivingDocument() {
     super(null);
@@ -53,7 +53,7 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  protected void __handle_direct(NtClient who, String channel, Object message) throws AbortMessageException {
+  protected void __handle_direct(NtPrincipal who, String channel, Object message) throws AbortMessageException {
   }
 
   @Override
@@ -70,10 +70,10 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  protected void __construct_intern(final NtClient who, final NtMessageBase message) {}
+  protected void __construct_intern(final NtPrincipal who, final NtMessageBase message) {}
 
   @Override
-  public PrivateView __createPrivateView(final NtClient __who, final Perspective __perspective, AssetIdEncoder encoder) {
+  public PrivateView __createPrivateView(final NtPrincipal __who, final Perspective __perspective, AssetIdEncoder encoder) {
     return null;
   }
 
@@ -113,21 +113,21 @@ public class MockLivingDocument extends LivingDocument {
   protected void __invoke_label(final String __new_state) {}
 
   @Override
-  public boolean __onConnected(final NtClient clientValue) {
+  public boolean __onConnected(final NtPrincipal clientValue) {
     connects.add(clientValue);
     return true;
   }
 
   @Override
-  public void __onDisconnected(final NtClient clientValue) {
+  public void __onDisconnected(final NtPrincipal clientValue) {
     disconnects.add(clientValue);
   }
 
   @Override
-  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}
+  public void __onAssetAttached(NtPrincipal __cvalue, NtAsset __asset) {}
 
   @Override
-  public boolean __onCanAssetAttached(NtClient __cvalue) {
+  public boolean __onCanAssetAttached(NtPrincipal __cvalue) {
     return false;
   }
 

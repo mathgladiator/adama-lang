@@ -11,13 +11,10 @@ package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
-import org.adamalang.translator.tree.expressions.FieldLookup;
-import org.adamalang.translator.tree.expressions.Lookup;
 import org.adamalang.translator.tree.privacy.PublicPolicy;
 import org.adamalang.translator.tree.statements.Block;
-import org.adamalang.translator.tree.statements.DefineVariable;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StorageSpecialization;
@@ -63,7 +60,7 @@ public class DefineRPC extends Definition {
   @Override
   public void typing(Environment environment) {
     final var next = environment.scopeAsMessageHandler();
-    next.define(clientVar.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVar).withPosition(this), true, this);
+    next.define(clientVar.text, new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, clientVar).withPosition(this), true, this);
     for (final FunctionArg arg : args) {
       next.define(arg.argName, arg.type, true, arg.type);
     }

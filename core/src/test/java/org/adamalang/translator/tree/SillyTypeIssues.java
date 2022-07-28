@@ -10,8 +10,7 @@
 package org.adamalang.translator.tree;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.sys.CoreRequestContext;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.EnvironmentState;
@@ -166,7 +165,7 @@ public class SillyTypeIssues {
 
   @Test
   public void reactive() {
-    final var reactiveClient = new TyReactiveClient(Token.WRAP("X"));
+    final var reactiveClient = new TyReactivePrincipal(Token.WRAP("X"));
     reactiveClient.makeCopyWithNewPosition(reactiveClient, TypeBehavior.ReadOnlyNativeValue);
     reactiveClient.getAdamaType();
     final var reactiveDouble = new TyReactiveDouble(Token.WRAP("X"));
@@ -251,7 +250,7 @@ public class SillyTypeIssues {
 
   @Test
   public void ntclient() {
-    new TyNativeClient(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
+    new TyNativePrincipal(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
     new TyNativeFuture(null, null, null, new TokenizedItem<>(new TyNativeVoid()))
         .writeTypeReflectionJson(new JsonStreamWriter());
   }
@@ -290,7 +289,7 @@ public class SillyTypeIssues {
   public static class X {
     public String x;
     public int z;
-    public NtClient w;
+    public NtPrincipal w;
   }
 
   @Test

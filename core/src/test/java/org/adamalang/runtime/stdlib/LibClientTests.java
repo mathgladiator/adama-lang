@@ -9,16 +9,16 @@
  */
 package org.adamalang.runtime.stdlib;
 
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class LibClientTests {
   @Test
   public void is() {
-    NtClient a = new NtClient("jeff", "adama");
+    NtPrincipal a = new NtPrincipal("jeff", "adama");
     Assert.assertTrue(LibClient.isAdamaDeveloper(a));
-    Assert.assertFalse(LibClient.isAdamaDeveloper(NtClient.NO_ONE));
+    Assert.assertFalse(LibClient.isAdamaDeveloper(NtPrincipal.NO_ONE));
     Assert.assertTrue(LibClient.fromAuthority(a, "adama"));
     Assert.assertFalse(LibClient.fromAuthority(a, "x"));
   }

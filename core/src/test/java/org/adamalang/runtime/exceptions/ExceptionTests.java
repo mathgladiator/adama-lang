@@ -11,7 +11,7 @@ package org.adamalang.runtime.exceptions;
 
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class ExceptionTests {
     Assert.assertEquals("Good will exhausted:0,1 --> 2,3", gwee.getMessage());
     new AbortMessageException();
     new RetryProgressException(null);
-    new ComputeBlockedException(NtClient.NO_ONE, "foo");
+    new ComputeBlockedException(NtPrincipal.NO_ONE, "foo");
     new ErrorCodeException(14, "Nope");
 
     ErrorCodeException eee = new ErrorCodeException(14, "Nope");

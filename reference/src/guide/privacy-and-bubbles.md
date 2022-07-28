@@ -20,7 +20,7 @@ record Row {
   private int pri;
 
   // a private person
-  private client who;
+  private principal who;
 
   // data that is only visible to the who
   viewer_is<who> int whos_age;
@@ -47,12 +47,12 @@ bubble mine = iterate tbl where who == @who;
 ### public/private
 The **private** modifier hides data from users. The **public** modifier discloses data to users. If no modifier is specified, the default is **private**.
 
-### client_is&lt;&gt;
+### viewer_is&lt;&gt;
 
 Inside the angle brackets denotes a variable local to the document or record which must be of type client. For instance:
 
 ```adama
-client owner;
+principal owner;
 viewer_is<owner> int data_only_for_owner;
 ```
 
@@ -68,7 +68,7 @@ record Card {
   private bool played;
 
   // who owns the card
-  private client owner;
+  private principal owner;
 
   // the value of the card
   use_policy<is_in_play> value; // 0 to 51 for a standard playing deck

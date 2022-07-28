@@ -10,7 +10,7 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.junit.Assert;
@@ -167,16 +167,16 @@ public class JsonStreamWriterTests {
   }
 
   @Test
-  public void simpleNtClient1() {
+  public void simpleNtPrincipal1() {
     JsonStreamWriter w = new JsonStreamWriter();
-    w.writeNtClient(NtClient.NO_ONE);
+    w.writeNtPrincipal(NtPrincipal.NO_ONE);
     Assert.assertEquals("{\"agent\":\"?\",\"authority\":\"?\"}", w.toString());
   }
 
   @Test
-  public void simpleNtClient2() {
+  public void simpleNtPrincipal2() {
     JsonStreamWriter w = new JsonStreamWriter();
-    w.writeNtClient(new NtClient("x", "y"));
+    w.writeNtPrincipal(new NtPrincipal("x", "y"));
     Assert.assertEquals("{\"agent\":\"x\",\"authority\":\"y\"}", w.toString());
   }
 

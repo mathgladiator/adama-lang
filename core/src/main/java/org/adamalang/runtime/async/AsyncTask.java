@@ -13,7 +13,7 @@ import org.adamalang.runtime.contracts.AsyncAction;
 import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.exceptions.RetryProgressException;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
 
 /**
@@ -25,12 +25,12 @@ public class AsyncTask {
   public final Object message;
   public final int messageId;
   public final long timestamp;
-  public final NtClient who;
+  public final NtPrincipal who;
   private boolean aborted;
   private AsyncAction action;
 
   /** Construct the task around a message */
-  public AsyncTask(final int messageId, final NtClient who, final String channel, final long timestamp, final Object message) {
+  public AsyncTask(final int messageId, final NtPrincipal who, final String channel, final long timestamp, final Object message) {
     this.messageId = messageId;
     this.who = who;
     this.channel = channel;
@@ -44,7 +44,7 @@ public class AsyncTask {
   public void dump(final JsonStreamWriter writer) {
     writer.beginObject();
     writer.writeObjectFieldIntro("who");
-    writer.writeNtClient(who);
+    writer.writeNtPrincipal(who);
     writer.writeObjectFieldIntro("channel");
     writer.writeFastString(channel);
     writer.writeObjectFieldIntro("timestamp");

@@ -18,7 +18,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.mocks.MockTime;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -46,7 +46,7 @@ public class ServiceImplicitCreateTests {
       MockStreamback streamback = new MockStreamback();
       Runnable latchClient = streamback.latchAt(2);
       Runnable latchData = dataService.latchLogAt(4);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       latchData.run();
       latchClient.run();
@@ -77,8 +77,8 @@ public class ServiceImplicitCreateTests {
       Runnable onlyOneCreates = dataService.latchAt(2);
       Runnable latchData = realDataService.latchLogAt(4);
       dataService.pause();
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback1);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback2);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback2);
       onlyOneAsks.run();
       dataService.once();
       onlyOneCreates.run();
@@ -120,7 +120,7 @@ public class ServiceImplicitCreateTests {
     CoreService service = new CoreService(METRICS, proxyFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback1 = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback1);
       streamback1.await_failure(-123);
     } finally {
       service.shutdown();
@@ -144,8 +144,8 @@ public class ServiceImplicitCreateTests {
       Runnable onlyOneAsks = dataService.latchAt(2);
       Runnable latchData = realDataService.latchLogAt(3);
       dataService.pause();
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback1);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback2);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback2);
       bothAskingOnlyOne.run();
       dataService.once();
       onlyOneAsks.run();

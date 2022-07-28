@@ -9,24 +9,24 @@
  */
 package org.adamalang.runtime.async;
 
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class OutstandingFutureTests {
   @Test
   public void flow() {
-    final var fut = new OutstandingFuture(1, "ch", NtClient.NO_ONE);
-    Assert.assertFalse(fut.test("ch", NtClient.NO_ONE));
+    final var fut = new OutstandingFuture(1, "ch", NtPrincipal.NO_ONE);
+    Assert.assertFalse(fut.test("ch", NtPrincipal.NO_ONE));
     Assert.assertTrue(fut.outstanding());
     fut.take();
     Assert.assertFalse(fut.outstanding());
     fut.reset();
     Assert.assertFalse(fut.outstanding());
-    Assert.assertTrue(fut.test("ch", NtClient.NO_ONE));
-    Assert.assertFalse(fut.test("ch2", NtClient.NO_ONE));
+    Assert.assertTrue(fut.test("ch", NtPrincipal.NO_ONE));
+    Assert.assertFalse(fut.test("ch2", NtPrincipal.NO_ONE));
     Assert.assertTrue(fut.outstanding());
-    Assert.assertFalse(fut.test("ch", NtClient.NO_ONE));
-    Assert.assertFalse(fut.test("ch2", NtClient.NO_ONE));
+    Assert.assertFalse(fut.test("ch", NtPrincipal.NO_ONE));
+    Assert.assertFalse(fut.test("ch2", NtPrincipal.NO_ONE));
   }
 }

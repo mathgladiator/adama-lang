@@ -19,7 +19,7 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.mocks.MockTime;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
@@ -54,7 +54,7 @@ public class RealDocumentSetup implements Deliverer {
   }
 
   @Override
-  public void deliver(NtClient agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
+  public void deliver(NtPrincipal agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
     this.deliver.deliver(agent, key, id, result, firstParty, callback);
   }
 
@@ -85,9 +85,9 @@ public class RealDocumentSetup implements Deliverer {
     Key key = new Key("space", "0");
     if (json == null) {
       DurableLivingDocument.fresh(
-          key, factory, NtClient.NO_ONE, "{}", "123", monitor, base, acquireReal);
+          key, factory, NtPrincipal.NO_ONE, "{}", "123", monitor, base, acquireReal);
       DurableLivingDocument.fresh(
-          key, factory, NtClient.NO_ONE, "{}", "123", monitor, base, acquireMirror);
+          key, factory, NtPrincipal.NO_ONE, "{}", "123", monitor, base, acquireMirror);
     } else {
       DurableLivingDocument.load(key, factory, monitor, base, acquireReal);
       DurableLivingDocument.load(key, factory, monitor, base, acquireMirror);

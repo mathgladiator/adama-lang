@@ -12,13 +12,13 @@ package org.adamalang.runtime.natives;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class NtClientTests {
+public class NtPrincipalTests {
   @Test
   public void comparisons() {
-    final var cv1 = new NtClient("a", "b");
-    final var cv2 = new NtClient("b", "b");
-    final var cv3 = new NtClient("b", "a");
-    final var cv4 = new NtClient("b", "c");
+    final var cv1 = new NtPrincipal("a", "b");
+    final var cv2 = new NtPrincipal("b", "b");
+    final var cv3 = new NtPrincipal("b", "a");
+    final var cv4 = new NtPrincipal("b", "c");
     Assert.assertEquals(-1, cv1.compareTo(cv2));
     Assert.assertEquals(1, cv1.compareTo(cv3));
     Assert.assertEquals(-1, cv1.compareTo(cv4));
@@ -56,6 +56,6 @@ public class NtClientTests {
 
   @Test
   public void coverage() {
-    NtClient.NO_ONE.toString();
+    NtPrincipal.NO_ONE.toString();
   }
 }

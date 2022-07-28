@@ -39,7 +39,7 @@ So, let's add some data.
 ```adama
 // `who said `what `when
 record Line {
-  public client who;
+  public principal who;
   public string what;
   public long when;
 }

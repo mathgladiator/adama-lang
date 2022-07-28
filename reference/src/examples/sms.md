@@ -11,7 +11,7 @@ This is as draft example
   }
 }
 
-public client owner;
+public principal owner;
 
 @connected {
   return true;

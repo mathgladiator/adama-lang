@@ -71,7 +71,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
       classConstructor.append("  return ").append(idefn.nameToken.text).append(".get()");
       final var fd = storage.fields.get(idefn.nameToken.text);
       if (fd != null) {
-        if (fd.type instanceof TyReactiveClient) {
+        if (fd.type instanceof TyReactivePrincipal) {
           classConstructor.append(".hashCode()");
         }
       }

@@ -18,7 +18,7 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyInternalReadonlyClass;
 import org.adamalang.translator.tree.types.natives.TyNativeAsset;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 
 import java.util.function.Consumer;
 
@@ -109,7 +109,7 @@ public class DefineDocumentEvent extends Definition {
         next.define(contextVariable, new TyInternalReadonlyClass(CoreRequestContext.class), true, this);
       }
       if (clientVarToken != null) {
-        next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
+        next.define(clientVarToken.text, new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
       }
       return next;
     }
@@ -122,7 +122,7 @@ public class DefineDocumentEvent extends Definition {
       next.define(parameterNameToken.text, new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, parameterNameToken).withPosition(this), true, this);
     }
     if (clientVarToken != null) {
-      next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
+      next.define(clientVarToken.text, new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
     }
     return next;
   }

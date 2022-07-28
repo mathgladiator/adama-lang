@@ -11,7 +11,7 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class ThreadedDataServiceTest {
     ThreadedDataService ds = new ThreadedDataService(1, () -> dataService);
     Key key = new Key("space", "key");
     RemoteDocumentUpdate update =
-        new RemoteDocumentUpdate(1, 1, NtClient.NO_ONE, "", "", "", false, 1, 123, UpdateType.AddUserData);
+        new RemoteDocumentUpdate(1, 1, NtPrincipal.NO_ONE, "", "", "", false, 1, 123, UpdateType.AddUserData);
     CountDownLatch latch = new CountDownLatch(5);
     ds.get(
         key,

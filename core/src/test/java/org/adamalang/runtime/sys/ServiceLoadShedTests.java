@@ -15,7 +15,7 @@ import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -24,8 +24,8 @@ import org.junit.Test;
 
 public class ServiceLoadShedTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
-  private static final NtClient ALICE = new NtClient("alice", "test");
-  private static final NtClient BOB = new NtClient("bob", "test");
+  private static final NtPrincipal ALICE = new NtPrincipal("alice", "test");
+  private static final NtPrincipal BOB = new NtPrincipal("bob", "test");
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
       "@static { create { return true; } } public int x; @connected { x += 1; return true; } @disconnected { x -= 1; } message M {} channel foo(M y) { x += 1000; }";
@@ -41,11 +41,11 @@ public class ServiceLoadShedTests {
     try {
       Runnable latch = dataService.latchLogAt(5);
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", "1", created);
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", "1", created);
       created.await_success();
       MockStreamback streamback1 = new MockStreamback();
       Runnable latchStreamBack = streamback1.latchAt(3);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback1);
       streamback1.await_began();
       service.shed((k) -> true);
       latchStreamBack.run();

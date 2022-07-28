@@ -9,7 +9,7 @@
  */
 package org.adamalang.runtime.sys.web;
 
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtMap;
 
@@ -17,13 +17,13 @@ import java.util.TreeMap;
 
 /** represents a get request */
 public class WebGet {
-  public final NtClient who;
+  public final NtPrincipal who;
   public final String uri;
   public final WebRouter router;
   public final NtMap<String, String> headers;
   public final NtDynamic parameters;
 
-  public WebGet(NtClient who, String uri, TreeMap<String, String> headers, NtDynamic parameters) {
+  public WebGet(NtPrincipal who, String uri, TreeMap<String, String> headers, NtDynamic parameters) {
     this.who = who;
     this.uri = uri;
     this.router = new WebRouter(uri);

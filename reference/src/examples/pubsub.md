@@ -14,7 +14,7 @@
 
 // we build a table of publishes with who published it and when they did so
 record Publish {
-  public client who;
+  public principal who;
   public long when;
   public string payload;
 }

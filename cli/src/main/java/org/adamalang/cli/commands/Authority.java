@@ -16,7 +16,7 @@ import org.adamalang.cli.Util;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.common.Json;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.transforms.results.Keystore;
 import org.adamalang.validators.ValidateKeystore;
 
@@ -74,7 +74,7 @@ public class Authority {
     String validateAgainst = Util.extractWithDefault("--validate", "-v", null, args);
     if (validateAgainst != null) {
       Keystore keystore = Keystore.parse(Files.readString(new File(validateAgainst).toPath()));
-      NtClient who = keystore.validate(authority, token);
+      NtPrincipal who = keystore.validate(authority, token);
       System.err.println("validated:" + who.agent);
     }
   }

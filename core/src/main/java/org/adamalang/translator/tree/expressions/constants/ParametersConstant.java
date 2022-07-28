@@ -14,10 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
 import org.adamalang.translator.tree.types.natives.TyNativeDynamic;
-import org.adamalang.translator.tree.types.natives.TyNativeMap;
-import org.adamalang.translator.tree.types.natives.TyNativeString;
 
 import java.util.function.Consumer;
 

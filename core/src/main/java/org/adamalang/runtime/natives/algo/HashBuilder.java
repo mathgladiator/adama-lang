@@ -11,7 +11,7 @@ package org.adamalang.runtime.natives.algo;
 
 import org.adamalang.common.Hashing;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
 
@@ -67,7 +67,7 @@ public class HashBuilder {
     digest.update(("" + l).getBytes(StandardCharsets.UTF_8));
   }
 
-  public void hashNtClient(final NtClient c) {
+  public void hashNtPrincipal(final NtPrincipal c) {
     digest.update(c.agent.getBytes(StandardCharsets.UTF_8));
     digest.update(c.authority.getBytes(StandardCharsets.UTF_8));
   }

@@ -93,7 +93,7 @@ public class TyNativeChannel extends TyType implements DetailTypeHasMethods, Det
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     final var resolvedChannelType = environment.rules.Resolve(tokenizedType.item, false);
-    final var ct = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, null);
+    final var ct = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, null);
     final var argTypes = new ArrayList<TyType>();
     if (environment.rules.IsNativeArray(resolvedChannelType, true)) {
       if ("fetch".equals(name)) {

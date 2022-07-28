@@ -78,7 +78,7 @@ public class TyNativeService extends TyType implements DetailTypeHasMethods {
       ArrayList<TyType> argTypes = new ArrayList<>();
       {
         TyType inputType = environment.rules.FindMessageStructure(method.inputTypeName.text, this, true).withPosition(service);
-        argTypes.add(new TyNativeClient(TypeBehavior.ReadWriteNative, null, null).withPosition(service));
+        argTypes.add(new TyNativePrincipal(TypeBehavior.ReadWriteNative, null, null).withPosition(service));
         argTypes.add(inputType);
       }
       TyType outputType = environment.rules.FindMessageStructure(method.outputTypeName.text, this, true);

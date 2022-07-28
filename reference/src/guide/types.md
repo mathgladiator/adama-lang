@@ -11,7 +11,7 @@ Adama has many built-in primal types! The following tables outline which types a
 | [complex](./rich-types.md#complex-numbers) | complex is a tuple of two doubles under the [complex field of numbers](https://en.wikipedia.org/wiki/Complex_number) | 0 + 0 * @i | @i |
 | string | string is a [utf-8](https://en.wikipedia.org/wiki/UTF-8) encoded collection of code-points. | "" (empty string) | "Hello World" |
 | label | label is a pointer to a block of code which is used by [the state machine](./state-machine.md), | # (the no-state) | #hello |
-| client | client is a reference to a connected person, and the backing data establishes who they are. This is used for [acquiring data and decisions from people](./async.md), | @no_one | @no_one |
+| principal | principal is a reference to a connected person, and the backing data establishes who they are. This is used for [acquiring data and decisions from people](./async.md), | @no_one | @no_one |
 
 ## Call-out to other types
 

@@ -10,7 +10,7 @@
 package org.adamalang.runtime.async;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.reactives.RxInt32;
 
 import java.util.ArrayList;
@@ -44,10 +44,10 @@ public class OutstandingFutureTracker {
    * dump the viewer's data into the provide node; this is how people learn that they must make a
    * decision
    */
-  public void dump(final JsonStreamWriter writer, final NtClient who) {
+  public void dump(final JsonStreamWriter writer, final NtPrincipal who) {
     writer.writeObjectFieldIntro("outstanding");
     writer.beginArray();
-    final var clientsBlocking = new HashSet<NtClient>();
+    final var clientsBlocking = new HashSet<NtPrincipal>();
     for (final OutstandingFuture exist : created) {
       if (exist.outstanding()) {
         clientsBlocking.add(exist.who);
@@ -59,8 +59,8 @@ public class OutstandingFutureTracker {
     writer.endArray();
     writer.writeObjectFieldIntro("blockers");
     writer.beginArray();
-    for (final NtClient blocker : clientsBlocking) {
-      writer.writeNtClient(blocker);
+    for (final NtPrincipal blocker : clientsBlocking) {
+      writer.writeNtPrincipal(blocker);
     }
     writer.endArray();
   }
@@ -68,7 +68,7 @@ public class OutstandingFutureTracker {
   /**
    * create a future for the given channel and client should the client not already know about one
    */
-  public OutstandingFuture make(final String channel, final NtClient client) {
+  public OutstandingFuture make(final String channel, final NtPrincipal client) {
     var newId = source.get() + 1;
     for (final OutstandingFuture exist : created) {
       if (exist.test(channel, client)) {

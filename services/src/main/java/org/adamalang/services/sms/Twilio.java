@@ -16,7 +16,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
 import org.adamalang.services.ServiceConfig;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class Twilio extends SimpleService {
   private final ExecutorService executor;
 
   public Twilio(ServiceConfig config, ExecutorService executor) throws ErrorCodeException {
-    super("twilio", new NtClient("twilio", "service"), true);
+    super("twilio", new NtPrincipal("twilio", "service"), true);
     this.executor = executor;
     String username = config.getDecryptedSecret("username");
     String password = config.getDecryptedSecret("password");

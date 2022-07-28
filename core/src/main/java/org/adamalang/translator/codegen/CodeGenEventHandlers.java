@@ -22,7 +22,7 @@ public class CodeGenEventHandlers {
     sb.append("{");
     sb.tabUp().writeNewline();
     if (dce.clientVarToken != null) {
-      sb.append("NtClient ").append(dce.clientVarToken.text).append(" = __who;").writeNewline();
+      sb.append("NtPrincipal ").append(dce.clientVarToken.text).append(" = __who;").writeNewline();
     }
     if (dce.which.isStaticPolicy && dce.contextVariable != null) {
       sb.append("CoreRequestContext ").append(dce.contextVariable).append(" = __context;").writeNewline();
@@ -42,13 +42,13 @@ public class CodeGenEventHandlers {
 
     public void consider(DefineDocumentEvent dce, StringBuilderWithTabs sb, Environment environment) {
       if (event.isStaticPolicy) {
-        sb.append("public static boolean ").append(event.prefix).append("__" + count).append("(StaticState __static_state, NtClient __who, CoreRequestContext __context) ");
+        sb.append("public static boolean ").append(event.prefix).append("__" + count).append("(StaticState __static_state, NtPrincipal __who, CoreRequestContext __context) ");
         writeBody(dce, sb, dce.nextEnvironment(environment));
       } else {
         if (event.hasParameter) {
-          sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtClient __who, ").append(event.parameterType).append(" ").append(dce.parameterNameToken.text).append(") ");
+          sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtPrincipal __who, ").append(event.parameterType).append(" ").append(dce.parameterNameToken.text).append(") ");
         } else {
-          sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtClient __who) ");
+          sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtPrincipal __who) ");
         }
         writeBody(dce, sb, dce.nextEnvironment(environment));
       }
@@ -78,9 +78,9 @@ public class CodeGenEventHandlers {
         if ("boolean".equals(event.returnType)) {
           sb.append("@Override").writeNewline();
           if (event.hasParameter) {
-            sb.append("public boolean ").append(event.prefix).append("(NtClient __cvalue, ").append(event.parameterType).append(" __pvalue) {").tabUp().writeNewline();
+            sb.append("public boolean ").append(event.prefix).append("(NtPrincipal __cvalue, ").append(event.parameterType).append(" __pvalue) {").tabUp().writeNewline();
           } else {
-            sb.append("public boolean ").append(event.prefix).append("(NtClient __cvalue) {").tabUp().writeNewline();
+            sb.append("public boolean ").append(event.prefix).append("(NtPrincipal __cvalue) {").tabUp().writeNewline();
           }
           if (count > 0) {
             sb.append("boolean __result = false;").writeNewline();
@@ -101,9 +101,9 @@ public class CodeGenEventHandlers {
         if ("void".equals(event.returnType)) {
           sb.append("@Override").writeNewline();
           if (event.hasParameter) {
-            sb.append("public void ").append(event.prefix).append("(NtClient __cvalue, ").append(event.parameterType).append(" __pvalue) {").tabUp().writeNewline();
+            sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue, ").append(event.parameterType).append(" __pvalue) {").tabUp().writeNewline();
           } else {
-            sb.append("public void ").append(event.prefix).append("(NtClient __cvalue) {").tabUp().writeNewline();
+            sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue) {").tabUp().writeNewline();
           }
           if (count > 0) {
             for (var k = 0; k < count; k++) {

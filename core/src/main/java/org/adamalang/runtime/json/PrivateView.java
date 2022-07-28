@@ -11,20 +11,20 @@ package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 /** a private view of the document where private lives; code is generated to use this */
 public abstract class PrivateView {
   private static final String DEFAULT_FUTURES = "\"outstanding\":[],\"blockers\":[]";
   public final Perspective perspective;
-  public final NtClient who;
+  public final NtPrincipal who;
   public final AssetIdEncoder assetIdEncoder;
   private boolean alive;
   private PrivateView usurper;
   private String lastWrittenFutures;
 
   /** construct the view based on the person (who) and the connection (perspective) */
-  public PrivateView(final NtClient who, final Perspective perspective, final AssetIdEncoder assetIdEncoder) {
+  public PrivateView(final NtPrincipal who, final Perspective perspective, final AssetIdEncoder assetIdEncoder) {
     alive = true;
     this.who = who;
     this.assetIdEncoder = assetIdEncoder;

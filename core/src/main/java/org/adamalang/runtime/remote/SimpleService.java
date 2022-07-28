@@ -12,7 +12,7 @@ package org.adamalang.runtime.remote;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.natives.NtResult;
 
@@ -21,17 +21,17 @@ import java.util.function.Function;
 /** simplifies the connecting of the dots */
 public abstract class SimpleService implements Service {
   private final String name;
-  private final NtClient agent;
+  private final NtPrincipal agent;
   private final boolean firstParty;
 
-  public SimpleService(String name, NtClient agent, boolean firstParty) {
+  public SimpleService(String name, NtPrincipal agent, boolean firstParty) {
     this.name = name;
     this.agent = agent;
     this.firstParty = firstParty;
   }
 
   @Override
-  public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtClient who, NtMessageBase request, Function<String, T> parser) {
+  public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtPrincipal who, NtMessageBase request, Function<String, T> parser) {
     return cache.answer(name, method, who, request, parser, (id, json) -> {
       request(method, json, new Callback<String>() {
         @Override

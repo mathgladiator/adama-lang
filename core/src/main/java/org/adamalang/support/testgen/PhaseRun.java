@@ -16,9 +16,8 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
-import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.json.JsonStreamReader;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
@@ -40,16 +39,16 @@ public class PhaseRun {
     DumbDataService.DumbDurableLivingDocumentAcquire acquire = new DumbDataService.DumbDurableLivingDocumentAcquire();
     Key key = new Key("0", "0");
     DocumentThreadBase base = new DocumentThreadBase(dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
-    DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "0", monitor, base, acquire);
+    DurableLivingDocument.fresh(key, factory, NtPrincipal.NO_ONE, "{}", "0", monitor, base, acquire);
     DurableLivingDocument doc = acquire.get();
     doc.invalidate(Callback.DONT_CARE_INTEGER);
     outputFile.append("CPU:").append(doc.getCodeCost()).append("\n");
     outputFile.append("MEMORY:").append(doc.getMemoryBytes()).append("\n");
-    doc.createPrivateView(NtClient.NO_ONE, wrap(str -> {
+    doc.createPrivateView(NtPrincipal.NO_ONE, wrap(str -> {
       outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
     }), new JsonStreamReader("{}"), null, DumbDataService.makePrinterPrivateView("NO_ONE", outputFile));
-    doc.connect(NtClient.NO_ONE, DumbDataService.makePrinterInt("NO_ONE", outputFile));
-    final var rando = new NtClient("rando", "random-place");
+    doc.connect(NtPrincipal.NO_ONE, DumbDataService.makePrinterInt("NO_ONE", outputFile));
+    final var rando = new NtPrincipal("rando", "random-place");
     doc.createPrivateView(rando, wrap(str -> {
       outputFile.append("+ RANDO DELTA:").append(str).append("\n");
     }), new JsonStreamReader("{}"), null, DumbDataService.makePrinterPrivateView("RANDO", outputFile));

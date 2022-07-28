@@ -25,7 +25,7 @@ public class NtChannel<T> {
   }
 
   /** from a list of options, choose $limit of them */
-  public SimpleFuture<NtMaybe<T>> choose(final NtClient who, final NtMessageBase[] optionsRaw, final int limit) {
+  public SimpleFuture<NtMaybe<T>> choose(final NtPrincipal who, final NtMessageBase[] optionsRaw, final int limit) {
     final var actualLimit = Math.min(limit, optionsRaw.length);
     if (actualLimit == 0) {
       return new SimpleFuture<>(sink.channel, who, new NtMaybe<>());
@@ -61,7 +61,7 @@ public class NtChannel<T> {
   }
 
   /** from a list of options, pick one of them */
-  public SimpleFuture<NtMaybe<T>> decide(final NtClient who, final NtMessageBase[] optionsRaw) {
+  public SimpleFuture<NtMaybe<T>> decide(final NtPrincipal who, final NtMessageBase[] optionsRaw) {
     if (optionsRaw.length == 0) {
       return new SimpleFuture<>(sink.channel, who, new NtMaybe<>());
     }
@@ -96,12 +96,12 @@ public class NtChannel<T> {
   }
 
   /** ask the user for one array of items, blocks entire universe */
-  public SimpleFuture<T> fetchArray(final NtClient who) {
+  public SimpleFuture<T> fetchArray(final NtPrincipal who) {
     return fetch(who, true);
   }
 
   /** ask the user for item/items */
-  public SimpleFuture<T> fetch(final NtClient who, boolean array) {
+  public SimpleFuture<T> fetch(final NtPrincipal who, boolean array) {
     final var oldFuture = tracker.make(sink.channel, who);
     final var writer = new JsonStreamWriter();
     writer.beginObject();
@@ -121,7 +121,7 @@ public class NtChannel<T> {
   }
 
   /** ask the user for one item, blocks entire universe */
-  public SimpleFuture<T> fetchItem(final NtClient who) {
+  public SimpleFuture<T> fetchItem(final NtPrincipal who) {
     return fetch(who, false);
   }
 }

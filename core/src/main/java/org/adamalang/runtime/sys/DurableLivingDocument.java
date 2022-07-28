@@ -24,7 +24,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.remote.ServiceRegistry;
@@ -84,7 +84,7 @@ public class DurableLivingDocument {
     this.lastActivityMS = base.time.nowMilliseconds();
   }
 
-  public static void fresh(final Key key, final LivingDocumentFactory factory, final NtClient who, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
+  public static void fresh(final Key key, final LivingDocumentFactory factory, final NtPrincipal who, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
     try {
       LivingDocument livingDocument = factory.create(monitor);
       livingDocument.__lateBind(key.space, key.key, Deliverer.FAILURE, ServiceRegistry.NOT_READY);
@@ -95,7 +95,7 @@ public class DurableLivingDocument {
     }
   }
 
-  private void construct(final NtClient who, final String arg, final String entropy, Callback<Integer> callback) {
+  private void construct(final NtPrincipal who, final String arg, final String entropy, Callback<Integer> callback) {
     try {
       final var writer = forge("construct", who);
       writer.writeObjectFieldIntro("arg");
@@ -119,7 +119,7 @@ public class DurableLivingDocument {
     }
   }
 
-  public JsonStreamWriter forge(final String command, final NtClient who) {
+  public JsonStreamWriter forge(final String command, final NtPrincipal who) {
     return forge(command, who, true);
   }
 
@@ -129,7 +129,7 @@ public class DurableLivingDocument {
     return request.toString();
   }
 
-  public JsonStreamWriter forge(final String command, final NtClient who, boolean activity) {
+  public JsonStreamWriter forge(final String command, final NtPrincipal who, boolean activity) {
     if (activity) {
       this.lastActivityMS = base.time.nowMilliseconds();
     }
@@ -141,7 +141,7 @@ public class DurableLivingDocument {
     writer.writeLong(base.time.nowMilliseconds());
     if (who != null) {
       writer.writeObjectFieldIntro("who");
-      writer.writeNtClient(who);
+      writer.writeNtPrincipal(who);
     }
     return writer;
   }
@@ -189,7 +189,7 @@ public class DurableLivingDocument {
     if (context != null) {
       if (context.who != null) {
         writer.writeObjectFieldIntro("who");
-        writer.writeNtClient(context.who);
+        writer.writeNtPrincipal(context.who);
       }
       writer.writeObjectFieldIntro("key");
       writer.writeString(context.key);
@@ -471,7 +471,7 @@ public class DurableLivingDocument {
                       public void execute() throws Exception {
                         document.__insert(new JsonStreamReader(value.patch));
                         IngestRequest[] requestsAfterCatchUp = new IngestRequest[requests.length + 1];
-                        requestsAfterCatchUp[0] = new IngestRequest(NtClient.NO_ONE, forgeInvalidate(), DONT_CARE_CHANGE, false);
+                        requestsAfterCatchUp[0] = new IngestRequest(NtPrincipal.NO_ONE, forgeInvalidate(), DONT_CARE_CHANGE, false);
                         for (int j = 0; j < requests.length; j++) {
                           requestsAfterCatchUp[j + 1] = requests[j];
                         }
@@ -554,7 +554,7 @@ public class DurableLivingDocument {
     }
   }
 
-  private void ingest(NtClient who, String requestJson, Callback<LivingDocumentChange> callback, boolean cleanupTest, boolean forceIntoQueue) {
+  private void ingest(NtPrincipal who, String requestJson, Callback<LivingDocumentChange> callback, boolean cleanupTest, boolean forceIntoQueue) {
     IngestRequest request = new IngestRequest(who, requestJson, callback, cleanupTest);
     if (catastrophicFailureOccurred) {
       request.callback.failure(new ErrorCodeException(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION));
@@ -583,7 +583,7 @@ public class DurableLivingDocument {
   }
 
   public void invalidate(Callback<Integer> callback) {
-    ingest(NtClient.NO_ONE, forgeInvalidate(), JUST_SEQ(base.metrics.document_invalidate.wrap(callback)), false, true);
+    ingest(NtPrincipal.NO_ONE, forgeInvalidate(), JUST_SEQ(base.metrics.document_invalidate.wrap(callback)), false, true);
   }
 
   public int getCodeCost() {
@@ -607,30 +607,30 @@ public class DurableLivingDocument {
     request.writeObjectFieldIntro("limit");
     request.writeLong(limit);
     request.endObject();
-    ingest(NtClient.NO_ONE, request.toString(), DONT_CARE_CHANGE, true, false);
+    ingest(NtPrincipal.NO_ONE, request.toString(), DONT_CARE_CHANGE, true, false);
   }
 
   public void registerActivity() {
     this.lastActivityMS = base.time.nowMilliseconds();
   }
 
-  public void connect(final NtClient who, Callback<Integer> callback) {
+  public void connect(final NtPrincipal who, Callback<Integer> callback) {
     final var request = forge("connect", who);
     request.endObject();
     ingest(who, request.toString(), JUST_SEQ(base.metrics.document_connect.wrap(callback)), false, false);
   }
 
-  public boolean isConnected(final NtClient who) {
+  public boolean isConnected(final NtPrincipal who) {
     return document.__isConnected(who);
   }
 
-  public void createPrivateView(final NtClient who, final Perspective perspective, JsonStreamReader viewerState, AssetIdEncoder encoder, Callback<PrivateView> callback) {
+  public void createPrivateView(final NtPrincipal who, final Perspective perspective, JsonStreamReader viewerState, AssetIdEncoder encoder, Callback<PrivateView> callback) {
     PrivateView result = document.__createView(who, perspective, encoder);
     result.ingest(viewerState);
     invalidate(Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
   }
 
-  public int garbageCollectPrivateViewsFor(final NtClient who) {
+  public int garbageCollectPrivateViewsFor(final NtPrincipal who) {
     return document.__garbageCollectViews(who);
   }
 
@@ -650,7 +650,7 @@ public class DurableLivingDocument {
     return timeSinceLastActivity > base.getMillisecondsInactivityBeforeCleanup() && document.__canRemoveFromMemory();
   }
 
-  public void disconnect(final NtClient who, Callback<Integer> callback) {
+  public void disconnect(final NtPrincipal who, Callback<Integer> callback) {
     final var request = forge("disconnect", who);
     request.endObject();
     ingest(who, request.toString(), JUST_SEQ(base.metrics.document_disconnect.wrap(callback)), true, false);
@@ -670,7 +670,7 @@ public class DurableLivingDocument {
     ingest(context.who, writer.toString(), JUST_SEQ(base.metrics.document_send.wrap(callback)), false, false);
   }
 
-  public void apply(NtClient who, String patch, Callback<Integer> callback) {
+  public void apply(NtPrincipal who, String patch, Callback<Integer> callback) {
     final var writer = forge("apply", who);
     writer.writeObjectFieldIntro("patch");
     writer.injectJson(patch);
@@ -678,12 +678,12 @@ public class DurableLivingDocument {
     ingest(who, writer.toString(), JUST_SEQ(base.metrics.document_apply.wrap(callback)), false, false);
   }
 
-  public boolean canAttach(NtClient who) {
+  public boolean canAttach(NtPrincipal who) {
     // TODO: check policy first
     return document.__onCanAssetAttached(who);
   }
 
-  public void attach(NtClient who, NtAsset asset, Callback<Integer> callback) {
+  public void attach(NtPrincipal who, NtAsset asset, Callback<Integer> callback) {
     final var writer = forge("attach", who);
     writer.writeObjectFieldIntro("asset");
     writer.writeNtAsset(asset);
@@ -691,7 +691,7 @@ public class DurableLivingDocument {
     ingest(who, writer.toString(), JUST_SEQ(base.metrics.document_attach.wrap(callback)), false, false);
   }
 
-  public void deliver(NtClient who, int deliveryId, RemoteResult result, Callback<Integer> callback) {
+  public void deliver(NtPrincipal who, int deliveryId, RemoteResult result, Callback<Integer> callback) {
     var writer = forge("deliver", who);
     writer.writeObjectFieldIntro("delivery_id");
     writer.writeInteger(deliveryId);
@@ -701,7 +701,7 @@ public class DurableLivingDocument {
     ingest(who, writer.toString(), JUST_SEQ(base.metrics.document_attach.wrap(callback)), false, false);
   }
 
-  public void webPut(NtClient who, WebPutRaw put, Callback<WebResponse> callback) {
+  public void webPut(NtPrincipal who, WebPutRaw put, Callback<WebResponse> callback) {
     final var writer = forge("web_put", who);
     put.writeBody(writer);
     writer.endObject();
@@ -729,7 +729,7 @@ public class DurableLivingDocument {
   }
 
   public void afterLoad() {
-    for (NtClient client : document.__reconcileClientsToForceDisconnect()) {
+    for (NtPrincipal client : document.__reconcileClientsToForceDisconnect()) {
       disconnect(client, Callback.DONT_CARE_INTEGER);
     }
     if (document.__state.has() && !document.__blocked.get()) {
@@ -739,13 +739,13 @@ public class DurableLivingDocument {
 
   private static class IngestRequest {
     public final boolean cleanupTest;
-    private final NtClient who;
+    private final NtPrincipal who;
     private final String request;
     private final Callback<LivingDocumentChange> callback;
     private int attempts;
     private LivingDocumentChange change;
 
-    private IngestRequest(NtClient who, String request, Callback<LivingDocumentChange> callback, boolean cleanup) {
+    private IngestRequest(NtPrincipal who, String request, Callback<LivingDocumentChange> callback, boolean cleanup) {
       this.who = who;
       this.request = request;
       this.callback = callback;

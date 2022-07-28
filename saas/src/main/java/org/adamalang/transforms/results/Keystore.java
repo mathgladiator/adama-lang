@@ -20,7 +20,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -144,7 +144,7 @@ public class Keystore {
     }
   }
 
-  public NtClient validate(String authority, String identity) throws ErrorCodeException {
+  public NtPrincipal validate(String authority, String identity) throws ErrorCodeException {
     for (PublicKey publicKey : keys) {
       try {
         Jws<Claims> claims = Jwts.parserBuilder()
@@ -152,7 +152,7 @@ public class Keystore {
             .requireIssuer(authority)
             .build()
             .parseClaimsJws(identity);
-        return new NtClient(claims.getBody().getSubject(), authority);
+        return new NtPrincipal(claims.getBody().getSubject(), authority);
       } catch (Exception ex) {
         // move on
       }

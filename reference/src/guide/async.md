@@ -15,7 +15,7 @@ message ChangeOutput {
 This establishes the shape of the communication, and we leverage a channel to open a pathway for messages to execute code. One option is to add a message handler:
 
 ```adama
-channel change_output(client sender, ChangeOutput change) {
+channel change_output(principal sender, ChangeOutput change) {
   output = change.new_output;
 }
 ```
@@ -23,10 +23,10 @@ channel change_output(client sender, ChangeOutput change) {
 This enables users to send messages via the change_output channel which will execute the associated code. In this example, 'change_output' is the name of the channel which clients will annotate their message with to execute the associated code. Nothing stops you from introducing multiple channels with the same message type.
 
 ```adama
-channel change_output(client sender, ChangeOutput change) {
+channel change_output(principal sender, ChangeOutput change) {
   output = change.new_output;
 }
-channel set_output(client sender, ChangeOutput change) {
+channel set_output(principal sender, ChangeOutput change) {
   output = change.new_output;
 }
 ```
@@ -46,8 +46,8 @@ channel<SomeDecision> decision;
 And any state machine transition block can then leverage the ```channel``` to pull data from a user.
 
 ```adama
-private client player1;
-private client player2;
+private principal player1;
+private principal player2;
 
 #getsome {
   future<SomeDecision> sd1 = decision.fetch(player1);

@@ -8,7 +8,7 @@ You want numbers? We got numbers. You want strings? We got strings. You want com
   int y = 0x04;
   double z = 3.14;
   bool b = true;
-  client c = @no_one;
+  principal c = @no_one;
   complex cx = 1 + @i;
 }
 ```
@@ -25,14 +25,14 @@ There are a variety of ways to conjure up constants. The following table illustr
 | double | [0-9]*.?[0-9]*(\[eE\](0-9)+)? | 3.14, 10e19, 2.72e10 |
 | string | "(^"|escape)*" | "", "hello world", "\" |
 | label | #[a-z]+ | #foo, #start |
-| client | @no_one | @no_one |
+| principal | @no_one | @no_one |
 | maybe&lt;?&gt; | @maybe&lt;Type&gt; | @maybe&lt;int&gt; |
 | maybe(?) | @maybe(Expr) | @maybe(123) |
 | complex | @i | 1 + @i |
 
 
 ## who is executing
-The ```@who``` constant refers to the client that is executing the current code.
+The ```@who``` constant refers to the principal that is executing the current code.
 
 ## String escaping
 
