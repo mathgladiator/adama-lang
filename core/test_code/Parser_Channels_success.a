@@ -5,13 +5,13 @@ message X {
 channel<X> foo1;
 channel<X[]> foo2;
 
-channel goo1(client c, X x) {
+channel goo1(X x) {
 }
 
 channel goo2(X x) {
 }
 
-channel gooarr1(client c, X[] x) {
+channel gooarr1(X[] x) {
 }
 
 channel gooarr2(X[] arr) {

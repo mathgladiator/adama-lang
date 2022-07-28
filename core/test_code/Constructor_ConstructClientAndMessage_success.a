@@ -4,7 +4,7 @@ message M {
   int x;
 }
 
-@construct (client c, M m3) {
+@construct (M m3) {
   owner = c;
   v = m3.x;
 }

@@ -1,12 +1,7 @@
 @construct {
 }
-@construct (client me) {
-}
 
 message M {}
 
 @construct (M m1) {
-}
-
-@construct (client c, M m3) {
 }

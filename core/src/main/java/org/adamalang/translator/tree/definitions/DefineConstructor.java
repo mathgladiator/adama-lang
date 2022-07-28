@@ -21,30 +21,18 @@ import java.util.function.Consumer;
 
 /** defines a constructor which runs when the document is created */
 public class DefineConstructor extends Definition {
-  public final Token clientTypeToken;
-  public final Token clientVarToken;
   public final Block code;
-  public final Token commaToken;
   public final Token constructToken;
   public final Token endParenToken;
   public final Token messageNameToken;
   public final Token messageTypeToken;
   public final Token openParenToken;
-  public TyNativeClient clientType;
   public TyType unifiedMessageType;
   public String unifiedMessageTypeNameToUse;
 
-  public DefineConstructor(final Token constructToken, final Token openParenToken, final Token clientTypeToken, final Token clientVarToken, final Token commaToken, final Token messageTypeToken, final Token messageNameToken, final Token endParenToken, final Block code) {
+  public DefineConstructor(final Token constructToken, final Token openParenToken, final Token messageTypeToken, final Token messageNameToken, final Token endParenToken, final Block code) {
     this.constructToken = constructToken;
     this.openParenToken = openParenToken;
-    this.clientTypeToken = clientTypeToken;
-    this.clientVarToken = clientVarToken;
-    if (clientTypeToken != null) {
-      clientType = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientTypeToken);
-      clientType.ingest(clientTypeToken);
-      clientType.ingest(clientVarToken);
-    }
-    this.commaToken = commaToken;
     this.messageTypeToken = messageTypeToken;
     this.messageNameToken = messageNameToken;
     this.endParenToken = endParenToken;
@@ -56,19 +44,7 @@ public class DefineConstructor extends Definition {
   @Override
   public void emit(final Consumer<Token> yielder) {
     yielder.accept(constructToken);
-    if (commaToken != null || clientTypeToken != null) {
-      yielder.accept(openParenToken);
-      if (clientTypeToken != null) {
-        yielder.accept(clientTypeToken);
-        yielder.accept(clientVarToken);
-      }
-      if (commaToken != null) {
-        yielder.accept(commaToken);
-        yielder.accept(messageTypeToken);
-        yielder.accept(messageNameToken);
-      }
-      yielder.accept(endParenToken);
-    } else if (messageNameToken != null) {
+    if (messageNameToken != null) {
       yielder.accept(openParenToken);
       yielder.accept(messageTypeToken);
       yielder.accept(messageNameToken);
@@ -80,9 +56,6 @@ public class DefineConstructor extends Definition {
   @Override
   public void typing(final Environment environment) {
     final var next = environment.scopeAsPolicy();
-    if (clientType != null) {
-      next.define(clientVarToken.text, clientType, true, clientType);
-    }
     if (messageNameToken != null && messageTypeToken != null && unifiedMessageType != null) {
       next.define(messageNameToken.text, unifiedMessageType, false, unifiedMessageType);
       unifiedMessageTypeNameToUse = ((TyNativeMessage) unifiedMessageType).name;

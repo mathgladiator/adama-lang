@@ -1,4 +1,4 @@
 message M {
 }
 
-channel foo(client c, M m+
+channel foo(M m+

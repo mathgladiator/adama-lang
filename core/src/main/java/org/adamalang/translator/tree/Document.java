@@ -373,15 +373,12 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(DefineRPC rpc) {
     TyNativeMessage nativeMessageType = rpc.genTyNativeMessage();
-    DefineHandler handler = rpc.genHandler();
     types.put(rpc.genMessageTypeName(), nativeMessageType);
     channelToMessageType.put(rpc.name.text, rpc.genMessageTypeName());
-    handlers.add(handler);
     typeCheckOrder.add(env -> {
       rpc.typing(env);
       if (env.document.errorLists.size() == 0) {
         nativeMessageType.typing(env);
-        handler.typing(env);
       }
     });
   }

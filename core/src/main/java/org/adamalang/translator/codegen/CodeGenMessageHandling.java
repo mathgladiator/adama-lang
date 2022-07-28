@@ -102,9 +102,6 @@ public class CodeGenMessageHandling {
             sb.append("[]");
           }
           sb.append(" ").append(payloadNameToUse).append(") throws AbortMessageException {").tabUp().writeNewline();
-          if (handler.client != null) {
-            sb.append("NtClient ").append(handler.client).append(" = __who;").writeNewline();
-          }
           handler.code.specialWriteJava(sb, child, false, false);
           sb.tabDown().writeNewline().append("}").writeNewline();
         }

@@ -1,5 +1,5 @@
 client owner;
 
-@construct (client me) {
-  owner = me;
+@construct {
+  owner = @who;
 }

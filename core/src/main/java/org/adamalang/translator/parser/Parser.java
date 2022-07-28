@@ -657,28 +657,11 @@ public class Parser {
     if (openParenToken != null) {
       final var identA = id();
       final var identB = id();
-      if (identA.text.equals("client")) {
-        final var clientTypeToken = identA;
-        final var clientVarToken = identB;
-        final var commaToken = tokens.popIf(t -> t.isSymbolWithTextEq(","));
-        if (commaToken != null) {
-          final var messageTypeToken = id();
-          final var messageNameToken = id();
-          final var endParenToken = consumeExpectedSymbol(")");
-          final var dc = new DefineConstructor(constructorToken, openParenToken, clientTypeToken, clientVarToken, commaToken, messageTypeToken, messageNameToken, endParenToken, block());
-          return doc -> doc.add(dc);
-        } else {
-          final var endParenToken = consumeExpectedSymbol(")");
-          final var dc = new DefineConstructor(constructorToken, openParenToken, clientTypeToken, clientVarToken, commaToken, null, null, endParenToken, block());
-          return doc -> doc.add(dc);
-        }
-      } else {
-        final var endParenToken = consumeExpectedSymbol(")");
-        final var dc = new DefineConstructor(constructorToken, openParenToken, null, null, null, identA, identB, endParenToken, block());
-        return doc -> doc.add(dc);
-      }
+      final var endParenToken = consumeExpectedSymbol(")");
+      final var dc = new DefineConstructor(constructorToken, openParenToken, identA, identB, endParenToken, block());
+      return doc -> doc.add(dc);
     } else {
-      final var dc = new DefineConstructor(constructorToken, null, null, null, null, null, null, null, block());
+      final var dc = new DefineConstructor(constructorToken,  null, null, null, null, block());
       return doc -> doc.add(dc);
     }
   }
@@ -809,23 +792,12 @@ public class Parser {
     if (nextType == null) {
       throw new ParseException("Parser expected a type, but instead got end of stream", openParen);
     }
-    if ("client".equals(nextType.text)) {
-      final var clientType = nextType;
-      final var clientVar = id();
-      final var comma = consumeExpectedSymbol(",");
-      final var messageType = id();
-      final var arrayToken = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("[]"));
-      final var messageVar = id();
-      final var endParen = consumeExpectedSymbol(")");
-      handler.setFullHandler(openParen, clientType, clientVar, comma, messageType, arrayToken, messageVar, endParen, block());
-    } else {
-      final var messageType = nextType;
-      testId(messageType);
-      final var arrayToken = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("[]"));
-      final var messageVarToken = id();
-      final var endParen = consumeExpectedSymbol(")");
-      handler.setMessageOnlyHandler(openParen, messageType, arrayToken, messageVarToken, endParen, block());
-    }
+    final var messageType = nextType;
+    testId(messageType);
+    final var arrayToken = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("[]"));
+    final var messageVarToken = id();
+    final var endParen = consumeExpectedSymbol(")");
+    handler.setMessageOnlyHandler(openParen, messageType, arrayToken, messageVarToken, endParen, block());
     return doc -> doc.add(handler);
   }
 

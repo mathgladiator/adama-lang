@@ -471,8 +471,8 @@ public class ErrorTable {
     descriptions.put(966835, "no description of error (yet)");
     names.put(949427, "WEB_BASE_GET_FAILED_CONNECT");
     descriptions.put(949427, "no description of error (yet)");
-    names.put(904383, "WEB_BASE_GET_FAILED_NOT_200");
-    descriptions.put(904383, "no description of error (yet)");
+    names.put(928959, "WEB_BASE_GET_FAILED_NOT_200");
+    descriptions.put(928959, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");

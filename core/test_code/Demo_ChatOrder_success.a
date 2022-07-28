@@ -43,6 +43,6 @@ bubble chat = @viewer.ordering ? (iterate _chat order id desc) : (iterate _chat 
 message Flux {
 }
 
-channel flux(client w, Flux f) {
-  (iterate _chat where who==w).what += "x";
+channel flux(Flux f) {
+  (iterate _chat where who==@who).what += "x";
 }

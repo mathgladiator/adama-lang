@@ -30,9 +30,6 @@ public class CodeGenConstructor {
         sb.append("}").writeNewline();
       } else {
         sb.tabUp().writeNewline();
-        if (dc.clientVarToken != null) {
-          sb.append("NtClient ").append(dc.clientVarToken.text).append(" = __who;");
-        }
         dc.code.specialWriteJava(sb, environment, false, true);
         sb.append("}").writeNewline();
       }

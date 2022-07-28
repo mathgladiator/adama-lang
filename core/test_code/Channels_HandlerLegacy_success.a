@@ -3,7 +3,7 @@ message M {
   int y;
 }
 
-channel chan1(client c, M m) {
+channel chan1(M m) {
   return;
 }
 

@@ -1,7 +1,7 @@
 client owner;
 
-@construct (client me) {
-  owner = me;
+@construct {
+  owner = @who;
 }
 
 message M {
@@ -14,6 +14,6 @@ int v;
   v += m1.x;
 }
 
-@construct (client c, M m3) {
+@construct (M m3) {
   v += m3.x;
 }

@@ -84,14 +84,4 @@ public class DefineRPC extends Definition {
     return "__Gen" + name.text.toUpperCase();
   }
 
-  public DefineHandler genHandler() {
-    DefineHandler handler = new DefineHandler(rpcToken, name);
-    Block codePrefix = new Block(openParen);
-    for (FunctionArg arg : args) {
-      codePrefix.add(new DefineVariable(rpcToken, arg.argNameToken, arg.type, null, new FieldLookup(new Lookup(name.cloneWithNewText("__message")), null, arg.argNameToken), null));
-    }
-    codePrefix.add(code);
-    handler.setFullHandler(openParen, clientVar, clientVar, clientVar, name.cloneWithNewText(genMessageTypeName()), null, name.cloneWithNewText("__message"), closeParen, codePrefix);
-    return handler;
-  }
 }

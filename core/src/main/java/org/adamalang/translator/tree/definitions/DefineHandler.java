@@ -32,14 +32,10 @@ public class DefineHandler extends Definition {
   private final Token channelNameToken;
   private final Token channelToken;
   public MessageHandlerBehavior behavior;
-  public String client;
   public Block code;
   public boolean isArray;
   public String messageVar;
   public String typeName;
-  private Token clientTypeToken = null;
-  private Token clientVarToken = null;
-  private Token commaToken = null;
   private Token endParenToken = null;
   private Token endType = null;
   private Token messageTypeArrayToken = null;
@@ -79,11 +75,6 @@ public class DefineHandler extends Definition {
     yielder.accept(channelNameToken);
     if (openParenToken != null) {
       yielder.accept(openParenToken);
-      if (clientTypeToken != null) {
-        yielder.accept(clientTypeToken);
-        yielder.accept(clientVarToken);
-        yielder.accept(commaToken);
-      }
       yielder.accept(messageTypeToken);
       if (messageTypeArrayToken != null) {
         yielder.accept(messageTypeArrayToken);
@@ -121,30 +112,7 @@ public class DefineHandler extends Definition {
         next.define(messageVar, (TyType) messageType, true, this);
       }
     }
-    if (client != null) {
-      next.define(client, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientTypeToken).withPosition(this), true, this);
-    }
     return next;
-  }
-
-  public void setFullHandler(final Token openParenToken, final Token clientTypeToken, final Token clientVarToken, final Token commaToken, final Token messageTypeToken, final Token messageTypeArrayToken, final Token messageVarToken, final Token endParenToken, final Block code) {
-    this.openParenToken = openParenToken;
-    this.clientTypeToken = clientTypeToken;
-    this.clientVarToken = clientVarToken;
-    this.commaToken = commaToken;
-    this.messageTypeToken = messageTypeToken;
-    this.messageTypeArrayToken = messageTypeArrayToken;
-    this.messageVarToken = messageVarToken;
-    this.endParenToken = endParenToken;
-    typeName = this.messageTypeToken.text;
-    messageVar = this.messageVarToken.text;
-    client = this.clientVarToken.text;
-    if (this.messageTypeArrayToken != null) {
-      makeArray();
-    }
-    behavior = MessageHandlerBehavior.ExecuteAssociatedCode;
-    this.code = code;
-    ingest(code);
   }
 
   /** make the handler operate on arrays */
