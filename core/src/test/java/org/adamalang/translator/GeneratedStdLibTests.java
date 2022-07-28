@@ -897,7 +897,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __track(5);");
     gold.append("\n    z2.set(-123);");
     gold.append("\n    __track(6);");
-    gold.append("\n    z2.set(Math.abs(z2.get()));");
+    gold.append("\n    z2.set(LibMath.abs(z2.get()));");
     gold.append("\n    __track(7);");
     gold.append("\n    {");
     gold.append("\n      RxTable<RTxR> _AutoRef3 = rows;");
