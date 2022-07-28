@@ -1,8 +1,8 @@
 record X {
-  policy x(c) {
+  policy x {
     return true;
   }
-  policy x(c) {
+  policy x {
     return true;
   }
 }

@@ -6,10 +6,10 @@ record X {
   use_policy<p1> int v;
   use_policy<p1, p2> int w;
 
-  policy p1(c) {
+  policy p1 {
     return true;
   }
-  policy p2(c) {
+  policy p2 {
     return true;
   }
 

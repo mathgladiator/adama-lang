@@ -167,7 +167,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ReadOnly_SimpleClient_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":50},\"end\":{\"line\":3,\"character\":3,\"byte\":51}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":86},\"end\":{\"line\":5,\"character\":3,\"byte\":87}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly (VariableLookup)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":53},\"end\":{\"line\":3,\"character\":3,\"byte\":54}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":89},\"end\":{\"line\":5,\"character\":3,\"byte\":90}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

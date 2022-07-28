@@ -185,7 +185,7 @@ public class LivingDocumentFactoryTests {
       new LivingDocumentFactory(
           "Space",
           "Foo",
-          "import org.adamalang.runtime.natives.*; import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { throw new NullPointerException(); } }",
+          "import org.adamalang.runtime.natives.*; import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtPrincipal who) { throw new NullPointerException(); } }",
           "{}", Deliverer.FAILURE);
       Assert.fail();
     } catch (final ErrorCodeException nsme) {
@@ -199,7 +199,7 @@ public class LivingDocumentFactoryTests {
       new LivingDocumentFactory(
           "Space",
           "Foo",
-          "import org.adamalang.runtime.natives.*; import org.adamalang.runtime.sys.*; import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(CoreRequestContext who) { throw new NullPointerException(); } public static boolean __onCanSendWhileDisconnected(NtClient who) { throw new NullPointerException(); } }",
+          "import org.adamalang.runtime.natives.*; import org.adamalang.runtime.sys.*; import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(CoreRequestContext who) { throw new NullPointerException(); } public static boolean __onCanSendWhileDisconnected(NtPrincipal who) { throw new NullPointerException(); } }",
           "{}", Deliverer.FAILURE);
       Assert.fail();
     } catch (final ErrorCodeException nsme) {

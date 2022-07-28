@@ -45,8 +45,8 @@ public class Authenticator {
         node.put("user-id", user.id);
       }
       if (user.who != null) {
-        node.put("client-agent", user.who.agent);
-        node.put("client-authority", user.who.authority);
+        node.put("principal-agent", user.who.agent);
+        node.put("principal-authority", user.who.authority);
       }
     }
   }

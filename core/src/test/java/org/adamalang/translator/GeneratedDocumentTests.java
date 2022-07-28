@@ -247,7 +247,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_DuplicatePolicies_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":7,\"byte\":42},\"end\":{\"line\":6,\"character\":1,\"byte\":66}},\"severity\":1,\"source\":\"error\",\"message\":\"Global policy 'foo' was already defined (GlobalDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":35},\"end\":{\"line\":6,\"character\":1,\"byte\":66}},\"severity\":1,\"source\":\"error\",\"message\":\"Global policy 'foo' was already defined (GlobalDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

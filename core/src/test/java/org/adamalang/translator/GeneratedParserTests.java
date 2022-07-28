@@ -16554,7 +16554,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_InvalidMultiPolicyRecord_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":19,\"byte\":139},\"end\":{\"line\":6,\"character\":20,\"byte\":140}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidMultiPolicyRecord_failure.a' failed to parse: Parser was expecting one of the following symbols:,, >; instead, the parse got Symbol:+. {Token: `+` @ (6,19) -> (6,20): Symbol} (ParseException)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting one of the following symbols:,, >; instead, the parse got Symbol:+. {Token: `+` @ (6,19) -> (6,20): Symbol} (ImportIssue)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":19,\"byte\":142},\"end\":{\"line\":6,\"character\":20,\"byte\":143}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidMultiPolicyRecord_failure.a' failed to parse: Parser was expecting one of the following symbols:,, >; instead, the parse got Symbol:+. {Token: `+` @ (6,19) -> (6,20): Symbol} (ParseException)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting one of the following symbols:,, >; instead, the parse got Symbol:+. {Token: `+` @ (6,19) -> (6,20): Symbol} (ImportIssue)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -24358,13 +24358,11 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    public boolean __POLICY_p1(NtPrincipal __who){");
-    gold.append("\n      NtPrincipal c = __who;");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(0);");
     gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    public boolean __POLICY_p2(NtPrincipal __who){");
-    gold.append("\n      NtPrincipal c = __who;");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(1);");
     gold.append("\n      return true;");

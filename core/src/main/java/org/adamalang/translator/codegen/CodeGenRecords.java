@@ -415,15 +415,8 @@ public class CodeGenRecords {
       final var policyExec = customPolicyEntry.getValue().scope(policyRoot, customPolicyEntry.getValue());
       sb.append("public boolean __POLICY_").append(customPolicyEntry.getKey()).append("(NtPrincipal __who)");
       customPolicyEntry.getValue().code.typing(policyExec);
-      if (customPolicyEntry.getValue().clientVar != null) {
-        sb.append("{").tabUp().writeNewline();
-        sb.append("NtPrincipal ").append(customPolicyEntry.getValue().clientVar.text).append(" = __who;").writeNewline();
-        customPolicyEntry.getValue().code.specialWriteJava(sb, policyExec, false, true);
-        sb.append("}").writeNewline();
-      } else {
-        customPolicyEntry.getValue().code.writeJava(sb, policyExec);
-        sb.writeNewline();
-      }
+      customPolicyEntry.getValue().code.writeJava(sb, policyExec);
+      sb.writeNewline();
     }
     for (final Map.Entry<String, BubbleDefinition> bubbleDefinitionEntry : storage.bubbles.entrySet()) {
       bubbleDefinitionEntry.getValue().writeSetup(sb, environment);

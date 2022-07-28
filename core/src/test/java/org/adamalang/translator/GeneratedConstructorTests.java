@@ -94,7 +94,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":10,\"byte\":82},\"end\":{\"line\":7,\"character\":11,\"byte\":83}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'c' was not defined (VariableLookup)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":10,\"byte\":85},\"end\":{\"line\":7,\"character\":11,\"byte\":86}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'c' was not defined (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

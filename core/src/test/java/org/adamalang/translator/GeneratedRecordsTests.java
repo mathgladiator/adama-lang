@@ -2364,7 +2364,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_DuplicatePolicy_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":9,\"byte\":61},\"end\":{\"line\":6,\"character\":3,\"byte\":90}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'x' was already defined (RecordMethodDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":51},\"end\":{\"line\":6,\"character\":3,\"byte\":84}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'x' was already defined (RecordMethodDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
