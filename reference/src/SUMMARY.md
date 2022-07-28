@@ -51,6 +51,7 @@
     - [Principals (i.e. People)](./reference/stdlib-client.md)
   - [Authentication](./reference/auth.md)
   - [JavaScript API Reference](./reference/api.md)
+- [RxHTML](./rxhtml/start.md)
 - [History and Motivations behind Adama (i.e. Why!?!)](./history/it-began.md)
   - [Origin Story](./history/origins.md)
   - [Embracing Laziness](./history/laziness.md)
