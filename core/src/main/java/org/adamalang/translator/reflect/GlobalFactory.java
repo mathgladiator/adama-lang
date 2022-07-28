@@ -22,18 +22,27 @@ import java.util.*;
 
 /** has the job of turning static methods on a class into a format that can be consumed by Adama */
 public class GlobalFactory {
-  /** we iterate all public static methods within a class */
-  public static TyNativeGlobalObject makeGlobal(final String name, final Class<?> clazz, HashMap<String, HashMap<String, TyNativeFunctional>> extensions) {
+
+  /** get the public static methods of the given class */
+  public static String[] publicStaticMethodsOf(final Class<?> clazz) {
     final var methods = new TreeSet<String>();
     for (final Method method : clazz.getMethods()) {
       final var isStatic = Modifier.isStatic(method.getModifiers());
       final var isPublic = Modifier.isPublic(method.getModifiers());
+      if (method.getAnnotation(Skip.class) != null) {
+        continue;
+      }
       if (isPublic && isStatic) {
         final var nameToUse = getMethodName(method);
         methods.add(nameToUse);
       }
     }
-    return makeGlobalExplicit(name, clazz, extensions, false, methods.toArray(new String[methods.size()]));
+    return methods.toArray(new String[methods.size()]);
+  }
+
+  /** we iterate all public static methods within a class */
+  public static TyNativeGlobalObject makeGlobal(final String name, final Class<?> clazz, HashMap<String, HashMap<String, TyNativeFunctional>> extensions) {
+    return makeGlobalExplicit(name, clazz, extensions, false, publicStaticMethodsOf(clazz));
   }
 
   private static String getMethodName(final Method method) {
@@ -45,6 +54,7 @@ public class GlobalFactory {
     return method.getName();
   }
 
+  /** make a global object with the given type */
   public static TyNativeGlobalObject makeGlobalExplicit(final String name, final Class<?> clazz, HashMap<String, HashMap<String, TyNativeFunctional>> extensions, boolean forceException, final String... methodsToGet) {
     final var object = new TyNativeGlobalObject(name, clazz.getPackageName() + "." + clazz.getSimpleName(), true);
     mergeInto(object, clazz, extensions, forceException, methodsToGet);

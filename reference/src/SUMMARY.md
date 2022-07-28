@@ -52,7 +52,7 @@
   - [Authentication](./reference/auth.md)
   - [JavaScript API Reference](./reference/api.md)
   - [JSON Delta Format](./reference/deltas.md)
-- [RxHTML](./rxhtml/start.md)
+- [RxHTML](./rxhtml/ref.md)
 - [History and Motivations behind Adama (i.e. Why!?!)](./history/it-began.md)
   - [Origin Story](./history/origins.md)
   - [Embracing Laziness](./history/laziness.md)

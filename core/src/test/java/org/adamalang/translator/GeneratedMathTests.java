@@ -112,7 +112,7 @@ public class GeneratedMathTests extends GeneratedBase {
     gold.append("\n    sqrt_4 = new RxDouble(this, 0.0);");
     gold.append("\n    eq1 = new RxBoolean(this, false);");
     gold.append("\n    c4 = new RxComplex(this, new NtComplex(0.0, 0.0));");
-    gold.append("\n    c4_len = new RxLazy<Double>(this, () -> (LibMath.len(c4.get())));");
+    gold.append("\n    c4_len = new RxLazy<Double>(this, () -> (LibMath.length(c4.get())));");
     gold.append("\n    c4.__subscribe(c4_len);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");

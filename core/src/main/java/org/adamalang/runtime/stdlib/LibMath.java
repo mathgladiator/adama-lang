@@ -13,6 +13,8 @@ import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.translator.reflect.Extension;
 import org.adamalang.translator.reflect.HiddenType;
+import org.adamalang.translator.reflect.Skip;
+import org.adamalang.translator.reflect.UseName;
 
 import java.util.function.BiFunction;
 
@@ -145,17 +147,17 @@ public class LibMath {
   }
 
   @Extension
-  public static double abs(final double x) {
+  public static int abs(int x) {
     return Math.abs(x);
   }
 
   @Extension
-  public static int abs(final int x) {
+  public static long abs(long x) {
     return Math.abs(x);
   }
 
   @Extension
-  public static long abs(final long x) {
+  public static double abs(double x) {
     return Math.abs(x);
   }
 
@@ -180,6 +182,15 @@ public class LibMath {
     return new NtMaybe<>();
   }
 
+  @Extension
+  @UseName(name="abs")
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> abs2(final @HiddenType(clazz=NtComplex.class) NtMaybe<NtComplex> x) {
+    if (x.has()) {
+      return new NtMaybe<>(length(x.get()));
+    }
+    return new NtMaybe<>();
+  }
+
   public static boolean isTrue(@HiddenType(clazz = Boolean.class) NtMaybe<Boolean> x) {
     if (x.has()) {
       return x.get();
@@ -187,6 +198,7 @@ public class LibMath {
     return false;
   }
 
+  @Skip
   public static <T> boolean equality(NtMaybe<T> x, T y, BiFunction<T, T, Boolean> check) {
     if (x.has()) {
       return check.apply(x.get(), y);

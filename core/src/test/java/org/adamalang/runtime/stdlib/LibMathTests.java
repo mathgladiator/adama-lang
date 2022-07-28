@@ -51,11 +51,8 @@ public class LibMathTests {
 
   @Test
   public void absolute_value() {
-    Assert.assertTrue(LibMath.near(2, LibMath.abs(-2.0)));
     Assert.assertTrue(LibMath.near(2, LibMath.abs(new NtMaybe<>(-2.0)).get()));
     Assert.assertFalse(LibMath.abs(new NtMaybe<>()).has());
-    Assert.assertTrue(LibMath.near(2, LibMath.abs(-2)));
-    Assert.assertTrue(LibMath.near(2L, LibMath.abs(-2L)));
   }
 
   @Test

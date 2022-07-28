@@ -16,7 +16,8 @@ developers can instead use
   formula a_x = x.abs();
 ```
 
-Also, many math functions also work on [maybe types](/guide/maybe.md) since some mathematical operators may be undefined. Operating on maybe types, while inefficient, allows for expressive compute.
+Also, many math functions also work on [maybe types](/guide/maybe.md) since some mathematical operators may be undefined (i.e. division by zero).
+Operating on maybe types, while inefficient, allows for expressive compute.
 
 ## Type: int
 
@@ -42,6 +43,8 @@ Also, many math functions also work on [maybe types](/guide/maybe.md) since some
 | round() | - | double |
 | round(double precision) | - | double |
 | roundTo(int digits) | - | double |
+
+> Note; while many math functions are supported; they don't yet operate on maybe types; see [#124](https://github.com/mathgladiator/adama-lang/issues/124)
 
 ## Type: complex, maybe&lt;compex&gt;
 | Method | Description | Result type |

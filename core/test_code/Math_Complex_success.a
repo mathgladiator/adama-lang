@@ -7,7 +7,7 @@ double sqrt_4;
 bool eq1;
 
 public complex c4;
-public formula c4_len = c4.len();
+public formula c4_len = c4.length();
 
 @construct {
     c1 = @i;

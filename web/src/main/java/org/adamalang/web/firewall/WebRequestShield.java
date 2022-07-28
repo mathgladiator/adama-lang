@@ -30,6 +30,7 @@ public class WebRequestShield {
     if (x.startsWith("/telescope/")) return true;
     if (x.startsWith("/idx_config/")) return true;
     if (x.startsWith("/console/")) return true;
+    if (x.startsWith("/mgmt/")) return true;
     return false;
   }
 }

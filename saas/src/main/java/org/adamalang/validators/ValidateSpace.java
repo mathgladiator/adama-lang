@@ -37,6 +37,7 @@ public class ValidateSpace {
     set.add("telescope");
     set.add("idx_config");
     set.add("console");
+    set.add("mgmt");
     return set;
   }
 

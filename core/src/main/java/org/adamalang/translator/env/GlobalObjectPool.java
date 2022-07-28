@@ -35,7 +35,7 @@ public class GlobalObjectPool {
     final var pool = new GlobalObjectPool();
     pool.add(GlobalFactory.makeGlobal("String", LibString.class, pool.extensions));
     final var mathlib = GlobalFactory.makeGlobalExplicit("Math", Math.class, pool.extensions, true, "min", "max", "ceil", "floor", "sin", "cos", "tan", "abs", "asin", "acos", "atan", "toRadians", "toDegrees", "sinh", "cosh", "tanh", "atan2", "hypot", "exp", "log", "log10", "pow", "cbrt", "floorDiv", "floorMod", "IEEEremainder", "expm1", "log1p", "signum", "ulp", "fma", "copySign", "getExponent", "powerOfTwo", "E", "PI");
-    GlobalFactory.mergeInto(mathlib, LibMath.class, pool.extensions, true, "near", "sqrt", "SQRT2", "round", "roundTo", "conj", "len");
+    GlobalFactory.mergeInto(mathlib, LibMath.class, pool.extensions, true, GlobalFactory.publicStaticMethodsOf(LibMath.class));
     pool.add(mathlib);
     pool.add(GlobalFactory.makeGlobal("Adama", LibAdama.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
