@@ -36,7 +36,9 @@ public class ContextConstant extends Expression {
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     if (environment.state.isStatic()) {
       environment.mustBeComputeContext(this);
-      return new TyInternalReadonlyClass(CoreRequestContext.class);
+      TyType type = new TyInternalReadonlyClass(CoreRequestContext.class);
+      environment.useSpecial(type, "__context");
+      return type;
     } else {
       environment.document.createError(this, "@context is only available within static policies", "WHO");
       return null;

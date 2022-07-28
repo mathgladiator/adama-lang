@@ -33,6 +33,7 @@ public class ViewerConstant extends Expression {
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     if (environment.state.isBubble()) {
       environment.mustBeComputeContext(this);
+      environment.useSpecial(environment.document.viewerType, "__viewer");
       return environment.document.viewerType;
     } else {
       environment.document.createError(this, "@viewer is only available in bubbles", "WHO");

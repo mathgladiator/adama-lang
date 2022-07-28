@@ -36,6 +36,7 @@ public class Environment {
   private boolean returnTypeSet;
   private Function<String, TyType> trap = null;
   private BiConsumer<String, TyType> watch = null;
+  private HashMap<String, TyType> specialConstants = null;
 
   private Environment(final Document document, final EnvironmentState state, final Environment parent) {
     this.document = document;
@@ -59,6 +60,7 @@ public class Environment {
       this.interns.add("\"?\"");
       this.interns.add("\"\"");
     }
+    this.specialConstants = specialConstants;
   }
 
   /** construct an environment that is fresh */
@@ -74,6 +76,28 @@ public class Environment {
   /** create a new environment which enforces a readonly barrier to all mutations prior it */
   public Environment scopeAsReadOnlyBoundary() {
     return new Environment(document, state.scopeReadonly(), this).scope();
+  }
+
+  /** need to capture special variables */
+  public Environment captureSpecials() {
+    Environment next = scope();
+    next.specialConstants = new HashMap<>();
+    return next;
+  }
+
+  /** return a map of the specials within the environment */
+  public HashMap<String, TyType> specials() {
+    return specialConstants;
+  }
+
+  /** use a special */
+  public void useSpecial(TyType type, String name) {
+    if (specialConstants != null) {
+      specialConstants.put(name, type);
+    }
+    if (parent != null) {
+      parent.useSpecial(type, name);
+    }
   }
 
   /** when we need to create a variable, let's make it globally unique */

@@ -36,6 +36,7 @@ import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
@@ -56,6 +57,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
   private int generatedClassId;
   private String iterType;
   private StructureStorage structureStorage;
+  private HashMap<String, TyType> specialsUsed;
 
   public Where(final Expression sql, final Token tokenWhere, final Token aliasToken, final Token colonToken, final Expression expression) {
     super(sql);
@@ -75,6 +77,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     indexKeysExpr = new StringBuilder();
     applyQuerySetStatements = new ArrayList<>();
     closureTyTypes = new TreeMap<>();
+    specialsUsed = null;
   }
 
   public static Expression findIndex(final Expression root, final String aliasName, final String indexName, BinaryOp mode) {
@@ -199,6 +202,16 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     expression.emit(yielder);
   }
 
+  /** convert the specials found within the environment to closure variables */
+  private void convertSpecials(Environment environment) {
+    if (specialsUsed != null) {
+      for (Map.Entry<String, TyType> entry : specialsUsed.entrySet()) {
+        closureTyTypes.put(entry.getKey(), entry.getValue());
+        closureTypes.put(entry.getKey(), entry.getValue().getJavaConcreteType(environment));
+      }
+    }
+  }
+
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     generatedClassId = environment.document.inventClassId();
@@ -218,14 +231,8 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
           closureTyTypes.put(name, ty);
           closureTypes.put(name, ty.getJavaConcreteType(environment));
         }
-      });
-      if (environment.state.isBubble()) {
-        TyNativePrincipal clientType = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("client"));
-        closureTyTypes.put("__who", clientType);
-        closureTypes.put("__who", clientType.getJavaConcreteType(environment));
-        closureTyTypes.put("__viewer", environment.document.viewerType);
-        closureTypes.put("__viewer", environment.document.viewerType.getJavaConcreteType(environment));
-      }
+      }).captureSpecials();
+      this.specialsUsed = watch.specials();
       final var next = watch.scopeWithComputeContext(ComputeContext.Computation);
       iterType = "RTx" + storageType.name();
       var toUse = next;
@@ -257,6 +264,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         });
       }
       final var expressionType = expression.typing(toUse, null);
+      convertSpecials(environment);
       environment.rules.IsBoolean(expressionType, false);
       return typeFrom.makeCopyWithNewPosition(this, typeFrom.behavior);
     }

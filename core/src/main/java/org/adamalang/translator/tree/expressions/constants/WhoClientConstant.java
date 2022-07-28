@@ -35,7 +35,9 @@ public class WhoClientConstant extends Expression {
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     if (environment.state.isStatic() || environment.state.isMessageHandler() || environment.state.isPolicy() || environment.state.isBubble() || environment.state.isWeb()) {
       environment.mustBeComputeContext(this);
-      return new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
+      TyType type = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
+      environment.useSpecial(type, "__who");
+      return type;
     } else {
       environment.document.createError(this, "@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers", "WHO");
       return null;
