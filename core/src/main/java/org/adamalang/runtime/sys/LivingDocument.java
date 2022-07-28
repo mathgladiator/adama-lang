@@ -74,6 +74,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private String __space;
   private String __key;
   private Deliverer __deliverer;
+  private boolean __raisedDirtyCalled;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -613,6 +614,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** artifact: from RxParent */
   @Override
   public void __raiseDirty() {
+    __raisedDirtyCalled = true;
   }
 
   /** for the reactive children, the root is always alive */
@@ -830,8 +832,10 @@ public abstract class LivingDocument implements RxParent, Caller {
       if (timestamp == null) {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP);
       }
+      if ("load".equals(command)) {
+        return __transaction_load(requestJson, timestamp);
+      }
       __time.set(timestamp);
-
       switch (command) {
         case "invalidate":
           if (__monitor != null) {
@@ -850,8 +854,6 @@ public abstract class LivingDocument implements RxParent, Caller {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG);
           }
           return __transaction_construct(requestJson, who, arg, entropy);
-        case "load":
-          return __transaction_load(requestJson);
         case "connect":
           if (who == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
@@ -924,9 +926,14 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
-  private LivingDocumentChange __transaction_load(final String request) throws ErrorCodeException {
-    __seq.bumpUpPre();
+  private LivingDocumentChange __transaction_load(final String request, long timestamp) throws ErrorCodeException {
+    __raisedDirtyCalled = false;
     __onLoad();
+    if (!__raisedDirtyCalled) {
+      return null;
+    }
+    __time.set(timestamp);
+    __seq.bumpUpPre();
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     forward.beginObject();

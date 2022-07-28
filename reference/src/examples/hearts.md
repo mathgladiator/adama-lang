@@ -96,12 +96,12 @@ record Player {
 
 table<Player> players;
 
-@connected(cv) {
+@connected {
   // the first connection assumes a leadership position as the owner of the table/game
   if (owner == @no_one) {
-    owner = cv;
+    owner = @who;
     players <- {
-      link:cv,
+      link:@who,
       playing:true,
       leader:true,
       play_order:0,
@@ -111,14 +111,14 @@ table<Player> players;
   }
 
   // the owner is always allowed
-  if (owner == cv) {
+  if (owner == @who) {
     return true;
   }
 
   // add the player if they are not already in the game
-  if ( (iterate players where link==cv).size() == 0) {
+  if ( (iterate players where link==@who).size() == 0) {
     players <- {
-      link:cv,
+      link:@who,
       playing:false,
       leader:false,
       play_order: players.size(),
@@ -129,9 +129,9 @@ table<Player> players;
   return true;
 }
 
-@disconnected(cv) {
+@disconnected {
   // remove the player if they are not playing
-  (iterate players where link==cv && !playing).delete();
+  (iterate players where link==@who && !playing).delete();
 }
 
 // how many people are connected

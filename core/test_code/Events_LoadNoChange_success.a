@@ -1,0 +1,4 @@
+public int x = 0;
+
+@load {
+}

@@ -18,7 +18,7 @@ public class JsonConstructionTests {
   public void sendMessageBasic() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "@connected (who) { return true; } message M { int x; double y; string z; bool b; } int xx; double yy; string zz; bool bb; channel foo(M m) { xx = m.x; yy = m.y; zz = m.z; bb = m.b; }");
+            "@connected { return true; } message M { int x; double y; string z; bool b; } int xx; double yy; string zz; bool bb; channel foo(M m) { xx = m.x; yy = m.y; zz = m.z; bb = m.b; }");
     setup.document.connect(NtPrincipal.NO_ONE, new RealDocumentSetup.AssertInt(2));
     setup.document.send(
         ContextSupport.WRAP(NtPrincipal.NO_ONE),

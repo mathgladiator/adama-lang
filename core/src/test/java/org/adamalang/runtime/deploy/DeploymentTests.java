@@ -32,13 +32,13 @@ public class DeploymentTests {
   public void transition() throws Exception {
     DeploymentPlan plan1 =
         new DeploymentPlan(
-            "{\"versions\":{\"a\":\"public int x; @construct { x = 100; } @connected(who) { return true; }\"},\"default\":\"a\"}",
+            "{\"versions\":{\"a\":\"public int x; @construct { x = 100; } @connected { return true; }\"},\"default\":\"a\"}",
             (t, errorCode) -> {
               t.printStackTrace();
             });
     DeploymentPlan plan2 =
         new DeploymentPlan(
-            "{\"versions\":{\"a\":\"public int x; @construct { x = 100; } @connected(who) { return true; }\",\"b\":\"public int x; @construct { x = 200; } @connected(who) { return true; }\"},\"plan\":[{\"version\":\"b\",\"seed\":\"x\",\"percent\":50}],\"default\":\"a\"}",
+            "{\"versions\":{\"a\":\"public int x; @construct { x = 100; } @connected { return true; }\",\"b\":\"public int x; @construct { x = 200; } @connected { return true; }\"},\"plan\":[{\"version\":\"b\",\"seed\":\"x\",\"percent\":50}],\"default\":\"a\"}",
             (t, errorCode) -> {
               t.printStackTrace();
             });

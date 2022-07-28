@@ -1,12 +1,12 @@
-@connected(cv) {
+@connected {
   // can inspect, but does not deny
   return false;
 }
 
 
-@connected(cv) {
+@connected {
   return true;
 }
 
-@disconnected(cv) {
+@disconnected {
 }

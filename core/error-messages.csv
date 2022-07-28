@@ -123,7 +123,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Channels_MessageTypeWasRecord_failure.a,5,0,6,1,"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'. (TypeCheckReferences)"
 ./test_code/Channels_UndefinedMessage_failure.a,0,0,0,15,"Type not found: a message named 'X' was not found. (TypeCheckReferences)"
 ./test_code/Channels_UndefinedMessage_failure.a,2,0,3,1,"Type not found: a message named 'X' was not found. (TypeCheckReferences)"
-./test_code/ConnectionEvents_ConnectMustReturn_failure.a,0,15,1,1,"The @connected handler must return a boolean (DocumentEvents)"
+./test_code/ConnectionEvents_ConnectMustReturn_failure.a,0,11,1,1,"The @connected handler must return a boolean (DocumentEvents)"
 ./test_code/Constructor_CantUnionTypes_failure.a,9,2,9,6,"Type check failure: The types 'MB' and 'bool' are not compatible for type unification (TypeCompatabilities)"
 ./test_code/Control_CantAbortOutsideOfMessageHandler_failure.a,8,2,8,8,"Can only 'abort' from a message handler (EvaluationContext)"
 ./test_code/Control_CantBlockOutsideOfStateTransition_failure.a,5,2,5,8,"Can only 'block' from a state machine transition (EvaluationContext)"

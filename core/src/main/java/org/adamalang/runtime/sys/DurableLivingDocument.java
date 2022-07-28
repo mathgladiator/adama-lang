@@ -150,16 +150,38 @@ public class DurableLivingDocument {
     try {
       LivingDocument doc = factory.create(monitor);
       doc.__lateBind(key.space, key.key, factory.deliverer, factory.registry);
-      base.service.get(key, Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_READ, (data) -> {
-        JsonStreamReader reader = new JsonStreamReader(data.patch);
-        reader.ingestDedupe(doc.__get_intern_strings());
-        doc.__insert(reader);
-        JsonStreamWriter writer = new JsonStreamWriter();
-        doc.__dump(writer);
-        DurableLivingDocument document = new DurableLivingDocument(key, doc, factory, base);
-        document.size.set(data.reads);
-        return document;
-      }));
+      base.service.get(key, new Callback<>() {
+        @Override
+        public void success(LocalDocumentChange documentValue) {
+          JsonStreamReader reader = new JsonStreamReader(documentValue.patch);
+          reader.ingestDedupe(doc.__get_intern_strings());
+          doc.__insert(reader);
+          JsonStreamWriter writer = new JsonStreamWriter();
+          doc.__dump(writer);
+          DurableLivingDocument document = new DurableLivingDocument(key, doc, factory, base);
+          document.size.set(documentValue.reads);
+          document.load(new Callback<>() {
+            @Override
+            public void success(LivingDocumentChange change) {
+              callback.success(document);
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              if (ex.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CHANGE) {
+                callback.success(document);
+              } else {
+                callback.failure(ex);
+              }
+            }
+          });
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, EXLOGGER));
     }
@@ -387,8 +409,12 @@ public class DurableLivingDocument {
           }
           lastRequest = request;
           request.change = document.__transact(request.request, currentFactory);
-          changes.add(request.change);
-          last = request.change;
+          if (request.change != null) {
+            changes.add(request.change);
+            last = request.change;
+          } else {
+            request.callback.failure(new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CHANGE));
+          }
         } catch (ErrorCodeException ex) {
           request.callback.failure(ex);
         }
@@ -610,10 +636,10 @@ public class DurableLivingDocument {
     ingest(NtPrincipal.NO_ONE, request.toString(), DONT_CARE_CHANGE, true, false);
   }
 
-  public void load() {
+  public void load(Callback<LivingDocumentChange> callback) {
     final var request = forge("load", null, false);
     request.endObject();
-    ingest(NtPrincipal.NO_ONE, request.toString(), DONT_CARE_CHANGE, true, false);
+    ingest(NtPrincipal.NO_ONE, request.toString(), callback, true, false);
   }
 
   public void registerActivity() {

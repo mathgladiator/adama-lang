@@ -67,7 +67,7 @@ public class CodeGenEventHandlers {
             sb.append("__result = true;").tabDown().writeNewline();
             sb.append("} else {").tabUp().writeNewline();
             sb.append("return false;").tabDown().writeNewline();
-            sb.append("}");
+            sb.append("}").writeNewline();
           }
           sb.append("return __result;");
         } else {
@@ -103,14 +103,15 @@ public class CodeGenEventHandlers {
           sb.append("@Override").writeNewline();
           if (event.hasPrincipal) {
             if (event.hasParameter) {
-              sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue, ").append(event.parameterType).append(" __pvalue) {").tabUp().writeNewline();
+              sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue, ").append(event.parameterType).append(" __pvalue) {");
             } else {
-              sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue) {").tabUp().writeNewline();
+              sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue) {");
             }
           } else {
-            sb.append("public void ").append(event.prefix).append("() {").tabUp().writeNewline();
+            sb.append("public void ").append(event.prefix).append("() {");
           }
           if (count > 0) {
+            sb.tabUp().writeNewline();
             for (var k = 0; k < count; k++) {
               if (event.hasPrincipal) {
                 if (event.hasParameter) {
@@ -126,8 +127,6 @@ public class CodeGenEventHandlers {
               }
               sb.writeNewline();
             }
-          } else {
-            sb.tabDown().writeNewline();
           }
           sb.append("}").writeNewline();
         }

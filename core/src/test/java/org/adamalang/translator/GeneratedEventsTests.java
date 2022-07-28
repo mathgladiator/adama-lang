@@ -11,46 +11,46 @@ package org.adamalang.translator;
 
 import org.junit.Test;
 
-public class GeneratedDynamicTests extends GeneratedBase {
-  private String cached_Native_1 = null;
-  private String get_Native_1() {
-    if (cached_Native_1 != null) {
-      return cached_Native_1;
+public class GeneratedEventsTests extends GeneratedBase {
+  private String cached_LoadChange_1 = null;
+  private String get_LoadChange_1() {
+    if (cached_LoadChange_1 != null) {
+      return cached_LoadChange_1;
     }
-    cached_Native_1 = generateTestOutput(true, "Native_1", "./test_code/Dynamic_Native_success.a");
-    return cached_Native_1;
+    cached_LoadChange_1 = generateTestOutput(true, "LoadChange_1", "./test_code/Events_LoadChange_success.a");
+    return cached_LoadChange_1;
   }
 
   @Test
-  public void testNativeEmission() {
-    assertEmissionGood(get_Native_1());
+  public void testLoadChangeEmission() {
+    assertEmissionGood(get_LoadChange_1());
   }
 
   @Test
-  public void testNativeSuccess() {
-    assertLivePass(get_Native_1());
+  public void testLoadChangeSuccess() {
+    assertLivePass(get_LoadChange_1());
   }
 
   @Test
-  public void testNativeGoodWillHappy() {
-    assertGoodWillHappy(get_Native_1());
+  public void testLoadChangeGoodWillHappy() {
+    assertGoodWillHappy(get_LoadChange_1());
   }
 
   @Test
-  public void testNativeExceptionFree() {
-    assertExceptionFree(get_Native_1());
+  public void testLoadChangeExceptionFree() {
+    assertExceptionFree(get_LoadChange_1());
   }
 
   @Test
-  public void testNativeTODOFree() {
-    assertTODOFree(get_Native_1());
+  public void testLoadChangeTODOFree() {
+    assertTODOFree(get_LoadChange_1());
   }
 
   @Test
-  public void stable_Native_1() {
-    String live = get_Native_1();
+  public void stable_LoadChange_1() {
+    String live = get_LoadChange_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:Dynamic_Native_success.a");
+    gold.append("Path:Events_LoadChange_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -81,20 +81,17 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Native_1 extends LivingDocument {");
-    gold.append("\n  private final RxBoolean t;");
-    gold.append("\n  private final RxBoolean t2;");
+    gold.append("\npublic class LoadChange_1 extends LivingDocument {");
+    gold.append("\n  private final RxInt32 x;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
-    gold.append("\n    __sum += t.__memory();");
-    gold.append("\n    __sum += t2.__memory();");
+    gold.append("\n    __sum += x.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Native_1(DocumentMonitor __monitor) {");
+    gold.append("\n  public LoadChange_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    t = new RxBoolean(this, false);");
-    gold.append("\n    t2 = new RxBoolean(this, false);");
+    gold.append("\n    x = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -104,11 +101,8 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n      while(__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
-    gold.append("\n          case \"t\":");
-    gold.append("\n            t.__insert(__reader);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"t2\":");
-    gold.append("\n            t2.__insert(__reader);");
+    gold.append("\n          case \"x\":");
+    gold.append("\n            x.__insert(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__insert(__reader);");
@@ -176,11 +170,8 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n      while(__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
-    gold.append("\n          case \"t\":");
-    gold.append("\n            t.__patch(__reader);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"t2\":");
-    gold.append("\n            t2.__patch(__reader);");
+    gold.append("\n          case \"x\":");
+    gold.append("\n            x.__patch(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__patch(__reader);");
@@ -245,10 +236,8 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
-    gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
-    gold.append("\n    t.__dump(__writer);");
-    gold.append("\n    __writer.writeObjectFieldIntro(\"t2\");");
-    gold.append("\n    t2.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__constructed\");");
@@ -301,8 +290,7 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
-    gold.append("\n    t.__commit(\"t\", __forward, __reverse);");
-    gold.append("\n    t2.__commit(\"t2\", __forward, __reverse);");
+    gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -319,30 +307,35 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    t.__revert();");
-    gold.append("\n    t2.__revert();");
+    gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaNative_1 implements DeltaNode {");
+    gold.append("\n  private class DeltaLoadChange_1 implements DeltaNode {");
+    gold.append("\n    private DInt32 __dx;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaNative_1() {");
+    gold.append("\n    private DeltaLoadChange_1() {");
+    gold.append("\n      __dx = new DInt32();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
     gold.append("\n      long __sum = 40;");
+    gold.append("\n      __sum += __dx.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Native_1 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LoadChange_1 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
+    gold.append("\n      __dx.show(__item.x.get(), __obj.planField(\"x\"));");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
-    gold.append("\n      __code_cost += 0;");
+    gold.append("\n      __dx.clear();");
+    gold.append("\n      __code_cost += 1;");
     gold.append("\n    }");
     gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      if (__emitted) {");
@@ -361,8 +354,8 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Native_1 __self = this;");
-    gold.append("\n    DeltaNative_1 __state = new DeltaNative_1();");
+    gold.append("\n    LoadChange_1 __self = this;");
+    gold.append("\n    DeltaLoadChange_1 __state = new DeltaLoadChange_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -468,6 +461,11 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
+    gold.append("\n  public void __onLoad__0() {");
+    gold.append("\n    __code_cost += 2;");
+    gold.append("\n    __track(0);");
+    gold.append("\n    x.bumpUpPost();");
+    gold.append("\n  }");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -478,7 +476,9 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __onLoad() {}");
+    gold.append("\n  public void __onLoad() {");
+    gold.append("\n    __onLoad__0();");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onCanAssetAttached(NtPrincipal __cvalue) {");
     gold.append("\n    return false;");
@@ -501,29 +501,12 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __code_cost += 7;");
-    gold.append("\n    __track(0);");
-    gold.append("\n    final NtDynamic cake1 = NtDynamic.NULL;");
-    gold.append("\n    __track(1);");
-    gold.append("\n    NtDynamic cake2 = NtDynamic.NULL;");
-    gold.append("\n    __track(2);");
-    gold.append("\n    NtDynamic cake3 = cake1;");
-    gold.append("\n    __track(3);");
-    gold.append("\n    t.set((cake1).equals(cake2));");
-    gold.append("\n    __track(4);");
-    gold.append("\n    cake3 = NtDynamic.NULL;");
-    gold.append("\n    __track(5);");
-    gold.append("\n    t2.set((cake1).equals(NtDynamic.NULL));");
-    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase message) {}");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
     gold.append("\n    __reader.skipValue();");
     gold.append("\n    return NtMessageBase.NULL;");
-    gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -532,115 +515,77 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\nBegin");
     gold.append("\nEnd");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"t\":true,\"t2\":true,\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:7");
-    gold.append("\nMEMORY:468");
+    gold.append("\nCPU:0");
+    gold.append("\nMEMORY:432");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
-    gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"x\":0},\"seq\":3}");
     gold.append("\nNO_ONE|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__time\":\"75\"} need:false in:-75");
     gold.append("\nRANDO: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":4}");
-    gold.append("\n+ RANDO DELTA:{\"seq\":4}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{\"x\":0},\"seq\":4}");
     gold.append("\nRANDO|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__time\":\"100\"} need:false in:-100");
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:586");
+    gold.append("\nMEMORY:630");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"t\":true,\"t2\":true,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"x\":0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"t\":true,\"t2\":true,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"t\":true,\"t2\":true,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"x\":0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"command\":\"load\",\"timestamp\":\"125\"}-->{\"__seq\":7,\"__time\":\"125\",\"x\":1,\"__messages\":null,\"__entropy\":\"488730542833106255\"} need:false in:-125");
+    gold.append("\n{\"x\":1,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"488730542833106255\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"125\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\nSKIPPING JSON COMPARE AS A LOAD WAS DETECTED");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_Random_2 = null;
-  private String get_Random_2() {
-    if (cached_Random_2 != null) {
-      return cached_Random_2;
+  private String cached_LoadNoChange_2 = null;
+  private String get_LoadNoChange_2() {
+    if (cached_LoadNoChange_2 != null) {
+      return cached_LoadNoChange_2;
     }
-    cached_Random_2 = generateTestOutput(false, "Random_2", "./test_code/Dynamic_Random_failure.a");
-    return cached_Random_2;
+    cached_LoadNoChange_2 = generateTestOutput(true, "LoadNoChange_2", "./test_code/Events_LoadNoChange_success.a");
+    return cached_LoadNoChange_2;
   }
 
   @Test
-  public void testRandomFailure() {
-    assertLiveFail(get_Random_2());
+  public void testLoadNoChangeEmission() {
+    assertEmissionGood(get_LoadNoChange_2());
   }
 
   @Test
-  public void testRandomNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_Random_2());
+  public void testLoadNoChangeSuccess() {
+    assertLivePass(get_LoadNoChange_2());
   }
 
   @Test
-  public void testRandomExceptionFree() {
-    assertExceptionFree(get_Random_2());
+  public void testLoadNoChangeGoodWillHappy() {
+    assertGoodWillHappy(get_LoadNoChange_2());
   }
 
   @Test
-  public void testRandomTODOFree() {
-    assertTODOFree(get_Random_2());
+  public void testLoadNoChangeExceptionFree() {
+    assertExceptionFree(get_LoadNoChange_2());
   }
 
   @Test
-  public void stable_Random_2() {
-    String live = get_Random_2();
+  public void testLoadNoChangeTODOFree() {
+    assertTODOFree(get_LoadNoChange_2());
+  }
+
+  @Test
+  public void stable_LoadNoChange_2() {
+    String live = get_LoadNoChange_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:Dynamic_Random_failure.a");
-    gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":9,\"byte\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'dynamic' is unable to store type 'bool'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
-    gold.append("\n");
-    gold.append("\nFailedValidation");
-    assertStable(live, gold);
-  }
-  private String cached_Reactive_3 = null;
-  private String get_Reactive_3() {
-    if (cached_Reactive_3 != null) {
-      return cached_Reactive_3;
-    }
-    cached_Reactive_3 = generateTestOutput(true, "Reactive_3", "./test_code/Dynamic_Reactive_success.a");
-    return cached_Reactive_3;
-  }
-
-  @Test
-  public void testReactiveEmission() {
-    assertEmissionGood(get_Reactive_3());
-  }
-
-  @Test
-  public void testReactiveSuccess() {
-    assertLivePass(get_Reactive_3());
-  }
-
-  @Test
-  public void testReactiveGoodWillHappy() {
-    assertGoodWillHappy(get_Reactive_3());
-  }
-
-  @Test
-  public void testReactiveExceptionFree() {
-    assertExceptionFree(get_Reactive_3());
-  }
-
-  @Test
-  public void testReactiveTODOFree() {
-    assertTODOFree(get_Reactive_3());
-  }
-
-  @Test
-  public void stable_Reactive_3() {
-    String live = get_Reactive_3();
-    StringBuilder gold = new StringBuilder();
-    gold.append("Path:Dynamic_Reactive_success.a");
+    gold.append("Path:Events_LoadNoChange_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -671,17 +616,17 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Reactive_3 extends LivingDocument {");
-    gold.append("\n  private final RxDynamic food;");
+    gold.append("\npublic class LoadNoChange_2 extends LivingDocument {");
+    gold.append("\n  private final RxInt32 x;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
-    gold.append("\n    __sum += food.__memory();");
+    gold.append("\n    __sum += x.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Reactive_3(DocumentMonitor __monitor) {");
+    gold.append("\n  public LoadNoChange_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    food = new RxDynamic(this, NtDynamic.NULL);");
+    gold.append("\n    x = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -691,8 +636,8 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n      while(__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
-    gold.append("\n          case \"food\":");
-    gold.append("\n            food.__insert(__reader);");
+    gold.append("\n          case \"x\":");
+    gold.append("\n            x.__insert(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__insert(__reader);");
@@ -760,8 +705,8 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n      while(__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
-    gold.append("\n          case \"food\":");
-    gold.append("\n            food.__patch(__reader);");
+    gold.append("\n          case \"x\":");
+    gold.append("\n            x.__patch(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__patch(__reader);");
@@ -826,8 +771,8 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
-    gold.append("\n    __writer.writeObjectFieldIntro(\"food\");");
-    gold.append("\n    food.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__constructed\");");
@@ -880,7 +825,7 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
-    gold.append("\n    food.__commit(\"food\", __forward, __reverse);");
+    gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -897,34 +842,34 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    food.__revert();");
+    gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaReactive_3 implements DeltaNode {");
-    gold.append("\n    private DDynamic __dfood;");
+    gold.append("\n  private class DeltaLoadNoChange_2 implements DeltaNode {");
+    gold.append("\n    private DInt32 __dx;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaReactive_3() {");
-    gold.append("\n      __dfood = new DDynamic();");
+    gold.append("\n    private DeltaLoadNoChange_2() {");
+    gold.append("\n      __dx = new DInt32();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
     gold.append("\n      long __sum = 40;");
-    gold.append("\n      __sum += __dfood.__memory();");
+    gold.append("\n      __sum += __dx.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Reactive_3 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LoadNoChange_2 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
-    gold.append("\n      __dfood.show(__item.food.get(), __obj.planField(\"food\"));");
+    gold.append("\n      __dx.show(__item.x.get(), __obj.planField(\"x\"));");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
-    gold.append("\n      __dfood.clear();");
+    gold.append("\n      __dx.clear();");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n    }");
     gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
@@ -944,8 +889,8 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Reactive_3 __self = this;");
-    gold.append("\n    DeltaReactive_3 __state = new DeltaReactive_3();");
+    gold.append("\n    LoadNoChange_2 __self = this;");
+    gold.append("\n    DeltaLoadNoChange_2 __state = new DeltaLoadNoChange_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -1013,148 +958,6 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxX extends NtMessageBase {");
-    gold.append("\n    private NtDynamic ninja = NtDynamic.NULL;");
-    gold.append("\n    public void __hash(HashBuilder __hash) {");
-    gold.append("\n      __hash.hashString(\"ninja\");");
-    gold.append("\n      __hash.hashNtDynamic(this.ninja);");
-    gold.append("\n      __hash.hashString(\"X\");");
-    gold.append("\n    }");
-    gold.append("\n    private RTxX(JsonStreamReader __reader) {");
-    gold.append("\n      __ingest(__reader);");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
-    gold.append("\n      if (__reader.startObject()) {");
-    gold.append("\n        while (__reader.notEndOfObject()) {");
-    gold.append("\n          String __fieldName = __reader.fieldName();");
-    gold.append("\n          switch (__fieldName) {");
-    gold.append("\n            case \"ninja\":");
-    gold.append("\n              this.ninja = __reader.readNtDynamic();");
-    gold.append("\n              break;");
-    gold.append("\n            default:");
-    gold.append("\n              __reader.skipValue();");
-    gold.append("\n          }");
-    gold.append("\n        }");
-    gold.append("\n      }");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void __writeOut(JsonStreamWriter __writer) {");
-    gold.append("\n      __writer.beginObject();");
-    gold.append("\n      __writer.writeObjectFieldIntro(\"ninja\");");
-    gold.append("\n      __writer.writeNtDynamic(ninja);");
-    gold.append("\n      __writer.endObject();");
-    gold.append("\n    }");
-    gold.append("\n    private RTxX() {}");
-    gold.append("\n    private RTxX(NtDynamic ninja) {");
-    gold.append("\n      this.ninja = ninja;");
-    gold.append("\n    }");
-    gold.append("\n  }");
-    gold.append("\n  private class DeltaRTxX implements DeltaNode {");
-    gold.append("\n    private DDynamic __dninja;");
-    gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaRTxX() {");
-    gold.append("\n      __dninja = new DDynamic();");
-    gold.append("\n      __emitted = false;");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = 40;");
-    gold.append("\n      __sum += __dninja.__memory();");
-    gold.append("\n      return __sum;");
-    gold.append("\n    }");
-    gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
-    gold.append("\n      __code_cost += 1;");
-    gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
-    gold.append("\n      __dninja.show(__item.ninja, __obj.planField(\"ninja\"));");
-    gold.append("\n      if (__obj.end()) {");
-    gold.append("\n        __emitted = true;");
-    gold.append("\n      }");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void clear() {");
-    gold.append("\n      __dninja.clear();");
-    gold.append("\n      __code_cost += 1;");
-    gold.append("\n    }");
-    gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
-    gold.append("\n      if (__emitted) {");
-    gold.append("\n        clear();");
-    gold.append("\n        __emitted = false;");
-    gold.append("\n        __writer.writeNull();");
-    gold.append("\n      }");
-    gold.append("\n    }");
-    gold.append("\n  }");
-    gold.append("\n  private static class RTx__GenASSOC2 extends NtMessageBase {");
-    gold.append("\n    private NtDynamic v = NtDynamic.NULL;");
-    gold.append("\n    public void __hash(HashBuilder __hash) {");
-    gold.append("\n      __hash.hashString(\"v\");");
-    gold.append("\n      __hash.hashNtDynamic(this.v);");
-    gold.append("\n      __hash.hashString(\"__GenASSOC2\");");
-    gold.append("\n    }");
-    gold.append("\n    private RTx__GenASSOC2(JsonStreamReader __reader) {");
-    gold.append("\n      __ingest(__reader);");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
-    gold.append("\n      if (__reader.startObject()) {");
-    gold.append("\n        while (__reader.notEndOfObject()) {");
-    gold.append("\n          String __fieldName = __reader.fieldName();");
-    gold.append("\n          switch (__fieldName) {");
-    gold.append("\n            case \"v\":");
-    gold.append("\n              this.v = __reader.readNtDynamic();");
-    gold.append("\n              break;");
-    gold.append("\n            default:");
-    gold.append("\n              __reader.skipValue();");
-    gold.append("\n          }");
-    gold.append("\n        }");
-    gold.append("\n      }");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void __writeOut(JsonStreamWriter __writer) {");
-    gold.append("\n      __writer.beginObject();");
-    gold.append("\n      __writer.writeObjectFieldIntro(\"v\");");
-    gold.append("\n      __writer.writeNtDynamic(v);");
-    gold.append("\n      __writer.endObject();");
-    gold.append("\n    }");
-    gold.append("\n    private RTx__GenASSOC2() {}");
-    gold.append("\n    private RTx__GenASSOC2(NtDynamic v) {");
-    gold.append("\n      this.v = v;");
-    gold.append("\n    }");
-    gold.append("\n  }");
-    gold.append("\n  private class DeltaRTx__GenASSOC2 implements DeltaNode {");
-    gold.append("\n    private DDynamic __dv;");
-    gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaRTx__GenASSOC2() {");
-    gold.append("\n      __dv = new DDynamic();");
-    gold.append("\n      __emitted = false;");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = 40;");
-    gold.append("\n      __sum += __dv.__memory();");
-    gold.append("\n      return __sum;");
-    gold.append("\n    }");
-    gold.append("\n    public void show(RTx__GenASSOC2 __item, PrivateLazyDeltaWriter __writer) {");
-    gold.append("\n      __code_cost += 1;");
-    gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
-    gold.append("\n      __dv.show(__item.v, __obj.planField(\"v\"));");
-    gold.append("\n      if (__obj.end()) {");
-    gold.append("\n        __emitted = true;");
-    gold.append("\n      }");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void clear() {");
-    gold.append("\n      __dv.clear();");
-    gold.append("\n      __code_cost += 1;");
-    gold.append("\n    }");
-    gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
-    gold.append("\n      if (__emitted) {");
-    gold.append("\n        clear();");
-    gold.append("\n        __emitted = false;");
-    gold.append("\n        __writer.writeNull();");
-    gold.append("\n      }");
-    gold.append("\n    }");
-    gold.append("\n  }");
     gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
     gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
     gold.append("\n    return __map;");
@@ -1163,50 +966,22 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
-    gold.append("\n  private void handleChannelMessage_assoc(NtPrincipal __who, RTxX x) throws AbortMessageException {");
-    gold.append("\n    __code_cost += 2;");
-    gold.append("\n    __track(0);");
-    gold.append("\n    food.set(x.ninja);");
-    gold.append("\n");
-    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
-    gold.append("\n    switch (channel) {");
-    gold.append("\n      case \"assoc\":");
-    gold.append("\n        return true;");
-    gold.append("\n    default:");
-    gold.append("\n      return false;");
-    gold.append("\n    }");
+    gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal __who, String __channel, Object __message) throws AbortMessageException {");
-    gold.append("\n    switch (__channel) {");
-    gold.append("\n      case \"assoc\":");
-    gold.append("\n        handleChannelMessage_assoc(__who, (RTxX) __message);");
-    gold.append("\n        return;");
-    gold.append("\n      default:");
-    gold.append("\n        return;");
-    gold.append("\n    }");
+    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __route(AsyncTask __task) {");
-    gold.append("\n    switch (__task.channel) {");
-    gold.append("\n      case \"assoc\":");
-    gold.append("\n        __task.setAction(() -> handleChannelMessage_assoc(__task.who, (RTxX)(__task.message)));");
-    gold.append("\n        return;");
-    gold.append("\n      default:");
-    gold.append("\n        return;");
-    gold.append("\n    }");
+    gold.append("\n  protected void __route(AsyncTask task) {");
+    gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected Object __parse_message(String __channel, JsonStreamReader __reader) {");
-    gold.append("\n    switch (__channel) {");
-    gold.append("\n      case \"assoc\":");
-    gold.append("\n        return new RTxX(__reader);");
-    gold.append("\n      default:");
-    gold.append("\n        __reader.skipValue();");
-    gold.append("\n        return NtMessageBase.NULL;");
-    gold.append("\n    }");
+    gold.append("\n  protected Object __parse_message(String channel, JsonStreamReader __reader) {");
+    gold.append("\n    __reader.skipValue();");
+    gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
@@ -1221,6 +996,9 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
+    gold.append("\n  public void __onLoad__0() {");
+    gold.append("\n    __code_cost += 1;");
+    gold.append("\n  }");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -1231,7 +1009,9 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __onLoad() {}");
+    gold.append("\n  public void __onLoad() {");
+    gold.append("\n    __onLoad__0();");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onCanAssetAttached(NtPrincipal __cvalue) {");
     gold.append("\n    return false;");
@@ -1254,21 +1034,12 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __code_cost += 3;");
-    gold.append("\n    __track(1);");
-    gold.append("\n    NtDynamic d = NtDynamic.NULL;");
-    gold.append("\n    __track(2);");
-    gold.append("\n    food.set(d);");
-    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase message) {}");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
     gold.append("\n    __reader.skipValue();");
     gold.append("\n    return NtMessageBase.NULL;");
-    gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -1277,31 +1048,31 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\nBegin");
     gold.append("\nEnd");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"food\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"dynamic\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"native_message\",\"name\":\"X\",\"anonymous\":false,\"fields\":{\"ninja\":{\"type\":{\"nature\":\"native_value\",\"type\":\"dynamic\"},\"privacy\":\"public\"}}},\"__GenASSOC2\":{\"nature\":\"native_message\",\"name\":\"__GenASSOC2\",\"anonymous\":false,\"fields\":{\"v\":{\"type\":{\"nature\":\"native_value\",\"type\":\"dynamic\"},\"privacy\":\"public\"}}}},\"channels\":{\"assoc\":\"X\",\"assoc2\":\"__GenASSOC2\"},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:3");
-    gold.append("\nMEMORY:456");
+    gold.append("\nCPU:0");
+    gold.append("\nMEMORY:432");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
-    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"food\":null},\"seq\":3}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"x\":0},\"seq\":3}");
     gold.append("\nNO_ONE|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__time\":\"75\"} need:false in:-75");
     gold.append("\nRANDO: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":4}");
-    gold.append("\n+ RANDO DELTA:{\"data\":{\"food\":null},\"seq\":4}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{\"x\":0},\"seq\":4}");
     gold.append("\nRANDO|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__time\":\"100\"} need:false in:-100");
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:670");
+    gold.append("\nMEMORY:630");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"food\":null,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"x\":0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"food\":null,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"food\":null,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"x\":0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"x\":0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");

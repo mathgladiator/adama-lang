@@ -261,10 +261,10 @@ public class LivingDocumentTests {
         new RealDocumentSetup(
             "public int x = 100; @construct { x = 100; } @load { x++; }", "{\"x\":1000}");
     Assert.assertEquals(
-        1000,
+        1001,
         ((int)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
-                .get("t")));
+                .get("x")));
   }
 
   @Test
@@ -871,7 +871,7 @@ public class LivingDocumentTests {
   public void send_must_be_connected() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "@construct {} @connected(who) { return true; } message M {} channel<M> foo;");
+            "@construct {} @connected { return true; } message M {} channel<M> foo;");
     setup.document.send(
         ContextSupport.WRAP(NtPrincipal.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertFailure(143373));
     setup.document.connect(NtPrincipal.NO_ONE, new RealDocumentSetup.AssertInt(2));
@@ -932,7 +932,7 @@ public class LivingDocumentTests {
   public void cant_double_construct() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
     }
@@ -953,7 +953,7 @@ public class LivingDocumentTests {
   public void send_requirements_must_have_channel() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
     }
@@ -972,7 +972,7 @@ public class LivingDocumentTests {
   public void send_requirements_must_have_message() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
     }
@@ -993,7 +993,7 @@ public class LivingDocumentTests {
   public void send_requirements_must_have_context() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
     }
@@ -1016,7 +1016,7 @@ public class LivingDocumentTests {
   public void send_requirements_must_have_who() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
     }
@@ -1037,7 +1037,7 @@ public class LivingDocumentTests {
   public void connect_requirements_must_have_who() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
     }
@@ -1056,7 +1056,7 @@ public class LivingDocumentTests {
   public void disconnect_requirements_must_have_who() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
     }
@@ -1075,7 +1075,7 @@ public class LivingDocumentTests {
   public void attach_requirements_must_have_who() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
     }
@@ -1094,7 +1094,7 @@ public class LivingDocumentTests {
   public void apply_requirements_must_have_who() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
     }
@@ -1113,7 +1113,7 @@ public class LivingDocumentTests {
   public void expire_requirements_must_have_limit() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
     }
@@ -1132,7 +1132,7 @@ public class LivingDocumentTests {
   public void apply_requirements_must_have_patch() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
     }
@@ -1152,7 +1152,7 @@ public class LivingDocumentTests {
   public void state_machine_progress() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}");
+            "@connected { return @who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}");
     setup.document.invalidate(Callback.DONT_CARE_INTEGER);
     String t =
         ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -1166,7 +1166,7 @@ public class LivingDocumentTests {
   public void state_machine_progress_no_monitor() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}",
+            "@connected { return @who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}",
             null,
             false);
     setup.document.invalidate(Callback.DONT_CARE_INTEGER);
@@ -1183,7 +1183,7 @@ public class LivingDocumentTests {
   public void state_machine_progress_over_time() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
+            "@connected { return @who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
     for (int k = 0; k < 26; k++) {
       setup.time.time += 100;
       setup.document.invalidate(new RealDocumentSetup.AssertInt(2 + k));
@@ -1208,7 +1208,7 @@ public class LivingDocumentTests {
   public void construct_over_time() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "@connected(who) { return who == @no_one; } @construct { transition #next in 0.25; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
+            "@connected { return @who == @no_one; } @construct { transition #next in 0.25; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
     setup.document.invalidate(Callback.DONT_CARE_INTEGER);
     Integer bumpTimeMs;
     int k = 3;
@@ -1228,7 +1228,7 @@ public class LivingDocumentTests {
 
   @Test
   public void transact_add_client_allowed() throws Exception {
-    final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+    final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
     setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
     setup.document.disconnect(A, new RealDocumentSetup.AssertInt(4));
     setup.assertCompare();
@@ -1236,7 +1236,7 @@ public class LivingDocumentTests {
 
   @Test
   public void transact_add_client_cant_connect_again_but_only_after_disconnect() throws Exception {
-    final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+    final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
     setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
     setup.document.connect(A, new RealDocumentSetup.AssertFailure(115724));
     setup.document.disconnect(A, new RealDocumentSetup.AssertInt(4));
@@ -1265,7 +1265,7 @@ public class LivingDocumentTests {
 
   @Test
   public void can_attach2() throws Exception {
-    final var setup = new RealDocumentSetup("@can_attach(who) { return true; }");
+    final var setup = new RealDocumentSetup("@can_attach { return true; }");
     Assert.assertTrue(setup.document.canAttach(NtPrincipal.NO_ONE));
   }
 
@@ -1273,7 +1273,7 @@ public class LivingDocumentTests {
   public void attach_default() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            " public int x = 0; public asset f; @connected(who) { x++; return true; } @construct {} @attached (a) { x++; f = a; }");
+            " public int x = 0; public asset f; @connected { x++; return true; } @construct {} @attached (a) { x++; f = a; }");
     setup.document.connect(NtPrincipal.NO_ONE, new RealDocumentSetup.AssertInt(2));
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtPrincipal.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
@@ -1291,7 +1291,7 @@ public class LivingDocumentTests {
   public void get_key_and_seq() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            " public int lolseq = 0; public string lolkey; @connected(who) { lolseq = Document.seq(); return true; } @construct { lolkey = Document.key(); } ");
+            " public int lolseq = 0; public string lolkey; @connected { lolseq = Document.seq(); return true; } @construct { lolkey = Document.key(); } ");
     setup.document.connect(NtPrincipal.NO_ONE, new RealDocumentSetup.AssertInt(2));
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtPrincipal.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
@@ -1330,7 +1330,7 @@ public class LivingDocumentTests {
 
   @Test
   public void transact_disconnect_without_connection() throws Exception {
-    final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+    final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
     setup.document.disconnect(A, new RealDocumentSetup.AssertFailure(145423));
     setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
     setup.document.disconnect(A, new RealDocumentSetup.AssertInt(4));
@@ -1341,7 +1341,7 @@ public class LivingDocumentTests {
 
   @Test
   public void crash_infinite_transition() throws Exception {
-      final var setup = new RealDocumentSetup("@construct { } #next { while(true) {} } @connected(who) { transition #next; return true; }");
+      final var setup = new RealDocumentSetup("@construct { } #next { while(true) {} } @connected { transition #next; return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertFailure(950384));
   }
 
@@ -1349,14 +1349,14 @@ public class LivingDocumentTests {
   public void transact_double_construct_document() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
       setup.assertCompare();
     }
     {
       final var setup =
-          new RealDocumentSetup("@construct {} @connected(who) { return true; }", prior);
+          new RealDocumentSetup("@construct {} @connected { return true; }", prior);
       final var document = setup.factory.create(new StdOutDocumentMonitor());
       document.__insert(new JsonStreamReader(prior.toString()));
       final var writer = setup.document.forge("construct", A);
@@ -1377,14 +1377,14 @@ public class LivingDocumentTests {
   public void transact_hydrate_clients() throws Exception {
     String prior;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       setup.document.connect(A, new RealDocumentSetup.AssertInt(2));
       prior = setup.document.json();
       setup.assertCompare();
     }
     {
       final var setup =
-          new RealDocumentSetup("@construct {} @connected(who) { return true; }", prior);
+          new RealDocumentSetup("@construct {} @connected { return true; }", prior);
       setup.document.connect(A, new RealDocumentSetup.AssertFailure(115724));
       setup.document.connect(B, new RealDocumentSetup.AssertInt(4));
     }
@@ -1440,7 +1440,7 @@ public class LivingDocumentTests {
   public void views() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @construct { x = 123; } @connected (who) { x++; return true; }");
+            "public int x; @construct { x = 123; } @connected { x++; return true; }");
     setup.document.connect(NtPrincipal.NO_ONE, new RealDocumentSetup.AssertInt(2));
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtPrincipal.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
@@ -1461,7 +1461,7 @@ public class LivingDocumentTests {
   public void views_no_monitor() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @construct { x = 123; } @connected (who) { x++; return true; }",
+            "public int x; @construct { x = 123; } @connected { x++; return true; }",
             null,
             false);
     setup.document.connect(NtPrincipal.NO_ONE, new RealDocumentSetup.AssertInt(2));
@@ -1485,7 +1485,7 @@ public class LivingDocumentTests {
   public void cant_connect_twice() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @construct { x = 123; } @connected (who) { x++; return true; }",
+            "public int x; @construct { x = 123; } @connected { x++; return true; }",
             null,
             false);
     Assert.assertEquals(

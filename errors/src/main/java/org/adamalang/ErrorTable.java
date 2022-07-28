@@ -52,6 +52,8 @@ public class ErrorTable {
     descriptions.put(184335, "no description of error (yet)");
     names.put(115724, "LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED");
     descriptions.put(115724, "no description of error (yet)");
+    names.put(109775, "LIVING_DOCUMENT_TRANSACTION_NO_CHANGE");
+    descriptions.put(109775, "no description of error (yet)");
     names.put(132111, "LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED");
     descriptions.put(132111, "no description of error (yet)");
     names.put(145423, "LIVING_DOCUMENT_TRANSACTION_CANT_DISCONNECT_DUE_TO_NOT_CONNECTED");

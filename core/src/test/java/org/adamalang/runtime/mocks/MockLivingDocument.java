@@ -61,6 +61,10 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public void __onLoad() {
+  }
+
+  @Override
   protected void __executeServiceCalls(boolean cancel) {
   }
 

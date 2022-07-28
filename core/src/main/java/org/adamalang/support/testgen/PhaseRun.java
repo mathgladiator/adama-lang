@@ -32,7 +32,11 @@ public class PhaseRun {
     final var testTime = new AtomicLong(0);
     final var time = (TimeSource) () -> testTime.get();
     outputFile.append("--JAVA RUNNING-------------------------------------").append("\n");
+    AtomicBoolean sawALoad = new AtomicBoolean(false);
     DumbDataService dds = new DumbDataService((patch) -> {
+      if (patch.request.contains("\"command\":\"load\"")) {
+        sawALoad.set(true);
+      }
       outputFile.append(patch.request + "-->" + patch.redo + " need:" + patch.requiresFutureInvalidation + " in:" + patch.whenToInvalidateMilliseconds + "\n");
       testTime.addAndGet(Math.max(patch.whenToInvalidateMilliseconds / 2, 25));
     });
@@ -63,8 +67,13 @@ public class PhaseRun {
     outputFile.append(json).append("\n");
     DumbDataService.DumbDurableLivingDocumentAcquire acquire2 = new DumbDataService.DumbDurableLivingDocumentAcquire();
     DurableLivingDocument.load(key, factory, monitor, base, acquire2);
+
     DurableLivingDocument doc2 = acquire2.get();
     outputFile.append(doc2.json()).append("\n");
+    if (sawALoad.get()) {
+      outputFile.append("SKIPPING JSON COMPARE AS A LOAD WAS DETECTED\n");
+      return;
+    }
     mustBeTrue(doc2.json().equals(json), "JSON don't match load, dump cycle");
   }
 

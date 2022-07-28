@@ -1012,13 +1012,13 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __onLoad() {}");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __onCanAssetAttached(NtPrincipal __cvalue) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __onAssetAttached(NtPrincipal __cvalue, NtAsset __pvalue) {");
-    gold.append("\n");
-    gold.append("\n  }");
+    gold.append("\n  public void __onAssetAttached(NtPrincipal __cvalue, NtAsset __pvalue) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(NtPrincipal __cvalue) {");
     gold.append("\n    boolean __result = false;");
@@ -1026,9 +1026,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n    return __result;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __onDisconnected(NtPrincipal __cvalue) {");
-    gold.append("\n");
-    gold.append("\n  }");
+    gold.append("\n  public void __onDisconnected(NtPrincipal __cvalue) {}");
     gold.append("\n  public static HashMap<String, Object> __config() {");
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
