@@ -610,6 +610,12 @@ public class DurableLivingDocument {
     ingest(NtPrincipal.NO_ONE, request.toString(), DONT_CARE_CHANGE, true, false);
   }
 
+  public void load() {
+    final var request = forge("load", null, false);
+    request.endObject();
+    ingest(NtPrincipal.NO_ONE, request.toString(), DONT_CARE_CHANGE, true, false);
+  }
+
   public void registerActivity() {
     this.lastActivityMS = base.time.nowMilliseconds();
   }

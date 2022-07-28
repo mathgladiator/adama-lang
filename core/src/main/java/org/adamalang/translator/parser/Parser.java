@@ -543,7 +543,7 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block());
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached", "@static", "@can_attach", "@web", "@include"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached", "@static", "@can_attach", "@web", "@include", "@load"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service"));
     }
@@ -571,6 +571,8 @@ public class Parser {
           return define_test_trailer(op);
         case "@construct":
           return define_constructor_trailer(op);
+        case "@load":
+          return define_document_event(op, DocumentEvent.Load);
         case "@connected":
           return define_document_event(op, DocumentEvent.ClientConnected);
         case "@disconnected":
@@ -617,17 +619,9 @@ public class Parser {
       final var openParen = consumeExpectedSymbol("(");
       final var parameterNameToken = id();
       final var closeParen = consumeExpectedSymbol(")");
-      return new DefineDocumentEvent(eventToken, which, openParen, null, null, parameterNameToken, closeParen, block());
-    }
-    final var openParen = tokens.popIf(t -> t.isSymbolWithTextEq("("));
-    if (openParen != null) {
-      final var name = id();
-      final var commaToken = tokens.popIf((t) -> t.isSymbolWithTextEq(","));
-      final var parameterNameToken = commaToken != null ? id() : null;
-      final var closeParen = consumeExpectedSymbol(")");
-      return new DefineDocumentEvent(eventToken, which, openParen, name, commaToken, parameterNameToken, closeParen, block());
+      return new DefineDocumentEvent(eventToken, which, openParen, parameterNameToken, closeParen, block());
     } else {
-      return new DefineDocumentEvent(eventToken, which, null, null, null, null, null, block());
+      return new DefineDocumentEvent(eventToken, which,  null, null, null, block());
     }
   }
 

@@ -24,8 +24,6 @@ import java.util.function.Consumer;
 
 /** defines an event for when connected or not */
 public class DefineDocumentEvent extends Definition {
-  public final Token clientVarToken;
-  public final Token commaToken;
   public final Token parameterNameToken;
   public final Token closeParen;
   public final Block code;
@@ -34,12 +32,10 @@ public class DefineDocumentEvent extends Definition {
   public final DocumentEvent which;
   public String contextVariable;
 
-  public DefineDocumentEvent(final Token eventToken, final DocumentEvent which, final Token openParen, final Token clientVarToken, final Token commaToken, final Token parameterNameToken, final Token closeParen, final Block code) {
+  public DefineDocumentEvent(final Token eventToken, final DocumentEvent which, final Token openParen, final Token parameterNameToken, final Token closeParen, final Block code) {
     this.eventToken = eventToken;
     this.which = which;
     this.openParen = openParen;
-    this.clientVarToken = clientVarToken;
-    this.commaToken = commaToken;
     this.parameterNameToken = parameterNameToken;
     this.closeParen = closeParen;
     this.code = code;
@@ -56,15 +52,7 @@ public class DefineDocumentEvent extends Definition {
     yielder.accept(eventToken);
     if (openParen != null) {
       yielder.accept(openParen);
-      if (which == DocumentEvent.AssetAttachment && clientVarToken == null) {
-        yielder.accept(parameterNameToken);
-      } else {
-        yielder.accept(clientVarToken);
-        if (commaToken != null) {
-          yielder.accept(commaToken);
-          yielder.accept(parameterNameToken);
-        }
-      }
+      yielder.accept(parameterNameToken);
       yielder.accept(closeParen);
     }
     code.emit(yielder);
@@ -108,21 +96,15 @@ public class DefineDocumentEvent extends Definition {
       if (contextVariable != null) {
         next.define(contextVariable, new TyInternalReadonlyClass(CoreRequestContext.class), true, this);
       }
-      if (clientVarToken != null) {
-        next.define(clientVarToken.text, new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
-      }
       return next;
     }
     boolean readonly = which == DocumentEvent.AskAssetAttachment;
     final var next = readonly ? environment.scopeAsReadOnlyBoundary() : environment.scope();
     if (which == DocumentEvent.ClientConnected || which == DocumentEvent.AskAssetAttachment) {
-      next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this));
+      next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, eventToken).withPosition(this));
     }
     if (which == DocumentEvent.AssetAttachment && parameterNameToken != null) {
       next.define(parameterNameToken.text, new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, parameterNameToken).withPosition(this), true, this);
-    }
-    if (clientVarToken != null) {
-      next.define(clientVarToken.text, new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
     }
     return next;
   }

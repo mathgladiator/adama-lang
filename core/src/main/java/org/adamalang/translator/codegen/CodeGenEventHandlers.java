@@ -21,9 +21,6 @@ public class CodeGenEventHandlers {
   private static void writeBody(DefineDocumentEvent dce, StringBuilderWithTabs sb, final Environment environment) {
     sb.append("{");
     sb.tabUp().writeNewline();
-    if (dce.clientVarToken != null) {
-      sb.append("NtPrincipal ").append(dce.clientVarToken.text).append(" = __who;").writeNewline();
-    }
     if (dce.which.isStaticPolicy && dce.contextVariable != null) {
       sb.append("CoreRequestContext ").append(dce.contextVariable).append(" = __context;").writeNewline();
     }
@@ -45,10 +42,14 @@ public class CodeGenEventHandlers {
         sb.append("public static boolean ").append(event.prefix).append("__" + count).append("(StaticState __static_state, NtPrincipal __who, CoreRequestContext __context) ");
         writeBody(dce, sb, dce.nextEnvironment(environment));
       } else {
-        if (event.hasParameter) {
-          sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtPrincipal __who, ").append(event.parameterType).append(" ").append(dce.parameterNameToken.text).append(") ");
+        if (event.hasPrincipal) {
+          if (event.hasParameter) {
+            sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtPrincipal __who, ").append(event.parameterType).append(" ").append(dce.parameterNameToken.text).append(") ");
+          } else {
+            sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtPrincipal __who) ");
+          }
         } else {
-          sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtPrincipal __who) ");
+          sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("() ");
         }
         writeBody(dce, sb, dce.nextEnvironment(environment));
       }
@@ -100,17 +101,25 @@ public class CodeGenEventHandlers {
         }
         if ("void".equals(event.returnType)) {
           sb.append("@Override").writeNewline();
-          if (event.hasParameter) {
-            sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue, ").append(event.parameterType).append(" __pvalue) {").tabUp().writeNewline();
+          if (event.hasPrincipal) {
+            if (event.hasParameter) {
+              sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue, ").append(event.parameterType).append(" __pvalue) {").tabUp().writeNewline();
+            } else {
+              sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue) {").tabUp().writeNewline();
+            }
           } else {
-            sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue) {").tabUp().writeNewline();
+            sb.append("public void ").append(event.prefix).append("() {").tabUp().writeNewline();
           }
           if (count > 0) {
             for (var k = 0; k < count; k++) {
-              if (event.hasParameter) {
-                sb.append(event.prefix).append("__" + k + "(__cvalue, __pvalue);");
+              if (event.hasPrincipal) {
+                if (event.hasParameter) {
+                  sb.append(event.prefix).append("__" + k + "(__cvalue, __pvalue);");
+                } else {
+                  sb.append(event.prefix).append("__" + k + "(__cvalue);");
+                }
               } else {
-                sb.append(event.prefix).append("__" + k + "(__cvalue);");
+                sb.append(event.prefix).append("__" + k + "();");
               }
               if (k == count - 1) {
                 sb.tabDown();

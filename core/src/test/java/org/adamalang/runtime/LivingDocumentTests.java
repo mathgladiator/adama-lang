@@ -256,6 +256,18 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void load_test() throws Exception {
+    final var setup =
+        new RealDocumentSetup(
+            "public int x = 100; @construct { x = 100; } @load { x++; }", "{\"x\":1000}");
+    Assert.assertEquals(
+        1000,
+        ((int)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("t")));
+  }
+
+  @Test
   @SuppressWarnings("unchecked")
   public void preempt() throws Exception {
     final var setup =

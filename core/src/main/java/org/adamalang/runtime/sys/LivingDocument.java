@@ -590,6 +590,9 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** code generated: allow the document to accept/reject the client */
   public abstract boolean __onConnected(NtPrincipal clientValue);
 
+  /** ran with loaded */
+  public abstract void __onLoad();
+
   /** code generated: let the document know of a disconnected client */
   public abstract void __onDisconnected(NtPrincipal clientValue);
 
@@ -847,6 +850,8 @@ public abstract class LivingDocument implements RxParent, Caller {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG);
           }
           return __transaction_construct(requestJson, who, arg, entropy);
+        case "load":
+          return __transaction_load(requestJson);
         case "connect":
           if (who == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
@@ -917,6 +922,21 @@ public abstract class LivingDocument implements RxParent, Caller {
     } catch (GoodwillExhaustedException gee) {
       throw new ErrorCodeException(ErrorCodes.API_GOODWILL_EXCEPTION, gee);
     }
+  }
+
+  private LivingDocumentChange __transaction_load(final String request) throws ErrorCodeException {
+    __seq.bumpUpPre();
+    __onLoad();
+    final var forward = new JsonStreamWriter();
+    final var reverse = new JsonStreamWriter();
+    forward.beginObject();
+    reverse.beginObject();
+    __commit(null, forward, reverse);
+    __internalCommit(forward, reverse);
+    forward.endObject();
+    reverse.endObject();
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), NtPrincipal.NO_ONE, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
+    return new LivingDocumentChange(update, null, null);
   }
 
   private LivingDocumentChange __transaction_deliver(final String request, NtPrincipal who, int deliveryId, RemoteResult result) throws ErrorCodeException {

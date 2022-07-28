@@ -11,31 +11,36 @@ package org.adamalang.translator.tree.definitions;
 
 /** an event that happens outside of message flow */
 public enum DocumentEvent {
-  AskCreation(true, "__onCanCreate", "boolean"), //
-  AskInvention(true, "__onCanInvent", "boolean"), //
-  AskSendWhileDisconnected(true, "__onCanSendWhileDisconnected", "boolean"), //
+  AskCreation(true, true, "__onCanCreate", "boolean"), //
+  AskInvention(true, true, "__onCanInvent", "boolean"), //
+  AskSendWhileDisconnected(true, true, "__onCanSendWhileDisconnected", "boolean"), //
 
-  AskAssetAttachment(false, "__onCanAssetAttached", "boolean"), //
-  AssetAttachment(false, "__onAssetAttached", "void", "NtAsset"), //
-  ClientConnected(false, "__onConnected", "boolean"), //
-  ClientDisconnected(false, "__onDisconnected", "void"); //
+  Load(false, false, "__onLoad", "void"), //
 
+  AskAssetAttachment(false, true, "__onCanAssetAttached", "boolean"), //
+  AssetAttachment(false, true, "__onAssetAttached", "void", "NtAsset"), //
+  ClientConnected(false, true, "__onConnected", "boolean"), //
+  ClientDisconnected(false, true, "__onDisconnected", "void"); //
+
+  public final boolean hasPrincipal;
   public final boolean isStaticPolicy;
   public final String prefix;
   public final String returnType;
   public final boolean hasParameter;
   public final String parameterType;
 
-  private DocumentEvent(boolean isStaticPolicy, String prefix, String returnType) {
+  private DocumentEvent(boolean isStaticPolicy, boolean hasPrincipal, String prefix, String returnType) {
     this.isStaticPolicy = isStaticPolicy;
+    this.hasPrincipal = hasPrincipal;
     this.prefix = prefix;
     this.returnType = returnType;
     this.hasParameter = false;
     this.parameterType = null;
   }
 
-  private DocumentEvent(boolean isStaticPolicy, String prefix, String returnType, String parameterType) {
+  private DocumentEvent(boolean isStaticPolicy, boolean hasPrincipal, String prefix, String returnType, String parameterType) {
     this.isStaticPolicy = isStaticPolicy;
+    this.hasPrincipal = hasPrincipal;
     this.prefix = prefix;
     this.returnType = returnType;
     this.hasParameter = parameterType != null;
