@@ -20,7 +20,9 @@ import org.adamalang.validators.ValidateKey;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Create a document.
+  * 
+  * The entropy allows the randomization of the document to be fixed at construction time. */
 public class DocumentCreateRequest {
   public final String identity;
   public final AuthenticatedUser who;

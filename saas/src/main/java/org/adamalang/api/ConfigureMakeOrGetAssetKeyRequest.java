@@ -18,7 +18,9 @@ import org.adamalang.web.io.*;
 
 /** Here, we ask if the connection if it has an asset key already.
   * If not, then it will generate one and send it along.
-  * Otherwise, it will return the key bound to the connection. */
+  * Otherwise, it will return the key bound to the connection.
+  * 
+  * This is allows anyone to have access to assets which are not exposed directly via a web handler should they see the asset within their document view. */
 public class ConfigureMakeOrGetAssetKeyRequest {
 
   public ConfigureMakeOrGetAssetKeyRequest() {

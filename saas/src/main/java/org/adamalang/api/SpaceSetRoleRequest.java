@@ -20,7 +20,9 @@ import org.adamalang.validators.ValidateEmail;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Set the role of an Adama developer for a particular space.
+  * 
+  * Spaces can be shared among Adama developers. */
 public class SpaceSetRoleRequest {
   public final String identity;
   public final AuthenticatedUser who;

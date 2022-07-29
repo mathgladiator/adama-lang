@@ -20,7 +20,7 @@ import org.adamalang.validators.ValidatePlan;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Set the deployment plan for a space. */
 public class SpaceSetRequest {
   public final String identity;
   public final AuthenticatedUser who;

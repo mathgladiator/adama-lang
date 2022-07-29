@@ -2,12 +2,7 @@
 <api output-path="./saas/src/main/java/org/adamalang/api" test-output-path="./saas/src/test/java/org/adamalang/api" package="org.adamalang.api" docs="./reference/src/reference/api.md" client="./client/src/index.ts">
     <parameter-definition name="identity" type="string" missing-error="458759">
         <documentation>
-            Identity is a token passed to the Authenticator which has the job of producing an agent (i.e. who is this
-            person) and an authority (who vouches for this person).
-            This is an opaque string for most of the system, but a common convention is to use JWT.
-
-            This parameter may also be prefixed with "FB/" or "GOOGLE/" for usage of common social media validation.
-            TODO: flush out social media login.
+            Identity is a token to authenticate a user.
         </documentation>
         <transform service="org.adamalang.transforms.Authenticator"
                    output-name="who"
@@ -42,13 +37,15 @@
 
     <parameter-definition name="viewer-state" type="json-object" optional="true">
         <documentation>
+            A connection to a document has a side-channel for passing information about the client's view into the evaluation of bubbles.
+            This allows for developers to implement real-time queries and pagination.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="entropy" type="string" optional="true" logged="true">
         <documentation>
             Each document has a random number generator. When 'entropy' is present, it will seed the random number
-            generate such that the randomness is now deterministic.
+            generate such that the randomness is now deterministic at the start.
         </documentation>
     </parameter-definition>
 
@@ -60,51 +57,52 @@
 
     <parameter-definition name="arg" type="json-object" missing-error="461826">
         <documentation>
-            Documents are constructed with a message argument per the @construct event. The 'arg' is an object which is
-            deserialized within the constructor's message type.
+            The parameter for a document's @construct event.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="channel" type="string" missing-error="454659" logged="true">
         <documentation>
-            'channel' is a identifier within a document used for communication
+            Each document has multiple channels available to send messages too.
         </documentation>
         <validate service="org.adamalang.validators.ValidateChannel"/>
     </parameter-definition>
 
     <parameter-definition name="message" type="json-object" missing-error="425987">
         <documentation>
-            'message' is an object that is sent to a message under a given channel
+            The object sent to a document which will be the parameter for a channel handler.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="connection" type="long" missing-error="405505">
         <documentation>
-            'connection' is a key to locate a sub-stream within a connection
+            A unique key to locate a document connection.
+
+            Adama will multiplex multiple documents on the same WebSocket.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="code" type="string" missing-error="455681">
         <documentation>
-            'code' is a randomly (secure) generated unique code to the socket and the universe which is sent via email
+            A randomly (secure) generated code to validate a user via 2FA auth (via email).
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="revoke" type="boolean" optional="true" logged="true">
         <documentation>
-            Should authentication on this connection wipe prior tokens
+            A flag to indicate wiping out previously granted tokens.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="asset-key" type="string" missing-error="475129">
         <documentation>
-            'asset-key' is for securely accessing assets where URIs for assets are encrypted.
+            A secure session-based key for allowing browsers to access assets without leaking of assets between browsers.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="email" type="string" missing-error="473103" logged="true">
         <documentation>
-            'email' is the email being accessed
+            The email of an Adama developer.
         </documentation>
         <transform service="org.adamalang.transforms.UserIdResolver"
                    output-name="userId"
@@ -115,7 +113,7 @@
 
     <parameter-definition name="access-token" type="string" missing-error="407544">
         <documentation>
-            'access-token' is an access token to convert to a user
+            A token from a third party authorization service.
         </documentation>
         <validate service="org.adamalang.validators.ValidateToken"/>
     </parameter-definition>
@@ -126,7 +124,7 @@
 
             These rules allow for a migration to happen slowly on your schedule.
 
-            Note: this method will validate that the scripts are valid, compile, and will not have any major regressions
+            Note: this value will validated such that the scripts are valid, compile, and will not have any major regressions
             during role out.
         </documentation>
         <validate service="org.adamalang.validators.ValidatePlan"/>
@@ -134,137 +132,141 @@
 
     <parameter-definition name="limit" type="int" optional="true" logged="true">
         <documentation>
-            'limit' is the maximum number of items to return during a listing process
+            Maximum number of items to return during a streaming list.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="marker" type="string" optional="true" logged="true">
         <documentation>
-            'marker' is a key to skip ahead a listing. When iterating, value will be returned that are after marker. To
-            paginate an entire list, then
+            A key to skip ahead a listing.
+            When iterating, values will be returned that are after marker.
+            To paginate an entire list, pick the last key or name returned and use it as the next marker.
         </documentation>
     </parameter-definition>
 
 
     <parameter-definition name="name" type="string" missing-error="453647" logged="true">
         <documentation>
-            'name' is an identifer
+            An identifier to name the resource.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="key-store" type="json-object" missing-error="457743">
         <documentation>
-            'key-store' is a collection of public keys used to validate an authority
+            A collection of public keys used to validate an identity within an authority.
         </documentation>
         <validate service="org.adamalang.validators.ValidateKeystore"/>
     </parameter-definition>
 
     <parameter-definition name="authority" type="string" missing-error="430095" logged="true">
         <documentation>
-            An authority is collection of users.
+            An authority is collection of users held together via a key store.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="role" type="string" missing-error="456716" logged="true">
         <documentation>
-            An role is a manner of user which has different capabilities
+            The role of a user may determine their capabilities to perform actions.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="seq" type="integer" missing-error="461836" logged="true">
         <documentation>
-            A 'seq' is an index in a log
+            A 'seq' is an index in a log.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="filename" type="string" missing-error="470028" logged="true">
         <documentation>
-            A filename is a nice description of the file being uploaded
+            A filename is a nice description of the asset being uploaded.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="chunk-md5" type="string" missing-error="462859">
         <documentation>
-            A md5 hash of a chunk being uploaded
+            A md5 hash of a chunk being uploaded.
+            This provides uploads with end-to-end data-integrity.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="content-type" type="string" missing-error="455691" logged="true">
         <documentation>
-            The MIME type like text/json or video/mp4
+            The MIME type like text/json or video/mp4.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="base64-bytes" type="string" missing-error="409608">
         <documentation>
-            Bytes encoded in base64
+            Bytes encoded in base64.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="upload" type="long" missing-error="409609">
         <documentation>
-            The id of the upload in progress
+            The id of the upload in progress.
         </documentation>
     </parameter-definition>
 
     <field-definition name="success" type="boolean">
         <documentation>
-            'success' indicates if the operation or method was successful
+            Indicates if the operation or method was successful.
         </documentation>
     </field-definition>
 
     <field-definition name="asset-key" type="string">
         <documentation>
-            'asset-key' is a key used to connect the dots from the connection to assets.
+            A key used to connect the dots from the connection to assets to a browser.
+            This is a session-based encryption scheme to protect assets from leaking outside the browser.
         </documentation>
     </field-definition>
 
     <field-definition name="delta" type="json-object">
         <documentation>
-            A json delta representing a change of data. See XYZ for more information about how to use the delta format.
+            A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information.
         </documentation>
     </field-definition>
 
     <field-definition name="keystore" type="json-object">
         <documentation>
-            A bunch of public keys
+            A bunch of public keys to validate tokens for an authority.
         </documentation>
     </field-definition>
 
     <field-definition name="plan" type="json-object">
         <documentation>
-            A plan is a predictable mapping of keys to implementation. The core reason for having multiple concurrent
-            implementations is to have a smooth and orderly deployment.
+            A plan is a predictable mapping of keys to implementations.
+            The core reason for having multiple concurrent implementations is to have a smooth and orderly deployment.
+            See [deployment plans](/reference/deployment-plan.md) for more information.
         </documentation>
     </field-definition>
 
     <field-definition name="reflection" type="json-object">
         <documentation>
-            A reflect is a json object describing the schema of a document.
+            Schema of a document.
         </documentation>
     </field-definition>
 
     <field-definition name="authority" type="string">
         <documentation>
-            An authority is collection of users.
+            An authority is collection of third party users authenticated via a public keystore.
         </documentation>
     </field-definition>
 
     <field-definition name="identity" type="string">
         <documentation>
-            A private key
+            A private token used to authenticate to Adama.
         </documentation>
     </field-definition>
 
     <field-definition name="space" type="string">
         <documentation>
-            A space
+            A space which is a collection of documents with a common Adama schema.
         </documentation>
     </field-definition>
 
     <field-definition name="balance" type="integer">
         <documentation>
-            The balance of a space (in pennies)
+            The balance of a space (in pennies).
         </documentation>
     </field-definition>
 
@@ -276,109 +278,110 @@
 
     <field-definition name="bandwidth" type="long">
         <documentation>
-            Bytes used to transmit
+            Bytes used to transmit.
         </documentation>
     </field-definition>
 
     <field-definition name="first-party-service-calls" type="long">
         <documentation>
-            Number of services calls made (managed by platform)
+            Number of services calls made (managed by platform).
         </documentation>
     </field-definition>
 
     <field-definition name="third-party-service-calls" type="long">
         <documentation>
-            Number of services calls made (managed by developers)
+            Number of services calls made (managed by developers).
         </documentation>
     </field-definition>
 
     <field-definition name="enabled" type="boolean">
         <documentation>
-            Is the item in question enabled
+            Is the item in question enabled.
         </documentation>
     </field-definition>
 
     <field-definition name="role" type="string">
         <documentation>
-            Each developer has a role to a document
+            Each developer has a role to a document.
         </documentation>
     </field-definition>
 
     <field-definition name="key" type="string">
         <documentation>
-            The key
+            The key.
         </documentation>
     </field-definition>
 
     <field-definition name="created" type="string">
         <documentation>
-            When the item was created
+            When the item was created.
         </documentation>
     </field-definition>
 
     <field-definition name="updated" type="string">
         <documentation>
-            When the item was created
+            When the item was last updated.
         </documentation>
     </field-definition>
 
     <field-definition name="seq" type="int">
         <documentation>
-            The sequencer for the item
+            The sequencer for the item.
         </documentation>
     </field-definition>
 
     <field-definition name="chunk_request_size" type="int">
         <documentation>
             The attachment uploader is asking for a chunk size.
+            Using the WebSocket leverages a flow control based uploader such that contention on the WebSocket is minimized.
         </documentation>
     </field-definition>
 
     <field-definition name="cpu" type="long">
         <documentation>
-            Cpu (in Adama ticks) used within the hour
+            Cpu (in Adama ticks) used within the hour.
         </documentation>
     </field-definition>
 
     <field-definition name="memory" type="long">
         <documentation>
-            Memory (in bytes) used within the hour
+            Memory (in bytes) used within the hour.
         </documentation>
     </field-definition>
 
     <field-definition name="connections" type="int">
         <documentation>
-            p95 connections for the hour
+            p95 connections for the hour.
         </documentation>
     </field-definition>
 
     <field-definition name="documents" type="int">
         <documentation>
-            p95 documents for the hour
+            p95 documents for the hour.
         </documentation>
     </field-definition>
 
     <field-definition name="messages" type="int">
         <documentation>
-            Messages sent within the hour
+            Messages sent within the hour.
         </documentation>
     </field-definition>
 
     <field-definition name="hour" type="int">
         <documentation>
-            The hour of billing
+            The hour of billing.
         </documentation>
     </field-definition>
 
     <field-definition name="key-id" type="int">
         <documentation>
-            ID of the public-key
+            Unique id of the private-key used for a secret.
         </documentation>
     </field-definition>
 
     <field-definition name="public-key" type="string">
         <documentation>
-            Public Key to encrypted
+            A public key to decrypt a secret with key arrangement.
         </documentation>
     </field-definition>
 
@@ -468,7 +471,7 @@
     <method name="init/convert-google-user" responder="initiation">
         <parameter name="access-token"/>
         <documentation>
-            The converts and validates a google token into an Adama token
+            The converts and validates a google token into an Adama token.
         </documentation>
     </method>
 
@@ -492,6 +495,7 @@
         <parameter name="identity"/>
         <parameter name="password"/>
         <documentation>
+            Set the password for an Adama developer.
         </documentation>
     </method>
 
@@ -499,13 +503,14 @@
         <parameter name="email"/>
         <parameter name="password"/>
         <documentation>
+            Sign an Adama developer in with an email and password pair.
         </documentation>
     </method>
 
     <method name="probe" responder="simple">
         <parameter name="identity"/>
         <documentation>
-            This is useful to validate an identity without executing anything
+            This is useful to validate an identity without executing anything.
         </documentation>
     </method>
 
@@ -513,6 +518,7 @@
     <method name="authority/create" responder="claim-result">
         <parameter name="identity"/>
         <documentation>
+            Create an authority. See [Authentication](/reference/auth.md) for more details.
         </documentation>
     </method>
 
@@ -521,6 +527,7 @@
         <parameter name="authority"/>
         <parameter name="key-store"/>
         <documentation>
+            Set the public keystore for the authority.
         </documentation>
     </method>
 
@@ -528,12 +535,14 @@
         <parameter name="identity"/>
         <parameter name="authority"/>
         <documentation>
+            Get the public keystore for the authority.
         </documentation>
     </method>
 
     <method name="authority/list" responder="authority-listing">
         <parameter name="identity"/>
         <documentation>
+            List authorities for the given developer.
         </documentation>
     </method>
 
@@ -541,6 +550,9 @@
         <parameter name="identity"/>
         <parameter name="authority"/>
         <documentation>
+            Destroy an authority.
+
+            This is exceptionally dangerous as it will break authentication for any users that have tokens based on that authority.
         </documentation>
     </method>
 
@@ -548,6 +560,7 @@
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
+            Create a space.
         </documentation>
     </method>
 
@@ -555,6 +568,13 @@
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
+            Generate a secret key for a space.
+
+            First party and third party services require secrets such as api tokens or credentials.
+
+            These credentials must be encrypted within the Adama document using a public-private key, and the secret is derived via a key exchange.
+            Here, the server will generate a public/private key pair and store the private key securely and give the developer a public key.
+            The developer then generates a public/private key, encrypts the token with the private key, throws away the private key, and then embeds the key id, the developer's public key, and the encrypted credential within the adama source code.
         </documentation>
     </method>
 
@@ -563,6 +583,7 @@
         <parameter name="space"/>
         <parameter name="limit"/>
         <documentation>
+            Get the most recent space usage in terms of billable hours.
         </documentation>
     </method>
 
@@ -570,6 +591,7 @@
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
+            Get the deployment plan for a space.
         </documentation>
     </method>
 
@@ -578,6 +600,7 @@
         <parameter name="space"/>
         <parameter name="plan"/>
         <documentation>
+            Set the deployment plan for a space.
         </documentation>
     </method>
 
@@ -585,6 +608,10 @@
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
+            Delete a space.
+
+            This requires no documents to be within the space, and this removes the space from use until garbage collection ensures no documents were created for that space after deletion.
+            A space may be reserved for 90 minutes until the system is absolutely sure no documents will leak.
         </documentation>
     </method>
 
@@ -594,6 +621,9 @@
         <parameter name="email"/>
         <parameter name="role"/>
         <documentation>
+            Set the role of an Adama developer for a particular space.
+
+            Spaces can be shared among Adama developers.
         </documentation>
     </method>
 
@@ -602,6 +632,7 @@
         <parameter name="space"/>
         <parameter name="key"/>
         <documentation>
+            Get a schema for the space.
         </documentation>
     </method>
 
@@ -610,6 +641,7 @@
         <parameter name="marker"/>
         <parameter name="limit"/>
         <documentation>
+            List the spaces available to the user.
         </documentation>
     </method>
 
@@ -620,6 +652,9 @@
         <parameter name="entropy"/>
         <parameter name="arg"/>
         <documentation>
+            Create a document.
+
+            The entropy allows the randomization of the document to be fixed at construction time.
         </documentation>
     </method>
 
@@ -629,6 +664,7 @@
         <parameter name="marker"/>
         <parameter name="limit"/>
         <documentation>
+            List documents within a space which are after the given marker.
         </documentation>
     </method>
 
@@ -638,6 +674,7 @@
         <parameter name="key"/>
         <parameter name="viewer-state"/>
         <documentation>
+            Create a connection to a document.
         </documentation>
     </method>
 
@@ -646,6 +683,7 @@
         <parameter name="channel"/>
         <parameter name="message"/>
         <documentation>
+            Send a message to the document on the given channel.
         </documentation>
     </method>
 
@@ -653,6 +691,10 @@
         <parameter name="connection"/>
         <parameter name="viewer-state"/>
         <documentation>
+            Update the viewer state of the document.
+
+            The viewer state is accessible to bubbles to provide view restriction and filtering.
+            For example, the viewer state is how a document can provide real-time search or pagination.
         </documentation>
     </method>
 
@@ -660,6 +702,7 @@
             error-find-by="474128" destroy="true">
         <parameter name="connection"/>
         <documentation>
+            Disconnect from the document document.
         </documentation>
     </method>
 
@@ -668,6 +711,8 @@
             Here, we ask if the connection if it has an asset key already.
             If not, then it will generate one and send it along.
             Otherwise, it will return the key bound to the connection.
+
+            This is allows anyone to have access to assets which are not exposed directly via a web handler should they see the asset within their document view.
         </documentation>
     </method>
 
@@ -678,6 +723,7 @@
         <parameter name="filename"/>
         <parameter name="content-type"/>
         <documentation>
+            Start an upload for the given document with the given filename and content type.
         </documentation>
     </method>
 
@@ -686,12 +732,14 @@
         <parameter name="chunk-md5"/>
         <parameter name="base64-bytes"/>
         <documentation>
+            Append a chunk with an MD5 to ensure data integrity.
         </documentation>
     </method>
 
     <method name="attachment/finish" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="478227" destroy="true">
         <parameter name="upload"/>
         <documentation>
+            Finishing uploading the attachment upload.
         </documentation>
     </method>
 

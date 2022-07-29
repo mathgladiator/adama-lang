@@ -20,7 +20,7 @@ import org.adamalang.validators.ValidateKey;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Start an upload for the given document with the given filename and content type. */
 public class AttachmentStartRequest {
   public final String identity;
   public final AuthenticatedUser who;

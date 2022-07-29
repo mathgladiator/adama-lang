@@ -18,7 +18,7 @@ import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Create a space. */
 public class SpaceCreateRequest {
   public final String identity;
   public final AuthenticatedUser who;

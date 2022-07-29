@@ -16,7 +16,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Append a chunk with an MD5 to ensure data integrity. */
 public class AttachmentAppendRequest {
   public final Long upload;
   public final String chunkMd5;

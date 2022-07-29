@@ -19,7 +19,10 @@ import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Delete a space.
+  * 
+  * This requires no documents to be within the space, and this removes the space from use until garbage collection ensures no documents were created for that space after deletion.
+  * A space may be reserved for 90 minutes until the system is absolutely sure no documents will leak. */
 public class SpaceDeleteRequest {
   public final String identity;
   public final AuthenticatedUser who;

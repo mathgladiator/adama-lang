@@ -20,7 +20,7 @@ import org.adamalang.validators.ValidateKey;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Get a schema for the space. */
 public class SpaceReflectRequest {
   public final String identity;
   public final AuthenticatedUser who;

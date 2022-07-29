@@ -17,7 +17,9 @@ import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Destroy an authority.
+  * 
+  * This is exceptionally dangerous as it will break authentication for any users that have tokens based on that authority. */
 public class AuthorityDestroyRequest {
   public final String identity;
   public final AuthenticatedUser who;

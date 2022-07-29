@@ -16,7 +16,10 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Update the viewer state of the document.
+  * 
+  * The viewer state is accessible to bubbles to provide view restriction and filtering.
+  * For example, the viewer state is how a document can provide real-time search or pagination. */
 public class ConnectionUpdateRequest {
   public final Long connection;
   public final ObjectNode viewerState;

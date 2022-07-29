@@ -17,7 +17,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.validators.ValidateToken;
 import org.adamalang.web.io.*;
 
-/** The converts and validates a google token into an Adama token */
+/** The converts and validates a google token into an Adama token. */
 public class InitConvertGoogleUserRequest {
   public final String accessToken;
 

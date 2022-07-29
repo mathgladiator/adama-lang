@@ -17,7 +17,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Get the public keystore for the authority. */
 public class AuthorityGetRequest {
   public final String identity;
   public final AuthenticatedUser who;

@@ -17,7 +17,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Set the password for an Adama developer. */
 public class AccountSetPasswordRequest {
   public final String identity;
   public final AuthenticatedUser who;

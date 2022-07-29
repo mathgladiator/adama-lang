@@ -17,7 +17,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.validators.ValidateChannel;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Send a message to the document on the given channel. */
 public class ConnectionSendRequest {
   public final Long connection;
   public final String channel;

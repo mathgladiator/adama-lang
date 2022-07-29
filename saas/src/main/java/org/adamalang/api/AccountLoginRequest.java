@@ -17,7 +17,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.validators.ValidateEmail;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Sign an Adama developer in with an email and password pair. */
 public class AccountLoginRequest {
   public final String email;
   public final Integer userId;

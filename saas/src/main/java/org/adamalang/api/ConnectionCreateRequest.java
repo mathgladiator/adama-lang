@@ -20,7 +20,7 @@ import org.adamalang.validators.ValidateKey;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Create a connection to a document. */
 public class ConnectionCreateRequest {
   public final String identity;
   public final AuthenticatedUser who;

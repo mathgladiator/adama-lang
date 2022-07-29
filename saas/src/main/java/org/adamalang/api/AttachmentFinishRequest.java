@@ -16,7 +16,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Finishing uploading the attachment upload. */
 public class AttachmentFinishRequest {
   public final Long upload;
 

@@ -19,7 +19,7 @@ import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/**  */
+/** List documents within a space which are after the given marker. */
 public class DocumentListRequest {
   public final String identity;
   public final AuthenticatedUser who;

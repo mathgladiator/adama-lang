@@ -48,9 +48,28 @@ public class DeploymentPlanTests {
 
   @Test
   public void happy() throws Exception {
-    new DeploymentPlan(
-        "{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
+    DeploymentPlan plan = new DeploymentPlan(
+        "{\"versions\":{\"x\":\"\",\"y\":\"\",\"z\":\"\"},\"default\":\"z\",\"plan\":[{\"version\":\"x\",\"percent\":0,\"keys\":[\"1\",\"2\"],\"prefix\":\"k\",\"seed\":\"a2\"},{\"version\":\"y\",\"percent\":50,\"prefix\":\"\",\"seed\":\"a2\"}]}",
         (t, errorCode) -> {});
+    Assert.assertEquals("x", plan.pickVersion("1"));
+    Assert.assertEquals("x", plan.pickVersion("2"));
+    Assert.assertEquals("y", plan.pickVersion("100"));
+    Assert.assertEquals("y", plan.pickVersion("101"));
+    Assert.assertEquals("z", plan.pickVersion("102"));
+    Assert.assertEquals("z", plan.pickVersion("103"));
+    Assert.assertEquals("z", plan.pickVersion("104"));
+    Assert.assertEquals("z", plan.pickVersion("105"));
+    Assert.assertEquals("y", plan.pickVersion("106"));
+  }
+
+  @Test
+  public void happy2() throws Exception {
+    DeploymentPlan plan = new DeploymentPlan(
+        "{\"versions\":{\"x\":\"\",\"y\":\"\",\"z\":\"\"},\"default\":\"z\",\"plan\":[{\"version\":\"x\",\"percent\":0,\"keys\":[\"1\",\"2\"],\"prefix\":\"k\",\"seed\":\"a2\"},{\"version\":\"y\",\"percent\":900,\"prefix\":\"y\",\"seed\":\"a2\"}]}",
+        (t, errorCode) -> {});
+    Assert.assertEquals("x", plan.pickVersion("1"));
+    Assert.assertEquals("x", plan.pickVersion("2"));
+    Assert.assertEquals("y", plan.pickVersion("y3"));
   }
 
   @Test
@@ -63,7 +82,6 @@ public class DeploymentPlanTests {
   public void parseTest(String json, int expectedError) {
     try {
       new DeploymentPlan(json, (t, errorCode) -> {});
-
       Assert.fail();
     } catch (ErrorCodeException ex) {
       Assert.assertEquals(expectedError, ex.code);
@@ -82,10 +100,17 @@ public class DeploymentPlanTests {
   }
 
   @Test
-  public void stage_bad_field() {
+  public void stage_extra_field() {
     parseTest(
         "{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"z\":true}]}",
         116812);
+  }
+
+  @Test
+  public void stage_bad_field_keys() {
+    parseTest(
+        "{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"keys\":true}]}",
+        199886);
   }
 
   @Test

@@ -17,7 +17,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.*;
 
-/** This is useful to validate an identity without executing anything */
+/** This is useful to validate an identity without executing anything. */
 public class ProbeRequest {
   public final String identity;
   public final AuthenticatedUser who;

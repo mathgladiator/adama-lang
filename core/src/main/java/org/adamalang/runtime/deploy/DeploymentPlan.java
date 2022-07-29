@@ -20,6 +20,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /** parses a deployment plan and constructs a safe plan which has yet to be compiled */
 public class DeploymentPlan {
@@ -63,6 +64,7 @@ public class DeploymentPlan {
                     String _prefix = "";
                     double _percent = 1.0;
                     String _version = null;
+                    HashSet<String> _keys = null;
                     while (reader.notEndOfObject()) {
                       switch (reader.fieldName()) {
                         case "version":
@@ -71,6 +73,16 @@ public class DeploymentPlan {
                             throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_PLAN_VERSION_MUST_EXIST);
                           }
                           break;
+                        case "keys": {
+                          _keys = new HashSet<>();
+                          if (reader.startArray()) {
+                            while (reader.notEndOfArray()) {
+                              _keys.add(reader.readString());
+                            }
+                          } else {
+                            throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_PLAN_KEYS_MUST_BE_ARRAY);
+                          }
+                        } break;
                         case "prefix":
                           _prefix = reader.readString();
                           break;
@@ -91,7 +103,7 @@ public class DeploymentPlan {
                     if (_version == null) {
                       throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_PLAN_PLAN_NO_VERSION);
                     }
-                    stages.add(new Stage(_version, _prefix, _seed, _percent));
+                    stages.add(new Stage(_version, _keys, _prefix, _seed, _percent));
                   } else {
                     throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_PLAN_PLAN_ARRAY_ELEMENT_MUST_OBJECT);
                   }
@@ -126,7 +138,15 @@ public class DeploymentPlan {
 
   public String pickVersion(String key) {
     for (Stage stage : stages) {
+      if (stage.keys != null) {
+        if (stage.keys.contains(key)) {
+          return stage.version;
+        }
+      }
       if (key.startsWith(stage.prefix)) {
+        if (stage.percent >= 100) {
+          return stage.version;
+        }
         double check = hash(stage.seed, key);
         if (check <= stage.percent) {
           return stage.version;
@@ -149,12 +169,14 @@ public class DeploymentPlan {
 
   public static class Stage {
     public final String version;
+    public final HashSet<String> keys;
     public final String prefix;
     public final String seed;
     public final double percent;
 
-    public Stage(String version, String prefix, String seed, double percent) {
+    public Stage(String version, HashSet<String> keys, String prefix, String seed, double percent) {
       this.version = version;
+      this.keys = keys;
       this.prefix = prefix;
       this.seed = seed;
       this.percent = percent;

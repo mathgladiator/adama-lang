@@ -17,7 +17,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.*;
 
-/**  */
+/** List the spaces available to the user. */
 public class SpaceListRequest {
   public final String identity;
   public final AuthenticatedUser who;

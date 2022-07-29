@@ -18,7 +18,7 @@ import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.validators.ValidateKeystore;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Set the public keystore for the authority. */
 public class AuthoritySetRequest {
   public final String identity;
   public final AuthenticatedUser who;

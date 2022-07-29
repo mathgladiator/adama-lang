@@ -22,11 +22,22 @@ public class DeployedVersionTests {
   }
 
   @Test
-  public void flow() {
+  public void flow1() {
     DeployedVersion v = new DeployedVersion(new JsonStreamReader("{\"main\":\"xyz\",\"junk\":true,\"includes\":{\"x\":\"y\"}}"));
     Assert.assertEquals("xyz", v.main);
     Assert.assertTrue(v.includes.containsKey("x"));
     Assert.assertEquals("y", v.includes.get("x"));
+    Assert.assertNull(v.rxhtml);
+    v.hashCode();
+  }
+
+  @Test
+  public void flow2() {
+    DeployedVersion v = new DeployedVersion(new JsonStreamReader("{\"main\":\"xyz\",\"rxhtml\":\"yo\",\"junk\":true,\"includes\":{\"x\":\"y\"}}"));
+    Assert.assertEquals("xyz", v.main);
+    Assert.assertTrue(v.includes.containsKey("x"));
+    Assert.assertEquals("y", v.includes.get("x"));
+    Assert.assertEquals("yo", v.rxhtml);
     v.hashCode();
   }
 }

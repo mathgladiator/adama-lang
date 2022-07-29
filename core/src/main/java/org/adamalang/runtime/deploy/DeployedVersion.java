@@ -18,15 +18,20 @@ import java.util.Objects;
 public class DeployedVersion {
   public final String main;
   public final HashMap<String, String> includes;
+  public final String rxhtml;
 
   public DeployedVersion(JsonStreamReader reader) {
     String _main = "";
+    String _rxhtml = null;
     includes = new HashMap<>();
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         switch (reader.fieldName()) {
           case "main":
             _main = reader.readString();
+            break;
+          case "rxhtml":
+            _rxhtml = reader.readString();
             break;
           case "includes":
             if (reader.startObject()) {
@@ -46,18 +51,19 @@ public class DeployedVersion {
       _main = reader.readString();
     }
     this.main = _main;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(main, includes);
+    this.rxhtml = _rxhtml;
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    DeployedVersion deployedVersion = (DeployedVersion) o;
-    return Objects.equals(main, deployedVersion.main) && Objects.equals(includes, deployedVersion.includes);
+    DeployedVersion that = (DeployedVersion) o;
+    return Objects.equals(main, that.main) && Objects.equals(includes, that.includes) && Objects.equals(rxhtml, that.rxhtml);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(main, includes, rxhtml);
   }
 }

@@ -17,7 +17,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.*;
 
-/**  */
+/** List authorities for the given developer. */
 public class AuthorityListRequest {
   public final String identity;
   public final AuthenticatedUser who;

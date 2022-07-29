@@ -19,7 +19,13 @@ import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Generate a secret key for a space.
+  * 
+  * First party and third party services require secrets such as api tokens or credentials.
+  * 
+  * These credentials must be encrypted within the Adama document using a public-private key, and the secret is derived via a key exchange.
+  * Here, the server will generate a public/private key pair and store the private key securely and give the developer a public key.
+  * The developer then generates a public/private key, encrypts the token with the private key, throws away the private key, and then embeds the key id, the developer's public key, and the encrypted credential within the adama source code. */
 public class SpaceGenerateKeyRequest {
   public final String identity;
   public final AuthenticatedUser who;

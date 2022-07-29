@@ -17,7 +17,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Create an authority. See [Authentication](/reference/auth.md) for more details. */
 public class AuthorityCreateRequest {
   public final String identity;
   public final AuthenticatedUser who;

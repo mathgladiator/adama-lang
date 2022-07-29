@@ -19,7 +19,7 @@ import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/**  */
+/** Get the most recent space usage in terms of billable hours. */
 public class SpaceUsageRequest {
   public final String identity;
   public final AuthenticatedUser who;
