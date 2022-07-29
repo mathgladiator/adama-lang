@@ -50,6 +50,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":63},\"end\":{\"line\":8,\"character\":8,\"byte\":69}},\"severity\":1,\"source\":\"error\",\"message\":\"Can only 'abort' from a message handler (EvaluationContext)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantBlockOutsideOfStateTransition_2 = null;
@@ -90,6 +91,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":50},\"end\":{\"line\":5,\"character\":8,\"byte\":56}},\"severity\":1,\"source\":\"error\",\"message\":\"Can only 'block' from a state machine transition (EvaluationContext)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyBlock_3 = null;
@@ -795,6 +797,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\nTEST[foo] = 100.0%");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyForEach_4 = null;
@@ -1588,6 +1591,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyIf_5 = null;
@@ -2345,6 +2349,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyLoops_6 = null;
@@ -3353,6 +3358,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Legacy_7 = null;
@@ -4060,6 +4066,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\nTEST[foo] = 100.0%");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MaybeBool_8 = null;
@@ -4615,6 +4622,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MegaIfLegacy_9 = null;
@@ -5187,6 +5195,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_NotMaybeInIf_10 = null;
@@ -5227,6 +5236,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":6,\"byte\":20},\"end\":{\"line\":1,\"character\":7,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' was expected to be a maybe<?> (RuleSetMaybe)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_VariousFor_11 = null;
@@ -5793,6 +5803,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

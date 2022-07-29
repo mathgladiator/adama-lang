@@ -50,6 +50,7 @@ public class GeneratedCrashReportTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":8,\"byte\":83},\"end\":{\"line\":3,\"character\":14,\"byte\":89}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'String' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

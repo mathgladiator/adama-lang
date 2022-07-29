@@ -50,6 +50,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":22,\"byte\":54},\"end\":{\"line\":4,\"character\":31,\"byte\":63}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type `int[]` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message. (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantConvertListToList_2 = null;
@@ -90,6 +91,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":12,\"character\":2,\"byte\":96},\"end\":{\"line\":12,\"character\":8,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'list<M>' is unable to store type 'M[]'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantInteger_3 = null;
@@ -130,6 +132,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":22,\"byte\":54},\"end\":{\"line\":4,\"character\":23,\"byte\":55}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type `int` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message. (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantMaybeInteger_4 = null;
@@ -170,6 +173,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":29,\"byte\":61},\"end\":{\"line\":4,\"character\":30,\"byte\":62}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'record' or 'message', but got a type of 'int'. (RuleSetStructures)\"},{\"range\":{\"start\":{\"line\":4,\"character\":22,\"byte\":54},\"end\":{\"line\":4,\"character\":30,\"byte\":62}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type `maybe<int>` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message. (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Legacy_5 = null;
@@ -1147,6 +1151,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_RecordToMessage_6 = null;
@@ -2021,6 +2026,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_WhenCantConvertBasedOnFields_7 = null;
@@ -2061,6 +2067,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":11,\"character\":2,\"byte\":111},\"end\":{\"line\":11,\"character\":8,\"byte\":117}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'string' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":15,\"character\":2,\"byte\":147},\"end\":{\"line\":15,\"character\":5,\"byte\":150}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":62},\"end\":{\"line\":6,\"character\":8,\"byte\":68}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'string' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":21,\"character\":2,\"byte\":193},\"end\":{\"line\":21,\"character\":11,\"byte\":202}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'BigS' contains field 'z' which is not found within 'SmallI'. (RuleSetStructures)\"},{\"range\":{\"start\":{\"line\":21,\"character\":2,\"byte\":193},\"end\":{\"line\":21,\"character\":11,\"byte\":202}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'BigI' contains field 'z' which is not found within 'SmallI'. (RuleSetStructures)\"},{\"range\":{\"start\":{\"line\":22,\"character\":2,\"byte\":206},\"end\":{\"line\":22,\"character\":11,\"byte\":215}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'BigS' contains field 'z' which is not found within 'SmallS'. (RuleSetStructures)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":18},\"end\":{\"line\":1,\"character\":5,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":22,\"character\":2,\"byte\":206},\"end\":{\"line\":22,\"character\":11,\"byte\":215}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'BigI' contains field 'z' which is not found within 'SmallS'. (RuleSetStructures)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":18},\"end\":{\"line\":1,\"character\":5,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":62},\"end\":{\"line\":6,\"character\":8,\"byte\":68}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'string' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":11,\"character\":2,\"byte\":111},\"end\":{\"line\":11,\"character\":8,\"byte\":117}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'string' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":15,\"character\":2,\"byte\":147},\"end\":{\"line\":15,\"character\":5,\"byte\":150}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

@@ -634,6 +634,7 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CanAttach_2 = null;
@@ -674,6 +675,7 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":12,\"byte\":12},\"end\":{\"line\":1,\"character\":1,\"byte\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"The @can_attach handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Failures_3 = null;
@@ -714,6 +716,7 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":49},\"end\":{\"line\":4,\"character\":8,\"byte\":55}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'asset' lacks field 'food' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":49},\"end\":{\"line\":4,\"character\":8,\"byte\":55}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":62},\"end\":{\"line\":5,\"character\":7,\"byte\":67}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'asset' is unable to store type 'int'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Sanity_4 = null;
@@ -1275,6 +1278,7 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

@@ -1021,6 +1021,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MegaTypeConstruction_2 = null;
@@ -2235,6 +2236,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_TypeConstruction_3 = null;
@@ -2956,6 +2958,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

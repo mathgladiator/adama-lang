@@ -560,6 +560,7 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Random_2 = null;
@@ -600,6 +601,7 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":9,\"byte\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'dynamic' is unable to store type 'bool'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Reactive_3 = null;
@@ -1305,6 +1307,7 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

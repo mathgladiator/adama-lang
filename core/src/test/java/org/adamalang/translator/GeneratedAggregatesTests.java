@@ -700,6 +700,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantBumpBoolList_2 = null;
@@ -740,6 +741,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":57},\"end\":{\"line\":6,\"character\":15,\"byte\":70}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<r<bool>>' (CanBumpNumeric)\"},{\"range\":{\"start\":{\"line\":7,\"character\":5,\"byte\":80},\"end\":{\"line\":7,\"character\":18,\"byte\":93}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<r<bool>>' (CanBumpNumeric)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_InvokeMethods_3 = null;
@@ -1413,6 +1415,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Legacy_4 = null;
@@ -2341,6 +2344,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MethodOnList_5 = null;
@@ -3163,6 +3167,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_NegateBoolList_6 = null;
@@ -3841,6 +3846,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_NegateIntList_7 = null;
@@ -4519,6 +4525,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

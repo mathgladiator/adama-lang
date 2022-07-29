@@ -778,6 +778,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Happy_2 = null;
@@ -1400,6 +1401,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\nTEST[Negate] = 100.0%");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

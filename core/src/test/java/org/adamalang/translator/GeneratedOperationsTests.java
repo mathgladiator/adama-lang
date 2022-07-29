@@ -610,6 +610,7 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\nTEST[PrimaryTest] = 100.0%");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

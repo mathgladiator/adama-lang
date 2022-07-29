@@ -543,6 +543,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_IndexLookupLegacy_2 = null;
@@ -1431,6 +1432,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_OfAllTypes_3 = null;
@@ -1990,6 +1992,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ParenthesisInvalidTypeDuringTPTC_4 = null;
@@ -2030,6 +2033,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":19,\"byte\":33},\"end\":{\"line\":1,\"character\":23,\"byte\":37}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'AutoMaxRecord2' and 'bool' are not compatible for type unification (TypeCompatabilities)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

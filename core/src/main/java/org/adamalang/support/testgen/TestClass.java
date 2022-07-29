@@ -88,7 +88,7 @@ public class TestClass {
 
   public static void writeStringBuilder(String str, StringBuilder outputFile, String variable) {
     outputFile.append("    StringBuilder ").append(variable).append(" = new StringBuilder();\n");
-    final var lines = str.split("\n");
+    final var lines = str.split("\n", -1);
     for (var k = 0; k < lines.length; k++) {
       lines[k] = lines[k].stripTrailing();
     }

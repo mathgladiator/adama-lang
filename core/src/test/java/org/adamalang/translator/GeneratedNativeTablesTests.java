@@ -50,6 +50,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":53},\"end\":{\"line\":6,\"character\":8,\"byte\":59}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'table<M>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":53},\"end\":{\"line\":6,\"character\":8,\"byte\":59}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FunctionPassing_2 = null;
@@ -881,6 +882,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Happy_3 = null;
@@ -1606,6 +1608,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_NoMessage_4 = null;
@@ -1646,6 +1649,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":8,\"byte\":16},\"end\":{\"line\":1,\"character\":9,\"byte\":17}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'M' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_TableCopy_5 = null;
@@ -2341,6 +2345,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

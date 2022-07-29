@@ -50,6 +50,7 @@ public class GeneratedIncludeTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":13,\"byte\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Inclusion of 'bad' resulted in an error; 'Parser was expecting an identifier, but got a Symbol:; instead. {Token: `;` @ (0,10) -> (0,11): Symbol}' (DocumentInclude)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Found_2 = null;
@@ -576,6 +577,7 @@ public class GeneratedIncludeTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_NotFound_3 = null;
@@ -616,6 +618,7 @@ public class GeneratedIncludeTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":15,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Failed to include 'howdy' as it was not bound to the deployment (DocumentInclude)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

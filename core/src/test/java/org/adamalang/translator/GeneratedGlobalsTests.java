@@ -50,6 +50,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":48}},\"severity\":1,\"source\":\"error\",\"message\":\"Overloaded function has many identical calls (FunctionOverlap)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FunctionOverloading_2 = null;
@@ -617,6 +618,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MathLib_3 = null;
@@ -1214,6 +1216,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_NotFound_4 = null;
@@ -1254,6 +1257,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":24},\"end\":{\"line\":1,\"character\":20,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'String' lacks 'foo' (GlobalLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":24},\"end\":{\"line\":1,\"character\":20,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Random_5 = null;
@@ -1856,6 +1860,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

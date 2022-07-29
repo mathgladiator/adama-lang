@@ -50,6 +50,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":11,\"byte\":60},\"end\":{\"line\":7,\"character\":15,\"byte\":64}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'M' to be an enumeration; instead, found a type of 'M'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":8,\"character\":11,\"byte\":78},\"end\":{\"line\":8,\"character\":15,\"byte\":82}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'R' to be an enumeration; instead, found a type of 'R'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":9,\"character\":11,\"byte\":96},\"end\":{\"line\":9,\"character\":18,\"byte\":103}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: an enumeration named 'Nope' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":10,\"character\":11,\"byte\":117},\"end\":{\"line\":10,\"character\":15,\"byte\":121}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'M' to be an enumeration; instead, found a type of 'M'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":11,\"character\":11,\"byte\":135},\"end\":{\"line\":11,\"character\":15,\"byte\":139}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'R' to be an enumeration; instead, found a type of 'R'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":12,\"character\":11,\"byte\":153},\"end\":{\"line\":12,\"character\":18,\"byte\":160}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: an enumeration named 'Nope' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":13,\"character\":11,\"byte\":174},\"end\":{\"line\":13,\"character\":21,\"byte\":184}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'M' to be an enumeration; instead, found a type of 'M'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":14,\"character\":11,\"byte\":198},\"end\":{\"line\":14,\"character\":21,\"byte\":208}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'R' to be an enumeration; instead, found a type of 'R'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":15,\"character\":11,\"byte\":222},\"end\":{\"line\":15,\"character\":24,\"byte\":235}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: an enumeration named 'Nope' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_BadMaybe_2 = null;
@@ -90,6 +91,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":18,\"byte\":32},\"end\":{\"line\":1,\"character\":26,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'int' / 'bool' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":55},\"end\":{\"line\":2,\"character\":20,\"byte\":64}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'maybe<42>' is unable to store type 'maybe<42>'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_BooleanBulk_3 = null;
@@ -639,6 +641,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nTEST[PrimaryTest] = 100.0%");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_BooleanLegacy_4 = null;
@@ -1464,6 +1467,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ChannelFunky_5 = null;
@@ -2104,6 +2108,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ConstantsLegacy_6 = null;
@@ -2663,6 +2668,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DoubleBulk_7 = null;
@@ -3273,6 +3279,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nTEST[PrimaryTest] = 100.0%");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_IntegerBulk_8 = null;
@@ -3853,6 +3860,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n...DUMP:{\"z\":10}");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LabelLegacy_9 = null;
@@ -4442,6 +4450,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LabelNotFound_10 = null;
@@ -4482,6 +4491,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":26},\"end\":{\"line\":2,\"character\":15,\"byte\":31}},\"severity\":1,\"source\":\"error\",\"message\":\"State machine transition not found: a state machine label 'nope' was not found. (StateMachineLabels)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyClient_11 = null;
@@ -5057,6 +5067,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyDouble_12 = null;
@@ -5723,6 +5734,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyEnum_13 = null;
@@ -6360,6 +6372,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nTEST[hasDefaultAtStart] = 100.0%");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyEnvironment_14 = null;
@@ -6902,6 +6915,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyInt_15 = null;
@@ -7514,6 +7528,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyMaybe_16 = null;
@@ -8114,6 +8129,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyStrings_17 = null;
@@ -8874,6 +8890,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Long64Bits_18 = null;
@@ -9442,6 +9459,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LongFun_19 = null;
@@ -10145,6 +10163,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MaybeDeleteFlow_20 = null;
@@ -10674,6 +10693,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MaybeDelete_21 = null;
@@ -11363,6 +11383,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n...DUMP:{\"w00t\":null,\"t2\":true}");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_NumberBulk_22 = null;
@@ -11943,6 +11964,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n...DUMP:{\"z\":10.0}");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ReactiveAssignmentMismatches_23 = null;
@@ -11983,6 +12005,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":14,\"character\":12,\"byte\":169},\"end\":{\"line\":14,\"character\":13,\"byte\":170}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'maybe<int>'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":10,\"character\":0,\"byte\":103},\"end\":{\"line\":10,\"character\":5,\"byte\":108}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'r<label>' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":16,\"character\":10,\"byte\":201},\"end\":{\"line\":16,\"character\":21,\"byte\":212}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'z' was already defined (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_SpecialConstants_24 = null;
@@ -12490,6 +12513,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_StringBulk_25 = null;
@@ -13105,6 +13129,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n...DUMP:{\"z\":10.0}");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

@@ -50,6 +50,7 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":11,\"byte\":11},\"end\":{\"line\":1,\"character\":1,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"The @connected handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Happy_2 = null;
@@ -580,6 +581,7 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Legacy_3 = null;
@@ -1110,6 +1112,7 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

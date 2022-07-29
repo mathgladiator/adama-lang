@@ -24,6 +24,7 @@ public class TemplateSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
+    gold.append("\n");
     return gold.toString();
   }
   @Override

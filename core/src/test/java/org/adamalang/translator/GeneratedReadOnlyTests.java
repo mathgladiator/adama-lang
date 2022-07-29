@@ -50,6 +50,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":96},\"end\":{\"line\":8,\"character\":3,\"byte\":97}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":96},\"end\":{\"line\":8,\"character\":5,\"byte\":99}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'x' is on a readonly message (FieldLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ProcedureArgs_2 = null;
@@ -90,6 +91,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":52},\"end\":{\"line\":5,\"character\":3,\"byte\":53}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' is readonly (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_SimpleBool_3 = null;
@@ -130,6 +132,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":61},\"end\":{\"line\":4,\"character\":3,\"byte\":62}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":91},\"end\":{\"line\":6,\"character\":3,\"byte\":92}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_SimpleClient_4 = null;
@@ -170,6 +173,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":53},\"end\":{\"line\":3,\"character\":3,\"byte\":54}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":89},\"end\":{\"line\":5,\"character\":3,\"byte\":90}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_SimpleDouble_5 = null;
@@ -210,6 +214,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":47},\"end\":{\"line\":3,\"character\":3,\"byte\":48}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":77},\"end\":{\"line\":5,\"character\":3,\"byte\":78}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_SimpleEnum_6 = null;
@@ -250,6 +255,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":68},\"end\":{\"line\":4,\"character\":3,\"byte\":69}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":98},\"end\":{\"line\":6,\"character\":3,\"byte\":99}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_SimpleInteger_7 = null;
@@ -290,6 +296,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":41},\"end\":{\"line\":3,\"character\":3,\"byte\":42}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":65},\"end\":{\"line\":5,\"character\":3,\"byte\":66}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_SimpleLong_8 = null;
@@ -330,6 +337,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":42},\"end\":{\"line\":3,\"character\":3,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":67},\"end\":{\"line\":5,\"character\":3,\"byte\":68}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_SimpleMaybe_9 = null;
@@ -370,6 +378,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":50},\"end\":{\"line\":3,\"character\":3,\"byte\":51}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":85},\"end\":{\"line\":5,\"character\":3,\"byte\":86}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_SimpleString_10 = null;
@@ -410,6 +419,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":46},\"end\":{\"line\":3,\"character\":3,\"byte\":47}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":74},\"end\":{\"line\":5,\"character\":3,\"byte\":75}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":7,\"character\":2,\"byte\":112},\"end\":{\"line\":7,\"character\":3,\"byte\":113}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'k' is readonly (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Simples_11 = null;
@@ -1046,6 +1056,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

@@ -50,6 +50,7 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7,\"byte\":18},\"end\":{\"line\":5,\"character\":3,\"byte\":71}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'send' policy must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Simple_2 = null;
@@ -567,6 +568,7 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_TimeNotStatic_3 = null;
@@ -607,6 +609,7 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":33},\"end\":{\"line\":2,\"character\":20,\"byte\":41}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'Time' lacks 'now' (GlobalLookup)\"},{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":33},\"end\":{\"line\":2,\"character\":20,\"byte\":41}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }

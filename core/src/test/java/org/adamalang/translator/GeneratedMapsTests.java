@@ -660,6 +660,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_InvalidAssignments_2 = null;
@@ -700,6 +701,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":101},\"end\":{\"line\":8,\"character\":18,\"byte\":117}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'double' is not an appropriate. (TyNativeMap)\"},{\"range\":{\"start\":{\"line\":7,\"character\":2,\"byte\":80},\"end\":{\"line\":7,\"character\":19,\"byte\":97}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'map<int,int>' is unable to store type 'map<double,int>'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":7,\"character\":2,\"byte\":80},\"end\":{\"line\":7,\"character\":19,\"byte\":97}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'map<int,int>' is unable to store type 'map<int,double>'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":101},\"end\":{\"line\":8,\"character\":22,\"byte\":121}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'map<double,int>' is unable to store type 'map<int,int>'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":101},\"end\":{\"line\":8,\"character\":22,\"byte\":121}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'map<double,int>' is unable to store type 'map<int,double>'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":9,\"character\":2,\"byte\":125},\"end\":{\"line\":9,\"character\":22,\"byte\":145}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'map<int,double>' is unable to store type 'map<int,int>'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":9,\"character\":2,\"byte\":125},\"end\":{\"line\":9,\"character\":22,\"byte\":145}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'map<int,double>' is unable to store type 'map<double,int>'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":20,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'map<int,int>' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":20,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'map<int,int>' is unable to store type 'string'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_InvalidDomains_3 = null;
@@ -740,6 +742,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":34},\"end\":{\"line\":4,\"character\":21,\"byte\":53}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'principal' is not an appropriate. (TyNativeMap)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":60},\"end\":{\"line\":5,\"character\":13,\"byte\":71}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'M' is not an appropriate. (TyNativeMap)\"},{\"range\":{\"start\":{\"line\":7,\"character\":6,\"byte\":101},\"end\":{\"line\":7,\"character\":7,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'K' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":10,\"character\":12,\"byte\":150},\"end\":{\"line\":10,\"character\":24,\"byte\":162}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'map<int,int>' lacks field 'notFound' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":10,\"character\":12,\"byte\":150},\"end\":{\"line\":10,\"character\":24,\"byte\":162}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ReactiveBad_4 = null;
@@ -780,6 +783,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7,\"byte\":83},\"end\":{\"line\":1,\"character\":26,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'principal' is not an appropriate. (TyNativeMap)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":190},\"end\":{\"line\":5,\"character\":14,\"byte\":202}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'r<map<principal,r<int>>>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":190},\"end\":{\"line\":5,\"character\":14,\"byte\":202}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Reactive_5 = null;
@@ -1789,6 +1793,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ReduceHappy_6 = null;
@@ -2695,6 +2700,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ReduceSad_7 = null;
@@ -2735,6 +2741,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":10,\"character\":0,\"byte\":85},\"end\":{\"line\":11,\"character\":1,\"byte\":128}},\"severity\":1,\"source\":\"error\",\"message\":\"The function 'goo' does not return in all cases (FunctionDefine)\"},{\"range\":{\"start\":{\"line\":21,\"character\":11,\"byte\":281},\"end\":{\"line\":21,\"character\":39,\"byte\":309}},\"severity\":1,\"source\":\"error\",\"message\":\"Function '$<foo>' must be a pure function a value (Reduce)\"},{\"range\":{\"start\":{\"line\":21,\"character\":11,\"byte\":281},\"end\":{\"line\":21,\"character\":39,\"byte\":309}},\"severity\":1,\"source\":\"error\",\"message\":\"Function '$<foo>' must return value (Reduce)\"},{\"range\":{\"start\":{\"line\":22,\"character\":11,\"byte\":351},\"end\":{\"line\":22,\"character\":39,\"byte\":379}},\"severity\":1,\"source\":\"error\",\"message\":\"Function invoked with wrong number of arguments. Expected 2, got 1 (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":23,\"character\":39,\"byte\":438},\"end\":{\"line\":23,\"character\":42,\"byte\":441}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'zoo' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":24,\"character\":11,\"byte\":468},\"end\":{\"line\":24,\"character\":42,\"byte\":499}},\"severity\":1,\"source\":\"error\",\"message\":\"Function '$<foo>' must be a pure function a value (Reduce)\"},{\"range\":{\"start\":{\"line\":24,\"character\":11,\"byte\":468},\"end\":{\"line\":24,\"character\":42,\"byte\":499}},\"severity\":1,\"source\":\"error\",\"message\":\"Function '$<foo>' must return value (Reduce)\"},{\"range\":{\"start\":{\"line\":24,\"character\":11,\"byte\":468},\"end\":{\"line\":24,\"character\":42,\"byte\":499}},\"severity\":1,\"source\":\"error\",\"message\":\"Field 'z' was not found for reduction (Reduce)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
+    gold.append("\n");
     assertStable(live, gold);
   }
 }
