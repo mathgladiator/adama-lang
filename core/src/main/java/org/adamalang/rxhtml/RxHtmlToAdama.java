@@ -9,6 +9,7 @@
  */
 package org.adamalang.rxhtml;
 
+import org.adamalang.rxhtml.template.Escapes;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.exceptions.ParseException;
 import org.adamalang.translator.parser.token.Token;
@@ -24,9 +25,37 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /** Tools to convert RxHTML scheme into Adama */
 public class RxHtmlToAdama {
+
+  public static String codegen(String rxhtml) throws AdamaLangException {
+    String template = RxHtmlTool.convertStringToTemplateForest(rxhtml, Feedback.NoOp);
+    String escapedTemplate = Escapes.escape34(template);
+    // TODO escape
+    String path = "t_" + Long.toString(System.currentTimeMillis(), 16) + ".js";
+
+    StringBuilder adama = new StringBuilder();
+    adama.append("@web get /\"").append(path).append("\" {\n");
+    adama.append("  return {\n");
+    adama.append("    js: \"" + escapedTemplate + "\"\n");
+    adama.append("  };\n");
+    adama.append("}\n");
+
+    // TODO: make a pure shell function; Or a add CONST to adama?
+    StringBuilder shell = new StringBuilder();
+    shell.append("link to:" + path);
+
+    for (Uri uri : assembleUrisFrom(rxhtml)) {
+      adama.append("@web get ").append(uri.rxhtmlPath()).append(" {\n");
+      adama.append("  return {\n");
+      adama.append("    html: \"TODO\"\n");
+      adama.append("  };\n");
+      adama.append("}\n");
+    }
+    return adama.toString();
+  }
 
   /** parse and assemble the uris */
   public static Uri[] assembleUrisFrom(String rxhtml) throws AdamaLangException {

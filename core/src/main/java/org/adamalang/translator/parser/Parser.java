@@ -461,9 +461,6 @@ public class Parser {
         }
       } else {
         Token uriMore = tokens.popIf((t) -> t.isIdentifier() || t.isStringLiteral());
-        if (uriMore != null) {
-          uriMore = uriMore.stripStringLiteral();
-        }
         uri.push(hasMore, null, uriMore, null, null, null);
       }
     }

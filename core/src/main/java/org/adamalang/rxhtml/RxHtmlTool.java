@@ -20,7 +20,7 @@ import java.util.List;
 
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
-  public static String convertStringToTemplateForest(String str, Feedback feedback) throws Exception {
+  public static String convertStringToTemplateForest(String str, Feedback feedback) {
     Environment env = Environment.fresh(feedback);
     Root.start(env);
     Document document = Jsoup.parse(str);

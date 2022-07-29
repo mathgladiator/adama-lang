@@ -15,4 +15,7 @@ public class Escapes {
   public static String escape39(String x) {
     return String.join("\\'", x.split(Pattern.quote("'"), -1));
   }
+  public static String escape34(String x) {
+    return String.join("\\\"", x.split(Pattern.quote("\""), -1));
+  }
 }

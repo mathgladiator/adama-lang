@@ -29,29 +29,35 @@ public class Uri extends Definition {
   public final TreeMap<String, TyType> variables;
   private final ArrayList<Function<UriTable.UriLevel, UriTable.UriLevel>> next;
   private final StringBuilder str;
+  private final StringBuilder rxhtmlPath;
 
   public Uri() {
     this.emission = new ArrayList<>();
     this.variables = new TreeMap<>();
     this.next = new ArrayList<>();
     this.str = new StringBuilder();
+    rxhtmlPath = new StringBuilder();
   }
 
   public void push(Token slash, Token dollarSign, Token id, Token starToken, Token colon, TyType type) {
     ingest(slash);
     emission.add((y) -> y.accept(slash));
     str.append("/");
+    rxhtmlPath.append("/");
     if (id != null) {
       ingest(id);
       if (dollarSign != null) {
         emission.add((y) -> y.accept(dollarSign));
         str.append("$");
+        rxhtmlPath.append("$");
       }
       emission.add((y) -> y.accept(id));
       if (starToken != null) {
         emission.add((y) -> y.accept(starToken));
       }
-      str.append(id.text);
+      String uriFragment = id.stripStringLiteral().text;
+      str.append(uriFragment);
+      rxhtmlPath.append(uriFragment);
       if (colon != null) {
         ingest(type);
         emission.add((y) -> y.accept(colon));
@@ -59,6 +65,16 @@ public class Uri extends Definition {
         variables.put(id.text, type);
         str.append(":");
         str.append(type.getAdamaType());
+        rxhtmlPath.append(":");
+        switch (type.getAdamaType()) {
+          case "int":
+          case "double":
+          case "long":
+            rxhtmlPath.append("number");
+            break;
+          default:
+            rxhtmlPath.append("text");
+        }
       }
       if (starToken == null) {
         if (dollarSign != null) {
@@ -74,7 +90,7 @@ public class Uri extends Definition {
               next.add((level) -> level.next(id.text, level.strings));
           }
         } else {
-          next.add((level) -> level.next(id.text, level.fixed));
+          next.add((level) -> level.next(id.stripStringLiteral().text, level.fixed));
         }
       } else {
         str.append("*");
@@ -121,5 +137,9 @@ public class Uri extends Definition {
   @Override
   public String toString() {
     return str.toString();
+  }
+
+  public String rxhtmlPath() {
+    return this.rxhtmlPath.toString();
   }
 }
