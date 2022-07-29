@@ -235,6 +235,8 @@ public class ErrorTable {
     descriptions.put(199768, "no description of error (yet)");
     names.put(145980, "DEPLOYMENT_PLAN_MUST_HAVE_DEFAULT");
     descriptions.put(145980, "no description of error (yet)");
+    names.put(199886, "DEPLOYMENT_PLAN_KEYS_MUST_BE_ARRAY");
+    descriptions.put(199886, "no description of error (yet)");
     names.put(117823, "DEPLOYMENT_CANT_PARSE_LANGUAGE");
     descriptions.put(117823, "The given Adama file was unable to be parsed; see the associated errorJson()");
     userspace.add(117823);

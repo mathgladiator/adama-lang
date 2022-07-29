@@ -63,7 +63,7 @@ public class TestBed implements AutoCloseable {
   public final ClientConfig clientConfig;
 
   public TestBed(int port, String code) throws Exception {
-    DeploymentFactory.compile("<direct>", "X", code, new HashMap<>(), Deliverer.FAILURE);
+    DeploymentFactory.compile("<direct>", "X", code, new HashMap<>(), null, Deliverer.FAILURE);
     this.base = new NetBase(MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
     this.port = port;
     clientExecutor = SimpleExecutor.create("client-executor");
