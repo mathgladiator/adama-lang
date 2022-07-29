@@ -122,15 +122,30 @@ public class Attributes {
     env.pool.give(parentVar);
   }
 
+  public void _wrap() {
+    String childStateVar = env.pool.ask();
+    String parentVar = env.pool.ask();
+    String caseVar = env.pool.ask();
+    env.writer.tab().append("$.WP(").append(eVar).append(",").append(env.stateVar).append(",'").append(env.element.attr("rx:wrap"));
+    env.writer.append("',function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(parentVar));
+    env.writer.tabDown().tab().append("});").newline();
+    env.pool.give(caseVar);
+    env.pool.give(childStateVar);
+    env.pool.give(parentVar);
+  }
+
   public void _template() {
     String name = env.element.attr("rx:template");
     String parentVar = env.pool.ask();
     String childStateVar = env.pool.ask();
-    env.writer.tab().append("$.UT(").append(eVar).append(",").append(env.stateVar).append(",'").append(name).append("', function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(childStateVar).parentVariable(parentVar));
+    String caseVar = env.pool.ask();
+    env.writer.tab().append("$.UT(").append(eVar).append(",").append(env.stateVar).append(",'").append(name).append("', function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(parentVar));
     env.writer.tabDown().tab().append("});").newline();
     env.pool.give(childStateVar);
     env.pool.give(parentVar);
+    env.pool.give(caseVar);
   }
 
   public void _base() {

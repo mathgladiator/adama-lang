@@ -9,7 +9,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateTemplatesTests extends BaseRxHtmlTest {
+public class TemplateTemplatesMultiSlotTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
@@ -23,12 +23,19 @@ public class TemplateTemplatesTests extends BaseRxHtmlTest {
     gold.append("\n  $.TP('temp', function(a,b,c) {");
     gold.append("\n    a.append($.T(' This is a template with a fragment: '));");
     gold.append("\n    c(a,b,'');");
+    gold.append("\n    a.append($.T(' And this is a slot '));");
+    gold.append("\n    c(a,b,'foo');");
     gold.append("\n  });");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    b.append($.T(' This is a page which is going to use the template. '));");
     gold.append("\n    var c = $.E('div');");
     gold.append("\n    $.UT(c,a,'temp', function(d,e,f) {");
-    gold.append("\n      d.append($.T(' This is data within the template. '));");
+    gold.append("\n      d.append($.T(' This is data within the template, and this is shown always. '));");
+    gold.append("\n      if (f == 'foo') {");
+    gold.append("\n        var g = $.E('div');");
+    gold.append("\n        g.append($.T(' This only shows up when the case is foo. '));");
+    gold.append("\n        d.append(g);");
+    gold.append("\n      }");
     gold.append("\n    });");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
@@ -41,11 +48,15 @@ public class TemplateTemplatesTests extends BaseRxHtmlTest {
     source.append("<forest>");
     source.append("\n    <template name=\"temp\">");
     source.append("\n        This is a template with a fragment: <fragment />");
+    source.append("\n        And this is a slot <fragment case=\"foo\" />");
     source.append("\n    </template>");
     source.append("\n    <page uri=\"/\">");
     source.append("\n        This is a page which is going to use the template.");
     source.append("\n        <div rx:template=\"temp\">");
-    source.append("\n            This is data within the template.");
+    source.append("\n            This is data within the template, and this is shown always.");
+    source.append("\n            <div rx:case=\"foo\">");
+    source.append("\n                This only shows up when the case is foo.");
+    source.append("\n            </div>");
     source.append("\n        </div>");
     source.append("\n    </page>");
     source.append("\n</forest>");

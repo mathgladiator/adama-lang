@@ -9,7 +9,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateTemplatesTests extends BaseRxHtmlTest {
+public class TemplateSimpleWithAuthTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
@@ -20,17 +20,17 @@ public class TemplateTemplatesTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("(function($){");
-    gold.append("\n  $.TP('temp', function(a,b,c) {");
-    gold.append("\n    a.append($.T(' This is a template with a fragment: '));");
-    gold.append("\n    c(a,b,'');");
-    gold.append("\n  });");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    b.append($.T(' This is a page which is going to use the template. '));");
-    gold.append("\n    var c = $.E('div');");
-    gold.append("\n    $.UT(c,a,'temp', function(d,e,f) {");
-    gold.append("\n      d.append($.T(' This is data within the template. '));");
-    gold.append("\n    });");
-    gold.append("\n    b.append(c);");
+    gold.append("\n    if ($.ID('default','').abort) {");
+    gold.append("\n      return;");
+    gold.append("\n    }");
+    gold.append("\n    b.append($.T(' Simple Page '));");
+    gold.append("\n  });");
+    gold.append("\n  $.PG(['fixed','page'], function(b,a) {");
+    gold.append("\n    if ($.ID('special','').abort) {");
+    gold.append("\n      return;");
+    gold.append("\n    }");
+    gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     return gold.toString();
@@ -39,14 +39,11 @@ public class TemplateTemplatesTests extends BaseRxHtmlTest {
   public String source() {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
-    source.append("\n    <template name=\"temp\">");
-    source.append("\n        This is a template with a fragment: <fragment />");
-    source.append("\n    </template>");
-    source.append("\n    <page uri=\"/\">");
-    source.append("\n        This is a page which is going to use the template.");
-    source.append("\n        <div rx:template=\"temp\">");
-    source.append("\n            This is data within the template.");
-    source.append("\n        </div>");
+    source.append("\n    <page uri=\"/\" authenticate>");
+    source.append("\n        Simple Page");
+    source.append("\n    </page>");
+    source.append("\n    <page uri=\"/page\" authenticate=\"special\">");
+    source.append("\n        Simple Page");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

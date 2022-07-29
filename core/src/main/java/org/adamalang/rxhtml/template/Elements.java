@@ -19,7 +19,11 @@ public class Elements {
   public static void page(Environment env) { /* no-op */ }
 
   public static void fragment(Environment env) {
-    env.writer.tab().append(env.fragmentFunc).append("(").append(env.parentVariable).append(",").append(env.stateVar).append(");").newline();
+    String caseToUse = "";
+    if (env.element.hasAttr("case")) {
+      caseToUse = env.element.attr("case");
+    }
+    env.writer.tab().append(env.fragmentFunc).append("(").append(env.parentVariable).append(",").append(env.stateVar).append(",'").append(caseToUse).append("');").newline();
   }
 
   public static void lookup(Environment env) {

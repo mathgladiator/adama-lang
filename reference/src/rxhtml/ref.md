@@ -22,6 +22,8 @@ A template is fundamentally a way to wrap a shared bit of RxHTML within a name. 
 </forest>
 ```
 
+However, there are parameters via the &lt;fragment&gt; element and the *rx:case* attribute. See below for more details.
+
 ### &lt;page uri="$uri"&gt;
 
 A page is a full-page document that is routable via a uri.
@@ -33,6 +35,8 @@ A page is a full-page document that is routable via a uri.
     </page>
 </forest>
 ```
+
+Beyond the uri, a page may also require authentication.
 
 ## Data binding with &lt;connection space="$space" key="$key" &gt;
 
@@ -141,6 +145,6 @@ Within a tag that has *rx:if* or *rx:ifnot*, the *rx:else* indicates that this e
 * fragment within templates
 * customdata
 * pick
-* slots
+* cases
 * transforms
 * wrapping

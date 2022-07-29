@@ -30,6 +30,16 @@ public class Root {
     String stateVar = env.pool.ask();
     String rootVar = env.pool.ask();
     env.writer.tab().append("$.PG(").append(uri_to_instructions(env.element.attr("uri"))).append(", function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();
+    if (env.element.hasAttr("authenticate")) {
+      String identity = env.element.attr("authenticate");
+      if (identity == null || identity.trim().equals("")) {
+        identity = "default";
+      }
+      // TODO: redirect
+      env.writer.tab().append("if ($.ID('").append(identity).append("','').abort) {").tabUp().newline();
+      env.writer.tab().append("return;").tabDown().newline();
+      env.writer.tab().append("}").newline();
+    }
     Base.children(env.parentVariable(rootVar).stateVar(stateVar));
     env.writer.tabDown().tab().append("});").newline();
     env.pool.give(rootVar);

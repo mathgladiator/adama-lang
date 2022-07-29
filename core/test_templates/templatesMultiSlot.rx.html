@@ -1,0 +1,15 @@
+<forest>
+    <template name="temp">
+        This is a template with a fragment: <fragment />
+        And this is a slot <fragment case="foo" />
+    </template>
+    <page uri="/">
+        This is a page which is going to use the template.
+        <div rx:template="temp">
+            This is data within the template, and this is shown always.
+            <div rx:case="foo">
+                This only shows up when the case is foo.
+            </div>
+        </div>
+    </page>
+</forest>
