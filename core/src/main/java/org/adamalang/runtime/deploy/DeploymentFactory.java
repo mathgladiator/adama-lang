@@ -69,9 +69,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
     this.plan = plan;
   }
 
-
-  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer) throws ErrorCodeException {
-    try {
+  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer) throws ErrorCodeException {    try {
       final var options = CompilerOptions.start().make();
       final var globals = GlobalObjectPool.createPoolWithStdLib();
       final var state = new EnvironmentState(globals, options);

@@ -31,7 +31,6 @@
         <module>canary</module>
         <module>net</module>
         <module>data-caravan</module>
-        <module>rxhtml</module>
         <module>services</module>
     </modules>
     <properties>
