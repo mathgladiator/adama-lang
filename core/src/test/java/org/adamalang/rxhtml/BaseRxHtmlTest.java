@@ -30,4 +30,9 @@ public abstract class BaseRxHtmlTest {
     Assert.assertEquals(gold(), live.trim());
     Assert.assertEquals(issues(), issuesLive.toString());
   }
+
+  @Test
+  public void codegen() throws Exception {
+    RxHtmlToAdama.codegen(source());
+  }
 }
