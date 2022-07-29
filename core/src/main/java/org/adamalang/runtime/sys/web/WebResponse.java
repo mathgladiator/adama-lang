@@ -28,6 +28,18 @@ public class WebResponse {
     return this;
   }
 
+  public WebResponse js(String body) {
+    this.contentType = "text/javascript";
+    this.body = body;
+    return this;
+  }
+
+  public WebResponse css(String body) {
+    this.contentType = "text/css";
+    this.body = body;
+    return this;
+  }
+
   public WebResponse cors(boolean cors) {
     this.cors = cors;
     return this;

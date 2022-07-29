@@ -44,6 +44,8 @@ public class ServiceWebTests {
       "@web get /path2/$x:long {\n" + "  return {html:\"path long without child:\" + x};\n" + "}\n" + "\n" + //
       "@web get /path2/$x:long/child {\n" + "  return {html:\"path long with child: \" + x + \"!\"};\n" + "}\n" + "\n" + //
       "@web get /path3/$a* {\n" + "  return {html:\"tail:\" + a};\n" + "}\n" + "\n" +
+      "@web get /\"something.js\" {\n" + "  return {js:\"function... blah...blah...blah\"};\n" + "}\n" + "\n" +
+      "@web get /\"something.css\" {\n" + "  return {css:\".class{}\"};\n" + "}\n" + "\n" +
       "@web get /asset/$a* {\n" + "  return {asset:@nothing,asset_transform:\"foo\"};\n" + "}\n" + "\n" +
       "@web get /path3/$a:string/child {\n" + "  return {html:\"abort tail and go with direct child:\" + a};\n" + "}";
 
@@ -59,7 +61,7 @@ public class ServiceWebTests {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
-      CountDownLatch latch = new CountDownLatch(5);
+      CountDownLatch latch = new CountDownLatch(7);
       service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
@@ -83,6 +85,30 @@ public class ServiceWebTests {
         @Override
         public void failure(ErrorCodeException ex) {
 
+        }
+      });
+      service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/something.js", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.assertEquals("function... blah...blah...blah", value.body);
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+        }
+      });
+      service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/something.css", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.assertEquals(".class{}", value.body);
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
         }
       });
       service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/nope", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {

@@ -76,6 +76,12 @@ public class Return extends Statement {
         if (consider("xml", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
           body++;
         }
+        if (consider("js", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+          body++;
+        }
+        if (consider("css", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+          body++;
+        }
         if (consider("json", webReturnType, (ty) -> environment.rules.IsNativeMessage(ty, false))) {
           body++;
         }

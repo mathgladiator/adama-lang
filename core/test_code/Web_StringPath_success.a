@@ -1,0 +1,3 @@
+@web get / "path.js" {
+  return {json:{error:true}};
+}

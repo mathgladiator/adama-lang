@@ -167,6 +167,13 @@ public class Token implements Comparable<Token> {
     return majorType == MajorTokenType.StringLiteral;
   }
 
+  public Token stripStringLiteral() {
+    if (isStringLiteral()) {
+      return new Token(sourceName, text.substring(1, text.length() - 1),  majorType, minorType, lineStart, charStart, lineEnd, charEnd, byteStart, byteEnd);
+    }
+    return this;
+  }
+
   /** helper: is the token a symbol */
   public boolean isSymbol() {
     return majorType == MajorTokenType.Symbol;
