@@ -1,0 +1,11 @@
+<forest>
+    <template name="temp">
+        This is a template with a fragment: <fragment />
+    </template>
+    <page uri="/">
+        This is a page which is going to use the template.
+        <div rx:template="temp">
+            This is data within the template.
+        </div>
+    </page>
+</forest>

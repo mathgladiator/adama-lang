@@ -46,7 +46,7 @@ public class GenerateTemplateTests {
         if (!file.getName().endsWith(".rx.html")) {
           continue;
         }
-        System.out.println("\u001b[36mTemplate: " + file.getName() + "\u001b[0m");
+        System.out.println("\u001b[36mTemplate:\u001b[0m" + file.getName());
         StringBuilder issues = new StringBuilder();
         Feedback feedback = (element, warning) -> {
           System.out.println("  " + warning);

@@ -102,6 +102,7 @@ public class Method {
       if (documentation == null) {
         throw new Exception("method has no documentation");
       }
+      System.out.println("\u001b[36mAPI:\u001b[0m" + name);
       methodsArrayList.add(new Method(name, parametersArrayList.toArray(new ParameterDefinition[parametersArrayList.size()]), documentation, responder, handlerValue, createValue, findByValue, errorCantFindBy, destroy, callOnDisconnect));
     }
     return methodsArrayList.toArray(new Method[methodsArrayList.size()]);

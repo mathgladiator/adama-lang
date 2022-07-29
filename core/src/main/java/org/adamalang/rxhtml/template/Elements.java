@@ -22,10 +22,6 @@ public class Elements {
     env.writer.tab().append(env.fragmentFunc).append("(").append(env.parentVariable).append(",").append(env.stateVar).append(");").newline();
   }
 
-  public static void button(Environment env) {
-    String inputVar = Base.write(env, true);
-  }
-
   public static void lookup(Environment env) {
     StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
     String transform = env.element.attr("transform");
@@ -120,19 +116,11 @@ public class Elements {
     env.pool.give(inputVar);
   }
 
+  public static void textarea(Environment env) {
+    input(env);
+  }
+
   public static void select(Environment env) {
-    String inputVar = Base.write(env, true);
-    if (env.element.hasAttr("rx:sync")) {
-      String path = env.element.attr("rx:sync");
-      boolean tuned = path.startsWith("view:") | path.startsWith("data:");
-      double ms = 100;
-      try {
-        ms = Double.parseDouble(env.element.attr("rx:debounce"));
-      } catch (NumberFormatException nfe) {
-      }
-      StatePath _path = StatePath.resolve(tuned ? path : ("view:" + path), env.stateVar);
-      env.writer.tab().append("$.SY(").append(inputVar).append(",").append(_path.command).append(",'").append(_path.name).append("',").append("" + ms).append(");").newline();
-    }
-    env.pool.give(inputVar);
+    input(env);
   }
 }
