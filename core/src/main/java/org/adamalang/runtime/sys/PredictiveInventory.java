@@ -15,16 +15,17 @@ package org.adamalang.runtime.sys;
  */
 public class PredictiveInventory {
   private final Snapshot[] snapshots;
-  private long memory;
-  private long ticks;
+  private long memory // estimate-standing;
   private long memory_growth;
+  private long ticks; // estimate-standing
   private long ticks_growth;
-  private long messages;
-  private long count;
-  private long connections;
-  private long bandwidth;
-  private long first_party_service_calls;
-  private long third_party_service_calls;
+  private long messages; // reset
+  private long count; // estimate-standing
+  private long connections; // estimate-standing
+  private long connections_growth;
+  private long bandwidth; // reset
+  private long first_party_service_calls; // reset
+  private long third_party_service_calls; // reset
 
   public PredictiveInventory() {
     this.memory = 0;
@@ -43,6 +44,9 @@ public class PredictiveInventory {
   public MeteringSample sample() {
     MeteringSample meteringSample = new MeteringSample(memory, ticks, count, messages, connections, bandwidth, first_party_service_calls, third_party_service_calls);
     messages = 0;
+    bandwidth = 0;
+    first_party_service_calls = 0;
+    third_party_service_calls = 0;
     return meteringSample;
   }
 
@@ -63,23 +67,27 @@ public class PredictiveInventory {
     // compute the average document size and use that as the estimate growth
     this.memory_growth = 0;
     this.ticks_growth = 0;
+    this.connections_growth = 0;
     long n = 0;
     for (int k = 0; k < snapshots.length; k++) {
       if (snapshots[k] != null) {
         this.memory_growth += snapshots[k].memory;
         this.ticks_growth += snapshots[k].ticks;
+        this.connections_growth += snapshots[k].connections;
         n += snapshots[k].count;
       }
     }
     if (n > 0) {
       this.memory_growth /= n;
       this.ticks_growth /= n;
+      this.connections_growth /= n;
     }
   }
 
   public void grow() {
     this.memory += memory_growth;
     this.ticks += ticks_growth;
+    this.connections += connections_growth;
     this.count++;
   }
 
