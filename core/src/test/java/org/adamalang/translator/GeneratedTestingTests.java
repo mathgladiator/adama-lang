@@ -50,7 +50,6 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":18},\"end\":{\"line\":2,\"character\":8,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Forcing a step designed exclusively for testing (Testing)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantPumpOutsideOfTest_2 = null;
@@ -91,7 +90,6 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":68},\"end\":{\"line\":8,\"character\":29,\"byte\":95}},\"severity\":1,\"source\":\"error\",\"message\":\"Pumping a message is designed exclusively for testing (Testing)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Legacy_3 = null;
@@ -936,7 +934,6 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nTEST[Test3] HAS NO ASSERTS");
     gold.append("\n");
     gold.append("\nAlmostTestsNotPassing");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MessagingLegacy_4 = null;
@@ -1592,7 +1589,6 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nTEST[pumping] = 100.0%");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PumpMessages_5 = null;
@@ -2272,7 +2268,6 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nTEST[drive_it] = 100.0%");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PumpNoChannel_6 = null;
@@ -2313,7 +2308,6 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":57},\"end\":{\"line\":6,\"character\":30,\"byte\":85}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'chanx' does not exist (Testing)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PumpNoMessage_7 = null;
@@ -2354,7 +2348,6 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":16,\"byte\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":39},\"end\":{\"line\":3,\"character\":29,\"byte\":66}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":4,\"character\":8,\"byte\":76},\"end\":{\"line\":4,\"character\":11,\"byte\":79}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'message', but got a type of 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":70},\"end\":{\"line\":4,\"character\":19,\"byte\":87}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'x' does not exist (Testing)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

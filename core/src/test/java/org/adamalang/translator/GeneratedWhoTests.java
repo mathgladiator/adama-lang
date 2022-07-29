@@ -50,7 +50,6 @@ public class GeneratedWhoTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":16},\"end\":{\"line\":1,\"character\":14,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers (WHO)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

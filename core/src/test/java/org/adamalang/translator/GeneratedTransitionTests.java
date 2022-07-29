@@ -539,7 +539,6 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_HappyTimeTravel_2 = null;
@@ -1069,7 +1068,6 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_InvokeLegacy_3 = null;
@@ -1620,7 +1618,6 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_RequiresNumber_4 = null;
@@ -1661,7 +1658,6 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":22,\"byte\":82},\"end\":{\"line\":6,\"character\":26,\"byte\":86}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'bool' (TypeCheckFailures)\"},{\"range\":{\"start\":{\"line\":2,\"character\":23,\"byte\":39},\"end\":{\"line\":2,\"character\":26,\"byte\":42}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'string' (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

@@ -50,7 +50,6 @@ public class GeneratedBlockTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":27},\"end\":{\"line\":2,\"character\":14,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"This code is unreachable. (Block)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DuplicateVariable_2 = null;
@@ -91,7 +90,6 @@ public class GeneratedBlockTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":26},\"end\":{\"line\":2,\"character\":5,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' was already defined (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

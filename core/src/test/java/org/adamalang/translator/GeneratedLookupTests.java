@@ -50,7 +50,6 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":12,\"byte\":54},\"end\":{\"line\":5,\"character\":15,\"byte\":57}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'int', but the type is actually 'string' (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ByIndexNotIterable_2 = null;
@@ -91,7 +90,6 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":12,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must be either an array or list to use index lookup[]; instead got 'int'. (RuleSetIterable)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Happy_3 = null;
@@ -857,7 +855,6 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_NotFound_4 = null;
@@ -898,7 +895,6 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":24},\"end\":{\"line\":1,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' was not defined (VariableLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

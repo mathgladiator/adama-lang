@@ -732,7 +732,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nTEST[drive_it] = 100.0%");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DuplicateHandlers_2 = null;
@@ -1274,7 +1273,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n}");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_EsotericMessages_3 = null;
@@ -2162,7 +2160,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_HandlerLegacy_4 = null;
@@ -2810,7 +2807,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MessageHasEnum_5 = null;
@@ -3510,7 +3506,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MessageHasMethod_6 = null;
@@ -4118,7 +4113,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MessageMethodsScopedStatic_7 = null;
@@ -4159,7 +4153,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":21,\"byte\":103},\"end\":{\"line\":7,\"character\":22,\"byte\":104}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":56},\"end\":{\"line\":8,\"character\":3,\"byte\":110}},\"severity\":1,\"source\":\"error\",\"message\":\"Function 'succ_z' does not return in all cases (MethodDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MessageTypeWasRecord_8 = null;
@@ -4200,7 +4193,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":0,\"byte\":17},\"end\":{\"line\":3,\"character\":15,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":5,\"character\":0,\"byte\":36},\"end\":{\"line\":6,\"character\":1,\"byte\":57}},\"severity\":1,\"source\":\"error\",\"message\":\"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_UndefinedMessage_9 = null;
@@ -4241,7 +4233,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":15,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":19},\"end\":{\"line\":3,\"character\":1,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

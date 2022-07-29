@@ -50,7 +50,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":12,\"byte\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: enum types are incompatible 'X' vs 'T'. (Assignment)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":12,\"byte\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'X' is unable to store type 'T'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantDefineDuplicates_2 = null;
@@ -91,7 +90,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":32,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"The enumeration 'E' has duplicates for 'X' defined. (DocumentDefine)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":32,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"The enumeration 'E' has duplicates for 'Z' defined. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantFindEnumName_3 = null;
@@ -132,7 +130,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":1,\"character\":1,\"byte\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"enum 'X' has no values (EnumStorage)\"},{\"range\":{\"start\":{\"line\":4,\"character\":10,\"byte\":39},\"end\":{\"line\":4,\"character\":14,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: an enumeration named 'Y' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":5,\"character\":10,\"byte\":56},\"end\":{\"line\":5,\"character\":14,\"byte\":60}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: an enumeration named 'Y' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantFindEnumValue_4 = null;
@@ -173,7 +170,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":10,\"byte\":46},\"end\":{\"line\":5,\"character\":14,\"byte\":50}},\"severity\":1,\"source\":\"error\",\"message\":\"Type lookup failure: unable to find value 'x' within the enumeration 'X' (Enumerations)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Cycle_5 = null;
@@ -833,7 +829,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DispatchDisagreeReturnType1_6 = null;
@@ -874,7 +869,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":23},\"end\":{\"line\":6,\"character\":1,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"Dispatcher 'x' do not agree on return type. (EnumStorage)\"},{\"range\":{\"start\":{\"line\":8,\"character\":0,\"byte\":69},\"end\":{\"line\":10,\"character\":1,\"byte\":116}},\"severity\":1,\"source\":\"error\",\"message\":\"Dispatcher 'x' do not agree on return type. (EnumStorage)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DispatchDisagreeReturnType2_7 = null;
@@ -915,7 +909,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":23},\"end\":{\"line\":6,\"character\":1,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"Dispatcher 'x' do not agree on return type. (EnumStorage)\"},{\"range\":{\"start\":{\"line\":8,\"character\":0,\"byte\":69},\"end\":{\"line\":9,\"character\":1,\"byte\":91}},\"severity\":1,\"source\":\"error\",\"message\":\"Dispatcher 'x' do not agree on return type. (EnumStorage)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DispatchInvoke_8 = null;
@@ -1514,7 +1507,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DispatchManyMissing_9 = null;
@@ -1555,7 +1547,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":31}},\"severity\":1,\"source\":\"error\",\"message\":\"Enum 'E' has a dispatcher 'x' which is incomplete and lacks: X, Z. (EnumStorage)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DispatchOverloading_10 = null;
@@ -2183,7 +2174,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DispatcherForNoEnum_11 = null;
@@ -2224,7 +2214,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":56}},\"severity\":1,\"source\":\"error\",\"message\":\"Dispatcher 'foo' was unable to find the given enumeration type of 'E' (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DispatcherForWrongType_12 = null;
@@ -2265,7 +2254,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":15},\"end\":{\"line\":4,\"character\":1,\"byte\":71}},\"severity\":1,\"source\":\"error\",\"message\":\"Dispatcher 'foo' found 'E', but it was 'E' (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DispatcherFoundNoValues_13 = null;
@@ -2306,7 +2294,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":23},\"end\":{\"line\":6,\"character\":1,\"byte\":60}},\"severity\":1,\"source\":\"error\",\"message\":\"Dispatcher 'foo' has a value prefix 'C' which does not relate to any value within enum 'X' (EnumStorage)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":48},\"end\":{\"line\":5,\"character\":11,\"byte\":57}},\"severity\":1,\"source\":\"error\",\"message\":\"The return statement expects no expression (ReturnFlow)\"},{\"range\":{\"start\":{\"line\":9,\"character\":2,\"byte\":89},\"end\":{\"line\":9,\"character\":11,\"byte\":98}},\"severity\":1,\"source\":\"error\",\"message\":\"The return statement expects no expression (ReturnFlow)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DispatcherLacksCoverage_14 = null;
@@ -2347,7 +2334,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"Enum 'X' has a dispatcher 'foo' which is incomplete and lacks: B. (EnumStorage)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":48},\"end\":{\"line\":5,\"character\":11,\"byte\":57}},\"severity\":1,\"source\":\"error\",\"message\":\"The return statement expects no expression (ReturnFlow)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DispatcherMustHaveNoOverlapWhenReturnValue_15 = null;
@@ -2388,7 +2374,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":41},\"end\":{\"line\":6,\"character\":1,\"byte\":97}},\"severity\":1,\"source\":\"error\",\"message\":\"Dispatcher 'foo' returns and matches too many for 'X' (EnumStorage)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DispatcherWithShouldReturn_16 = null;
@@ -2429,7 +2414,6 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":0,\"byte\":20},\"end\":{\"line\":4,\"character\":1,\"byte\":63}},\"severity\":1,\"source\":\"error\",\"message\":\"Dispatch 'foo' does not return in all cases (DefineDispatcher)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

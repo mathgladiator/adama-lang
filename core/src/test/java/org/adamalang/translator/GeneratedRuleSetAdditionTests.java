@@ -595,7 +595,6 @@ public class GeneratedRuleSetAdditionTests extends GeneratedBase {
     gold.append("\nTEST[PrimaryTest] HAS NO ASSERTS");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

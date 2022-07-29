@@ -50,7 +50,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":9,\"character\":0,\"byte\":129},\"end\":{\"line\":9,\"character\":15,\"byte\":144}},\"severity\":1,\"source\":\"error\",\"message\":\"Lazy type has inappropriate type `channel<M>` (Lazy)\"},{\"range\":{\"start\":{\"line\":9,\"character\":0,\"byte\":129},\"end\":{\"line\":11,\"character\":26,\"byte\":198}},\"severity\":1,\"source\":\"error\",\"message\":\"Lazy type has inappropriate type `maybe<channel<M>>` (Lazy)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FlowBasics_2 = null;
@@ -703,7 +702,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FlowChildRecordWithPrivacyChange_3 = null;
@@ -1543,7 +1541,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FlowMaybeComplex_4 = null;
@@ -2482,7 +2479,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FlowMessageArray_5 = null;
@@ -3099,7 +3095,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FlowMessageList_6 = null;
@@ -3734,7 +3729,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FlowRecordArray_7 = null;
@@ -4605,7 +4599,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FlowRecordList_8 = null;
@@ -5476,7 +5469,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FlowSimpleArray_9 = null;
@@ -6183,7 +6175,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FlowSimpleMaybe_10 = null;
@@ -6866,7 +6857,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FlowSimpleMessage_11 = null;
@@ -7629,7 +7619,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

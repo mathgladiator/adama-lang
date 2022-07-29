@@ -804,7 +804,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_AssignmentIssues_2 = null;
@@ -845,7 +844,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":27},\"end\":{\"line\":4,\"character\":7,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'r<maybe<R>>' is unable to store type 'R'. (TypeCheckReferencesX)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'R' is not applicable for assignment (=) (Assignment)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Reactive pointers must be initialized (DefinePtr)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ClientRefNotFound_3 = null;
@@ -886,7 +884,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":14,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Field 'c' was not defined within the record (ViewerPolicy)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ComputedFields_4 = null;
@@ -1423,7 +1420,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DeleteOnList_5 = null;
@@ -2285,7 +2281,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DuplicateFields_6 = null;
@@ -2326,7 +2321,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":31},\"end\":{\"line\":2,\"character\":16,\"byte\":45}},\"severity\":1,\"source\":\"error\",\"message\":\"Field 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":102},\"end\":{\"line\":9,\"character\":3,\"byte\":140}},\"severity\":1,\"source\":\"error\",\"message\":\"Function 'foo' does not return in all cases (MethodDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DuplicatePolicy_7 = null;
@@ -2367,7 +2361,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":51},\"end\":{\"line\":6,\"character\":3,\"byte\":84}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'x' was already defined (RecordMethodDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DuplicateViewerComputeFields_8 = null;
@@ -2408,7 +2401,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":31},\"end\":{\"line\":2,\"character\":15,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":48},\"end\":{\"line\":3,\"character\":15,\"byte\":61}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":82},\"end\":{\"line\":5,\"character\":15,\"byte\":95}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'y' was already defined (StructureDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FailedFindPolicyForView_9 = null;
@@ -2449,7 +2441,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":12,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'p' was not found (CustomPolicy)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_IdMustBeInt_10 = null;
@@ -2490,7 +2481,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"id must be type int (Record)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_InvalidFormula_11 = null;
@@ -2531,7 +2521,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":21,\"byte\":33},\"end\":{\"line\":1,\"character\":22,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":27,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LazyFields_12 = null;
@@ -3458,7 +3447,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n...DUMP:{\"x\":{\"x\":1,\"y\":2,\"w\":{\"u\":4}}}");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MaybeFields_13 = null;
@@ -4195,7 +4183,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n...DUMP:{\"x\":{\"mi\":null}}");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MessageFieldsLegacy_14 = null;
@@ -5273,7 +5260,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MethodCallingMethodReadOnly_15 = null;
@@ -5314,7 +5300,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":10,\"byte\":104},\"end\":{\"line\":5,\"character\":13,\"byte\":107}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":5,\"character\":18,\"byte\":112},\"end\":{\"line\":5,\"character\":21,\"byte\":115}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MethodCallingMethod_16 = null;
@@ -5985,7 +5970,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MethodOverloading_17 = null;
@@ -6687,7 +6671,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MethodReactive_18 = null;
@@ -7387,7 +7370,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MethodSimple_19 = null;
@@ -8087,7 +8069,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PolicyNotFound_20 = null;
@@ -8128,7 +8109,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":15,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'p' was not found (UseCustomPolicy)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PrivacyGlobalPolicy_21 = null;
@@ -8861,7 +8841,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PrivacyLegacy_22 = null;
@@ -10479,7 +10458,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_RecordFieldsLegacy_23 = null;
@@ -11599,7 +11577,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

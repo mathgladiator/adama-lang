@@ -783,7 +783,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantExportIntegerAlreadyDefined_2 = null;
@@ -824,7 +823,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":9,\"character\":2,\"byte\":88},\"end\":{\"line\":9,\"character\":18,\"byte\":104}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'z' was already defined (EnvironmentDefine)\"},{\"range\":{\"start\":{\"line\":10,\"character\":2,\"byte\":108},\"end\":{\"line\":10,\"character\":27,\"byte\":133}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'z2' was already defined (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantIngestIntegers_3 = null;
@@ -865,7 +863,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":2,\"byte\":65},\"end\":{\"line\":7,\"character\":3,\"byte\":66}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":7,\"character\":2,\"byte\":65},\"end\":{\"line\":7,\"character\":3,\"byte\":66}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to ingest into this type 'int'. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":8,\"character\":7,\"byte\":85},\"end\":{\"line\":8,\"character\":8,\"byte\":86}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: 'int' unable to produce data to ingest into 'table<X>'. (RuleSetIngestion)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantIngestStrings_4 = null;
@@ -906,7 +903,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":2,\"byte\":65},\"end\":{\"line\":7,\"character\":5,\"byte\":68}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":7,\"character\":2,\"byte\":65},\"end\":{\"line\":7,\"character\":5,\"byte\":68}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to ingest into this type 'string'. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":8,\"character\":7,\"byte\":87},\"end\":{\"line\":8,\"character\":10,\"byte\":90}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: 'string' unable to produce data to ingest into 'table<X>'. (RuleSetIngestion)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Copy_5 = null;
@@ -1685,7 +1681,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DataLoss_6 = null;
@@ -1726,7 +1721,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":7,\"byte\":63},\"end\":{\"line\":7,\"character\":14,\"byte\":70}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The field 'y' was lost during ingestion (RuleSetIngestion)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FailurePassthrough_7 = null;
@@ -1767,7 +1761,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":3,\"byte\":66},\"end\":{\"line\":7,\"character\":11,\"byte\":74}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":7,\"character\":3,\"byte\":66},\"end\":{\"line\":7,\"character\":7,\"byte\":70}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":7,\"character\":10,\"byte\":73},\"end\":{\"line\":7,\"character\":11,\"byte\":74}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":7,\"character\":3,\"byte\":66},\"end\":{\"line\":7,\"character\":11,\"byte\":74}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'bool' + 'int' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":8,\"character\":8,\"byte\":95},\"end\":{\"line\":8,\"character\":16,\"byte\":103}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'bool' + 'int' (OperatorTable)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_IncompatibleField_8 = null;
@@ -1808,7 +1801,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":24},\"end\":{\"line\":2,\"character\":5,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'r<int>' is unable to store type 'string'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":5,\"byte\":17}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'r<int>' is unable to store type 'string'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_IntoMaybeRecord_9 = null;
@@ -2635,7 +2627,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_RecursiveBreakage_10 = null;
@@ -2676,7 +2667,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":13,\"character\":20,\"byte\":121},\"end\":{\"line\":13,\"character\":23,\"byte\":124}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: 'int' unable to produce data to ingest into 'table<Z>'. (RuleSetIngestion)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_RecursiveMapErrors_11 = null;
@@ -2717,7 +2707,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":12,\"character\":0,\"byte\":160},\"end\":{\"line\":14,\"character\":1,\"byte\":184}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The field 'x' was lost during ingestion (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":5,\"character\":7,\"byte\":77},\"end\":{\"line\":5,\"character\":21,\"byte\":91}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: ranges are incompatble for ingestion. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":24,\"character\":14,\"byte\":325},\"end\":{\"line\":24,\"character\":17,\"byte\":328}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: 'int' unable to produce data to ingest into 'Z'. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":5,\"character\":7,\"byte\":77},\"end\":{\"line\":5,\"character\":21,\"byte\":91}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: ranges are incompatble for ingestion. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":16,\"character\":0,\"byte\":188},\"end\":{\"line\":18,\"character\":1,\"byte\":216}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The field 'x' was lost during ingestion (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":5,\"character\":7,\"byte\":77},\"end\":{\"line\":5,\"character\":21,\"byte\":91}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: ranges are incompatble for ingestion. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11,\"byte\":81},\"end\":{\"line\":5,\"character\":17,\"byte\":87}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'string' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":5,\"character\":7,\"byte\":77},\"end\":{\"line\":5,\"character\":21,\"byte\":91}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: domains are incompatble for ingestion string <- int. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":5,\"character\":7,\"byte\":77},\"end\":{\"line\":5,\"character\":21,\"byte\":91}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to ingest into this type 'r<map<string,Z>>'. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":28,\"character\":2,\"byte\":405},\"end\":{\"line\":28,\"character\":21,\"byte\":424}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: 'map<int,int>' unable to produce data to ingest into 'r<map<string,Z>>'. (RuleSetIngestion)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_RecursiveMap_12 = null;
@@ -3649,7 +3638,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_RecursiveTable_13 = null;
@@ -4740,7 +4728,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_SimpleAs_14 = null;
@@ -5604,7 +5591,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Simple_15 = null;
@@ -6409,7 +6395,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

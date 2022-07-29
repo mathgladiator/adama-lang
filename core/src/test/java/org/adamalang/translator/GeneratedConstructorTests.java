@@ -50,7 +50,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":9,\"character\":2,\"byte\":90},\"end\":{\"line\":9,\"character\":6,\"byte\":94}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'MB' and 'bool' are not compatible for type unification (TypeCompatabilities)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ConstructClientAndMessage_2 = null;
@@ -664,7 +663,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ConstructJustClient_3 = null;
@@ -1192,7 +1190,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ConstructJustMessage_4 = null;
@@ -1791,7 +1788,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ConstructNoArgs_5 = null;
@@ -2302,7 +2298,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Legacy_6 = null;
@@ -2926,7 +2921,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_UnionTypes_7 = null;
@@ -3738,7 +3732,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

@@ -50,7 +50,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":6,\"byte\":29},\"end\":{\"line\":4,\"character\":7,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'Z' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":12,\"character\":11,\"byte\":104},\"end\":{\"line\":12,\"character\":12,\"byte\":105}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":12,\"character\":11,\"byte\":104},\"end\":{\"line\":12,\"character\":12,\"byte\":105}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'table<?>', but got a type of 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":11,\"byte\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'table<?>', but got a type of 'X'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FieldNotFound_2 = null;
@@ -91,7 +90,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":11,\"byte\":69},\"end\":{\"line\":7,\"character\":24,\"byte\":82}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'list<Y>' lacks field 'z' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":8,\"character\":11,\"byte\":96},\"end\":{\"line\":8,\"character\":14,\"byte\":99}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'Y' lacks field 'z' (FieldLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_IndexingCant_3 = null;
@@ -132,7 +130,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":9,\"byte\":40},\"end\":{\"line\":2,\"character\":10,\"byte\":41}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'E' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":33},\"end\":{\"line\":2,\"character\":13,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'y' has no backing type (EnvironmentDefine)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":70},\"end\":{\"line\":5,\"character\":16,\"byte\":84}},\"severity\":1,\"source\":\"error\",\"message\":\"Index could not find field 'nofound' (StructureDefine)\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":88},\"end\":{\"line\":6,\"character\":10,\"byte\":96}},\"severity\":1,\"source\":\"error\",\"message\":\"Index for field 'z' is not possible due to type (StructureDefine)\"},{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":112},\"end\":{\"line\":8,\"character\":10,\"byte\":120}},\"severity\":1,\"source\":\"error\",\"message\":\"Index was already defined: 'x' (StructureDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Indexing_4 = null;
@@ -1624,7 +1621,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_IterateNonTable_5 = null;
@@ -1665,7 +1661,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":27},\"end\":{\"line\":2,\"character\":12,\"byte\":28}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":27},\"end\":{\"line\":2,\"character\":12,\"byte\":28}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'table<?>', but got a type of 'int'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacyShuffle_6 = null;
@@ -2527,7 +2522,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Legacy_7 = null;
@@ -3850,7 +3844,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_NonOrderable_8 = null;
@@ -3891,7 +3884,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":10,\"character\":31,\"byte\":108},\"end\":{\"line\":10,\"character\":32,\"byte\":109}},\"severity\":1,\"source\":\"error\",\"message\":\"Typing issue: the structure 'Y' has field 'x' but it is not orderable.. (RuleSetStructures)\"},{\"range\":{\"start\":{\"line\":11,\"character\":31,\"byte\":144},\"end\":{\"line\":11,\"character\":32,\"byte\":145}},\"severity\":1,\"source\":\"error\",\"message\":\"Field not found: the structure 'Y' does not contain the field 'z'. (RuleSetStructures)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_NotApplicableToNonLists_9 = null;
@@ -3932,7 +3924,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":26},\"end\":{\"line\":2,\"character\":11,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: expected an list, but was actually type 'int'. (RuleSetArray)\"},{\"range\":{\"start\":{\"line\":3,\"character\":10,\"byte\":53},\"end\":{\"line\":3,\"character\":11,\"byte\":54}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: expected an list, but was actually type 'int'. (RuleSetArray)\"},{\"range\":{\"start\":{\"line\":4,\"character\":10,\"byte\":75},\"end\":{\"line\":4,\"character\":11,\"byte\":76}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: expected an list, but was actually type 'int'. (RuleSetArray)\"},{\"range\":{\"start\":{\"line\":5,\"character\":10,\"byte\":100},\"end\":{\"line\":5,\"character\":11,\"byte\":101}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: expected an list, but was actually type 'int'. (RuleSetArray)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_SortLegacy_10 = null;
@@ -5096,7 +5087,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_WhereBuildClosure_11 = null;
@@ -5914,7 +5904,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_WhereDuplicateFields_12 = null;
@@ -6694,7 +6683,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_WhereOtherIndexingModes_13 = null;
@@ -7700,7 +7688,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_WherePrimaryKeyExtraction_14 = null;
@@ -8613,7 +8600,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

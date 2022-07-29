@@ -701,7 +701,6 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_BothSidesFail_2 = null;
@@ -742,7 +741,6 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":18,\"byte\":34},\"end\":{\"line\":2,\"character\":26,\"byte\":42}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'bool' + 'int' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":2,\"character\":31,\"byte\":47},\"end\":{\"line\":2,\"character\":40,\"byte\":56}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'int' + 'bool' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":3,\"character\":11,\"byte\":71},\"end\":{\"line\":3,\"character\":19,\"byte\":79}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'bool' + 'int' (OperatorTable)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Legacy_3 = null;
@@ -1422,7 +1420,6 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MaxTypeFailures_4 = null;
@@ -1463,7 +1460,6 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":30,\"byte\":112},\"end\":{\"line\":7,\"character\":31,\"byte\":113}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'string' and 'int' are not compatible for type unification (TypeCompatabilities)\"},{\"range\":{\"start\":{\"line\":7,\"character\":23,\"byte\":105},\"end\":{\"line\":7,\"character\":31,\"byte\":113}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'string' and 'maybe<int>' are not compatible for type unification (TypeCompatabilities)\"},{\"range\":{\"start\":{\"line\":8,\"character\":29,\"byte\":146},\"end\":{\"line\":8,\"character\":32,\"byte\":149}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'int' and 'string' are not compatible for type unification (TypeCompatabilities)\"},{\"range\":{\"start\":{\"line\":8,\"character\":29,\"byte\":146},\"end\":{\"line\":8,\"character\":32,\"byte\":149}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'maybe<int>' and 'string' are not compatible for type unification (TypeCompatabilities)\"},{\"range\":{\"start\":{\"line\":9,\"character\":2,\"byte\":154},\"end\":{\"line\":9,\"character\":6,\"byte\":158}},\"severity\":1,\"source\":\"error\",\"message\":\"The message types `A` and `B` can not be joined. (MaxUnionType)\"},{\"range\":{\"start\":{\"line\":10,\"character\":2,\"byte\":162},\"end\":{\"line\":10,\"character\":6,\"byte\":166}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'A' and 'B' are not compatible for type unification (TypeCompatabilities)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MaybePromotions_5 = null;
@@ -1982,7 +1978,6 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MessageRectify_6 = null;
@@ -2596,7 +2591,6 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_RecordsMismatch_7 = null;
@@ -2637,7 +2631,6 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":20,\"character\":2,\"byte\":139},\"end\":{\"line\":20,\"character\":6,\"byte\":143}},\"severity\":1,\"source\":\"error\",\"message\":\"The message types `U` and `V` can not be joined. (MaxUnionType)\"},{\"range\":{\"start\":{\"line\":21,\"character\":2,\"byte\":147},\"end\":{\"line\":21,\"character\":6,\"byte\":151}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'U' and 'V' are not compatible for type unification (TypeCompatabilities)\"},{\"range\":{\"start\":{\"line\":3,\"character\":0,\"byte\":17},\"end\":{\"line\":4,\"character\":1,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'X' and 'Y' are not compatible for type unification (TypeCompatabilities)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

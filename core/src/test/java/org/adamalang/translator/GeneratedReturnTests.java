@@ -50,7 +50,6 @@ public class GeneratedReturnTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":28},\"end\":{\"line\":1,\"character\":9,\"byte\":35}},\"severity\":1,\"source\":\"error\",\"message\":\"The return statement expected an expression of type `int` (ReturnFlow)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ShouldntReturnButDoes_2 = null;
@@ -91,7 +90,6 @@ public class GeneratedReturnTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":21},\"end\":{\"line\":1,\"character\":11,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"The return statement expects no expression (ReturnFlow)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

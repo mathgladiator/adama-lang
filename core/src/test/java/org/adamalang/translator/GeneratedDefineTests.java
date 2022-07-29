@@ -50,7 +50,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":13},\"end\":{\"line\":1,\"character\":7,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'table<X>' is not applicable for assignment (=) (Assignment)\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":13},\"end\":{\"line\":1,\"character\":7,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'table<X>' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":13},\"end\":{\"line\":5,\"character\":8,\"byte\":60}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'table<X>' += 'int' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":13},\"end\":{\"line\":6,\"character\":8,\"byte\":71}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'table<X>' *= 'int' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":13},\"end\":{\"line\":7,\"character\":8,\"byte\":82}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'table<X>' -= 'int' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":13},\"end\":{\"line\":1,\"character\":7,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'table<X>' (CanBumpNumeric)\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":13},\"end\":{\"line\":1,\"character\":7,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'table<X>' (CanBumpNumeric)\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":13},\"end\":{\"line\":1,\"character\":7,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'table<X>' (CanBumpNumeric)\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":13},\"end\":{\"line\":1,\"character\":7,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'bool', but the type is actually 'table<X>' (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_BetweenNonArrayToArray_2 = null;
@@ -91,7 +90,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":44},\"end\":{\"line\":5,\"character\":5,\"byte\":47}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'M[]' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":6,\"character\":22,\"byte\":80},\"end\":{\"line\":6,\"character\":24,\"byte\":82}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type `int` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message. (TypeCheckFailures)\"},{\"range\":{\"start\":{\"line\":7,\"character\":2,\"byte\":88},\"end\":{\"line\":7,\"character\":3,\"byte\":89}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: expected an array, but was actually type 'M'. (RuleSetArray)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_BringLazyIntoPicture_3 = null;
@@ -635,7 +633,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_BumpHappy_4 = null;
@@ -1329,7 +1326,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_BumpWrongType_5 = null;
@@ -1370,7 +1366,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":11,\"byte\":76},\"end\":{\"line\":7,\"character\":12,\"byte\":77}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'bool', but the type is actually 'int' (TypeCheckFailures)\"},{\"range\":{\"start\":{\"line\":8,\"character\":4,\"byte\":84},\"end\":{\"line\":8,\"character\":17,\"byte\":97}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'bool', but the type is actually 'string' (TypeCheckFailures)\"},{\"range\":{\"start\":{\"line\":11,\"character\":2,\"byte\":119},\"end\":{\"line\":11,\"character\":15,\"byte\":132}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<r<string>>' (CanBumpNumeric)\"},{\"range\":{\"start\":{\"line\":12,\"character\":5,\"byte\":142},\"end\":{\"line\":12,\"character\":18,\"byte\":155}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<r<string>>' (CanBumpNumeric)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantBumpString_6 = null;
@@ -1411,7 +1406,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":32},\"end\":{\"line\":2,\"character\":3,\"byte\":33}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":14,\"byte\":28}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'string' (CanBumpNumeric)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_CantSetLazy_7 = null;
@@ -1452,7 +1446,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":17,\"byte\":29},\"end\":{\"line\":1,\"character\":18,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'r<auto<int>>' is not applicable for assignment (=) (Assignment)\"},{\"range\":{\"start\":{\"line\":1,\"character\":17,\"byte\":29},\"end\":{\"line\":1,\"character\":18,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'r<auto<int>>' is unable to store type 'int'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DeclareVariableHappy_8 = null;
@@ -2177,7 +2170,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_DoubleBumpList_9 = null;
@@ -2858,7 +2850,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_FailingAssignments_10 = null;
@@ -2899,7 +2890,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":15},\"end\":{\"line\":2,\"character\":7,\"byte\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'table<R>' is not applicable for assignment (=) (Assignment)\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":15},\"end\":{\"line\":2,\"character\":7,\"byte\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'table<R>' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":15},\"end\":{\"line\":6,\"character\":8,\"byte\":62}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'table<R>' += 'int' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":15},\"end\":{\"line\":7,\"character\":8,\"byte\":73}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'table<R>' *= 'int' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":15},\"end\":{\"line\":8,\"character\":8,\"byte\":84}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'table<R>' -= 'int' (OperatorTable)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_InappropriateType_11 = null;
@@ -2940,7 +2930,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":5,\"byte\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LegacySuper_12 = null;
@@ -3665,7 +3654,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MaybeAssignments_13 = null;
@@ -4212,7 +4200,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PostFixLegacy_14 = null;
@@ -4786,7 +4773,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PrefixLegacy_15 = null;
@@ -5576,7 +5562,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_RightSideFailTyping_16 = null;
@@ -5617,7 +5602,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":24},\"end\":{\"line\":1,\"character\":18,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'string' + '__ViewerType' (OperatorTable)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ValueDoesntAssign_17 = null;
@@ -5658,7 +5642,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":48},\"end\":{\"line\":6,\"character\":5,\"byte\":51}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'table<R>'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_VariousAssignments_18 = null;
@@ -6280,7 +6263,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n...DUMP:{\"ry\":23.0,\"sy\":30.0}");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }

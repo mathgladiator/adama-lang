@@ -693,7 +693,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ApplyOnNotAFunction_2 = null;
@@ -734,7 +733,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":42},\"end\":{\"line\":2,\"character\":14,\"byte\":45}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The given type was expected to be a function: 'int' (RuleSetFunctions)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":42},\"end\":{\"line\":2,\"character\":14,\"byte\":45}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ArityMismatch_3 = null;
@@ -775,7 +773,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":11,\"byte\":86},\"end\":{\"line\":5,\"character\":22,\"byte\":97}},\"severity\":1,\"source\":\"error\",\"message\":\"Function invoked with wrong number of arguments. Expected 1, got 0 (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11,\"byte\":113},\"end\":{\"line\":6,\"character\":22,\"byte\":124}},\"severity\":1,\"source\":\"error\",\"message\":\"Function invoked with wrong number of arguments. Expected 1, got 2 (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_AutoConvertAnonymousOnReturn_4 = null;
@@ -1378,7 +1375,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_BadArgType_5 = null;
@@ -1419,7 +1415,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":22,\"byte\":22},\"end\":{\"line\":0,\"character\":25,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_Happy_6 = null;
@@ -1994,7 +1989,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_IncompatibleReturnValue_7 = null;
@@ -2035,7 +2029,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":31,\"byte\":31},\"end\":{\"line\":0,\"character\":34,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":58}},\"severity\":1,\"source\":\"error\",\"message\":\"The function 'square_func' does not return in all cases (FunctionDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_LookupFailures_8 = null;
@@ -2076,7 +2069,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":15,\"character\":2,\"byte\":139},\"end\":{\"line\":15,\"character\":7,\"byte\":144}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The given type was expected to be a function: 'label' (RuleSetFunctions)\"},{\"range\":{\"start\":{\"line\":15,\"character\":2,\"byte\":139},\"end\":{\"line\":15,\"character\":7,\"byte\":144}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":16,\"character\":2,\"byte\":151},\"end\":{\"line\":16,\"character\":8,\"byte\":157}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'R' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":16,\"character\":2,\"byte\":151},\"end\":{\"line\":16,\"character\":8,\"byte\":157}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":18,\"character\":11,\"byte\":191},\"end\":{\"line\":18,\"character\":17,\"byte\":197}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'R' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":18,\"character\":11,\"byte\":191},\"end\":{\"line\":18,\"character\":17,\"byte\":197}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":19,\"character\":11,\"byte\":213},\"end\":{\"line\":19,\"character\":19,\"byte\":221}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'channel<M>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":19,\"character\":11,\"byte\":213},\"end\":{\"line\":19,\"character\":19,\"byte\":221}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":20,\"character\":11,\"byte\":237},\"end\":{\"line\":20,\"character\":23,\"byte\":249}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'principal' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":20,\"character\":11,\"byte\":237},\"end\":{\"line\":20,\"character\":23,\"byte\":249}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":21,\"character\":11,\"byte\":265},\"end\":{\"line\":21,\"character\":22,\"byte\":276}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'E' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":21,\"character\":11,\"byte\":265},\"end\":{\"line\":21,\"character\":22,\"byte\":276}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":22,\"character\":11,\"byte\":292},\"end\":{\"line\":22,\"character\":23,\"byte\":304}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'E[]' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":22,\"character\":11,\"byte\":292},\"end\":{\"line\":22,\"character\":23,\"byte\":304}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":24,\"character\":11,\"byte\":352},\"end\":{\"line\":24,\"character\":18,\"byte\":359}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'future<M>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":24,\"character\":11,\"byte\":352},\"end\":{\"line\":24,\"character\":18,\"byte\":359}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":25,\"character\":11,\"byte\":375},\"end\":{\"line\":25,\"character\":26,\"byte\":390}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'int' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":25,\"character\":11,\"byte\":375},\"end\":{\"line\":25,\"character\":26,\"byte\":390}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":27,\"character\":11,\"byte\":424},\"end\":{\"line\":27,\"character\":21,\"byte\":434}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'list<M>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":27,\"character\":11,\"byte\":424},\"end\":{\"line\":27,\"character\":21,\"byte\":434}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":42,\"character\":11,\"byte\":611},\"end\":{\"line\":42,\"character\":18,\"byte\":618}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'bool' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":42,\"character\":11,\"byte\":611},\"end\":{\"line\":42,\"character\":18,\"byte\":618}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":43,\"character\":11,\"byte\":634},\"end\":{\"line\":43,\"character\":18,\"byte\":641}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'principal' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":43,\"character\":11,\"byte\":634},\"end\":{\"line\":43,\"character\":18,\"byte\":641}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":44,\"character\":11,\"byte\":657},\"end\":{\"line\":44,\"character\":18,\"byte\":664}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'double' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":44,\"character\":11,\"byte\":657},\"end\":{\"line\":44,\"character\":18,\"byte\":664}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":45,\"character\":11,\"byte\":680},\"end\":{\"line\":45,\"character\":18,\"byte\":687}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'E' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":45,\"character\":11,\"byte\":680},\"end\":{\"line\":45,\"character\":18,\"byte\":687}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":46,\"character\":11,\"byte\":703},\"end\":{\"line\":46,\"character\":18,\"byte\":710}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'int' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":46,\"character\":11,\"byte\":703},\"end\":{\"line\":46,\"character\":18,\"byte\":710}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":47,\"character\":11,\"byte\":726},\"end\":{\"line\":47,\"character\":18,\"byte\":733}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'double' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":47,\"character\":11,\"byte\":726},\"end\":{\"line\":47,\"character\":18,\"byte\":733}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":48,\"character\":11,\"byte\":749},\"end\":{\"line\":48,\"character\":19,\"byte\":757}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'int' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":48,\"character\":11,\"byte\":749},\"end\":{\"line\":48,\"character\":19,\"byte\":757}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":49,\"character\":11,\"byte\":773},\"end\":{\"line\":49,\"character\":17,\"byte\":779}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'R' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":49,\"character\":11,\"byte\":773},\"end\":{\"line\":49,\"character\":17,\"byte\":779}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":50,\"character\":11,\"byte\":795},\"end\":{\"line\":50,\"character\":18,\"byte\":802}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'label' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":50,\"character\":11,\"byte\":795},\"end\":{\"line\":50,\"character\":18,\"byte\":802}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":51,\"character\":11,\"byte\":818},\"end\":{\"line\":51,\"character\":18,\"byte\":825}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'string' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":51,\"character\":11,\"byte\":818},\"end\":{\"line\":51,\"character\":18,\"byte\":825}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":52,\"character\":12,\"byte\":842},\"end\":{\"line\":52,\"character\":20,\"byte\":850}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'table<R>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":52,\"character\":12,\"byte\":842},\"end\":{\"line\":52,\"character\":20,\"byte\":850}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MethodsOnLists_9 = null;
@@ -2999,7 +2991,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MultiArgs_10 = null;
@@ -3647,7 +3638,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_MustReturn_11 = null;
@@ -3688,7 +3678,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":2},\"end\":{\"line\":6,\"character\":1,\"byte\":80}},\"severity\":1,\"source\":\"error\",\"message\":\"The procedure 'x' does not return in all cases (FunctionDefine)\"},{\"range\":{\"start\":{\"line\":9,\"character\":2,\"byte\":98},\"end\":{\"line\":14,\"character\":3,\"byte\":180}},\"severity\":1,\"source\":\"error\",\"message\":\"Function 'foo' does not return in all cases (MethodDefine)\"},{\"range\":{\"start\":{\"line\":16,\"character\":2,\"byte\":186},\"end\":{\"line\":17,\"character\":3,\"byte\":201}},\"severity\":1,\"source\":\"error\",\"message\":\"Policy 'p' does not return in all cases (PolicyDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PrepWorkReducers_12 = null;
@@ -4559,7 +4548,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PureCantInvokeProcedure_13 = null;
@@ -4600,7 +4588,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":9,\"byte\":78},\"end\":{\"line\":5,\"character\":12,\"byte\":81}},\"severity\":1,\"source\":\"error\",\"message\":\"Pure functions can only call other pure functions (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":5,\"character\":17,\"byte\":86},\"end\":{\"line\":5,\"character\":20,\"byte\":89}},\"severity\":1,\"source\":\"error\",\"message\":\"Pure functions can only call other pure functions (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PureInvokePure_14 = null;
@@ -5118,7 +5105,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PureMustReturn_15 = null;
@@ -5159,7 +5145,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":1,\"character\":1,\"byte\":35}},\"severity\":1,\"source\":\"error\",\"message\":\"The function 'whoops1' does not return in all cases (FunctionDefine)\"},{\"range\":{\"start\":{\"line\":3,\"character\":0,\"byte\":39},\"end\":{\"line\":8,\"character\":1,\"byte\":122}},\"severity\":1,\"source\":\"error\",\"message\":\"The function 'whoops2' does not return in all cases (FunctionDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_PureVariablesReadOnly_16 = null;
@@ -5200,7 +5185,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":36},\"end\":{\"line\":1,\"character\":3,\"byte\":37}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' is readonly (VariableLookup)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":47}},\"severity\":1,\"source\":\"error\",\"message\":\"The function 'whoops1' does not return in all cases (FunctionDefine)\"},{\"range\":{\"start\":{\"line\":11,\"character\":2,\"byte\":131},\"end\":{\"line\":11,\"character\":3,\"byte\":132}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly due to the environment (VariableLookup)\"},{\"range\":{\"start\":{\"line\":11,\"character\":2,\"byte\":131},\"end\":{\"line\":11,\"character\":3,\"byte\":132}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly due to the environment (VariableLookup)\"},{\"range\":{\"start\":{\"line\":16,\"character\":9,\"byte\":187},\"end\":{\"line\":16,\"character\":10,\"byte\":188}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":15,\"character\":0,\"byte\":148},\"end\":{\"line\":17,\"character\":1,\"byte\":192}},\"severity\":1,\"source\":\"error\",\"message\":\"The function 'cantread' does not return in all cases (FunctionDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ReactiveCantInvokeProcedure_17 = null;
@@ -5241,7 +5225,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":13,\"byte\":57},\"end\":{\"line\":4,\"character\":16,\"byte\":60}},\"severity\":1,\"source\":\"error\",\"message\":\"Reactive expressions can only invoke pure functions (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":6,\"character\":21,\"byte\":88},\"end\":{\"line\":6,\"character\":24,\"byte\":91}},\"severity\":1,\"source\":\"error\",\"message\":\"Reactive expressions can only invoke pure functions (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ReactiveInvokePure_18 = null;
@@ -5777,7 +5760,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_ReadOnly_19 = null;
@@ -6306,7 +6288,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
   private String cached_TypeBuiltIn_20 = null;
@@ -7038,7 +7019,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n...DUMP:{\"y\":\"xyz\",\"mi\":null}");
     gold.append("\n");
     gold.append("\nSuccess");
-    gold.append("\n");
     assertStable(live, gold);
   }
 }
