@@ -15,7 +15,7 @@ package org.adamalang.runtime.sys;
  */
 public class PredictiveInventory {
   private final Snapshot[] snapshots;
-  private long memory // estimate-standing;
+  private long memory; // estimate-standing;
   private long memory_growth;
   private long ticks; // estimate-standing
   private long ticks_growth;
