@@ -16,6 +16,7 @@ import org.adamalang.cli.Util;
 import org.adamalang.common.DefaultCopyright;
 import org.adamalang.net.codec.Generate;
 import org.adamalang.support.GenerateLanguageTests;
+import org.adamalang.support.GenerateTemplateTests;
 import org.adamalang.web.service.BundleJavaScriptClient;
 
 import java.io.File;
@@ -30,8 +31,11 @@ public class Contrib {
     String command = Util.normalize(args[0]);
     String[] next = Util.tail(args);
     switch (command) {
-      case "generate":
+      case "tests-adama":
         GenerateLanguageTests.generate(0, next);
+        return;
+      case "tests-rxhtml":
+        GenerateTemplateTests.generate(0, next);
         return;
       case "make-codec":
         Generate.main(next);
@@ -64,7 +68,8 @@ public class Contrib {
     System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
     System.out.println();
     System.out.println(Util.prefix("CONTRIBSUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("generate", Util.ANSI.Green) + "          Generates the core test files from scripts.");
+    System.out.println("    " + Util.prefix("tests-adama", Util.ANSI.Green) + "       Generate tests for Adama Language.");
+    System.out.println("    " + Util.prefix("tests-rxhtml", Util.ANSI.Green) + "      Generate tests for RxHTML.");
     System.out.println("    " + Util.prefix("make-api", Util.ANSI.Green) + "          Produces api files for SaaS and documentation for the WebSocket low level API.");
     System.out.println("    " + Util.prefix("make-et", Util.ANSI.Green) + "           Generates the error table which provides useful insight to issues");
     System.out.println("    " + Util.prefix("make-codec", Util.ANSI.Green) + "        Generates the networking codec");

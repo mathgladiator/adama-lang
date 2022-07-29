@@ -11,7 +11,9 @@ package org.adamalang.cli.commands;
 
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.rxhtml.Feedback;
 import org.adamalang.rxhtml.RxHtmlTool;
+import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -78,6 +80,12 @@ public class Frontend {
   private static void makeRxHTMLTemplate(String[] args) throws Exception {
     ArrayList<File> files = convertArgsToFileList(args);
     String output = Util.extractOrCrash("--output", "-o", args);
-    Files.writeString(new File(output).toPath(), RxHtmlTool.convertFilesToTemplateForest(files));
+
+    Files.writeString(new File(output).toPath(), RxHtmlTool.convertFilesToTemplateForest(files, new Feedback() {
+      @Override
+      public void warn(Element element, String warning) {
+        System.err.println(warning);
+      }
+    }));
   }
 }

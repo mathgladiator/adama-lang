@@ -79,21 +79,25 @@ public class TestClass {
     outputFile.append("  @Test\n");
     outputFile.append("  public void stable_" + varName + "() {\n");
     outputFile.append("    String live = get_" + varName + "();\n");
-    outputFile.append("    StringBuilder gold = new StringBuilder();\n");
     final var gold = TestForge.forge(test.success, varName, correctedFile.toPath(), correctedFile.getParentFile().toPath());
-    final var lines = gold.split("\n");
+    writeStringBuilder(gold, outputFile, "gold");
+    outputFile.append("    assertStable(live, gold);\n");
+    outputFile.append("  }\n");
+    return gold.endsWith("Success\n");
+  }
+
+  public static void writeStringBuilder(String str, StringBuilder outputFile, String variable) {
+    outputFile.append("    StringBuilder ").append(variable).append(" = new StringBuilder();\n");
+    final var lines = str.split("\n");
     for (var k = 0; k < lines.length; k++) {
       lines[k] = lines[k].stripTrailing();
     }
     if (lines.length > 0) {
-      outputFile.append(String.format("    gold.append(\"%s\");\n", escapeLine(lines[0])));
+      outputFile.append(String.format("    " + variable + ".append(\"%s\");\n", escapeLine(lines[0])));
       for (var k = 1; k < lines.length; k++) {
-        outputFile.append(String.format("    gold.append(\"\\n%s\");\n", escapeLine(lines[k])));
+        outputFile.append(String.format("    " + variable + ".append(\"\\n%s\");\n", escapeLine(lines[k])));
       }
     }
-    outputFile.append("    assertStable(live, gold);\n");
-    outputFile.append("  }\n");
-    return gold.endsWith("Success\n");
   }
 
   public static String escapeLine(final String line) {

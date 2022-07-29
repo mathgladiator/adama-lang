@@ -55,7 +55,8 @@ if made_jar:
 if generate:
     cwd = os.getcwd()
     os.chdir("core")
-    os.system("java -jar ../release/adama.jar contrib generate")
+    os.system("java -jar ../release/adama.jar contrib tests-adama")
+    os.system("java -jar ../release/adama.jar contrib tests-rxhtml")
     os.chdir(cwd)
     os.system("java -jar release/adama.jar contrib make-api")
     os.system("java -jar release/adama.jar contrib make-et")

@@ -16,17 +16,25 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
-  public static String convertFilesToTemplateForest(ArrayList<File> files) throws Exception {
-    Environment env = Environment.fresh(new Feedback() {
-      @Override
-      public void warn(Element element, String warning) {
-        System.err.println(warning);
-      }
-    });
+  public static String convertStringToTemplateForest(String str, Feedback feedback) throws Exception {
+    Environment env = Environment.fresh(feedback);
+    Root.start(env);
+    Document document = Jsoup.parse(str);
+    for (Element element : document.getElementsByTag("template")) {
+      Root.template(env.element(element, true));
+    }
+    for (Element element : document.getElementsByTag("page")) {
+      Root.page(env.element(element, true));
+    }
+    // TODO: do warnings about cross-page linking, etc...
+    return Root.finish(env);
+  }
+  public static String convertFilesToTemplateForest(List<File> files, Feedback feedback) throws Exception {
+    Environment env = Environment.fresh(feedback);
     Root.start(env);
     for (File file : files) {
       Document document = Jsoup.parse(file, "UTF-8");
