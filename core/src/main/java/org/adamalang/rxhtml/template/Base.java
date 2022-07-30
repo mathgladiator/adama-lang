@@ -32,14 +32,6 @@ public class Base {
     return xmlns;
   }
 
-  private static boolean testForFastPathIsSoWrite(Environment env, boolean returnVariable, String xmlns) {
-    if (env.element.attributesSize() == 0 && env.element.childNodeSize() == 0 && !returnVariable) {
-      env.writer.tab().append(env.parentVariable).append(".append(").append("$.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append("));").newline();
-      return true;
-    }
-    return false;
-  }
-
   private static boolean testRxCaseIfSoThenOpen(Environment env) {
     boolean hasCase = env.element.hasAttr("rx:case") && env.caseVar != null;
     if (hasCase) {
@@ -97,9 +89,7 @@ public class Base {
   public static String write(Environment env, boolean returnVariable) {
     // get the namespace of the element
     String xmlns = xmlnsOf(env);
-    if (testForFastPathIsSoWrite(env, returnVariable, xmlns)) {
-      return null;
-    }
+
     // does the element have an rx:case
     boolean hasCase = testRxCaseIfSoThenOpen(env);
 
@@ -116,10 +106,6 @@ public class Base {
       StatePath path = StatePath.resolve(env.element.attr("rx:scope"), env.stateVar);
       String newStateVar = env.pool.ask();
       env.writer.tab().append("var ").append(newStateVar).append(" = $.pI(").append(path.command).append(",'").append(path.name).append("');").newline();
-    } else if (env.element.hasAttr("rx:internal")) {
-      String newStateVar = env.pool.ask();
-      env.writer.tab().append("var ").append(newStateVar).append("=").append("$.INTERNAL(").append(env.stateVar).append(");").newline();
-      next = next.stateVar(newStateVar);
     }
 
     // write the body of the element (the children and more)

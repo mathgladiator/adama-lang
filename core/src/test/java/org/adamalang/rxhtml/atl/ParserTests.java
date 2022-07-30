@@ -18,6 +18,30 @@ import java.util.Map;
 import java.util.Set;
 
 public class ParserTests {
+  @Test
+  public void fail() {
+    String[] strs = new String[] {
+        "{xyz",
+        "[xyz",
+        "[[",
+        "[}",
+        "{]",
+        "]",
+        "|",
+        "xyz|",
+        "}",
+        "{{",
+    };
+    for (String str: strs) {
+      try {
+        Parser.parse(str);
+        Assert.fail();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    }
+  }
+
 
   @Test
   public void simple() {

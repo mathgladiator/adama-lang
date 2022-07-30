@@ -25,6 +25,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 
 /** Tools to convert RxHTML scheme into Adama */
@@ -78,22 +79,20 @@ public class RxHtmlToAdama {
         Token parameter = id(tokens);
 
         var colon = tokens.popIf((t) -> t.isSymbolWithTextEq(":"));
-        TyType type = null;
+        final TyType type;
         if (colon == null) {
           colon = Token.WRAP(":");
           type = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, parameter);
         } else {
           Token typeRaw = id(tokens);
-          if ("text".equals(typeRaw.text) || "string".equals(typeRaw.text)) {
-            type = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, typeRaw);
-          } else if ("number".equals(typeRaw.text) || "double".equals(typeRaw.text)) {
+          String typeNameFixed = typeRaw.text.trim().toLowerCase(Locale.ROOT);
+          if ("number".equals(typeNameFixed) || "double".equals(typeNameFixed)) {
             type = new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, typeRaw);
-          } else if ("int".equals(typeRaw.text)) {
+          } else if ("int".equals(typeNameFixed)) {
             type = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, typeRaw);
+          } else {
+            type = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, typeRaw);
           }
-        }
-        if (type == null) {
-          throw new ParseException("Parser was expected a type of text, string, number, double, or int.", parameter);
         }
         uri.push(hasMore, isParameter, parameter, null, colon, type);
       } else {

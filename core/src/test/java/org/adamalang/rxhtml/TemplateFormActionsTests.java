@@ -23,7 +23,7 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n    var c = $.E('form');");
-    gold.append("\n    $.aSO(c,a,'default','sign_in_failed','/');");
+    gold.append("\n    $.aSO(c,a,'default','faied_to_signin','/yes');");
     gold.append("\n    var d = $.E('input');");
     gold.append("\n    d.setAttribute('name','email');");
     gold.append("\n    d.setAttribute('type','email');");
@@ -78,6 +78,15 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
     gold.append("\n    d.setAttribute('type','submit');");
     gold.append("\n    c.append(d);");
     gold.append("\n    b.append(c);");
+    gold.append("\n    var c = $.E('form');");
+    gold.append("\n    $.aCP(c,$.pV(a),'xyz');");
+    gold.append("\n    var d = $.E('input');");
+    gold.append("\n    d.setAttribute('name','param');");
+    gold.append("\n    c.append(d);");
+    gold.append("\n    var d = $.E('input');");
+    gold.append("\n    d.setAttribute('type','submit');");
+    gold.append("\n    c.append(d);");
+    gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     return gold.toString();
@@ -88,7 +97,7 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
     source.append("\n        Simple Page");
-    source.append("\n        <form rx:action=\"adama:sign-in\">");
+    source.append("\n        <form rx:action=\"adama:sign-in\" rx:failure=\"faied_to_signin\" rx:forward=\"/yes\">");
     source.append("\n            <input name=\"email\" type=\"email\" />");
     source.append("\n            <input name=\"password\" type=\"password\" />");
     source.append("\n            <input type=\"submit\" />");
@@ -107,6 +116,10 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
     source.append("\n            <input type=\"submit\" />");
     source.append("\n        </form>");
     source.append("\n        <form rx:action=\"send:channel\">");
+    source.append("\n            <input name=\"param\" />");
+    source.append("\n            <input type=\"submit\" />");
+    source.append("\n        </form>");
+    source.append("\n        <form rx:action=\"copy:xyz\">");
     source.append("\n            <input name=\"param\" />");
     source.append("\n            <input type=\"submit\" />");
     source.append("\n        </form>");

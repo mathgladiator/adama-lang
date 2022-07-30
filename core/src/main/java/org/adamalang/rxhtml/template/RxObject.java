@@ -57,7 +57,7 @@ public class RxObject {
           env.writer.tab().append(rxObj).append(".").append(nameToUse).append("='").append(Escapes.escape39(value)).append("';").newline();
         }
       } else {
-        env.writer.tab().append(rxObj).append(".").append(nameToUse).append("=false;").newline();
+        env.writer.tab().append(rxObj).append(".").append(nameToUse).append("=true;").newline();
       }
     }
     this.delayed = _delayed;

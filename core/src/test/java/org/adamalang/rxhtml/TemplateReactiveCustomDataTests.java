@@ -37,6 +37,7 @@ public class TemplateReactiveCustomDataTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    $.Y(a,c._.three,'var1', c._._);");
     gold.append("\n    $.Y(a,c._.three,'var2', c._._);");
+    gold.append("\n    c.present='';");
     gold.append("\n    $.CUDA(b,a,'',c,'/sign-in',function(d) {");
     gold.append("\n    });");
     gold.append("\n  });");
@@ -48,7 +49,7 @@ public class TemplateReactiveCustomDataTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <customdata parameter:one=\"one\" parameter:two=\"{var}\"  parameter:three=\"{var1}{var2}\">");
+    source.append("\n        <customdata parameter:one=\"one\" parameter:two=\"{var}\"  parameter:three=\"{var1}{var2}\" parameter:present>");
     source.append("\n");
     source.append("\n        </customdata>");
     source.append("\n    </page>");

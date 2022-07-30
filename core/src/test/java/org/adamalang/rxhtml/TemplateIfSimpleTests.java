@@ -22,11 +22,11 @@ public class TemplateIfSimpleTests extends BaseRxHtmlTest {
     gold.append("(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c = $.E('div');");
-    gold.append("\n    $.IF(c,a,'obj', true,false,function(e,d) {");
+    gold.append("\n    $.IF(c,a,'obj',true,false,function(e,d) {");
     gold.append("\n      e.append($.L(d,'key'));");
     gold.append("\n      e.append($.T(' - '));");
     gold.append("\n      e.append($.L(d,'value'));");
-    gold.append("\n    }, function(e,d) {");
+    gold.append("\n    },function(e,d) {");
     gold.append("\n      var f = $.E('div');");
     gold.append("\n      f.append($.T(' Not set! '));");
     gold.append("\n      e.append(f);");

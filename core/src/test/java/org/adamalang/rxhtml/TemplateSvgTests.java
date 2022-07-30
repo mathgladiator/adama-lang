@@ -9,7 +9,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateSimpleTests extends BaseRxHtmlTest {
+public class TemplateSvgTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
@@ -21,10 +21,13 @@ public class TemplateSimpleTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    b.append($.T(' Simple Page '));");
-    gold.append("\n    var c = $.E('div');");
-    gold.append("\n    b.append(c);");
-    gold.append("\n    var c = $.E('span');");
+    gold.append("\n    var c = $.E('svg', 'http://www.w3.org/2000/svg');");
+    gold.append("\n    c.setAttribute('height','210');");
+    gold.append("\n    c.setAttribute('width','400');");
+    gold.append("\n    var d = $.E('path', 'http://www.w3.org/2000/svg');");
+    gold.append("\n    d.setAttribute('d','M150 0 L75 200 L225 200 Z');");
+    gold.append("\n    c.append(d);");
+    gold.append("\n    c.append($.T(' Sorry, your browser does not support inline SVG. '));");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -35,9 +38,12 @@ public class TemplateSimpleTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        Simple Page");
-    source.append("\n        <div></div>");
-    source.append("\n        <span></span>");
+    source.append("\n");
+    source.append("\n        <svg height=\"210\" width=\"400\">");
+    source.append("\n            <path d=\"M150 0 L75 200 L225 200 Z\" />");
+    source.append("\n            Sorry, your browser does not support inline SVG.");
+    source.append("\n        </svg>");
+    source.append("\n");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

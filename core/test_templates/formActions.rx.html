@@ -1,7 +1,7 @@
 <forest>
     <page uri="/">
         Simple Page
-        <form rx:action="adama:sign-in">
+        <form rx:action="adama:sign-in" rx:failure="faied_to_signin" rx:forward="/yes">
             <input name="email" type="email" />
             <input name="password" type="password" />
             <input type="submit" />
@@ -20,6 +20,10 @@
             <input type="submit" />
         </form>
         <form rx:action="send:channel">
+            <input name="param" />
+            <input type="submit" />
+        </form>
+        <form rx:action="copy:xyz">
             <input name="param" />
             <input type="submit" />
         </form>

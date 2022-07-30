@@ -5,10 +5,22 @@
     <page uri="/$user:text" authenticate>
         Text type user profile
     </page>
+    <page uri="/$usery:string" authenticate>
+        Text type user profile
+    </page>
     <page uri="/$user/profile" authenticate>
         No type
     </page>
     <page uri="/$user/settings/$key" authenticate>
+        Keys for a user
+    </page>
+    <page uri="/$user/sets1/$key:number" authenticate>
+        Keys for a user
+    </page>
+    <page uri="/$user/sets2/$key:int" authenticate>
+        Keys for a user
+    </page>
+    <page uri="/$user/sets3/$key:double" authenticate>
         Keys for a user
     </page>
     <page uri="/yolo" authenticate redirect="/bounce">

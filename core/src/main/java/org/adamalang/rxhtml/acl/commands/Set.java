@@ -30,6 +30,7 @@ public class Set implements Command {
     }
     this.value = value;
   }
+
   private String constant() {
     String processedValue = "'" + Escapes.escape39(value) + "'";
     try {

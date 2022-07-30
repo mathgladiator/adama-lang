@@ -17,7 +17,6 @@ import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -47,7 +46,7 @@ public class Attributes {
       String parentVar = env.pool.ask();
       env.writer.tab().append("$.DE(").append(eVar).append(",").append(env.stateVar).append(",").append(pathName.command);
       env.writer.append(",'").append(channel).append("','").append(key).append("'");
-      env.writer.append(",'").append(pathName.name).append("', ").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+      env.writer.append(",'").append(pathName.name).append("',").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
       Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
         if (node instanceof Element) {
           return !node.hasAttr("rx:else");
@@ -55,7 +54,7 @@ public class Attributes {
           return true;
         }
       });
-      env.writer.tabDown().tab().append("}, function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+      env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
       Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
         if (node instanceof Element) {
           return node.hasAttr("rx:else");
@@ -71,7 +70,7 @@ public class Attributes {
       String childStateVar = env.pool.ask();
       String parentVar = env.pool.ask();
       env.writer.tab().append("$.IF(").append(eVar).append(",").append(path.command);
-      env.writer.append(",'").append(path.name).append("', ").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+      env.writer.append(",'").append(path.name).append("',").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
       Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
         if (node instanceof Element) {
           return !node.hasAttr("rx:else");
@@ -79,7 +78,7 @@ public class Attributes {
           return true;
         }
       });
-      env.writer.tabDown().tab().append("}, function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+      env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
       Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
         if (node instanceof Element) {
           return node.hasAttr("rx:else");
@@ -187,11 +186,7 @@ public class Attributes {
     if (hasValue && key.equalsIgnoreCase("value")) {
       env.writer.tab().append(var).append(".value=").append(expr).append(";").newline();
     } else {
-      if (key.startsWith("json:")) {
-        env.writer.tab().append(var).append(".set_").append(key.substring(5).toLowerCase(Locale.ROOT)).append("(").append(expr).append(");").newline();
-      } else {
-        env.writer.tab().append(var).append(".setAttribute('").append(key).append("',").append(expr).append(");").newline();
-      }
+      env.writer.tab().append(var).append(".setAttribute('").append(key).append("',").append(expr).append(");").newline();
     }
   }
 
