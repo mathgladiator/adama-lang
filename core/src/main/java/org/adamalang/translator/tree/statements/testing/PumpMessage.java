@@ -76,7 +76,7 @@ public class PumpMessage extends Statement {
 
   @Override
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
-    sb.append("__queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"").append(channelToken.text).append("\", 0, ");
+    sb.append("__queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"").append(channelToken.text).append("\", 0, \"origin\", \"ip\", ");
     expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
     sb.append("));");
   }

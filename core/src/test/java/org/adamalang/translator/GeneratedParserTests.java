@@ -417,7 +417,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1542,7 +1542,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2314,7 +2314,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3253,7 +3253,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3782,7 +3782,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -4357,19 +4357,19 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
-    gold.append("\n  private void handleChannelMessage_goo1(NtPrincipal __who, RTxX x) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_goo1(CoreRequestContext __context, NtPrincipal __who, RTxX x) throws AbortMessageException {");
     gold.append("\n    __code_cost += 1;");
     gold.append("\n");
     gold.append("\n  }");
-    gold.append("\n  private void handleChannelMessage_goo2(NtPrincipal __who, RTxX x) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_goo2(CoreRequestContext __context, NtPrincipal __who, RTxX x) throws AbortMessageException {");
     gold.append("\n    __code_cost += 1;");
     gold.append("\n");
     gold.append("\n  }");
-    gold.append("\n  private void handleChannelMessage_gooarr1(NtPrincipal __who, RTxX[] x) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_gooarr1(CoreRequestContext __context, NtPrincipal __who, RTxX[] x) throws AbortMessageException {");
     gold.append("\n    __code_cost += 1;");
     gold.append("\n");
     gold.append("\n  }");
-    gold.append("\n  private void handleChannelMessage_gooarr2(NtPrincipal __who, RTxX[] arr) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_gooarr2(CoreRequestContext __context, NtPrincipal __who, RTxX[] arr) throws AbortMessageException {");
     gold.append("\n    __code_cost += 1;");
     gold.append("\n");
     gold.append("\n  }");
@@ -4390,19 +4390,19 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal __who, String __channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext __context, String __channel, Object __message) throws AbortMessageException {");
     gold.append("\n    switch (__channel) {");
     gold.append("\n      case \"gooarr1\":");
-    gold.append("\n        handleChannelMessage_gooarr1(__who, (RTxX[]) __message);");
+    gold.append("\n        handleChannelMessage_gooarr1(__context, __context.who, (RTxX[]) __message);");
     gold.append("\n        return;");
     gold.append("\n      case \"goo1\":");
-    gold.append("\n        handleChannelMessage_goo1(__who, (RTxX) __message);");
+    gold.append("\n        handleChannelMessage_goo1(__context, __context.who, (RTxX) __message);");
     gold.append("\n        return;");
     gold.append("\n      case \"goo2\":");
-    gold.append("\n        handleChannelMessage_goo2(__who, (RTxX) __message);");
+    gold.append("\n        handleChannelMessage_goo2(__context, __context.who, (RTxX) __message);");
     gold.append("\n        return;");
     gold.append("\n      case \"gooarr2\":");
-    gold.append("\n        handleChannelMessage_gooarr2(__who, (RTxX[]) __message);");
+    gold.append("\n        handleChannelMessage_gooarr2(__context, __context.who, (RTxX[]) __message);");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -4418,16 +4418,16 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n        __queue_foo2.enqueue(__task, (RTxX[]) __task.message);");
     gold.append("\n        return;");
     gold.append("\n      case \"goo1\":");
-    gold.append("\n        __task.setAction(() -> handleChannelMessage_goo1(__task.who, (RTxX)(__task.message)));");
+    gold.append("\n        __task.setAction(() -> handleChannelMessage_goo1(__task.context(__getKey()), __task.who, (RTxX)(__task.message)));");
     gold.append("\n        return;");
     gold.append("\n      case \"goo2\":");
-    gold.append("\n        __task.setAction(() -> handleChannelMessage_goo2(__task.who, (RTxX)(__task.message)));");
+    gold.append("\n        __task.setAction(() -> handleChannelMessage_goo2(__task.context(__getKey()), __task.who, (RTxX)(__task.message)));");
     gold.append("\n        return;");
     gold.append("\n      case \"gooarr1\":");
-    gold.append("\n        __task.setAction(() -> handleChannelMessage_gooarr1(__task.who, (RTxX[])(__task.message)));");
+    gold.append("\n        __task.setAction(() -> handleChannelMessage_gooarr1(__task.context(__getKey()), __task.who, (RTxX[])(__task.message)));");
     gold.append("\n        return;");
     gold.append("\n      case \"gooarr2\":");
-    gold.append("\n        __task.setAction(() -> handleChannelMessage_gooarr2(__task.who, (RTxX[])(__task.message)));");
+    gold.append("\n        __task.setAction(() -> handleChannelMessage_gooarr2(__task.context(__getKey()), __task.who, (RTxX[])(__task.message)));");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -4981,7 +4981,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -5514,7 +5514,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -6100,7 +6100,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
-    gold.append("\n  private void handleChannelMessage_foo(NtPrincipal __who, RTxF x) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_foo(CoreRequestContext __context, NtPrincipal __who, RTxF x) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    throw new AbortMessageException();");
@@ -6116,10 +6116,10 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal __who, String __channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext __context, String __channel, Object __message) throws AbortMessageException {");
     gold.append("\n    switch (__channel) {");
     gold.append("\n      case \"foo\":");
-    gold.append("\n        handleChannelMessage_foo(__who, (RTxF) __message);");
+    gold.append("\n        handleChannelMessage_foo(__context, __context.who, (RTxF) __message);");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -6129,7 +6129,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  protected void __route(AsyncTask __task) {");
     gold.append("\n    switch (__task.channel) {");
     gold.append("\n      case \"foo\":");
-    gold.append("\n        __task.setAction(() -> handleChannelMessage_foo(__task.who, (RTxF)(__task.message)));");
+    gold.append("\n        __task.setAction(() -> handleChannelMessage_foo(__task.context(__getKey()), __task.who, (RTxF)(__task.message)));");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -6838,7 +6838,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -7444,7 +7444,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -7965,7 +7965,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -8506,7 +8506,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -9199,7 +9199,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -9946,7 +9946,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -10834,7 +10834,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -11419,7 +11419,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -11947,7 +11947,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -12492,7 +12492,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -13024,7 +13024,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -13625,7 +13625,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -14254,7 +14254,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -14809,7 +14809,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -15480,7 +15480,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -16282,7 +16282,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -17016,7 +17016,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -18042,7 +18042,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -18714,7 +18714,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -19261,7 +19261,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -19783,7 +19783,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -20432,7 +20432,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -21060,7 +21060,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -21820,7 +21820,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -22544,7 +22544,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -23225,7 +23225,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -23900,7 +23900,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -24686,7 +24686,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -25202,7 +25202,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -25746,7 +25746,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -26449,7 +26449,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -26986,7 +26986,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -27517,7 +27517,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -28136,7 +28136,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -28896,7 +28896,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -29418,7 +29418,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -30114,7 +30114,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");

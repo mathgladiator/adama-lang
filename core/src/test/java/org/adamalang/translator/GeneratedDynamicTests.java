@@ -443,7 +443,7 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1167,7 +1167,7 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
-    gold.append("\n  private void handleChannelMessage_assoc(NtPrincipal __who, RTxX x) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_assoc(CoreRequestContext __context, NtPrincipal __who, RTxX x) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    food.set(x.ninja);");
@@ -1183,10 +1183,10 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal __who, String __channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext __context, String __channel, Object __message) throws AbortMessageException {");
     gold.append("\n    switch (__channel) {");
     gold.append("\n      case \"assoc\":");
-    gold.append("\n        handleChannelMessage_assoc(__who, (RTxX) __message);");
+    gold.append("\n        handleChannelMessage_assoc(__context, __context.who, (RTxX) __message);");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -1196,7 +1196,7 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  protected void __route(AsyncTask __task) {");
     gold.append("\n    switch (__task.channel) {");
     gold.append("\n      case \"assoc\":");
-    gold.append("\n        __task.setAction(() -> handleChannelMessage_assoc(__task.who, (RTxX)(__task.message)));");
+    gold.append("\n        __task.setAction(() -> handleChannelMessage_assoc(__task.context(__getKey()), __task.who, (RTxX)(__task.message)));");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");

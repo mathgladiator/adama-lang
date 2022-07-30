@@ -1,0 +1,9 @@
+message M {}
+
+public string last_origin;
+public string last_ip;
+
+channel foo(M m) {
+  last_origin = @context.origin;
+  last_ip = @context.ip;
+}

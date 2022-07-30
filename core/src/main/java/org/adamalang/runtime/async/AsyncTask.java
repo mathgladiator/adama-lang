@@ -15,6 +15,7 @@ import org.adamalang.runtime.exceptions.RetryProgressException;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
+import org.adamalang.runtime.sys.CoreRequestContext;
 
 /**
  * a task is a wrapper around a message, it is used to track the lifecycle of the message and delay
@@ -26,18 +27,26 @@ public class AsyncTask {
   public final int messageId;
   public final long timestamp;
   public final NtPrincipal who;
+  public final String origin;
+  public final String ip;
   private boolean aborted;
   private AsyncAction action;
 
   /** Construct the task around a message */
-  public AsyncTask(final int messageId, final NtPrincipal who, final String channel, final long timestamp, final Object message) {
+  public AsyncTask(final int messageId, final NtPrincipal who, final String channel, final long timestamp, final String origin, String ip, final Object message) {
     this.messageId = messageId;
     this.who = who;
     this.channel = channel;
     this.timestamp = timestamp;
+    this.origin = origin;
+    this.ip = ip;
     this.message = message;
     action = null;
     aborted = false;
+  }
+
+  public CoreRequestContext context(String key) {
+    return new CoreRequestContext(who, origin, ip, key);
   }
 
   /** dump to a Json Stream Writer */
@@ -49,6 +58,10 @@ public class AsyncTask {
     writer.writeFastString(channel);
     writer.writeObjectFieldIntro("timestamp");
     writer.writeLong(timestamp);
+    writer.writeObjectFieldIntro("origin");
+    writer.writeFastString(origin);
+    writer.writeObjectFieldIntro("ip");
+    writer.writeFastString(ip);
     writer.writeObjectFieldIntro("message");
     if (message instanceof NtMessageBase) {
       ((NtMessageBase) message).__writeOut(writer);

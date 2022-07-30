@@ -602,7 +602,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
-    gold.append("\n  private void handleChannelMessage_x(NtPrincipal __who, RTxX msg) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_x(CoreRequestContext __context, NtPrincipal __who, RTxX msg) throws AbortMessageException {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
     gold.append("\n    lastValue.set(msg.v);");
@@ -624,10 +624,10 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal __who, String __channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext __context, String __channel, Object __message) throws AbortMessageException {");
     gold.append("\n    switch (__channel) {");
     gold.append("\n      case \"x\":");
-    gold.append("\n        handleChannelMessage_x(__who, (RTxX) __message);");
+    gold.append("\n        handleChannelMessage_x(__context, __context.who, (RTxX) __message);");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -637,7 +637,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n  protected void __route(AsyncTask __task) {");
     gold.append("\n    switch (__task.channel) {");
     gold.append("\n      case \"x\":");
-    gold.append("\n        __task.setAction(() -> handleChannelMessage_x(__task.who, (RTxX)(__task.message)));");
+    gold.append("\n        __task.setAction(() -> handleChannelMessage_x(__task.context(__getKey()), __task.who, (RTxX)(__task.message)));");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -719,7 +719,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 9;");
     gold.append("\n      __track(6);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"x\", 0, new RTxX(42)));");
+    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"x\", 0, \"origin\", \"ip\", new RTxX(42)));");
     gold.append("\n      __track(7);");
     gold.append("\n      __test_progress();");
     gold.append("\n      __track(8);");
@@ -727,7 +727,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      __track(9);");
     gold.append("\n      __assert_truth(!skip.get(), 30, 2, 30, 15);");
     gold.append("\n      __track(10);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"x\", 0, new RTxX(50)));");
+    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"x\", 0, \"origin\", \"ip\", new RTxX(50)));");
     gold.append("\n      __track(11);");
     gold.append("\n      __test_progress();");
     gold.append("\n      __track(12);");
@@ -1454,7 +1454,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2107,7 +2107,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3143,7 +3143,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3868,7 +3868,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
-    gold.append("\n  private void handleChannelMessage_x(NtPrincipal __who, RTxX msg) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_x(CoreRequestContext __context, NtPrincipal __who, RTxX msg) throws AbortMessageException {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
     gold.append("\n    lastV.set(msg.v);");
@@ -3890,10 +3890,10 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal __who, String __channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext __context, String __channel, Object __message) throws AbortMessageException {");
     gold.append("\n    switch (__channel) {");
     gold.append("\n      case \"x\":");
-    gold.append("\n        handleChannelMessage_x(__who, (RTxX) __message);");
+    gold.append("\n        handleChannelMessage_x(__context, __context.who, (RTxX) __message);");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -3903,7 +3903,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n  protected void __route(AsyncTask __task) {");
     gold.append("\n    switch (__task.channel) {");
     gold.append("\n      case \"x\":");
-    gold.append("\n        __task.setAction(() -> handleChannelMessage_x(__task.who, (RTxX)(__task.message)));");
+    gold.append("\n        __task.setAction(() -> handleChannelMessage_x(__task.context(__getKey()), __task.who, (RTxX)(__task.message)));");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -3998,19 +3998,19 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 10;");
     gold.append("\n      __track(9);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"x\", 0, new RTxX(42)));");
+    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"x\", 0, \"origin\", \"ip\", new RTxX(42)));");
     gold.append("\n      __track(10);");
     gold.append("\n      __test_progress();");
     gold.append("\n      __track(11);");
     gold.append("\n      __assert_truth(lastV.get() == 42, 35, 2, 35, 21);");
     gold.append("\n      __track(12);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"x\", 0, new RTxX(32)));");
+    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"x\", 0, \"origin\", \"ip\", new RTxX(32)));");
     gold.append("\n      __track(13);");
     gold.append("\n      __test_progress();");
     gold.append("\n      __track(14);");
     gold.append("\n      __assert_truth(lastV.get() == 42, 38, 2, 38, 21);");
     gold.append("\n      __track(15);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"x\", 0, new RTxX(50)));");
+    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"x\", 0, \"origin\", \"ip\", new RTxX(50)));");
     gold.append("\n      __track(16);");
     gold.append("\n      __test_progress();");
     gold.append("\n      __track(17);");
@@ -4506,7 +4506,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -5072,7 +5072,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -5681,7 +5681,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtPrincipal who, String channel, Object __message) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(CoreRequestContext context, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");

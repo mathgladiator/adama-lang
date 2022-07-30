@@ -1,0 +1,31 @@
+message M {}
+
+public principal last_who;
+public string last_origin;
+public string last_ip;
+
+@connected {
+  last_who = @who;
+  last_origin = @context.origin;
+  last_ip = @context.ip;
+  return true;
+}
+
+@disconnected {
+  last_who = @who;
+  last_origin = @context.origin;
+  last_ip = @context.ip;
+}
+
+@can_attach {
+  let me_who = @who;
+  let me_origin = @context.origin;
+  let me_ip = @context.ip;
+  return true;
+}
+
+@attached (what) {
+  last_who = @who;
+  last_origin = @context.origin;
+  last_ip = @context.ip;
+}

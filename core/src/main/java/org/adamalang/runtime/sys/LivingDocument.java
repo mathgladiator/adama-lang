@@ -508,6 +508,8 @@ public abstract class LivingDocument implements RxParent, Caller {
               NtPrincipal who = null;
               String channel = null;
               Object message = null;
+              String origin = null;
+              String ip = null;
               var timestamp = 0L;
               while (reader.notEndOfObject()) {
                 final var f = reader.fieldName();
@@ -521,6 +523,12 @@ public abstract class LivingDocument implements RxParent, Caller {
                   case "timestamp":
                     timestamp = reader.readLong();
                     break;
+                  case "origin":
+                    origin = reader.readString();
+                    break;
+                  case "ip":
+                    ip = reader.readString();
+                    break;
                   case "message":
                     message = __parse_message(channel, reader);
                     break;
@@ -528,7 +536,7 @@ public abstract class LivingDocument implements RxParent, Caller {
                     reader.skipValue();
                 }
               }
-              final var task = new AsyncTask(msgId, who, channel, timestamp, message);
+              final var task = new AsyncTask(msgId, who, channel, timestamp, origin, ip, message);
               tasks.put(msgId, task);
             }
           } else {
@@ -547,7 +555,7 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   protected abstract boolean __is_direct_channel(String channel);
 
-  protected abstract void __handle_direct(NtPrincipal who, String channel, Object message) throws AbortMessageException;
+  protected abstract void __handle_direct(CoreRequestContext context, String channel, Object message) throws AbortMessageException;
 
   /** code generated: insert data */
   public abstract void __insert(JsonStreamReader __reader);
@@ -886,7 +894,7 @@ public abstract class LivingDocument implements RxParent, Caller {
           if (context == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
           }
-          return __transaction_send(context, requestJson, who, marker, channel, timestamp, message, factory);
+          return __transaction_send(context, requestJson, marker, channel, timestamp, message, factory);
         case "deliver":
           if (who == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
@@ -1346,7 +1354,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     return new LivingDocumentChange(update, broadcasts, null);
   }
 
-  private LivingDocumentChange __transaction_send_enqueue(final String request, final String dedupeKey, final NtPrincipal who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_send_enqueue(final String request, final String dedupeKey, final CoreRequestContext context, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     // create the delta
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
@@ -1365,7 +1373,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.writeObjectFieldIntro("__messages");
     forward.beginObject();
     forward.writeObjectFieldIntro(msgId);
-    final var task = new AsyncTask(msgId, who, channel, timestamp, message);
+    final var task = new AsyncTask(msgId, context.who, channel, timestamp, context.origin, context.ip, message);
     task.dump(forward);
     forward.endObject();
     reverse.beginObject();
@@ -1387,12 +1395,12 @@ public abstract class LivingDocument implements RxParent, Caller {
     __commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
-    final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
+    final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), context.who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
     return new LivingDocumentChange(result, null, null);
   }
 
   /** transaction: a person is sending the document a message */
-  private LivingDocumentChange __transaction_send(CoreRequestContext context, final String request, final NtPrincipal who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_send(CoreRequestContext context, final String request, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -1400,11 +1408,11 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
     try {
       // they must be connected
-      if (!__clients.containsKey(who) && !factory.canSendWhileDisconnected(context)) {
+      if (!__clients.containsKey(context.who) && !factory.canSendWhileDisconnected(context)) {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
       }
 
-      String dedupeKey = who.agent + "/" + who.authority + "/" + marker;
+      String dedupeKey = context.who.agent + "/" + context.who.authority + "/" + marker;
       if (marker != null) {
         if (__dedupe.containsKey(dedupeKey)) {
           throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_ALREADY_SENT);
@@ -1415,16 +1423,16 @@ public abstract class LivingDocument implements RxParent, Caller {
       if (__is_direct_channel(channel)) {
         try {
           __random = new Random(Long.parseLong(__entropy.get()) + timestamp);
-          __handle_direct(who, channel, message);
-          change = __transaction_send_commit(request, dedupeKey, who, marker, channel, timestamp, message, factory);
+          __handle_direct(context, channel, message);
+          change = __transaction_send_commit(request, dedupeKey, context.who, marker, channel, timestamp, message, factory);
         } catch (AbortMessageException ame) {
           throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT);
         } catch (ComputeBlockedException cbe) {
           __revert();
-          change = __transaction_send_enqueue(request, dedupeKey, who, marker, channel, timestamp, message, factory);
+          change = __transaction_send_enqueue(request, dedupeKey, context, marker, channel, timestamp, message, factory);
         }
       } else {
-        change = __transaction_send_enqueue(request, dedupeKey, who, marker, channel, timestamp, message, factory);
+        change = __transaction_send_enqueue(request, dedupeKey, context, marker, channel, timestamp, message, factory);
       }
       exception = false;
       return change;

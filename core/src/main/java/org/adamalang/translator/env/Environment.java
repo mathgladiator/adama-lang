@@ -209,6 +209,11 @@ public class Environment {
     return new Environment(document, state.scopeConstructor(), this);
   }
 
+  /** create a new environment just for document events */
+  public Environment scopeAsDocumentEvent() {
+    return new Environment(document, state.scopeDocumentEvent(), this);
+  }
+
   /** create a new environment where code is free (Why?) */
   public Environment scopeAsNoCost() {
     return new Environment(document, state.scopeNoCost(), this);

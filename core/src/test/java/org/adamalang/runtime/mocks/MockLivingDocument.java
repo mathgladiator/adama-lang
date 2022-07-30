@@ -54,7 +54,7 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  protected void __handle_direct(NtPrincipal who, String channel, Object message) throws AbortMessageException {
+  protected void __handle_direct(CoreRequestContext who, String channel, Object message) throws AbortMessageException {
   }
 
   @Override

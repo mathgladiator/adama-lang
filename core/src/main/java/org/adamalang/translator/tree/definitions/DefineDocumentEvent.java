@@ -99,7 +99,7 @@ public class DefineDocumentEvent extends Definition {
       return next;
     }
     boolean readonly = which == DocumentEvent.AskAssetAttachment;
-    final var next = readonly ? environment.scopeAsReadOnlyBoundary() : environment.scope();
+    final var next = readonly ? environment.scopeAsReadOnlyBoundary().scopeAsDocumentEvent() : environment.scopeAsDocumentEvent();
     if (which == DocumentEvent.ClientConnected || which == DocumentEvent.AskAssetAttachment) {
       next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, eventToken).withPosition(this));
     }

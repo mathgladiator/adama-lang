@@ -29,6 +29,7 @@ public class EnvironmentState {
   private boolean isBubble;
   private boolean isWeb;
   private boolean isConstructor;
+  private boolean isDocumentEvent;
   private String webMethod;
   private String cacheObject;
   private boolean readonlyEnv;
@@ -53,6 +54,7 @@ public class EnvironmentState {
     readonly = false;
     readonlyEnv = prior.readonlyEnv;
     isConstructor = prior.isConstructor;
+    isDocumentEvent = prior.isDocumentEvent;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -74,6 +76,7 @@ public class EnvironmentState {
     webMethod = null;
     cacheObject = null;
     isConstructor = false;
+    isDocumentEvent = false;
   }
 
   public boolean hasNoCost() {
@@ -115,6 +118,10 @@ public class EnvironmentState {
   /** is the current environment operating inside a message handler */
   public boolean isMessageHandler() {
     return isMessageHandler;
+  }
+
+  public boolean isDocumentEvent() {
+    return isDocumentEvent;
   }
 
   /** is the current environment operating in a purity model */
@@ -190,6 +197,12 @@ public class EnvironmentState {
   public EnvironmentState scopeConstructor() {
     final var next = new EnvironmentState(this);
     next.isConstructor = true;
+    return next;
+  }
+
+  public EnvironmentState scopeDocumentEvent() {
+    final var next = new EnvironmentState(this);
+    next.isDocumentEvent = true;
     return next;
   }
 
