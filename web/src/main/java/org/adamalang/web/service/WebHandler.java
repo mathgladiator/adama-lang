@@ -166,6 +166,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       cookie.setMaxAge(60 * 60 * 24 * 7);
       cookie.setHttpOnly(true);
       cookie.setSecure(true);
+      res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
       res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
       sendWithKeepAlive(webConfig, ctx, req, res);
       return true;
