@@ -31,7 +31,7 @@ public class TemplateDecideSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    d.name='default';");
     gold.append("\n    $.P(b,a,d,function(e) {");
     gold.append("\n      var f = $.E('div');");
-    gold.append("\n      $.IF(f,e,'decide',true,false,function(h,g) {");
+    gold.append("\n      $.DE(f,e,e,'channel','id','id',true,false,function(h,g) {");
     gold.append("\n        h.append($.T(' Time to decide! '));");
     gold.append("\n      },function(h,g) {");
     gold.append("\n        var i = $.E('span');");
@@ -51,7 +51,7 @@ public class TemplateDecideSimpleTests extends BaseRxHtmlTest {
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
     source.append("\n        <connection space=\"space\" key=\"key\">");
-    source.append("\n            <div rx:if=\"decide\">");
+    source.append("\n            <div rx:if=\"decide:channel\">");
     source.append("\n                Time to decide!");
     source.append("\n                <span rx:else>");
     source.append("\n                    Can't decide... yet");
