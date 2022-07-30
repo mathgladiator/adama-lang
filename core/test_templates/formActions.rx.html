@@ -1,0 +1,26 @@
+<forest>
+    <page uri="/">
+        Simple Page
+        <form rx:action="adama:sign-in">
+            <input name="email" />
+            <input name="password" />
+            <input type="submit" />
+        </form>
+        <form rx:action="custom:foo">
+            <input type="submit" />
+        </form>
+        <form rx:action="adama:sign-up">
+            <input name="email" />
+            <input type="submit" />
+        </form>
+        <form rx:action="adama:set-password">
+            <input name="email" />
+            <input name="password" />
+            <input type="submit" />
+        </form>
+        <form rx:action="send:channel">
+            <input name="param" />
+            <input type="submit" />
+        </form>
+    </page>
+</forest>

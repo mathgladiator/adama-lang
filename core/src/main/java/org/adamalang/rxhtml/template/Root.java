@@ -26,7 +26,7 @@ public class Root {
     env.writer.tabDown().tab().append("});").newline();
   }
 
-  public static void page(Environment env) {
+  public static void page(Environment env, String defaultRedirect) {
     String stateVar = env.pool.ask();
     String rootVar = env.pool.ask();
     env.writer.tab().append("$.PG(").append(uri_to_instructions(env.element.attr("uri"))).append(", function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();
@@ -35,8 +35,14 @@ public class Root {
       if (identity == null || identity.trim().equals("")) {
         identity = "default";
       }
-      // TODO: redirect
-      env.writer.tab().append("if ($.ID('").append(identity).append("','').abort) {").tabUp().newline();
+      String redirect = defaultRedirect;
+      if (env.element.hasAttr("redirect")) {
+        String redirectTo = env.element.attr("redirect");
+        if (redirectTo != null && !redirectTo.trim().equals("")) {
+          redirect = redirectTo;
+        }
+      }
+      env.writer.tab().append("if ($.ID('").append(identity).append("','").append(redirect != null ? redirect : "").append("').abort) {").tabUp().newline();
       env.writer.tab().append("return;").tabDown().newline();
       env.writer.tab().append("}").newline();
     }

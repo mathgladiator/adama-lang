@@ -1,0 +1,23 @@
+<forest>
+    <page uri="/" authenticate>
+        Simple Page
+    </page>
+    <page uri="/$user:text" authenticate>
+        Text type user profile
+    </page>
+    <page uri="/$user/profile" authenticate>
+        No type
+    </page>
+    <page uri="/$user/settings/$key" authenticate>
+        Keys for a user
+    </page>
+    <page uri="/yolo" authenticate redirect="/bounce">
+
+    </page>
+    <page uri="/bounce" authenticate>
+
+    </page>
+    <page uri="/login" default-redirect-source>
+        Simple Page
+    </page>
+</forest>
