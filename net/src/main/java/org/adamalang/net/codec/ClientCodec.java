@@ -12,6 +12,7 @@ package org.adamalang.net.codec;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ClientMessage.WebOptions;
 import org.adamalang.net.codec.ClientMessage.WebPut;
 import org.adamalang.net.codec.ClientMessage.WebGet;
 import org.adamalang.net.codec.ClientMessage.Header;
@@ -41,6 +42,8 @@ import org.adamalang.net.codec.ClientMessage.PingRequest;
 public class ClientCodec {
 
   public static abstract class StreamServer implements ByteStream {
+    public abstract void handle(WebOptions payload);
+
     public abstract void handle(WebPut payload);
 
     public abstract void handle(WebGet payload);
@@ -99,6 +102,9 @@ public class ClientCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
+        case 1725:
+          handle(readBody_1725(buf, new WebOptions()));
+          return;
         case 1723:
           handle(readBody_1723(buf, new WebPut()));
           return;
@@ -173,6 +179,7 @@ public class ClientCodec {
   }
 
   public static interface HandlerServer {
+    public void handle(WebOptions payload);
     public void handle(WebPut payload);
     public void handle(WebGet payload);
     public void handle(ProxyClose payload);
@@ -200,6 +207,9 @@ public class ClientCodec {
 
   public static void route(ByteBuf buf, HandlerServer handler) {
     switch (buf.readIntLE()) {
+      case 1725:
+        handler.handle(readBody_1725(buf, new WebOptions()));
+        return;
       case 1723:
         handler.handle(readBody_1723(buf, new WebPut()));
         return;
@@ -343,6 +353,28 @@ public class ClientCodec {
   }
 
 
+  public static WebOptions read_WebOptions(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 1725:
+        return readBody_1725(buf, new WebOptions());
+    }
+    return null;
+  }
+
+
+  private static WebOptions readBody_1725(ByteBuf buf, WebOptions o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    o.agent = Helper.readString(buf);
+    o.authority = Helper.readString(buf);
+    o.uri = Helper.readString(buf);
+    o.headers = Helper.readArray(buf, (n) -> new Header[n], () -> read_Header(buf));
+    o.parametersJson = Helper.readString(buf);
+    o.origin = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
+    return o;
+  }
+
   public static WebPut read_WebPut(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 1723:
@@ -361,6 +393,8 @@ public class ClientCodec {
     o.headers = Helper.readArray(buf, (n) -> new Header[n], () -> read_Header(buf));
     o.parametersJson = Helper.readString(buf);
     o.bodyJson = Helper.readString(buf);
+    o.origin = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
     return o;
   }
 
@@ -381,6 +415,8 @@ public class ClientCodec {
     o.uri = Helper.readString(buf);
     o.headers = Helper.readArray(buf, (n) -> new Header[n], () -> read_Header(buf));
     o.parametersJson = Helper.readString(buf);
+    o.origin = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
     return o;
   }
 
@@ -750,6 +786,23 @@ public class ClientCodec {
     return o;
   }
 
+  public static void write(ByteBuf buf, WebOptions o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(1725);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
+    Helper.writeString(buf, o.agent);;
+    Helper.writeString(buf, o.authority);;
+    Helper.writeString(buf, o.uri);;
+    Helper.writeArray(buf, o.headers, (item) -> write(buf, item));
+    Helper.writeString(buf, o.parametersJson);;
+    Helper.writeString(buf, o.origin);;
+    Helper.writeString(buf, o.ip);;
+  }
+
   public static void write(ByteBuf buf, WebPut o) {
     if (o == null) {
       buf.writeIntLE(0);
@@ -764,6 +817,8 @@ public class ClientCodec {
     Helper.writeArray(buf, o.headers, (item) -> write(buf, item));
     Helper.writeString(buf, o.parametersJson);;
     Helper.writeString(buf, o.bodyJson);;
+    Helper.writeString(buf, o.origin);;
+    Helper.writeString(buf, o.ip);;
   }
 
   public static void write(ByteBuf buf, WebGet o) {
@@ -779,6 +834,8 @@ public class ClientCodec {
     Helper.writeString(buf, o.uri);;
     Helper.writeArray(buf, o.headers, (item) -> write(buf, item));
     Helper.writeString(buf, o.parametersJson);;
+    Helper.writeString(buf, o.origin);;
+    Helper.writeString(buf, o.ip);;
   }
 
   public static void write(ByteBuf buf, Header o) {

@@ -120,6 +120,8 @@ public class ErrorTable {
     descriptions.put(146115, "no description of error (yet)");
     names.put(133308, "DOCUMENT_WEB_GET_NOT_FOUND");
     descriptions.put(133308, "no description of error (yet)");
+    names.put(127692, "DOCUMENT_WEB_OPTIONS_NOT_FOUND");
+    descriptions.put(127692, "no description of error (yet)");
     names.put(114881, "DOCUMENT_WEB_PUT_NOT_FOUND");
     descriptions.put(114881, "no description of error (yet)");
     names.put(130092, "SERVICE_DOCUMENT_ALREADY_CREATED");
@@ -565,6 +567,8 @@ public class ErrorTable {
     descriptions.put(717952, "no description of error (yet)");
     names.put(797824, "ADAMA_NET_WEBGET_FOUND_REGION_RATHER_THAN_MACHINE");
     descriptions.put(797824, "no description of error (yet)");
+    names.put(773309, "ADAMA_NET_WEBOPTIONS_FOUND_REGION_RATHER_THAN_MACHINE");
+    descriptions.put(773309, "no description of error (yet)");
     names.put(703539, "ADAMA_NET_WEBPUT_FOUND_REGION_RATHER_THAN_MACHINE");
     descriptions.put(703539, "no description of error (yet)");
     names.put(737336, "ADAMA_NET_CREATE_REJECTED");
@@ -593,6 +597,10 @@ public class ErrorTable {
     descriptions.put(792631, "no description of error (yet)");
     names.put(732208, "ADAMA_NET_WEBPUT_REJECTED");
     descriptions.put(732208, "no description of error (yet)");
+    names.put(703667, "ADAMA_NET_WEBOPTIONS_TIMEOUT");
+    descriptions.put(703667, "no description of error (yet)");
+    names.put(786615, "ADAMA_NET_WEBOPTIONS_REJECTED");
+    descriptions.put(786615, "no description of error (yet)");
     names.put(769085, "ADAMA_NET_CONNECTION_DONE");
     descriptions.put(769085, "no description of error (yet)");
     retry.add(769085);

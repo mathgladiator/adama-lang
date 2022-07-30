@@ -462,7 +462,18 @@ public class Service {
       public void handleOptions(String uri, Callback<Boolean> callback) {
         SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
         if (skr != null) {
-          // TODO: ask the space for the policy; need a robust cache here
+          WebGet get = new WebGet(NtPrincipal.NO_ONE, skr.uri, new TreeMap<>(), new NtDynamic("{}"));
+          client.webOptions(skr.space, skr.key, get, new Callback<>() {
+            @Override
+            public void success(WebResponse value) {
+              callback.success(value.cors);
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              callback.failure(ex);
+            }
+          });
           callback.success(true);
         } else {
           callback.success(false);

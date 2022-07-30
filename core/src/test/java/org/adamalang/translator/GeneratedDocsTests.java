@@ -631,6 +631,10 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n  protected WebResponse __put_internal(WebPut __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public WebResponse __options(WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
     gold.append("\n  private void __step_transition1() {");
     gold.append("\n    __code_cost += 4;");
     gold.append("\n    __track(2);");
@@ -2047,6 +2051,10 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __put_internal(WebPut __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public WebResponse __options(WebGet __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");

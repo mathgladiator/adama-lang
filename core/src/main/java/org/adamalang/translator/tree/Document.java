@@ -73,6 +73,7 @@ public class Document implements TopLevelDocumentHandler {
   private String className;
   public final UriTable webGet;
   public final UriTable webPut;
+  public final UriTable webOptions;
   private final HashMap<String, String> includes;
   public final LinkedHashMap<String, DefineService> services;
   private final HashSet<String> defined;
@@ -102,6 +103,7 @@ public class Document implements TopLevelDocumentHandler {
     types.put("__ViewerType", viewerType);
     webGet = new UriTable();
     webPut = new UriTable();
+    webOptions = new UriTable();
     includes = new HashMap<>();
     services = new LinkedHashMap<>();
     defined = new HashSet<>();
@@ -400,6 +402,16 @@ public class Document implements TopLevelDocumentHandler {
     });
     if (!webPut.map(dwp.uri, dwp)) {
       createError(dwp, String.format("Web put path %s has a conflict", dwp.uri), "Web");
+    }
+  }
+
+  @Override
+  public void add(DefineWebOptions dwo) {
+    typeCheckOrder.add((env) -> {
+      dwo.typing(env);
+    });
+    if (!webOptions.map(dwo.uri, dwo)) {
+      createError(dwo, String.format("Web options path %s has a conflict", dwo.uri), "Web");
     }
   }
 

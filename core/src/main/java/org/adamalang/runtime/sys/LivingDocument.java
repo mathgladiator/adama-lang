@@ -581,6 +581,9 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** code generated: respond to a get request */
   public abstract WebResponse __get(WebGet __get);
 
+  /** code generated: respond to a get request */
+  public abstract WebResponse __options(WebGet __get);
+
   /** code generated: respond to a put request */
   protected abstract WebResponse __put_internal(WebPut __put);
 

@@ -131,6 +131,11 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   }
 
   @Override
+  public void add(DefineWebOptions dwo) {
+    dwo.emit(this);
+  }
+
+  @Override
   public void add(Include in) {
     in.emit(this);
   }

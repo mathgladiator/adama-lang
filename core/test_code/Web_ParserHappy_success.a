@@ -18,12 +18,25 @@ message M {
   int x;
 }
 
+@web options / {
+  return {cors:true}
+}
+
 @web put / (M m) {
   return {html:"Put Root"};
 }
 
+
+@web options /xyz {
+  return {cors:true}
+}
+
 @web put /xyz (M m) {
   return {html:"Hi XYZ"};
+}
+
+@web options /xyz/uv {
+  return {cors:true}
 }
 
 @web put /xyz/uv (M m) {

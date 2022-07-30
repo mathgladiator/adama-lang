@@ -55,6 +55,8 @@ public interface TopLevelDocumentHandler {
 
   void add(DefineWebPut dwp);
 
+  void add(DefineWebOptions dwo);
+
   void add(Include in);
 
   void add(DefineService ds);

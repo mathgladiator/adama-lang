@@ -468,12 +468,12 @@ public class Parser {
   }
 
   public Consumer<TopLevelDocumentHandler> define_web(Token webToken) throws AdamaLangException {
-    Token getOrPutToken = tokens.popIf((t) -> t.isIdentifier("get", "put"));
-    if (getOrPutToken == null) {
-      throw new ParseException("Parser was get or put after @web to indicate a read (i.e. get) or write (i.e. put) request", tokens.getLastTokenIfAvailable());
+    Token methodToken = tokens.popIf((t) -> t.isIdentifier("get", "put", "options"));
+    if (methodToken == null) {
+      throw new ParseException("Parser was get or put after @web to indicate a read (i.e. get), write (i.e. put) request, or the prelight options for CORS.", tokens.getLastTokenIfAvailable());
     }
     Uri uri = uri();
-    if ("put".equals(getOrPutToken.text)) {
+    if ("put".equals(methodToken.text)) {
       final var open = consumeExpectedSymbol("(");
       final var messageTypeName = id();
       final var messageVariableName = id();
@@ -481,13 +481,19 @@ public class Parser {
       final var body = block();
       // @web post URI / childPath / $var (messageType messageVar) {
       // }
-      DefineWebPut dwp = new DefineWebPut(webToken, getOrPutToken, uri, open, messageTypeName, messageVariableName, close, body);
+      DefineWebPut dwp = new DefineWebPut(webToken, methodToken, uri, open, messageTypeName, messageVariableName, close, body);
       return (doc) -> doc.add(dwp);
+    } else if ("options".equals(methodToken.text)) {
+      final var body = block();
+      // @web options URI / childPath / $var {
+      // }
+      DefineWebOptions dwo = new DefineWebOptions(webToken, methodToken, uri, body);
+      return (doc) -> doc.add(dwo);
     } else { // GET
       // @web get URI / childPath / $var {
       // }
       final var body = block();
-      DefineWebGet dwg = new DefineWebGet(webToken, getOrPutToken, uri, body);
+      DefineWebGet dwg = new DefineWebGet(webToken, methodToken, uri, body);
       return (doc) -> doc.add(dwg);
     }
   }

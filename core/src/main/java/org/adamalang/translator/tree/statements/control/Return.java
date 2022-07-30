@@ -67,6 +67,7 @@ public class Return extends Statement {
     if (environment.state.isWeb()) {
       final var givenReturnType = environment.rules.Resolve(expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null), true);
       if (givenReturnType instanceof TyNativeMessage) {
+        String method = environment.state.getWebMethod();
         webFields = new TreeSet<>();
         webReturnType = (TyNativeMessage) givenReturnType;
         int body = 0;
@@ -91,8 +92,14 @@ public class Return extends Statement {
         }
         consider("cors", webReturnType, (ty) -> environment.rules.IsBoolean(ty, false));
         consider("cache_ttl_seconds", webReturnType, (ty) -> environment.rules.IsInteger(ty, false));
-        if (body != 1) {
-          environment.document.createError(this, String.format("The return statement within a @web expects exactly one field type; got " + body + " instead"), "ReturnFlowWeb");
+        if (method.equals("options")) {
+          if (body != 0) {
+            environment.document.createError(this, String.format("The return statement within a @web expects no body fields; got " + body + " instead"), "ReturnFlowWeb");
+          }
+        } else {
+          if (body != 1) {
+            environment.document.createError(this, String.format("The return statement within a @web expects exactly one body type; got " + body + " instead"), "ReturnFlowWeb");
+          }
         }
       } else {
         environment.document.createError(this, String.format("The return statement within a @web expects a message type"), "ReturnFlowWeb");

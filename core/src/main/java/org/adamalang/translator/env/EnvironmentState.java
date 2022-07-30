@@ -28,6 +28,7 @@ public class EnvironmentState {
   private boolean isPolicy;
   private boolean isBubble;
   private boolean isWeb;
+  private String webMethod;
   private String cacheObject;
   private boolean readonlyEnv;
 
@@ -46,6 +47,7 @@ public class EnvironmentState {
     isPolicy = prior.isPolicy;
     isBubble = prior.isBubble;
     isWeb = prior.isWeb;
+    webMethod = prior.webMethod;
     cacheObject = prior.cacheObject;
     readonly = false;
     readonlyEnv = prior.readonlyEnv;
@@ -67,6 +69,7 @@ public class EnvironmentState {
     isPolicy = false;
     isBubble = false;
     isWeb = false;
+    webMethod = null;
     cacheObject = null;
   }
 
@@ -88,6 +91,10 @@ public class EnvironmentState {
 
   public boolean isWeb() {
     return isWeb;
+  }
+
+  public String getWebMethod() {
+    return webMethod;
   }
 
   public String getCacheObject() {
@@ -166,9 +173,10 @@ public class EnvironmentState {
     return next;
   }
 
-  public EnvironmentState scopeWeb() {
+  public EnvironmentState scopeWeb(String method) {
     final var next = new EnvironmentState(this);
     next.isWeb = true;
+    next.webMethod = method;
     return next;
   }
 

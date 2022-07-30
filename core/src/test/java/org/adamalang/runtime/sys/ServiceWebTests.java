@@ -39,6 +39,7 @@ public class ServiceWebTests {
   private static final String SIMPLE_CODE_MSG = "@static { create { return true; } }" +
       "@web get / {\n" + "  return {html:\"root\"};\n" + "}\n" + "\n" + //
       "@web get /fixed {\n" + "  return {html:\"fixed path\"};\n" + "}\n" + "\n" + //
+      "@web options /fixed {\n" + "  return {cors:true};\n" + "}\n" + "\n" + //
       "@web get /path0/$x:int {\n" + "  return {html:\"path integer:\" + x,cache_ttl_seconds:42};\n" + "}\n" + "\n" + //
       "@web get /path1/$x:double {\n" + "  return {html:\"path double:\" + x};\n" + "}\n" + "\n" + //
       "@web get /path2/$x:long {\n" + "  return {html:\"path long without child:\" + x};\n" + "}\n" + "\n" + //
@@ -61,11 +62,23 @@ public class ServiceWebTests {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
-      CountDownLatch latch = new CountDownLatch(7);
+      CountDownLatch latch = new CountDownLatch(8);
       service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
           Assert.assertEquals("root", value.body);
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+      service.webOptions(KEY, new WebGet(NtPrincipal.NO_ONE, "/fixed", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.assertTrue(value.cors);
           latch.countDown();
         }
 

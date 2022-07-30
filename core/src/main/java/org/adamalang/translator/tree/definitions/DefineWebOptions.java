@@ -16,21 +16,21 @@ import org.adamalang.translator.tree.definitions.web.UriAction;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyNativeRef;
 
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
-/** defines a URI to get a web resource */
-public class DefineWebGet extends Definition implements UriAction {
-
+public class DefineWebOptions extends Definition implements UriAction {
   public final Token webToken;
-  public final Token getToken;
+  public final Token optionsToken;
   public final Uri uri;
   public final Block code;
 
-  public DefineWebGet(Token webToken, Token getToken, Uri uri, Block code) {
+  public DefineWebOptions(Token webToken, Token optionsToken, Uri uri, Block code) {
     this.webToken = webToken;
-    this.getToken = getToken;
+    this.optionsToken = optionsToken;
     this.uri = uri;
     this.code = code;
     ingest(webToken);
@@ -40,7 +40,7 @@ public class DefineWebGet extends Definition implements UriAction {
   @Override
   public void emit(Consumer<Token> yielder) {
     yielder.accept(webToken);
-    yielder.accept(getToken);
+    yielder.accept(optionsToken);
     uri.emit(yielder);
     code.emit(yielder);
   }
@@ -51,7 +51,7 @@ public class DefineWebGet extends Definition implements UriAction {
   }
 
   public Environment next(Environment environment) {
-    Environment env = environment.scopeAsReadOnlyBoundary().scopeAsWeb("get");
+    Environment env = environment.scopeAsWeb("options");
     uri.extendInto(env);
     uri.typing(env);
     return env;

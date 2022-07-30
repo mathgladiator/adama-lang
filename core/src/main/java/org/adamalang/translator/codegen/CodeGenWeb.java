@@ -12,6 +12,7 @@ package org.adamalang.translator.codegen;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineWebGet;
+import org.adamalang.translator.tree.definitions.DefineWebOptions;
 import org.adamalang.translator.tree.definitions.DefineWebPut;
 import org.adamalang.translator.tree.definitions.web.UriAction;
 import org.adamalang.translator.tree.definitions.web.UriTable;
@@ -109,6 +110,16 @@ public class CodeGenWeb {
     sb.writeNewline();
   }
 
+  private void writeOptionsHandler(StringBuilderWithTabs sb, Environment environment, String name, DefineWebOptions options) {
+    sb.append("private WebResponse __options_").append(name).append("(NtPrincipal __who, WebGet __request");
+    for (Map.Entry<String, TyType> param : options.parameters().entrySet()) {
+      sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
+    }
+    sb.append(")");
+    options.code.writeJava(sb, options.next(environment));
+    sb.writeNewline();
+  }
+
   private void writePutHandler(StringBuilderWithTabs sb, Environment environment, String name, DefineWebPut put) {
     sb.append("private WebResponse __put_").append(name).append("(NtPrincipal __who, WebPut __request");
     for (Map.Entry<String, TyType> param : put.parameters().entrySet()) {
@@ -143,6 +154,18 @@ public class CodeGenWeb {
       sb.append("}").writeNewline();
       for (Map.Entry<String, UriAction> action : actions.entrySet()) {
         put.writePutHandler(sb, environment, action.getKey(), (DefineWebPut) action.getValue());
+      }
+    }
+    {
+      sb.append("@Override").writeNewline();
+      sb.append("public WebResponse __options(WebGet __request) {").tabUp().writeNewline();
+      TreeMap<String, UriAction> actions = environment.document.webOptions.ready("OPTIONS");
+      CodeGenWeb options = new CodeGenWeb(environment, environment.document.webOptions, "options");
+      options.table(sb);
+      sb.append("return null;").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+      for (Map.Entry<String, UriAction> action : actions.entrySet()) {
+        options.writeOptionsHandler(sb, environment, action.getKey(), (DefineWebOptions) action.getValue());
       }
     }
   }

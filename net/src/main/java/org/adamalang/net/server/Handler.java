@@ -215,6 +215,27 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   }
 
   @Override
+  public void handle(ClientMessage.WebOptions payload) {
+    Key key = new Key(payload.space, payload.key);
+    TreeMap<String, String> headers = new TreeMap<>();
+    for (ClientMessage.Header header : payload.headers) {
+      headers.put(header.key, header.value);
+    }
+    WebGet get = new WebGet(new NtPrincipal(payload.agent, payload.authority), payload.uri, headers, new NtDynamic(payload.parametersJson));
+    nexus.service.webOptions(key, get, new Callback<>() {
+      @Override
+      public void success(WebResponse value) {
+        commonWebHandle(value);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
+  }
+
+  @Override
   public void handle(ClientMessage.WebGet payload) {
     Key key = new Key(payload.space, payload.key);
     TreeMap<String, String> headers = new TreeMap<>();

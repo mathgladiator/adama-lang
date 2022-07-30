@@ -481,6 +481,10 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public WebResponse __options(WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate__0(StaticState __static_state, NtPrincipal __who, CoreRequestContext __context) {");
     gold.append("\n    return true;");

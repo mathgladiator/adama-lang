@@ -1,0 +1,7 @@
+@web get / {
+  return {html:"HTML",xml:"XML"};
+}
+
+@web options / {
+  return {html:"HTML"};
+}

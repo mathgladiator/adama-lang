@@ -280,6 +280,60 @@ public class InstanceClient implements AutoCloseable {
     });
   }
 
+  public void webOptions(String space, String key, WebGet request, Callback<WebResponse> callback) {
+    executor.execute(new NamedRunnable("execute-web-get") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_WEBOPTIONS_TIMEOUT, ErrorCodes.ADAMA_NET_WEBOPTIONS_REJECTED, metrics.client_weboptions.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamWeb() {
+              @Override
+              public void handle(ServerMessage.WebResponseNet payload) {
+                commonWebReturn(payload, callback);
+              }
+
+              @Override
+              public void completed() {}
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new CallbackByteStreamWriter(callback) {
+              @Override
+              public void write(ByteStream stream) {
+                ByteBuf toWrite = stream.create(space.length() + key.length() + request.who.agent.length() + request.who.authority.length() + request.uri.length() + 40);
+                ClientMessage.WebOptions webOptions = new ClientMessage.WebOptions();
+                webOptions.agent = request.who.agent;
+                webOptions.authority = request.who.authority;
+                webOptions.uri = request.uri;
+                webOptions.key = key;
+                webOptions.space = space;
+                webOptions.headers = new ClientMessage.Header[request.headers.size()];
+                int at = 0;
+                for (Map.Entry<String, String> header : request.headers.entries()) {
+                  webOptions.headers[at] = new ClientMessage.Header();
+                  webOptions.headers[at].key = header.getKey();
+                  webOptions.headers[at].value = header.getValue();
+                  at++;
+                }
+                webOptions.parametersJson = request.parameters.json;
+                ClientCodec.write(toWrite, webOptions);
+                stream.next(toWrite);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
   public void webPut(String space, String key, WebPut request, Callback<WebResponse> callback) {
     executor.execute(new NamedRunnable("execute-web-put") {
       @Override

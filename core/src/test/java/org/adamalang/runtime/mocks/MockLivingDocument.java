@@ -87,6 +87,11 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public WebResponse __options(WebGet __get) {
+    return null;
+  }
+
+  @Override
   protected WebResponse __put_internal(WebPut __get) {
     return null;
   }

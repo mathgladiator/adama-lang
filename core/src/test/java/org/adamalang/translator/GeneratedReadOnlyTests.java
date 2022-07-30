@@ -925,6 +925,10 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  protected WebResponse __put_internal(WebPut __request) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public WebResponse __options(WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
     gold.append("\n  private void __step_fooz() {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");

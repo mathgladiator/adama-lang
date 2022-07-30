@@ -516,6 +516,29 @@ public class CoreService implements Deliverer {
     });
   }
 
+  /** execute a web options against the document */
+  public void webOptions(Key key, WebGet request, Callback<WebResponse> callback) {
+    load(key, new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
+        document.registerActivity();
+        WebResponse response = document.document().__options(request);
+        if (response != null) {
+          response.account(inventory);
+          callback.success(response);
+        } else {
+          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_OPTIONS_NOT_FOUND));
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
   public void startupLoad(Key key) {
     load(key, metrics.document_load_startup.wrap(DONT_CARE_DOCUMENT));
   }

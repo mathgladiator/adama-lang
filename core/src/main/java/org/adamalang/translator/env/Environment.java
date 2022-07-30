@@ -230,8 +230,8 @@ public class Environment {
   }
 
   /** create a new environment for web calls */
-  public Environment scopeAsWeb() {
-    return new Environment(document, state.scopeWeb(), this);
+  public Environment scopeAsWeb(String method) {
+    return new Environment(document, state.scopeWeb(method), this);
   }
 
   /** create a new environment which is for unit tests */
