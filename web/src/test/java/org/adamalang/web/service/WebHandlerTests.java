@@ -149,6 +149,17 @@ public class WebHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
+        callback.keepPings = true; // Hack since the rxhtml.js MAY have ping in it
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .get("/rxhtml.js")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertDataPrefix("var RxHTML = (function");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
             .post("/crash", "{}")

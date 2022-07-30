@@ -17,7 +17,7 @@ import org.adamalang.common.DefaultCopyright;
 import org.adamalang.net.codec.Generate;
 import org.adamalang.support.GenerateLanguageTests;
 import org.adamalang.support.GenerateTemplateTests;
-import org.adamalang.web.service.BundleJavaScriptClient;
+import org.adamalang.web.service.BundleJavaScript;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -44,7 +44,7 @@ public class Contrib {
         Tool.build("saas/api.xml", new File("."));
         return;
       case "bundle-js":
-        BundleJavaScriptClient.main(next);
+        BundleJavaScript.main(next);
         return;
       case "make-et":
         GenerateTables.main(next);
