@@ -16,6 +16,7 @@ import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.rxhtml.RxHtmlToAdama;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -80,8 +81,10 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
       final var parser = new Parser(tokenEngine);
       parser.document().accept(document);
       if (rxhtml != null) {
-        // TODO. Here, we want to convert RxHTML into Adama code!
-        // This is interesting and has interesting growth potential, and it can illustrate some issues with adama.
+        String rxhtmlAdama = RxHtmlToAdama.codegen(rxhtml);
+        final var tokenEngineRxHtml = new TokenEngine("rxhtml", rxhtmlAdama.codePoints().iterator());
+        final var parserRxHtml = new Parser(tokenEngineRxHtml);
+        parserRxHtml.document().accept(document);
       }
       if (!document.check(state)) {
         throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_TYPE_LANGUAGE, document.errorsJson());

@@ -12,13 +12,16 @@ package org.adamalang.rxhtml.template;
 import java.util.regex.Pattern;
 
 public class Escapes {
+  public static String escapeNewLine(String x) {
+    return String.join("\\n", x.split(Pattern.quote("\n"), -1));
+  }
   public static String escapeSlash(String x) {
     return String.join("\\\\", x.split(Pattern.quote("\\"), -1));
   }
   public static String escape39(String x) {
-    return String.join("\\'", escapeSlash(x).split(Pattern.quote("'"), -1));
+    return String.join("\\'", escapeNewLine(escapeSlash(x)).split(Pattern.quote("'"), -1));
   }
   public static String escape34(String x) {
-    return String.join("\\\"", escapeSlash(x).split(Pattern.quote("\""), -1));
+    return String.join("\\\"", escapeNewLine(escapeSlash(x)).split(Pattern.quote("\""), -1));
   }
 }

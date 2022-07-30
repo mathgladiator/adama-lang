@@ -62,6 +62,17 @@ public class DeploymentFactoryTests {
   }
 
   @Test
+  public void rxhtml() throws Exception {
+    DeploymentPlan plan =
+        new DeploymentPlan(
+            "{\"versions\":{\"x\":{\"main\":\"public int x = 123;\",\"rxhtml\":\"<forest><page uri=\\\"/\\\">Hello World</page></forest>\"}},\"default\":\"x\",\"plan\":[]}",
+            (t, errorCode) -> {});
+    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    base.deploy("space", plan);
+    Assert.assertEquals("W9ngBjBRMNDRTZY3N3OjKA==", base.hashOf("space"));
+  }
+
+  @Test
   public void happyDirect() throws Exception {
     DeploymentPlan plan =
         new DeploymentPlan(
