@@ -24,6 +24,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
+import org.adamalang.runtime.sys.web.WebContext;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
@@ -294,7 +295,7 @@ public class CoreService implements Deliverer {
               return;
             }
             // bring the document into existence
-            DurableLivingDocument.fresh(key, factory, context.who, arg, entropy, null, base, metrics.documentFresh.wrap(new Callback<>() {
+            DurableLivingDocument.fresh(key, factory, context, arg, entropy, null, base, metrics.documentFresh.wrap(new Callback<>() {
               @Override
               public void success(DurableLivingDocument document) {
                 // jump into the thread; note, the data service must ensure this will succeed once
@@ -544,12 +545,12 @@ public class CoreService implements Deliverer {
   }
 
   /** execute a web put against the document */
-  public void webPut(NtPrincipal who, Key key, WebPutRaw request, Callback<WebResponse> callback) {
+  public void webPut(WebContext context, Key key, WebPutRaw request, Callback<WebResponse> callback) {
     load(key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
         PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
-        document.webPut(who, request, new Callback<WebResponse>() {
+        document.webPut(context.who, request, new Callback<WebResponse>() {
           @Override
           public void success(WebResponse response) {
             document.base.executor.execute(new NamedRunnable("web-put-accounting") {

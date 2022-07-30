@@ -31,6 +31,7 @@ import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.runtime.sys.metering.MeterReading;
+import org.adamalang.runtime.sys.web.WebContext;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
@@ -201,7 +202,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     for (ClientMessage.Header header : payload.headers) {
       headers.put(header.key, header.value);
     }
-    nexus.service.webPut(new NtPrincipal(payload.agent, payload.authority), key, new WebPutRaw(payload.uri, headers, new NtDynamic(payload.parametersJson), payload.bodyJson), new Callback<>() {
+    nexus.service.webPut(new WebContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip), key, new WebPutRaw(payload.uri, headers, new NtDynamic(payload.parametersJson), payload.bodyJson), new Callback<>() {
       @Override
       public void success(WebResponse value) {
         commonWebHandle(value);
@@ -221,7 +222,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     for (ClientMessage.Header header : payload.headers) {
       headers.put(header.key, header.value);
     }
-    WebGet get = new WebGet(new NtPrincipal(payload.agent, payload.authority), payload.uri, headers, new NtDynamic(payload.parametersJson));
+    WebGet get = new WebGet(new WebContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip), payload.uri, headers, new NtDynamic(payload.parametersJson));
     nexus.service.webOptions(key, get, new Callback<>() {
       @Override
       public void success(WebResponse value) {
@@ -242,7 +243,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     for (ClientMessage.Header header : payload.headers) {
       headers.put(header.key, header.value);
     }
-    WebGet get = new WebGet(new NtPrincipal(payload.agent, payload.authority), payload.uri, headers, new NtDynamic(payload.parametersJson));
+    WebGet get = new WebGet(new WebContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip), payload.uri, headers, new NtDynamic(payload.parametersJson));
     nexus.service.webGet(key, get, new Callback<>() {
       @Override
       public void success(WebResponse value) {

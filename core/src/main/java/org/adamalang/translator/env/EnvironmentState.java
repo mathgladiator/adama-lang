@@ -28,6 +28,7 @@ public class EnvironmentState {
   private boolean isPolicy;
   private boolean isBubble;
   private boolean isWeb;
+  private boolean isConstructor;
   private String webMethod;
   private String cacheObject;
   private boolean readonlyEnv;
@@ -51,6 +52,7 @@ public class EnvironmentState {
     cacheObject = prior.cacheObject;
     readonly = false;
     readonlyEnv = prior.readonlyEnv;
+    isConstructor = prior.isConstructor;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -71,6 +73,7 @@ public class EnvironmentState {
     isWeb = false;
     webMethod = null;
     cacheObject = null;
+    isConstructor = false;
   }
 
   public boolean hasNoCost() {
@@ -132,6 +135,10 @@ public class EnvironmentState {
     return readonlyEnv;
   }
 
+  public boolean isConstructor() {
+    return isConstructor;
+  }
+
   /** is the current environment for state machine transition code */
   public boolean isStateMachineTransition() {
     return isStateMachineTransition;
@@ -177,6 +184,12 @@ public class EnvironmentState {
     final var next = new EnvironmentState(this);
     next.isWeb = true;
     next.webMethod = method;
+    return next;
+  }
+
+  public EnvironmentState scopeConstructor() {
+    final var next = new EnvironmentState(this);
+    next.isConstructor = true;
     return next;
   }
 

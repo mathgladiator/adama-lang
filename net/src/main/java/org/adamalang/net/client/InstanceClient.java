@@ -249,13 +249,15 @@ public class InstanceClient implements AutoCloseable {
             }, new CallbackByteStreamWriter(callback) {
               @Override
               public void write(ByteStream stream) {
-                ByteBuf toWrite = stream.create(space.length() + key.length() + request.who.agent.length() + request.who.authority.length() + request.uri.length() + 40);
+                ByteBuf toWrite = stream.create(space.length() + key.length() + request.context.who.agent.length() + request.context.who.authority.length() + request.uri.length() + 40);
                 ClientMessage.WebGet webGet = new ClientMessage.WebGet();
-                webGet.agent = request.who.agent;
-                webGet.authority = request.who.authority;
+                webGet.agent = request.context.who.agent;
+                webGet.authority = request.context.who.authority;
                 webGet.uri = request.uri;
                 webGet.key = key;
                 webGet.space = space;
+                webGet.origin = request.context.origin;
+                webGet.ip = request.context.ip;
                 webGet.headers = new ClientMessage.Header[request.headers.size()];
                 int at = 0;
                 for (Map.Entry<String, String> header : request.headers.entries()) {
@@ -303,13 +305,15 @@ public class InstanceClient implements AutoCloseable {
             }, new CallbackByteStreamWriter(callback) {
               @Override
               public void write(ByteStream stream) {
-                ByteBuf toWrite = stream.create(space.length() + key.length() + request.who.agent.length() + request.who.authority.length() + request.uri.length() + 40);
+                ByteBuf toWrite = stream.create(space.length() + key.length() + request.context.who.agent.length() + request.context.who.authority.length() + request.uri.length() + 40);
                 ClientMessage.WebOptions webOptions = new ClientMessage.WebOptions();
-                webOptions.agent = request.who.agent;
-                webOptions.authority = request.who.authority;
+                webOptions.agent = request.context.who.agent;
+                webOptions.authority = request.context.who.authority;
                 webOptions.uri = request.uri;
                 webOptions.key = key;
                 webOptions.space = space;
+                webOptions.origin = request.context.origin;
+                webOptions.ip = request.context.ip;
                 webOptions.headers = new ClientMessage.Header[request.headers.size()];
                 int at = 0;
                 for (Map.Entry<String, String> header : request.headers.entries()) {
@@ -357,13 +361,15 @@ public class InstanceClient implements AutoCloseable {
             }, new CallbackByteStreamWriter(callback) {
               @Override
               public void write(ByteStream stream) {
-                ByteBuf toWrite = stream.create(space.length() + key.length() + request.who.agent.length() + request.who.authority.length() + request.uri.length() + 40);
+                ByteBuf toWrite = stream.create(space.length() + key.length() + request.context.who.agent.length() + request.context.who.authority.length() + request.uri.length() + 40);
                 ClientMessage.WebPut webPut = new ClientMessage.WebPut();
-                webPut.agent = request.who.agent;
-                webPut.authority = request.who.authority;
+                webPut.agent = request.context.who.agent;
+                webPut.authority = request.context.who.authority;
                 webPut.uri = request.uri;
                 webPut.key = key;
                 webPut.space = space;
+                webPut.origin = request.context.origin;
+                webPut.ip = request.context.ip;
                 webPut.headers = new ClientMessage.Header[request.headers.size()];
                 int at = 0;
                 for (Map.Entry<String, String> header : request.headers.entries()) {

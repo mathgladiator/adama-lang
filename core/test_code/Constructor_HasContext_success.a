@@ -1,0 +1,7 @@
+public string ip;
+public string origin;
+
+@construct {
+  ip = @context.ip();
+  origin = @context.origin();
+}

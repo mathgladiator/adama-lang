@@ -16,10 +16,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.sys.CoreMetrics;
-import org.adamalang.runtime.sys.DocumentThreadBase;
-import org.adamalang.runtime.sys.DurableLivingDocument;
-import org.adamalang.runtime.sys.LivingDocument;
+import org.adamalang.runtime.sys.*;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
@@ -60,7 +57,7 @@ public class DeploymentTests {
               DurableLivingDocument.fresh(
                   new Key("space", "key"),
                   factory,
-                  NtPrincipal.NO_ONE,
+                  new CoreRequestContext(NtPrincipal.NO_ONE, "key", "origin", "ip"),
                   "{}",
                   null,
                   null,

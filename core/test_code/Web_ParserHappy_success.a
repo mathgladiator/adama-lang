@@ -19,7 +19,7 @@ message M {
 }
 
 @web options / {
-  return {cors:true}
+  return {cors:true};
 }
 
 @web put / (M m) {
@@ -28,7 +28,7 @@ message M {
 
 
 @web options /xyz {
-  return {cors:true}
+  return {cors:true};
 }
 
 @web put /xyz (M m) {
@@ -36,7 +36,7 @@ message M {
 }
 
 @web options /xyz/uv {
-  return {cors:true}
+  return {cors:true};
 }
 
 @web put /xyz/uv (M m) {

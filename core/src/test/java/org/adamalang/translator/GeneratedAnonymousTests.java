@@ -976,7 +976,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(5);");
     gold.append("\n    __transitionStateMachine(\"setup\", 0);");
@@ -987,8 +987,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -999,7 +999,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"Thing\":{\"nature\":\"reactive_record\",\"name\":\"Thing\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"y\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"double\"},\"privacy\":\"public\"}}},\"_AnonObjConvert_0\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_0\",\"anonymous\":true,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}},\"y\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}}}},\"AutoMaxRecord6\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord6\",\"anonymous\":true,\"fields\":{}},\"AutoMaxRecord16\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord16\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[\"setup\"]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1,\"__auto_table_row_id\":7,\"things\":{\"1\":{\"x\":1,\"y\":2,\"z\":0.0,\"id\":1},\"2\":{\"x\":2,\"y\":3,\"z\":0.0,\"id\":2},\"3\":{\"x\":0,\"y\":0,\"z\":4.0,\"id\":3},\"4\":{\"x\":3,\"y\":4,\"z\":0.0,\"id\":4},\"5\":{\"x\":4,\"y\":5,\"z\":0.0,\"id\":5},\"6\":{\"x\":3,\"y\":4,\"z\":1.0,\"id\":6},\"7\":{\"x\":4,\"y\":5,\"z\":3.14,\"id\":7}}} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1,\"__auto_table_row_id\":7,\"things\":{\"1\":{\"x\":1,\"y\":2,\"z\":0.0,\"id\":1},\"2\":{\"x\":2,\"y\":3,\"z\":0.0,\"id\":2},\"3\":{\"x\":0,\"y\":0,\"z\":4.0,\"id\":3},\"4\":{\"x\":3,\"y\":4,\"z\":0.0,\"id\":4},\"5\":{\"x\":4,\"y\":5,\"z\":0.0,\"id\":5},\"6\":{\"x\":3,\"y\":4,\"z\":1.0,\"id\":6},\"7\":{\"x\":4,\"y\":5,\"z\":3.14,\"id\":7}}} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:23");
     gold.append("\nMEMORY:2334");
@@ -2184,7 +2184,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 7;");
     gold.append("\n    __track(0);");
     gold.append("\n    final RTxAutoMaxRecord4[] a = new RTxAutoMaxRecord4[] {new RTxAutoMaxRecord4(0), new RTxAutoMaxRecord4(1)};");
@@ -2205,8 +2205,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -2217,7 +2217,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"AutoMaxRecord4\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord4\",\"anonymous\":true,\"fields\":{}},\"AutoMaxRecord9\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord9\",\"anonymous\":true,\"fields\":{}},\"AutoMaxRecord24\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord24\",\"anonymous\":true,\"fields\":{}},\"AutoMaxRecord25\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord25\",\"anonymous\":true,\"fields\":{}},\"AutoMaxRecord34\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord34\",\"anonymous\":true,\"fields\":{}},\"_AnonObjConvert_35\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_35\",\"anonymous\":true,\"fields\":{\"z1\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}}}},\"AutoMaxRecord42\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord42\",\"anonymous\":true,\"fields\":{}},\"AutoMaxRecord58\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord58\",\"anonymous\":true,\"fields\":{}},\"AutoMaxRecord59\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord59\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:7");
     gold.append("\nMEMORY:384");
@@ -2913,7 +2913,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 5;");
     gold.append("\n    __track(0);");
     gold.append("\n    final RTxAutoMaxRecord4[] x = new RTxAutoMaxRecord4[] {new RTxAutoMaxRecord4(1, 0), (new RTxAutoMaxRecord4(0, 2))};");
@@ -2930,8 +2930,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -2942,7 +2942,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"E\":{\"nature\":\"native_value\",\"enum\":\"E\",\"options\":{\"options\":{\"X\":0},\"default\":\"X\"}},\"AutoMaxRecord4\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord4\",\"anonymous\":true,\"fields\":{}},\"AutoMaxRecord17\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord17\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:5");
     gold.append("\nMEMORY:384");

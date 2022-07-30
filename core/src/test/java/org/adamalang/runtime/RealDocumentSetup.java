@@ -24,6 +24,7 @@ import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.sys.CoreMetrics;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.support.testgen.DumbDataService;
@@ -85,9 +86,9 @@ public class RealDocumentSetup implements Deliverer {
     Key key = new Key("space", "0");
     if (json == null) {
       DurableLivingDocument.fresh(
-          key, factory, NtPrincipal.NO_ONE, "{}", "123", monitor, base, acquireReal);
+          key, factory, new CoreRequestContext(NtPrincipal.NO_ONE, key.key, "origin", "ip"), "{}", "123", monitor, base, acquireReal);
       DurableLivingDocument.fresh(
-          key, factory, NtPrincipal.NO_ONE, "{}", "123", monitor, base, acquireMirror);
+          key, factory, new CoreRequestContext(NtPrincipal.NO_ONE, key.key, "origin", "ip"), "{}", "123", monitor, base, acquireMirror);
     } else {
       DurableLivingDocument.load(key, factory, monitor, base, acquireReal);
       DurableLivingDocument.load(key, factory, monitor, base, acquireMirror);

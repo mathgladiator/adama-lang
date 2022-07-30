@@ -30,10 +30,7 @@ import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
 import org.adamalang.runtime.remote.*;
-import org.adamalang.runtime.sys.web.WebGet;
-import org.adamalang.runtime.sys.web.WebPut;
-import org.adamalang.runtime.sys.web.WebPutRaw;
-import org.adamalang.runtime.sys.web.WebResponse;
+import org.adamalang.runtime.sys.web.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.*;
@@ -241,7 +238,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** code generated: what happens when the document is constructed */
-  protected abstract void __construct_intern(NtPrincipal who, NtMessageBase message);
+  protected abstract void __construct_intern(CoreRequestContext context, NtMessageBase message);
 
   public void __usurp(LivingDocument usurpingDocument) {
     for (Map.Entry<NtPrincipal, ArrayList<PrivateView>> existing : __trackedViews.entrySet()) {
@@ -846,28 +843,28 @@ public abstract class LivingDocument implements RxParent, Caller {
           } else {
             return __transaction_invalidate_body(who, requestJson);
           }
-        case "construct":
-          if (who == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-          }
+        case "construct": // TODO: context
           if (__constructed.get()) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED);
           }
           if (arg == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG);
           }
-          return __transaction_construct(requestJson, who, arg, entropy);
-        case "connect":
+          if (who == null || key == null || origin == null || ip == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
+          }
+          return __transaction_construct(requestJson, new CoreRequestContext(who, origin, ip, key), arg, entropy);
+        case "connect": // TODO: context
           if (who == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
           }
           return __transaction_connect(requestJson, who);
-        case "disconnect":
+        case "disconnect": // TODO: context
           if (who == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
           }
           return __transaction_disconnect(requestJson, who);
-        case "attach":
+        case "attach": // TODO: context
           if (who == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
           }
@@ -876,20 +873,16 @@ public abstract class LivingDocument implements RxParent, Caller {
           }
           return __transaction_attach(requestJson, who, asset);
         case "send":
-          if (who == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-          }
           if (channel == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL);
           }
           if (message == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE);
           }
-          if (key == null || origin == null || ip == null) {
+          if (who == null || key == null || origin == null || ip == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
           }
-          CoreRequestContext context = new CoreRequestContext(who, origin, ip, key);
-          return __transaction_send(context, requestJson, who, marker, channel, timestamp, message, factory);
+          return __transaction_send(new CoreRequestContext(who, origin, ip, key), requestJson, who, marker, channel, timestamp, message, factory);
         case "deliver":
           if (who == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
@@ -913,7 +906,7 @@ public abstract class LivingDocument implements RxParent, Caller {
           if (put == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_PUT);
           }
-          return __transaction_web_put(requestJson, new WebPut(who, put));
+          return __transaction_web_put(requestJson, new WebPut(new WebContext(who, origin, ip), put));
         case "apply":
           if (who == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
@@ -995,7 +988,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       __randomizeOutOfBand();
       WebResponse response = __put_internal(put);
       exception = false;
-      return __simple_commit(put.who, request, response);
+      return __simple_commit(put.context.who, request, response);
     } finally {
       if (exception) {
         __revert();
@@ -1098,7 +1091,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: construct the document */
-  private LivingDocumentChange __transaction_construct(final String request, final NtPrincipal who, final NtMessageBase arg, final String entropy) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_construct(final String request, final CoreRequestContext context, final NtMessageBase arg, final String entropy) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -1109,7 +1102,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         __entropy.set(entropy);
       }
       __random = new Random(Long.parseLong(__entropy.get()));
-      __construct_intern(who, arg);
+      __construct_intern(context, arg);
       __constructed.set(true);
       final var forward = new JsonStreamWriter();
       final var reverse = new JsonStreamWriter();
@@ -1118,7 +1111,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
-      final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
+      final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), context.who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
       exception = false;
       return new LivingDocumentChange(result, null, null);
     } finally {

@@ -34,7 +34,7 @@ public class ContextConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    if (environment.state.isStatic()) {
+    if (environment.state.isStatic() || environment.state.isConstructor()) {
       environment.mustBeComputeContext(this);
       TyType type = new TyInternalReadonlyClass(CoreRequestContext.class);
       environment.useSpecial(type, "__context");

@@ -62,10 +62,7 @@ import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
-import org.adamalang.runtime.sys.web.WebGet;
-import org.adamalang.runtime.sys.web.WebPut;
-import org.adamalang.runtime.sys.web.WebPutRaw;
-import org.adamalang.runtime.sys.web.WebResponse;
+import org.adamalang.runtime.sys.web.*;
 import org.adamalang.services.FirstPartyServices;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.contracts.HttpHandler;
@@ -462,7 +459,7 @@ public class Service {
       public void handleOptions(String uri, Callback<Boolean> callback) {
         SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
         if (skr != null) {
-          WebGet get = new WebGet(NtPrincipal.NO_ONE, skr.uri, new TreeMap<>(), new NtDynamic("{}"));
+          WebGet get = new WebGet(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, new TreeMap<>(), new NtDynamic("{}"));
           client.webOptions(skr.space, skr.key, get, new Callback<>() {
             @Override
             public void success(WebResponse value) {
@@ -485,7 +482,7 @@ public class Service {
         SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
         if (skr != null) {
           // TODO: need a way to get an NtPrincipal token
-          WebGet get = new WebGet(NtPrincipal.NO_ONE, skr.uri, headers, new NtDynamic(parametersJson));
+          WebGet get = new WebGet(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson));
           client.webGet(skr.space, skr.key, get, new Callback<>() {
             @Override
             public void success(WebResponse value) {
@@ -515,7 +512,7 @@ public class Service {
         SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
         if (skr != null) {
           // TODO: need a way to get an NtPrincipal token
-          WebPut put = new WebPut(NtPrincipal.NO_ONE, new WebPutRaw(skr.uri, headers, new NtDynamic(parametersJson), body));
+          WebPut put = new WebPut(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), new WebPutRaw(skr.uri, headers, new NtDynamic(parametersJson), body));
           client.webPut(skr.space, skr.key, put, new Callback<>() {
             @Override
             public void success(WebResponse value) {

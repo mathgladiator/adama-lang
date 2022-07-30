@@ -68,7 +68,7 @@ public class CodeGenWeb {
     if (level.action != null) {
       if (level.tail) {
         sb.writeNewline();
-        sb.append("return ").append("__").append(method).append("_").append(level.name).append("(__request.who, __request");
+        sb.append("return ").append("__").append(method).append("_").append(level.name).append("(__request.context.who, __request");
         String paramName = translate.get("#tail-" + (at - 1) + "-name");
         if (paramName != null) {
           String paramValue = translate.get("#tail-" + (at - 1) + "-value");
@@ -82,7 +82,7 @@ public class CodeGenWeb {
         sb.append(");").writeNewline();
       } else {
         sb.append(" else {").tabUp().writeNewline();
-        sb.append("return ").append("__").append(method).append("_").append(level.name).append("(__request.who, __request");
+        sb.append("return ").append("__").append(method).append("_").append(level.name).append("(__request.context.who, __request");
         for (Map.Entry<String, TyType> param : level.action.parameters().entrySet()) {
           sb.append(", ").append(translate.get(param.getKey()));
         }

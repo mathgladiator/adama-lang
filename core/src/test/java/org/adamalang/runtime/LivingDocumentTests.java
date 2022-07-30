@@ -1028,7 +1028,7 @@ public class LivingDocumentTests {
     try {
       setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(122896, drre.code);
+      Assert.assertEquals(184332, drre.code);
     }
     setup.assertCompare();
   }
@@ -1431,7 +1431,7 @@ public class LivingDocumentTests {
     try {
       document.__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(122896, drre.code);
+      Assert.assertEquals(196624, drre.code);
     }
     setup.assertCompare();
   }

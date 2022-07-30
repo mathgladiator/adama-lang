@@ -139,6 +139,12 @@ public class LivingDocumentFactory {
     writer.writeString("0");
     writer.writeObjectFieldIntro("entropy");
     writer.writeString(entropy);
+    writer.writeObjectFieldIntro("key");
+    writer.writeString("key");
+    writer.writeObjectFieldIntro("origin");
+    writer.writeString("origin");
+    writer.writeObjectFieldIntro("ip");
+    writer.writeString("1.2.3.4");
     writer.writeObjectFieldIntro("who");
     writer.writeNtPrincipal(NtPrincipal.NO_ONE);
     writer.writeObjectFieldIntro("arg");

@@ -24,10 +24,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.runtime.sys.metering.MeterReading;
-import org.adamalang.runtime.sys.web.WebGet;
-import org.adamalang.runtime.sys.web.WebPut;
-import org.adamalang.runtime.sys.web.WebPutRaw;
-import org.adamalang.runtime.sys.web.WebResponse;
+import org.adamalang.runtime.sys.web.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,6 +36,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class ClientTests {
+  private static final WebContext CONTEXT = new WebContext(NtPrincipal.NO_ONE, "ORIGIN", "1.2.3.4");
+
   @Test
   public void simple_happy_flows() throws Exception {
     try (TestBed bed =
@@ -221,7 +220,7 @@ public class ClientTests {
         Assert.assertTrue(latchCreatedKey.await(5000, TimeUnit.MILLISECONDS));
 
         CountDownLatch getLatches = new CountDownLatch(3);
-        client.webGet("space", "key1", new WebGet(NtPrincipal.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        client.webGet("space", "key1", new WebGet(CONTEXT, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("root", value.body);
@@ -234,7 +233,7 @@ public class ClientTests {
 
           }
         });
-        client.webGet("space", "key1", new WebGet(NtPrincipal.NO_ONE, "/cors", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        client.webGet("space", "key1", new WebGet(CONTEXT, "/cors", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("my-cors", value.body);
@@ -251,7 +250,7 @@ public class ClientTests {
         });
         TreeMap<String, String> header1 = new TreeMap<>();
         header1.put("x", "y");
-        client.webGet("space", "key1", new WebGet(NtPrincipal.NO_ONE, "/nope", header1, new NtDynamic("{}")), new Callback<>() {
+        client.webGet("space", "key1", new WebGet(CONTEXT, "/nope", header1, new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
           }
@@ -264,7 +263,7 @@ public class ClientTests {
         });
 
         CountDownLatch putLatches = new CountDownLatch(2);
-        client.webPut("space", "key1", new WebPut(NtPrincipal.NO_ONE, new WebPutRaw("/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
+        client.webPut("space", "key1", new WebPut(CONTEXT, new WebPutRaw("/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("c:123", value.body);
@@ -276,7 +275,7 @@ public class ClientTests {
           }
         });
 
-        client.webPut("space", "key1", new WebPut(NtPrincipal.NO_ONE, new WebPutRaw("/nope", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
+        client.webPut("space", "key1", new WebPut(CONTEXT, new WebPutRaw("/nope", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             System.err.println(value.body);

@@ -53,7 +53,7 @@ public class DefineConstructor extends Definition {
 
   @Override
   public void typing(final Environment environment) {
-    final var next = environment.scopeAsPolicy();
+    final var next = environment.scopeAsPolicy().scopeAsConstructor();
     if (messageNameToken != null && messageTypeToken != null && unifiedMessageType != null) {
       next.define(messageNameToken.text, unifiedMessageType, false, unifiedMessageType);
       unifiedMessageTypeNameToUse = ((TyNativeMessage) unifiedMessageType).name;

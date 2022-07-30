@@ -23,6 +23,7 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
 import org.adamalang.runtime.sys.mocks.NullCallbackLatch;
+import org.adamalang.runtime.sys.web.WebContext;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -36,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class ServiceWebTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
+  private static WebContext CONTEXT = new WebContext(NtPrincipal.NO_ONE, "Origin", "1.2.3.4");
   private static final String SIMPLE_CODE_MSG = "@static { create { return true; } }" +
       "@web get / {\n" + "  return {html:\"root\"};\n" + "}\n" + "\n" + //
       "@web get /fixed {\n" + "  return {html:\"fixed path\"};\n" + "}\n" + "\n" + //
@@ -63,7 +65,7 @@ public class ServiceWebTests {
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       CountDownLatch latch = new CountDownLatch(8);
-      service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(KEY, new WebGet(CONTEXT, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
           Assert.assertEquals("root", value.body);
@@ -75,7 +77,7 @@ public class ServiceWebTests {
 
         }
       });
-      service.webOptions(KEY, new WebGet(NtPrincipal.NO_ONE, "/fixed", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webOptions(KEY, new WebGet(CONTEXT, "/fixed", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
           Assert.assertTrue(value.cors);
@@ -87,7 +89,7 @@ public class ServiceWebTests {
 
         }
       });
-      service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/path0/14", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(KEY, new WebGet(CONTEXT, "/path0/14", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
           Assert.assertEquals("path integer:14", value.body);
@@ -100,7 +102,7 @@ public class ServiceWebTests {
 
         }
       });
-      service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/something.js", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(KEY, new WebGet(CONTEXT, "/something.js", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
           Assert.assertEquals("function... blah...blah...blah", value.body);
@@ -112,7 +114,7 @@ public class ServiceWebTests {
           ex.printStackTrace();
         }
       });
-      service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/something.css", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(KEY, new WebGet(CONTEXT, "/something.css", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
           Assert.assertEquals(".class{}", value.body);
@@ -124,7 +126,7 @@ public class ServiceWebTests {
           ex.printStackTrace();
         }
       });
-      service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/nope", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(KEY, new WebGet(CONTEXT, "/nope", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
 
@@ -136,7 +138,7 @@ public class ServiceWebTests {
           latch.countDown();
         }
       });
-      service.webGet(new Key("nope", "noep"), new WebGet(NtPrincipal.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(new Key("nope", "noep"), new WebGet(CONTEXT, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
         }
@@ -147,7 +149,7 @@ public class ServiceWebTests {
           latch.countDown();
         }
       });
-      service.webGet(new Key("nope", "noep"), new WebGet(NtPrincipal.NO_ONE, "/asset", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+      service.webGet(new Key("nope", "noep"), new WebGet(CONTEXT, "/asset", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
           Assert.assertNotNull(value.asset);

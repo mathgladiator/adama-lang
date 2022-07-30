@@ -1523,7 +1523,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase message) {}");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
     gold.append("\n    __reader.skipValue();");
@@ -1599,7 +1599,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"E\":{\"nature\":\"native_value\",\"enum\":\"E\",\"options\":{\"options\":{\"A\":0,\"B\":1},\"default\":\"A\"}},\"One\":{\"nature\":\"reactive_record\",\"name\":\"One\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"y\":{\"type\":{\"nature\":\"reactive_enum\",\"type\":\"E\"},\"privacy\":\"public\"},\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"public\"}}},\"Two\":{\"nature\":\"reactive_record\",\"name\":\"Two\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"y\":{\"type\":{\"nature\":\"reactive_enum\",\"type\":\"E\"},\"privacy\":\"public\"},\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"public\"}}},\"Issues\":{\"nature\":\"reactive_record\",\"name\":\"Issues\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"y\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"u\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"Three\":{\"nature\":\"reactive_record\",\"name\":\"Three\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"y\":{\"type\":{\"nature\":\"reactive_enum\",\"type\":\"E\"},\"privacy\":\"public\"},\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[\"code\"]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:0");
     gold.append("\nMEMORY:624");
@@ -2454,7 +2454,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 4;");
     gold.append("\n    __track(1);");
     gold.append("\n    {");
@@ -2490,8 +2490,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -2502,7 +2502,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"list_1\":{\"type\":{\"nature\":\"native_list\",\"type\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{}}},\"privacy\":\"public\"},\"list_2\":{\"type\":{\"nature\":\"native_list\",\"type\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{}}},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{}},\"_AnonObjConvert_0\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_0\",\"anonymous\":true,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}},\"y\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":3,\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":3,\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:10");
     gold.append("\nMEMORY:1192");
@@ -3548,7 +3548,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 17;");
     gold.append("\n    __track(0);");
     gold.append("\n    {");
@@ -3674,8 +3674,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxX> {");
     gold.append("\n    @Override");
@@ -3830,7 +3830,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{}},\"Z\":{\"nature\":\"reactive_record\",\"name\":\"Z\",\"fields\":{}},\"_AnonObjConvert_0\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_0\",\"anonymous\":true,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}},\"y\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":16,\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"count1\":3,\"count2\":1,\"count3\":2,\"tbl2\":{\"4\":{\"x\":100,\"y\":3,\"id\":4},\"5\":{\"x\":2,\"y\":2,\"id\":5},\"6\":{\"x\":2,\"y\":2,\"id\":6},\"7\":{\"x\":100,\"y\":1,\"id\":7},\"8\":{\"x\":4,\"y\":2,\"id\":8},\"10\":{\"x\":1,\"y\":2,\"id\":10}},\"tbl3\":{\"11\":{\"x\":100,\"y\":3,\"id\":4},\"12\":{\"x\":2,\"y\":2,\"id\":5},\"13\":{\"x\":2,\"y\":2,\"id\":6},\"14\":{\"x\":100,\"y\":1,\"id\":7},\"15\":{\"x\":4,\"y\":2,\"id\":8},\"16\":{\"x\":1,\"y\":2,\"id\":10}},\"count_tbl2\":7,\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":16,\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"count1\":3,\"count2\":1,\"count3\":2,\"tbl2\":{\"4\":{\"x\":100,\"y\":3,\"id\":4},\"5\":{\"x\":2,\"y\":2,\"id\":5},\"6\":{\"x\":2,\"y\":2,\"id\":6},\"7\":{\"x\":100,\"y\":1,\"id\":7},\"8\":{\"x\":4,\"y\":2,\"id\":8},\"10\":{\"x\":1,\"y\":2,\"id\":10}},\"tbl3\":{\"11\":{\"x\":100,\"y\":3,\"id\":4},\"12\":{\"x\":2,\"y\":2,\"id\":5},\"13\":{\"x\":2,\"y\":2,\"id\":6},\"14\":{\"x\":100,\"y\":1,\"id\":7},\"15\":{\"x\":4,\"y\":2,\"id\":8},\"16\":{\"x\":1,\"y\":2,\"id\":10}},\"count_tbl2\":7,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:70");
     gold.append("\nMEMORY:4628");
@@ -4942,7 +4942,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 13;");
     gold.append("\n    __track(0);");
     gold.append("\n    {");
@@ -5023,8 +5023,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  private final static Comparator<RTxX> __ORDER_X_b_a = new Comparator<RTxX>() {");
     gold.append("\n    @Override");
@@ -5077,7 +5077,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{}},\"_AnonObjConvert_0\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_0\",\"anonymous\":true,\"fields\":{\"i\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}}}},\"_AnonObjConvert_1\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_1\",\"anonymous\":true,\"fields\":{\"d\":{\"type\":{\"nature\":\"native_value\",\"type\":\"double\"}}}},\"_AnonObjConvert_2\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_2\",\"anonymous\":true,\"fields\":{\"b\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}}}},\"_AnonObjConvert_3\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_3\",\"anonymous\":true,\"fields\":{\"s\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"}}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":8,\"tbl\":{\"1\":{\"i\":4,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":1},\"2\":{\"i\":null,\"s\":null,\"b\":null,\"d\":3.14,\"i1\":123,\"id\":2},\"3\":{\"i\":null,\"s\":null,\"b\":true,\"d\":null,\"i1\":123,\"id\":3},\"4\":{\"i\":null,\"s\":\"Hi\",\"b\":null,\"d\":null,\"i1\":123,\"id\":4},\"5\":{\"i\":8,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":5},\"6\":{\"i\":null,\"s\":null,\"b\":null,\"d\":2.71,\"i1\":123,\"id\":6},\"7\":{\"i\":null,\"s\":null,\"b\":false,\"d\":null,\"i1\":123,\"id\":7},\"8\":{\"i\":null,\"s\":\"Joe\",\"b\":null,\"d\":null,\"i1\":123,\"id\":8}},\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":8,\"tbl\":{\"1\":{\"i\":4,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":1},\"2\":{\"i\":null,\"s\":null,\"b\":null,\"d\":3.14,\"i1\":123,\"id\":2},\"3\":{\"i\":null,\"s\":null,\"b\":true,\"d\":null,\"i1\":123,\"id\":3},\"4\":{\"i\":null,\"s\":\"Hi\",\"b\":null,\"d\":null,\"i1\":123,\"id\":4},\"5\":{\"i\":8,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":5},\"6\":{\"i\":null,\"s\":null,\"b\":null,\"d\":2.71,\"i1\":123,\"id\":6},\"7\":{\"i\":null,\"s\":null,\"b\":false,\"d\":null,\"i1\":123,\"id\":7},\"8\":{\"i\":null,\"s\":\"Joe\",\"b\":null,\"d\":null,\"i1\":123,\"id\":8}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:21");
     gold.append("\nMEMORY:5574");
@@ -5817,7 +5817,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(2);");
     gold.append("\n    {");
@@ -5840,8 +5840,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxX> {");
     gold.append("\n    private int x0;");
@@ -5898,7 +5898,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{}},\"_AnonObjConvert_2\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_2\",\"anonymous\":true,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":1,\"t\":{\"1\":{\"x\":2,\"id\":1}},\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":1,\"t\":{\"1\":{\"x\":2,\"id\":1}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:7");
     gold.append("\nMEMORY:648");
@@ -6628,7 +6628,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
     gold.append("\n    {");
@@ -6651,8 +6651,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxX> {");
     gold.append("\n    @Override");
@@ -6681,7 +6681,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{}},\"_AnonObjConvert_0\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_0\",\"anonymous\":true,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":1,\"t\":{\"1\":{\"x\":0,\"id\":1}},\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":1,\"t\":{\"1\":{\"x\":0,\"id\":1}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:5");
     gold.append("\nMEMORY:648");
@@ -7554,7 +7554,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    {");
@@ -7578,8 +7578,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxX> {");
     gold.append("\n    @Override");
@@ -7690,7 +7690,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"t_less\":{\"type\":{\"nature\":\"native_list\",\"type\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"privacy\":\"public\"},\"t_lesseq\":{\"type\":{\"nature\":\"native_list\",\"type\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"privacy\":\"public\"},\"t_eq\":{\"type\":{\"nature\":\"native_list\",\"type\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"privacy\":\"public\"},\"t_greateq\":{\"type\":{\"nature\":\"native_list\",\"type\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"privacy\":\"public\"},\"t_great\":{\"type\":{\"nature\":\"native_list\",\"type\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"_AnonObjConvert_0\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_0\",\"anonymous\":true,\"fields\":{\"z\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":100,\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":3},\"5\":{\"id\":5,\"z\":4},\"6\":{\"id\":6,\"z\":5},\"7\":{\"id\":7,\"z\":6},\"8\":{\"id\":8,\"z\":7},\"9\":{\"id\":9,\"z\":8},\"10\":{\"id\":10,\"z\":9},\"11\":{\"id\":11,\"z\":10},\"12\":{\"id\":12,\"z\":11},\"13\":{\"id\":13,\"z\":12},\"14\":{\"id\":14,\"z\":13},\"15\":{\"id\":15,\"z\":14},\"16\":{\"id\":16,\"z\":15},\"17\":{\"id\":17,\"z\":16},\"18\":{\"id\":18,\"z\":17},\"19\":{\"id\":19,\"z\":18},\"20\":{\"id\":20,\"z\":19},\"21\":{\"id\":21,\"z\":20},\"22\":{\"id\":22,\"z\":21},\"23\":{\"id\":23,\"z\":22},\"24\":{\"id\":24,\"z\":23},\"25\":{\"id\":25,\"z\":24},\"26\":{\"id\":26,\"z\":25},\"27\":{\"id\":27,\"z\":26},\"28\":{\"id\":28,\"z\":27},\"29\":{\"id\":29,\"z\":28},\"30\":{\"id\":30,\"z\":29},\"31\":{\"id\":31,\"z\":30},\"32\":{\"id\":32,\"z\":31},\"33\":{\"id\":33,\"z\":32},\"34\":{\"id\":34,\"z\":33},\"35\":{\"id\":35,\"z\":34},\"36\":{\"id\":36,\"z\":35},\"37\":{\"id\":37,\"z\":36},\"38\":{\"id\":38,\"z\":37},\"39\":{\"id\":39,\"z\":38},\"40\":{\"id\":40,\"z\":39},\"41\":{\"id\":41,\"z\":40},\"42\":{\"id\":42,\"z\":41},\"43\":{\"id\":43,\"z\":42},\"44\":{\"id\":44,\"z\":43},\"45\":{\"id\":45,\"z\":44},\"46\":{\"id\":46,\"z\":45},\"47\":{\"id\":47,\"z\":46},\"48\":{\"id\":48,\"z\":47},\"49\":{\"id\":49,\"z\":48},\"50\":{\"id\":50,\"z\":49},\"51\":{\"id\":51,\"z\":50},\"52\":{\"id\":52,\"z\":51},\"53\":{\"id\":53,\"z\":52},\"54\":{\"id\":54,\"z\":53},\"55\":{\"id\":55,\"z\":54},\"56\":{\"id\":56,\"z\":55},\"57\":{\"id\":57,\"z\":56},\"58\":{\"id\":58,\"z\":57},\"59\":{\"id\":59,\"z\":58},\"60\":{\"id\":60,\"z\":59},\"61\":{\"id\":61,\"z\":60},\"62\":{\"id\":62,\"z\":61},\"63\":{\"id\":63,\"z\":62},\"64\":{\"id\":64,\"z\":63},\"65\":{\"id\":65,\"z\":64},\"66\":{\"id\":66,\"z\":65},\"67\":{\"id\":67,\"z\":66},\"68\":{\"id\":68,\"z\":67},\"69\":{\"id\":69,\"z\":68},\"70\":{\"id\":70,\"z\":69},\"71\":{\"id\":71,\"z\":70},\"72\":{\"id\":72,\"z\":71},\"73\":{\"id\":73,\"z\":72},\"74\":{\"id\":74,\"z\":73},\"75\":{\"id\":75,\"z\":74},\"76\":{\"id\":76,\"z\":75},\"77\":{\"id\":77,\"z\":76},\"78\":{\"id\":78,\"z\":77},\"79\":{\"id\":79,\"z\":78},\"80\":{\"id\":80,\"z\":79},\"81\":{\"id\":81,\"z\":80},\"82\":{\"id\":82,\"z\":81},\"83\":{\"id\":83,\"z\":82},\"84\":{\"id\":84,\"z\":83},\"85\":{\"id\":85,\"z\":84},\"86\":{\"id\":86,\"z\":85},\"87\":{\"id\":87,\"z\":86},\"88\":{\"id\":88,\"z\":87},\"89\":{\"id\":89,\"z\":88},\"90\":{\"id\":90,\"z\":89},\"91\":{\"id\":91,\"z\":90},\"92\":{\"id\":92,\"z\":91},\"93\":{\"id\":93,\"z\":92},\"94\":{\"id\":94,\"z\":93},\"95\":{\"id\":95,\"z\":94},\"96\":{\"id\":96,\"z\":95},\"97\":{\"id\":97,\"z\":96},\"98\":{\"id\":98,\"z\":97},\"99\":{\"id\":99,\"z\":98},\"100\":{\"id\":100,\"z\":99}},\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":100,\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":3},\"5\":{\"id\":5,\"z\":4},\"6\":{\"id\":6,\"z\":5},\"7\":{\"id\":7,\"z\":6},\"8\":{\"id\":8,\"z\":7},\"9\":{\"id\":9,\"z\":8},\"10\":{\"id\":10,\"z\":9},\"11\":{\"id\":11,\"z\":10},\"12\":{\"id\":12,\"z\":11},\"13\":{\"id\":13,\"z\":12},\"14\":{\"id\":14,\"z\":13},\"15\":{\"id\":15,\"z\":14},\"16\":{\"id\":16,\"z\":15},\"17\":{\"id\":17,\"z\":16},\"18\":{\"id\":18,\"z\":17},\"19\":{\"id\":19,\"z\":18},\"20\":{\"id\":20,\"z\":19},\"21\":{\"id\":21,\"z\":20},\"22\":{\"id\":22,\"z\":21},\"23\":{\"id\":23,\"z\":22},\"24\":{\"id\":24,\"z\":23},\"25\":{\"id\":25,\"z\":24},\"26\":{\"id\":26,\"z\":25},\"27\":{\"id\":27,\"z\":26},\"28\":{\"id\":28,\"z\":27},\"29\":{\"id\":29,\"z\":28},\"30\":{\"id\":30,\"z\":29},\"31\":{\"id\":31,\"z\":30},\"32\":{\"id\":32,\"z\":31},\"33\":{\"id\":33,\"z\":32},\"34\":{\"id\":34,\"z\":33},\"35\":{\"id\":35,\"z\":34},\"36\":{\"id\":36,\"z\":35},\"37\":{\"id\":37,\"z\":36},\"38\":{\"id\":38,\"z\":37},\"39\":{\"id\":39,\"z\":38},\"40\":{\"id\":40,\"z\":39},\"41\":{\"id\":41,\"z\":40},\"42\":{\"id\":42,\"z\":41},\"43\":{\"id\":43,\"z\":42},\"44\":{\"id\":44,\"z\":43},\"45\":{\"id\":45,\"z\":44},\"46\":{\"id\":46,\"z\":45},\"47\":{\"id\":47,\"z\":46},\"48\":{\"id\":48,\"z\":47},\"49\":{\"id\":49,\"z\":48},\"50\":{\"id\":50,\"z\":49},\"51\":{\"id\":51,\"z\":50},\"52\":{\"id\":52,\"z\":51},\"53\":{\"id\":53,\"z\":52},\"54\":{\"id\":54,\"z\":53},\"55\":{\"id\":55,\"z\":54},\"56\":{\"id\":56,\"z\":55},\"57\":{\"id\":57,\"z\":56},\"58\":{\"id\":58,\"z\":57},\"59\":{\"id\":59,\"z\":58},\"60\":{\"id\":60,\"z\":59},\"61\":{\"id\":61,\"z\":60},\"62\":{\"id\":62,\"z\":61},\"63\":{\"id\":63,\"z\":62},\"64\":{\"id\":64,\"z\":63},\"65\":{\"id\":65,\"z\":64},\"66\":{\"id\":66,\"z\":65},\"67\":{\"id\":67,\"z\":66},\"68\":{\"id\":68,\"z\":67},\"69\":{\"id\":69,\"z\":68},\"70\":{\"id\":70,\"z\":69},\"71\":{\"id\":71,\"z\":70},\"72\":{\"id\":72,\"z\":71},\"73\":{\"id\":73,\"z\":72},\"74\":{\"id\":74,\"z\":73},\"75\":{\"id\":75,\"z\":74},\"76\":{\"id\":76,\"z\":75},\"77\":{\"id\":77,\"z\":76},\"78\":{\"id\":78,\"z\":77},\"79\":{\"id\":79,\"z\":78},\"80\":{\"id\":80,\"z\":79},\"81\":{\"id\":81,\"z\":80},\"82\":{\"id\":82,\"z\":81},\"83\":{\"id\":83,\"z\":82},\"84\":{\"id\":84,\"z\":83},\"85\":{\"id\":85,\"z\":84},\"86\":{\"id\":86,\"z\":85},\"87\":{\"id\":87,\"z\":86},\"88\":{\"id\":88,\"z\":87},\"89\":{\"id\":89,\"z\":88},\"90\":{\"id\":90,\"z\":89},\"91\":{\"id\":91,\"z\":90},\"92\":{\"id\":92,\"z\":91},\"93\":{\"id\":93,\"z\":92},\"94\":{\"id\":94,\"z\":93},\"95\":{\"id\":95,\"z\":94},\"96\":{\"id\":96,\"z\":95},\"97\":{\"id\":97,\"z\":96},\"98\":{\"id\":98,\"z\":97},\"99\":{\"id\":99,\"z\":98},\"100\":{\"id\":100,\"z\":99}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:302");
     gold.append("\nMEMORY:20554");
@@ -8349,7 +8349,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 13;");
     gold.append("\n    __track(0);");
     gold.append("\n    (t.iterate(false)).where(true, new __CLOSURE_WhereClause0());");
@@ -8382,8 +8382,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxX> {");
     gold.append("\n    @Override");
@@ -8606,7 +8606,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:13");
     gold.append("\nMEMORY:490");

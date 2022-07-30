@@ -616,7 +616,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, RTxM m3) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, RTxM m3) {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
     gold.append("\n    owner.set(__who);");
@@ -628,9 +628,9 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    return new RTxM(__reader);");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object_pre_cast) {");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object_pre_cast) {");
     gold.append("\n    RTxM __object = (RTxM) __object_pre_cast;");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -641,7 +641,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"M\":{\"nature\":\"native_message\",\"name\":\"M\",\"anonymous\":false,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[\"m3\"],\"constructor\":\"M\",\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:3");
     gold.append("\nMEMORY:496");
@@ -1149,7 +1149,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    owner.set(__who);");
@@ -1160,8 +1160,8 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -1172,7 +1172,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:2");
     gold.append("\nMEMORY:448");
@@ -1751,7 +1751,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, RTxM m1) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, RTxM m1) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    v.set(m1.x);");
@@ -1761,9 +1761,9 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    return new RTxM(__reader);");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object_pre_cast) {");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object_pre_cast) {");
     gold.append("\n    RTxM __object = (RTxM) __object_pre_cast;");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -1774,7 +1774,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"M\":{\"nature\":\"native_message\",\"name\":\"M\",\"anonymous\":false,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[\"m1\"],\"constructor\":\"M\",\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:2");
     gold.append("\nMEMORY:432");
@@ -2269,15 +2269,15 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {}");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {}");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
     gold.append("\n    __reader.skipValue();");
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -2288,7 +2288,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:0");
     gold.append("\nMEMORY:384");
@@ -2316,43 +2316,90 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_Legacy_6 = null;
-  private String get_Legacy_6() {
-    if (cached_Legacy_6 != null) {
-      return cached_Legacy_6;
+  private String cached_HasContext_6 = null;
+  private String get_HasContext_6() {
+    if (cached_HasContext_6 != null) {
+      return cached_HasContext_6;
     }
-    cached_Legacy_6 = generateTestOutput(true, "Legacy_6", "./test_code/Constructor_Legacy_success.a");
-    return cached_Legacy_6;
+    cached_HasContext_6 = generateTestOutput(true, "HasContext_6", "./test_code/Constructor_HasContext_success.a");
+    return cached_HasContext_6;
+  }
+
+  @Test
+  public void testHasContextEmission() {
+    assertEmissionGood(get_HasContext_6());
+  }
+
+  @Test
+  public void testHasContextSuccess() {
+    assertLivePass(get_HasContext_6());
+  }
+
+  @Test
+  public void testHasContextGoodWillHappy() {
+    assertGoodWillHappy(get_HasContext_6());
+  }
+
+  @Test
+  public void testHasContextExceptionFree() {
+    assertExceptionFree(get_HasContext_6());
+  }
+
+  @Test
+  public void testHasContextTODOFree() {
+    assertTODOFree(get_HasContext_6());
+  }
+
+  @Test
+  public void stable_HasContext_6() {
+    String live = get_HasContext_6();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Constructor_HasContext_success.a");
+    gold.append("\n--EMISSION-----------------------------------------");
+    gold.append("\nEmission Success, Yay");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The given type was expected to be a function: 'string' (RuleSetFunctions)\"},{\"range\":{\"start\":{\"line\":4,\"character\":7,\"byte\":65},\"end\":{\"line\":4,\"character\":18,\"byte\":76}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The given type was expected to be a function: 'string' (RuleSetFunctions)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11,\"byte\":92},\"end\":{\"line\":5,\"character\":26,\"byte\":107}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_Legacy_7 = null;
+  private String get_Legacy_7() {
+    if (cached_Legacy_7 != null) {
+      return cached_Legacy_7;
+    }
+    cached_Legacy_7 = generateTestOutput(true, "Legacy_7", "./test_code/Constructor_Legacy_success.a");
+    return cached_Legacy_7;
   }
 
   @Test
   public void testLegacyEmission() {
-    assertEmissionGood(get_Legacy_6());
+    assertEmissionGood(get_Legacy_7());
   }
 
   @Test
   public void testLegacySuccess() {
-    assertLivePass(get_Legacy_6());
+    assertLivePass(get_Legacy_7());
   }
 
   @Test
   public void testLegacyGoodWillHappy() {
-    assertGoodWillHappy(get_Legacy_6());
+    assertGoodWillHappy(get_Legacy_7());
   }
 
   @Test
   public void testLegacyExceptionFree() {
-    assertExceptionFree(get_Legacy_6());
+    assertExceptionFree(get_Legacy_7());
   }
 
   @Test
   public void testLegacyTODOFree() {
-    assertTODOFree(get_Legacy_6());
+    assertTODOFree(get_Legacy_7());
   }
 
   @Test
-  public void stable_Legacy_6() {
-    String live = get_Legacy_6();
+  public void stable_Legacy_7() {
+    String live = get_Legacy_7();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Constructor_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -2385,7 +2432,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Legacy_6 extends LivingDocument {");
+    gold.append("\npublic class Legacy_7 extends LivingDocument {");
     gold.append("\n  private final RxPrincipal owner;");
     gold.append("\n  private final RxInt32 v;");
     gold.append("\n  @Override");
@@ -2395,7 +2442,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    __sum += v.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Legacy_6(DocumentMonitor __monitor) {");
+    gold.append("\n  public Legacy_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    owner = new RxPrincipal(this, NtPrincipal.NO_ONE);");
     gold.append("\n    v = new RxInt32(this, 0);");
@@ -2627,9 +2674,9 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    v.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLegacy_6 implements DeltaNode {");
+    gold.append("\n  private class DeltaLegacy_7 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLegacy_6() {");
+    gold.append("\n    private DeltaLegacy_7() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2637,7 +2684,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Legacy_6 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Legacy_7 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -2665,8 +2712,8 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Legacy_6 __self = this;");
-    gold.append("\n    DeltaLegacy_6 __state = new DeltaLegacy_6();");
+    gold.append("\n    Legacy_7 __self = this;");
+    gold.append("\n    DeltaLegacy_7 __state = new DeltaLegacy_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -2880,17 +2927,17 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    owner.set(__who);");
     gold.append("\n  }");
-    gold.append("\n  private void __construct_1(NtPrincipal __who, RTxM m1) {");
+    gold.append("\n  private void __construct_1(CoreRequestContext __context, NtPrincipal __who, RTxM m1) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
     gold.append("\n    v.opAddTo(m1.x);");
     gold.append("\n  }");
-    gold.append("\n  private void __construct_2(NtPrincipal __who, RTxM m3) {");
+    gold.append("\n  private void __construct_2(CoreRequestContext __context, NtPrincipal __who, RTxM m3) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(2);");
     gold.append("\n    v.opAddTo(m3.x);");
@@ -2900,11 +2947,11 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    return new RTxM(__reader);");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object_pre_cast) {");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object_pre_cast) {");
     gold.append("\n    RTxM __object = (RTxM) __object_pre_cast;");
-    gold.append("\n    __construct_0(__who, __object);");
-    gold.append("\n    __construct_1(__who, __object);");
-    gold.append("\n    __construct_2(__who, __object);");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
+    gold.append("\n    __construct_1(__context, __context.who, __object);");
+    gold.append("\n    __construct_2(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -2915,7 +2962,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"M\":{\"nature\":\"native_message\",\"name\":\"M\",\"anonymous\":false,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[\"m1\",\"m3\"],\"constructor\":\"M\",\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"v\":0,\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"v\":0,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:6");
     gold.append("\nMEMORY:496");
@@ -2943,43 +2990,43 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_UnionTypes_7 = null;
-  private String get_UnionTypes_7() {
-    if (cached_UnionTypes_7 != null) {
-      return cached_UnionTypes_7;
+  private String cached_UnionTypes_8 = null;
+  private String get_UnionTypes_8() {
+    if (cached_UnionTypes_8 != null) {
+      return cached_UnionTypes_8;
     }
-    cached_UnionTypes_7 = generateTestOutput(true, "UnionTypes_7", "./test_code/Constructor_UnionTypes_success.a");
-    return cached_UnionTypes_7;
+    cached_UnionTypes_8 = generateTestOutput(true, "UnionTypes_8", "./test_code/Constructor_UnionTypes_success.a");
+    return cached_UnionTypes_8;
   }
 
   @Test
   public void testUnionTypesEmission() {
-    assertEmissionGood(get_UnionTypes_7());
+    assertEmissionGood(get_UnionTypes_8());
   }
 
   @Test
   public void testUnionTypesSuccess() {
-    assertLivePass(get_UnionTypes_7());
+    assertLivePass(get_UnionTypes_8());
   }
 
   @Test
   public void testUnionTypesGoodWillHappy() {
-    assertGoodWillHappy(get_UnionTypes_7());
+    assertGoodWillHappy(get_UnionTypes_8());
   }
 
   @Test
   public void testUnionTypesExceptionFree() {
-    assertExceptionFree(get_UnionTypes_7());
+    assertExceptionFree(get_UnionTypes_8());
   }
 
   @Test
   public void testUnionTypesTODOFree() {
-    assertTODOFree(get_UnionTypes_7());
+    assertTODOFree(get_UnionTypes_8());
   }
 
   @Test
-  public void stable_UnionTypes_7() {
-    String live = get_UnionTypes_7();
+  public void stable_UnionTypes_8() {
+    String live = get_UnionTypes_8();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Constructor_UnionTypes_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -3012,13 +3059,13 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class UnionTypes_7 extends LivingDocument {");
+    gold.append("\npublic class UnionTypes_8 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public UnionTypes_7(DocumentMonitor __monitor) {");
+    gold.append("\n  public UnionTypes_8(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -3228,9 +3275,9 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaUnionTypes_7 implements DeltaNode {");
+    gold.append("\n  private class DeltaUnionTypes_8 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaUnionTypes_7() {");
+    gold.append("\n    private DeltaUnionTypes_8() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -3238,7 +3285,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(UnionTypes_7 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(UnionTypes_8 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -3266,8 +3313,8 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    UnionTypes_7 __self = this;");
-    gold.append("\n    DeltaUnionTypes_7 __state = new DeltaUnionTypes_7();");
+    gold.append("\n    UnionTypes_8 __self = this;");
+    gold.append("\n    DeltaUnionTypes_8 __state = new DeltaUnionTypes_8();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -3709,17 +3756,17 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  private void __construct_0(NtPrincipal __who, RTxAutoMaxRecord0 a) {}");
-    gold.append("\n  private void __construct_1(NtPrincipal __who, RTxAutoMaxRecord0 b) {}");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, RTxAutoMaxRecord0 a) {}");
+    gold.append("\n  private void __construct_1(CoreRequestContext __context, NtPrincipal __who, RTxAutoMaxRecord0 b) {}");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
     gold.append("\n    return new RTxAutoMaxRecord0(__reader);");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtPrincipal __who, NtMessageBase __object_pre_cast) {");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object_pre_cast) {");
     gold.append("\n    RTxAutoMaxRecord0 __object = (RTxAutoMaxRecord0) __object_pre_cast;");
-    gold.append("\n    __construct_0(__who, __object);");
-    gold.append("\n    __construct_1(__who, __object);");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
+    gold.append("\n    __construct_1(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -3730,7 +3777,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"MA\":{\"nature\":\"native_message\",\"name\":\"MA\",\"anonymous\":false,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"z\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"},\"privacy\":\"public\"},\"u\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"}}},\"MB\":{\"nature\":\"native_message\",\"name\":\"MB\",\"anonymous\":false,\"fields\":{\"y\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"v\":{\"type\":{\"nature\":\"native_value\",\"type\":\"string\"},\"privacy\":\"public\"},\"u\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"}}},\"AutoMaxRecord0\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord0\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[\"a\",\"b\"],\"constructor\":\"AutoMaxRecord0\",\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"ip\",\"origin\":\"0\",\"ip\":\"origin\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:0");
     gold.append("\nMEMORY:384");

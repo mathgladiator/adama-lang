@@ -22,6 +22,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.ServiceRegistry;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
@@ -74,7 +75,7 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  protected void __construct_intern(final NtPrincipal who, final NtMessageBase message) {}
+  protected void __construct_intern(CoreRequestContext context, final NtMessageBase message) {}
 
   @Override
   public PrivateView __createPrivateView(final NtPrincipal __who, final Perspective __perspective, AssetIdEncoder encoder) {

@@ -84,26 +84,32 @@ public class DurableLivingDocument {
     this.lastActivityMS = base.time.nowMilliseconds();
   }
 
-  public static void fresh(final Key key, final LivingDocumentFactory factory, final NtPrincipal who, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
+  public static void fresh(final Key key, final LivingDocumentFactory factory, final CoreRequestContext context, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
     try {
       LivingDocument livingDocument = factory.create(monitor);
       livingDocument.__lateBind(key.space, key.key, Deliverer.FAILURE, ServiceRegistry.NOT_READY);
       DurableLivingDocument document = new DurableLivingDocument(key, livingDocument, factory, base);
-      document.construct(who, arg, entropy, Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_PERSIST, (seq) -> document));
+      document.construct(context, arg, entropy, Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_PERSIST, (seq) -> document));
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex, EXLOGGER));
     }
   }
 
-  private void construct(final NtPrincipal who, final String arg, final String entropy, Callback<Integer> callback) {
+  private void construct(final CoreRequestContext context, final String arg, final String entropy, Callback<Integer> callback) {
     try {
-      final var writer = forge("construct", who);
+      final var writer = forge("construct", context.who);
       writer.writeObjectFieldIntro("arg");
       writer.injectJson(arg);
       if (entropy != null) {
         writer.writeObjectFieldIntro("entropy");
         writer.writeFastString(entropy);
       }
+      writer.writeObjectFieldIntro("key");
+      writer.writeFastString(context.key);
+      writer.writeObjectFieldIntro("origin");
+      writer.writeFastString(context.origin);
+      writer.writeObjectFieldIntro("ip");
+      writer.writeFastString(context.ip);
       writer.endObject();
       final var init = document.__transact(writer.toString(), currentFactory);
       final var invalidate = document.__transact(forgeInvalidate(), currentFactory);

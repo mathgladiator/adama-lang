@@ -22,7 +22,7 @@ public class CodeGenConstructor {
       if (dc.unifiedMessageTypeNameToUse != null) {
         messageTypeNameToUse = "RTx" + dc.unifiedMessageTypeNameToUse;
       }
-      sb.append("private void __construct").append("_" + idx).append("(NtPrincipal __who");
+      sb.append("private void __construct").append("_" + idx).append("(CoreRequestContext __context, NtPrincipal __who");
       sb.append(", ").append(messageTypeNameToUse).append(" ");
       sb.append(dc.messageNameToken == null ? "__object" : dc.messageNameToken.text);
       sb.append(") {");
@@ -37,7 +37,7 @@ public class CodeGenConstructor {
     }
     if (idx == 0) {
       sb.append("@Override").writeNewline();
-      sb.append("protected void __construct_intern(NtPrincipal __who, NtMessageBase message) {}").writeNewline();
+      sb.append("protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}").writeNewline();
       sb.append("@Override").writeNewline();
       sb.append("protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {").tabUp().writeNewline();
       sb.append("__reader.skipValue();").writeNewline();
@@ -55,13 +55,13 @@ public class CodeGenConstructor {
       sb.append("}").writeNewline();
       sb.append("@Override").writeNewline();
       if (!messageTypeNameToUse.equals("NtMessageBase")) {
-        sb.append("protected void __construct_intern(NtPrincipal __who, NtMessageBase __object_pre_cast) {").tabUp().writeNewline();
+        sb.append("protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object_pre_cast) {").tabUp().writeNewline();
         sb.append(messageTypeNameToUse).append(" __object = (").append(messageTypeNameToUse).append(") __object_pre_cast;").writeNewline();
       } else {
-        sb.append("protected void __construct_intern(NtPrincipal __who, NtMessageBase __object) {").tabUp().writeNewline();
+        sb.append("protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {").tabUp().writeNewline();
       }
       for (var k = 0; k < idx; k++) {
-        sb.append("__construct").append("_" + k).append("(__who, __object);");
+        sb.append("__construct").append("_" + k).append("(__context, __context.who, __object);");
         if (k + 1 >= idx) {
           sb.tabDown();
         }

@@ -20,6 +20,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
+import org.adamalang.runtime.sys.web.WebContext;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -134,7 +135,7 @@ public class ServiceCleanupTests {
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       CountDownLatch got = new CountDownLatch(1);
-      service.webGet(KEY, new WebGet(NtPrincipal.NO_ONE, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<WebResponse>() {
+      service.webGet(KEY, new WebGet(new WebContext(NtPrincipal.NO_ONE, "Origin", "1.2.3.4"), "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<WebResponse>() {
         @Override
         public void success(WebResponse value) {
           got.countDown();

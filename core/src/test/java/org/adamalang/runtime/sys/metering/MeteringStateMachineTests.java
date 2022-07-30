@@ -17,10 +17,7 @@ import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
-import org.adamalang.runtime.sys.CoreMetrics;
-import org.adamalang.runtime.sys.DocumentThreadBase;
-import org.adamalang.runtime.sys.DurableLivingDocument;
-import org.adamalang.runtime.sys.PredictiveInventory;
+import org.adamalang.runtime.sys.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -127,7 +124,7 @@ public class MeteringStateMachineTests {
     LivingDocumentFactory factory = LivingDocumentTests.compile("public int x = 123; @construct { transition #foo in 2; } #foo { transition #foo in 2; }", Deliverer.FAILURE);
     {
       CountDownLatch latch = new CountDownLatch(1);
-      DurableLivingDocument.fresh(new Key("space", "key"), factory, NtPrincipal.NO_ONE, "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
+      DurableLivingDocument.fresh(new Key("space", "key"), factory, new CoreRequestContext(NtPrincipal.NO_ONE, "key", "origin", "ip"), "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
         @Override
         public void success(DurableLivingDocument value) {
           bases[0].executor.execute(new NamedRunnable("test") {
@@ -221,7 +218,7 @@ public class MeteringStateMachineTests {
     AtomicReference<HashMap<String, PredictiveInventory.MeteringSample>> billing = new AtomicReference<>(null);
     {
       CountDownLatch latch = new CountDownLatch(1);
-      DurableLivingDocument.fresh(new Key("space", "key"), factory, NtPrincipal.NO_ONE, "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
+      DurableLivingDocument.fresh(new Key("space", "key"), factory, new CoreRequestContext(NtPrincipal.NO_ONE, "key", "origin", "ip"), "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
         @Override
         public void success(DurableLivingDocument value) {
           bases[0].executor.execute(new NamedRunnable("test") {
