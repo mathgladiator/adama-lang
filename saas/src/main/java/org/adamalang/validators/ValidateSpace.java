@@ -38,6 +38,7 @@ public class ValidateSpace {
     set.add("idx_config");
     set.add("console");
     set.add("mgmt");
+    set.add("wp-admin");
     return set;
   }
 
