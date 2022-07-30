@@ -85,8 +85,6 @@ public class Base {
       rx._ifnot();
     } else if (env.element.hasAttr("rx:wrap")) {
       rx._wrap();
-    } else if (env.element.hasAttr("rx:scope")) {
-      // rx._scope();
     } else if (env.element.hasAttr("rx:switch")) {
       rx._switch();
     } else if (env.element.hasAttr("rx:template")) {

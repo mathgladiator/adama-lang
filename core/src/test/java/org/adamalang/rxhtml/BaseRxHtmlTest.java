@@ -9,6 +9,8 @@
  */
 package org.adamalang.rxhtml;
 
+import org.adamalang.translator.parser.Parser;
+import org.adamalang.translator.parser.token.TokenEngine;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,11 +30,13 @@ public abstract class BaseRxHtmlTest {
     Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
     String live = RxHtmlTool.convertStringToTemplateForest(source(), feedback);
     Assert.assertEquals(gold(), live.trim());
-    Assert.assertEquals(issues(), issuesLive.toString());
+    Assert.assertEquals(issues().trim(), issuesLive.toString().trim());
   }
 
   @Test
   public void codegen() throws Exception {
-    RxHtmlToAdama.codegen(source());
+    String adamaCode = RxHtmlToAdama.codegen(source());
+    Parser parser = new Parser(new TokenEngine("test", adamaCode.codePoints().iterator()));
+    parser.document();
   }
 }

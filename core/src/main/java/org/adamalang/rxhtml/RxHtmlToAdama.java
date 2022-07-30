@@ -77,24 +77,23 @@ public class RxHtmlToAdama {
       if (isParameter != null) {
         Token parameter = id(tokens);
 
-        final var colon = tokens.pop();
-        if (colon == null) {
-          throw new ParseException("Parser was expecting a colon", tokens.getLastTokenIfAvailable());
-        }
-        if (!colon.isSymbolWithTextEq(":")) {
-          throw new ParseException("Parser was expecting a colon", tokens.getLastTokenIfAvailable());
-        }
-        Token typeRaw = id(tokens);
+        var colon = tokens.popIf((t) -> t.isSymbolWithTextEq(":"));
         TyType type = null;
-        if ("text".equals(typeRaw.text) || "string".equals(typeRaw.text)) {
-          type = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, typeRaw);
-        } else if ("number".equals(typeRaw.text) || "double".equals(typeRaw.text)) {
-          type = new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, typeRaw);
-        } else if ("int".equals(typeRaw.text)) {
-          type = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, typeRaw);
+        if (colon == null) {
+          colon = Token.WRAP(":");
+          type = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, parameter);
+        } else {
+          Token typeRaw = id(tokens);
+          if ("text".equals(typeRaw.text) || "string".equals(typeRaw.text)) {
+            type = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, typeRaw);
+          } else if ("number".equals(typeRaw.text) || "double".equals(typeRaw.text)) {
+            type = new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, typeRaw);
+          } else if ("int".equals(typeRaw.text)) {
+            type = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, typeRaw);
+          }
         }
         if (type == null) {
-          throw new ParseException("Parser was expected a type of text, string, number, double, or int.", typeRaw);
+          throw new ParseException("Parser was expected a type of text, string, number, double, or int.", parameter);
         }
         uri.push(hasMore, isParameter, parameter, null, colon, type);
       } else {

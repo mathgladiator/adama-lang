@@ -9,7 +9,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateIterateSimpleTests extends BaseRxHtmlTest {
+public class TemplateInputSyncTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
@@ -21,18 +21,22 @@ public class TemplateIterateSimpleTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c = $.E('table');");
-    gold.append("\n    var d = $.E('tbody');");
-    gold.append("\n    $.IT(d,$.pD(a),'set',false,function(e) {");
-    gold.append("\n      var f = $.E('tr');");
-    gold.append("\n      var g = $.E('td');");
-    gold.append("\n      g.append($.L(e,'key'));");
-    gold.append("\n      g.append($.L(e,'value'));");
-    gold.append("\n      f.append(g);");
-    gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n    var c = $.E('input');");
+    gold.append("\n    c.setAttribute('name','email');");
+    gold.append("\n    b.append(c);");
+    gold.append("\n    $.SY(c,$.pV(a),'foo',100.0);");
+    gold.append("\n    var c = $.E('textarea');");
+    gold.append("\n    c.setAttribute('name','email');");
+    gold.append("\n    b.append(c);");
+    gold.append("\n    $.SY(c,$.pD(a),'foo',100.0);");
+    gold.append("\n    var c = $.E('select');");
+    gold.append("\n    c.setAttribute('name','email');");
+    gold.append("\n    var d = $.E('option');");
+    gold.append("\n    d.setAttribute('value','foo');");
+    gold.append("\n    d.append($.T('FOOO'));");
     gold.append("\n    c.append(d);");
     gold.append("\n    b.append(c);");
+    gold.append("\n    $.SY(c,$.pV(a),'foo',100.0);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     return gold.toString();
@@ -42,14 +46,11 @@ public class TemplateIterateSimpleTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <table>");
-    source.append("\n            <tbody rx:iterate=\"data:set\">");
-    source.append("\n                <tr><td>");
-    source.append("\n                    <lookup path=\"key\" />");
-    source.append("\n                    <lookup path=\"value\" />");
-    source.append("\n                </td></tr>");
-    source.append("\n            </tbody>");
-    source.append("\n        </table>");
+    source.append("\n        <input name=\"email\" rx:sync=\"foo\"/>");
+    source.append("\n        <textarea name=\"email\" rx:sync=\"data:foo\"></textarea>");
+    source.append("\n        <select name=\"email\" rx:sync=\"view:foo\">");
+    source.append("\n            <option value=\"foo\">FOOO</option>");
+    source.append("\n        </select>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

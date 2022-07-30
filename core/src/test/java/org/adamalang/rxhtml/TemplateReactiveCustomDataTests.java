@@ -9,7 +9,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateIterateSimpleTests extends BaseRxHtmlTest {
+public class TemplateReactiveCustomDataTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
@@ -21,18 +21,24 @@ public class TemplateIterateSimpleTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c = $.E('table');");
-    gold.append("\n    var d = $.E('tbody');");
-    gold.append("\n    $.IT(d,$.pD(a),'set',false,function(e) {");
-    gold.append("\n      var f = $.E('tr');");
-    gold.append("\n      var g = $.E('td');");
-    gold.append("\n      g.append($.L(e,'key'));");
-    gold.append("\n      g.append($.L(e,'value'));");
-    gold.append("\n      f.append(g);");
-    gold.append("\n      return f;");
+    gold.append("\n    var c={};");
+    gold.append("\n    c.one='one';");
+    gold.append("\n    c._={};");
+    gold.append("\n    c._.two={};");
+    gold.append("\n    c._._ = function() {");
+    gold.append("\n      c.two=c._.two['var']");
+    gold.append("\n      c.__();");
+    gold.append("\n    }");
+    gold.append("\n    $.Y(a,c._.two,'var', c._._);");
+    gold.append("\n    c._.three={};");
+    gold.append("\n    c._._ = function() {");
+    gold.append("\n      c.three=c._.three['var1'] + c._.three['var2']");
+    gold.append("\n      c.__();");
+    gold.append("\n    }");
+    gold.append("\n    $.Y(a,c._.three,'var1', c._._);");
+    gold.append("\n    $.Y(a,c._.three,'var2', c._._);");
+    gold.append("\n    $.CUDA(b,a,'',c,'/sign-in',function(d) {");
     gold.append("\n    });");
-    gold.append("\n    c.append(d);");
-    gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     return gold.toString();
@@ -42,14 +48,9 @@ public class TemplateIterateSimpleTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <table>");
-    source.append("\n            <tbody rx:iterate=\"data:set\">");
-    source.append("\n                <tr><td>");
-    source.append("\n                    <lookup path=\"key\" />");
-    source.append("\n                    <lookup path=\"value\" />");
-    source.append("\n                </td></tr>");
-    source.append("\n            </tbody>");
-    source.append("\n        </table>");
+    source.append("\n        <customdata parameter:one=\"one\" parameter:two=\"{var}\"  parameter:three=\"{var1}{var2}\">");
+    source.append("\n");
+    source.append("\n        </customdata>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

@@ -35,6 +35,7 @@ public class TemplateLookupDataTests extends BaseRxHtmlTest {
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
     source.append("\n        <lookup path=\"title\" />");
+    source.append("\n        <!-- ignore me -->");
     source.append("\n        <lookup path=\"/title\" />");
     source.append("\n        <lookup path=\"/blog/title\" />");
     source.append("\n        <lookup path=\"../title\" />");
