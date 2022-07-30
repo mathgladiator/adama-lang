@@ -124,7 +124,7 @@ public class MeteringStateMachineTests {
     LivingDocumentFactory factory = LivingDocumentTests.compile("public int x = 123; @construct { transition #foo in 2; } #foo { transition #foo in 2; }", Deliverer.FAILURE);
     {
       CountDownLatch latch = new CountDownLatch(1);
-      DurableLivingDocument.fresh(new Key("space", "key"), factory, new CoreRequestContext(NtPrincipal.NO_ONE, "key", "origin", "ip"), "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
+      DurableLivingDocument.fresh(new Key("space", "key"), factory, new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", "key"), "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
         @Override
         public void success(DurableLivingDocument value) {
           bases[0].executor.execute(new NamedRunnable("test") {
@@ -218,7 +218,7 @@ public class MeteringStateMachineTests {
     AtomicReference<HashMap<String, PredictiveInventory.MeteringSample>> billing = new AtomicReference<>(null);
     {
       CountDownLatch latch = new CountDownLatch(1);
-      DurableLivingDocument.fresh(new Key("space", "key"), factory, new CoreRequestContext(NtPrincipal.NO_ONE, "key", "origin", "ip"), "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
+      DurableLivingDocument.fresh(new Key("space", "key"), factory, new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", "key"), "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
         @Override
         public void success(DurableLivingDocument value) {
           bases[0].executor.execute(new NamedRunnable("test") {

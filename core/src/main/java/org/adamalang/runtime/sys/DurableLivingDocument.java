@@ -105,11 +105,11 @@ public class DurableLivingDocument {
         writer.writeFastString(entropy);
       }
       writer.writeObjectFieldIntro("key");
-      writer.writeFastString(context.key);
+      writer.writeString(context.key);
       writer.writeObjectFieldIntro("origin");
-      writer.writeFastString(context.origin);
+      writer.writeString(context.origin);
       writer.writeObjectFieldIntro("ip");
-      writer.writeFastString(context.ip);
+      writer.writeString(context.ip);
       writer.endObject();
       final var init = document.__transact(writer.toString(), currentFactory);
       final var invalidate = document.__transact(forgeInvalidate(), currentFactory);

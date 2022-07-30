@@ -86,9 +86,9 @@ public class RealDocumentSetup implements Deliverer {
     Key key = new Key("space", "0");
     if (json == null) {
       DurableLivingDocument.fresh(
-          key, factory, new CoreRequestContext(NtPrincipal.NO_ONE, key.key, "origin", "ip"), "{}", "123", monitor, base, acquireReal);
+          key, factory, new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", key.key), "{}", "123", monitor, base, acquireReal);
       DurableLivingDocument.fresh(
-          key, factory, new CoreRequestContext(NtPrincipal.NO_ONE, key.key, "origin", "ip"), "{}", "123", monitor, base, acquireMirror);
+          key, factory, new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", key.key), "{}", "123", monitor, base, acquireMirror);
     } else {
       DurableLivingDocument.load(key, factory, monitor, base, acquireReal);
       DurableLivingDocument.load(key, factory, monitor, base, acquireMirror);

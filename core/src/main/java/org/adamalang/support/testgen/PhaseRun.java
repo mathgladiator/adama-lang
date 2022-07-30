@@ -44,7 +44,7 @@ public class PhaseRun {
     DumbDataService.DumbDurableLivingDocumentAcquire acquire = new DumbDataService.DumbDurableLivingDocumentAcquire();
     Key key = new Key("0", "0");
     DocumentThreadBase base = new DocumentThreadBase(dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
-    DurableLivingDocument.fresh(key, factory, new CoreRequestContext(NtPrincipal.NO_ONE, key.key, "origin", "ip"), "{}", "0", monitor, base, acquire);
+    DurableLivingDocument.fresh(key, factory, new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", key.key), "{}", "0", monitor, base, acquire);
     DurableLivingDocument doc = acquire.get();
     doc.invalidate(Callback.DONT_CARE_INTEGER);
     outputFile.append("CPU:").append(doc.getCodeCost()).append("\n");
