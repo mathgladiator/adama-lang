@@ -10,6 +10,7 @@
 package org.adamalang.runtime;
 
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class JsonConstructionTests {
     final var setup =
         new RealDocumentSetup(
             "@connected { return true; } message M { int x; double y; string z; bool b; } int xx; double yy; string zz; bool bb; channel foo(M m) { xx = m.x; yy = m.y; zz = m.z; bb = m.b; }");
-    setup.document.connect(NtPrincipal.NO_ONE, new RealDocumentSetup.AssertInt(2));
+    setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
     setup.document.send(
         ContextSupport.WRAP(NtPrincipal.NO_ONE),
         "marker",

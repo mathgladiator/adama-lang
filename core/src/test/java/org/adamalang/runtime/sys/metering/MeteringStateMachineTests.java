@@ -11,6 +11,7 @@ package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
@@ -131,7 +132,7 @@ public class MeteringStateMachineTests {
             @Override
             public void execute() throws Exception {
               bases[0].map.put(new Key("space", "key"), value);
-              value.connect(NtPrincipal.NO_ONE, Callback.DONT_CARE_INTEGER);
+              value.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), Callback.DONT_CARE_INTEGER);
               latch.countDown();
             }
           });

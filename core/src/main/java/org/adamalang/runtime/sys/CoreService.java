@@ -430,7 +430,7 @@ public class CoreService implements Deliverer {
     if (document.isConnected(context.who)) {
       onConnected.success(null);
     } else {
-      document.connect(context.who, onConnected);
+      document.connect(context, onConnected);
     }
   }
 

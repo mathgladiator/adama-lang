@@ -123,21 +123,21 @@ public class MockLivingDocument extends LivingDocument {
   protected void __invoke_label(final String __new_state) {}
 
   @Override
-  public boolean __onConnected(final NtPrincipal clientValue) {
-    connects.add(clientValue);
+  public boolean __onConnected(final CoreRequestContext context) {
+    connects.add(context.who);
     return true;
   }
 
   @Override
-  public void __onDisconnected(final NtPrincipal clientValue) {
-    disconnects.add(clientValue);
+  public void __onDisconnected(final CoreRequestContext context) {
+    disconnects.add(context.who);
   }
 
   @Override
-  public void __onAssetAttached(NtPrincipal __cvalue, NtAsset __asset) {}
+  public void __onAssetAttached(CoreRequestContext __cvalue, NtAsset __asset) {}
 
   @Override
-  public boolean __onCanAssetAttached(NtPrincipal __cvalue) {
+  public boolean __onCanAssetAttached(CoreRequestContext __cvalue) {
     return false;
   }
 

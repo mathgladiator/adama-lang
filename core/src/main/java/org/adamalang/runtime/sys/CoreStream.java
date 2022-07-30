@@ -79,7 +79,7 @@ public class CoreStream implements AdamaStream {
       public void execute() throws Exception {
         inventory.message();
         try {
-          callback.success(document.canAttach(context.who));
+          callback.success(document.canAttach(context));
         } catch (Exception ex) {
           callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.CORE_STREAM_CAN_ATTACH_UNKNOWN_EXCEPTION, ex, LOGGER));
         }
@@ -102,7 +102,7 @@ public class CoreStream implements AdamaStream {
       @Override
       public void execute() throws Exception {
         inventory.message();
-        document.attach(context.who, asset, callback);
+        document.attach(context, asset, callback);
       }
     });
   }
@@ -121,7 +121,7 @@ public class CoreStream implements AdamaStream {
         // clean up and keep things tidy
         if (document.garbageCollectPrivateViewsFor(context.who) == 0) {
           // falling edge disconnects the person
-          document.disconnect(context.who, Callback.DONT_CARE_INTEGER);
+          document.disconnect(context, Callback.DONT_CARE_INTEGER);
         } else {
           document.invalidate(Callback.DONT_CARE_INTEGER);
         }

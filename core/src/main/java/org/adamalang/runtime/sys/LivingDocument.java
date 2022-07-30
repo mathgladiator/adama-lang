@@ -589,19 +589,19 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** code generated: allow the document to accept/reject the client */
-  public abstract boolean __onConnected(NtPrincipal clientValue);
+  public abstract boolean __onConnected(CoreRequestContext clientValue);
 
   /** ran with loaded */
   public abstract void __onLoad();
 
   /** code generated: let the document know of a disconnected client */
-  public abstract void __onDisconnected(NtPrincipal clientValue);
+  public abstract void __onDisconnected(CoreRequestContext clientValue);
 
   /** code generate: let the document know an asset was uploaded */
-  public abstract void __onAssetAttached(NtPrincipal __cvalue, NtAsset __asset);
+  public abstract void __onAssetAttached(CoreRequestContext __cvalue, NtAsset __asset);
 
   /** code generate: can the client even attach any data */
-  public abstract boolean __onCanAssetAttached(NtPrincipal __cvalue);
+  public abstract boolean __onCanAssetAttached(CoreRequestContext __cvalue);
 
   /** code generated: convert the reader into a constructor arg */
   protected abstract NtMessageBase __parse_construct_arg(JsonStreamReader reader);
@@ -835,6 +835,10 @@ public abstract class LivingDocument implements RxParent, Caller {
       if ("load".equals(command)) {
         return __transaction_load(requestJson, timestamp);
       }
+      CoreRequestContext context = null;
+      if (who != null && key != null && origin != null && ip != null) {
+        context = new CoreRequestContext(who, origin, ip, key);
+      }
       __time.set(timestamp);
       switch (command) {
         case "invalidate":
@@ -850,28 +854,28 @@ public abstract class LivingDocument implements RxParent, Caller {
           if (arg == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG);
           }
-          if (who == null || key == null || origin == null || ip == null) {
+          if (context == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
           }
-          return __transaction_construct(requestJson, new CoreRequestContext(who, origin, ip, key), arg, entropy);
-        case "connect": // TODO: context
-          if (who == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+          return __transaction_construct(requestJson, context, arg, entropy);
+        case "connect":
+          if (context == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
           }
-          return __transaction_connect(requestJson, who);
-        case "disconnect": // TODO: context
-          if (who == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+          return __transaction_connect(requestJson, context);
+        case "disconnect":
+          if (context == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
           }
-          return __transaction_disconnect(requestJson, who);
-        case "attach": // TODO: context
-          if (who == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+          return __transaction_disconnect(requestJson, context);
+        case "attach":
+          if (context == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
           }
           if (asset == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ASSET);
           }
-          return __transaction_attach(requestJson, who, asset);
+          return __transaction_attach(requestJson, context, asset);
         case "send":
           if (channel == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL);
@@ -879,10 +883,10 @@ public abstract class LivingDocument implements RxParent, Caller {
           if (message == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE);
           }
-          if (who == null || key == null || origin == null || ip == null) {
+          if (context == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
           }
-          return __transaction_send(new CoreRequestContext(who, origin, ip, key), requestJson, who, marker, channel, timestamp, message, factory);
+          return __transaction_send(context, requestJson, who, marker, channel, timestamp, message, factory);
         case "deliver":
           if (who == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
@@ -1010,22 +1014,22 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: a person connects to document */
-  private LivingDocumentChange __transaction_attach(final String request, final NtPrincipal who, final NtAsset asset) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_attach(final String request, final CoreRequestContext context, final NtAsset asset) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
       __monitor.push("TransactionAttach");
     }
     try {
-      if (!__clients.containsKey(who)) {
+      if (!__clients.containsKey(context.who)) {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_ATTACH_NOT_CONNECTED);
       }
       // execute the attachment
-      __onAssetAttached(who, asset);
+      __onAssetAttached(context, asset);
       __seq.bumpUpPre();
 
       exception = false;
-      return __simple_commit(who, request, null);
+      return __simple_commit(context.who, request, null);
     } finally {
       if (exception) {
         __revert();
@@ -1037,23 +1041,23 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: a person connects to document */
-  private LivingDocumentChange __transaction_connect(final String request, final NtPrincipal who) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_connect(final String request, final CoreRequestContext context) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
       __monitor.push("TransactionConnect");
     }
     try {
-      if (__clients.containsKey(who)) {
+      if (__clients.containsKey(context.who)) {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED);
       }
       __randomizeOutOfBand();
-      if (__onConnected(who)) {
+      if (__onConnected(context)) {
         // user was accepted, so let's commit it
         // generate a connection id for the user
         final var cId = __connection_id.bumpUpPost();
         // associate the client to the connection id
-        __clients.put(who, cId);
+        __clients.put(context.who, cId);
         // commit the tree to the delta
         __seq.bumpUpPre();
         final var forward = new JsonStreamWriter();
@@ -1064,17 +1068,16 @@ public abstract class LivingDocument implements RxParent, Caller {
         forward.writeObjectFieldIntro("__clients");
         forward.beginObject();
         forward.writeObjectFieldIntro(cId);
-        forward.writeNtPrincipal(who);
+        forward.writeNtPrincipal(context.who);
         forward.endObject();
         forward.endObject();
-
         reverse.writeObjectFieldIntro("__clients");
         reverse.beginObject();
         reverse.writeObjectFieldIntro(cId);
         reverse.writeNull();
         reverse.endObject();
         reverse.endObject();
-        final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
+        final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), context.who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
         exception = false;
         return new LivingDocumentChange(result, null, null);
       } else {
@@ -1122,7 +1125,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: a person disconnects from the document */
-  private LivingDocumentChange __transaction_disconnect(final String request, final NtPrincipal who) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_disconnect(final String request, final CoreRequestContext context) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -1130,13 +1133,13 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
     try {
       __randomizeOutOfBand();
-      if (!__clients.containsKey(who)) {
+      if (!__clients.containsKey(context.who)) {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_DISCONNECT_DUE_TO_NOT_CONNECTED);
       }
       // disconnect them
-      __onDisconnected(who);
+      __onDisconnected(context);
       // stop tracking them
-      final int id = __clients.remove(who);
+      final int id = __clients.remove(context.who);
       __seq.bumpUpPre();
       final var forward = new JsonStreamWriter();
       final var reverse = new JsonStreamWriter();
@@ -1152,10 +1155,10 @@ public abstract class LivingDocument implements RxParent, Caller {
       reverse.writeObjectFieldIntro("__clients");
       reverse.beginObject();
       reverse.writeObjectFieldIntro(id);
-      reverse.writeNtPrincipal(who);
+      reverse.writeNtPrincipal(context.who);
       reverse.endObject();
       reverse.endObject();
-      final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
+      final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), context.who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
       exception = false;
       return new LivingDocumentChange(result, null, null);
     } finally {

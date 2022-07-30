@@ -152,6 +152,29 @@ public class DurableLivingDocument {
     return writer;
   }
 
+  public JsonStreamWriter forgeWithContext(final String command, final CoreRequestContext context) {
+    this.lastActivityMS = base.time.nowMilliseconds();
+    final var writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("command");
+    writer.writeFastString(command);
+    writer.writeObjectFieldIntro("timestamp");
+    writer.writeLong(base.time.nowMilliseconds());
+    if (context != null) {
+      if (context.who != null) {
+        writer.writeObjectFieldIntro("who");
+        writer.writeNtPrincipal(context.who);
+      }
+      writer.writeObjectFieldIntro("key");
+      writer.writeString(context.key);
+      writer.writeObjectFieldIntro("origin");
+      writer.writeString(context.origin);
+      writer.writeObjectFieldIntro("ip");
+      writer.writeString(context.ip);
+    }
+    return writer;
+  }
+
   public static void load(final Key key, final LivingDocumentFactory factory, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
     try {
       LivingDocument doc = factory.create(monitor);
@@ -205,28 +228,6 @@ public class DurableLivingDocument {
         callback.failure(ex);
       }
     };
-  }
-
-  public JsonStreamWriter forgeWithContext(final String command, final CoreRequestContext context) {
-    final var writer = new JsonStreamWriter();
-    writer.beginObject();
-    writer.writeObjectFieldIntro("command");
-    writer.writeFastString(command);
-    writer.writeObjectFieldIntro("timestamp");
-    writer.writeLong(base.time.nowMilliseconds());
-    if (context != null) {
-      if (context.who != null) {
-        writer.writeObjectFieldIntro("who");
-        writer.writeNtPrincipal(context.who);
-      }
-      writer.writeObjectFieldIntro("key");
-      writer.writeString(context.key);
-      writer.writeObjectFieldIntro("origin");
-      writer.writeString(context.origin);
-      writer.writeObjectFieldIntro("ip");
-      writer.writeString(context.ip);
-    }
-    return writer;
   }
 
   private void queueCompact() {
@@ -652,10 +653,10 @@ public class DurableLivingDocument {
     this.lastActivityMS = base.time.nowMilliseconds();
   }
 
-  public void connect(final NtPrincipal who, Callback<Integer> callback) {
-    final var request = forge("connect", who);
+  public void connect(final CoreRequestContext context, Callback<Integer> callback) {
+    final var request = forgeWithContext("connect", context);
     request.endObject();
-    ingest(who, request.toString(), JUST_SEQ(base.metrics.document_connect.wrap(callback)), false, false);
+    ingest(context.who, request.toString(), JUST_SEQ(base.metrics.document_connect.wrap(callback)), false, false);
   }
 
   public boolean isConnected(final NtPrincipal who) {
@@ -688,10 +689,10 @@ public class DurableLivingDocument {
     return timeSinceLastActivity > base.getMillisecondsInactivityBeforeCleanup() && document.__canRemoveFromMemory();
   }
 
-  public void disconnect(final NtPrincipal who, Callback<Integer> callback) {
-    final var request = forge("disconnect", who);
+  public void disconnect(final CoreRequestContext context, Callback<Integer> callback) {
+    final var request = forgeWithContext("disconnect", context);
     request.endObject();
-    ingest(who, request.toString(), JUST_SEQ(base.metrics.document_disconnect.wrap(callback)), true, false);
+    ingest(context.who, request.toString(), JUST_SEQ(base.metrics.document_disconnect.wrap(callback)), true, false);
   }
 
   public void send(final CoreRequestContext context, final String marker, final String channel, final String message, Callback<Integer> callback) {
@@ -716,17 +717,17 @@ public class DurableLivingDocument {
     ingest(who, writer.toString(), JUST_SEQ(base.metrics.document_apply.wrap(callback)), false, false);
   }
 
-  public boolean canAttach(NtPrincipal who) {
+  public boolean canAttach(CoreRequestContext context) {
     // TODO: check policy first
-    return document.__onCanAssetAttached(who);
+    return document.__onCanAssetAttached(context);
   }
 
-  public void attach(NtPrincipal who, NtAsset asset, Callback<Integer> callback) {
-    final var writer = forge("attach", who);
+  public void attach(CoreRequestContext context, NtAsset asset, Callback<Integer> callback) {
+    final var writer = forgeWithContext("attach", context);
     writer.writeObjectFieldIntro("asset");
     writer.writeNtAsset(asset);
     writer.endObject();
-    ingest(who, writer.toString(), JUST_SEQ(base.metrics.document_attach.wrap(callback)), false, false);
+    ingest(context.who, writer.toString(), JUST_SEQ(base.metrics.document_attach.wrap(callback)), false, false);
   }
 
   public void deliver(NtPrincipal who, int deliveryId, RemoteResult result, Callback<Integer> callback) {
@@ -768,7 +769,7 @@ public class DurableLivingDocument {
 
   public void afterLoad() {
     for (NtPrincipal client : document.__reconcileClientsToForceDisconnect()) {
-      disconnect(client, Callback.DONT_CARE_INTEGER);
+      disconnect(new CoreRequestContext(client, "adama", "127.0.0.1", key.key), Callback.DONT_CARE_INTEGER);
     }
     if (document.__state.has() && !document.__blocked.get()) {
       invalidate(Callback.DONT_CARE_INTEGER);

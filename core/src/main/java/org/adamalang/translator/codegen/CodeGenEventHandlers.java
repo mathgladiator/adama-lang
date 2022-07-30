@@ -44,9 +44,9 @@ public class CodeGenEventHandlers {
       } else {
         if (event.hasPrincipal) {
           if (event.hasParameter) {
-            sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtPrincipal __who, ").append(event.parameterType).append(" ").append(dce.parameterNameToken.text).append(") ");
+            sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(CoreRequestContext __context, NtPrincipal __who, ").append(event.parameterType).append(" ").append(dce.parameterNameToken.text).append(") ");
           } else {
-            sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtPrincipal __who) ");
+            sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(CoreRequestContext __context, NtPrincipal __who) ");
           }
         } else {
           sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("() ");
@@ -79,17 +79,17 @@ public class CodeGenEventHandlers {
         if ("boolean".equals(event.returnType)) {
           sb.append("@Override").writeNewline();
           if (event.hasParameter) {
-            sb.append("public boolean ").append(event.prefix).append("(NtPrincipal __cvalue, ").append(event.parameterType).append(" __pvalue) {").tabUp().writeNewline();
+            sb.append("public boolean ").append(event.prefix).append("(CoreRequestContext __cvalue, ").append(event.parameterType).append(" __pvalue) {").tabUp().writeNewline();
           } else {
-            sb.append("public boolean ").append(event.prefix).append("(NtPrincipal __cvalue) {").tabUp().writeNewline();
+            sb.append("public boolean ").append(event.prefix).append("(CoreRequestContext __cvalue) {").tabUp().writeNewline();
           }
           if (count > 0) {
             sb.append("boolean __result = false;").writeNewline();
             for (var k = 0; k < count; k++) {
               if (event.hasParameter) {
-                sb.append("if (").append(event.prefix).append("__" + k).append("(__cvalue, __pvalue)) __result = true;").writeNewline();
+                sb.append("if (").append(event.prefix).append("__" + k).append("(__cvalue, __cvalue.who, __pvalue)) __result = true;").writeNewline();
               } else {
-                sb.append("if (").append(event.prefix).append("__" + k).append("(__cvalue)) __result = true;").writeNewline();
+                sb.append("if (").append(event.prefix).append("__" + k).append("(__cvalue, __cvalue.who)) __result = true;").writeNewline();
               }
             }
             sb.append("return __result;");
@@ -103,9 +103,9 @@ public class CodeGenEventHandlers {
           sb.append("@Override").writeNewline();
           if (event.hasPrincipal) {
             if (event.hasParameter) {
-              sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue, ").append(event.parameterType).append(" __pvalue) {");
+              sb.append("public void ").append(event.prefix).append("(CoreRequestContext __cvalue, ").append(event.parameterType).append(" __pvalue) {");
             } else {
-              sb.append("public void ").append(event.prefix).append("(NtPrincipal __cvalue) {");
+              sb.append("public void ").append(event.prefix).append("(CoreRequestContext __cvalue) {");
             }
           } else {
             sb.append("public void ").append(event.prefix).append("() {");
@@ -115,9 +115,9 @@ public class CodeGenEventHandlers {
             for (var k = 0; k < count; k++) {
               if (event.hasPrincipal) {
                 if (event.hasParameter) {
-                  sb.append(event.prefix).append("__" + k + "(__cvalue, __pvalue);");
+                  sb.append(event.prefix).append("__" + k + "(__cvalue, __cvalue.who, __pvalue);");
                 } else {
-                  sb.append(event.prefix).append("__" + k + "(__cvalue);");
+                  sb.append(event.prefix).append("__" + k + "(__cvalue, __cvalue.who);");
                 }
               } else {
                 sb.append(event.prefix).append("__" + k + "();");

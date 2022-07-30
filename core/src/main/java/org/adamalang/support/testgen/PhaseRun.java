@@ -52,12 +52,12 @@ public class PhaseRun {
     doc.createPrivateView(NtPrincipal.NO_ONE, wrap(str -> {
       outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
     }), new JsonStreamReader("{}"), null, DumbDataService.makePrinterPrivateView("NO_ONE", outputFile));
-    doc.connect(NtPrincipal.NO_ONE, DumbDataService.makePrinterInt("NO_ONE", outputFile));
+    doc.connect(new CoreRequestContext(NtPrincipal.NO_ONE, "phase", "ip", "key"), DumbDataService.makePrinterInt("NO_ONE", outputFile));
     final var rando = new NtPrincipal("rando", "random-place");
     doc.createPrivateView(rando, wrap(str -> {
       outputFile.append("+ RANDO DELTA:").append(str).append("\n");
     }), new JsonStreamReader("{}"), null, DumbDataService.makePrinterPrivateView("RANDO", outputFile));
-    doc.connect(rando, DumbDataService.makePrinterInt("RANDO", outputFile));
+    doc.connect(new CoreRequestContext(rando, "phase", "ip", "key"), DumbDataService.makePrinterInt("RANDO", outputFile));
     doc.invalidate(DumbDataService.makePrinterInt("RANDO", outputFile));
     outputFile.append("MEMORY:" + doc.getMemoryBytes() + "\n");
     outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
