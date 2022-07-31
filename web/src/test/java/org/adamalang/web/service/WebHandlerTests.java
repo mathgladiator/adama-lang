@@ -155,7 +155,7 @@ public class WebHandlerTests {
             .get("/rxhtml.js")
             .execute(callback);
         callback.awaitFirst();
-        callback.assertDataPrefix("var RxHTML = (function");
+        callback.assertDataPrefix("function AdamaTreeSimple() {");
       }
 
       {
