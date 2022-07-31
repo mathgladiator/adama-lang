@@ -9,7 +9,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
+public class TemplateHrefTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
@@ -21,21 +21,15 @@ public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    b.append($.T(' Simple Page '));");
+    gold.append("\n    var c = $.E('a');");
+    gold.append("\n    $.HREF(c,'/here-i-am');");
+    gold.append("\n    c.append($.T(' To rock you '));");
+    gold.append("\n    b.append(c);");
+    gold.append("\n    var c = $.E('img');");
+    gold.append("\n    $.ASRC(c,'/image.png');");
+    gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('div');");
-    gold.append("\n    {");
-    gold.append("\n      var d = {};");
-    gold.append("\n      d.__dom = c;");
-    gold.append("\n      var e = (function() {");
-    gold.append("\n        $.ACLASS(this.__dom,this['classy'] + \" \" + ((this['b']) ? (\"active\") : (\"inactive\")));");
-    gold.append("\n      }).bind(d);");
-    gold.append("\n      $.Y(a,d,'b',e);");
-    gold.append("\n      $.Y(a,d,'classy',e);");
-    gold.append("\n      e();");
-    gold.append("\n    }");
-    gold.append("\n    c.setAttribute('fixed','constant string');");
-    gold.append("\n    c.setAttribute('len','40');");
-    gold.append("\n    c.append($.T(' Yaz '));");
+    gold.append("\n    $.ACLASS(c,'someclass');");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -46,10 +40,11 @@ public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        Simple Page");
-    source.append("\n        <div class=\"{classy} [b]active[#b]inactive[/b]\" fixed=\"constant string\" len=40>");
-    source.append("\n            Yaz");
-    source.append("\n        </div>");
+    source.append("\n        <a href=\"/here-i-am\">");
+    source.append("\n            To rock you");
+    source.append("\n        </a>");
+    source.append("\n        <img src=\"/image.png\" />");
+    source.append("\n        <div class=\"someclass\"></div>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

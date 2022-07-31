@@ -182,8 +182,14 @@ public class Attributes {
   }
 
   private void writeDomSetter(String var, String key, String expr) {
-    boolean hasValue = env.element.tagName().equalsIgnoreCase("textarea") || env.element.tagName().equalsIgnoreCase("input");
-    if (hasValue && key.equalsIgnoreCase("value")) {
+    boolean hasValue = env.element.tagName().equalsIgnoreCase("textarea") || env.element.tagName().equalsIgnoreCase("input") || env.element.tagName().equalsIgnoreCase("select");
+    if (key.equalsIgnoreCase("href")) {
+      env.writer.tab().append("$.HREF(").append(var).append(",").append(expr).append(");").newline();
+    } else if (key.equalsIgnoreCase("class")) {
+      env.writer.tab().append("$.ACLASS(").append(var).append(",").append(expr).append(");").newline();
+    } else if (key.equalsIgnoreCase("src")) {
+      env.writer.tab().append("$.ASRC(").append(var).append(",").append(expr).append(");").newline();
+    } else if (hasValue && key.equalsIgnoreCase("value")) {
       env.writer.tab().append(var).append(".value=").append(expr).append(";").newline();
     } else {
       env.writer.tab().append(var).append(".setAttribute('").append(key).append("',").append(expr).append(");").newline();

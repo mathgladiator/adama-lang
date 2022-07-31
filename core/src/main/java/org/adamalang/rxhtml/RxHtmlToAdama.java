@@ -53,12 +53,12 @@ public class RxHtmlToAdama {
        shell.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
        shell.append("<script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script>");
        shell.append("<script src=\"https://aws-us-east-2.adama-platform.com/rxhtml.js\"></script>");
-       shell.append("<script src=\"").append(path).append("\"></script>");
+       shell.append("<script>\n\n").append(template).append("\n\n</script>");
        // TODO: need to path relative to the URI back to the root
        shell.append("</head>");
        shell.append("<body></body>"); // TODO: server side rendering could be neat, but it is tricky given the multiple connections
        shell.append("<script>");
-       shell.append("RxHTML.run(document.body, window.location.pathname + window.location.hash);");
+       shell.append("RxHTML.init();");
        shell.append("</script>");
        shell.append("</html>");
 

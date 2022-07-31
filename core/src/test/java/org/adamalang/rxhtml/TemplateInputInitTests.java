@@ -51,7 +51,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
     gold.append("\n      var e = (function() {");
-    gold.append("\n        this.__dom.setAttribute('value',this['value']);");
+    gold.append("\n        this.__dom.value=this['value'];");
     gold.append("\n      }).bind(d);");
     gold.append("\n      $.Y(a,d,'value',e);");
     gold.append("\n      e();");
