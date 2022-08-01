@@ -198,7 +198,7 @@ public class Connection implements AdamaStream {
     base.executor.execute(new NamedRunnable("connection-update") {
       @Override
       public void execute() throws Exception {
-        Connection.this.viewerState = viewerState;
+        Connection.this.viewerState = viewerState; // TODO: merge? set? need to validate behavior
         bufferOrExecute(new ItemAction<>(ErrorCodes.API_UPDATE_TIMEOUT, ErrorCodes.API_UPDATE_REJECTED, mInstance) {
           @Override
           protected void executeNow(Remote remote) {

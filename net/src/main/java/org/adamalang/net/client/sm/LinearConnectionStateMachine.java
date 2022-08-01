@@ -9,18 +9,24 @@
  */
 package org.adamalang.net.client.sm;
 
+import org.adamalang.ErrorCodes;
+import org.adamalang.ErrorTable;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.metrics.ItemActionMonitor;
+import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.contracts.Events;
 import org.adamalang.net.client.contracts.Remote;
 import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.contracts.SimpleEvents;
+import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.Key;
 
 /** Assumes a fixed routing decision and heads until first failure */
-public class LinearConnectionStateMachine {
+public class LinearConnectionStateMachine implements AdamaStream {
   // these can be put under a base
   private final ConnectionBase base;
   // these are critical to the request (i.e they are the request)
@@ -34,6 +40,8 @@ public class LinearConnectionStateMachine {
   private String viewerState;
   // the buffer of actions to execute once we have a remote
   private final ItemQueue<Remote> queue;
+  private int backoff;
+  private boolean closed;
 
   public LinearConnectionStateMachine(ConnectionBase base, String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
     this.base = base;
@@ -46,32 +54,55 @@ public class LinearConnectionStateMachine {
     this.assetKey = assetKey;
     this.events = events;
     this.queue = new ItemQueue<>(base.executor, base.config.getConnectionQueueSize(), base.config.getConnectionQueueTimeoutMS());
+    this.backoff = 1;
+    this.closed = false;
   }
 
-  public void send() {
-  }
-
-  // TODO: update view state
-
-  private void handleError(int code) {
+  private void handleError(int error) {
+    if (ErrorTable.INSTANCE.shouldRetry(error)) {
+      backoff = Math.min((int) (backoff + Math.random() * backoff + 1), 2000);
+      base.executor.schedule(new NamedRunnable("lcsm-handle-error") {
+        @Override
+        public void execute() throws Exception {
+          if (!closed) {
+            open();
+          }
+        }
+      }, backoff);
+    } else {
+      events.error(error);
+    }
   }
 
   public void open() {
     base.router.get(key, new RoutingSubscriber() {
       @Override
       public void onRegion(String region) {
-        handleError(-1);
+        handleError(ErrorCodes.NET_LCSM_WRONG_REGION);
       }
 
       @Override
       public void onMachine(String machine) {
-        base.mesh.find(machine, new Callback<InstanceClient>() {
+        if (machine == null) {
+          handleError(ErrorCodes.NET_LCSM_NO_MACHINE_FOUND);
+          return;
+        }
+        base.mesh.find(machine, new Callback<>() {
           @Override
-          public void success(InstanceClient value) {
-            value.connect(ip, origin, agent, authority, key.space, key.key, viewerState, assetKey, new Events() {
+          public void success(InstanceClient client) {
+            client.connect(ip, origin, agent, authority, key.space, key.key, viewerState, assetKey, new Events() {
               @Override
               public void connected(Remote remote) {
-                queue.ready(remote);
+                base.executor.execute(new NamedRunnable("lcsm-connected") {
+                  @Override
+                  public void execute() throws Exception {
+                    if (closed) {
+                      remote.disconnect();
+                    } else {
+                      queue.ready(remote);
+                    }
+                  }
+                });
               }
 
               @Override
@@ -81,29 +112,126 @@ public class LinearConnectionStateMachine {
 
               @Override
               public void error(int code) {
-                events.error(code);
+                handleError(code);
               }
 
               @Override
               public void disconnected() {
-                handleError(-3); /* Unexpected disconnect */
+                handleError(ErrorCodes.NET_LCSM_DISCONNECTED_PREMATURE);
               }
             });
           }
 
           @Override
           public void failure(ErrorCodeException ex) {
-            events.error(ex.code);
-            // TODO: LOG
+            handleError(ex.code);
           }
         });
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-        events.error(ex.code);
+        handleError(ex.code);
       }
     });
   }
 
+  @Override
+  public void update(String newViewerState) {
+    ItemActionMonitor.ItemActionMonitorInstance instance = base.metrics.lcsm_connection_update.start();
+    base.executor.execute(new NamedRunnable("lcsm-update") {
+      @Override
+      public void execute() throws Exception {
+        viewerState = newViewerState; // TODO: merge? or set?
+        queue.add(new ItemAction<>(ErrorCodes.NET_LCSM_UPDATE_TIMEOUT, ErrorCodes.NET_LCSM_UPDATE_REJECTED, instance) {
+          @Override
+          protected void executeNow(Remote remote) {
+            remote.update(viewerState);
+          }
+
+          @Override
+          protected void failure(int code) {
+            // Don't care
+          }
+        });
+      }
+    });
+  }
+
+  @Override
+  public void send(String channel, String marker, String message, Callback<Integer> callback) {
+    ItemActionMonitor.ItemActionMonitorInstance instance = base.metrics.lcsm_connection_update.start();
+    base.executor.execute(new NamedRunnable("lcsm-send") {
+      @Override
+      public void execute() throws Exception {
+        queue.add(new ItemAction<>(ErrorCodes.NET_LCSM_SEND_TIMEOUT, ErrorCodes.NET_LCSM_SEND_REJECTED, instance) {
+          @Override
+          protected void executeNow(Remote remote) {
+            remote.send(channel, marker, message, callback);
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
+  @Override
+  public void canAttach(Callback<Boolean> callback) {
+    ItemActionMonitor.ItemActionMonitorInstance instance = base.metrics.lcsm_connection_can_attach.start();
+    base.executor.execute(new NamedRunnable("lcsm-can-attach") {
+      @Override
+      public void execute() throws Exception {
+        queue.add(new ItemAction<>(ErrorCodes.NET_LCSM_CAN_ATTACH_TIMEOUT, ErrorCodes.NET_LCSM_CAN_ATTACH_REJECTED, instance) {
+          @Override
+          protected void executeNow(Remote remote) {
+            remote.canAttach(callback);
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
+  @Override
+  public void attach(String id, String name, String contentType, long size, String md5, String sha384, Callback<Integer> callback) {
+    ItemActionMonitor.ItemActionMonitorInstance instance = base.metrics.lcsm_connection_attach.start();
+    base.executor.execute(new NamedRunnable("lcsm-attach") {
+      @Override
+      public void execute() throws Exception {
+        queue.add(new ItemAction<>(ErrorCodes.NET_LCSM_ATTACH_TIMEOUT, ErrorCodes.NET_LCSM_ATTACH_REJECTED, instance) {
+          @Override
+          protected void executeNow(Remote remote) {
+            remote.attach(id, name, contentType, size, md5, sha384, callback);
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
+  @Override
+  public void close() {
+    base.executor.execute(new NamedRunnable("lcsm-close") {
+      @Override
+      public void execute() throws Exception {
+        closed = true;
+        Remote remote = queue.nuke();
+        if (remote != null) {
+          remote.disconnect();
+        }
+      }
+    });
+  }
 }

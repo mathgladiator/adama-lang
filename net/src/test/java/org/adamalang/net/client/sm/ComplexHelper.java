@@ -23,8 +23,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class ComplexHelper {
-
-
   public static final String SIMPLE = "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; } @can_attach { return true; } @attached(what) {} ";
   public static final String VIEW_MIRROR = "@static { create { return true; } } @connected { return true; } view int z; bubble zz = 1000 + @viewer.z; public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; } @can_attach { return true; } @attached(what) {} ";
   public static final String BAD_CODE = "@can_attach { int x = 1; while(true) { x++; } return true; } @attached(what) { while(true) {} } @static { create { return true; } } @connected { return true; } message M {} channel foo(M y) { while(true) {} }  ";

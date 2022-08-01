@@ -55,6 +55,11 @@ public class ClientMetrics {
 
   public final Runnable client_failed_pick_host;
 
+  public final ItemActionMonitor lcsm_connection_update;
+  public final ItemActionMonitor lcsm_connection_send;
+  public final ItemActionMonitor lcsm_connection_can_attach;
+  public final ItemActionMonitor lcsm_connection_attach;
+
   public ClientMetrics(MetricsFactory factory) {
     client_connection_alive = factory.inflight("client_connection_alive");
     client_state_machines_alive = factory.inflight("client_state_machines_alive");
@@ -92,5 +97,10 @@ public class ClientMetrics {
     client_weboptions_found_machine = factory.makeRequestResponseMonitor("client_weboptions_found_machine");
     client_webput_found_machine = factory.makeRequestResponseMonitor("client_webput_found_machine");
     client_failed_pick_host = factory.counter("client_failed_pick_host");
+
+    lcsm_connection_update = factory.makeItemActionMonitor("lcsm_connection_update");
+    lcsm_connection_send = factory.makeItemActionMonitor("lcsm_connection_send");
+    lcsm_connection_can_attach = factory.makeItemActionMonitor("lcsm_connection_can_attach");
+    lcsm_connection_attach = factory.makeItemActionMonitor("lcsm_connection_attach");
   }
 }

@@ -44,13 +44,16 @@ public class ItemQueue<T> {
     this.item = null;
   }
 
-  public void nuke() {
+  public T nuke() {
     if (buffer != null) {
       for (ItemAction<T> action : buffer) {
         action.killDueToReject();
       }
       buffer = null;
     }
+    T result = item;
+    item = null;
+    return result;
   }
 
   public void add(ItemAction<T> action) {

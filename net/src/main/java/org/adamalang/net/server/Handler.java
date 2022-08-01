@@ -464,7 +464,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
       upstream.next(buf);
       upstream.completed();
     } catch (Exception ex) {
-      upstream.error(ErrorCodes.GRPC_HANDLER_SCAN_EXCEPTION);
+      upstream.error(ErrorCodes.NET_HANDLER_SCAN_EXCEPTION);
     }
   }
 

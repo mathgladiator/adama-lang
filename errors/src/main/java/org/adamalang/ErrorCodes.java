@@ -11,13 +11,24 @@ package org.adamalang;
 
 /** centralized listing of all error codes */
 public class ErrorCodes {
+  @RetryInternally
   public static final int DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE = 123392;
+
+  @RetryInternally
   public static final int DURABLE_LIVING_DOCUMENT_STAGE_FRESH_PERSIST = 198657;
+
+  @RetryInternally
   public static final int DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE = 130568;
+
+  @RetryInternally
   public static final int DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_PERSIST = 134152;
+
+  @RetryInternally
   public static final int DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE = 143880;
-  public static final int DURABLE_LIVING_DOCUMENT_STAGE_LOAD_READ = 101386;
+
+  @RetryInternally
   public static final int DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW = 138255;
+
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_COMMAND_FOUND = 194575;
   public static final int LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT = 184335;
   public static final int LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED = 115724;
@@ -52,7 +63,10 @@ public class ErrorCodes {
   public static final int FACTORY_CANT_INVOKE_CAN_CREATE = 180858;
   public static final int FACTORY_CANT_INVOKE_CAN_SEND_WHILE_DISCONNECTED = 148095;
   public static final int FACTORY_CANT_INVOKE_CAN_INVENT = 146558;
+
+  @RetryInternally
   public static final int CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION = 144416;
+
   public static final int DOCUMENT_SHEDDING_LOAD = 146115;
   public static final int DOCUMENT_WEB_GET_NOT_FOUND = 133308;
   public static final int DOCUMENT_WEB_OPTIONS_NOT_FOUND = 127692;
@@ -80,7 +94,6 @@ public class ErrorCodes {
   public static final int DOCUMENT_QUEUE_CONFLICT_OPERATIONS = 159869;
   public static final int CORE_STREAM_CAN_ATTACH_UNKNOWN_EXCEPTION = 146569;
   public static final int DOCUMENT_NOT_READY = 194752;
-
   public static final int UNCAUGHT_EXCEPTION_WEB_SOCKET = 295116;
   public static final int ONLY_ACCEPTS_TEXT_FRAMES = 213711;
   public static final int USERLAND_REQUEST_NO_METHOD_PROPERTY = 213708;
@@ -99,9 +112,12 @@ public class ErrorCodes {
   @Description("The given document already exists")
   public static final int UNIVERSAL_INITIALIZE_FAILURE = 667658;
 
-  @Description("The document change was unabled to be patched")
+  @Description("The document change was unable to be patched")
+  @RetryInternally
   public static final int PATCH_FAILURE = 640009;
   public static final int COMPUTE_FAILURE = 605195;
+
+  @RetryInternally
   public static final int GET_FAILURE = 669710;
   public static final int DELETE_FAILURE = 641036;
   public static final int DEPLOYMENT_NOT_FOUND = 643084;
@@ -129,7 +145,6 @@ public class ErrorCodes {
   public static final int FRONTEND_AUTHORITY_GET_NOT_FOUND_INTERNAL = 643072;
   public static final int FRONTEND_AUTHORITY_GET_NOT_FOUND_PUBLIC = 626691;
   public static final int FRONTEND_AUTHORITY_DELETE_NOT_FOUND_OR_INCORRECT = 654339;
-
   public static final int DELIVERER_FAILURE_NOT_SET = 161987;
 
   @User
@@ -139,14 +154,41 @@ public class ErrorCodes {
   @User
   @Description("The deployment plan lacked a versions object within the root object")
   public static final int DEPLOYMENT_PLAN_NO_VERSIONS = 115788;
+
+  @User
+  @Description("The deployment plan lacked a default version")
   public static final int DEPLOYMENT_PLAN_NO_DEFAULT = 143948;
+
+  @User
+  @Description("The deployment plan is not correct; the versions field must be an object")
   public static final int DEPLOYMENT_PLAN_VERSIONS_MUST_BE_OBJECT = 155711;
+
+  @User
+  @Description("The deployment plan is not correct; the plan field be an array")
   public static final int DEPLOYMENT_PLAN_PLAN_MUST_BE_ARRAY = 126012;
+
+  @User
+  @Description("The deployment plan is not correct; elements with the plan array must be objects")
   public static final int DEPLOYMENT_PLAN_PLAN_ARRAY_ELEMENT_MUST_OBJECT = 176703;
+
+  @User
+  @Description("The deployment plan is not correct; plan objects must have percent be numeric")
   public static final int DEPLOYMENT_PLAN_PERCENT_MUST_BE_DOUBLE = 151615;
+
+  @User
+  @Description("The deployment plan is not correct; plan object must point to a version which exists")
   public static final int DEPLOYMENT_PLAN_VERSION_MUST_EXIST = 120895;
+
+  @User
+  @Description("The deployment plan is not correct; plan object must have a version")
   public static final int DEPLOYMENT_PLAN_PLAN_NO_VERSION = 199768;
+
+  @User
+  @Description("The deployment plan is not correct; default version doesn't exist")
   public static final int DEPLOYMENT_PLAN_MUST_HAVE_DEFAULT = 145980;
+
+  @User
+  @Description("The deployment plan is not correct; the keys within a plan object must be an array")
   public static final int DEPLOYMENT_PLAN_KEYS_MUST_BE_ARRAY = 199886;
 
   @User
@@ -160,8 +202,17 @@ public class ErrorCodes {
   @User
   @Description("The space was not found on the given Adama host. Either this means the space doesn't exist, or a routing issue caused by a poor deployment or capacity management resulted in a invalid mapping")
   public static final int DEPLOYMENT_FACTORY_CANT_FIND_SPACE = 134214;
+
+  @User
+  @Description("The deployment plan contains junk")
   public static final int DEPLOYMENT_UNKNOWN_FIELD_ROOT = 143430;
+
+  @User
+  @Description("The deployment plan contains junk within a plan object")
   public static final int DEPLOYMENT_UNKNOWN_FIELD_STAGE = 116812;
+
+  @User
+  @Description("The deployment plan failed for an unknown reason")
   public static final int DEPLOYMENT_UNKNOWN_EXCEPTION = 146561;
 
   /**
@@ -185,7 +236,6 @@ public class ErrorCodes {
   public static final int USER_NOT_FOUND_GET_BALANCE = 605208;
   public static final int USER_FAILED_TO_COUNT = 662552;
   public static final int PRIVATE_KEY_NOT_FOUND = 643100;
-
   public static final int USER_NOT_FOUND_GET_PROFILE = 674832;
   public static final int USER_FAILED_TO_SET_PROFILE = 634899;
 
@@ -238,8 +288,6 @@ public class ErrorCodes {
   public static final int USERID_RESOLVE_UNKNOWN_EXCEPTION = 979980;
   public static final int API_INVALID_EMAIL = 905293;
   public static final int SPACE_POLICY_LOCATOR_UNKNOWN_EXCEPTION = 969741;
-
-  public static final int API_SPACE_INVALID_NAME_FOR_LOOKUP = 928828;
 
   public static final int API_SPACE_CREATE_UNKNOWN_EXCEPTION = 900104;
   public static final int API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION = 909436;
@@ -307,21 +355,8 @@ public class ErrorCodes {
   @Description("The document was busy and unable to attach the data")
   public static final int API_ATTACH_REJECTED = 913447;
 
-  public static final int INSTANCE_FINDER_TIMEOUT = 998434;
-  public static final int INSTANCE_FINDER_REJECTED = 930848;
   public static final int STATE_MACHINE_TOO_MANY_FAILURES = 992319;
   public static final int STATE_MACHINE_UNABLE_TO_RECONNECT = 947263;
-
-  public static final int API_DEPLOY_REJECTED = 901180;
-  public static final int API_DEPLOY_TIMEOUT = 912444;
-
-  public static final int API_CREATE_CANT_FIND_CAPACITY = 912447;
-  public static final int API_CREATE_TIMEOUT = 962655;
-  public static final int API_CREATE_REJECTED = 996436;
-
-  public static final int API_REFLECT_CANT_FIND_CAPACITY = 969806;
-  public static final int API_REFLECT_TIMEOUT = 902223;
-  public static final int API_REFLECT_REJECTED = 983117;
 
   public static final int API_METHOD_NOT_FOUND = 945213;
   public static final int API_INVALID_KEY_EMPTY = 919676;
@@ -370,9 +405,6 @@ public class ErrorCodes {
   public static final int API_GENERATE_KEY_UNKNOWN_EXCEPTION = 925840;
   public static final int API_GENERATE_KEY_NO_PERMISSION = 908435;
 
-  public static final int API_METERING_TIMEOUT = 998480;
-  public static final int API_METERING_REJECTED = 998499;
-
   public static final int API_CHANNEL_VALIDATION_FAILED_EMPTY = 950399;
   public static final int API_CHANNEL_VALIDATION_BAD_START_CHARACTER = 908415;
   public static final int API_CHANNEL_VALIDATION_BAD_MIDDLE_CHARACTER = 967804;
@@ -386,8 +418,25 @@ public class ErrorCodes {
   public static final int WEB_BASE_GET_FAILED_CONNECT = 949427;
   public static final int WEB_BASE_GET_FAILED_NOT_200 = 928959;
 
+  public static final int NET_LCSM_UPDATE_TIMEOUT = 998434;
+  public static final int NET_LCSM_UPDATE_REJECTED = 930848;
+  public static final int NET_LCSM_SEND_TIMEOUT = 901180;
+  public static final int NET_LCSM_SEND_REJECTED = 912444;
+  public static final int NET_LCSM_CAN_ATTACH_TIMEOUT = 912447;
+  public static final int NET_LCSM_CAN_ATTACH_REJECTED = 962655;
+  public static final int NET_LCSM_ATTACH_TIMEOUT = 996436;
+  public static final int NET_LCSM_ATTACH_REJECTED = 969806;
+
+  @RetryInternally
+  public static final int NET_LCSM_WRONG_REGION = 902223;
+
+  @RetryInternally
+  public static final int NET_LCSM_NO_MACHINE_FOUND = 912544;
+
+  @RetryInternally
+  public static final int NET_LCSM_DISCONNECTED_PREMATURE = 983117;
+
   /**
-   * 912544
    * 928944 903347 986319 993487 913615 947404 904399 903375 937164 984268 924877 991435 904392
    * 979145 904394 920777 929990 998599 979143 967879 903364 931015 982212 986308 950469 921794
    * 999619 929987 977091 934083 962752 998593 914626 950465 919774 921823 928991 909532 973020
@@ -431,33 +480,7 @@ public class ErrorCodes {
   public static final int SERVICE_CONFIG_BAD_ENCRYPT_STRING_FAILED_DECRYPTION = 782348;
   public static final int MYSQL_FAILED_FINDING_SECRET_KEY = 786436;
 
-  public static final int GRPC_HANDLER_EXCEPTION = 734211;
-  public static final int GRPC_HANDLER_SCAN_EXCEPTION = 716806;
-
-  public static final int GRPC_STREAM_ASK_TIMEOUT = 774147;
-  public static final int GRPC_STREAM_ASK_REJECTED = 782339;
-
-  public static final int GRPC_STREAM_ATTACH_TIMEOUT = 751618;
-  public static final int GRPC_STREAM_ATTACH_REJECTED = 733185;
-
-  public static final int GRPC_STREAM_SEND_TIMEOUT = 768000;
-  public static final int GRPC_STREAM_SEND_REJECTED = 754688;
-
-  public static final int GRPC_STREAM_UPDATE_TIMEOUT = 786433;
-  public static final int GRPC_STREAM_UPDATE_REJECTED = 796674;
-
-  public static final int DISK_GET_IO_EXCEPTION = 716804;
-  public static final int DISK_INITIALIZE_IO_EXCEPTION = 793602;
-  public static final int DISK_UNABLE_TO_PATCH_FILE_NOT_FOUND = 794627;
-  public static final int DISK_PATCH_IO_EXCEPTION = 777244;
-  public static final int DISK_UNABLE_TO_DELETE = 769042;
-  public static final int DISK_UNABLE_TO_COMPACT_FILE_NOT_FOUND = 784401;
-  public static final int DISK_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY = 777259;
-  public static final int DISK_COMPACT_READ_IO_EXCEPTION = 736272;
-  public static final int DISK_COMPACT_WRITE_IO_EXCEPTION = 739351;
-  public static final int DISK_UNABLE_TO_COMPUTE_FILE_NOT_FOUND = 790544;
-
-  public static final int DISK_COMPUTE_HEADPATCH_NOTHING_TO_DO = 725039;
+  public static final int NET_HANDLER_SCAN_EXCEPTION = 716806;
 
   public static final int NET_FAILED_INITIATION = 753699;
   public static final int NET_DISCONNECT = 773155;
@@ -497,10 +520,6 @@ public class ErrorCodes {
   public static final int ADAMA_NET_FAILED_FIND_TARGET = 753724;
   public static final int ADAMA_NET_FAILED_FINDING_SUBID = 797755;
 
-  // TODO: nuke prior WAL implementation
-  public static final int CARAVAN_KEY_NOT_LOADED_PATCH = 707675;
-  public static final int CARAVAN_KEY_NOT_LOADED_COMPUTE = 790622;
-  public static final int CARAVAN_KEY_NOT_LOADED_SNAPSHOT = 790623;
   public static final int CARAVAN_COMPUTE_METHOD_NOT_FOUND = 785491;
   public static final int CARAVAN_COMPUTE_REWIND_SEQ_NOT_FOUND = 791602;
   public static final int CARAVAN_COMPUTE_HEADPATCH_SEQ_NOT_FOUND = 787507;
@@ -516,9 +535,7 @@ public class ErrorCodes {
   public static final int CARAVAN_CANT_MERGE_RESTORE_OUT_OF_SPACE = 720012;
 
   public static final int FINDER_SERVICE_MYSQL_FREE_EXCEPTION = 771139;
-  public static final int FINDER_SERVICE_MYSQL_CANT_UPDATE = 707651;
   public static final int FINDER_SERVICE_MYSQL_CANT_DELETE = 773247;
-  public static final int FINDER_SERVICE_MYSQL_UPDATE_EXCEPTION = 792643;
   public static final int FINDER_SERVICE_MYSQL_FIND_EXCEPTION = 785528;
   public static final int FINDER_SERVICE_MYSQL_LIST_EXCEPTION = 735364;
   public static final int FINDER_SERVICE_MYSQL_DELETE_EXCEPTION = 777331;
@@ -527,8 +544,6 @@ public class ErrorCodes {
 
   public static final int PROXY_TIMEOUT = 736347;
   public static final int PROXY_REJECTED = 799836;
-
-  public static final int STORAGE_TIER_FAILED_TO_APPLY_GOTO = 788607;
 
   public static final int MANAGED_STORAGE_WRONG_MACHINE = 735344;
   public static final int MANAGED_STORAGE_WRITE_FAILED_CLOSED = 734320;
@@ -568,4 +583,41 @@ public class ErrorCodes {
    * 720867 717792 720871 799714 726011 796668 717816 740351 705535 785405 717820 712700 753651
    * 728051 736243 783347 774130 737266 789495 709617 758768 799728 787440
    */
+
+  // TODO: nuke prior WAL implementation
+  public static final int CARAVAN_KEY_NOT_LOADED_PATCH = 707675;
+  public static final int CARAVAN_KEY_NOT_LOADED_COMPUTE = 790622;
+  public static final int CARAVAN_KEY_NOT_LOADED_SNAPSHOT = 790623;
+
+  public static final int GRPC_HANDLER_EXCEPTION = 734211;
+  public static final int GRPC_STREAM_ASK_TIMEOUT = 774147;
+  public static final int GRPC_STREAM_ASK_REJECTED = 782339;
+
+  public static final int GRPC_STREAM_ATTACH_TIMEOUT = 751618;
+  public static final int GRPC_STREAM_ATTACH_REJECTED = 733185;
+
+  public static final int GRPC_STREAM_SEND_TIMEOUT = 768000;
+  public static final int GRPC_STREAM_SEND_REJECTED = 754688;
+
+  public static final int GRPC_STREAM_UPDATE_TIMEOUT = 786433;
+  public static final int GRPC_STREAM_UPDATE_REJECTED = 796674;
+
+  public static final int DISK_GET_IO_EXCEPTION = 716804;
+  public static final int DISK_INITIALIZE_IO_EXCEPTION = 793602;
+  public static final int DISK_UNABLE_TO_PATCH_FILE_NOT_FOUND = 794627;
+  public static final int DISK_PATCH_IO_EXCEPTION = 777244;
+  public static final int DISK_UNABLE_TO_DELETE = 769042;
+  public static final int DISK_UNABLE_TO_COMPACT_FILE_NOT_FOUND = 784401;
+  public static final int DISK_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY = 777259;
+  public static final int DISK_COMPACT_READ_IO_EXCEPTION = 736272;
+  public static final int DISK_COMPACT_WRITE_IO_EXCEPTION = 739351;
+  public static final int DISK_UNABLE_TO_COMPUTE_FILE_NOT_FOUND = 790544;
+
+  public static final int DISK_COMPUTE_HEADPATCH_NOTHING_TO_DO = 725039;
+  public static final int STORAGE_TIER_FAILED_TO_APPLY_GOTO = 788607;
+  public static final int FINDER_SERVICE_MYSQL_CANT_UPDATE = 707651;
+  public static final int FINDER_SERVICE_MYSQL_UPDATE_EXCEPTION = 792643;
+
+  public static final int DURABLE_LIVING_DOCUMENT_STAGE_LOAD_READ = 101386;
+  public static final int API_SPACE_INVALID_NAME_FOR_LOOKUP = 928828;
 }
