@@ -74,7 +74,6 @@ public class Deployments {
   public static ArrayList<Deployment> listSpacesOnTarget(DataBase dataBase, String target) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = new StringBuilder().append("SELECT `space`, `hash`, `plan` FROM `").append(dataBase.databaseName).append("`.`deployed` WHERE `target`=? ORDER BY `space` ASC").toString();
-
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, target);
         try (ResultSet rs = statement.executeQuery()) {
