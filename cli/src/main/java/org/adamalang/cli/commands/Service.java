@@ -31,7 +31,7 @@ import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.gossip.Engine;
-import org.adamalang.gossip.EngineRole;
+import org.adamalang.common.gossip.EngineRole;
 import org.adamalang.gossip.GossipMetricsImpl;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;

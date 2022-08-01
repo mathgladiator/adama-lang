@@ -7,8 +7,10 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.gossip;
+package org.adamalang.common.gossip;
 
+import org.adamalang.common.gossip.Constants;
+import org.adamalang.common.gossip.GarbageMap;
 import org.junit.Assert;
 import org.junit.Test;
 

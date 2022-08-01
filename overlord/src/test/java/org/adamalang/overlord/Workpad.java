@@ -13,7 +13,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.gossip.Engine;
-import org.adamalang.gossip.EngineRole;
+import org.adamalang.common.gossip.EngineRole;
 import org.adamalang.gossip.GossipMetricsImpl;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;

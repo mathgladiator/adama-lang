@@ -7,20 +7,14 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.gossip;
+package org.adamalang.common.gossip;
 
-import org.junit.Assert;
+import org.adamalang.common.gossip.Constants;
 import org.junit.Test;
 
-import java.util.Random;
-
-public class EngineRoleTests {
+public class ConstantsTests {
   @Test
-  public void basis() {
-    Random jitter = new Random();
-    for (int k = 0; k < 1000; k++) {
-      Assert.assertTrue(EngineRole.computeWait(jitter, EngineRole.Node) < 301);
-      Assert.assertTrue(EngineRole.computeWait(jitter, EngineRole.SuperNode) < 15*5+1);
-    }
+  public void coverage() {
+    new Constants();
   }
 }

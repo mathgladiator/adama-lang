@@ -20,6 +20,7 @@ import io.grpc.netty.shaded.io.netty.channel.ChannelOption;
 import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
 import io.grpc.stub.StreamObserver;
 import org.adamalang.common.*;
+import org.adamalang.common.gossip.EngineRole;
 import org.adamalang.gossip.proto.Endpoint;
 import org.adamalang.gossip.proto.GossipGrpc;
 import org.adamalang.gossip.proto.GossipReverse;

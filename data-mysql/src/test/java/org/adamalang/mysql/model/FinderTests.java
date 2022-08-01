@@ -13,6 +13,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
+import org.adamalang.mysql.data.DocumentIndex;
 import org.adamalang.mysql.mocks.SimpleFinderCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
 import org.adamalang.runtime.data.BackupResult;
@@ -21,6 +22,7 @@ import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -38,6 +40,7 @@ public class FinderTests {
       try {
         installer.install();
         Finder machine = new Finder(dataBase, "region");
+        ArrayList<DocumentIndex> listing;
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
@@ -53,11 +56,16 @@ public class FinderTests {
           machine.find(KEY2, cb);
           cb.assertFailure(625676);
         }
+        listing = FinderOperations.list(dataBase, "space-1", "", 4);
+        Assert.assertEquals(0, listing.size());
         {
           SimpleMockCallback callback = new SimpleMockCallback();
           machine.bind(KEY1, "machineB:523", callback);
           callback.assertSuccess();
         }
+        listing = FinderOperations.list(dataBase, "space-1", "", 4);
+        Assert.assertEquals(1, listing.size());
+        Assert.assertEquals(KEY1.key, listing.get(0).key);
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
@@ -147,7 +155,6 @@ public class FinderTests {
           machine.find(KEY1, cb);
           cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key-old");
         }
-
         {
           SimpleMockCallback callback = new SimpleMockCallback();
           machine.free(KEY1, "machineB:523", callback);
@@ -176,6 +183,8 @@ public class FinderTests {
           machine.delete(KEY1, "targetNew", callback);
           callback.assertSuccess();
         }
+        listing = FinderOperations.list(dataBase, "space-1", "", 4);
+        Assert.assertEquals(0, listing.size());
       } finally {
         installer.uninstall();
       }

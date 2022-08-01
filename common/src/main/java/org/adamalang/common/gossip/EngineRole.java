@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.gossip;
+package org.adamalang.common.gossip;
 
 import java.util.Random;
 
