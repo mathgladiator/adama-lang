@@ -77,7 +77,7 @@ public class DeploymentsTests {
         Deployments.deploy(dataBase, "space3", "127.0.0.1:232", "hash1x", "plan1x");
 
 
-        ArrayList<Deployment> deploymentsOnSpace = Deployments.listTargetsOnSpace(dataBase,"space2");
+        ArrayList<Deployment> deploymentsOnSpace = Deployments.listTargetsOnSpace(dataBase, "space2");
         Assert.assertEquals(2, deploymentsOnSpace.size());
         Assert.assertEquals("127.0.0.1:230", deploymentsOnSpace.get(0).target);
         Assert.assertEquals("127.0.0.1:231", deploymentsOnSpace.get(1).target);

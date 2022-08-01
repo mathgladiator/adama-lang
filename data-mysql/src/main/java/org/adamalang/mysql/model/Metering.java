@@ -29,7 +29,7 @@ public class Metering {
   public static Long getEarliestRecordTimeOfCreation(DataBase dataBase) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        String sql = new StringBuilder().append("SELECT `created` FROM `").append(dataBase.databaseName).append("`.`metering` ORDER BY `created` ASC LIMIT 1").toString();
+        String sql = "SELECT `created` FROM `" + dataBase.databaseName + "`.`metering` ORDER BY `created` ASC LIMIT 1";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           ResultSet rs = statement.executeQuery();
           if (rs.next()) {
@@ -45,7 +45,7 @@ public class Metering {
   public static void recordBatch(DataBase dataBase, String target, String batch, long time) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`metering` (`target`, `batch`, `created`) VALUES (?,?,?)").toString();
+        String sql = "INSERT INTO `" + dataBase.databaseName + "`.`metering` (`target`, `batch`, `created`) VALUES (?,?,?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
           statement.setString(1, target);
@@ -60,7 +60,7 @@ public class Metering {
   public static HashMap<String, MeteringSpaceSummary> summarizeWindow(DataBase dataBase, MeteringMetrics metrics, long fromTime, long toTime) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        String sql = new StringBuilder().append("SELECT `target`, `batch` FROM `").append(dataBase.databaseName).append("`.`metering` WHERE ? <= `created` AND `created` < ?").toString();
+        String sql = "SELECT `target`, `batch` FROM `" + dataBase.databaseName + "`.`metering` WHERE ? <= `created` AND `created` < ?";
         HashMap<String, MeteringSpaceSummary> summary = new HashMap<>();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, DataBase.dateTimeOf(fromTime));

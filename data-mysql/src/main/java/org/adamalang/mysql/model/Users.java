@@ -25,7 +25,7 @@ public class Users {
   public static int getOrCreateUserId(DataBase dataBase, String email) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        String sql = new StringBuilder("SELECT `id` FROM `").append(dataBase.databaseName).append("`.`emails` WHERE email=?").toString();
+        String sql = "SELECT `id` FROM `" + dataBase.databaseName + "`.`emails` WHERE email=?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, email);
           try (ResultSet rs = statement.executeQuery()) {
@@ -37,7 +37,7 @@ public class Users {
       }
 
       {
-        String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`emails` (`email`, `balance`, `password`, `validations`) VALUES (?, 500, '', 0)").toString();
+        String sql = "INSERT INTO `" + dataBase.databaseName + "`.`emails` (`email`, `balance`, `password`, `validations`) VALUES (?, 500, '', 0)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
           statement.setString(1, email);
           statement.execute();
@@ -49,7 +49,7 @@ public class Users {
 
   public static int countUsers(DataBase dataBase) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder("SELECT COUNT(`id`) FROM `").append(dataBase.databaseName).append("`.`emails`").toString();
+      String sql = "SELECT COUNT(`id`) FROM `" + dataBase.databaseName + "`.`emails`";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         try (ResultSet rs = statement.executeQuery()) {
           if (rs.next()) {
@@ -63,7 +63,7 @@ public class Users {
 
   public static void setPasswordHash(DataBase dataBase, int userId, String pwHash) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`emails` SET `password` = ? WHERE `id`=").append(userId).toString();
+      String sql = "UPDATE `" + dataBase.databaseName + "`.`emails` SET `password` = ? WHERE `id`=" + userId;
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, pwHash);
         statement.execute();
@@ -74,7 +74,7 @@ public class Users {
   public static String getPasswordHash(DataBase dataBase, int userId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        String sql = new StringBuilder("SELECT `password` FROM `").append(dataBase.databaseName).append("`.`emails` WHERE `id`=").append(userId).toString();
+        String sql = "SELECT `password` FROM `" + dataBase.databaseName + "`.`emails` WHERE `id`=" + userId;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           try (ResultSet rs = statement.executeQuery()) {
             if (rs.next()) {
@@ -91,7 +91,7 @@ public class Users {
   public static String getProfile(DataBase dataBase, int userId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        String sql = new StringBuilder("SELECT `profile` FROM `").append(dataBase.databaseName).append("`.`emails` WHERE `id`=").append(userId).toString();
+        String sql = "SELECT `profile` FROM `" + dataBase.databaseName + "`.`emails` WHERE `id`=" + userId;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           try (ResultSet rs = statement.executeQuery()) {
             if (rs.next()) {
@@ -112,7 +112,7 @@ public class Users {
   public static void setProfileIf(DataBase dataBase, int userId, String profile, String oldProfile) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`emails` SET `profile` = ? WHERE `id`=").append(userId).append(" AND (`profile` IS NULL OR `profile`=?)").toString();
+        String sql = "UPDATE `" + dataBase.databaseName + "`.`emails` SET `profile` = ? WHERE `id`=" + userId + " AND (`profile` IS NULL OR `profile`=?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
           statement.setString(1, profile);
           statement.setString(2, oldProfile);
@@ -127,7 +127,7 @@ public class Users {
   public static int getBalance(DataBase dataBase, int userId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        String sql = new StringBuilder("SELECT `balance` FROM `").append(dataBase.databaseName).append("`.`emails` WHERE `id`=").append(userId).toString();
+        String sql = "SELECT `balance` FROM `" + dataBase.databaseName + "`.`emails` WHERE `id`=" + userId;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           try (ResultSet rs = statement.executeQuery()) {
             if (rs.next()) {
@@ -143,18 +143,18 @@ public class Users {
 
   public static void addToBalance(DataBase dataBase, int userId, int balanceToAdd) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sqlAddToBalance = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`emails` SET `balance` = `balance` + ").append(balanceToAdd).append(" WHERE `id`=").append(userId).toString();
+      String sqlAddToBalance = "UPDATE `" + dataBase.databaseName + "`.`emails` SET `balance` = `balance` + " + balanceToAdd + " WHERE `id`=" + userId;
       DataBase.execute(connection, sqlAddToBalance);
-      String sqlReEnableSpaces = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `enabled`=TRUE WHERE `owner`=").append(userId).toString();
+      String sqlReEnableSpaces = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `enabled`=TRUE WHERE `owner`=" + userId;
       DataBase.execute(connection, sqlReEnableSpaces);
     }
   }
 
   public static void disableSweep(DataBase dataBase) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sqlFindErrantCustomers = new StringBuilder().append("SELECT `id` FROM `").append(dataBase.databaseName).append("`.`emails` WHERE `balance` < `credit_carry_limit`").toString();
+      String sqlFindErrantCustomers = "SELECT `id` FROM `" + dataBase.databaseName + "`.`emails` WHERE `balance` < `credit_carry_limit`";
       DataBase.walk(connection, (rs) -> {
-        String sqlReEnableSpaces = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `enabled`=FALSE WHERE `owner`=").append(rs.getInt(1)).toString();
+        String sqlReEnableSpaces = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `enabled`=FALSE WHERE `owner`=" + rs.getInt(1);
         DataBase.execute(connection, sqlReEnableSpaces);
       }, sqlFindErrantCustomers);
     }
@@ -162,7 +162,7 @@ public class Users {
 
   public static void validateUser(DataBase dataBase, int userId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`emails` SET `validations` = `validations` + 1, `last_validated`=? WHERE `id`=").append(userId).toString();
+      String sql = "UPDATE `" + dataBase.databaseName + "`.`emails` SET `validations` = `validations` + 1, `last_validated`=? WHERE `id`=" + userId;
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, DataBase.dateTimeOf(System.currentTimeMillis()));
         statement.execute();
@@ -173,7 +173,7 @@ public class Users {
   public static List<String> listKeys(DataBase dataBase, int userId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       ArrayList<String> keys = new ArrayList<>();
-      String sql = new StringBuilder().append("SELECT `public_key` FROM `").append(dataBase.databaseName).append("`.`email_keys` WHERE `user`=").append(userId).toString();
+      String sql = "SELECT `public_key` FROM `" + dataBase.databaseName + "`.`email_keys` WHERE `user`=" + userId;
       DataBase.walk(connection, (rs) -> {
         keys.add(rs.getString(1));
       }, sql);
@@ -183,13 +183,12 @@ public class Users {
 
   public static void addKey(DataBase dataBase, int userId, String publicKey, long expires) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`email_keys` (`user`,`public_key`,`expires`) VALUES (?,?,?)").toString();
+      String sql = "INSERT INTO `" + dataBase.databaseName + "`.`email_keys` (`user`,`public_key`,`expires`) VALUES (?,?,?)";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setInt(1, userId);
         statement.setString(2, publicKey);
         statement.setString(3, DataBase.dateTimeOf(expires));
         statement.execute();
-        return;
       }
     }
   }
@@ -198,14 +197,14 @@ public class Users {
     int keysDeleted = 0;
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`email_keys` WHERE `expires` < ?").toString();
+        String sql = "DELETE FROM `" + dataBase.databaseName + "`.`email_keys` WHERE `expires` < ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, DataBase.dateTimeOf(now));
           keysDeleted += statement.executeUpdate();
         }
       }
       {
-        String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`initiations` WHERE `expires` < ?").toString();
+        String sql = "DELETE FROM `" + dataBase.databaseName + "`.`initiations` WHERE `expires` < ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, DataBase.dateTimeOf(now));
           keysDeleted += statement.executeUpdate();
@@ -217,7 +216,7 @@ public class Users {
 
   public static int removeAllKeys(DataBase dataBase, int userId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`email_keys` WHERE `user`=?").toString();
+      String sql = "DELETE FROM `" + dataBase.databaseName + "`.`email_keys` WHERE `user`=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setInt(1, userId);
         return statement.executeUpdate();
@@ -227,13 +226,12 @@ public class Users {
 
   public static void addInitiationPair(DataBase dataBase, int userId, String hash, long expires) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`initiations` (`user`,`hash`,`expires`) VALUES (?,?,?)").toString();
+      String sql = "INSERT INTO `" + dataBase.databaseName + "`.`initiations` (`user`,`hash`,`expires`) VALUES (?,?,?)";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setInt(1, userId);
         statement.setString(2, hash);
         statement.setString(3, DataBase.dateTimeOf(expires));
         statement.execute();
-        return;
       }
     }
   }
@@ -241,7 +239,7 @@ public class Users {
   public static List<IdHashPairing> listInitiationPairs(DataBase dataBase, int userId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       ArrayList<IdHashPairing> pairs = new ArrayList<>();
-      String sql = new StringBuilder().append("SELECT `id`,`hash` FROM `").append(dataBase.databaseName).append("`.`initiations` WHERE `user`=").append(userId).toString();
+      String sql = "SELECT `id`,`hash` FROM `" + dataBase.databaseName + "`.`initiations` WHERE `user`=" + userId;
       DataBase.walk(connection, (rs) -> {
         pairs.add(new IdHashPairing(rs.getInt(1), rs.getString(2)));
       }, sql);
@@ -251,7 +249,7 @@ public class Users {
 
   public static void deleteInitiationPairing(DataBase dataBase, int pairId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`initiations` WHERE `id`=").append(pairId).toString();
+      String sql = "DELETE FROM `" + dataBase.databaseName + "`.`initiations` WHERE `id`=" + pairId;
       DataBase.execute(connection, sql);
     }
   }

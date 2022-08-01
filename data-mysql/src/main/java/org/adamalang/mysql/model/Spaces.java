@@ -21,7 +21,7 @@ public class Spaces {
   public static HashMap<String, UnbilledResources> collectUnbilledStorage(DataBase dataBase) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       HashMap<String, UnbilledResources> byteHours = new HashMap<>();
-      String sql = new StringBuilder("SELECT `name`, `unbilled_storage_bytes_hours`, `unbilled_bandwidth_hours`, `unbilled_first_party_service_calls`, `unbilled_third_party_service_calls`  FROM `").append(dataBase.databaseName).append("`.`spaces`").toString();
+      String sql = "SELECT `name`, `unbilled_storage_bytes_hours`, `unbilled_bandwidth_hours`, `unbilled_first_party_service_calls`, `unbilled_third_party_service_calls`  FROM `" + dataBase.databaseName + "`.`spaces`";
       DataBase.walk(connection, (rs) -> {
         byteHours.put(rs.getString(1), new UnbilledResources(rs.getLong(2), rs.getLong(3), rs.getLong(4), rs.getLong(5)));
       }, sql);
@@ -31,7 +31,7 @@ public class Spaces {
 
   public static Integer getLatestBillingHourCode(DataBase dataBase) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sqlTestWater = new StringBuilder().append("SELECT `latest_billing_hour` FROM `").append(dataBase.databaseName).append("`.`spaces` ORDER BY `latest_billing_hour` DESC LIMIT 1").toString();
+      String sqlTestWater = "SELECT `latest_billing_hour` FROM `" + dataBase.databaseName + "`.`spaces` ORDER BY `latest_billing_hour` DESC LIMIT 1";
       try (PreparedStatement statement = connection.prepareStatement(sqlTestWater)) {
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
@@ -45,7 +45,7 @@ public class Spaces {
 
   public static int createSpace(DataBase dataBase, int userId, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sqlTestWater = new StringBuilder().append("SELECT `owner`, `id` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE `name`=?").toString();
+      String sqlTestWater = "SELECT `owner`, `id` FROM `" + dataBase.databaseName + "`.`spaces` WHERE `name`=?";
       try (PreparedStatement statement = connection.prepareStatement(sqlTestWater)) {
         statement.setString(1, space);
         ResultSet rs = statement.executeQuery();
@@ -56,7 +56,7 @@ public class Spaces {
           throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_ALREADY_EXISTS);
         }
       }
-      String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`spaces` (`owner`, `name`, `plan`, `hash`) VALUES (?,?,'{}', '')").toString();
+      String sql = "INSERT INTO `" + dataBase.databaseName + "`.`spaces` (`owner`, `name`, `plan`, `hash`) VALUES (?,?,'{}', '')";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setInt(1, userId);
         statement.setString(2, space);
@@ -70,7 +70,7 @@ public class Spaces {
 
   public static SpaceInfo getSpaceInfo(DataBase dataBase, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder("SELECT `id`,`owner`,`enabled`,`storage_bytes` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE name=?").toString();
+      String sql = "SELECT `id`,`owner`,`enabled`,`storage_bytes` FROM `" + dataBase.databaseName + "`.`spaces` WHERE name=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
         try (ResultSet rs = statement.executeQuery()) {
@@ -78,12 +78,10 @@ public class Spaces {
             Set<Integer> developers = new HashSet<>();
             int owner = rs.getInt(2);
             developers.add(owner);
-            String sqlGrants = new StringBuilder("SELECT `user`,`role` FROM `").append(dataBase.databaseName).append("`.`grants` WHERE `space`=").append(rs.getInt(1)).toString();
+            String sqlGrants = "SELECT `user`,`role` FROM `" + dataBase.databaseName + "`.`grants` WHERE `space`=" + rs.getInt(1);
             DataBase.walk(connection, (g) -> {
-              switch (g.getInt(2)) {
-                case 0x01: // Role.Developer
-                  developers.add(g.getInt(1));
-                  break;
+              if (g.getInt(2) == 0x01) { // Role.Developer
+                developers.add(g.getInt(1));
               }
             }, sqlGrants);
             return new SpaceInfo(rs.getInt(1), owner, developers, rs.getBoolean(3), rs.getLong(2));
@@ -96,7 +94,7 @@ public class Spaces {
 
   public static void setPlan(DataBase dataBase, int spaceId, String plan, String hash) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `plan`=?, `hash`=? WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
+      String sql = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `plan`=?, `hash`=? WHERE `id`=" + spaceId + " LIMIT 1";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, plan);
         statement.setString(2, hash);
@@ -107,7 +105,7 @@ public class Spaces {
 
   public static String getPlan(DataBase dataBase, int spaceId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder("SELECT `plan` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE id=").append(spaceId).toString();
+      String sql = "SELECT `plan` FROM `" + dataBase.databaseName + "`.`spaces` WHERE id=" + spaceId;
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         try (ResultSet rs = statement.executeQuery()) {
           if (rs.next()) {
@@ -121,7 +119,7 @@ public class Spaces {
 
   public static InternalDeploymentPlan getPlanByNameForInternalDeployment(DataBase dataBase, String spaceName) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder("SELECT `plan`, `hash` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE `name`=?").toString();
+      String sql = "SELECT `plan`, `hash` FROM `" + dataBase.databaseName + "`.`spaces` WHERE `name`=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, spaceName);
         try (ResultSet rs = statement.executeQuery()) {
@@ -137,9 +135,9 @@ public class Spaces {
   public static List<SpaceListingItem> list(DataBase dataBase, int userId, String marker, int limit) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       // select * from a LEFT OUTER JOIN b on a.a = b.b;
-      String sql = new StringBuilder("SELECT `s`.`name`,`s`.`owner`,`s`.`created`,`s`.`enabled`,`s`.`storage_bytes` FROM `").append(dataBase.databaseName) //
-          .append("`.`spaces` as `s` LEFT OUTER JOIN `").append(dataBase.databaseName).append("`.`grants` as `g` ON `s`.`id` = `g`.`space`") //
-          .append(" WHERE (`s`.owner=").append(userId).append(" OR `g`.`user`=").append(userId).append(") AND `s`.`name`>? ORDER BY `s`.`name` ASC LIMIT ").append(limit).toString();
+      String sql = "SELECT `s`.`name`,`s`.`owner`,`s`.`created`,`s`.`enabled`,`s`.`storage_bytes` FROM `" + dataBase.databaseName + //
+          "`.`spaces` as `s` LEFT OUTER JOIN `" + dataBase.databaseName + "`.`grants` as `g` ON `s`.`id` = `g`.`space`" + //
+          " WHERE (`s`.owner=" + userId + " OR `g`.`user`=" + userId + ") AND `s`.`name`>? ORDER BY `s`.`name` ASC LIMIT " + limit;
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, marker == null ? "" : marker);
         try (ResultSet rs = statement.executeQuery()) {
@@ -156,8 +154,8 @@ public class Spaces {
 
   public static ArrayList<String> listAllSpaceNames(DataBase dataBase) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder("SELECT `name` FROM `").append(dataBase.databaseName) //
-          .append("`.`spaces` ORDER BY `id` ASC").toString();
+      String sql = "SELECT `name` FROM `" + dataBase.databaseName + //
+          "`.`spaces` ORDER BY `id` ASC";
       ArrayList<String> results = new ArrayList<>();
       DataBase.walk(connection, (rs) -> {
         results.add(rs.getString(1));
@@ -168,14 +166,14 @@ public class Spaces {
 
   public static boolean changePrimaryOwner(DataBase dataBase, int spaceId, int oldOwner, int newOwner) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `owner`=").append(newOwner).append(" WHERE `id`=").append(spaceId).append(" AND `owner`=").append(oldOwner).append(" LIMIT 1").toString();
+      String sql = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `owner`=" + newOwner + " WHERE `id`=" + spaceId + " AND `owner`=" + oldOwner + " LIMIT 1";
       return DataBase.executeUpdate(connection, sql) > 0;
     }
   }
 
   public static boolean delete(DataBase dataBase, int spaceId, int owner) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE `id`=").append(spaceId).append(" AND `owner`=").append(owner).toString();
+      String sql = "DELETE FROM `" + dataBase.databaseName + "`.`spaces` WHERE `id`=" + spaceId + " AND `owner`=" + owner;
       return DataBase.executeUpdate(connection, sql) > 0;
     }
   }
@@ -183,10 +181,10 @@ public class Spaces {
   public static void setRole(DataBase dataBase, int spaceId, int userId, Role role) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        DataBase.execute(connection, new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`grants` WHERE `space`=").append(spaceId).append(" AND `user`=").append(userId).toString());
+        DataBase.execute(connection, "DELETE FROM `" + dataBase.databaseName + "`.`grants` WHERE `space`=" + spaceId + " AND `user`=" + userId);
       }
       if (role != Role.None) {
-        DataBase.execute(connection, new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`grants` (`space`, `user`, `role`) VALUES (").append(spaceId).append(",").append(userId).append(",").append(role.role).append(")").toString());
+        DataBase.execute(connection, "INSERT INTO `" + dataBase.databaseName + "`.`grants` (`space`, `user`, `role`) VALUES (" + spaceId + "," + userId + "," + role.role + ")");
       }
     }
   }

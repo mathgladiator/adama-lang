@@ -9,7 +9,6 @@
  */
 package org.adamalang.mysql.model;
 
-import io.netty.channel.unix.Errors;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
@@ -23,7 +22,7 @@ public class Secrets {
   /** insert a secret key */
   public static int insertSecretKey(DataBase dataBase, String space, String privateKeyEncrypted) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`secrets` (`space`, `encrypted_private_key`) VALUES (?,?)").toString();
+      String sql = "INSERT INTO `" + dataBase.databaseName + "`.`secrets` (`space`, `encrypted_private_key`) VALUES (?,?)";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, space);
         statement.setString(2, privateKeyEncrypted);
@@ -34,9 +33,9 @@ public class Secrets {
   }
 
   /** get the private key by an id */
-  public static String getPrivateKey(DataBase dataBase, String space, int keyId) throws Exception{
+  public static String getPrivateKey(DataBase dataBase, String space, int keyId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("SELECT `encrypted_private_key` FROM `").append(dataBase.databaseName).append("`.`secrets` WHERE `id`=? AND `space`=?").toString();
+      String sql = "SELECT `encrypted_private_key` FROM `" + dataBase.databaseName + "`.`secrets` WHERE `id`=? AND `space`=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setInt(1, keyId);
         statement.setString(2, space);

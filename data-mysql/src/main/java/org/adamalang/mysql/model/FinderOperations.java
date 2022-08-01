@@ -24,8 +24,8 @@ public class FinderOperations {
   public static HashMap<String, Long> inventoryStorage(DataBase dataBase) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       HashMap<String, Long> bytes = new HashMap<>();
-      String sql = new StringBuilder("SELECT `space`, SUM(delta_bytes), SUM(asset_bytes) FROM `").append(dataBase.databaseName) //
-          .append("`.`directory` GROUP BY `space`").toString();
+      String sql = "SELECT `space`, SUM(delta_bytes), SUM(asset_bytes) FROM `" + dataBase.databaseName + //
+          "`.`directory` GROUP BY `space`";
       DataBase.walk(connection, (rs) -> {
         bytes.put(rs.getString(1), rs.getLong(2) + rs.getLong(3));
       }, sql);
@@ -35,8 +35,8 @@ public class FinderOperations {
 
   public static ArrayList<DocumentIndex> list(DataBase dataBase, String space, String marker, int limit) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder("SELECT `key`, `created`, `updated`, `head_seq` FROM `").append(dataBase.databaseName) //
-          .append("`.`directory` WHERE `space`=? AND `key`>? LIMIT ").append(Math.max(Math.min(limit, 1000), 1)).toString();
+      String sql = "SELECT `key`, `created`, `updated`, `head_seq` FROM `" + dataBase.databaseName + //
+          "`.`directory` WHERE `space`=? AND `key`>? LIMIT " + Math.max(Math.min(limit, 1000), 1);
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
         statement.setString(2, marker == null ? "" : marker);

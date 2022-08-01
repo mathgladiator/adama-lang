@@ -17,31 +17,34 @@ import java.sql.ResultSet;
 
 public class Hosts {
   /** initialize the public key for a web host; this host has a private key that it will use to sign keys */
-  public static void initializeWebHost(DataBase dataBase, String region, String machine, String publicKey) throws Exception {
+  public static void initializeHost(DataBase dataBase, String region, String machine, String role, String publicKey) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sqlDelete = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`web_hosts` WHERE `region`=? AND `machine`=?").toString();
+      String sqlDelete = "DELETE FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `machine`=? AND `role`=?";
       try (PreparedStatement statement = connection.prepareStatement(sqlDelete)) {
         statement.setString(1, region);
         statement.setString(2, machine);
+        statement.setString(3, role);
         statement.execute();
       }
-      String sqlInsert = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`web_hosts` (`region`, `machine`, `public_key`) VALUES (?,?,?)").toString();
+      String sqlInsert = "INSERT INTO `" + dataBase.databaseName + "`.`hosts` (`region`, `machine`, `role`, `public_key`) VALUES (?,?,?,?)";
       try (PreparedStatement statement = connection.prepareStatement(sqlInsert)) {
         statement.setString(1, region);
         statement.setString(2, machine);
-        statement.setString(3, publicKey);
+        statement.setString(3, role);
+        statement.setString(4, publicKey);
         statement.execute();
       }
     }
   }
 
   /** get the public key for a machine within a region */
-  public static String getWebHostPublicKey(DataBase dataBase, String region, String machine) throws Exception {
+  public static String getHostPublicKey(DataBase dataBase, String region, String machine, String role) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("SELECT `public_key` FROM `").append(dataBase.databaseName).append("`.`web_hosts` WHERE `region`=? AND `machine`=?").toString();
+      String sql = "SELECT `public_key` FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `machine`=? AND `role`=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, region);
         statement.setString(2, machine);
+        statement.setString(3, role);
         try (ResultSet rs = statement.executeQuery()) {
           if (rs.next()) {
             return rs.getString(1);

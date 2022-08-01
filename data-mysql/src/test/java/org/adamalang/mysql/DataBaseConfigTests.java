@@ -76,9 +76,7 @@ public class DataBaseConfigTests {
 
   @Test
   public void ok() throws Exception {
-    DataBaseConfig c =
-        new DataBaseConfig(
-            new ConfigObject(Json.parseJsonObject("{\"db\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\"}}")));
+    DataBaseConfig c = new DataBaseConfig(new ConfigObject(Json.parseJsonObject("{\"db\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\"}}")));
     Assert.assertEquals("1", c.jdbcUrl);
     Assert.assertEquals("2", c.user);
     Assert.assertEquals("3", c.password);
@@ -87,9 +85,7 @@ public class DataBaseConfigTests {
 
   @Test
   public void skipAndOk() throws Exception {
-    DataBaseConfig c =
-        new DataBaseConfig(
-            new ConfigObject(Json.parseJsonObject("{\"db\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\",\"z\":42},\"z\":123}")));
+    DataBaseConfig c = new DataBaseConfig(new ConfigObject(Json.parseJsonObject("{\"db\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\",\"z\":42},\"z\":123}")));
     Assert.assertEquals("1", c.jdbcUrl);
     Assert.assertEquals("2", c.user);
     Assert.assertEquals("3", c.password);
@@ -99,8 +95,7 @@ public class DataBaseConfigTests {
   @Test
   public void skipAndNotOk() throws Exception {
     try {
-      new DataBaseConfig(
-          new ConfigObject(Json.parseJsonObject("{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\",\"z\":42},\"any\":123}")));
+      new DataBaseConfig(new ConfigObject(Json.parseJsonObject("{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\",\"z\":42},\"any\":123}")));
       Assert.fail();
     } catch (NullPointerException ex) {
       Assert.assertTrue(ex instanceof RuntimeException);

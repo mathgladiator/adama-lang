@@ -15,8 +15,6 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
 import org.adamalang.mysql.mocks.SimpleFinderCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
-import org.adamalang.mysql.model.Finder;
-import org.adamalang.mysql.model.FinderOperations;
 import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
@@ -114,7 +112,7 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1,  result2, "machineB:523", callback);
+          machine.backup(KEY1, result2, "machineB:523", callback);
           callback.assertSuccess();
         }
         {
@@ -152,7 +150,7 @@ public class FinderTests {
 
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.free(KEY1,  "machineB:523", callback);
+          machine.free(KEY1, "machineB:523", callback);
           callback.assertSuccess();
         }
         HashMap<String, Long> inventory = FinderOperations.inventoryStorage(dataBase);

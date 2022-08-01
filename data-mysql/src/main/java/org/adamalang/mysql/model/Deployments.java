@@ -25,7 +25,7 @@ public class Deployments {
   public static void undeploy(DataBase dataBase, String space, String target) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       { // delete prior versions
-        String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`deployed` WHERE `space`=? AND `target`=?").toString();
+        String sql = "DELETE FROM `" + dataBase.databaseName + "`.`deployed` WHERE `space`=? AND `target`=?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, space);
           statement.setString(2, target);
@@ -38,7 +38,7 @@ public class Deployments {
   public static void undeployAll(DataBase dataBase, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       { // delete prior versions
-        String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`deployed` WHERE `space`=?").toString();
+        String sql = "DELETE FROM `" + dataBase.databaseName + "`.`deployed` WHERE `space`=?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, space);
           statement.execute();
@@ -50,7 +50,7 @@ public class Deployments {
   public static void undeployTarget(DataBase dataBase, String target) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       { // delete prior versions
-        String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`deployed` WHERE `target`=?").toString();
+        String sql = "DELETE FROM `" + dataBase.databaseName + "`.`deployed` WHERE `target`=?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, target);
           statement.execute();
@@ -61,7 +61,7 @@ public class Deployments {
 
   public static TreeSet<String> listAllTargets(DataBase dataBase) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("SELECT DISTINCT `target` FROM `").append(dataBase.databaseName).append("`.`deployed`").toString();
+      String sql = "SELECT DISTINCT `target` FROM `" + dataBase.databaseName + "`.`deployed`";
 
       TreeSet<String> targets = new TreeSet<>();
       DataBase.walk(connection, (rs) -> {
@@ -73,7 +73,7 @@ public class Deployments {
 
   public static ArrayList<Deployment> listSpacesOnTarget(DataBase dataBase, String target) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("SELECT `space`, `hash`, `plan` FROM `").append(dataBase.databaseName).append("`.`deployed` WHERE `target`=? ORDER BY `space` ASC").toString();
+      String sql = "SELECT `space`, `hash`, `plan` FROM `" + dataBase.databaseName + "`.`deployed` WHERE `target`=? ORDER BY `space` ASC";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, target);
         try (ResultSet rs = statement.executeQuery()) {
@@ -89,7 +89,7 @@ public class Deployments {
 
   public static ArrayList<Deployment> listTargetsOnSpace(DataBase dataBase, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("SELECT `hash`, `plan`, `target` FROM `").append(dataBase.databaseName).append("`.`deployed` WHERE `space`=? ORDER BY `target` ASC").toString();
+      String sql = "SELECT `hash`, `plan`, `target` FROM `" + dataBase.databaseName + "`.`deployed` WHERE `space`=? ORDER BY `target` ASC";
 
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
@@ -106,7 +106,7 @@ public class Deployments {
 
   public static Deployment get(DataBase dataBase, String target, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("SELECT `hash`, `plan` FROM `").append(dataBase.databaseName).append("`.`deployed` WHERE `target`=? AND `space`=? LIMIT 1").toString();
+      String sql = "SELECT `hash`, `plan` FROM `" + dataBase.databaseName + "`.`deployed` WHERE `target`=? AND `space`=? LIMIT 1";
 
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, target);
@@ -124,7 +124,7 @@ public class Deployments {
   public static void deploy(DataBase dataBase, String space, String target, String hash, String plan) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       { // delete prior versions
-        String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`deployed` WHERE `space`=? AND `target`=?").toString();
+        String sql = "DELETE FROM `" + dataBase.databaseName + "`.`deployed` WHERE `space`=? AND `target`=?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, space);
           statement.setString(2, target);
@@ -132,7 +132,7 @@ public class Deployments {
         }
       }
       {
-        String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`deployed` (`space`, `target`, `hash`, `plan`) VALUES (?,?,?,?)").toString();
+        String sql = "INSERT INTO `" + dataBase.databaseName + "`.`deployed` (`space`, `target`, `hash`, `plan`) VALUES (?,?,?,?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
           statement.setString(1, space);
           statement.setString(2, target);

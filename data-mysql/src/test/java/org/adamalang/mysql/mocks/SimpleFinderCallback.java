@@ -12,15 +12,14 @@ package org.adamalang.mysql.mocks;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.FinderService;
-import org.adamalang.runtime.data.LocalDocumentChange;
 import org.junit.Assert;
 
 public class SimpleFinderCallback implements Callback<FinderService.Result> {
   public FinderService.Result value;
+  public int reads;
   private boolean success;
   private int count;
   private int reason;
-  public int reads;
 
   public SimpleFinderCallback() {
     this.success = false;

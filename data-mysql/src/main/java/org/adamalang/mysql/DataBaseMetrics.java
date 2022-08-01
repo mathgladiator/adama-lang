@@ -22,6 +22,7 @@ public class DataBaseMetrics {
   public final CallbackMonitor finder_free;
   public final CallbackMonitor finder_delete;
   public final CallbackMonitor finder_list;
+  public final Runnable capacity_duplicate;
 
   public DataBaseMetrics(MetricsFactory factory) {
     transaction = factory.makeRequestResponseMonitor("database_transaction");
@@ -32,5 +33,6 @@ public class DataBaseMetrics {
     finder_free = factory.makeCallbackMonitor("database_finder_free");
     finder_delete = factory.makeCallbackMonitor("database_finder_delete");
     finder_list = factory.makeCallbackMonitor("database_finder_list");
+    capacity_duplicate = factory.counter("database_capacity_duplicate");
   }
 }

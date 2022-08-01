@@ -20,7 +20,7 @@ public class Authorities {
 
   public static int createAuthority(DataBase dataBase, int ownerId, String authority) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`authorities` (`owner`, `authority`, `keystore`) VALUES (?,?,'{}')").toString();
+      String sql = "INSERT INTO `" + dataBase.databaseName + "`.`authorities` (`owner`, `authority`, `keystore`) VALUES (?,?,'{}')";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setInt(1, ownerId);
         statement.setString(2, authority);
@@ -34,7 +34,7 @@ public class Authorities {
 
   public static void setKeystore(DataBase dataBase, int ownerId, String authority, String keystore) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`authorities` SET `keystore`=? WHERE `owner`=? AND authority=?").toString();
+      String sql = "UPDATE `" + dataBase.databaseName + "`.`authorities` SET `keystore`=? WHERE `owner`=? AND authority=?";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, keystore);
         statement.setInt(2, ownerId);
@@ -49,7 +49,7 @@ public class Authorities {
   public static ArrayList<String> list(DataBase dataBase, int ownerId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       ArrayList<String> results = new ArrayList<>();
-      String sql = new StringBuilder().append("SELECT `authority` FROM `").append(dataBase.databaseName).append("`.`authorities` WHERE owner=").append(ownerId).append(" ORDER BY `authority` ASC").toString();
+      String sql = "SELECT `authority` FROM `" + dataBase.databaseName + "`.`authorities` WHERE owner=" + ownerId + " ORDER BY `authority` ASC";
       DataBase.walk(connection, (rs) -> {
         results.add(rs.getString(1));
       }, sql);
@@ -59,7 +59,7 @@ public class Authorities {
 
   public static void changeOwner(DataBase dataBase, String authority, int oldOwnerId, int newOwnerId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`authorities` SET `owner`=? WHERE `owner`=? AND authority=?").toString();
+      String sql = "UPDATE `" + dataBase.databaseName + "`.`authorities` SET `owner`=? WHERE `owner`=? AND authority=?";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setInt(1, newOwnerId);
         statement.setInt(2, oldOwnerId);
@@ -73,7 +73,7 @@ public class Authorities {
 
   public static String getKeystoreInternal(DataBase dataBase, String authority) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("SELECT `keystore` FROM `").append(dataBase.databaseName).append("`.`authorities` WHERE authority=?").toString();
+      String sql = "SELECT `keystore` FROM `" + dataBase.databaseName + "`.`authorities` WHERE authority=?";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, authority);
         ResultSet rs = statement.executeQuery();
@@ -88,7 +88,7 @@ public class Authorities {
 
   public static String getKeystorePublic(DataBase dataBase, int owner, String authority) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("SELECT `keystore` FROM `").append(dataBase.databaseName).append("`.`authorities` WHERE authority=? AND `owner`=?").toString();
+      String sql = "SELECT `keystore` FROM `" + dataBase.databaseName + "`.`authorities` WHERE authority=? AND `owner`=?";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, authority);
         statement.setInt(2, owner);
@@ -105,7 +105,7 @@ public class Authorities {
 
   public static void deleteAuthority(DataBase dataBase, int ownerId, String authority) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`authorities` WHERE `owner`=? AND authority=?").toString();
+      String sql = "DELETE FROM `" + dataBase.databaseName + "`.`authorities` WHERE `owner`=? AND authority=?";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setInt(1, ownerId);
         statement.setString(2, authority);

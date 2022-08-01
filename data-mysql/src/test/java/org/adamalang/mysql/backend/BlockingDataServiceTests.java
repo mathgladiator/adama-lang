@@ -27,18 +27,10 @@ import java.util.HashMap;
 public class BlockingDataServiceTests {
   private static final Key KEY_1 = new Key("space", "key1");
   private static final Key KEY_2 = new Key("space", "key2");
-  private static final RemoteDocumentUpdate UPDATE_1 =
-      new RemoteDocumentUpdate(
-          1, 1, NtPrincipal.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0, 100, UpdateType.AddUserData);
-  private static final RemoteDocumentUpdate UPDATE_2 =
-      new RemoteDocumentUpdate(
-          2, 2, null, "REQUEST", "{\"x\":2}", "{\"x\":1,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
-  private static final RemoteDocumentUpdate UPDATE_3 =
-      new RemoteDocumentUpdate(
-          3, 3, null, "REQUEST", "{\"x\":3}", "{\"x\":2,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
-  private static final RemoteDocumentUpdate UPDATE_4 =
-      new RemoteDocumentUpdate(
-          4, 4, null, "REQUEST", "{\"x\":4}", "{\"x\":3,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
+  private static final RemoteDocumentUpdate UPDATE_1 = new RemoteDocumentUpdate(1, 1, NtPrincipal.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0, 100, UpdateType.AddUserData);
+  private static final RemoteDocumentUpdate UPDATE_2 = new RemoteDocumentUpdate(2, 2, null, "REQUEST", "{\"x\":2}", "{\"x\":1,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
+  private static final RemoteDocumentUpdate UPDATE_3 = new RemoteDocumentUpdate(3, 3, null, "REQUEST", "{\"x\":3}", "{\"x\":2,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
+  private static final RemoteDocumentUpdate UPDATE_4 = new RemoteDocumentUpdate(4, 4, null, "REQUEST", "{\"x\":4}", "{\"x\":3,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
 
   @Test
   public void flow_1() throws Exception {
@@ -66,12 +58,12 @@ public class BlockingDataServiceTests {
 
         // update the key and put it in an active state
         SimpleMockCallback cb3 = new SimpleMockCallback();
-        service.patch(KEY_1, new RemoteDocumentUpdate[] { UPDATE_2 }, cb3);
+        service.patch(KEY_1, new RemoteDocumentUpdate[]{UPDATE_2}, cb3);
         cb3.assertSuccess();
 
         // patching with same sequencer should fail
         SimpleMockCallback cb4 = new SimpleMockCallback();
-        service.patch(KEY_1, new RemoteDocumentUpdate[] { UPDATE_2 }, cb4);
+        service.patch(KEY_1, new RemoteDocumentUpdate[]{UPDATE_2}, cb4);
         cb4.assertFailure(621580);
 
         // getting the data should return a composite
@@ -81,7 +73,7 @@ public class BlockingDataServiceTests {
         Assert.assertEquals("{\"x\":2,\"y\":4}", cb5.value);
 
         SimpleMockCallback cb5_X = new SimpleMockCallback();
-        service.patch(KEY_1, new RemoteDocumentUpdate[] { UPDATE_3, UPDATE_4 }, cb5_X);
+        service.patch(KEY_1, new RemoteDocumentUpdate[]{UPDATE_3, UPDATE_4}, cb5_X);
         cb5_X.assertSuccess();
 
         HashMap<String, Long> inventory = BackendOperations.inventoryStorage(dataBase);

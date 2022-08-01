@@ -25,6 +25,7 @@ public class SimpleIntCallback implements Callback<Integer> {
     this.count = 0;
     this.reason = -1;
   }
+
   @Override
   public void success(Integer value) {
     this.value = value;

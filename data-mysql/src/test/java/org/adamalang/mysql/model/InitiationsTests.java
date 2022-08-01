@@ -11,29 +11,33 @@ package org.adamalang.mysql.model;
 
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
+import org.adamalang.mysql.data.IdHashPairing;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class HostsTests {
+public class InitiationsTests {
   @Test
-  public void hosts() throws Exception {
+  public void initiations() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
     try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory()))) {
       Installer installer = new Installer(dataBase);
       try {
         installer.install();
-        Hosts.initializeHost(dataBase, "region", "machine1", "web", "pubKey123");
-        Hosts.initializeHost(dataBase, "region", "machine2", "web", "pubKey42");
-        Hosts.initializeHost(dataBase, "region", "machine1", "adama", "pubKeyX");
-        Hosts.initializeHost(dataBase, "region", "machine2", "adama", "pubKeyY");
-        Assert.assertEquals("pubKey123", Hosts.getHostPublicKey(dataBase, "region", "machine1", "web"));
-        Assert.assertEquals("pubKey42", Hosts.getHostPublicKey(dataBase, "region", "machine2", "web"));
-        Assert.assertEquals("pubKeyX", Hosts.getHostPublicKey(dataBase, "region", "machine1", "adama"));
-        Assert.assertEquals("pubKeyY", Hosts.getHostPublicKey(dataBase, "region", "machine2", "adama"));
-        Assert.assertNull(Hosts.getHostPublicKey(dataBase, "r", "ma", "x"));
+        Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
+        Users.addInitiationPair(dataBase, 1, "hash", System.currentTimeMillis() - 60000);
+        Assert.assertEquals("hash", Users.listInitiationPairs(dataBase, 1).get(0).hash);
+        Assert.assertEquals(1, Users.expireKeys(dataBase, System.currentTimeMillis()));
+        Assert.assertEquals(0, Users.listInitiationPairs(dataBase, 1).size());
+        Users.addInitiationPair(dataBase, 1, "hash", System.currentTimeMillis() - 60000);
+        Assert.assertEquals(1, Users.listInitiationPairs(dataBase, 1).size());
+        for (IdHashPairing ihp : Users.listInitiationPairs(dataBase, 1)) {
+          Users.deleteInitiationPairing(dataBase, ihp.id);
+        }
+        Assert.assertEquals(0, Users.listInitiationPairs(dataBase, 1).size());
       } finally {
         installer.uninstall();
       }
     }
   }
+
 }

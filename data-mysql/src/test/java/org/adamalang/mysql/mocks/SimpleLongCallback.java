@@ -25,6 +25,7 @@ public class SimpleLongCallback implements Callback<Long> {
     this.count = 0;
     this.reason = -1;
   }
+
   @Override
   public void success(Long value) {
     this.value = value;

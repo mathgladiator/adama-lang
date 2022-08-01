@@ -65,7 +65,7 @@ public class MeteringSampleTests {
         Assert.assertEquals(-29146, Users.getBalance(dataBase, userId));
         Assert.assertEquals(52, (int) Spaces.getLatestBillingHourCode(dataBase));
         HashMap<String, UnbilledResources> unbilledAfter = Spaces.collectUnbilledStorage(dataBase);
-        Assert.assertEquals(1024, (long) (unbilledAfter.get("space").storage));
+        Assert.assertEquals(1024, unbilledAfter.get("space").storage);
         Billing.mergeStorageIntoSummaries(summary1, inventory, unbilled);
 
         ArrayList<BillingUsage> usages = Billing.usageReport(dataBase, spaceId, 2);
@@ -128,7 +128,7 @@ public class MeteringSampleTests {
         Assert.assertEquals(-29126, Users.getBalance(dataBase, userId));
         Assert.assertEquals(52, (int) Spaces.getLatestBillingHourCode(dataBase));
         HashMap<String, UnbilledResources> unbilledAfter = Spaces.collectUnbilledStorage(dataBase);
-        Assert.assertEquals(1024, (long) (unbilledAfter.get("space").storage));
+        Assert.assertEquals(1024, unbilledAfter.get("space").storage);
         Billing.mergeStorageIntoSummaries(summary1, inventory, unbilled);
 
         ArrayList<BillingUsage> usages = Billing.usageReport(dataBase, spaceId, 2);
@@ -144,7 +144,7 @@ public class MeteringSampleTests {
         Users.disableSweep(dataBase);
         Assert.assertFalse(Spaces.getSpaceInfo(dataBase, "space").enabled);
         Users.addToBalance(dataBase, userId, 50000);
-        Assert.assertEquals(50000-29126, Users.getBalance(dataBase, userId));
+        Assert.assertEquals(50000 - 29126, Users.getBalance(dataBase, userId));
         Assert.assertTrue(Spaces.getSpaceInfo(dataBase, "space").enabled);
       } finally {
         installer.uninstall();

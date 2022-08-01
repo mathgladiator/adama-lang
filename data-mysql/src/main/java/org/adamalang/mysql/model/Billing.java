@@ -43,17 +43,9 @@ public class Billing {
     }
   }
 
-  public static long usageValueOfZeroIfNotPresentOrNull(ObjectNode node, String field) {
-    JsonNode child = node.get(field);
-    if (child == null || child.isNull()) {
-      return 0;
-    }
-    return child.asLong();
-  }
-
   public static ArrayList<BillingUsage> usageReport(DataBase dataBase, int spaceId, int limit) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder("SELECT `hour`,`summary` FROM `").append(dataBase.databaseName).append("`.`bills` WHERE `space`=").append(spaceId).append(" ORDER BY `hour` DESC LIMIT ").append(limit).toString();
+      String sql = "SELECT `hour`,`summary` FROM `" + dataBase.databaseName + "`.`bills` WHERE `space`=" + spaceId + " ORDER BY `hour` DESC LIMIT " + limit;
       ArrayList<BillingUsage> usage = new ArrayList<>();
       DataBase.walk(connection, (rs) -> {
         int hour = rs.getInt(1);
@@ -73,11 +65,19 @@ public class Billing {
     }
   }
 
+  public static long usageValueOfZeroIfNotPresentOrNull(ObjectNode node, String field) {
+    JsonNode child = node.get(field);
+    if (child == null || child.isNull()) {
+      return 0;
+    }
+    return child.asLong();
+  }
+
   public static long transcribeSummariesAndUpdateBalances(DataBase dataBase, int hour, HashMap<String, MeteringSpaceSummary> summaries, ResourcesPerPenny rates) throws Exception {
     long pennies_billed = 0;
     try (Connection connection = dataBase.pool.getConnection()) {
       for (Map.Entry<String, MeteringSpaceSummary> entry : summaries.entrySet()) {
-        String sql = new StringBuilder("SELECT `id`,`latest_billing_hour`,`owner` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE name=?").toString();
+        String sql = "SELECT `id`,`latest_billing_hour`,`owner` FROM `" + dataBase.databaseName + "`.`spaces` WHERE name=?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, entry.getKey());
           try (ResultSet rs = statement.executeQuery()) {
@@ -88,7 +88,7 @@ public class Billing {
               int ownerId = rs.getInt(3);
               if (latestBillingHour < hour) {
                 MeteredWindowSummary summary = entry.getValue().summarize(rates);
-                String sqlInsertLog = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`bills` (`space`, `hour`, `summary`, `pennies`) VALUES (?,?,?,?)").toString();
+                String sqlInsertLog = "INSERT INTO `" + dataBase.databaseName + "`.`bills` (`space`, `hour`, `summary`, `pennies`) VALUES (?,?,?,?)";
                 try (PreparedStatement statementInsertLog = connection.prepareStatement(sqlInsertLog)) {
                   statementInsertLog.setInt(1, spaceId);
                   statementInsertLog.setInt(2, hour);
@@ -97,13 +97,8 @@ public class Billing {
                   statementInsertLog.execute();
                   pennies_billed += summary.pennies;
                 }
-               String sqlUpdateSpace = new StringBuilder().append("UPDATE `").append(dataBase.databaseName)
-                   .append("`.`spaces` SET `latest_billing_hour`=?, `storage_bytes`=?," +
-                    "`unbilled_storage_bytes_hours`=`unbilled_storage_bytes_hours`+?" +
-                    ", `unbilled_bandwidth_hours`=`unbilled_bandwidth_hours`+?" +
-                    ", `unbilled_first_party_service_calls`=`unbilled_first_party_service_calls`+?" +
-                    ", `unbilled_third_party_service_calls`=`unbilled_third_party_service_calls`+?" + //
-                    " WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
+                String sqlUpdateSpace = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `latest_billing_hour`=?, `storage_bytes`=?," + "`unbilled_storage_bytes_hours`=`unbilled_storage_bytes_hours`+?" + ", `unbilled_bandwidth_hours`=`unbilled_bandwidth_hours`+?" + ", `unbilled_first_party_service_calls`=`unbilled_first_party_service_calls`+?" + ", `unbilled_third_party_service_calls`=`unbilled_third_party_service_calls`+?" + //
+                    " WHERE `id`=" + spaceId + " LIMIT 1";
 
                 try (PreparedStatement statementUpdateSpace = connection.prepareStatement(sqlUpdateSpace)) {
                   statementUpdateSpace.setInt(1, hour);
@@ -114,7 +109,7 @@ public class Billing {
                   statementUpdateSpace.setLong(6, summary.changeUnbilled.third_party_service_calls);
                   statementUpdateSpace.execute();
                 }
-                String sqlUpdateDeveloperBalance = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`emails` SET `balance`=`balance`-").append(summary.pennies).append(" WHERE `id`=").append(ownerId).append(" LIMIT 1").toString();
+                String sqlUpdateDeveloperBalance = "UPDATE `" + dataBase.databaseName + "`.`emails` SET `balance`=`balance`-" + summary.pennies + " WHERE `id`=" + ownerId + " LIMIT 1";
                 DataBase.execute(connection, sqlUpdateDeveloperBalance);
               }
             }

@@ -16,10 +16,10 @@ import org.junit.Assert;
 
 public class SimpleDataCallback implements Callback<LocalDocumentChange> {
   public String value;
+  public int reads;
   private boolean success;
   private int count;
   private int reason;
-  public int reads;
 
   public SimpleDataCallback() {
     this.success = false;

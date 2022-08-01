@@ -34,6 +34,20 @@ public class Installer {
         .append(" DEFAULT CHARACTER SET = utf8mb4;") //
         .toString();
 
+    String createCapacityTableSQL = new StringBuilder() //
+        .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`capacity` (") //
+        .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
+        .append("  `space` VARCHAR(128) NOT NULL,") //
+        .append("  `region` VARCHAR(256) NOT NULL,") //
+        .append("  `machine` VARCHAR(256) NOT NULL,") //
+        .append("  PRIMARY KEY (`id`),") //
+        .append("  INDEX `s` (`space` ASC),") //
+        .append("  INDEX `r` (`region` ASC),") //
+        .append("  UNIQUE `srm` (`space`,`region`,`machine`))") //
+        .append(" ENGINE = InnoDB") //
+        .append(" DEFAULT CHARACTER SET = utf8mb4;") //
+        .toString();
+
     String createDirectoryTableSQL = new StringBuilder() //
         .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`directory` (") //
         .append("  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,") //
@@ -175,12 +189,14 @@ public class Installer {
         .append(" DEFAULT CHARACTER SET = utf8mb4;") //
         .toString();
 
-    String createWebHostsTableSQL = new StringBuilder() //
-        .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`web_hosts` (") //
+    String createHostsTableSQL = new StringBuilder() //
+        .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`hosts` (") //
         .append("  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,") //
+        .append("  `role` VARCHAR(16) NOT NULL,") //
         .append("  `region` VARCHAR(64) NOT NULL,") //
         .append("  `machine` VARCHAR(512) NOT NULL,") //
         .append("  `public_key` LONGTEXT NOT NULL,")
+        .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
         .append("  PRIMARY KEY (`id`),") //
         .append("  INDEX `m` (`machine`))") //
         .append(" ENGINE = InnoDB") //
@@ -202,6 +218,7 @@ public class Installer {
     try {
       DataBase.execute(connection, createDatabaseSQL);
       DataBase.execute(connection, createDeployedTableSQL);
+      DataBase.execute(connection, createCapacityTableSQL);
       DataBase.execute(connection, createDirectoryTableSQL);
       DataBase.execute(connection, createInitiationsTableSQL);
       DataBase.execute(connection, createEmailsTableSQL);
@@ -211,7 +228,7 @@ public class Installer {
       DataBase.execute(connection, createAuthoritiesTableSQL);
       DataBase.execute(connection, createMeteringTableSQL);
       DataBase.execute(connection, createBillingTableSQL);
-      DataBase.execute(connection, createWebHostsTableSQL);
+      DataBase.execute(connection, createHostsTableSQL);
       DataBase.execute(connection, createSecretsTableSQL);
     } finally {
       connection.close();
@@ -231,7 +248,8 @@ public class Installer {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`bills`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`directory`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`deployed`;").toString());
-      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`web_hosts`;").toString());
+      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`capacity`;").toString());
+      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`hosts`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`secrets`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP DATABASE IF EXISTS `").append(dataBase.databaseName).append("`;").toString());
     } finally {
