@@ -83,4 +83,28 @@ public class Helper {
     buf.writeIntLE(bytes.length + 1);
     buf.writeBytes(bytes);
   }
+
+
+  public static int[] readIntArray(ByteBuf buf) {
+    int count = buf.readIntLE();
+    if (count == 0) {
+      return null;
+    }
+    int[] arr = new int[count - 1];
+    for (int k = 0; k < arr.length; k++) {
+      arr[k] = buf.readIntLE();
+    }
+    return arr;
+  }
+
+  public static void writeIntArray(ByteBuf buf, int[] nums) {
+    if (nums == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(nums.length + 1);
+    for (int k = 0; k < nums.length; k++) {
+      buf.writeIntLE(nums[k]);
+    }
+  }
 }

@@ -264,6 +264,9 @@ public class CodecCodeGen {
     if (field.getType() == String[].class) {
       return "Helper.readStringArray(buf)";
     }
+    if (field.getType() == int[].class) {
+      return "Helper.readIntArray(buf)";
+    }
     if (field.getType().getAnnotation(TypeId.class) != null) {
       return "read_" + field.getType().getSimpleName() + "(buf)";
     }
@@ -295,6 +298,9 @@ public class CodecCodeGen {
     }
     if (field.getType() == String[].class) {
       return "Helper.writeStringArray(buf, " + value + ");";
+    }
+    if (field.getType() == int[].class) {
+      return "Helper.writeIntArray(buf, " + value + ");";
     }
     if (field.getType().getAnnotation(TypeId.class) != null) {
       return "write(buf, " + value + ");";
