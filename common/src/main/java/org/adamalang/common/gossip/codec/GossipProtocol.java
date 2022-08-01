@@ -32,9 +32,8 @@ import org.adamalang.common.codec.TypeId;
  (v) if the Set was not found, then send a SlowGossip and stop (breaking asymmetry)
  */
 public class GossipProtocol {
-
   @Flow("Raw")
-  @TypeId(30000)
+  @TypeId(30)
   public static class Endpoint {
     @FieldOrder(1)
     public String id;
@@ -53,8 +52,8 @@ public class GossipProtocol {
   }
 
   // client initiates gossip by sending its hash along with an optimistic list of endpoints
-  @Flow("Chatter")
-  @TypeId(30001)
+  @Flow("ChatterFromClient")
+  @TypeId(31)
   public static class BeginGossip {
     @FieldOrder(1)
     public String hash;
@@ -65,8 +64,8 @@ public class GossipProtocol {
   }
 
   // server found the hash and knows how to respond to a quick gossip
-  @Flow("Chatter")
-  @TypeId(30002)
+  @Flow("ChatterFromServer")
+  @TypeId(33)
   public static class HashFoundRequestForwardQuickGossip {
     @FieldOrder(1)
     public int[] counters;
@@ -77,16 +76,16 @@ public class GossipProtocol {
   }
 
   // server found the hash or client found the reverse hash
-  @Flow("Chatter")
-  @TypeId(30003)
+  @Flow("ChatterFromClient")
+  @TypeId(34)
   public static class ForwardQuickGossip {
     @FieldOrder(1)
     public int[] counters;
   }
 
   // server couldn't find hash, so it sends its recent endpoints along with its hash
-  @Flow("Chatter")
-  @TypeId(30004)
+  @Flow("ChatterFromServer")
+  @TypeId(35)
   public static class HashNotFoundReverseConversation {
     @FieldOrder(1)
     public String hash;
@@ -97,8 +96,8 @@ public class GossipProtocol {
   }
 
   // client is learning that a hash wasn't found, but it found the related hash
-  @Flow("Chatter")
-  @TypeId(30005)
+  @Flow("ChatterFromClient")
+  @TypeId(36)
   public static class ReverseHashFound {
     @FieldOrder(1)
     public int[] counters;
@@ -106,17 +105,27 @@ public class GossipProtocol {
     public Endpoint[] missing_endpoints;
   }
 
+  // client is learning that a hash wasn't found, but it found the related hash
+  @Flow("ChatterFromServer")
+  @TypeId(37)
+  public static class ReverseQuickGossip {
+    @FieldOrder(1)
+    public int[] counters;
+    @FieldOrder(2)
+    public Endpoint[] missing_endpoints;
+  }
+
   // client didn't find the reverse hash, send everything
-  @Flow("Chatter")
-  @TypeId(30006)
+  @Flow("ChatterFromClient")
+  @TypeId(38)
   public static class ForwardSlowGossip {
     @FieldOrder(1)
     public Endpoint[] all_endpoints;
   }
 
   // server responses to a slow gossip with a slow gossip
-  @Flow("Chatter")
-  @TypeId(30007)
+  @Flow("ChatterFromServer")
+  @TypeId(39)
   public static class ReverseSlowGossip {
     @FieldOrder(1)
     public Endpoint[] all_endpoints;

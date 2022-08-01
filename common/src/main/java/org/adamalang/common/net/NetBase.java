@@ -28,6 +28,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.gossip.Engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,7 @@ public class NetBase {
   private final CountDownLatch killLatch;
   private final SslContext sslContext;
   private final ArrayList<CountDownLatch> blockers;
+  private final Engine gossipEngine;
 
   public NetBase(MachineIdentity identity, int bossThreads, int workerThreads) throws Exception {
     this.identity = identity;
@@ -57,6 +59,7 @@ public class NetBase {
     this.alive = new AtomicBoolean(true);
     this.killLatch = new CountDownLatch(1);
     this.blockers = new ArrayList<>();
+    this.gossipEngine = new Engine();
   }
 
   public boolean alive() {
@@ -84,7 +87,7 @@ public class NetBase {
           ch.pipeline().addLast(sslContext.newHandler(ch.alloc(), peerHost, peerPort));
           ch.pipeline().addLast(new LengthFieldPrepender(4));
           ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
-          ch.pipeline().addLast(new ChannelClient(lifecycle));
+          ch.pipeline().addLast(new ChannelClient(lifecycle, gossipEngine));
         }
       });
       bootstrap.connect().addListener(new ChannelFutureListener() {
@@ -112,7 +115,7 @@ public class NetBase {
         ch.pipeline().addLast(sslContext.newHandler(ch.alloc()));
         ch.pipeline().addLast(new LengthFieldPrepender(4));
         ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(65535, 0, 4, 0, 4));
-        ch.pipeline().addLast(new ChannelServer(ch, set, handler));
+        ch.pipeline().addLast(new ChannelServer(ch, set, handler, gossipEngine));
       }
     });
     ChannelFuture future = bootstrap.bind();

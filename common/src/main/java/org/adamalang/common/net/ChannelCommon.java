@@ -15,6 +15,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.concurrent.ScheduledFuture;
 import org.adamalang.ErrorCodes;
+import org.adamalang.common.gossip.Engine;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,12 +27,14 @@ public abstract class ChannelCommon extends ChannelInboundHandlerAdapter {
   private final int initialId;
   protected ScheduledFuture<?> scheduledFlush;
   private int nextId;
+  protected final Engine gossipEngine;
 
-  public ChannelCommon(int initialId) {
+  public ChannelCommon(int initialId, Engine gossipEngine) {
     this.initialId = initialId;
     this.scheduledFlush = null;
     this.streams = new HashMap<>();
     this.nextId = initialId;
+    this.gossipEngine = gossipEngine;
   }
 
   public int makeId() {

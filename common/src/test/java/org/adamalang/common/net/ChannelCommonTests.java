@@ -16,7 +16,7 @@ public class ChannelCommonTests {
 
   public static class DemoChannel extends ChannelCommon {
     public DemoChannel() {
-      super(1);
+      super(1, null);
       streams.put(3, null);
     }
   }
