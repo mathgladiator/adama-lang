@@ -41,6 +41,9 @@ public class CodecCodeGenTests {
 
     @FieldOrder(7)
     public String[] strarr;
+
+    @FieldOrder(8)
+    public int[] intarr;
   }
 
   @TypeId(4242)
