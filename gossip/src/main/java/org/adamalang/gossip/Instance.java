@@ -9,6 +9,7 @@
  */
 package org.adamalang.gossip;
 
+import org.adamalang.common.gossip.Constants;
 import org.adamalang.gossip.proto.Endpoint;
 
 import java.util.Objects;

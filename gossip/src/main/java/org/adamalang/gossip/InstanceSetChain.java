@@ -10,6 +10,8 @@
 package org.adamalang.gossip;
 
 import org.adamalang.common.TimeSource;
+import org.adamalang.common.gossip.Constants;
+import org.adamalang.common.gossip.GarbageMap;
 import org.adamalang.gossip.proto.Endpoint;
 
 import java.util.*;

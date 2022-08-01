@@ -11,6 +11,7 @@ package org.adamalang.gossip;
 
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.TimeSource;
+import org.adamalang.common.gossip.EngineRole;
 import org.adamalang.gossip.proto.Endpoint;
 import org.junit.Assert;
 import org.junit.Test;
