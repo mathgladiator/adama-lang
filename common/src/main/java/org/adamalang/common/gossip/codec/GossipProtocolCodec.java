@@ -12,7 +12,7 @@ package org.adamalang.common.gossip.codec;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
-import org.adamalang.common.gossip.codec.GossipProtocol.SlowGossip;
+import org.adamalang.common.gossip.codec.GossipProtocol.ForwardSlowGossip;
 import org.adamalang.common.gossip.codec.GossipProtocol.ReverseHashFound;
 import org.adamalang.common.gossip.codec.GossipProtocol.HashNotFoundReverseConversation;
 import org.adamalang.common.gossip.codec.GossipProtocol.ForwardQuickGossip;
@@ -58,7 +58,7 @@ public class GossipProtocolCodec {
 
 
   public static abstract class StreamChatter implements ByteStream {
-    public abstract void handle(SlowGossip payload);
+    public abstract void handle(ForwardSlowGossip payload);
 
     public abstract void handle(ReverseHashFound payload);
 
@@ -83,7 +83,7 @@ public class GossipProtocolCodec {
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
         case 30006:
-          handle(readBody_30006(buf, new SlowGossip()));
+          handle(readBody_30006(buf, new ForwardSlowGossip()));
           return;
         case 30005:
           handle(readBody_30005(buf, new ReverseHashFound()));
@@ -105,7 +105,7 @@ public class GossipProtocolCodec {
   }
 
   public static interface HandlerChatter {
-    public void handle(SlowGossip payload);
+    public void handle(ForwardSlowGossip payload);
     public void handle(ReverseHashFound payload);
     public void handle(HashNotFoundReverseConversation payload);
     public void handle(ForwardQuickGossip payload);
@@ -116,7 +116,7 @@ public class GossipProtocolCodec {
   public static void route(ByteBuf buf, HandlerChatter handler) {
     switch (buf.readIntLE()) {
       case 30006:
-        handler.handle(readBody_30006(buf, new SlowGossip()));
+        handler.handle(readBody_30006(buf, new ForwardSlowGossip()));
         return;
       case 30005:
         handler.handle(readBody_30005(buf, new ReverseHashFound()));
@@ -137,16 +137,16 @@ public class GossipProtocolCodec {
   }
 
 
-  public static SlowGossip read_SlowGossip(ByteBuf buf) {
+  public static ForwardSlowGossip read_SlowGossip(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 30006:
-        return readBody_30006(buf, new SlowGossip());
+        return readBody_30006(buf, new ForwardSlowGossip());
     }
     return null;
   }
 
 
-  private static SlowGossip readBody_30006(ByteBuf buf, SlowGossip o) {
+  private static ForwardSlowGossip readBody_30006(ByteBuf buf, ForwardSlowGossip o) {
     o.all_endpoints = Helper.readArray(buf, (n) -> new Endpoint[n], () -> read_Endpoint(buf));
     return o;
   }
@@ -248,7 +248,7 @@ public class GossipProtocolCodec {
     return o;
   }
 
-  public static void write(ByteBuf buf, SlowGossip o) {
+  public static void write(ByteBuf buf, ForwardSlowGossip o) {
     if (o == null) {
       buf.writeIntLE(0);
       return;
