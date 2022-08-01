@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+/** a collection of instances */
 public class InstanceSet {
   public final ArrayList<Instance> instances;
   public final TreeSet<String> ids;
