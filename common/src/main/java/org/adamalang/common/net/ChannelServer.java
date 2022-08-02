@@ -40,11 +40,10 @@ public class ChannelServer extends ChannelCommon {
     byte type = inBuffer.readByte();
     int id = inBuffer.readIntLE();
     if (type == 0x10 || type == 0x11) {
+      ByteStream upstream = new Remote(streams, id, ctx, () -> flushFromWithinContextExecutor(ctx));
       if (type == 0x11) {
-        ByteStream upstream = new Remote(streams, id, ctx, () -> flushFromWithinContextExecutor(ctx));
         streams.put(id, gossipEngine.server(upstream));
       } else {
-        ByteStream upstream = new Remote(streams, id, ctx, () -> flushFromWithinContextExecutor(ctx));
         streams.put(id, handler.create(upstream));
       }
       ByteBuf buffer = Unpooled.buffer();
