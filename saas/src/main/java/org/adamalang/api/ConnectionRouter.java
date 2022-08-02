@@ -47,6 +47,7 @@ public class ConnectionRouter {
           entry.getValue().disconnect(entry.getKey());
         }
         inflightDocumentStream.clear();
+        handler.disconnect();
       }
     });
   }

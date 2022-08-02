@@ -497,6 +497,9 @@ public class ErrorTable {
     names.put(983117, "NET_LCSM_DISCONNECTED_PREMATURE");
     descriptions.put(983117, "no description of error (yet)");
     retry.add(983117);
+    names.put(928828, "NET_LCSM_TIMEOUT");
+    descriptions.put(928828, "no description of error (yet)");
+    retry.add(928828);
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");
@@ -692,7 +695,5 @@ public class ErrorTable {
     descriptions.put(792643, "no description of error (yet)");
     names.put(101386, "DURABLE_LIVING_DOCUMENT_STAGE_LOAD_READ");
     descriptions.put(101386, "no description of error (yet)");
-    names.put(928828, "API_SPACE_INVALID_NAME_FOR_LOOKUP");
-    descriptions.put(928828, "no description of error (yet)");
   }
 }

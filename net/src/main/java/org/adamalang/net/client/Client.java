@@ -314,17 +314,10 @@ public class Client {
     });
   }
 
-  public Connection connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
+  /** Connect to a document with a simplified state machine */
+  public LinearConnectionStateMachine connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
     ConnectionBase base = new ConnectionBase(config, metrics, router.routerForDocuments, clientFinder, executors[rng.nextInt(executors.length)]);
-    Connection connection = new Connection(base, ip, origin, agent, authority, space, key, viewerState, assetKey, events);
-    connection.open();
-    return connection;
-  }
-
-  /** Experimental: simplified connection state machine */
-  public LinearConnectionStateMachine simpleConnect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
-    ConnectionBase base = new ConnectionBase(config, metrics, router.routerForDocuments, clientFinder, executors[rng.nextInt(executors.length)]);
-    LinearConnectionStateMachine connection = new LinearConnectionStateMachine(base, ip, origin, agent, authority, space, key, viewerState, assetKey, events);
+    LinearConnectionStateMachine connection = new LinearConnectionStateMachine(base, ip, origin, agent, authority, space, key, viewerState, assetKey, 2500, events);
     connection.open();
     return connection;
   }

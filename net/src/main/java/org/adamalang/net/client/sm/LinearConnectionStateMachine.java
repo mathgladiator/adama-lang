@@ -42,8 +42,11 @@ public class LinearConnectionStateMachine implements AdamaStream {
   private final ItemQueue<Remote> queue;
   private int backoff;
   private boolean closed;
+  private int timeoutMilliseconds;
+  private int waitingInError;
+  private boolean connectedOnce;
 
-  public LinearConnectionStateMachine(ConnectionBase base, String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
+  public LinearConnectionStateMachine(ConnectionBase base, String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, int timeoutMilliseconds, SimpleEvents events) {
     this.base = base;
     this.ip = ip;
     this.origin = origin;
@@ -53,14 +56,22 @@ public class LinearConnectionStateMachine implements AdamaStream {
     this.viewerState = viewerState;
     this.assetKey = assetKey;
     this.events = events;
+    this.timeoutMilliseconds = timeoutMilliseconds;
     this.queue = new ItemQueue<>(base.executor, base.config.getConnectionQueueSize(), base.config.getConnectionQueueTimeoutMS());
     this.backoff = 1;
     this.closed = false;
+    this.waitingInError = 0;
+    this.connectedOnce = false;
   }
 
   private void handleError(int error) {
     if (ErrorTable.INSTANCE.shouldRetry(error)) {
+      if (waitingInError > timeoutMilliseconds) {
+        events.error(ErrorCodes.NET_LCSM_TIMEOUT);
+        return;
+      }
       backoff = Math.min((int) (backoff + Math.random() * backoff + 1), 2000);
+      waitingInError += backoff;
       base.executor.schedule(new NamedRunnable("lcsm-handle-error") {
         @Override
         public void execute() throws Exception {
@@ -99,7 +110,12 @@ public class LinearConnectionStateMachine implements AdamaStream {
                     if (closed) {
                       remote.disconnect();
                     } else {
+                      waitingInError = 0;
                       queue.ready(remote);
+                      if (!connectedOnce) {
+                        events.connected();
+                        connectedOnce = true;
+                      }
                     }
                   }
                 });
@@ -110,14 +126,22 @@ public class LinearConnectionStateMachine implements AdamaStream {
                 events.delta(data);
               }
 
+
+
               @Override
               public void error(int code) {
-                handleError(code);
+                base.executor.execute(new NamedRunnable("lcsm-connected") {
+                  @Override
+                  public void execute() throws Exception {
+                    queue.unready();
+                    handleError(code);
+                  }
+                });
               }
 
               @Override
               public void disconnected() {
-                handleError(ErrorCodes.NET_LCSM_DISCONNECTED_PREMATURE);
+                error(ErrorCodes.NET_LCSM_DISCONNECTED_PREMATURE);
               }
             });
           }
@@ -231,6 +255,7 @@ public class LinearConnectionStateMachine implements AdamaStream {
         if (remote != null) {
           remote.disconnect();
         }
+        events.disconnected();
       }
     });
   }

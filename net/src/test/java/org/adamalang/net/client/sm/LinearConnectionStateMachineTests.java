@@ -42,7 +42,7 @@ public class LinearConnectionStateMachineTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        LinearConnectionStateMachine connection = new LinearConnectionStateMachine(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, events);
+        LinearConnectionStateMachine connection = new LinearConnectionStateMachine(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, 1000, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 2; k++) {
           connection.update("{\"k\":" + k + "}");
@@ -105,7 +105,7 @@ public class LinearConnectionStateMachineTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        LinearConnectionStateMachine connection = new LinearConnectionStateMachine(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, events);
+        LinearConnectionStateMachine connection = new LinearConnectionStateMachine(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, 1000, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 20; k++) {
           connection.update("{\"k\":" + k + "}");

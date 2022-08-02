@@ -69,6 +69,7 @@ public class AssembleConnectionRouter {
         router.append("        inflight").append(subHandler).append(".clear();\n");
       }
     }
+    router.append("        handler.disconnect();\n");
     router.append("      }\n");
     router.append("    });\n");
     router.append("  }\n");
