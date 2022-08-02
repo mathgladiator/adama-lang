@@ -13,10 +13,9 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.contracts.RoutingSubscriber;
-import org.adamalang.net.client.contracts.SpaceTrackingEvents;
 import org.adamalang.net.client.routing.finder.FinderServiceRouter;
 import org.adamalang.net.client.routing.finder.MachinePicker;
-import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
+import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
 import org.slf4j.Logger;
@@ -26,10 +25,10 @@ import org.slf4j.LoggerFactory;
 public class ClientRouter {
   private static final Logger LOGGER = LoggerFactory.getLogger(ClientRouter.class);
   private final SimpleExecutor executor;
-  public final ReativeRoutingEngine engine;
+  public final AggregatedCacheRouter engine;
   public final Router routerForDocuments;
 
-  public ClientRouter(SimpleExecutor executor, ReativeRoutingEngine engine, Router routerForDocuments) {
+  public ClientRouter(SimpleExecutor executor, AggregatedCacheRouter engine, Router routerForDocuments) {
     this.executor = executor;
     this.engine = engine;
     this.routerForDocuments = routerForDocuments;
@@ -41,13 +40,13 @@ public class ClientRouter {
 
   public static ClientRouter REACTIVE(ClientMetrics metrics) {
     SimpleExecutor executor = SimpleExecutor.create("routing-executor");
-    ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, SpaceTrackingEvents.NoOp, 250, 250);
+    AggregatedCacheRouter engine = new AggregatedCacheRouter(executor);
     return new ClientRouter(executor, engine, engine);
   }
 
   public static ClientRouter FINDER(ClientMetrics metrics, FinderService finder, String region) {
     SimpleExecutor executor = SimpleExecutor.create("routing-executor");
-    ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, SpaceTrackingEvents.NoOp, 250, 250);
+    AggregatedCacheRouter engine = new AggregatedCacheRouter(executor);
     MachinePicker picker = new MachinePicker() {
       @Override
       public void pickHost(Key key, Callback<String> callback) {

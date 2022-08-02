@@ -7,18 +7,12 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.net.client.routing.reactive;
-
-import org.adamalang.net.client.contracts.SpaceTrackingEvents;
-import org.adamalang.runtime.data.Key;
+package org.adamalang.net.client.routing.cache;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 /** the routing table which maps keys to targets for use by clients */
 public class RoutingTable {
-  /** what happens when a space is created and destroyed */
-  private final SpaceTrackingEvents events;
   /** raw targets held onto for differentiation */
   private final HashMap<String, TreeSet<String>> history;
   /** the routing table of spaces to their tables */
@@ -26,10 +20,9 @@ public class RoutingTable {
 
   private final Random rng;
 
-  public RoutingTable(SpaceTrackingEvents events) {
+  public RoutingTable() {
     this.history = new HashMap<>();
     this.routing = new HashMap<>();
-    this.events = events;
     this.rng = new Random();
   }
 
@@ -42,7 +35,6 @@ public class RoutingTable {
     if (state == null) {
       state = new SpaceState();
       routing.put(space, state);
-      events.gainInterestInSpace(space);
     }
     return state;
   }
@@ -87,31 +79,10 @@ public class RoutingTable {
     TreeSet<String> spaces = history.remove(target);
     if (spaces != null) {
       for (String space : spaces) {
-        getOrCreateSpaceState(space).subtract(target);
-      }
-    }
-  }
-
-  /** broadcast to subscribers that the table has convergence (expensive recompute) */
-  public void broadcast() {
-    TreeSet<String> all = new TreeSet<>();
-    for (TreeSet<String> possible : history.values()) {
-      all.addAll(possible);
-    }
-    Iterator<Map.Entry<String, SpaceState>> it = routing.entrySet().iterator();
-    while (it.hasNext()) {
-      Map.Entry<String, SpaceState> entry = it.next();
-      if (entry.getValue().recompute((set) -> events.shareTargetsFor(entry.getKey(), set))) {
-        if (!all.contains(entry.getKey())) {
-          events.lostInterestInSpace(entry.getKey());
-          it.remove();
+        if (getOrCreateSpaceState(space).subtract(target)) {
+          routing.remove(space);
         }
       }
     }
-  }
-
-  /** subscribe to a key */
-  public Runnable subscribe(Key key, Consumer<String> target) {
-    return getOrCreateSpaceState(key.space).subscribe(key.key, target);
   }
 }

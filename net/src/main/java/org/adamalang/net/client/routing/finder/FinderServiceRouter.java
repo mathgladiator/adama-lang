@@ -104,9 +104,4 @@ public class FinderServiceRouter implements Router {
       }
     });
   }
-
-  @Override
-  public void subscribe(Key key, RoutingSubscriber subscriber, Consumer<Runnable> onCancel) {
-    get(key, subscriber);
-  }
 }

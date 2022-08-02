@@ -16,8 +16,7 @@ import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.InstanceClientFinder;
 import org.adamalang.net.client.TestClientConfig;
-import org.adamalang.net.client.routing.MockSpaceTrackingEvents;
-import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
+import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.net.mocks.LatchedSeqCallback;
 import org.adamalang.net.mocks.MockSimpleEvents;
 import org.junit.Test;
@@ -35,7 +34,7 @@ public class LinearConnectionStateMachineTests {
     try {
       ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
-      ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
+      AggregatedCacheRouter engine = new AggregatedCacheRouter(executor);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
@@ -98,7 +97,7 @@ public class LinearConnectionStateMachineTests {
     try {
       ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.BAD_CODE);
-      ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
+      AggregatedCacheRouter engine = new AggregatedCacheRouter(executor);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);

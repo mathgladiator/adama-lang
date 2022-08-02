@@ -30,19 +30,6 @@ public class FinderServiceRouterTests {
       FinderServiceRouter router = new FinderServiceRouter(executor, finder, picker, "test-region");
       finder.bindLocal(new Key("space", "retry-key"));
       CountDownLatch latch = new CountDownLatch(1);
-      router.subscribe(new Key("space", "retry-key"), new RoutingSubscriber() {
-        @Override
-        public void onRegion(String region) {
-        }
-        @Override
-        public void failure(ErrorCodeException ex) {
-        }
-        @Override
-        public void onMachine(String machine) {
-          latch.countDown();
-        }
-      }, (runnable) -> {
-      });
       Assert.assertTrue(latch.await(2500, TimeUnit.MILLISECONDS));
     } finally {
       executor.shutdown().await(1000, TimeUnit.MILLISECONDS);
@@ -58,19 +45,6 @@ public class FinderServiceRouterTests {
       FinderServiceRouter router = new FinderServiceRouter(executor, finder, picker, "test-region");
       finder.bindOtherRegion(new Key("space", "retry-key"));
       CountDownLatch latch = new CountDownLatch(1);
-      router.subscribe(new Key("space", "retry-key"), new RoutingSubscriber() {
-        @Override
-        public void onRegion(String region) {
-          latch.countDown();
-        }
-        @Override
-        public void failure(ErrorCodeException ex) {
-        }
-        @Override
-        public void onMachine(String machine) {
-        }
-      }, (runnable) -> {
-      });
       Assert.assertTrue(latch.await(2500, TimeUnit.MILLISECONDS));
     } finally {
       executor.shutdown().await(1000, TimeUnit.MILLISECONDS);

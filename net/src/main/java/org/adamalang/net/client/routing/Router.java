@@ -16,6 +16,4 @@ import java.util.function.Consumer;
 
 public interface Router {
   public void get(Key key, RoutingSubscriber callback);
-
-  public void subscribe(Key key, RoutingSubscriber subscriber, Consumer<Runnable> onCancel);
 }

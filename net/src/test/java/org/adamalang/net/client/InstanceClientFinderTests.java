@@ -12,12 +12,10 @@ package org.adamalang.net.client;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
-import org.adamalang.net.client.contracts.SpaceTrackingEvents;
-import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
+import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -43,31 +41,10 @@ public class InstanceClientFinderTests {
         servers[k].startServer();
         targets.add("127.0.0.1:" + (20001 + k));
       }
-      CountDownLatch primed = new CountDownLatch(1);
-      ReativeRoutingEngine engine =
-          new ReativeRoutingEngine(
-              metrics,
-              routingExecutor,
-              new SpaceTrackingEvents() {
-                @Override
-                public void gainInterestInSpace(String space) {}
-
-                @Override
-                public void shareTargetsFor(String space, Set<String> targets) {
-                  if ("space".equals(space) && servers.length == targets.size()) {
-                    primed.countDown();
-                  }
-                }
-
-                @Override
-                public void lostInterestInSpace(String space) {}
-              },
-              50,
-              25);
+      AggregatedCacheRouter engine = new AggregatedCacheRouter(routingExecutor);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         finder.sync(targets);
-        Assert.assertTrue(primed.await(25000, TimeUnit.MILLISECONDS));
         CountDownLatch latchFoundSame = new CountDownLatch(1);
         finder.findCapacity(targets, (x) -> {
           Assert.assertTrue(x == targets);

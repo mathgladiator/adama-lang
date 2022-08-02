@@ -17,7 +17,6 @@ import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.routing.ClientRouter;
-import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.client.sm.LinearConnectionStateMachine;
 import org.adamalang.net.mocks.MockMeteringFlow;
 import org.adamalang.runtime.data.Key;

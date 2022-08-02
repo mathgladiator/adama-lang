@@ -14,7 +14,6 @@ import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.InstanceClientFinder;
 import org.adamalang.net.client.routing.Router;
-import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 
 /** each state machine has some common ground, and we form a base around that */
 public class ConnectionBase {
