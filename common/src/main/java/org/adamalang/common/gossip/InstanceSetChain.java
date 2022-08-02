@@ -46,24 +46,24 @@ public class InstanceSetChain {
     return this.current;
   }
 
-  public Collection<GossipProtocol.Endpoint> recent() {
+  public GossipProtocol.Endpoint[] recent() {
     ArrayList<GossipProtocol.Endpoint> list = new ArrayList<>();
     Iterator<Instance> instance = recentlyLearnedAbout.iterator();
     while (instance.hasNext()) {
       list.add(instance.next().toEndpoint());
     }
-    return list;
+    return list.toArray(new GossipProtocol.Endpoint[list.size()]);
   }
 
   public long now() {
     return time.nowMilliseconds();
   }
 
-  public Collection<GossipProtocol.Endpoint> missing(InstanceSet set) {
+  public GossipProtocol.Endpoint[] missing(InstanceSet set) {
     return current.missing(set);
   }
 
-  public Collection<GossipProtocol.Endpoint> all() {
+  public GossipProtocol.Endpoint[] all() {
     return current.toEndpoints();
   }
 
@@ -110,7 +110,7 @@ public class InstanceSetChain {
     recentlyLearnedAbout.gc(now);
   }
 
-  public void ingest(Collection<GossipProtocol.Endpoint> endpoints, Set<String> deletes) {
+  public void ingest(GossipProtocol.Endpoint[] endpoints, String[] deletes) {
     long now = time.nowMilliseconds();
 
     TreeSet<Instance> clone = null;
@@ -153,7 +153,8 @@ public class InstanceSetChain {
     }
   }
 
-  public Collection<String> deletes() {
-    return recentlyDeleted.keys();
+  public String[] deletes() {
+    Collection<String> keys = recentlyDeleted.keys();
+    return keys.toArray(new String[keys.size()]);
   }
 }

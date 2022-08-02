@@ -40,38 +40,41 @@ public class InstanceSet {
     return new TreeSet<>(instances);
   }
 
-  public ArrayList<Integer> counters() {
-    ArrayList<Integer> list = new ArrayList<>(instances.size());
+  public int[] counters() {
+    int[] counters = new int[instances.size()];
+    int at = 0;
     for (Instance instance : instances) {
-      list.add(instance.counter());
+      counters[at] = instance.counter();
+      at++;
     }
-    return list;
+    return counters;
   }
 
-  public ArrayList<GossipProtocol.Endpoint> toEndpoints() {
+  public GossipProtocol.Endpoint[] toEndpoints() {
     ArrayList<GossipProtocol.Endpoint> endpoints = new ArrayList<>();
     for (Instance instance : instances) {
       endpoints.add(instance.toEndpoint());
     }
-    return endpoints;
+    return endpoints.toArray(new GossipProtocol.Endpoint[endpoints.size()]);
   }
 
-  public ArrayList<GossipProtocol.Endpoint> missing(InstanceSet prior) {
+  public GossipProtocol.Endpoint[] missing(InstanceSet prior) {
     ArrayList<GossipProtocol.Endpoint> eps = new ArrayList<>();
     for (Instance local : instances) {
       if (!prior.ids.contains(local.id)) {
         eps.add(local.toEndpoint());
       }
     }
-    return eps;
+    return eps.toArray(new GossipProtocol.Endpoint[eps.size()]);
   }
 
-  public void ingest(Collection<Integer> counters, long now) {
-    if (instances.size() == counters.size()) {
+  public void ingest(int[] counters, long now) {
+    if (instances.size() == counters.length) {
       Iterator<Instance> instanceIt = instances.iterator();
-      Iterator<Integer> counterIt = counters.iterator();
-      while (instanceIt.hasNext() && counterIt.hasNext()) {
-        instanceIt.next().absorb(counterIt.next(), now);
+      int at = 0;
+      while (instanceIt.hasNext()) {
+        instanceIt.next().absorb(counters[at], now);
+        at++;
       }
     }
   }

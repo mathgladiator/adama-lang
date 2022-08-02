@@ -125,19 +125,15 @@ public class CommonTest {
     return set;
   }
 
-  public static Collection<GossipProtocol.Endpoint> ENDPOINTS(Instance... instances) {
+  public static GossipProtocol.Endpoint[] ENDPOINTS(Instance... instances) {
     ArrayList<GossipProtocol.Endpoint> set = new ArrayList<>();
     for (Instance instance : instances) {
       set.add(instance.toEndpoint());
     }
-    return set;
+    return set.toArray(new GossipProtocol.Endpoint[set.size()]);
   }
 
-  public ArrayList<Integer> counters(int... values) {
-    ArrayList<Integer> c = new ArrayList<>(values.length);
-    for (int val : values) {
-      c.add(val);
-    }
-    return c;
+  public int[] counters(int... values) {
+    return values;
   }
 }

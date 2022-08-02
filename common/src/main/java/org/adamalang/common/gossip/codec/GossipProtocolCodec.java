@@ -252,7 +252,7 @@ public class GossipProtocolCodec {
 
   private static HashNotFoundReverseConversation readBody_35(ByteBuf buf, HashNotFoundReverseConversation o) {
     o.hash = Helper.readString(buf);
-    o.missing_endpoints = Helper.readArray(buf, (n) -> new Endpoint[n], () -> read_Endpoint(buf));
+    o.recent_endpoints = Helper.readArray(buf, (n) -> new Endpoint[n], () -> read_Endpoint(buf));
     o.recent_deletes = Helper.readStringArray(buf);
     return o;
   }
@@ -282,7 +282,7 @@ public class GossipProtocolCodec {
 
   private static HashFoundRequestForwardQuickGossip readBody_33(ByteBuf buf, HashFoundRequestForwardQuickGossip o) {
     o.counters = Helper.readIntArray(buf);
-    o.missing_endpoints = Helper.readArray(buf, (n) -> new Endpoint[n], () -> read_Endpoint(buf));
+    o.recent_endpoints = Helper.readArray(buf, (n) -> new Endpoint[n], () -> read_Endpoint(buf));
     o.recent_deletes = Helper.readStringArray(buf);
     return o;
   }
@@ -368,7 +368,7 @@ public class GossipProtocolCodec {
     }
     buf.writeIntLE(35);
     Helper.writeString(buf, o.hash);;
-    Helper.writeArray(buf, o.missing_endpoints, (item) -> write(buf, item));
+    Helper.writeArray(buf, o.recent_endpoints, (item) -> write(buf, item));
     Helper.writeStringArray(buf, o.recent_deletes);;
   }
 
@@ -388,7 +388,7 @@ public class GossipProtocolCodec {
     }
     buf.writeIntLE(33);
     Helper.writeIntArray(buf, o.counters);;
-    Helper.writeArray(buf, o.missing_endpoints, (item) -> write(buf, item));
+    Helper.writeArray(buf, o.recent_endpoints, (item) -> write(buf, item));
     Helper.writeStringArray(buf, o.recent_deletes);;
   }
 

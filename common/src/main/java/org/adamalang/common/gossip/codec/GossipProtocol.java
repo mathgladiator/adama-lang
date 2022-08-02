@@ -70,7 +70,7 @@ public class GossipProtocol {
     @FieldOrder(1)
     public int[] counters;
     @FieldOrder(2)
-    public Endpoint[] missing_endpoints;
+    public Endpoint[] recent_endpoints;
     @FieldOrder(3)
     public String[] recent_deletes;
   }
@@ -90,7 +90,7 @@ public class GossipProtocol {
     @FieldOrder(1)
     public String hash;
     @FieldOrder(2)
-    public Endpoint[] missing_endpoints;
+    public Endpoint[] recent_endpoints;
     @FieldOrder(3)
     public String[] recent_deletes;
   }
@@ -121,6 +121,8 @@ public class GossipProtocol {
   public static class ForwardSlowGossip {
     @FieldOrder(1)
     public Endpoint[] all_endpoints;
+    @FieldOrder(2)
+    public String[] recent_deletes;
   }
 
   // server responses to a slow gossip with a slow gossip
@@ -129,5 +131,7 @@ public class GossipProtocol {
   public static class ReverseSlowGossip {
     @FieldOrder(1)
     public Endpoint[] all_endpoints;
+    @FieldOrder(2)
+    public String[] recent_deletes;
   }
 }
