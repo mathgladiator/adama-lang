@@ -194,6 +194,7 @@ public class GossipProtocolCodec {
 
   private static ReverseSlowGossip readBody_39(ByteBuf buf, ReverseSlowGossip o) {
     o.all_endpoints = Helper.readArray(buf, (n) -> new Endpoint[n], () -> read_Endpoint(buf));
+    o.recent_deletes = Helper.readStringArray(buf);
     return o;
   }
 
@@ -208,6 +209,7 @@ public class GossipProtocolCodec {
 
   private static ForwardSlowGossip readBody_38(ByteBuf buf, ForwardSlowGossip o) {
     o.all_endpoints = Helper.readArray(buf, (n) -> new Endpoint[n], () -> read_Endpoint(buf));
+    o.recent_deletes = Helper.readStringArray(buf);
     return o;
   }
 
@@ -330,6 +332,7 @@ public class GossipProtocolCodec {
     }
     buf.writeIntLE(39);
     Helper.writeArray(buf, o.all_endpoints, (item) -> write(buf, item));
+    Helper.writeStringArray(buf, o.recent_deletes);;
   }
 
   public static void write(ByteBuf buf, ForwardSlowGossip o) {
@@ -339,6 +342,7 @@ public class GossipProtocolCodec {
     }
     buf.writeIntLE(38);
     Helper.writeArray(buf, o.all_endpoints, (item) -> write(buf, item));
+    Helper.writeStringArray(buf, o.recent_deletes);;
   }
 
   public static void write(ByteBuf buf, ReverseQuickGossip o) {
