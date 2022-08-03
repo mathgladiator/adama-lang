@@ -260,13 +260,15 @@ public class Connection implements AdamaStream {
     base.executor.execute(new NamedRunnable("lcsm-close") {
       @Override
       public void execute() throws Exception {
-        closed = true;
+        if (!closed) {
+          closed = true;
+          base.metrics.client_state_machines_alive.down();
+          events.disconnected();
+        }
         Remote remote = queue.nuke();
         if (remote != null) {
           remote.disconnect();
         }
-        events.disconnected();
-        base.metrics.client_state_machines_alive.down();
       }
     });
   }
