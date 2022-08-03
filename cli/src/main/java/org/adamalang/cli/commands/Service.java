@@ -28,16 +28,11 @@ import org.adamalang.extern.aws.SES;
 import org.adamalang.extern.prometheus.PrometheusDashboard;
 import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.frontend.FrontendConfig;
-import org.adamalang.gossip.Engine;
-import org.adamalang.common.gossip.EngineRole;
-import org.adamalang.gossip.GossipMetricsImpl;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.model.Deployments;
 import org.adamalang.mysql.data.Deployment;
 import org.adamalang.net.client.Client;
-import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
-import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
@@ -137,14 +132,14 @@ public class Service {
     }
   }
 
-
   public static void serviceBackend(Config config) throws Exception {
     CommonServiceInit init = new CommonServiceInit(config, Role.Adama, config.get_int("adama_port", 8001));
-    int gossipPort = config.get_int("gossip_backend_port", 8002);
     int coreThreads = config.get_int("service_thread_count", 8);
     String billingRootPath = config.get_string("billing_path", "billing");
+    /*
     Engine engine = new Engine(init.identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, init.monitoringPort, new GossipMetricsImpl(init.metricsFactory), EngineRole.Node);
     engine.start();
+     */
 
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     FirstPartyServices.install(init.database);
@@ -202,7 +197,7 @@ public class Service {
       }
     });
 
-    engine.newApp("adama", init.servicePort, (hb) -> {
+    init.engine.createLocalApplicationHeartbeat("adama", init.servicePort, init.monitoringPort, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
         hb.run();
         return true;
@@ -291,12 +286,27 @@ public class Service {
     String scanPath = config.get_string("scan_path", "web_root");
     File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
 
+    /*
     Engine engine = new Engine(init.identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, init.monitoringPort, new GossipMetricsImpl(init.metricsFactory), EngineRole.SuperNode);
     engine.start();
+     */
 
-    Client client = init.makeClient(engine);
+    init.engine.createLocalApplicationHeartbeat("overlord", webConfig.port, init.monitoringPort, (hb) -> {
+      init.system.schedule(new NamedRunnable("overlord-hb") {
+        @Override
+        public void execute() throws Exception {
+          hb.run();
+          if (init.alive.get()) {
+            init.system.schedule(this, 1000);
+          }
+        }
+      }, 100);
+    });
 
-    HttpHandler handler = Overlord.execute(client, engine, init.metricsFactory, targetsPath, init.database, scanPath);
+
+    Client client = init.makeClient();
+
+    HttpHandler handler = Overlord.execute(client, init.engine, init.metricsFactory, targetsPath, init.database, scanPath);
 
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
     final var runnable = new ServiceRunnable(webConfig, new WebMetrics(init.metricsFactory), serviceBase, () -> {});
@@ -320,11 +330,13 @@ public class Service {
     System.err.println("starting frontend");
     String masterKey = config.get_string("master-key", null);
     int gossipPort = config.get_int("gossip_frontend_port", 8004);
+    /*
     Engine engine = new Engine(init.identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, init.monitoringPort, new GossipMetricsImpl(init.metricsFactory), EngineRole.Node);
     engine.start();
+     */
     System.err.println("gossiping on:" + gossipPort);
     System.err.println("standing up http on:" + webConfig.port);
-    Client client = init.makeClient(engine);
+    Client client = init.makeClient();
 
     WebClientBase webBase = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
 
@@ -420,7 +432,8 @@ public class Service {
     // TODO: have some sense of health checking in the web package
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();
     CountDownLatch latchForHeartbeat = new CountDownLatch(1);
-    engine.newApp("web", webConfig.port, (hb) -> {
+
+    init.engine.createLocalApplicationHeartbeat("web", webConfig.port, init.monitoringPort, (hb) -> {
       heartbeat.set(hb);
       latchForHeartbeat.countDown();
     });

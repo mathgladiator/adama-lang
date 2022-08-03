@@ -57,12 +57,12 @@ public class EngineTests {
       this.size = size;
     }
 
-    private synchronized Runnable latchAt(int at) {
+    public synchronized Runnable latchAt(int at) {
       CountDownLatch latch = new CountDownLatch(at);
       latches.add(latch);
       return () -> {
         try {
-          Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+          Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
         } catch (Exception ex) {
           Assert.fail();
         }

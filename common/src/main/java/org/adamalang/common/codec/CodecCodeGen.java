@@ -26,6 +26,7 @@ public class CodecCodeGen {
     sb.append("package " + packageName + ";\n\n");
 
     sb.append("import io.netty.buffer.ByteBuf;\n");
+    sb.append("import io.netty.buffer.Unpooled;\n");
     sb.append("import org.adamalang.common.codec.Helper;\n");
     sb.append("import org.adamalang.common.net.ByteStream;\n");
     for (Class<?> clazz : classes) {
@@ -63,7 +64,7 @@ public class CodecCodeGen {
       sb.append("    }\n\n");
       sb.append("    @Override\n");
       sb.append("    public ByteBuf create(int size) {\n");
-      sb.append("      throw new UnsupportedOperationException();\n");
+      sb.append("      return Unpooled.buffer();\n");
       sb.append("    }\n\n");
       sb.append("    @Override\n");
       sb.append("    public void next(ByteBuf buf) {\n");

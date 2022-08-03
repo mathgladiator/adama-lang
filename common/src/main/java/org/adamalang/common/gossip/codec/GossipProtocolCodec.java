@@ -10,6 +10,7 @@
 package org.adamalang.common.gossip.codec;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.common.gossip.codec.GossipProtocol.ReverseSlowGossip;
@@ -39,7 +40,7 @@ public class GossipProtocolCodec {
 
     @Override
     public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
+      return Unpooled.buffer();
     }
 
     @Override
@@ -101,7 +102,7 @@ public class GossipProtocolCodec {
 
     @Override
     public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
+      return Unpooled.buffer();
     }
 
     @Override
@@ -157,7 +158,7 @@ public class GossipProtocolCodec {
 
     @Override
     public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
+      return Unpooled.buffer();
     }
 
     @Override

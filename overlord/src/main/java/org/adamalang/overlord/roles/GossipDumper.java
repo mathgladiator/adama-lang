@@ -11,7 +11,7 @@ package org.adamalang.overlord.roles;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.gossip.Engine;
+import org.adamalang.common.gossip.Engine;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 

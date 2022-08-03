@@ -9,16 +9,10 @@
  */
 package org.adamalang.overlord;
 
-import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.common.net.NetBase;
-import org.adamalang.common.net.NetMetrics;
-import org.adamalang.gossip.Engine;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.net.client.Client;
-import org.adamalang.net.client.ClientConfig;
-import org.adamalang.net.client.ClientMetrics;
-import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.roles.*;
@@ -39,10 +33,12 @@ public class Overlord {
     OverlordMetrics metrics = new OverlordMetrics(metricsFactory);
 
     // start producing the prometheus targets.json from the gossip engine
+    /*
     PrometheusTargetMaker.kickOff(metrics, engine, targetsDestination, handler);
 
     // make sure that we remove deployments from dead hosts
     DeploymentReconciliation.kickOff(metrics, engine, dataBase, handler);
+    */
 
     // we will be monitoring the heat on each host within this table
     HeatTable heatTable = new HeatTable(handler);

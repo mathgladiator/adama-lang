@@ -1,3 +1,12 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See https://www.adama-platform.com/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
+ */
 package org.adamalang.cli.commands.services;
 
 import org.adamalang.cli.Config;
@@ -10,7 +19,6 @@ import org.adamalang.extern.aws.AWSConfig;
 import org.adamalang.extern.aws.AWSMetrics;
 import org.adamalang.extern.aws.S3;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
-import org.adamalang.gossip.Engine;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
@@ -28,9 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.security.KeyPair;
 import java.security.PrivateKey;
-import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 /** Common service initialization */
 public class CommonServiceInit {
@@ -47,11 +53,12 @@ public class CommonServiceInit {
   public final DataBase database;
   public final NetBase netBase;
   public final Finder finder;
-  private final SimpleExecutor system;
+  public final SimpleExecutor system;
   public final S3 s3;
   public final AWSConfig awsConfig;
   public final AWSMetrics awsMetrics;
   public final String machine;
+  public final org.adamalang.common.gossip.Engine engine;
 
   public CommonServiceInit(Config config, Role role, int servicePort) throws Exception {
     MachineHeat.install();
@@ -86,7 +93,6 @@ public class CommonServiceInit {
       }
     }, 5000);
 
-
     this.awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
     this.awsMetrics = new AWSMetrics(metricsFactory);
     this.s3 = new S3(awsConfig, awsMetrics);
@@ -107,6 +113,7 @@ public class CommonServiceInit {
         }
       }
     }, 5000);
+    engine = netBase.startGossiping();
 
     System.out.println("[Setup]");
     System.out.println("         role:" + role.name);
@@ -128,7 +135,7 @@ public class CommonServiceInit {
     })));
   }
 
-  public Client makeClient(Engine engine) {
+  public Client makeClient() {
     ClientConfig clientConfig = new ClientConfig();
     ClientMetrics metrics = new ClientMetrics(metricsFactory);
     ClientRouter router = ClientRouter.FINDER(metrics, finder, region);
@@ -141,8 +148,7 @@ public class CommonServiceInit {
         targetsQuorum.deliverDatabase(Hosts.listHosts(database, region, "adama"));
       }
     }, 50);
-
-    engine.subscribe("adama", targetsQuorum::deliverDatabase);
+    this.engine.subscribe("adama", targetsQuorum::deliverGossip);
     return client;
   }
 

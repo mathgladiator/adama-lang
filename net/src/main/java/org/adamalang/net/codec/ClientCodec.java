@@ -10,6 +10,7 @@
 package org.adamalang.net.codec;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.codec.ClientMessage.WebOptions;
@@ -96,7 +97,7 @@ public class ClientCodec {
 
     @Override
     public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
+      return Unpooled.buffer();
     }
 
     @Override
@@ -292,7 +293,7 @@ public class ClientCodec {
 
     @Override
     public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
+      return Unpooled.buffer();
     }
 
     @Override
@@ -327,7 +328,7 @@ public class ClientCodec {
 
     @Override
     public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
+      return Unpooled.buffer();
     }
 
     @Override

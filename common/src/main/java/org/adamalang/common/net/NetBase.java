@@ -48,7 +48,7 @@ public class NetBase {
   private final CountDownLatch killLatch;
   private final SslContext sslContext;
   private final ArrayList<CountDownLatch> blockers;
-  private final Engine gossipEngine;
+  private final Engine engine;
 
   public NetBase(NetMetrics metrics, MachineIdentity identity, int bossThreads, int workerThreads) throws Exception {
     this.metrics = metrics;
@@ -59,7 +59,12 @@ public class NetBase {
     this.alive = new AtomicBoolean(true);
     this.killLatch = new CountDownLatch(1);
     this.blockers = new ArrayList<>();
-    this.gossipEngine = new Engine(identity.ip, metrics.gossip, TimeSource.REAL_TIME);
+    this.engine = new Engine(identity.ip, metrics.gossip, TimeSource.REAL_TIME);
+  }
+
+  public Engine startGossiping() {
+    engine.kickoff(alive);
+    return engine;
   }
 
   public boolean alive() {
@@ -88,7 +93,7 @@ public class NetBase {
           ch.pipeline().addLast(sslContext.newHandler(ch.alloc(), peerHost, peerPort));
           ch.pipeline().addLast(new LengthFieldPrepender(4));
           ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
-          ch.pipeline().addLast(new ChannelClient(peerHost, peerPort, lifecycle, gossipEngine));
+          ch.pipeline().addLast(new ChannelClient(peerHost, peerPort, lifecycle, engine));
         }
       });
       bootstrap.connect().addListener(new ChannelFutureListener() {
@@ -117,7 +122,7 @@ public class NetBase {
         ch.pipeline().addLast(sslContext.newHandler(ch.alloc()));
         ch.pipeline().addLast(new LengthFieldPrepender(4));
         ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(65535, 0, 4, 0, 4));
-        ch.pipeline().addLast(new ChannelServer(ch, set, handler, gossipEngine));
+        ch.pipeline().addLast(new ChannelServer(ch, set, handler, engine));
       }
     });
     ChannelFuture future = bootstrap.bind();

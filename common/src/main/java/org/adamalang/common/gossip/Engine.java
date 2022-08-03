@@ -10,7 +10,6 @@
 package org.adamalang.common.gossip;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import org.adamalang.common.*;
 import org.adamalang.common.gossip.codec.GossipProtocol;
 import org.adamalang.common.gossip.codec.GossipProtocolCodec;
@@ -18,6 +17,7 @@ import org.adamalang.common.net.ByteStream;
 import org.adamalang.common.net.ChannelClient;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 /** represents both the server and the client conjoined together in a gossipy fate */
@@ -29,6 +29,7 @@ public class Engine {
   private final HashMap<String, ArrayList<Consumer<Collection<String>>>> subscribersByApp;
   private final HashMap<Integer, ChannelClient> clients;
   private int clientId;
+  private ChannelClient[] flatClients;
 
   public Engine(String ip, GossipMetrics metrics, TimeSource time) {
     this.ip = ip;
@@ -38,6 +39,31 @@ public class Engine {
     this.subscribersByApp = new HashMap<>();
     this.clients = new HashMap<>();
     this.clientId = 1;
+    this.flatClients = new ChannelClient[0];
+  }
+
+  public void kickoff(AtomicBoolean alive) {
+    Random rng = new Random();
+    executor.schedule(new NamedRunnable("gossip") {
+      @Override
+      public void execute() throws Exception {
+        metrics.gossip_wake.run();
+        metrics.gossip_active_clients.set(flatClients.length);
+        if (flatClients.length > 0) {
+          ChannelClient next = flatClients[rng.nextInt(flatClients.length)];
+          next.gossip();
+        } else {
+          metrics.gossip_skip.run();
+        }
+        if (alive.get()) {
+          executor.schedule(this, (int) (250 + 250 * Math.random() + 500 * Math.random()));
+        }
+      }
+    }, 500);
+  }
+
+  public void shutdown() {
+    executor.shutdown();
   }
 
   public void createLocalApplicationHeartbeat(String role, int port, int monitoringPort, Consumer<Runnable> callback) {
@@ -121,15 +147,26 @@ public class Engine {
     });
   }
 
+  private void flatten() {
+    flatClients = new ChannelClient[clients.size()];
+    int at = 0;
+    for (ChannelClient client : clients.values()) {
+      flatClients[at] = client;
+      at++;
+    }
+  }
+
   public Runnable registerClient(ChannelClient client) {
     final int id;
     synchronized (clients) {
       id = clientId++;
       clients.put(id, client);
+      flatten();
     }
     return () -> {
       synchronized (clients) {
         clients.remove(id);
+        flatten();
       }
     };
   }
@@ -143,8 +180,9 @@ public class Engine {
       executor.execute(new NamedRunnable("gossip-start") {
         @Override
         public void execute() throws Exception {
+          metrics.gossip_send_begin.run();
           current = chain.current();
-          ByteBuf buf = Unpooled.buffer();
+          ByteBuf buf = remote.create(1024);
           GossipProtocol.BeginGossip begin = new GossipProtocol.BeginGossip();
           begin.hash = current.hash();
           begin.recent_deletes = chain.deletes();
@@ -160,6 +198,7 @@ public class Engine {
       executor.execute(new NamedRunnable("gossip-reverse-slow") {
         @Override
         public void execute() throws Exception {
+          metrics.gossip_read_reverse_slow_gossip.run();
           boolean changed = chain.ingest(payload.all_endpoints, payload.recent_deletes);
           remote.completed();
           if (changed) {
@@ -174,6 +213,7 @@ public class Engine {
       executor.execute(new NamedRunnable("gossip-reverse-quick") {
         @Override
         public void execute() throws Exception {
+          metrics.gossip_read_reverse_quick_gossip.run();
           current.ingest(payload.counters, chain.now());
           chain.ingest(payload.missing_endpoints, payload.recent_deletes);
           remote.completed();
@@ -189,16 +229,19 @@ public class Engine {
       executor.execute(new NamedRunnable("gossip-hash-not-found-do-reverse") {
         @Override
         public void execute() throws Exception {
+          metrics.gossip_read_hash_not_found.run();
           boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
           current = chain.find(payload.hash);
-          ByteBuf buf = Unpooled.buffer();
+          ByteBuf buf = remote.create(1024);
           if (current != null) {
+            metrics.gossip_send_reverse_hash_found.run();
             GossipProtocol.ReverseHashFound found = new GossipProtocol.ReverseHashFound();
             found.missing_endpoints = chain.missing(current);
             found.recent_deletes = chain.deletes();
             found.counters = current.counters();
             GossipProtocolCodec.write(buf, found);
           } else {
+            metrics.gossip_send_forward_slow_gossip.run();
             GossipProtocol.ForwardSlowGossip slow = new GossipProtocol.ForwardSlowGossip();
             slow.all_endpoints = chain.all();
             slow.recent_deletes = chain.deletes();
@@ -217,13 +260,14 @@ public class Engine {
       executor.execute(new NamedRunnable("gossip-hash-found-forward") {
         @Override
         public void execute() throws Exception {
+          metrics.gossip_read_hash_found_forward_quick_gossip.run();
           current.ingest(payload.counters, chain.now());
           boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
           GossipProtocol.ForwardQuickGossip quick = new GossipProtocol.ForwardQuickGossip();
           quick.counters = current.counters();
           quick.recent_endpoints = chain.recent();
           quick.recent_deletes = chain.deletes();
-          ByteBuf buf = Unpooled.buffer();
+          ByteBuf buf = remote.create(1024);
           GossipProtocolCodec.write(buf, quick);
           remote.next(buf);
           remote.completed();
@@ -257,23 +301,29 @@ public class Engine {
   }
 
   public ByteStream server(ByteStream upstream) {
+    metrics.gossip_inflight.up();
     return new GossipProtocolCodec.StreamChatterFromClient() {
       @Override
-      public void completed() { }
+      public void completed() {
+        metrics.gossip_inflight.down();
+      }
 
       @Override
-      public void error(int errorCode) { }
+      public void error(int errorCode) {
+        completed();
+      }
 
       @Override
       public void handle(GossipProtocol.ForwardSlowGossip payload) {
         executor.execute(new NamedRunnable("gossip-forward-slow") {
           @Override
           public void execute() throws Exception {
+            metrics.gossip_read_forward_slow_gossip.run();
             boolean changed = chain.ingest(payload.all_endpoints, payload.recent_deletes);
             GossipProtocol.ReverseSlowGossip slow = new GossipProtocol.ReverseSlowGossip();
             slow.all_endpoints = chain.all();
             slow.recent_deletes = chain.deletes();
-            ByteBuf buf = Unpooled.buffer();
+            ByteBuf buf = upstream.create(1024);
             GossipProtocolCodec.write(buf, slow);
             upstream.next(buf);
             upstream.completed();
@@ -289,13 +339,14 @@ public class Engine {
         executor.execute(new NamedRunnable("gossip-reverse-hash-found") {
           @Override
           public void execute() throws Exception {
+            metrics.gossip_read_reverse_hash_found.run();
             set.ingest(payload.counters, chain.now());
             boolean changed = chain.ingest(payload.missing_endpoints, payload.recent_deletes);
             GossipProtocol.ReverseQuickGossip quick = new GossipProtocol.ReverseQuickGossip();
             quick.counters = set.counters();
             quick.missing_endpoints = chain.missing(set);
             quick.recent_deletes = chain.deletes();
-            ByteBuf buf = Unpooled.buffer();
+            ByteBuf buf = upstream.create(1024);
             GossipProtocolCodec.write(buf, quick);
             upstream.next(buf);
             upstream.completed();
@@ -311,6 +362,7 @@ public class Engine {
         executor.execute(new NamedRunnable("gossip-forward-quick") {
           @Override
           public void execute() throws Exception {
+            metrics.gossip_read_forward_quick_gossip.run();
             set.ingest(payload.counters, chain.now());
             boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
             upstream.completed();
@@ -327,16 +379,19 @@ public class Engine {
         executor.execute(new NamedRunnable("gossip-begin") {
           @Override
           public void execute() throws Exception {
+            metrics.gossip_read_begin_gossip.run();
             boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
             set = chain.find(payload.hash);
-            ByteBuf buf = Unpooled.buffer();
+            ByteBuf buf = upstream.create(1024);
             if (set != null) {
+              metrics.gossip_read_begin_gossip.run();
               GossipProtocol.HashFoundRequestForwardQuickGossip found = new GossipProtocol.HashFoundRequestForwardQuickGossip();
               found.counters = set.counters();
               found.recent_deletes = chain.deletes();
               found.recent_endpoints = chain.missing(set);
               GossipProtocolCodec.write(buf, found);
             } else {
+              metrics.gossip_send_hash_not_found.run();
               set = chain.current();
               GossipProtocol.HashNotFoundReverseConversation notfound = new GossipProtocol.HashNotFoundReverseConversation();
               notfound.hash = set.hash;
