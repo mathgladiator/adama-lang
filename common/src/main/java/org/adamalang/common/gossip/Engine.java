@@ -47,13 +47,13 @@ public class Engine {
     executor.schedule(new NamedRunnable("gossip") {
       @Override
       public void execute() throws Exception {
+        chain.scan();
+        chain.gc();
         metrics.gossip_wake.run();
         metrics.gossip_active_clients.set(flatClients.length);
         if (flatClients.length > 0) {
           ChannelClient next = flatClients[rng.nextInt(flatClients.length)];
           next.gossip();
-        } else {
-          metrics.gossip_skip.run();
         }
         if (alive.get()) {
           executor.schedule(this, (int) (250 + 250 * Math.random() + 500 * Math.random()));
@@ -133,16 +133,6 @@ public class Engine {
         }
         sbHtml.append("</table></body></html>");
         html.accept(sbHtml.toString());
-      }
-    });
-  }
-
-  public void tick() {
-    executor.execute(new NamedRunnable("round") {
-      @Override
-      public void execute() throws Exception {
-        chain.scan();
-        chain.gc();
       }
     });
   }
@@ -384,7 +374,7 @@ public class Engine {
             set = chain.find(payload.hash);
             ByteBuf buf = upstream.create(1024);
             if (set != null) {
-              metrics.gossip_read_begin_gossip.run();
+              metrics.gossip_send_hash_found.run();
               GossipProtocol.HashFoundRequestForwardQuickGossip found = new GossipProtocol.HashFoundRequestForwardQuickGossip();
               found.counters = set.counters();
               found.recent_deletes = chain.deletes();

@@ -136,10 +136,6 @@ public class Service {
     CommonServiceInit init = new CommonServiceInit(config, Role.Adama, config.get_int("adama_port", 8001));
     int coreThreads = config.get_int("service_thread_count", 8);
     String billingRootPath = config.get_string("billing_path", "billing");
-    /*
-    Engine engine = new Engine(init.identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, init.monitoringPort, new GossipMetricsImpl(init.metricsFactory), EngineRole.Node);
-    engine.start();
-     */
 
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     FirstPartyServices.install(init.database);
@@ -281,16 +277,8 @@ public class Service {
     co.intOf("http_port", 8081);
     WebConfig webConfig = new WebConfig(co);
     CommonServiceInit init = new CommonServiceInit(config, Role.Overlord, webConfig.port);
-
-    int gossipPort = config.get_int("gossip_overlord_port", 8010);
     String scanPath = config.get_string("scan_path", "web_root");
     File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
-
-    /*
-    Engine engine = new Engine(init.identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, init.monitoringPort, new GossipMetricsImpl(init.metricsFactory), EngineRole.SuperNode);
-    engine.start();
-     */
-
     init.engine.createLocalApplicationHeartbeat("overlord", webConfig.port, init.monitoringPort, (hb) -> {
       init.system.schedule(new NamedRunnable("overlord-hb") {
         @Override
@@ -302,12 +290,8 @@ public class Service {
         }
       }, 100);
     });
-
-
     Client client = init.makeClient();
-
     HttpHandler handler = Overlord.execute(client, init.engine, init.metricsFactory, targetsPath, init.database, scanPath);
-
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
     final var runnable = new ServiceRunnable(webConfig, new WebMetrics(init.metricsFactory), serviceBase, () -> {});
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
@@ -317,7 +301,6 @@ public class Service {
         runnable.shutdown();
       }
     }));
-
     System.err.println("running overlord web");
     runnable.run();
     System.err.println("overlord finished");
@@ -326,18 +309,12 @@ public class Service {
   public static void serviceFrontend(Config config) throws Exception {
     WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
     CommonServiceInit init = new CommonServiceInit(config, Role.Web, webConfig.port);
-
     System.err.println("starting frontend");
     String masterKey = config.get_string("master-key", null);
     int gossipPort = config.get_int("gossip_frontend_port", 8004);
-    /*
-    Engine engine = new Engine(init.identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, init.monitoringPort, new GossipMetricsImpl(init.metricsFactory), EngineRole.Node);
-    engine.start();
-     */
     System.err.println("gossiping on:" + gossipPort);
     System.err.println("standing up http on:" + webConfig.port);
     Client client = init.makeClient();
-
     WebClientBase webBase = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
 
     // TODO: bring this out, and this whole file is getting CRAZY

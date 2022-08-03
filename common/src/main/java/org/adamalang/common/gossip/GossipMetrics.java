@@ -11,13 +11,10 @@ package org.adamalang.common.gossip;
 
 import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GossipMetrics {
   public final Inflight gossip_active_clients;
   public final Runnable gossip_wake;
-  public final Runnable gossip_skip;
   public final Runnable gossip_send_begin;
   public final Runnable gossip_read_reverse_slow_gossip;
   public final Runnable gossip_read_reverse_quick_gossip;
@@ -36,7 +33,6 @@ public class GossipMetrics {
   public GossipMetrics(MetricsFactory factory) {
     gossip_active_clients = factory.inflight("gossip_active_clients");
     gossip_wake = factory.counter("gossip_wake");
-    gossip_skip = factory.counter("gossip_skip");
     gossip_send_begin = factory.counter("gossip_send_begin");
     gossip_read_reverse_slow_gossip = factory.counter("gossip_read_reverse_slow_gossip");
     gossip_read_reverse_quick_gossip = factory.counter("gossip_read_reverse_quick_gossip");

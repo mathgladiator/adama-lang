@@ -188,7 +188,6 @@ public class EngineTests {
       }
       for (int k = 0; k < e.length; k++) {
         a[k].run();
-        e[k].tick();
       }
       time.currentTime += 100;
     }

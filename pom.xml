@@ -25,7 +25,6 @@
         <module>cli</module>
         <module>saas</module>
         <module>errors</module>
-        <module>gossip</module>
         <module>common</module>
         <module>overlord</module>
         <module>canary</module>
