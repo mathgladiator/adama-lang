@@ -19,6 +19,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
+import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.extern.AssetUploader;
 import org.adamalang.extern.Email;
@@ -180,7 +181,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
             TimeSource.REAL_TIME,
             1);
 
-    this.netBase = new NetBase(identity, 1, 2);
+    this.netBase = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity, 1, 2);
     this.clientExecutor = SimpleExecutor.create("disk");
     ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, (space) -> {
       try {

@@ -10,30 +10,34 @@
 package org.adamalang.common.gossip;
 
 import org.adamalang.common.metrics.Inflight;
+import org.adamalang.common.metrics.MetricsFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/** how to learn of events happening during the mysterious gossip protocol */
-public interface GossipMetrics {
+public class GossipMetrics {
+  private static final Logger LOGGER = LoggerFactory.getLogger(GossipMetrics.class);
 
-  // a round of gossip is being considered
-  void wake();
+  public final Runnable gossip_wake;
+  public final Runnable gossip_sad;
+  public final Runnable gossip_slow_c;
+  public final Runnable gossip_optimistic;
+  public final Runnable gossip_turn;
+  public final Runnable start;
+  public final Runnable foundReverse;
+  public final Runnable quickGossip;
+  public final Runnable serverSlowGossip;
+  public final Inflight inflight;
 
-  void bump_sad_return();
-
-  void bump_client_slow_gossip();
-
-  void bump_optimistic_return();
-
-  void bump_turn_tables();
-
-  void bump_start();
-
-  void bump_found_reverse();
-
-  void bump_quick_gossip();
-
-  void bump_server_slow_gossip();
-
-  void log_error(Throwable cause);
-
-  Inflight gossips_inflight();
+  public GossipMetrics(MetricsFactory factory) {
+    gossip_wake = factory.counter("gossip_wake");
+    gossip_sad = factory.counter("gossip_sad");
+    gossip_slow_c = factory.counter("gossip_slow_c");
+    gossip_optimistic = factory.counter("gossip_optimistic");
+    gossip_turn = factory.counter("gossip_turn");
+    start = factory.counter("gossip_start");
+    foundReverse = factory.counter("gossip_found_rev");
+    quickGossip = factory.counter("gossip_quick");
+    serverSlowGossip = factory.counter("gossip_slow_s");
+    inflight = factory.inflight("gossip_inflight");
+  }
 }

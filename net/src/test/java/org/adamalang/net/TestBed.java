@@ -14,6 +14,7 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
+import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
@@ -64,7 +65,7 @@ public class TestBed implements AutoCloseable {
 
   public TestBed(int port, String code) throws Exception {
     DeploymentFactory.compile("<direct>", "X", code, new HashMap<>(), null, Deliverer.FAILURE);
-    this.base = new NetBase(MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
+    this.base = new NetBase(new NetMetrics(new NoOpMetricsFactory()), MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
     this.port = port;
     clientExecutor = SimpleExecutor.create("client-executor");
     deploymentScans = new AtomicInteger(0);

@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 public class NetBase {
   private static final Logger LOGGER = LoggerFactory.getLogger(NetBase.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(NetBase.class);
+  public final NetMetrics metrics;
   public final NioEventLoopGroup bossGroup;
   public final NioEventLoopGroup workerGroup;
   public final MachineIdentity identity;
@@ -52,7 +53,8 @@ public class NetBase {
   private final ArrayList<CountDownLatch> blockers;
   private final Engine gossipEngine;
 
-  public NetBase(MachineIdentity identity, int bossThreads, int workerThreads) throws Exception {
+  public NetBase(NetMetrics metrics, MachineIdentity identity, int bossThreads, int workerThreads) throws Exception {
+    this.metrics = metrics;
     this.identity = identity;
     this.sslContext = SslContextBuilder.forClient().keyManager(identity.getCert(), identity.getKey()).trustManager(identity.getTrust()).build();
     this.bossGroup = new NioEventLoopGroup(bossThreads);
@@ -60,7 +62,7 @@ public class NetBase {
     this.alive = new AtomicBoolean(true);
     this.killLatch = new CountDownLatch(1);
     this.blockers = new ArrayList<>();
-    this.gossipEngine = new Engine();
+    this.gossipEngine = new Engine(identity.ip, metrics.gossip);
   }
 
   public boolean alive() {
@@ -85,6 +87,7 @@ public class NetBase {
       bootstrap.handler(new ChannelInitializer<SocketChannel>() {
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
+          metrics.net_create_client_handler.run();
           ch.pipeline().addLast(sslContext.newHandler(ch.alloc(), peerHost, peerPort));
           ch.pipeline().addLast(new LengthFieldPrepender(4));
           ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
@@ -113,6 +116,7 @@ public class NetBase {
     SocketChannelSet set = new SocketChannelSet();
     bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
       protected void initChannel(SocketChannel ch) throws Exception {
+        metrics.net_create_server_handler.run();
         ch.pipeline().addLast(sslContext.newHandler(ch.alloc()));
         ch.pipeline().addLast(new LengthFieldPrepender(4));
         ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(65535, 0, 4, 0, 4));

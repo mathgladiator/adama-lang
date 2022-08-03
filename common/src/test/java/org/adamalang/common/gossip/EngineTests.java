@@ -9,5 +9,17 @@
  */
 package org.adamalang.common.gossip;
 
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.common.net.ByteStream;
+import org.junit.Test;
+
 public class EngineTests {
+  @Test
+  public void nothing() {
+    Engine a = new Engine("127.0.0.1", new GossipMetrics(new NoOpMetricsFactory()));
+    Engine b = new Engine("127.0.0.2", new GossipMetrics(new NoOpMetricsFactory()));
+    Engine.Exchange ex = a.client();
+    ByteStream up = b.server(ex);
+    ex.start(up);
+  }
 }

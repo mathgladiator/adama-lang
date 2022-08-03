@@ -10,24 +10,44 @@
 package org.adamalang.common.gossip;
 
 import io.netty.buffer.ByteBuf;
-import org.adamalang.common.NamedRunnable;
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
 import org.adamalang.common.gossip.codec.GossipProtocol;
 import org.adamalang.common.gossip.codec.GossipProtocolCodec;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.common.net.ChannelClient;
-import org.adamalang.common.net.Remote;
 
 public class Engine {
+  private final String ip;
+  private final GossipMetrics metrics;
   private final SimpleExecutor executor;
   private final InstanceSetChain chain;
-  private final GossipMetrics metrics;
 
-  public Engine() {
+  public Engine(String ip, GossipMetrics metrics) {
+    this.ip = ip;
+    this.metrics = metrics;
     this.executor = SimpleExecutor.create("gossip");
     this.chain = new InstanceSetChain(TimeSource.REAL_TIME);
-    this.metrics = null;
+  }
+
+  public Runnable createLocalApplicationHeartbeat(String role, int port, int monitoringPort) {
+    GossipProtocol.Endpoint endpoint = new GossipProtocol.Endpoint();
+    endpoint.id = ProtectedUUID.generate();
+    endpoint.ip = ip;
+    endpoint.port = port;
+    endpoint.monitoringPort = monitoringPort;
+    endpoint.counter = 0;
+    endpoint.created = System.currentTimeMillis();
+    GossipProtocol.Endpoint[] local = new GossipProtocol.Endpoint[] { endpoint };
+    String[] deletes = new String[] {};
+    return () -> {
+      executor.execute(new NamedRunnable("heartbeat-local-app") {
+        @Override
+        public void execute() throws Exception {
+          endpoint.counter++;
+          chain.ingest(local, deletes);
+        }
+      });
+    };
   }
 
   public void registerClient(ChannelClient client) {
@@ -38,9 +58,9 @@ public class Engine {
 
   public class Exchange extends GossipProtocolCodec.StreamChatterFromServer {
     private InstanceSet current;
-    private Remote remote;
+    private ByteStream remote;
 
-    public void start(Remote remote) {
+    public void start(ByteStream remote) {
       this.remote = remote;
       executor.execute(new NamedRunnable("gossip-start") {
         @Override

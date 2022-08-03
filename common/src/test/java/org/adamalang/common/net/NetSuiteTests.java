@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -35,7 +36,7 @@ public class NetSuiteTests {
 
   @Test
   public void happy() throws Exception {
-    NetBase base = new NetBase(identity(), 2, 4);
+    NetBase base = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity(), 2, 4);
     try {
       ServerHandle handle = base.serve(25001, new Handler() {
         @Override
@@ -174,7 +175,7 @@ public class NetSuiteTests {
 
   @Test
   public void sad_remote_error() throws Exception {
-    NetBase base = new NetBase(identity(), 2, 4);
+    NetBase base = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity(), 2, 4);
     try {
       ServerHandle handle = base.serve(25002, upstream -> new ByteStream() {
         @Override

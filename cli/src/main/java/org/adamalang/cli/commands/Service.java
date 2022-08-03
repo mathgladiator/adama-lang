@@ -19,6 +19,7 @@ import org.adamalang.cli.Util;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.net.NetBase;
+import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
@@ -320,7 +321,7 @@ public class Service {
 
     // prime the host with spaces
     scanForDeployments.accept("*");
-    NetBase netBase = new NetBase(identity, 1, 2);
+    NetBase netBase = new NetBase(new NetMetrics(prometheusMetricsFactory), identity, 1, 2);
     ServerNexus nexus = new ServerNexus(netBase, identity, service, new ServerMetrics(prometheusMetricsFactory), deploymentFactoryBase, scanForDeployments, meteringPubSub, billingBatchMaker, port, 4);
     ServerHandle handle = netBase.serve(port, (upstream) -> new Handler(nexus, upstream));
     Thread serverThread = new Thread(() -> handle.waitForEnd());
@@ -412,7 +413,7 @@ public class Service {
     System.err.println("gossiping on:" + gossipPort);
     WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
     System.err.println("standing up http on:" + webConfig.port);
-    NetBase netBase = new NetBase(identity, 1, 2);
+    NetBase netBase = new NetBase(new NetMetrics(prometheusMetricsFactory), identity, 1, 2);
     ClientConfig clientConfig = new ClientConfig();
     ClientMetrics metrics = new ClientMetrics(prometheusMetricsFactory);
     AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));

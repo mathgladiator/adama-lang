@@ -12,7 +12,7 @@ package org.adamalang.gossip;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.junit.Test;
 
-public class GossipMetricsImplTests {
+public class GossipMetricsTests {
   @Test
   public void coverage() {
     GossipMetricsImpl impl = new GossipMetricsImpl(new NoOpMetricsFactory());

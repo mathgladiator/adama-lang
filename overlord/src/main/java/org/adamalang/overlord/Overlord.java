@@ -15,6 +15,7 @@ import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
+import org.adamalang.common.net.NetMetrics;
 import org.adamalang.gossip.Engine;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.net.client.Client;
@@ -52,7 +53,7 @@ public class Overlord {
     HeatTable heatTable = new HeatTable(handler);
 
     // setup the foundation
-    NetBase netBase = new NetBase(identity, 1, 2);
+    NetBase netBase = new NetBase(new NetMetrics(metricsFactory), identity, 1, 2);
 
     // build a full mesh from overlord to all clients
     String adamaRole = "adama";

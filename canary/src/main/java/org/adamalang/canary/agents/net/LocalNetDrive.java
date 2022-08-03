@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
+import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
@@ -47,7 +48,7 @@ public class LocalNetDrive {
     };
     SimpleExecutor executor = SimpleExecutor.create("billing");
     MachineIdentity identity = MachineIdentity.fromFile(config.identityFile);
-    NetBase netBase = new NetBase(identity, 1, 4);
+    NetBase netBase = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity, 1, 4);
     ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     File billingRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "Billing-" + System.currentTimeMillis());
     billingRoot.mkdir();
