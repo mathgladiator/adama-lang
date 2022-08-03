@@ -26,7 +26,7 @@ import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.Key;
 
 /** Assumes a fixed routing decision and heads until first failure */
-public class LinearConnectionStateMachine implements AdamaStream {
+public class Connection implements AdamaStream {
   // these can be put under a base
   private final ConnectionBase base;
   // these are critical to the request (i.e they are the request)
@@ -46,7 +46,7 @@ public class LinearConnectionStateMachine implements AdamaStream {
   private int waitingInError;
   private boolean connectedOnce;
 
-  public LinearConnectionStateMachine(ConnectionBase base, String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, int timeoutMilliseconds, SimpleEvents events) {
+  public Connection(ConnectionBase base, String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, int timeoutMilliseconds, SimpleEvents events) {
     this.base = base;
     this.ip = ip;
     this.origin = origin;
@@ -62,12 +62,22 @@ public class LinearConnectionStateMachine implements AdamaStream {
     this.closed = false;
     this.waitingInError = 0;
     this.connectedOnce = false;
+    base.metrics.client_state_machines_alive.up();
+  }
+
+  private void signalError(int error) {
+    if (!closed) {
+      base.metrics.client_state_machines_alive.down();
+      closed = true;
+    }
+    events.error(error);
   }
 
   private void handleError(int error) {
     if (ErrorTable.INSTANCE.shouldRetry(error)) {
       if (waitingInError > timeoutMilliseconds) {
-        events.error(ErrorCodes.NET_LCSM_TIMEOUT);
+        base.metrics.lcsm_timeout.run();
+        signalError(ErrorCodes.NET_LCSM_TIMEOUT);
         return;
       }
       backoff = Math.min((int) (backoff + Math.random() * backoff + 1), 2000);
@@ -81,7 +91,7 @@ public class LinearConnectionStateMachine implements AdamaStream {
         }
       }, backoff);
     } else {
-      events.error(error);
+      signalError(error);
     }
   }
 
@@ -256,6 +266,7 @@ public class LinearConnectionStateMachine implements AdamaStream {
           remote.disconnect();
         }
         events.disconnected();
+        base.metrics.client_state_machines_alive.down();
       }
     });
   }

@@ -17,7 +17,7 @@ import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.routing.ClientRouter;
-import org.adamalang.net.client.sm.LinearConnectionStateMachine;
+import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.mocks.MockMeteringFlow;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -109,7 +109,7 @@ public class ClientTests {
         CountDownLatch latchGotConnected = new CountDownLatch(1);
         CountDownLatch latchGotData = new CountDownLatch(1);
         CountDownLatch latchGotDisconnect = new CountDownLatch(1);
-        LinearConnectionStateMachine connection = client.connect("127.0.0.1", "origin", "me", "dev", "space", "key1", "{}", null, new SimpleEvents() {
+        Connection connection = client.connect("127.0.0.1", "origin", "me", "dev", "space", "key1", "{}", null, new SimpleEvents() {
           @Override
           public void connected() {
             latchGotConnected.countDown();

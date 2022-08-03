@@ -14,7 +14,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.contracts.SimpleEvents;
-import org.adamalang.net.client.sm.LinearConnectionStateMachine;
+import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 
@@ -35,7 +35,7 @@ public class LocalNetAgent implements SimpleEvents {
   private final Random rng;
   private final AtomicBoolean firstData = new AtomicBoolean(true);
   private final AtomicBoolean dedupe;
-  private LinearConnectionStateMachine connection;
+  private Connection connection;
 
   public LocalNetAgent(Client client, LocalNetCanaryConfig config, int agentId, ScheduledExecutorService executor) {
     this.client = client;

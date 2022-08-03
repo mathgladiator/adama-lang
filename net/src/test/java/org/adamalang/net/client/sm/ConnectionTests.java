@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-public class LinearConnectionStateMachineTests {
+public class ConnectionTests {
 
   @Test
   public void happy() throws Exception {
@@ -41,7 +41,7 @@ public class LinearConnectionStateMachineTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        LinearConnectionStateMachine connection = new LinearConnectionStateMachine(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, 1000, events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, 1000, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 2; k++) {
           connection.update("{\"k\":" + k + "}");
@@ -104,7 +104,7 @@ public class LinearConnectionStateMachineTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        LinearConnectionStateMachine connection = new LinearConnectionStateMachine(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, 1000, events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, 1000, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 20; k++) {
           connection.update("{\"k\":" + k + "}");

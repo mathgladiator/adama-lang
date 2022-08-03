@@ -18,7 +18,7 @@ import org.adamalang.net.client.proxy.ProxyDataService;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.net.client.sm.ConnectionBase;
-import org.adamalang.net.client.sm.LinearConnectionStateMachine;
+import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
@@ -312,9 +312,9 @@ public class Client {
   }
 
   /** Connect to a document with a simplified state machine */
-  public LinearConnectionStateMachine connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
+  public Connection connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
     ConnectionBase base = new ConnectionBase(config, metrics, router.routerForDocuments, clientFinder, executors[rng.nextInt(executors.length)]);
-    LinearConnectionStateMachine connection = new LinearConnectionStateMachine(base, ip, origin, agent, authority, space, key, viewerState, assetKey, 2500, events);
+    Connection connection = new Connection(base, ip, origin, agent, authority, space, key, viewerState, assetKey, 2500, events);
     connection.open();
     return connection;
   }

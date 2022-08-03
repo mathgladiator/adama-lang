@@ -15,7 +15,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.contracts.SimpleEvents;
-import org.adamalang.net.client.sm.LinearConnectionStateMachine;
+import org.adamalang.net.client.sm.Connection;
 import org.adamalang.overlord.OverlordMetrics;
 
 public class LiveCanaryMonitor {
@@ -34,7 +34,7 @@ public class LiveCanaryMonitor {
     private State state;
     private String key;
     private String prior;
-    private LinearConnectionStateMachine connection;
+    private Connection connection;
     private long started;
 
     private class Handler implements SimpleEvents {

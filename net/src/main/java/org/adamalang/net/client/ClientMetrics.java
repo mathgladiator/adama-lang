@@ -14,13 +14,6 @@ import org.adamalang.common.metrics.*;
 public class ClientMetrics {
   public final Inflight client_connection_alive;
   public final Inflight client_state_machines_alive;
-  public final Runnable client_too_many_failures_finding_client;
-  public final Runnable client_too_many_failures_disconnected_by_peer;
-  public final ItemActionMonitor client_connection_send;
-  public final ItemActionMonitor client_connection_update;
-  public final ItemActionMonitor client_connection_attach;
-  public final ItemActionMonitor client_connection_can_attach;
-  public final StreamMonitor client_open_document;
 
   public final ItemActionMonitor client_ping;
   public final ItemActionMonitor client_create;
@@ -59,6 +52,7 @@ public class ClientMetrics {
   public final ItemActionMonitor lcsm_connection_send;
   public final ItemActionMonitor lcsm_connection_can_attach;
   public final ItemActionMonitor lcsm_connection_attach;
+  public final Runnable lcsm_timeout;
 
   public ClientMetrics(MetricsFactory factory) {
     client_connection_alive = factory.inflight("client_connection_alive");
@@ -66,14 +60,7 @@ public class ClientMetrics {
     client_notify_deploy_success = factory.counter("client_notify_deploy_success");
     client_notify_deploy_failure_do = factory.counter("client_notify_deploy_failure_do");
     client_notify_deploy_failure_find = factory.counter("client_notify_deploy_failure_find");
-    client_too_many_failures_finding_client = factory.counter("client_too_many_failures_finding_client");
-    client_too_many_failures_disconnected_by_peer = factory.counter("client_too_many_failures_disconnected_by_peer");
     client_metering_exchange = factory.makeItemActionMonitor("client_metering_exchange");
-    client_connection_send = factory.makeItemActionMonitor("client_connection_send");
-    client_connection_update = factory.makeItemActionMonitor("client_connection_update");
-    client_connection_attach = factory.makeItemActionMonitor("client_connection_attach");
-    client_connection_can_attach = factory.makeItemActionMonitor("client_connection_can_attach");
-    client_open_document = factory.makeStreamMonitor("client_open_document");
     client_ping = factory.makeItemActionMonitor("client_ping");
     client_create = factory.makeItemActionMonitor("client_create");
     client_webget = factory.makeItemActionMonitor("client_webget");
@@ -102,5 +89,6 @@ public class ClientMetrics {
     lcsm_connection_send = factory.makeItemActionMonitor("lcsm_connection_send");
     lcsm_connection_can_attach = factory.makeItemActionMonitor("lcsm_connection_can_attach");
     lcsm_connection_attach = factory.makeItemActionMonitor("lcsm_connection_attach");
+    lcsm_timeout = factory.counter("lcsm_timeout");
   }
 }
