@@ -167,6 +167,7 @@ public class Service {
 
   public static void serviceBackend(Config config) throws Exception {
     MachineHeat.install();
+
     int port = config.get_int("adama_port", 8001);
     int gossipPort = config.get_int("gossip_backend_port", 8002);
     int monitoringPort = config.get_int("monitoring_backend_port", 8003);
@@ -189,6 +190,7 @@ public class Service {
         LOGGER.error("health-check-failure-database", ex);
       }
     }, 30000, 30000, TimeUnit.MILLISECONDS);
+    NetBase netBase = new NetBase(new NetMetrics(prometheusMetricsFactory), identity, 1, 2);
 
     final DataService data;
     final Finder finder;
@@ -200,8 +202,6 @@ public class Service {
     {
       String caravanRoot = config.get_string("caravan_root", "caravan");
       String region = config.get_string("region", null);
-
-
       SimpleExecutor caravanExecutor = SimpleExecutor.create("caravan");
       SimpleExecutor managedExecutor = SimpleExecutor.create("managed-base");
       File caravanPath = new File(caravanRoot);
@@ -275,6 +275,7 @@ public class Service {
 
       }
     };
+
     // TODO: clean this up, this ... kind of sucks
     Consumer<String> scanForDeployments = (space) -> {
       try {
@@ -320,7 +321,6 @@ public class Service {
 
     // prime the host with spaces
     scanForDeployments.accept("*");
-    NetBase netBase = new NetBase(new NetMetrics(prometheusMetricsFactory), identity, 1, 2);
     ServerNexus nexus = new ServerNexus(netBase, identity, service, new ServerMetrics(prometheusMetricsFactory), deploymentFactoryBase, scanForDeployments, meteringPubSub, billingBatchMaker, port, 4);
     ServerHandle handle = netBase.serve(port, (upstream) -> new Handler(nexus, upstream));
     Thread serverThread = new Thread(() -> handle.waitForEnd());
@@ -562,26 +562,26 @@ public class Service {
 
   public static void dashboards() throws Exception {
     PrometheusDashboard metricsFactory = new PrometheusDashboard();
-    metricsFactory.page("aws", "AWS");
-    new AWSMetrics(metricsFactory);
-    metricsFactory.page("gossip", "Gossip");
-    new GossipMetricsImpl(metricsFactory);
-    metricsFactory.page("client", "Client to Adama");
-    new ClientMetrics(metricsFactory);
-    metricsFactory.page("server", "Adama Server");
-    new ServerMetrics(metricsFactory);
-    metricsFactory.page("adama", "Core Service");
-    new CoreMetrics(metricsFactory);
-    metricsFactory.page("web", "Web Proxy");
+    metricsFactory.page("web", "Web");
     new WebMetrics(metricsFactory);
-    metricsFactory.page("overlord", "The Overlord");
-    new OverlordMetrics(metricsFactory);
-    metricsFactory.page("api", "The Public API");
+    metricsFactory.page("api", "Public API");
     new ApiMetrics(metricsFactory);
+    metricsFactory.page("client", "Web to Adama");
+    new ClientMetrics(metricsFactory);
+    metricsFactory.page("server", "Adama Service");
+    new ServerMetrics(metricsFactory);
+    metricsFactory.page("adama", "Adama Core");
+    new CoreMetrics(metricsFactory);
     metricsFactory.page("database", "Database");
     new DataBaseMetrics(metricsFactory);
     metricsFactory.page("disk", "Disk");
     new DiskMetrics(metricsFactory);
+    metricsFactory.page("overlord", "Overlord");
+    new OverlordMetrics(metricsFactory);
+    metricsFactory.page("net", "Network");
+    new NetMetrics(metricsFactory);
+    metricsFactory.page("aws", "AWS");
+    new AWSMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));
   }
 }

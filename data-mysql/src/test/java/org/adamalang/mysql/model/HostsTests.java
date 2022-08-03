@@ -14,6 +14,9 @@ import org.adamalang.mysql.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HostsTests {
   @Test
   public void hosts() throws Exception {
@@ -22,10 +25,15 @@ public class HostsTests {
       Installer installer = new Installer(dataBase);
       try {
         installer.install();
+        Assert.assertEquals(0, Hosts.listHosts(dataBase, "region", "web").size());
         Hosts.initializeHost(dataBase, "region", "machine1", "web", "pubKey123");
+        Assert.assertEquals(1, Hosts.listHosts(dataBase, "region", "web").size());
         Hosts.initializeHost(dataBase, "region", "machine2", "web", "pubKey42");
         Hosts.initializeHost(dataBase, "region", "machine1", "adama", "pubKeyX");
         Hosts.initializeHost(dataBase, "region", "machine2", "adama", "pubKeyY");
+        List<String> results = Hosts.listHosts(dataBase, "region", "web");
+        Assert.assertEquals("machine1", results.get(0));
+        Assert.assertEquals("machine2", results.get(1));
         Assert.assertEquals("pubKey123", Hosts.getHostPublicKey(dataBase, "region", "machine1", "web"));
         Assert.assertEquals("pubKey42", Hosts.getHostPublicKey(dataBase, "region", "machine2", "web"));
         Assert.assertEquals("pubKeyX", Hosts.getHostPublicKey(dataBase, "region", "machine1", "adama"));

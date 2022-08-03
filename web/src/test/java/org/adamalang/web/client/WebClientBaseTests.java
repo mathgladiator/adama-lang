@@ -36,20 +36,9 @@ public class WebClientBaseTests {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest5);
     WebClientBase clientBase = new WebClientBase(webConfig);
     try {
-      CountDownLatch latch = new CountDownLatch(3);
-      clientBase.executeGet("https://nope.nope.nope.nope.nope.localhost/the-path", new HashMap<>(), new Callback<String>() {
-        @Override
-        public void success(String value) {
+      CountDownLatch latch = new CountDownLatch(2);
 
-        }
-
-        @Override
-        public void failure(ErrorCodeException ex) {
-          ex.printStackTrace();
-          latch.countDown();
-        }
-      });
-      clientBase.executeGet("https://www.adama-platform.com", new HashMap<>(), new Callback<String>() {
+      Callback<String> callback = new Callback<String>() {
         @Override
         public void success(String value) {
           latch.countDown();
@@ -57,26 +46,16 @@ public class WebClientBaseTests {
 
         @Override
         public void failure(ErrorCodeException ex) {
-          ex.printStackTrace();
           latch.countDown();
         }
-      });
+      };
+
+      clientBase.executeGet("https://nope.nope.nope.nope.nope.localhost/the-path", new HashMap<>(), callback);
+      clientBase.executeGet("https://www.adama-platform.com", new HashMap<>(), callback);
       HashMap<String, String> google = new HashMap<>();
       google.put("Authorization", "Bearer XYZ");
-      clientBase.executeGet("https://www.googleapis.com/oauth2/v1/userinfo", google, new Callback<String>() {
-        @Override
-        public void success(String value) {
-          System.err.println(value);
-          latch.countDown();
-        }
-
-        @Override
-        public void failure(ErrorCodeException ex) {
-          ex.printStackTrace();
-          latch.countDown();
-        }
-      });
-      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+      clientBase.executeGet("https://www.googleapis.com/oauth2/v1/userinfo", google, callback);
+      Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
 
     } finally {
       clientBase.shutdown();

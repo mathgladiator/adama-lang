@@ -10,10 +10,13 @@
 package org.adamalang.mysql.model;
 
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.data.DocumentIndex;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Hosts {
   /** initialize the public key for a web host; this host has a private key that it will use to sign keys */
@@ -33,6 +36,23 @@ public class Hosts {
         statement.setString(3, role);
         statement.setString(4, publicKey);
         statement.execute();
+      }
+    }
+  }
+
+  public static List<String> listHosts(DataBase dataBase, String region, String role) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = "SELECT `machine` FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `role`=? ORDER BY `machine`";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, region);
+        statement.setString(2, role);
+        try (ResultSet rs = statement.executeQuery()) {
+          ArrayList<String> hosts = new ArrayList<>();
+          while (rs.next()) {
+            hosts.add(rs.getString(1));
+          }
+          return hosts;
+        }
       }
     }
   }
