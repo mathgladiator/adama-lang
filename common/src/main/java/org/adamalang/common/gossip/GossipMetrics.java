@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GossipMetrics {
+  /*
   private static final Logger LOGGER = LoggerFactory.getLogger(GossipMetrics.class);
 
   public final Runnable gossip_wake;
@@ -27,8 +28,10 @@ public class GossipMetrics {
   public final Runnable quickGossip;
   public final Runnable serverSlowGossip;
   public final Inflight inflight;
+  */
 
   public GossipMetrics(MetricsFactory factory) {
+    /*
     gossip_wake = factory.counter("gossip_wake");
     gossip_sad = factory.counter("gossip_sad");
     gossip_slow_c = factory.counter("gossip_slow_c");
@@ -39,5 +42,6 @@ public class GossipMetrics {
     quickGossip = factory.counter("gossip_quick");
     serverSlowGossip = factory.counter("gossip_slow_s");
     inflight = factory.inflight("gossip_inflight");
+    */
   }
 }

@@ -20,6 +20,7 @@ import org.adamalang.common.net.ChannelClient;
 import java.util.*;
 import java.util.function.Consumer;
 
+/** represents both the server and the client conjoined together in a gossipy fate */
 public class Engine {
   private final String ip;
   private final GossipMetrics metrics;

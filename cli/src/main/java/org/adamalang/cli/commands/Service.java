@@ -16,31 +16,24 @@ import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.cli.commands.services.CommonServiceInit;
+import org.adamalang.cli.commands.services.Role;
 import org.adamalang.common.*;
-import org.adamalang.common.jvm.MachineHeat;
-import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
-import org.adamalang.extern.aws.AWSConfig;
 import org.adamalang.extern.aws.AWSMetrics;
-import org.adamalang.extern.aws.S3;
 import org.adamalang.extern.aws.SES;
 import org.adamalang.extern.prometheus.PrometheusDashboard;
-import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.gossip.Engine;
 import org.adamalang.common.gossip.EngineRole;
 import org.adamalang.gossip.GossipMetricsImpl;
-import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.model.Deployments;
 import org.adamalang.mysql.data.Deployment;
-import org.adamalang.mysql.model.Finder;
-import org.adamalang.mysql.model.Health;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
@@ -75,7 +68,6 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -145,63 +137,22 @@ public class Service {
     }
   }
 
-  private static void startArchivingLogs(S3 s3, String prefix, AtomicBoolean alive) {
-    SimpleExecutor executor = SimpleExecutor.create("s3-archive-logs");
-    executor.schedule(new NamedRunnable("archive-s3") {
-      @Override
-      public void execute() throws Exception {
-        try {
-          s3.uploadLogs(new File("logs"), prefix);
-        } catch (Exception ex) {
-          LOGGER.error("error-uploading-logs", ex);
-        } finally {
-          if (alive.get()) {
-            executor.schedule(this, 60000);
-          } else {
-            executor.shutdown();
-          }
-        }
-      }
-    }, 5000);
-  }
 
   public static void serviceBackend(Config config) throws Exception {
-    MachineHeat.install();
-
-    int port = config.get_int("adama_port", 8001);
+    CommonServiceInit init = new CommonServiceInit(config, Role.Adama, config.get_int("adama_port", 8001));
     int gossipPort = config.get_int("gossip_backend_port", 8002);
-    int monitoringPort = config.get_int("monitoring_backend_port", 8003);
-    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
     int coreThreads = config.get_int("service_thread_count", 8);
-    String identityFileName = config.get_string("identity_filename", "me.identity");
     String billingRootPath = config.get_string("billing_path", "billing");
-    MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
-    String machine = identity.ip + ":" + port;
-    Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.Node);
+    Engine engine = new Engine(init.identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, init.monitoringPort, new GossipMetricsImpl(init.metricsFactory), EngineRole.Node);
     engine.start();
+
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
-    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(prometheusMetricsFactory));
-    FirstPartyServices.install(dataBase);
-    ScheduledExecutorService databasePings = Executors.newSingleThreadScheduledExecutor();
-    databasePings.scheduleAtFixedRate(() -> {
-      try {
-        Health.pingDataBase(dataBase);
-      } catch (Exception ex) {
-        LOGGER.error("health-check-failure-database", ex);
-      }
-    }, 30000, 30000, TimeUnit.MILLISECONDS);
-    NetBase netBase = new NetBase(new NetMetrics(prometheusMetricsFactory), identity, 1, 2);
+    FirstPartyServices.install(init.database);
 
     final DataService data;
-    final Finder finder;
-    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
-    AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
-    S3 s3 = new S3(awsConfig, awsMetrics);
-    AtomicBoolean alive = new AtomicBoolean(true);
-    startArchivingLogs(s3, "adama/" + identity.ip + "_" + gossipPort, alive);
+
     {
       String caravanRoot = config.get_string("caravan_root", "caravan");
-      String region = config.get_string("region", null);
       SimpleExecutor caravanExecutor = SimpleExecutor.create("caravan");
       SimpleExecutor managedExecutor = SimpleExecutor.create("managed-base");
       File caravanPath = new File(caravanRoot);
@@ -211,15 +162,14 @@ public class Service {
       walRoot.mkdir();
       dataRoot.mkdir();
       File storePath = new File(dataRoot, "store");
-      DurableListStore store = new DurableListStore(new DiskMetrics(prometheusMetricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
-      finder = new Finder(dataBase, region);
-      CaravanDataService caravanDataService = new CaravanDataService(s3, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
-      Base managedBase = new Base(finder, caravanDataService, region, machine, managedExecutor, 2 * 60 * 1000);
+      DurableListStore store = new DurableListStore(new DiskMetrics(init.metricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
+      CaravanDataService caravanDataService = new CaravanDataService(init.s3, new FinderServiceToKeyToIdService(init.finder), store, caravanExecutor);
+      Base managedBase = new Base(init.finder, caravanDataService, init.region, init.machine, managedExecutor, 2 * 60 * 1000);
       data = new ManagedDataService(managedBase);
       Thread flusher = new Thread(new Runnable() {
         @Override
         public void run() {
-          while (alive.get()) {
+          while (init.alive.get()) {
             try {
               Thread.sleep(0, 800000);
               caravanDataService.flush(false).await(1000, TimeUnit.MILLISECONDS);
@@ -230,20 +180,15 @@ public class Service {
         }
       });
       flusher.start();
-      Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
-        @Override
-        public void run() throws Exception {
-          alive.set(false);
-        }
-      })));
+
     }
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
-    CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
+    CoreMetrics coreMetrics = new CoreMetrics(init.metricsFactory);
     CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), data, TimeSource.REAL_TIME, coreThreads);
     deploymentFactoryBase.attachDeliverer(service);
 
     // list all the documents on this machine, and spin them up
-    finder.list(machine, new Callback<List<Key>>() {
+    init.finder.list(init.machine, new Callback<List<Key>>() {
       @Override
       public void success(List<Key> keys) {
         for (Key key : keys) {
@@ -257,7 +202,7 @@ public class Service {
       }
     });
 
-    engine.newApp("adama", port, (hb) -> {
+    engine.newApp("adama", init.servicePort, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
         hb.run();
         return true;
@@ -280,7 +225,7 @@ public class Service {
     Consumer<String> scanForDeployments = (space) -> {
       try {
         if ("*".equals(space)) {
-          ArrayList<Deployment> deployments = Deployments.listSpacesOnTarget(dataBase, identity.ip + ":" + port);
+          ArrayList<Deployment> deployments = Deployments.listSpacesOnTarget(init.database, init.machine);
           for (Deployment deployment : deployments) {
             try {
               deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {
@@ -295,7 +240,7 @@ public class Service {
             }
           }
         } else {
-          Deployment deployment = Deployments.get(dataBase, identity.ip + ":" + port, space);
+          Deployment deployment = Deployments.get(init.database, init.machine, space);
           deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {
           }));
           service.deploy(deploymentMonitor);
@@ -318,11 +263,10 @@ public class Service {
       return true;
     });
 
-
     // prime the host with spaces
     scanForDeployments.accept("*");
-    ServerNexus nexus = new ServerNexus(netBase, identity, service, new ServerMetrics(prometheusMetricsFactory), deploymentFactoryBase, scanForDeployments, meteringPubSub, billingBatchMaker, port, 4);
-    ServerHandle handle = netBase.serve(port, (upstream) -> new Handler(nexus, upstream));
+    ServerNexus nexus = new ServerNexus(init.netBase, init.identity, service, new ServerMetrics(init.metricsFactory), deploymentFactoryBase, scanForDeployments, meteringPubSub, billingBatchMaker, init.servicePort, 4);
+    ServerHandle handle = init.netBase.serve(init.servicePort, (upstream) -> new Handler(nexus, upstream));
     Thread serverThread = new Thread(() -> handle.waitForEnd());
     serverThread.start();
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
@@ -331,50 +275,34 @@ public class Service {
         // billingPubSub.terminate();
         // This will send to all connections an empty list which will remove from the routing table. At this point, we should wait all connections migrate away
 
-        // TODO: for each connection, remove from routing table, stop
-        databasePings.shutdown();
         handle.kill();
-        netBase.shutdown();
       }
     })));
     System.err.println("backend running");
   }
 
   public static void serviceOverlord(Config config) throws Exception {
-    MachineHeat.install();
-    int gossipPort = config.get_int("gossip_overlord_port", 8010);
-    int monitoringPort = config.get_int("monitoring_overlord_port", 8011);
-    int overlordPort  = config.get_int("overlord_port", 8015);
-    String scanPath = config.get_string("scan_path", "web_root");
-    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
-    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(prometheusMetricsFactory));
-
-    String identityFileName = config.get_string("identity_filename", "me.identity");
-    File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
-    MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
-
-    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
-    AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
-    S3 s3 = new S3(awsConfig, awsMetrics);
-    AtomicBoolean alive = new AtomicBoolean(true);
-    startArchivingLogs(s3, "overlord/" +identity.ip + "_" + gossipPort, alive);
-
-    Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.SuperNode);
-    engine.start();
-
-    System.err.println("running overlord web");
-
-    HttpHandler handler = Overlord.execute(identity, engine, overlordPort, prometheusMetricsFactory, targetsPath, dataBase, scanPath);
-
     ConfigObject co = new ConfigObject(config.get_or_create_child("overlord_web"));
     co.intOf("http_port", 8081);
     WebConfig webConfig = new WebConfig(co);
+    CommonServiceInit init = new CommonServiceInit(config, Role.Overlord, webConfig.port);
+
+    int gossipPort = config.get_int("gossip_overlord_port", 8010);
+    String scanPath = config.get_string("scan_path", "web_root");
+    File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
+
+    Engine engine = new Engine(init.identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, init.monitoringPort, new GossipMetricsImpl(init.metricsFactory), EngineRole.SuperNode);
+    engine.start();
+
+    Client client = init.makeClient(engine);
+
+    HttpHandler handler = Overlord.execute(client, engine, init.metricsFactory, targetsPath, init.database, scanPath);
+
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(prometheusMetricsFactory), serviceBase, () -> {});
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(init.metricsFactory), serviceBase, () -> {});
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {
-        alive.set(false);
         System.err.println("shutting down overlord");
         runnable.shutdown();
       }
@@ -386,59 +314,17 @@ public class Service {
   }
 
   public static void serviceFrontend(Config config) throws Exception {
-    MachineHeat.install();
+    WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
+    CommonServiceInit init = new CommonServiceInit(config, Role.Web, webConfig.port);
+
     System.err.println("starting frontend");
-    String identityFileName = config.get_string("identity_filename", "me.identity");
-    String region = config.get_string("region", null);
     String masterKey = config.get_string("master-key", null);
     int gossipPort = config.get_int("gossip_frontend_port", 8004);
-    int monitoringPort = config.get_int("monitoring_frontend_port", 8005);
-    MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
-    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
-    DataBase database = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(prometheusMetricsFactory));
-    ScheduledExecutorService databasePings = Executors.newSingleThreadScheduledExecutor();
-    databasePings.scheduleAtFixedRate(() -> {
-      try {
-        Health.pingDataBase(database);
-      } catch (Exception ex) {
-        LOGGER.error("health-check-failure-database", ex);
-      }
-    }, 30000, 30000, TimeUnit.MILLISECONDS);
-
-    System.err.println("using database: " + database.databaseName);
-    System.err.println("identity: " + identity.ip);
-    Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.Node);
+    Engine engine = new Engine(init.identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, init.monitoringPort, new GossipMetricsImpl(init.metricsFactory), EngineRole.Node);
     engine.start();
     System.err.println("gossiping on:" + gossipPort);
-    WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
     System.err.println("standing up http on:" + webConfig.port);
-    NetBase netBase = new NetBase(new NetMetrics(prometheusMetricsFactory), identity, 1, 2);
-    ClientConfig clientConfig = new ClientConfig();
-    ClientMetrics metrics = new ClientMetrics(prometheusMetricsFactory);
-    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
-    AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
-    S3 s3 = new S3(awsConfig, awsMetrics);
-    AtomicBoolean alive = new AtomicBoolean(true);
-    startArchivingLogs(s3, "web/" + identity.ip + "_" + gossipPort, alive);
-
-    Finder finder = new Finder(database, region);
-    ClientRouter router = ClientRouter.FINDER(metrics, finder, region);
-    Client client = new Client(netBase, clientConfig, metrics, router, null);
-    Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
-
-    engine.subscribe("adama", (targets) -> {
-      StringBuilder notice = new StringBuilder();
-      boolean append = false;
-      for (String target : targets) {
-        if (append) {
-          notice.append(", ");
-        }
-        append = true;
-        notice.append(target);
-      }
-      System.err.println("adama targets:" + notice);
-      targetPublisher.accept(targets);
-    });
+    Client client = init.makeClient(engine);
 
     WebClientBase webBase = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
 
@@ -523,10 +409,10 @@ public class Service {
       }
     };
 
-    Email email = new SES(awsConfig, awsMetrics);
+    Email email = new SES(init.awsConfig, init.awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
-    ExternNexus nexus = new ExternNexus(frontendConfig, email, s3, s3, database, finder, client, prometheusMetricsFactory, new File("inflight"), (item) -> {
+    ExternNexus nexus = new ExternNexus(frontendConfig, email, init.s3, init.s3, init.database, init.finder, client, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
     }, masterKey, webBase);
     System.err.println("nexus constructed");
@@ -544,14 +430,12 @@ public class Service {
       return;
     }
 
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(prometheusMetricsFactory), serviceBase, heartbeat.get());
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(init.metricsFactory), serviceBase, heartbeat.get());
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {
-        alive.set(false);
         System.err.println("shutting down frontend");
         runnable.shutdown();
-        databasePings.shutdown();
         webBase.shutdown();
       }
     }));

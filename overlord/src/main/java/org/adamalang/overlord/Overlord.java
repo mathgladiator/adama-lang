@@ -31,7 +31,7 @@ import java.io.File;
 public class Overlord {
   private static final Logger LOGGER = LoggerFactory.getLogger(Overlord.class);
 
-  public static HttpHandler execute(MachineIdentity identity, Engine engine, int overlordPort, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath) throws Exception {
+  public static HttpHandler execute(Client client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath) throws Exception {
     // the HTTP web server will render data that has been put/cached in this handler
     ConcurrentCachedHttpHandler handler = new ConcurrentCachedHttpHandler();
 
@@ -46,19 +46,6 @@ public class Overlord {
 
     // we will be monitoring the heat on each host within this table
     HeatTable heatTable = new HeatTable(handler);
-
-    // setup the foundation
-    NetBase netBase = new NetBase(new NetMetrics(metricsFactory), identity, 1, 2);
-
-    // build a full mesh from overlord to all clients
-    String adamaRole = "adama";
-    ClientConfig clientConfig = new ClientConfig();
-    ClientMetrics clientMetrics = new ClientMetrics(metricsFactory);
-    // TODO: need new client picker, or not... hrmm
-    Client client = new Client(netBase, clientConfig, clientMetrics, ClientRouter.REACTIVE(clientMetrics), (target, cpu, memory) -> {
-      heatTable.onSample(target, adamaRole, cpu, memory);
-    });
-    engine.subscribe(adamaRole, client.getTargetPublisher());
 
     // kick off capacity management will will add/remove capacity per space
     CapacityManager.kickOffReturnHotTargetEvent(metrics, client, dataBase, handler, heatTable);
