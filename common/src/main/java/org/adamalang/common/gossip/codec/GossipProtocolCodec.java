@@ -225,6 +225,7 @@ public class GossipProtocolCodec {
   private static ReverseQuickGossip readBody_37(ByteBuf buf, ReverseQuickGossip o) {
     o.counters = Helper.readIntArray(buf);
     o.missing_endpoints = Helper.readArray(buf, (n) -> new Endpoint[n], () -> read_Endpoint(buf));
+    o.recent_deletes = Helper.readStringArray(buf);
     return o;
   }
 
@@ -240,6 +241,7 @@ public class GossipProtocolCodec {
   private static ReverseHashFound readBody_36(ByteBuf buf, ReverseHashFound o) {
     o.counters = Helper.readIntArray(buf);
     o.missing_endpoints = Helper.readArray(buf, (n) -> new Endpoint[n], () -> read_Endpoint(buf));
+    o.recent_deletes = Helper.readStringArray(buf);
     return o;
   }
 
@@ -270,6 +272,8 @@ public class GossipProtocolCodec {
 
   private static ForwardQuickGossip readBody_34(ByteBuf buf, ForwardQuickGossip o) {
     o.counters = Helper.readIntArray(buf);
+    o.recent_endpoints = Helper.readArray(buf, (n) -> new Endpoint[n], () -> read_Endpoint(buf));
+    o.recent_deletes = Helper.readStringArray(buf);
     return o;
   }
 
@@ -353,6 +357,7 @@ public class GossipProtocolCodec {
     buf.writeIntLE(37);
     Helper.writeIntArray(buf, o.counters);;
     Helper.writeArray(buf, o.missing_endpoints, (item) -> write(buf, item));
+    Helper.writeStringArray(buf, o.recent_deletes);;
   }
 
   public static void write(ByteBuf buf, ReverseHashFound o) {
@@ -363,6 +368,7 @@ public class GossipProtocolCodec {
     buf.writeIntLE(36);
     Helper.writeIntArray(buf, o.counters);;
     Helper.writeArray(buf, o.missing_endpoints, (item) -> write(buf, item));
+    Helper.writeStringArray(buf, o.recent_deletes);;
   }
 
   public static void write(ByteBuf buf, HashNotFoundReverseConversation o) {
@@ -383,6 +389,8 @@ public class GossipProtocolCodec {
     }
     buf.writeIntLE(34);
     Helper.writeIntArray(buf, o.counters);;
+    Helper.writeArray(buf, o.recent_endpoints, (item) -> write(buf, item));
+    Helper.writeStringArray(buf, o.recent_deletes);;
   }
 
   public static void write(ByteBuf buf, HashFoundRequestForwardQuickGossip o) {

@@ -81,6 +81,10 @@ public class GossipProtocol {
   public static class ForwardQuickGossip {
     @FieldOrder(1)
     public int[] counters;
+    @FieldOrder(2)
+    public Endpoint[] recent_endpoints;
+    @FieldOrder(3)
+    public String[] recent_deletes;
   }
 
   // server couldn't find hash, so it sends its recent endpoints along with its hash
@@ -103,6 +107,8 @@ public class GossipProtocol {
     public int[] counters;
     @FieldOrder(2)
     public Endpoint[] missing_endpoints;
+    @FieldOrder(3)
+    public String[] recent_deletes;
   }
 
   // client is learning that a hash wasn't found, but it found the related hash
@@ -113,6 +119,8 @@ public class GossipProtocol {
     public int[] counters;
     @FieldOrder(2)
     public Endpoint[] missing_endpoints;
+    @FieldOrder(3)
+    public String[] recent_deletes;
   }
 
   // client didn't find the reverse hash, send everything
