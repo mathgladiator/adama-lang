@@ -28,6 +28,7 @@ public class FirstPartyServices {
         executor.shutdown();
       }
     }));
+    /*
     ServiceRegistry.REGISTRY.put("twilio", (space, configRaw) -> {
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw);
       try {
@@ -36,5 +37,6 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
+    */
   }
 }

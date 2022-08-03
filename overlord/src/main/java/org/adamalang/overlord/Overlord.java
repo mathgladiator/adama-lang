@@ -10,10 +10,7 @@
 package org.adamalang.overlord;
 
 import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.gossip.Engine;
@@ -22,7 +19,6 @@ import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.routing.ClientRouter;
-import org.adamalang.overlord.grpc.OverlordServer;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.roles.*;
@@ -31,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.function.Consumer;
 
 public class Overlord {
   private static final Logger LOGGER = LoggerFactory.getLogger(Overlord.class);
@@ -76,21 +71,6 @@ public class Overlord {
 
     // start doing the accounting work
     HourlyAccountant.kickOff(metrics, dataBase, handler);
-
-    engine.newApp("overlord", overlordPort, new Consumer<Runnable>() {
-      @Override
-      public void accept(Runnable hb) {
-        try {
-          OverlordServer server = new OverlordServer(identity, overlordPort, heatTable, metrics, () -> {
-            heatTable.onSample(identity.ip + ":" + overlordPort, "overlord", MachineHeat.cpu(), MachineHeat.memory());
-            hb.run();
-          });
-          WebRootScanner.kickOff(metrics, server, handler, scanPath);
-        } catch (Exception ex) {
-          LOGGER.error("failed-to-start-overlord-server", ex);
-        }
-      }
-    });
 
     // build the index
     StringBuilder indexHtmlBuilder = new StringBuilder();

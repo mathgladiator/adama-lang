@@ -50,7 +50,6 @@ import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.overlord.OverlordMetrics;
-import org.adamalang.overlord.grpc.OverlordClient;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.data.managed.Base;
@@ -441,17 +440,6 @@ public class Service {
       targetPublisher.accept(targets);
     });
 
-    OverlordClient overlordClient = new OverlordClient(identity, webConfig.port);
-    engine.subscribe("overlord", new Consumer<Collection<String>>() {
-      @Override
-      public void accept(Collection<String> targets) {
-        for (String first : targets) {
-          overlordClient.setTarget(first);
-          return;
-        }
-        overlordClient.setTarget(null);
-      }
-    });
     WebClientBase webBase = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
 
     // TODO: bring this out, and this whole file is getting CRAZY
