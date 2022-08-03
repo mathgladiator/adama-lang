@@ -27,19 +27,25 @@ public class ChannelClient extends ChannelCommon {
   private final HashMap<Integer, Consumer<Boolean>> initiations;
   private final Engine gossipEngine;
   private ChannelHandlerContext context;
+  private Runnable unregister;
+  public final String host;
+  public final int port;
 
-  public ChannelClient(Lifecycle lifecycle, Engine gossipEngine) {
+  public ChannelClient(String host, int port, Lifecycle lifecycle, Engine gossipEngine) {
     super(1, gossipEngine);
+    this.host = host;
+    this.port = port;
     this.lifecycle = lifecycle;
     this.initiations = new HashMap<>();
     this.gossipEngine = gossipEngine;
+    this.unregister = null;
   }
 
   @Override
   public void channelActive(ChannelHandlerContext ctx) throws Exception {
     this.context = ctx;
     lifecycle.connected(this);
-    gossipEngine.registerClient(this);
+    unregister = gossipEngine.registerClient(this);
   }
 
   @Override
@@ -66,7 +72,10 @@ public class ChannelClient extends ChannelCommon {
     }
     initiations.clear();
     lifecycle.disconnected();
-    gossipEngine.unregisterClient(this);
+    if (unregister != null) {
+      unregister.run();
+      unregister = null;
+    }
   }
 
   public void close() {

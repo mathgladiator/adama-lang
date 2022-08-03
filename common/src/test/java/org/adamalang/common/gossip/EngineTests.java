@@ -9,15 +9,13 @@
  */
 package org.adamalang.common.gossip;
 
+import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.ByteStream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -43,12 +41,20 @@ public class EngineTests {
   }
 
   public static class TargetCollectorAsserter implements Consumer<Collection<String>> {
-    public ArrayList<String> log;
-    public ArrayList<CountDownLatch> latches;
+    private final ArrayList<String> log;
+    private final ArrayList<CountDownLatch> latches;
+    private final CountDownLatch sizeLatch;
+    private final int size;
 
     public TargetCollectorAsserter() {
+      this(1);
+    }
+
+    public TargetCollectorAsserter(int size) {
       this.log = new ArrayList<>();
       this.latches = new ArrayList<>();
+      this.sizeLatch = new CountDownLatch(1);
+      this.size = size;
     }
 
     private synchronized Runnable latchAt(int at) {
@@ -69,6 +75,7 @@ public class EngineTests {
     }
 
     private synchronized void witness(String str) {
+      System.err.println(str);
       log.add(str);
       Iterator<CountDownLatch> it = latches.iterator();
       while (it.hasNext()) {
@@ -93,22 +100,33 @@ public class EngineTests {
         first = false;
       }
       witness(sb.toString());
+      if (values.size() == size) {
+        sizeLatch.countDown();
+      }
+    }
+
+    public void awaitSize() throws Exception {
+      Assert.assertTrue(sizeLatch.await(2500, TimeUnit.MILLISECONDS));
+    }
+
+    public boolean testSize() throws Exception {
+      return !sizeLatch.await(5, TimeUnit.MILLISECONDS);
     }
   }
 
   @Test
   public void nothing() {
-    Engine a = new Engine("127.0.0.1", new GossipMetrics(new NoOpMetricsFactory()));
-    Engine b = new Engine("127.0.0.2", new GossipMetrics(new NoOpMetricsFactory()));
+    Engine a = new Engine("127.0.0.1", new GossipMetrics(new NoOpMetricsFactory()), TimeSource.REAL_TIME);
+    Engine b = new Engine("127.0.0.2", new GossipMetrics(new NoOpMetricsFactory()), TimeSource.REAL_TIME);
     exchange(a, b);
   }
 
   @Test
   public void single() throws Exception {
-    Engine a = new Engine("127.0.0.1", new GossipMetrics(new NoOpMetricsFactory()));
+    Engine a = new Engine("127.0.0.1", new GossipMetrics(new NoOpMetricsFactory()), TimeSource.REAL_TIME);
     Runnable hb = createApp(a, "role", 100, 101);
     hb.run();
-    Engine b = new Engine("127.0.0.2", new GossipMetrics(new NoOpMetricsFactory()));
+    Engine b = new Engine("127.0.0.2", new GossipMetrics(new NoOpMetricsFactory()), TimeSource.REAL_TIME);
     TargetCollectorAsserter blog = new TargetCollectorAsserter();
     Runnable first = blog.latchAt(1);
     Runnable second = blog.latchAt(2);
@@ -118,5 +136,98 @@ public class EngineTests {
     exchange(a, b);
     second.run();
     Assert.assertEquals("127.0.0.1:100", blog.logAt(1));
+  }
+
+  @Test
+  public void cross() throws Exception {
+    Engine a = new Engine("127.0.0.1", new GossipMetrics(new NoOpMetricsFactory()), TimeSource.REAL_TIME);
+    createApp(a, "role", 100, 101).run();
+    Engine b = new Engine("127.0.0.2", new GossipMetrics(new NoOpMetricsFactory()), TimeSource.REAL_TIME);
+    createApp(b, "role", 100, 101).run();
+    TargetCollectorAsserter a_log = new TargetCollectorAsserter();
+    TargetCollectorAsserter b_log = new TargetCollectorAsserter();
+    Runnable a_first = a_log.latchAt(1);
+    Runnable a_second = a_log.latchAt(2);
+    Runnable b_first = b_log.latchAt(1);
+    Runnable b_second = b_log.latchAt(2);
+    a.subscribe("role", a_log);
+    b.subscribe("role", b_log);
+    a_first.run();
+    b_first.run();
+    Assert.assertEquals("127.0.0.1:100", a_log.logAt(0));
+    Assert.assertEquals("127.0.0.2:100", b_log.logAt(0));
+    exchange(a, b);
+    a_second.run();
+    b_second.run();
+    Assert.assertEquals("127.0.0.1:100,127.0.0.2:100", a_log.logAt(1));
+    Assert.assertEquals("127.0.0.1:100,127.0.0.2:100", b_log.logAt(1));
+  }
+
+  @Test
+  public void ten_fold() throws Exception {
+    MockTime time = new MockTime();
+    Engine[] e = new Engine[10];
+    Runnable[] a = new Runnable[e.length];
+    TargetCollectorAsserter[] l = new TargetCollectorAsserter[e.length];
+    {
+      for (int k = 0; k < e.length; k++) {
+        e[k] = new Engine("127.0.0.1" + k, new GossipMetrics(new NoOpMetricsFactory()), time);
+        l[k] = new TargetCollectorAsserter(e.length);
+        a[k] = createApp(e[k], "role", 100 + 2 * k, -1);
+        a[k].run();
+        e[k].subscribe("role", l[k]);
+      }
+    }
+    for(int j = 0; j < 2; j++) {
+      for (int k = 0; k < e.length; k++) {
+        exchange(e[k], e[(k + 1) % e.length]);
+        CountDownLatch ready = new CountDownLatch(2);
+        e[k].ready(() -> ready.countDown());
+        e[(k + 1) % e.length].ready(() -> ready.countDown());
+        Assert.assertTrue(ready.await(1000, TimeUnit.MILLISECONDS));
+      }
+      for (int k = 0; k < e.length; k++) {
+        a[k].run();
+        e[k].tick();
+      }
+      time.currentTime += 100;
+    }
+    for(int j = 0; j < e.length; j++) {
+      l[j].awaitSize();
+    }
+    e[0].summarizeHtml((str) -> {
+      System.err.println(str);
+    });
+  }
+
+  @Test
+  public void ten_random_converge() throws Exception {
+    MockTime time = new MockTime();
+    Engine[] e = new Engine[10];
+    Runnable[] a = new Runnable[e.length];
+    TargetCollectorAsserter[] l = new TargetCollectorAsserter[e.length];
+    {
+      for (int k = 0; k < e.length; k++) {
+        e[k] = new Engine("127.0.0.1" + k, new GossipMetrics(new NoOpMetricsFactory()), time);
+        l[k] = new TargetCollectorAsserter(e.length);
+        a[k] = createApp(e[k], "role", 100 + 2 * k, -1);
+        a[k].run();
+        e[k].subscribe("role", l[k]);
+      }
+    }
+    Random rng = new Random();
+    for (int k = 0; k < e.length; k++) {
+      while (l[k].testSize()) {
+        int p0 = rng.nextInt(e.length);
+        int p1 = p0;
+        while (p1 == p0) {
+          p0 = rng.nextInt(e.length);
+        }
+        exchange(e[p0], e[p1]);
+      }
+    }
+    e[0].summarizeHtml((str) -> {
+      System.err.println(str);
+    });
   }
 }

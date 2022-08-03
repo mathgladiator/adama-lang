@@ -25,10 +25,7 @@ import io.netty.handler.ssl.ClientAuth;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.*;
 import org.adamalang.common.gossip.Engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +59,7 @@ public class NetBase {
     this.alive = new AtomicBoolean(true);
     this.killLatch = new CountDownLatch(1);
     this.blockers = new ArrayList<>();
-    this.gossipEngine = new Engine(identity.ip, metrics.gossip);
+    this.gossipEngine = new Engine(identity.ip, metrics.gossip, TimeSource.REAL_TIME);
   }
 
   public boolean alive() {
@@ -91,7 +88,7 @@ public class NetBase {
           ch.pipeline().addLast(sslContext.newHandler(ch.alloc(), peerHost, peerPort));
           ch.pipeline().addLast(new LengthFieldPrepender(4));
           ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
-          ch.pipeline().addLast(new ChannelClient(lifecycle, gossipEngine));
+          ch.pipeline().addLast(new ChannelClient(peerHost, peerPort, lifecycle, gossipEngine));
         }
       });
       bootstrap.connect().addListener(new ChannelFutureListener() {

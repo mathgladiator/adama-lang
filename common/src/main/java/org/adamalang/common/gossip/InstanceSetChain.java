@@ -110,9 +110,8 @@ public class InstanceSetChain {
     recentlyLearnedAbout.gc(now);
   }
 
-  public void ingest(GossipProtocol.Endpoint[] endpoints, String[] deletes) {
+  public boolean ingest(GossipProtocol.Endpoint[] endpoints, String[] deletes) {
     long now = time.nowMilliseconds();
-
     TreeSet<Instance> clone = null;
     for (GossipProtocol.Endpoint ep : endpoints) {
       Instance prior = primary.get(ep.id);
@@ -150,7 +149,9 @@ public class InstanceSetChain {
     if (clone != null) {
       history.put(current.hash(), current, now);
       current = new InstanceSet(clone, now);
+      return true;
     }
+    return false;
   }
 
   public String[] deletes() {

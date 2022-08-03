@@ -17,10 +17,7 @@ import org.adamalang.common.gossip.codec.GossipProtocolCodec;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.common.net.ChannelClient;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Engine {
@@ -29,13 +26,17 @@ public class Engine {
   private final SimpleExecutor executor;
   private final InstanceSetChain chain;
   private final HashMap<String, ArrayList<Consumer<Collection<String>>>> subscribersByApp;
+  private final HashMap<Integer, ChannelClient> clients;
+  private int clientId;
 
-  public Engine(String ip, GossipMetrics metrics) {
+  public Engine(String ip, GossipMetrics metrics, TimeSource time) {
     this.ip = ip;
     this.metrics = metrics;
     this.executor = SimpleExecutor.create("gossip");
-    this.chain = new InstanceSetChain(TimeSource.REAL_TIME);
+    this.chain = new InstanceSetChain(time);
     this.subscribersByApp = new HashMap<>();
+    this.clients = new HashMap<>();
+    this.clientId = 1;
   }
 
   public void createLocalApplicationHeartbeat(String role, int port, int monitoringPort, Consumer<Runnable> callback) {
@@ -83,10 +84,53 @@ public class Engine {
     }
   }
 
-  public void registerClient(ChannelClient client) {
+  public void summarizeHtml(Consumer<String> html) {
+    executor.execute(new NamedRunnable("summarizing-html") {
+      @Override
+      public void execute() throws Exception {
+        StringBuilder sbHtml = new StringBuilder();
+        sbHtml.append("<html><head><title>Gossip Summary</title></head><body><table>");
+        sbHtml.append("<tr><th>ID</th><th>Witness (ms ago)</th><th>IP</th><th>Port</th><th>Role</th><th>Counter</th><th>Age (ms)</th></tr>");
+        ArrayList<Instance> copySortedForHumans = new ArrayList<>(chain.current().instances);
+        copySortedForHumans.sort(Instance::humanizeCompare);
+        for (Instance instance : copySortedForHumans) {
+          sbHtml.append("<tr>");
+          sbHtml.append("<td>").append(instance.id).append("</td>");
+          sbHtml.append("<td>").append(System.currentTimeMillis() - instance.witnessed()).append(" ms</td>");
+          sbHtml.append("<td>").append(instance.ip).append("</td>");
+          sbHtml.append("<td>").append(instance.port).append("</td>");
+          sbHtml.append("<td>").append(instance.role).append("</td>");
+          sbHtml.append("<td>").append(instance.counter()).append("</td>");
+          sbHtml.append("<td>").append(System.currentTimeMillis() - instance.created).append("</td>");
+          sbHtml.append("</tr>");
+        }
+        sbHtml.append("</table></body></html>");
+        html.accept(sbHtml.toString());
+      }
+    });
   }
 
-  public void unregisterClient(ChannelClient client) {
+  public void tick() {
+    executor.execute(new NamedRunnable("round") {
+      @Override
+      public void execute() throws Exception {
+        chain.scan();
+        chain.gc();
+      }
+    });
+  }
+
+  public Runnable registerClient(ChannelClient client) {
+    final int id;
+    synchronized (clients) {
+      id = clientId++;
+      clients.put(id, client);
+    }
+    return () -> {
+      synchronized (clients) {
+        clients.remove(id);
+      }
+    };
   }
 
   public class Exchange extends GossipProtocolCodec.StreamChatterFromServer {
@@ -115,9 +159,11 @@ public class Engine {
       executor.execute(new NamedRunnable("gossip-reverse-slow") {
         @Override
         public void execute() throws Exception {
-          chain.ingest(payload.all_endpoints, payload.recent_deletes);
+          boolean changed = chain.ingest(payload.all_endpoints, payload.recent_deletes);
           remote.completed();
-          broadcastChangesWhileInExecutor();
+          if (changed) {
+            broadcastChangesWhileInExecutor();
+          }
         }
       });
     }
@@ -142,23 +188,24 @@ public class Engine {
       executor.execute(new NamedRunnable("gossip-hash-not-found-do-reverse") {
         @Override
         public void execute() throws Exception {
-          chain.ingest(payload.recent_endpoints, payload.recent_deletes);
+          boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
           current = chain.find(payload.hash);
+          ByteBuf buf = Unpooled.buffer();
           if (current != null) {
             GossipProtocol.ReverseHashFound found = new GossipProtocol.ReverseHashFound();
             found.missing_endpoints = chain.missing(current);
             found.recent_deletes = chain.deletes();
             found.counters = current.counters();
-            ByteBuf buf = Unpooled.buffer();
             GossipProtocolCodec.write(buf, found);
-            remote.next(buf);
           } else {
             GossipProtocol.ForwardSlowGossip slow = new GossipProtocol.ForwardSlowGossip();
             slow.all_endpoints = chain.all();
             slow.recent_deletes = chain.deletes();
-            ByteBuf buf = Unpooled.buffer();
             GossipProtocolCodec.write(buf, slow);
-            remote.next(buf);
+          }
+          remote.next(buf);
+          if (changed) {
+            broadcastChangesWhileInExecutor();
           }
         }
       });
@@ -170,7 +217,7 @@ public class Engine {
         @Override
         public void execute() throws Exception {
           current.ingest(payload.counters, chain.now());
-          chain.ingest(payload.recent_endpoints, payload.recent_deletes);
+          boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
           GossipProtocol.ForwardQuickGossip quick = new GossipProtocol.ForwardQuickGossip();
           quick.counters = current.counters();
           quick.recent_endpoints = chain.recent();
@@ -179,7 +226,7 @@ public class Engine {
           GossipProtocolCodec.write(buf, quick);
           remote.next(buf);
           remote.completed();
-          if (payload.recent_deletes.length > 0 || payload.recent_endpoints.length > 0) {
+          if (changed) {
             broadcastChangesWhileInExecutor();
           }
         }
@@ -193,6 +240,15 @@ public class Engine {
     @Override
     public void error(int errorCode) {
     }
+  }
+
+  public void ready(Runnable done) {
+    executor.execute(new NamedRunnable("ready-check") {
+      @Override
+      public void execute() throws Exception {
+        done.run();
+      }
+    });
   }
 
   public Exchange client() {
@@ -212,7 +268,7 @@ public class Engine {
         executor.execute(new NamedRunnable("gossip-forward-slow") {
           @Override
           public void execute() throws Exception {
-            chain.ingest(payload.all_endpoints, payload.recent_deletes);
+            boolean changed = chain.ingest(payload.all_endpoints, payload.recent_deletes);
             GossipProtocol.ReverseSlowGossip slow = new GossipProtocol.ReverseSlowGossip();
             slow.all_endpoints = chain.all();
             slow.recent_deletes = chain.deletes();
@@ -220,7 +276,9 @@ public class Engine {
             GossipProtocolCodec.write(buf, slow);
             upstream.next(buf);
             upstream.completed();
-            broadcastChangesWhileInExecutor();
+            if (changed) {
+              broadcastChangesWhileInExecutor();
+            }
           }
         });
       }
@@ -231,7 +289,7 @@ public class Engine {
           @Override
           public void execute() throws Exception {
             set.ingest(payload.counters, chain.now());
-            chain.ingest(payload.missing_endpoints, payload.recent_deletes);
+            boolean changed = chain.ingest(payload.missing_endpoints, payload.recent_deletes);
             GossipProtocol.ReverseQuickGossip quick = new GossipProtocol.ReverseQuickGossip();
             quick.counters = set.counters();
             quick.missing_endpoints = chain.missing(set);
@@ -240,7 +298,7 @@ public class Engine {
             GossipProtocolCodec.write(buf, quick);
             upstream.next(buf);
             upstream.completed();
-            if (payload.missing_endpoints.length > 0 || payload.recent_deletes.length > 0) {
+            if (changed) {
               broadcastChangesWhileInExecutor();
             }
           }
@@ -253,9 +311,9 @@ public class Engine {
           @Override
           public void execute() throws Exception {
             set.ingest(payload.counters, chain.now());
-            chain.ingest(payload.recent_endpoints, payload.recent_deletes);
+            boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
             upstream.completed();
-            if (payload.recent_deletes.length > 0 || payload.recent_endpoints.length > 0) {
+            if (changed) {
               broadcastChangesWhileInExecutor();
             }
           }
@@ -268,26 +326,26 @@ public class Engine {
         executor.execute(new NamedRunnable("gossip-begin") {
           @Override
           public void execute() throws Exception {
-            chain.ingest(payload.recent_endpoints, payload.recent_deletes);
+            boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
             set = chain.find(payload.hash);
+            ByteBuf buf = Unpooled.buffer();
             if (set != null) {
               GossipProtocol.HashFoundRequestForwardQuickGossip found = new GossipProtocol.HashFoundRequestForwardQuickGossip();
               found.counters = set.counters();
               found.recent_deletes = chain.deletes();
               found.recent_endpoints = chain.missing(set);
-              ByteBuf buf = Unpooled.buffer();
               GossipProtocolCodec.write(buf, found);
-              upstream.next(buf);
-
             } else {
               set = chain.current();
               GossipProtocol.HashNotFoundReverseConversation notfound = new GossipProtocol.HashNotFoundReverseConversation();
               notfound.hash = set.hash;
               notfound.recent_endpoints = chain.recent();
               notfound.recent_deletes = chain.deletes();
-              ByteBuf buf = Unpooled.buffer();
               GossipProtocolCodec.write(buf, notfound);
-              upstream.next(buf);
+            }
+            upstream.next(buf);
+            if (changed) {
+              broadcastChangesWhileInExecutor();
             }
           }
         });
