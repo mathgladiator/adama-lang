@@ -54,6 +54,10 @@ public class ClientMetrics {
   public final ItemActionMonitor lcsm_connection_attach;
   public final Runnable lcsm_timeout;
 
+  public final Inflight client_host_set_invalid;
+  public final Inflight client_host_set_database_size;
+  public final Inflight client_host_set_gossip_size;
+
   public ClientMetrics(MetricsFactory factory) {
     client_connection_alive = factory.inflight("client_connection_alive");
     client_state_machines_alive = factory.inflight("client_state_machines_alive");
@@ -90,5 +94,8 @@ public class ClientMetrics {
     lcsm_connection_can_attach = factory.makeItemActionMonitor("lcsm_connection_can_attach");
     lcsm_connection_attach = factory.makeItemActionMonitor("lcsm_connection_attach");
     lcsm_timeout = factory.counter("lcsm_timeout");
+    client_host_set_invalid = factory.inflight("alarm_client_host_set_invalid");
+    client_host_set_database_size = factory.inflight("client_host_set_database_size");
+    client_host_set_gossip_size = factory.inflight("client_host_set_gossip_size");
   }
 }

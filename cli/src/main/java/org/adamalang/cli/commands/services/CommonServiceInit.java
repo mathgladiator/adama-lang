@@ -20,6 +20,7 @@ import org.adamalang.mysql.model.Hosts;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.TargetsQuorum;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,21 +134,15 @@ public class CommonServiceInit {
     ClientRouter router = ClientRouter.FINDER(metrics, finder, region);
     Client client = new Client(netBase, clientConfig, metrics, router, null);
 
-    // Here, is where we need to pull from the hosts
-    Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
-    engine.subscribe("adama", (targets) -> {
-      StringBuilder notice = new StringBuilder();
-      boolean append = false;
-      for (String target : targets) {
-        if (append) {
-          notice.append(", ");
-        }
-        append = true;
-        notice.append(target);
+    TargetsQuorum targetsQuorum = new TargetsQuorum(metrics, client.getTargetPublisher());
+    system.schedule(new NamedRunnable("list-hosts-database") {
+      @Override
+      public void execute() throws Exception {
+        targetsQuorum.deliverDatabase(Hosts.listHosts(database, region, "adama"));
       }
-      targetPublisher.accept(targets);
-    });
+    }, 50);
 
+    engine.subscribe("adama", targetsQuorum::deliverDatabase);
     return client;
   }
 
