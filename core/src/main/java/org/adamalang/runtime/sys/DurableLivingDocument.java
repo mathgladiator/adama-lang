@@ -365,6 +365,7 @@ public class DurableLivingDocument {
   }
 
   private void catastrophicFailureWhileInExecutor(int code) {
+    inflightPatch = false;
     base.metrics.document_catastrophic_failure.run();
     catastrophicFailureOccurred = true;
     issueCloseWhileInExecutor(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION);
@@ -418,7 +419,6 @@ public class DurableLivingDocument {
         }
       }
       if (last == null) {
-        inflightPatch = false;
         finishSuccessDataServicePatchWhileInExecutor();
         return;
       }
@@ -427,7 +427,6 @@ public class DurableLivingDocument {
         base.executor.execute(new NamedRunnable("catastrophic-failure") {
           @Override
           public void execute() throws Exception {
-            inflightPatch = false;
             sad.accept(ex2);
             catastrophicFailureWhileInExecutor(ex2.code);
           }
@@ -444,7 +443,6 @@ public class DurableLivingDocument {
         }
       }
       requiresInvalidateMilliseconds = last.update.requiresFutureInvalidation ? last.update.whenToInvalidateMilliseconds : null;
-
       RemoteDocumentUpdate[] patches = new RemoteDocumentUpdate[changes.size()];
       int at = 0;
       for (LivingDocumentChange change : changes) {
