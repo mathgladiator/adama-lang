@@ -314,11 +314,11 @@ public class DurableLivingDocument {
     }
   }
 
-  private void finishSuccessDataServicePatchWhileInExecutor() {
+  private void finishSuccessDataServicePatchWhileInExecutor(boolean checkInvalidate) {
     this.inflightPatch = false;
     if (pending.size() == 0) {
       outstandingExecutionsWhichRequireDrain = 0;
-      if (requiresInvalidateMilliseconds != null) {
+      if (requiresInvalidateMilliseconds != null && checkInvalidate) {
         base.executor.schedule(new NamedRunnable("finish-success-patch") {
           @Override
           public void execute() throws Exception {
@@ -419,7 +419,7 @@ public class DurableLivingDocument {
         }
       }
       if (last == null) {
-        finishSuccessDataServicePatchWhileInExecutor();
+        finishSuccessDataServicePatchWhileInExecutor(false);
         return;
       }
       final boolean shouldCleanUp = requestsCleanUp;
@@ -477,7 +477,7 @@ public class DurableLivingDocument {
                   queueCompact();
                 }
               } finally {
-                finishSuccessDataServicePatchWhileInExecutor();
+                finishSuccessDataServicePatchWhileInExecutor(true);
               }
             }
           });
