@@ -10,8 +10,8 @@
 package org.adamalang.overlord.roles;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import org.adamalang.gossip.Engine;
-import org.adamalang.gossip.proto.Endpoint;
+import org.adamalang.common.gossip.Engine;
+import org.adamalang.common.gossip.codec.GossipProtocol;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -30,7 +30,8 @@ public class PrometheusTargetMaker {
   /** scan gossip table to make targets.json for promethesus */
   public static void kickOff(OverlordMetrics metrics, Engine engine, File targetsDestination, ConcurrentCachedHttpHandler handler) {
     AtomicReference<String> lastWritten = new AtomicReference<>("");
-    HashMap<String, Endpoint> cached = new HashMap<>();
+    HashMap<String, GossipProtocol.Endpoint> cached = new HashMap<>();
+    /*
     engine.setWatcher((endpointsLatest) -> {
       // this is a hack to keep everything available so things just don't go pop due to a gossip failure
       // TODO: add a system here to keep an endpoint for at least an hour for monitoring
@@ -83,6 +84,7 @@ public class PrometheusTargetMaker {
         LOGGER.error("failed-write-to-disk", ex);
       }
     });
+    */
   }
 
   private static String classifyByPort(int port) {
