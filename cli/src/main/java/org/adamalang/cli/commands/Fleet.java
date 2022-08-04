@@ -234,13 +234,16 @@ public class Fleet {
       }
       Files.writeString(new File("staging/" + instance.privateIpAddress() + ".json").toPath(), configTemplate.toPrettyString());
       Security.newServer(new String[]{"--ip", instance.privateIpAddress(), "--out", "staging/" + instance.privateIpAddress() + ".identity"});
+      commands.append("echo ").append(Util.prefix("TRANSFER CONFIG", Util.ANSI.Green)).append(" ").append(instance.privateIpAddress()).append("\n");
       commands.append("scp " + instance.privateIpAddress() + ".identity ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/me.identity\n");
       commands.append("scp " + instance.privateIpAddress() + ".json ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/.adama\n");
+      commands.append("echo ").append(Util.prefix("TRANSFER BINARY", Util.ANSI.Green)).append(" ").append(instance.privateIpAddress()).append("\n");
       commands.append("scp adama.jar ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/adama-new.jar\n");
       commands.append("scp adama.sh ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/adama.sh\n");
       commands.append("ssh ec2-user@" + instance.privateIpAddress() + " chmod 700 /home/ec2-user/adama.sh\n");
 
       if (sslAvailable && "frontend".equals(role)) {
+        commands.append("echo ").append(Util.prefix("INSTALL CERT", Util.ANSI.Green)).append(" ").append(instance.privateIpAddress()).append("\n");
         commands.append("scp ").append(" adama.sh ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/adama.sh\n");
         commands.append("scp cert.pem ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/cert.pem\n");
         commands.append("scp key.pem ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/key.pem\n");

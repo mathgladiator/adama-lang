@@ -31,6 +31,8 @@ import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -362,7 +364,7 @@ public class DurableLivingDocument {
     return currentFactory;
   }
 
-  private void catastrophicFailureWhileInExecutor() {
+  private void catastrophicFailureWhileInExecutor(int code) {
     base.metrics.document_catastrophic_failure.run();
     catastrophicFailureOccurred = true;
     issueCloseWhileInExecutor(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION);
@@ -388,17 +390,6 @@ public class DurableLivingDocument {
     };
     try {
       LivingDocumentChange last = null;
-
-      Runnable happy = () -> {
-        for (final IngestRequest request : requests) {
-          if (request.change != null) {
-            request.callback.success(request.change);
-          }
-        }
-        for (final LivingDocumentChange change : changes) {
-          change.complete();
-        }
-      };
 
       Consumer<ErrorCodeException> sad = (ErrorCodeException ex) -> {
         for (final IngestRequest request : requests) {
@@ -428,6 +419,7 @@ public class DurableLivingDocument {
       }
       if (last == null) {
         inflightPatch = false;
+        finishSuccessDataServicePatchWhileInExecutor();
         return;
       }
       final boolean shouldCleanUp = requestsCleanUp;
@@ -437,7 +429,7 @@ public class DurableLivingDocument {
           public void execute() throws Exception {
             inflightPatch = false;
             sad.accept(ex2);
-            catastrophicFailureWhileInExecutor();
+            catastrophicFailureWhileInExecutor(ex2.code);
           }
         });
       };
@@ -471,14 +463,24 @@ public class DurableLivingDocument {
           base.executor.execute(new NamedRunnable("execute-now-patch-callback") {
             @Override
             public void execute() throws Exception {
-              happy.run();
-              if (shouldCleanUp && document.__canRemoveFromMemory()) {
-                scheduleCleanup();
+              try {
+                for (final IngestRequest request : requests) {
+                  if (request.change != null) {
+                    request.callback.success(request.change);
+                  }
+                }
+                for (final LivingDocumentChange change : changes) {
+                  change.complete();
+                }
+                if (shouldCleanUp && document.__canRemoveFromMemory()) {
+                  scheduleCleanup();
+                }
+                if (size.get() > currentFactory.maximum_history) {
+                  queueCompact();
+                }
+              } finally {
+                finishSuccessDataServicePatchWhileInExecutor();
               }
-              if (size.get() > currentFactory.maximum_history) {
-                queueCompact();
-              }
-              finishSuccessDataServicePatchWhileInExecutor();
             }
           });
         }
@@ -551,7 +553,7 @@ public class DurableLivingDocument {
               for (IngestRequest request : requests) {
                 request.callback.failure(ex);
               }
-              catastrophicFailureWhileInExecutor();
+              catastrophicFailureWhileInExecutor(ex.code);
             }
           });
         }
@@ -566,7 +568,7 @@ public class DurableLivingDocument {
               for (IngestRequest request : requests) {
                 request.callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_SELF_DESTRUCT_SUCCESSFUL));
               }
-              catastrophicFailureWhileInExecutor();
+              catastrophicFailureWhileInExecutor(ErrorCodes.DOCUMENT_SELF_DESTRUCT_SUCCESSFUL);
             }
           });
         }
@@ -579,7 +581,7 @@ public class DurableLivingDocument {
               for (IngestRequest request : requests) {
                 request.callback.failure(ex);
               }
-              catastrophicFailureWhileInExecutor();
+              catastrophicFailureWhileInExecutor(ex.code);
             }
           });
         }

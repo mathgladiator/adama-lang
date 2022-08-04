@@ -402,7 +402,7 @@ public class CoreService implements Deliverer {
           public void disconnect() {
             stream.status(Streamback.StreamStatus.Disconnected);
           }
-        }, viewerState, assetIdEncoder, metrics.createPrivateView.wrap(new Callback<>() {
+        }, viewerState, assetIdEncoder, metrics.create_private_view.wrap(new Callback<>() {
           @Override
           public void success(PrivateView view) {
             stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, view));

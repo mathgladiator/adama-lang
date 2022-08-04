@@ -14,14 +14,21 @@ import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.hotspot.*;
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 public class PrometheusMetricsFactory implements MetricsFactory {
+  private static final Logger LOGGER = LoggerFactory.getLogger(PrometheusMetricsFactory.class);
   private final HTTPServer server;
   private static final double[] LATENCY_BUCKETS = new double[]{0.001D, 0.005D, 0.01D, 0.02D, 0.03D, 0.04D, 0.05D, 0.075D, 0.1D, 0.2D, 0.3D, 0.4D, 0.5D, 1.0D, 2.0D, 5.0D, 10.0D};
+  private final SimpleExecutor executor;
 
   public PrometheusMetricsFactory(int metricsHttpPort) throws Exception {
     server = new HTTPServer.Builder()
@@ -32,9 +39,11 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     new StandardExports().register();
     new MemoryAllocationExports().register();
     new ThreadExports().register();
+    this.executor = SimpleExecutor.create("timeout");
   }
 
   public void shutdown() {
+    executor.shutdown();
     server.close();
   }
 
@@ -95,10 +104,12 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     Counter start = Counter.build().name("stream_" + name + "_start").help("Stream requests started for " + name).register();
     Counter progress = Counter.build().name("stream_" + name + "_progress").help("Stream progress made for " + name).register();
     Counter finish = Counter.build().name("stream_" + name + "_finish").help("Stream finished for " + name).register();
+    Gauge timeout = Gauge.build().name("stream_" + name + "_timeout").help("Timeouts streams for " + name).register();
     Counter failure = Counter.build().name("stream_" + name + "_failure").help("Stream filure for " + name).register();
     Gauge inflight = Gauge.build().name("stream_" + name + "_inflight").help("Inprogress streams for " + name).register();
     Histogram firstLatency = Histogram.build().name("stream_" + name + "_first_latency").buckets(LATENCY_BUCKETS).help("Latency for the first bit of progress for " + name).register();
     return () -> {
+      AtomicBoolean responded = makeTimeoutBoolean(timeout, name);
       Histogram.Timer timer = firstLatency.startTimer();
       start.inc();
       inflight.inc();
@@ -110,6 +121,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
           if (first) {
             timer.close();
             first = false;
+            responded.set(true);
           }
         }
 
@@ -186,6 +198,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     Counter start = Counter.build().name("cb_" + name + "_start").help("Callback started for " + name).register();
     Counter success = Counter.build().name("cb_" + name + "_success").help("Callback success for " + name).register();
     Counter failure = Counter.build().name("cb_" + name + "_failure").help("Callback failure for " + name).register();
+    Gauge timeout = Gauge.build().name("cb_" + name + "_timeout").help("Internal timeout for " + name).register();
     Gauge inflight = Gauge.build().name("cb_" + name + "_inflight").help("Inprogress callbacks for " + name).register();
     Histogram latency = Histogram.build().name("cb_" + name + "_latency").buckets(LATENCY_BUCKETS).help("Latency callback to complete " + name).register();
     return new CallbackMonitor() {
@@ -194,6 +207,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
         start.inc();
         inflight.inc();
         Histogram.Timer timer = latency.startTimer();
+        AtomicBoolean responded = makeTimeoutBoolean(timeout, name);
         return new CallbackMonitorInstance() {
           boolean first = true;
 
@@ -202,6 +216,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
               timer.observeDuration();
               inflight.dec();
               first = false;
+              responded.set(true);
             }
           }
 
@@ -256,5 +271,20 @@ public class PrometheusMetricsFactory implements MetricsFactory {
 
   @Override
   public void section(String title) {
+  }
+
+  /** register a timeout */
+  private AtomicBoolean makeTimeoutBoolean(Gauge timeout, String metricName) {
+    AtomicBoolean responded = new AtomicBoolean(false);
+    executor.schedule(new NamedRunnable("timeout-test-callback") {
+      @Override
+      public void execute() throws Exception {
+        if (!responded.get()) {
+          LOGGER.error("timeout-" + metricName);
+          timeout.inc();
+        }
+      }
+    }, 2500);
+    return responded;
   }
 }
