@@ -245,7 +245,6 @@ public class Machine {
             }
           }
         });
-
       }
 
       @Override
@@ -262,12 +261,12 @@ public class Machine {
   }
 
   public void write(Action action) {
+    if (attemptClose) {
+      attemptClose = false;
+    }
     if (closed) {
       action.callback.failure(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_WRITE_FAILED_CLOSED));
       return;
-    }
-    if (attemptClose) {
-      attemptClose = false;
     }
     pendingWrites++;
     switch (state) {
@@ -285,12 +284,12 @@ public class Machine {
   }
 
   public void read(Action action) {
+    if (attemptClose) {
+      attemptClose = false;
+    }
     if (closed) {
       action.callback.failure(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_READ_FAILED_CLOSED));
       return;
-    }
-    if (attemptClose) {
-      attemptClose = false;
     }
     switch (state) {
       case Unknown:
@@ -307,6 +306,10 @@ public class Machine {
 
   public void close() {
     attemptClose = true;
+    if (state == State.Unknown) {
+      closed = true;
+      return;
+    }
     if (state == State.OnMachine && pendingWrites == 0) {
       executeClosed();
     }

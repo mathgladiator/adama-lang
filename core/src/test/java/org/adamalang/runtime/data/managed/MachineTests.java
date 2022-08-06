@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MachineTests {
@@ -68,6 +69,33 @@ public class MachineTests {
       });
       Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
       Assert.assertEquals("{\"x\":2}", val.get());
+    }, archive);
+  }
+
+  @Test
+  public void closing() throws Exception {
+    MockInstantDataService data = new MockInstantDataService();
+    MockArchiveDataSource archive = new MockArchiveDataSource(data);
+    BaseTests.flow((base) -> {
+      CountDownLatch latchFailure = new CountDownLatch(2);
+      base.on(KEY, (machine) -> {
+        Callback<Void> cb = new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            latchFailure.countDown();
+          }
+        };
+        machine.close();
+        machine.read(new Action(() -> {}, cb));
+        machine.close();
+        machine.write(new Action(() -> {}, cb));
+      });
+      Assert.assertTrue(latchFailure.await(1000, TimeUnit.MILLISECONDS));
     }, archive);
   }
 }
