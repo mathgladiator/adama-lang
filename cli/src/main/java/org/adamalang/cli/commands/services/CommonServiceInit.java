@@ -12,7 +12,6 @@ package org.adamalang.cli.commands.services;
 import org.adamalang.cli.Config;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
-import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.extern.aws.AWSConfig;
@@ -30,7 +29,7 @@ import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.TargetsQuorum;
 import org.adamalang.net.client.routing.ClientRouter;
-import org.adamalang.transforms.Authenticator;
+import org.adamalang.transforms.PerSessionAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +64,7 @@ public class CommonServiceInit {
   public CommonServiceInit(Config config, Role role, int servicePort) throws Exception {
     MachineHeat.install();
     String identityFileName = config.get_string("identity_filename", "me.identity");
-    KeyPair keyPair = Authenticator.inventHostKey();
+    KeyPair keyPair = PerSessionAuthenticator.inventHostKey();
     this.alive = new AtomicBoolean(true);
     this.region = config.get_string("region", null);
     this.role = role.name;
@@ -79,7 +78,7 @@ public class CommonServiceInit {
     this.finder = new Finder(database, region);
     this.system = SimpleExecutor.create("system");
     this.machine = this.identity.ip + ":" + servicePort;
-    this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, Authenticator.encodePublicKey(keyPair));
+    this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, PerSessionAuthenticator.encodePublicKey(keyPair));
 
     system.schedule(new NamedRunnable("database-ping") {
       @Override

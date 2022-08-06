@@ -9,17 +9,24 @@
  */
 package org.adamalang.transforms.results;
 
+import io.jsonwebtoken.Jwts;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.web.io.ConnectionContext;
+
+import java.security.PrivateKey;
+import java.util.TreeMap;
 
 public class AuthenticatedUser {
   public final Source source;
   public final int id;
   public final NtPrincipal who;
+  public final ConnectionContext context;
 
-  public AuthenticatedUser(Source source, int id, NtPrincipal who) {
+  public AuthenticatedUser(Source source, int id, NtPrincipal who, ConnectionContext context) {
     this.source = source;
     this.id = id;
     this.who = who;
+    this.context = context;
   }
 
   public enum Source {
@@ -27,5 +34,18 @@ public class AuthenticatedUser {
     Adama,
     Anonymous,
     Authority,
+  }
+
+  public String asIdentity(int keyId, PrivateKey key) {
+    TreeMap<String, Object> claims = new TreeMap<>();
+    claims.put("kid", keyId);
+    claims.put("ps", source.toString());
+    claims.put("puid", id);
+    claims.put("pa", who.authority);
+    claims.put("po", context.origin);
+    claims.put("pip", context.remoteIp);
+    claims.put("pak", context.assetKey);
+    claims.put("pua", context.userAgent);
+    return Jwts.builder().setClaims(claims).setIssuer("web-host").setSubject(who.agent).signWith(key).compact();
   }
 }

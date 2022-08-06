@@ -9,31 +9,21 @@
  */
 package org.adamalang.connection;
 
+import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.results.AuthenticatedUser;
-import org.adamalang.web.io.ConnectionContext;
 
 import java.util.HashMap;
 
 public class Session {
-  public final ConnectionContext context;
   public final long created;
   private long lastActivity;
   public HashMap<String, AuthenticatedUser> identityCache;
-  private String assetKey;
+  public final PerSessionAuthenticator authenticator;
 
-  public Session(ConnectionContext context) {
-    this.context = context;
+  public Session(final PerSessionAuthenticator authenticator) {
     this.created = System.currentTimeMillis();
     this.identityCache = new HashMap<>();
-    this.assetKey = context.assetKey;
-  }
-
-  public synchronized String getAssetKey() {
-    return assetKey;
-  }
-
-  public synchronized void setAssetKey(String assetKey) {
-    this.assetKey = assetKey;
+    this.authenticator = authenticator;
   }
 
   public synchronized void activity() {

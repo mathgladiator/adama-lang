@@ -60,7 +60,7 @@ public class SpaceReflectRequest {
   }
 
   public void logInto(ObjectNode _node) {
-    org.adamalang.transforms.Authenticator.logInto(who, _node);
+    org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
     _node.put("space", space);
     org.adamalang.transforms.SpacePolicyLocator.logInto(policy, _node);
     _node.put("key", key);

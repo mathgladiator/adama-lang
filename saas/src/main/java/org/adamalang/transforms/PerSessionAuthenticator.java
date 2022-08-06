@@ -19,30 +19,43 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.model.Authorities;
 import org.adamalang.mysql.model.Hosts;
 import org.adamalang.mysql.model.Users;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.Keystore;
+import org.adamalang.web.io.ConnectionContext;
 
 import java.security.KeyFactory;
 import java.security.KeyPair;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-public class Authenticator {
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(Authenticator.class);
-  public final ExternNexus nexus;
+/** This is a per session Authenticator */
+public class PerSessionAuthenticator {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(PerSessionAuthenticator.class);
+  private final ExternNexus nexus;
+  private ConnectionContext defaultContext;
 
-  public Authenticator(ExternNexus nexus) {
+  public PerSessionAuthenticator(ExternNexus nexus, ConnectionContext defaultContext) {
     this.nexus = nexus;
+    this.defaultContext = defaultContext;
+  }
+
+  public void updateAssetKey(String assetKey) {
+    this.defaultContext = new ConnectionContext(defaultContext.origin, defaultContext.remoteIp, defaultContext.userAgent, assetKey);
+  }
+
+  public String assetKey() {
+    return defaultContext.assetKey;
   }
 
   public static void logInto(AuthenticatedUser user, ObjectNode node) {
@@ -82,7 +95,7 @@ public class Authenticator {
     try {
       if (identity.startsWith("anonymous:")) {
         String agent = identity.substring("anonymous:".length());
-        callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Anonymous, -1, new NtPrincipal(agent, "anonymous")));
+        callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Anonymous, -1, new NtPrincipal(agent, "anonymous"), defaultContext));
         return;
       }
       // TODO: check for Google Prefix
@@ -94,8 +107,8 @@ public class Authenticator {
             .requireIssuer("adama")
             .build()
             .parseClaimsJws(identity);
-        // TODO: origin and IP
-        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_source, parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority));
+        ConnectionContext context = new ConnectionContext(parsedToken.proxy_origin, parsedToken.proxy_ip, parsedToken.proxy_useragent, parsedToken.proxy_asset_key);
+        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_source, parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context);
         session.identityCache.put(identity, user);
         callback.success(user);
         return;
@@ -110,7 +123,7 @@ public class Authenticator {
                 .requireIssuer("adama")
                 .build()
                 .parseClaimsJws(identity);
-            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, userId, new NtPrincipal("" + userId, "adama"));
+            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, userId, new NtPrincipal("" + userId, "adama"), defaultContext);
             session.identityCache.put(identity, user);
             callback.success(user);
             return;
@@ -123,7 +136,7 @@ public class Authenticator {
         String keystoreJson = Authorities.getKeystoreInternal(nexus.dataBase, parsedToken.iss);
         Keystore keystore = Keystore.parse(keystoreJson);
         NtPrincipal who = keystore.validate(parsedToken.iss, identity);
-        AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who);
+        AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who, defaultContext);
         session.identityCache.put(identity, user);
         callback.success(user);
       }
@@ -143,6 +156,7 @@ public class Authenticator {
     public final String proxy_origin;
     public final String proxy_ip;
     public final String proxy_asset_key;
+    public final String proxy_useragent;
 
     public ParsedToken(String token) throws ErrorCodeException {
       String[] parts = token.split(Pattern.quote("."));
@@ -163,6 +177,7 @@ public class Authenticator {
               this.proxy_origin = tree.get("po").asText();
               this.proxy_ip = tree.get("pip").asText();
               this.proxy_asset_key = tree.get("pak").asText();
+              this.proxy_useragent = tree.get("pua").asText();
             } else {
               this.key_id = -1;
               this.proxy_source = null;
@@ -171,6 +186,7 @@ public class Authenticator {
               this.proxy_origin = null;
               this.proxy_ip = null;
               this.proxy_asset_key = null;
+              this.proxy_useragent = null;
             }
             if (_iss != null && _iss.isTextual() && _sub != null && _sub.isTextual()) {
               this.iss = _iss.textValue();

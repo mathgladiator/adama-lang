@@ -11,7 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.connection.Session;
-import org.adamalang.transforms.Authenticator;
+import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
 import org.adamalang.web.io.JsonLogger;;
@@ -21,10 +21,10 @@ public class ConnectionNexus {
   public final ApiMetrics metrics;
   public final SimpleExecutor executor;
   public final UserIdResolver emailService;
-  public final Authenticator identityService;
+  public final PerSessionAuthenticator identityService;
   public final SpacePolicyLocator spaceService;
 
-  public ConnectionNexus(JsonLogger logger, ApiMetrics metrics, SimpleExecutor executor, UserIdResolver emailService, Authenticator identityService, SpacePolicyLocator spaceService) {
+  public ConnectionNexus(JsonLogger logger, ApiMetrics metrics, SimpleExecutor executor, UserIdResolver emailService, PerSessionAuthenticator identityService, SpacePolicyLocator spaceService) {
     this.logger = logger;
     this.metrics = metrics;
     this.executor = executor;

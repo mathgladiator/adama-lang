@@ -63,12 +63,10 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(Session session, ConfigureMakeOrGetAssetKeyRequest request, AssetKeyResponder responder) {
-    String assetKey = session.getAssetKey();
-    if (assetKey == null) {
-      assetKey = SecureAssetUtil.makeAssetKeyHeader();
-      session.setAssetKey(assetKey);
+    if (session.authenticator.assetKey() == null) {
+      session.authenticator.updateAssetKey(SecureAssetUtil.makeAssetKeyHeader());
     }
-    responder.complete(assetKey);
+    responder.complete(session.authenticator.assetKey());
   }
 
   @Override
@@ -288,7 +286,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, SpaceCreateRequest request, SimpleResponder responder) {
     try {
       int spaceId = Spaces.createSpace(nexus.dataBase, request.who.id, request.space);
-      nexus.adama.create(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, "ide", request.space, null, "{}", new Callback<Void>() {
+      nexus.adama.create(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, "ide", request.space, null, "{}", new Callback<Void>() {
         @Override
         public void success(Void value) {
           responder.complete();
@@ -442,7 +440,7 @@ public class RootHandlerImpl implements RootHandler {
         responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_DOCUMENT_SPACE_RESERVED));
         return;
       }
-      nexus.adama.create(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
+      nexus.adama.create(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
         @Override
         public void success(Void value) {
           responder.complete();
@@ -497,7 +495,7 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void bind() {
-        connection = nexus.adama.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", session.getAssetKey(), new SimpleEvents() {
+        connection = nexus.adama.connect(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", request.who.context.assetKey, new SimpleEvents() {
           @Override
           public void connected() {
           }
@@ -564,7 +562,7 @@ public class RootHandlerImpl implements RootHandler {
     AtomicBoolean killed = new AtomicBoolean(false);
     AtomicReference<AdamaStream> connection = new AtomicReference<>(null);
     Runnable kickOff = () -> {
-      connection.set(nexus.adama.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", session.getAssetKey(), new SimpleEvents() {
+      connection.set(nexus.adama.connect(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", request.who.context.assetKey, new SimpleEvents() {
         @Override
         public void connected() {
         }

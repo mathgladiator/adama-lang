@@ -21,17 +21,17 @@ import java.security.KeyPair;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class AuthenticatorTests {
+public class PerSessionAuthenticatorTests {
   @Test
   public void tokenParsing() {
     try {
-      new Authenticator.ParsedToken("{}");
+      new PerSessionAuthenticator.ParsedToken("{}");
       Assert.fail();
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(995342, ece.code);
     }
     try {
-      new Authenticator.ParsedToken("x.x.x");
+      new PerSessionAuthenticator.ParsedToken("x.x.x");
       Assert.fail();
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(908303, ece.code);
@@ -40,14 +40,17 @@ public class AuthenticatorTests {
 
   @Test
   public void keys() throws Exception {
-    KeyPair hostKeyPair = Authenticator.inventHostKey();
-    Authenticator.decodePublicKey(Authenticator.encodePublicKey(hostKeyPair));
+    KeyPair hostKeyPair = PerSessionAuthenticator.inventHostKey();
+    PerSessionAuthenticator.decodePublicKey(PerSessionAuthenticator.encodePublicKey(hostKeyPair));
   }
 
   @Test
   public void anonymous() throws Exception {
-    Authenticator authenticator = new Authenticator(null);
-    Session session = new Session(new ConnectionContext("origin", "remote", "user-agent", "key"));
+    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(null, new ConnectionContext("a", "b", "c", "D"));
+    Assert.assertEquals("D", authenticator.assetKey());
+    authenticator.updateAssetKey("E");
+    Assert.assertEquals("E", authenticator.assetKey());
+    Session session = new Session(authenticator);
     CountDownLatch success = new CountDownLatch(1);
     authenticator.execute(session, "anonymous:jeffrey", new Callback<AuthenticatedUser>() {
       @Override

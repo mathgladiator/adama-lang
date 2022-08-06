@@ -56,7 +56,7 @@ import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
-import org.adamalang.transforms.Authenticator;
+import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
@@ -264,7 +264,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
     this.webBase = new WebClientBase(new WebConfig(new ConfigObject(Json.parseJsonObject("{}"))));
     this.hostKeyPair = Keys.keyPairFor(SignatureAlgorithm.ES256);
-    int keyId = Hosts.initializeHost(dataBase, "region", "127.0.0.1:" + port, "web", Authenticator.encodePublicKey(hostKeyPair));
+    int keyId = Hosts.initializeHost(dataBase, "region", "127.0.0.1:" + port, "web", PerSessionAuthenticator.encodePublicKey(hostKeyPair));
     this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, finder, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, hostKeyPair.getPrivate(), keyId);
 
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);

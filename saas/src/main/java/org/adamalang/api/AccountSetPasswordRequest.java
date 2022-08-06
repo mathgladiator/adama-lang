@@ -48,6 +48,6 @@ public class AccountSetPasswordRequest {
   }
 
   public void logInto(ObjectNode _node) {
-    org.adamalang.transforms.Authenticator.logInto(who, _node);
+    org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
   }
 }
