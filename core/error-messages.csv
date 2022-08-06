@@ -602,4 +602,6 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Web_BodyConditions_failure.a,5,2,5,23,"The return statement within a @web expects no body fields; got 1 instead (ReturnFlowWeb)"
 ./test_code/Web_NoReturn_failure.a,0,0,1,1,"The @web handlers must return a message (Web)"
 ./test_code/Web_NoReturn_failure.a,5,0,6,1,"The @web handlers must return a message (Web)"
+./test_code/Who_CantPromoteOrdinaryClient_failure.a,8,0,11,1,"Type check failure: the type 'secure<principal>' is unable to store type 'principal'. (TypeCheckReferences)"
 ./test_code/Who_CantStateTransition_failure.a,1,10,1,14,"@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers (WHO)"
+./test_code/Who_CopySecureClient_failure.a,6,2,6,19,"Type check failure: the type 'secure<principal>' is unable to store type 'principal'. (TypeCheckReferences)"

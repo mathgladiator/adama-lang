@@ -14,7 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
+import org.adamalang.translator.tree.types.natives.TyNativeSecurePrincipal;
 
 import java.util.function.Consumer;
 
@@ -35,7 +35,7 @@ public class WhoClientConstant extends Expression {
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     if (environment.state.isStatic() || environment.state.isMessageHandler() || environment.state.isPolicy() || environment.state.isBubble() || environment.state.isWeb()) {
       environment.mustBeComputeContext(this);
-      TyType type = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
+      TyType type = new TyNativeSecurePrincipal(TypeBehavior.ReadOnlyNativeValue, null, token, token, token, token).withPosition(this);
       environment.useSpecial(type, "__who");
       return type;
     } else {

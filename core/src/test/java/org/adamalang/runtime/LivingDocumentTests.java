@@ -220,6 +220,46 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void secure_service() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup(
+          "@connected { return true; }" +
+              "message From { string phone; string msg; }" +
+              "message Res { }" +
+              "service sms { class=\"demo\"; method secured<From, Res> send; }" +
+              "public string msg = \"123\";" +
+              "message M {}" +
+              "channel foo(M m) {" +
+              "secure<principal> w = @who;" +
+              "sms.send(w, {phone:\"\",msg:\"\"});" +
+              "}",
+          null);
+      RealDocumentSetup.GotView gv = new RealDocumentSetup.GotView();
+      ArrayList<String> list = new ArrayList<>();
+      Perspective linked =
+          new Perspective() {
+            @Override
+            public void data(String data) {
+              list.add(data);
+            }
+
+            @Override
+            public void disconnect() {}
+          };
+
+      setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      for (String item : list) {
+        System.err.println(item);
+      }
+
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+      Assert.fail();
+    }
+  }
+
+  @Test
   @SuppressWarnings("unchecked")
   public void accept_array_message() throws Exception {
     final var setup =

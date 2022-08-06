@@ -1,0 +1,19 @@
+message SendRequest {
+  string phone;
+  string message;
+}
+
+message SendResponse {
+}
+
+service sms {
+  internal = "twilio.com";
+  method secured <SendRequest, SendResponse> send;
+}
+
+message M {
+}
+
+channel foo(M m) {
+  sms.send(@no_one, {phone:"123", message:"yo"});
+}

@@ -33,7 +33,8 @@ public class BinaryOperatorTable {
     TyType tyString = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"));
     TyType tyComplex = new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("complex"));
     TyType tyLabel = new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("label"));
-    TyType tyClient = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("client"));
+    TyType tyPrincipal = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("principal"));
+    TyType tySecurePrincipal = new TyNativeSecurePrincipal(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("secure"), null, null, null);
     TyType tyAsset = new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("asset"));
     TyType tyDynamic = new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("dynamic"));
 
@@ -333,8 +334,14 @@ public class BinaryOperatorTable {
       insert(tyLabel, "!=", tyLabel, tyBoolean, "!((%s).equals(%s))", false);
       insert(tyAsset, "==", tyAsset, tyBoolean, "(%s).equals(%s)", false);
       insert(tyAsset, "!=", tyAsset, tyBoolean, "!((%s).equals(%s))", false);
-      insert(tyClient, "==", tyClient, tyBoolean, "(%s).equals(%s)", false);
-      insert(tyClient, "!=", tyClient, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tyPrincipal, "==", tyPrincipal, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyPrincipal, "!=", tyPrincipal, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tySecurePrincipal, "==", tySecurePrincipal, tyBoolean, "(%s).equals(%s)", false);
+      insert(tySecurePrincipal, "!=", tySecurePrincipal, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tyPrincipal, "==", tySecurePrincipal, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyPrincipal, "!=", tySecurePrincipal, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tySecurePrincipal, "==", tyPrincipal, tyBoolean, "(%s).equals(%s)", false);
+      insert(tySecurePrincipal, "!=", tyPrincipal, tyBoolean, "!((%s).equals(%s))", false);
     }
     // LOGIC
     {
@@ -507,7 +514,7 @@ public class BinaryOperatorTable {
       insert(tyDouble, "==", tyComplex, tyBoolean, "LibMath.near(%s, %s)", true);
 
       insert(tyAsset, "==", tyAsset, tyBoolean, "(%s).equals(%s)", false);
-      insert(tyClient, "==", tyClient, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyPrincipal, "==", tyPrincipal, tyBoolean, "(%s).equals(%s)", false);
       insert(tyDynamic, "==", tyDynamic, tyBoolean, "(%s).equals(%s)", false);
       insert(tyString, "==", tyString, tyBoolean, "(%s).equals(%s)", false);
       insert(tyLabel, "==", tyLabel, tyBoolean, "(%s).equals(%s)", false);
@@ -547,7 +554,7 @@ public class BinaryOperatorTable {
       insert(tyDouble, "!=", tyComplex, tyBoolean, "!LibMath.near(%s, %s)", true);
 
       insert(tyAsset, "!=", tyAsset, tyBoolean, "!(%s).equals(%s)", false);
-      insert(tyClient, "!=", tyClient, tyBoolean, "!(%s).equals(%s)", false);
+      insert(tyPrincipal, "!=", tyPrincipal, tyBoolean, "!(%s).equals(%s)", false);
       insert(tyDynamic, "!=", tyDynamic, tyBoolean, "!(%s).equals(%s)", false);
       insert(tyString, "!=", tyString, tyBoolean, "!(%s).equals(%s)", false);
       insert(tyLabel, "!=", tyLabel, tyBoolean, "!(%s).equals(%s)", false);

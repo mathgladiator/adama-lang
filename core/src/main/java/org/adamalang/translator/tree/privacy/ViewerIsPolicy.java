@@ -13,6 +13,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetAsync;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 
@@ -49,7 +50,7 @@ public class ViewerIsPolicy extends Policy {
       environment.document.createError(this, String.format("Field '%s' was not defined within the record", fieldToken.text), "ViewerPolicy");
       return;
     }
-    environment.rules.IsClient(fd.type, false);
+    RuleSetAsync.IsPrincipal(environment, fd.type, false);
   }
 
   @Override

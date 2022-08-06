@@ -98,9 +98,14 @@ public class RuleSetAssignment {
     if (aText && bString) {
       return true;
     }
-    final var aClient = RuleSetAsync.IsClient(environment, typeA, true);
-    final var bClient = RuleSetAsync.IsClient(environment, typeB, true);
-    if (aClient && bClient) {
+    final var aSecureClient = RuleSetAsync.IsSecurePrincipal(environment, typeA, true);
+    final var bSecureClient = RuleSetAsync.IsSecurePrincipal(environment, typeB, true);
+    if (aSecureClient && bSecureClient) {
+      return true;
+    }
+    final var aClient = RuleSetAsync.IsPrincipal(environment, typeA, true);
+    final var bClient = RuleSetAsync.IsPrincipal(environment, typeB, true);
+    if (aClient && (bClient || bSecureClient)) {
       return true;
     }
     final var aDynamic = RuleSetCommon.IsDynamic(environment, typeA, true);

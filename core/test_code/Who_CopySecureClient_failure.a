@@ -1,0 +1,8 @@
+message M {
+}
+
+channel zoo(M m) {
+  secure<principal> sc = @who;
+  principal w = sc;
+  secure<principal> copy = w;
+}

@@ -64,8 +64,8 @@ public class RuleSetEquality {
       if (aStateMachineRef && bStateMachineRef) {
         return CanTestEqualityResult.Yes;
       }
-      final var aClient = RuleSetAsync.IsClient(environment, typeA, true);
-      final var bClient = RuleSetAsync.IsClient(environment, typeB, true);
+      final var aClient = RuleSetAsync.IsPrincipal(environment, typeA, true) || RuleSetAsync.IsSecurePrincipal(environment, typeA, true);
+      final var bClient = RuleSetAsync.IsPrincipal(environment, typeB, true) || RuleSetAsync.IsSecurePrincipal(environment, typeB, true);
       if (aClient && bClient) {
         return CanTestEqualityResult.Yes;
       }

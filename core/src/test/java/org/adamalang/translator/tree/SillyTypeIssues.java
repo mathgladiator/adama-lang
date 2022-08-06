@@ -251,8 +251,17 @@ public class SillyTypeIssues {
   @Test
   public void ntprincipal() {
     new TyNativePrincipal(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
+  }
+
+  @Test
+  public void future() {
     new TyNativeFuture(null, null, null, new TokenizedItem<>(new TyNativeVoid()))
         .writeTypeReflectionJson(new JsonStreamWriter());
+  }
+
+  @Test
+  public void securentprincipal() {
+    new TyNativeSecurePrincipal(null, null, null, null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
   }
 
   @Test

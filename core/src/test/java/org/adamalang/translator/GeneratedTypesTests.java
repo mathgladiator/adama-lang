@@ -4996,7 +4996,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __track(5);");
     gold.append("\n    final boolean eq = (NtPrincipal.NO_ONE).equals(__who);");
     gold.append("\n    __track(6);");
-    gold.append("\n    final boolean neq = !(NtPrincipal.NO_ONE).equals(__who);");
+    gold.append("\n    final boolean neq = !((NtPrincipal.NO_ONE).equals(__who));");
     gold.append("\n    __track(7);");
     gold.append("\n    return true;");
     gold.append("\n  }");

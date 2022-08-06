@@ -52,6 +52,7 @@ public class DefineService extends Definition {
 
   public static class ServiceMethod extends Definition {
     public final Token methodToken;
+    public final Token secured;
     public final Token pairOpen;
     public final Token inputTypeName;
     public final Token comma;
@@ -61,8 +62,9 @@ public class DefineService extends Definition {
     public final Token name;
     public final Token semicolon;
 
-    public ServiceMethod(Token methodToken, Token pairOpen, Token inputTypeName, Token comma, Token outputTypeName, Token outputArrayExt, Token pairClose, Token name, Token semicolon) {
+    public ServiceMethod(Token methodToken, Token secured, Token pairOpen, Token inputTypeName, Token comma, Token outputTypeName, Token outputArrayExt, Token pairClose, Token name, Token semicolon) {
       this.methodToken = methodToken;
+      this.secured = secured;
       this.pairOpen = pairOpen;
       this.inputTypeName = inputTypeName;
       this.comma = comma;
@@ -75,9 +77,16 @@ public class DefineService extends Definition {
       ingest(semicolon);
     }
 
+    public boolean requiresSecureCaller() {
+      return secured != null;
+    }
+
     @Override
     public void emit(Consumer<Token> yielder) {
       yielder.accept(methodToken);
+      if (secured != null) {
+        yielder.accept(secured);
+      }
       yielder.accept(pairOpen);
       yielder.accept(inputTypeName);
       yielder.accept(comma);

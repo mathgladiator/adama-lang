@@ -102,11 +102,6 @@ public class Rules {
     return RuleSetCommon.IsBoolean(environment, tyType, silent);
   }
 
-  /** FROM: RuleSetAsync */
-  public boolean IsClient(final TyType tyType, final boolean silent) {
-    return RuleSetAsync.IsClient(environment, tyType, silent);
-  }
-
   /** FROM: RuleSetFunctions */
   public boolean IsFunction(final TyType tyType, final boolean silent) {
     return RuleSetFunctions.IsFunction(environment, tyType, silent);

@@ -516,7 +516,9 @@ public class Parser {
       if (!nextOrClose.isIdentifier()) {
         throw new ParseException("Service was expecting an identifier", tokens.getLastTokenIfAvailable());
       }
+
       if (nextOrClose.isIdentifier("method")) {
+        Token secured = tokens.popIf((t) -> t.isIdentifier("secured"));
         Token pairOpen = consumeExpectedSymbol("<");
         Token inputTypeName = id();
         Token comma = consumeExpectedSymbol(",");
@@ -525,7 +527,7 @@ public class Parser {
         Token pairClose = consumeExpectedSymbol(">");
         Token methodName = id();
         Token semicolon = consumeExpectedSymbol(";");
-        DefineService.ServiceMethod method = new DefineService.ServiceMethod(nextOrClose, pairOpen, inputTypeName, comma, outputTypeName, outputArrayExt, pairClose, methodName, semicolon);
+        DefineService.ServiceMethod method = new DefineService.ServiceMethod(nextOrClose, secured, pairOpen, inputTypeName, comma, outputTypeName, outputArrayExt, pairClose, methodName, semicolon);
         methods.add(method);
         emissions.add((y) -> method.emit(y));
       } else {
@@ -1219,6 +1221,12 @@ public class Parser {
       case "client":
       case "principal":
         return new TyNativePrincipal(behavior, readonlyToken, token);
+      case "secure": {
+        Token open = consumeExpectedSymbol("<");
+        Token principal = consumeExpectedIdentifier("principal");
+        Token close = consumeExpectedSymbol(">");
+        return new TyNativeSecurePrincipal(behavior, readonlyToken, token, open, principal, close);
+      }
       case "asset":
         return new TyNativeAsset(behavior, readonlyToken, token);
       case "dynamic":
@@ -1533,6 +1541,7 @@ public class Parser {
     switch (token.text) {
       case "bool":
       case "client":
+      case "secure":
       case "principal":
       case "dynamic":
       case "double":
