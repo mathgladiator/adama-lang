@@ -508,6 +508,90 @@ public class ConnectionRouter {
                 }
               });
             } return;
+            case "connection/send-once": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConnectionSendOnce.start();
+              ConnectionSendOnceRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(ConnectionSendOnceRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
+                  if (handlerToUse != null) {
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("failure-code", 410619);
+                    nexus.logger.log(_accessLogItem);
+                    mInstance.failure(410619);
+                    responder.error(new ErrorCodeException(410619));
+                  }
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "connection/can-attach": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConnectionCanAttach.start();
+              ConnectionCanAttachRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(ConnectionCanAttachRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
+                  if (handlerToUse != null) {
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new YesResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("failure-code", 494559);
+                    nexus.logger.log(_accessLogItem);
+                    mInstance.failure(494559);
+                    responder.error(new ErrorCodeException(494559));
+                  }
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "connection/attach": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConnectionAttach.start();
+              ConnectionAttachRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(ConnectionAttachRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
+                  if (handlerToUse != null) {
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("failure-code", 442363);
+                    nexus.logger.log(_accessLogItem);
+                    mInstance.failure(442363);
+                    responder.error(new ErrorCodeException(442363));
+                  }
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "connection/update": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConnectionUpdate.start();
               ConnectionUpdateRequest.resolve(session, nexus, request, new Callback<>() {

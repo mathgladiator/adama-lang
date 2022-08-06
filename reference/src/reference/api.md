@@ -1,6 +1,7 @@
 # API Reference 
  Methods: 
-[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [AccountSetPassword](#method-accountsetpassword), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceUsage](#method-spaceusage), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [DocumentCreate](#method-documentcreate), [DocumentList](#method-documentlist), [ConnectionCreate](#method-connectioncreate), [ConnectionSend](#method-connectionsend), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
+[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [AccountSetPassword](#method-accountsetpassword), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceUsage](#method-spaceusage), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [DocumentCreate](#method-documentcreate), [DocumentList](#method-documentlist), [ConnectionCreate](#method-connectioncreate), [ConnectionSend](#method-connectionsend), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
+
 ## Method: InitSetupAccount
 This initiates developer machine via email verification.
 
@@ -21,6 +22,7 @@ connection.InitSetupAccount(email, {
 ```
 
 This method simply returns void.
+
 ## Method: InitConvertGoogleUser
 The converts and validates a google token into an Adama token.
 
@@ -46,6 +48,7 @@ connection.InitConvertGoogleUser(access-token, {
 | name | type | documentation |
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
+
 ## Method: InitCompleteAccount
 This establishes a developer machine via email verification.
 
@@ -80,6 +83,7 @@ connection.InitCompleteAccount(email, revoke, code, {
 | name | type | documentation |
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
+
 ## Method: AccountSetPassword
 Set the password for an Adama developer.
 
@@ -101,6 +105,7 @@ connection.AccountSetPassword(identity, password, {
 ```
 
 This method simply returns void.
+
 ## Method: AccountLogin
 Sign an Adama developer in with an email and password pair.
 
@@ -127,6 +132,7 @@ connection.AccountLogin(email, password, {
 | name | type | documentation |
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
+
 ## Method: Probe
 This is useful to validate an identity without executing anything.
 
@@ -147,6 +153,7 @@ connection.Probe(identity, {
 ```
 
 This method simply returns void.
+
 ## Method: AuthorityCreate
 Create an authority. See [Authentication](/reference/auth.md) for more details.
 
@@ -172,6 +179,7 @@ connection.AuthorityCreate(identity, {
 | name | type | documentation |
 | --- | --- | --- |
 | authority | String | An authority is collection of third party users authenticated via a public keystore. |
+
 ## Method: AuthoritySet
 Set the public keystore for the authority.
 
@@ -194,6 +202,7 @@ connection.AuthoritySet(identity, authority, key-store, {
 ```
 
 This method simply returns void.
+
 ## Method: AuthorityGet
 Get the public keystore for the authority.
 
@@ -220,6 +229,7 @@ connection.AuthorityGet(identity, authority, {
 | name | type | documentation |
 | --- | --- | --- |
 | keystore | ObjectNode | A bunch of public keys to validate tokens for an authority. |
+
 ## Method: AuthorityList
 List authorities for the given developer.
 
@@ -247,6 +257,7 @@ connection.AuthorityList(identity, {
 | name | type | documentation |
 | --- | --- | --- |
 | authority | String | An authority is collection of third party users authenticated via a public keystore. |
+
 ## Method: AuthorityDestroy
 Destroy an authority.
 
@@ -270,6 +281,7 @@ connection.AuthorityDestroy(identity, authority, {
 ```
 
 This method simply returns void.
+
 ## Method: SpaceCreate
 Create a space.
 
@@ -291,6 +303,7 @@ connection.SpaceCreate(identity, space, {
 ```
 
 This method simply returns void.
+
 ## Method: SpaceGenerateKey
 Generate a secret key for a space.
 
@@ -325,6 +338,7 @@ connection.SpaceGenerateKey(identity, space, {
 | --- | --- | --- |
 | key-id | Integer | Unique id of the private-key used for a secret. |
 | public-key | String | A public key to decrypt a secret with key arrangement. |
+
 ## Method: SpaceUsage
 Get the most recent space usage in terms of billable hours.
 
@@ -372,6 +386,7 @@ connection.SpaceUsage(identity, space, limit, {
 | bandwidth | Long | Bytes used to transmit. |
 | first-party-service-calls | Long | Number of services calls made (managed by platform). |
 | third-party-service-calls | Long | Number of services calls made (managed by developers). |
+
 ## Method: SpaceGet
 Get the deployment plan for a space.
 
@@ -398,6 +413,7 @@ connection.SpaceGet(identity, space, {
 | name | type | documentation |
 | --- | --- | --- |
 | plan | ObjectNode | A plan is a predictable mapping of keys to implementations.             The core reason for having multiple concurrent implementations is to have a smooth and orderly deployment.             See [deployment plans](/reference/deployment-plan.md) for more information. |
+
 ## Method: SpaceSet
 Set the deployment plan for a space.
 
@@ -420,6 +436,7 @@ connection.SpaceSet(identity, space, plan, {
 ```
 
 This method simply returns void.
+
 ## Method: SpaceDelete
 Delete a space.
 
@@ -444,6 +461,7 @@ connection.SpaceDelete(identity, space, {
 ```
 
 This method simply returns void.
+
 ## Method: SpaceSetRole
 Set the role of an Adama developer for a particular space.
 
@@ -469,6 +487,7 @@ connection.SpaceSetRole(identity, space, email, role, {
 ```
 
 This method simply returns void.
+
 ## Method: SpaceReflect
 Get a schema for the space.
 
@@ -496,6 +515,7 @@ connection.SpaceReflect(identity, space, key, {
 | name | type | documentation |
 | --- | --- | --- |
 | reflection | ObjectNode | Schema of a document. |
+
 ## Method: SpaceList
 List the spaces available to the user.
 
@@ -533,6 +553,7 @@ connection.SpaceList(identity, marker, limit, {
 | created | String | When the item was created. |
 | enabled | Boolean | Is the item in question enabled. |
 | storage-bytes | Long | The storage used. |
+
 ## Method: DocumentCreate
 Create a document.
 
@@ -559,6 +580,7 @@ connection.DocumentCreate(identity, space, key, entropy, arg, {
 ```
 
 This method simply returns void.
+
 ## Method: DocumentList
 List documents within a space which are after the given marker.
 
@@ -595,6 +617,7 @@ connection.DocumentList(identity, space, marker, limit, {
 | created | String | When the item was created. |
 | updated | String | When the item was last updated. |
 | seq | Integer | The sequencer for the item. |
+
 ## Method: ConnectionCreate
 Create a connection to a document.
 
@@ -625,20 +648,20 @@ connection.ConnectionCreate(identity, space, key, viewer-state, {
 | name | type | documentation |
 | --- | --- | --- |
 | delta | ObjectNode | A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information. |
+
 ## Method: ConnectionSend
 Send a message to the document on the given channel.
 
 ### Parameters
 | name | required | type | documentation |
 | --- | --- | --- | --- |
-| connection | yes | Long | A unique key to locate a document connection.              Adama will multiplex multiple documents on the same WebSocket. |
 | channel | yes | String | Each document has multiple channels available to send messages too. |
 | message | yes | ObjectNode | The object sent to a document which will be the parameter for a channel handler. |
 
 
 ### Template
 ```js
-connection.ConnectionSend(connection, channel, message, {
+stream.Send(channel, message, {
   success: function(response) {
     // response.seq
   },
@@ -652,6 +675,93 @@ connection.ConnectionSend(connection, channel, message, {
 | name | type | documentation |
 | --- | --- | --- |
 | seq | Integer | The sequencer for the item. |
+
+## Method: ConnectionSendOnce
+Send a message to the document on the given channel with a dedupe key such that sending happens at most once.
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| channel | yes | String | Each document has multiple channels available to send messages too. |
+| dedupe | no | String | A key used to dedupe request such that at-most once processing is used. |
+| message | yes | ObjectNode | The object sent to a document which will be the parameter for a channel handler. |
+
+
+### Template
+```js
+stream.SendOnce(channel, dedupe, message, {
+  success: function(response) {
+    // response.seq
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+
+### Request response fields
+| name | type | documentation |
+| --- | --- | --- |
+| seq | Integer | The sequencer for the item. |
+
+## Method: ConnectionCanAttach
+Ask whether the connection can have attachments attached.
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+
+
+### Template
+```js
+stream.CanAttach({
+  success: function(response) {
+    // response.yes
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+
+### Request response fields
+| name | type | documentation |
+| --- | --- | --- |
+| yes | Boolean | The result of a boolean question. |
+
+## Method: ConnectionAttach
+This is an internal API used only by Adama for multi-region support.
+
+Start an upload for the given document with the given filename and content type.
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| asset-id | yes | String | The id of an asset. |
+| filename | yes | String | A filename is a nice description of the asset being uploaded. |
+| content-type | yes | String | The MIME type like text/json or video/mp4. |
+| size | yes | Long | The size of an attachment. |
+| digest-md5 | yes | String | The MD5 of an attachment. |
+| digest-sha384 | yes | String | The SHA384 of an attachment. |
+
+
+### Template
+```js
+stream.Attach(asset-id, filename, content-type, size, digest-md5, digest-sha384, {
+  success: function(response) {
+    // response.seq
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+
+### Request response fields
+| name | type | documentation |
+| --- | --- | --- |
+| seq | Integer | The sequencer for the item. |
+
 ## Method: ConnectionUpdate
 Update the viewer state of the document.
 
@@ -661,13 +771,12 @@ For example, the viewer state is how a document can provide real-time search or 
 ### Parameters
 | name | required | type | documentation |
 | --- | --- | --- | --- |
-| connection | yes | Long | A unique key to locate a document connection.              Adama will multiplex multiple documents on the same WebSocket. |
 | viewer-state | no | ObjectNode | A connection to a document has a side-channel for passing information about the client's view into the evaluation of bubbles.             This allows for developers to implement real-time queries and pagination. |
 
 
 ### Template
 ```js
-connection.ConnectionUpdate(connection, viewer-state, {
+stream.Update(viewer-state, {
   success: function() {
   },
   failure: function(reason) {
@@ -676,18 +785,18 @@ connection.ConnectionUpdate(connection, viewer-state, {
 ```
 
 This method simply returns void.
+
 ## Method: ConnectionEnd
 Disconnect from the document document.
 
 ### Parameters
 | name | required | type | documentation |
 | --- | --- | --- | --- |
-| connection | yes | Long | A unique key to locate a document connection.              Adama will multiplex multiple documents on the same WebSocket. |
 
 
 ### Template
 ```js
-connection.ConnectionEnd(connection, {
+stream.End({
   success: function() {
   },
   failure: function(reason) {
@@ -696,6 +805,7 @@ connection.ConnectionEnd(connection, {
 ```
 
 This method simply returns void.
+
 ## Method: ConfigureMakeOrGetAssetKey
 Here, we ask if the connection if it has an asset key already.
 If not, then it will generate one and send it along.
@@ -720,6 +830,7 @@ connection.ConfigureMakeOrGetAssetKey({
 | name | type | documentation |
 | --- | --- | --- |
 | asset-key | String | A key used to connect the dots from the connection to assets to a browser.             This is a session-based encryption scheme to protect assets from leaking outside the browser. |
+
 ## Method: AttachmentStart
 Start an upload for the given document with the given filename and content type.
 
@@ -751,20 +862,20 @@ connection.AttachmentStart(identity, space, key, filename, content-type, {
 | name | type | documentation |
 | --- | --- | --- |
 | chunk_request_size | Integer | The attachment uploader is asking for a chunk size.             Using the WebSocket leverages a flow control based uploader such that contention on the WebSocket is minimized. |
+
 ## Method: AttachmentAppend
 Append a chunk with an MD5 to ensure data integrity.
 
 ### Parameters
 | name | required | type | documentation |
 | --- | --- | --- | --- |
-| upload | yes | Long | The id of the upload in progress. |
 | chunk-md5 | yes | String | A md5 hash of a chunk being uploaded.             This provides uploads with end-to-end data-integrity. |
 | base64-bytes | yes | String | Bytes encoded in base64. |
 
 
 ### Template
 ```js
-connection.AttachmentAppend(upload, chunk-md5, base64-bytes, {
+stream.Append(chunk-md5, base64-bytes, {
   success: function() {
   },
   failure: function(reason) {
@@ -773,18 +884,18 @@ connection.AttachmentAppend(upload, chunk-md5, base64-bytes, {
 ```
 
 This method simply returns void.
+
 ## Method: AttachmentFinish
 Finishing uploading the attachment upload.
 
 ### Parameters
 | name | required | type | documentation |
 | --- | --- | --- | --- |
-| upload | yes | Long | The id of the upload in progress. |
 
 
 ### Template
 ```js
-connection.AttachmentFinish(upload, {
+stream.Finish({
   success: function() {
   },
   failure: function(reason) {

@@ -21,8 +21,8 @@ public class AuthenticatedUserTests {
 
   @Test
   public void flow() throws Exception {
-    AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, 123, new NtPrincipal("jeff", "adama"),
-        new ConnectionContext("origin", "ip", "agent", "asset-key"));
+    AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, 123, new NtPrincipal("jeff", "adama"), new ConnectionContext("origin", "ip", "agent", "asset-key"), false);
+    Assert.assertFalse(user.internal);
     KeyPair pair = PerSessionAuthenticator.inventHostKey();
     String identity = user.asIdentity(42, pair.getPrivate());
     PerSessionAuthenticator.ParsedToken parsedToken = new PerSessionAuthenticator.ParsedToken(identity);

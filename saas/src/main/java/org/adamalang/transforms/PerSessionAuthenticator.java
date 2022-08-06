@@ -103,7 +103,7 @@ public class PerSessionAuthenticator {
     try {
       if (identity.startsWith("anonymous:")) {
         String agent = identity.substring("anonymous:".length());
-        callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Anonymous, -1, new NtPrincipal(agent, "anonymous"), defaultContext));
+        callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Anonymous, -1, new NtPrincipal(agent, "anonymous"), defaultContext, false));
         return;
       }
       // TODO: check for Google Prefix
@@ -116,7 +116,7 @@ public class PerSessionAuthenticator {
             .build()
             .parseClaimsJws(identity);
         ConnectionContext context = new ConnectionContext(parsedToken.proxy_origin, parsedToken.proxy_ip, parsedToken.proxy_useragent, parsedToken.proxy_asset_key);
-        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_source, parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context);
+        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_source, parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context, true);
         session.identityCache.put(identity, user);
         callback.success(user);
         return;
@@ -131,7 +131,7 @@ public class PerSessionAuthenticator {
                 .requireIssuer("adama")
                 .build()
                 .parseClaimsJws(identity);
-            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, userId, new NtPrincipal("" + userId, "adama"), defaultContext);
+            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, userId, new NtPrincipal("" + userId, "adama"), defaultContext, false);
             session.identityCache.put(identity, user);
             callback.success(user);
             return;
@@ -144,7 +144,7 @@ public class PerSessionAuthenticator {
         String keystoreJson = Authorities.getKeystoreInternal(nexus.dataBase, parsedToken.iss);
         Keystore keystore = Keystore.parse(keystoreJson);
         NtPrincipal who = keystore.validate(parsedToken.iss, identity);
-        AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who, defaultContext);
+        AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who, defaultContext, false);
         session.identityCache.put(identity, user);
         callback.success(user);
       }

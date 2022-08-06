@@ -30,11 +30,15 @@ public class AuthenticatedUser {
   /** details about the connection */
   public final ConnectionContext context;
 
-  public AuthenticatedUser(Source source, int id, NtPrincipal who, ConnectionContext context) {
+  /** Was this user internally validated */
+  public final boolean internal;
+
+  public AuthenticatedUser(Source source, int id, NtPrincipal who, ConnectionContext context, boolean internal) {
     this.source = source;
     this.id = id;
     this.who = who;
     this.context = context;
+    this.internal = internal;
   }
 
   public enum Source {

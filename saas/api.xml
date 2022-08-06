@@ -144,6 +144,12 @@
         </documentation>
     </parameter-definition>
 
+    <parameter-definition name="dedupe" type="string" optional="true" logged="true">
+        <documentation>
+            A key used to dedupe request such that at-most once processing is used.
+        </documentation>
+    </parameter-definition>
+
 
     <parameter-definition name="name" type="string" missing-error="453647" logged="true">
         <documentation>
@@ -176,6 +182,12 @@
         </documentation>
     </parameter-definition>
 
+    <parameter-definition name="asset-id" type="string" missing-error="476156" logged="true">
+        <documentation>
+            The id of an asset.
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="filename" type="string" missing-error="470028" logged="true">
         <documentation>
             A filename is a nice description of the asset being uploaded.
@@ -192,6 +204,24 @@
     <parameter-definition name="content-type" type="string" missing-error="455691" logged="true">
         <documentation>
             The MIME type like text/json or video/mp4.
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="size" type="long" missing-error="477179" logged="true">
+        <documentation>
+            The size of an attachment.
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="digest-md5" type="string" missing-error="445437" logged="true">
+        <documentation>
+            The MD5 of an attachment.
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="digest-sha384" type="string" missing-error="406525" logged="true">
+        <documentation>
+            The SHA384 of an attachment.
         </documentation>
     </parameter-definition>
 
@@ -330,6 +360,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="yes" type="bool">
+        <documentation>
+            The result of a boolean question.
+        </documentation>
+    </field-definition>
+
     <field-definition name="chunk_request_size" type="int">
         <documentation>
             The attachment uploader is asking for a chunk size.
@@ -431,6 +467,10 @@
 
     <responder name="seq">
         <field name="seq"/>
+    </responder>
+
+    <responder name="yes">
+        <field name="yes"/>
     </responder>
 
     <responder name="plan">
@@ -684,6 +724,38 @@
         <parameter name="message"/>
         <documentation>
             Send a message to the document on the given channel.
+        </documentation>
+    </method>
+
+    <method name="connection/send-once" responder="seq" handler="document-stream" find-by="connection" error-find-by="410619">
+        <parameter name="connection"/>
+        <parameter name="channel"/>
+        <parameter name="dedupe"/>
+        <parameter name="message"/>
+        <documentation>
+            Send a message to the document on the given channel with a dedupe key such that sending happens at most once.
+        </documentation>
+    </method>
+
+    <method name="connection/can-attach" responder="yes" handler="document-stream" find-by="connection" error-find-by="494559">
+        <parameter name="connection"/>
+        <documentation>
+            Ask whether the connection can have attachments attached.
+        </documentation>
+    </method>
+
+    <method name="connection/attach" responder="seq" handler="document-stream" find-by="connection" error-find-by="442363">
+        <parameter name="connection"/>
+        <parameter name="asset-id"/>
+        <parameter name="filename"/>
+        <parameter name="content-type"/>
+        <parameter name="size"/>
+        <parameter name="digest-md5"/>
+        <parameter name="digest-sha384"/>
+        <documentation>
+            This is an internal API used only by Adama for multi-region support.
+
+            Start an upload for the given document with the given filename and content type.
         </documentation>
     </method>
 
@@ -1173,7 +1245,6 @@
 446419
 457680
 471007
-494559
 479196
 461788
 459736
@@ -1202,12 +1273,6 @@
 402428
 488444
 471036
-476156
-406525
-445437
-477179
-442363
-410619
 -->
 
 </api>

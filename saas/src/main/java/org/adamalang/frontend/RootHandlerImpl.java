@@ -489,13 +489,13 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public DocumentStreamHandler handle(Session session, ConnectionCreateRequest request, DataResponder responder) {
+  public DocumentStreamHandler handle(Session session, ConnectionCreateRequest connect, DataResponder responder) {
     return new DocumentStreamHandler() {
       private AdamaStream connection;
 
       @Override
       public void bind() {
-        connection = nexus.adama.connect(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", request.who.context.assetKey, new SimpleEvents() {
+        connection = nexus.adama.connect(connect.who.context.remoteIp, connect.who.context.origin, connect.who.who.agent, connect.who.who.authority, connect.space, connect.key, connect.viewerState != null ? connect.viewerState.toString() : "{}", connect.who.context.assetKey, new SimpleEvents() {
           @Override
           public void connected() {
           }
@@ -524,18 +524,37 @@ public class RootHandlerImpl implements RootHandler {
       }
 
       @Override
-      public void handle(ConnectionSendRequest request, SeqResponder responder) {
-        connection.send(request.channel, null, request.message.toString(), new Callback<Integer>() {
-          @Override
-          public void success(Integer seq) {
-            responder.complete(seq);
-          }
+      public void handle(ConnectionCanAttachRequest request, YesResponder responder) {
+       connection.canAttach(new Callback<Boolean>() {
+         @Override
+         public void success(Boolean value) {
+           responder.complete(value);
+         }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            responder.error(ex);
-          }
-        });
+         @Override
+         public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+         }
+       });
+      }
+
+      @Override
+      public void handle(ConnectionAttachRequest request, SeqResponder responder) {
+        if (connect.who.internal) {
+          connection.attach(request.assetId, request.filename, request.contentType, request.size, request.digestMd5, request.digestSha384, WRAP(responder));
+        } else {
+          responder.error(new ErrorCodeException(ErrorCodes.API_LOCKED_INTERNAL));
+        }
+      }
+
+      @Override
+      public void handle(ConnectionSendOnceRequest request, SeqResponder responder) {
+        connection.send(request.channel, request.dedupe, request.message.toString(), WRAP(responder));
+      }
+
+      @Override
+      public void handle(ConnectionSendRequest request, SeqResponder responder) {
+        connection.send(request.channel, null, request.message.toString(), WRAP(responder));
       }
 
       @Override
@@ -551,7 +570,7 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void logInto(ObjectNode node) {
-        request.logInto(node);
+        connect.logInto(node);
       }
     };
   }
@@ -724,5 +743,19 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void disconnect() {
+  }
+
+  private static Callback<Integer> WRAP(SeqResponder seqResponder) {
+    return new Callback<>() {
+      @Override
+      public void success(Integer seq) {
+        seqResponder.complete(seq);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        seqResponder.error(ex);
+      }
+    };
   }
 }

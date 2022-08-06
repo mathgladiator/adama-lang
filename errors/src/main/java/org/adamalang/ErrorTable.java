@@ -500,6 +500,16 @@ public class ErrorTable {
     names.put(928828, "NET_LCSM_TIMEOUT");
     descriptions.put(928828, "no description of error (yet)");
     retry.add(928828);
+    names.put(937164, "API_LOCKED_INTERNAL");
+    descriptions.put(937164, "no description of error (yet)");
+    names.put(904392, "WEB_CLIENT_CONNECTION_TIMEOUT");
+    descriptions.put(904392, "no description of error (yet)");
+    names.put(991435, "WEB_CLIENT_CONNECTION_REJECTED");
+    descriptions.put(991435, "no description of error (yet)");
+    names.put(924877, "WEB_CLIENT_STREAM_TIMEOUT");
+    descriptions.put(924877, "no description of error (yet)");
+    names.put(984268, "WEB_CLIENT_STREAM_REJECTED");
+    descriptions.put(984268, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");

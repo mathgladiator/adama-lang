@@ -573,6 +573,15 @@ export interface SpaceListingResponder {
   failure(reason: number): void;
 }
 
+export interface YesPayload {
+  yes: boolean;
+}
+
+export interface YesResponder {
+  success(data: YesPayload): void;
+  failure(reason: number): void;
+}
+
 
   /**[END-EXPORTS]**/
 
@@ -1125,6 +1134,33 @@ export class Connection {
           id: subId,
           responder: subResponder,
           request: { method: "connection/send", id: subId, "connection":parId, "channel": channel, "message": message}
+        });
+      },
+      sendOnce: function(channel: string, dedupe: string, message: any, subResponder: SeqResponder) {
+        self.nextId++;
+        var subId = self.nextId;
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/send-once", id: subId, "connection":parId, "channel": channel, "dedupe": dedupe, "message": message}
+        });
+      },
+      canAttach: function(subResponder: YesResponder) {
+        self.nextId++;
+        var subId = self.nextId;
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/can-attach", id: subId, "connection":parId}
+        });
+      },
+      attach: function(assetId: string, filename: string, contentType: string, size: string, digestMd5: string, digestSha384: string, subResponder: SeqResponder) {
+        self.nextId++;
+        var subId = self.nextId;
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/attach", id: subId, "connection":parId, "asset-id": assetId, "filename": filename, "content-type": contentType, "size": size, "digest-md5": digestMd5, "digest-sha384": digestSha384}
         });
       },
       update: function(viewerState: any, subResponder: SimpleResponder) {

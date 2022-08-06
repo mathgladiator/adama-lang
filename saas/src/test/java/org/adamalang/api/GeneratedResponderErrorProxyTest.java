@@ -52,6 +52,7 @@ public class GeneratedResponderErrorProxyTest {
     new SeqResponder(responder).error(new ErrorCodeException(13));
     new SimpleResponder(responder).error(new ErrorCodeException(14));
     new SpaceListingResponder(responder).error(new ErrorCodeException(15));
-    Assert.assertEquals(120, errorCount.get());
+    new YesResponder(responder).error(new ErrorCodeException(16));
+    Assert.assertEquals(136, errorCount.get());
   }
 }

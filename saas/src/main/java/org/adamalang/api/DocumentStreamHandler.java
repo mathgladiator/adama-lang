@@ -17,6 +17,12 @@ public interface DocumentStreamHandler {
 
   public void handle(ConnectionSendRequest request, SeqResponder responder);
 
+  public void handle(ConnectionSendOnceRequest request, SeqResponder responder);
+
+  public void handle(ConnectionCanAttachRequest request, YesResponder responder);
+
+  public void handle(ConnectionAttachRequest request, SeqResponder responder);
+
   public void handle(ConnectionUpdateRequest request, SimpleResponder responder);
 
   public void handle(ConnectionEndRequest request, SimpleResponder responder);

@@ -9,6 +9,7 @@
  */
 package org.adamalang.apikit.docgen;
 
+import org.adamalang.apikit.model.Common;
 import org.adamalang.apikit.model.FieldDefinition;
 import org.adamalang.apikit.model.Method;
 import org.adamalang.apikit.model.ParameterDefinition;
@@ -34,7 +35,8 @@ public class AssembleAPIDocs {
     }
     markdown.append("\n");
     for (Method method : methods) {
-      markdown.append("## Method: ").append(method.camelName).append("\n");
+      boolean specialHandler = !"Root".equals(method.handler);
+      markdown.append("\n## Method: ").append(method.camelName).append("\n");
       for (String ln : method.documentation.trim().split(Pattern.quote("\n"))) {
         markdown.append(ln.trim()).append("\n");
       }
@@ -44,6 +46,9 @@ public class AssembleAPIDocs {
         markdown.append("| name | required | type | documentation |\n");
         markdown.append("| --- | --- | --- | --- |\n");
         for (ParameterDefinition pd : method.parameters) {
+          if (specialHandler && pd.name.equals(method.findBy)) {
+            continue;
+          }
           markdown.append("| ").append(pd.name).append(" | ").append(pd.optional ? "no" : "yes").append(" | ").append(pd.type.javaType()).append(" | ").append(String.join(" ", pd.documentation.split(Pattern.quote("\n"))).trim()).append(" |\n");
         }
         markdown.append("\n");
@@ -54,9 +59,20 @@ public class AssembleAPIDocs {
       markdown.append("\n");
       markdown.append("### Template\n");
       markdown.append("```js\n");
-      markdown.append("connection.").append(method.camelName).append("(");
+      String methodNameToUse = method.name;
+      if (methodNameToUse.contains("/") && specialHandler) {
+        methodNameToUse = methodNameToUse.substring(methodNameToUse.indexOf('/') + 1);
+      }
+      if (specialHandler) {
+        markdown.append("stream.").append(Common.camelize(methodNameToUse)).append("(");
+      } else {
+        markdown.append("connection.").append(Common.camelize(methodNameToUse)).append("(");
+      }
       boolean notfirst = false;
       for (ParameterDefinition pd : method.parameters) {
+        if (specialHandler && pd.name.equals(method.findBy)) {
+          continue;
+        }
         if (notfirst) {
           markdown.append(", ");
         }

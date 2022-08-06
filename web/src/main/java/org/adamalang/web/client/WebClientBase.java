@@ -44,6 +44,7 @@ public class WebClientBase {
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(WebClientBase.class);
   private final WebConfig config;
   private final EventLoopGroup group;
+
   public WebClientBase(WebConfig config) {
     group = new NioEventLoopGroup();
     this.config = config;

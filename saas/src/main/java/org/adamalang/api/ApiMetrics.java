@@ -37,6 +37,9 @@ public class ApiMetrics {
   public final RequestResponseMonitor monitor_DocumentList;
   public final StreamMonitor monitor_ConnectionCreate;
   public final RequestResponseMonitor monitor_ConnectionSend;
+  public final RequestResponseMonitor monitor_ConnectionSendOnce;
+  public final RequestResponseMonitor monitor_ConnectionCanAttach;
+  public final RequestResponseMonitor monitor_ConnectionAttach;
   public final RequestResponseMonitor monitor_ConnectionUpdate;
   public final RequestResponseMonitor monitor_ConnectionEnd;
   public final RequestResponseMonitor monitor_ConfigureMakeOrGetAssetKey;
@@ -69,6 +72,9 @@ public class ApiMetrics {
     this.monitor_DocumentList = factory.makeRequestResponseMonitor("document/list");
     this.monitor_ConnectionCreate = factory.makeStreamMonitor("connection/create");
     this.monitor_ConnectionSend = factory.makeRequestResponseMonitor("connection/send");
+    this.monitor_ConnectionSendOnce = factory.makeRequestResponseMonitor("connection/send-once");
+    this.monitor_ConnectionCanAttach = factory.makeRequestResponseMonitor("connection/can-attach");
+    this.monitor_ConnectionAttach = factory.makeRequestResponseMonitor("connection/attach");
     this.monitor_ConnectionUpdate = factory.makeRequestResponseMonitor("connection/update");
     this.monitor_ConnectionEnd = factory.makeRequestResponseMonitor("connection/end");
     this.monitor_ConfigureMakeOrGetAssetKey = factory.makeRequestResponseMonitor("configure/make-or-get-asset-key");

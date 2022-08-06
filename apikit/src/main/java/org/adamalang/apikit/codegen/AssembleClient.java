@@ -14,6 +14,7 @@ import org.adamalang.apikit.model.*;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class AssembleClient {
 
@@ -39,15 +40,6 @@ public class AssembleClient {
     } else {
       throw new Exception("Failed to find insertion points within the client");
     }
-  }
-
-  private static String removeCommonFromChild(String base, String child) {
-    for (int k = 0; k < Math.min(base.length(), child.length()); k++) {
-      if (base.charAt(k) != child.charAt(k)) {
-        return child.substring(k).toLowerCase(Locale.ROOT);
-      }
-    }
-    return child;
   }
 
   private static String makeResponders(Map<String, Responder> responders) {
@@ -114,7 +106,11 @@ public class AssembleClient {
         }
         if (submethods.size() > 0) {
           for (Method submethod : submethods) {
-            ts.append(",\n      ").append(removeCommonFromChild(method.camelName, submethod.camelName)).append(": function(");
+            String subMethodNameToUse = submethod.name;
+            if (subMethodNameToUse.contains("/")) {
+              subMethodNameToUse = subMethodNameToUse.substring(subMethodNameToUse.indexOf('/') + 1);
+            }
+            ts.append(",\n      ").append(Common.camelize(subMethodNameToUse, true)).append(": function(");
             boolean append2 = false;
             for (ParameterDefinition parameter : submethod.parameters) {
               if (submethod.findBy.equals(parameter.name)) {
