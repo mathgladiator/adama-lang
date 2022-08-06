@@ -12,6 +12,8 @@ package org.adamalang.runtime.deploy;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,5 +37,7 @@ public class DeploymentFactoryBaseTests {
         });
     Assert.assertEquals(0, base.spacesAvailable().size());
     Assert.assertNull(base.hashOf("space"));
+    base.attachDeliverer(Deliverer.FAILURE);
+    base.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), 400, null, true, Callback.DONT_CARE_INTEGER);
   }
 }
