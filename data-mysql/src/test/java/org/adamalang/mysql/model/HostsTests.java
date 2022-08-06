@@ -26,19 +26,19 @@ public class HostsTests {
       try {
         installer.install();
         Assert.assertEquals(0, Hosts.listHosts(dataBase, "region", "web").size());
-        Hosts.initializeHost(dataBase, "region", "machine1", "web", "pubKey123");
+        int web1 = Hosts.initializeHost(dataBase, "region", "machine1", "web", "pubKey123");
         Assert.assertEquals(1, Hosts.listHosts(dataBase, "region", "web").size());
-        Hosts.initializeHost(dataBase, "region", "machine2", "web", "pubKey42");
-        Hosts.initializeHost(dataBase, "region", "machine1", "adama", "pubKeyX");
-        Hosts.initializeHost(dataBase, "region", "machine2", "adama", "pubKeyY");
+        int web2 = Hosts.initializeHost(dataBase, "region", "machine2", "web", "pubKey42");
+        int web3 = Hosts.initializeHost(dataBase, "region", "machine1", "adama", "pubKeyX");
+        int web4 = Hosts.initializeHost(dataBase, "region", "machine2", "adama", "pubKeyY");
         List<String> results = Hosts.listHosts(dataBase, "region", "web");
         Assert.assertEquals("machine1", results.get(0));
         Assert.assertEquals("machine2", results.get(1));
-        Assert.assertEquals("pubKey123", Hosts.getHostPublicKey(dataBase, "region", "machine1", "web"));
-        Assert.assertEquals("pubKey42", Hosts.getHostPublicKey(dataBase, "region", "machine2", "web"));
-        Assert.assertEquals("pubKeyX", Hosts.getHostPublicKey(dataBase, "region", "machine1", "adama"));
-        Assert.assertEquals("pubKeyY", Hosts.getHostPublicKey(dataBase, "region", "machine2", "adama"));
-        Assert.assertNull(Hosts.getHostPublicKey(dataBase, "r", "ma", "x"));
+        Assert.assertEquals("pubKey123", Hosts.getHostPublicKey(dataBase, web1));
+        Assert.assertEquals("pubKey42", Hosts.getHostPublicKey(dataBase, web2));
+        Assert.assertEquals("pubKeyX", Hosts.getHostPublicKey(dataBase, web3));
+        Assert.assertEquals("pubKeyY", Hosts.getHostPublicKey(dataBase, web4));
+        Assert.assertNull(Hosts.getHostPublicKey(dataBase, 1000));
       } finally {
         installer.uninstall();
       }

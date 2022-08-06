@@ -17,6 +17,7 @@ import org.adamalang.web.io.ConnectionContext;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.security.KeyPair;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +36,12 @@ public class AuthenticatorTests {
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(908303, ece.code);
     }
+  }
+
+  @Test
+  public void keys() throws Exception {
+    KeyPair hostKeyPair = Authenticator.inventHostKey();
+    Authenticator.decodePublicKey(Authenticator.encodePublicKey(hostKeyPair));
   }
 
   @Test

@@ -10,6 +10,8 @@
 package org.adamalang;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DurableListStore;
@@ -33,6 +35,7 @@ import org.adamalang.mysql.Installer;
 import org.adamalang.mysql.model.Deployments;
 import org.adamalang.mysql.data.Deployment;
 import org.adamalang.mysql.model.Finder;
+import org.adamalang.mysql.model.Hosts;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
@@ -53,6 +56,7 @@ import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
+import org.adamalang.transforms.Authenticator;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
@@ -68,6 +72,7 @@ import org.junit.Assert;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.security.KeyPair;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,6 +101,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public final DurableListStore store;
   private final CountDownLatch threadDeath;
   private final WebClientBase webBase;
+  private final KeyPair hostKeyPair;
 
   public final File caravanPath;
   public TestFrontEnd() throws Exception {
@@ -257,7 +263,10 @@ public class TestFrontEnd implements AutoCloseable, Email {
     };
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
     this.webBase = new WebClientBase(new WebConfig(new ConfigObject(Json.parseJsonObject("{}"))));
-    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, finder, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase);
+    this.hostKeyPair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+    int keyId = Hosts.initializeHost(dataBase, "region", "127.0.0.1:" + port, "web", Authenticator.encodePublicKey(hostKeyPair));
+    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, finder, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, hostKeyPair.getPrivate(), keyId);
+
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);
     connection = this.frontend.establish(context);

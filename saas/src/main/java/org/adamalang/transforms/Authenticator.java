@@ -13,19 +13,26 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.model.Authorities;
+import org.adamalang.mysql.model.Hosts;
 import org.adamalang.mysql.model.Users;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.Keystore;
 
 import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.regex.Pattern;
@@ -51,6 +58,21 @@ public class Authenticator {
     }
   }
 
+  public static KeyPair inventHostKey() {
+    return Keys.keyPairFor(SignatureAlgorithm.ES256);
+  }
+
+  public static String encodePublicKey(KeyPair pair) {
+    return new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+  }
+
+  public static PublicKey decodePublicKey(String publicKey64) throws Exception {
+    byte[] publicKey = Base64.getDecoder().decode(publicKey64);
+    X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
+    KeyFactory kf = KeyFactory.getInstance("EC");
+    return kf.generatePublic(spec);
+  }
+
   public void execute(Session session, String identity, Callback<AuthenticatedUser> callback) {
     AuthenticatedUser cacheHit = session.identityCache.get(identity);
     if (cacheHit != null) {
@@ -65,15 +87,26 @@ public class Authenticator {
       }
       // TODO: check for Google Prefix
       ParsedToken parsedToken = new ParsedToken(identity);
+      if ("web-host".equals(parsedToken.iss)) {
+        PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(nexus.dataBase, parsedToken.key_id));
+        Jwts.parserBuilder()
+            .setSigningKey(publicKey)
+            .requireIssuer("adama")
+            .build()
+            .parseClaimsJws(identity);
+        // TODO: origin and IP
+        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_source, parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority));
+        session.identityCache.put(identity, user);
+        callback.success(user);
+        return;
+      }
       if ("adama".equals(parsedToken.iss)) {
         int userId = Integer.parseInt(parsedToken.sub);
         for (String publicKey64 : Users.listKeys(nexus.dataBase, userId)) {
-          byte[] publicKey = Base64.getDecoder().decode(publicKey64);
-          X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
-          KeyFactory kf = KeyFactory.getInstance("EC");
+          PublicKey publicKey = decodePublicKey(publicKey64);
           try {
             Jwts.parserBuilder()
-                .setSigningKey(kf.generatePublic(spec))
+                .setSigningKey(publicKey)
                 .requireIssuer("adama")
                 .build()
                 .parseClaimsJws(identity);
@@ -103,6 +136,13 @@ public class Authenticator {
   public static class ParsedToken {
     public final String iss;
     public final String sub;
+    public final int key_id;
+    public final AuthenticatedUser.Source proxy_source;
+    public final int proxy_user_id;
+    public final String proxy_authority;
+    public final String proxy_origin;
+    public final String proxy_ip;
+    public final String proxy_asset_key;
 
     public ParsedToken(String token) throws ErrorCodeException {
       String[] parts = token.split(Pattern.quote("."));
@@ -114,6 +154,24 @@ public class Authenticator {
           if (tree != null && tree.isObject()) {
             JsonNode _iss = tree.get("iss");
             JsonNode _sub = tree.get("sub");
+            JsonNode _key_id = tree.get("kid");
+            if (_key_id != null && _key_id.isIntegralNumber()) {
+              this.key_id = _key_id.asInt();
+              this.proxy_source = AuthenticatedUser.Source.valueOf(tree.get("ps").asText());
+              this.proxy_user_id = tree.get("puid").asInt();
+              this.proxy_authority = tree.get("pa").asText();
+              this.proxy_origin = tree.get("po").asText();
+              this.proxy_ip = tree.get("pip").asText();
+              this.proxy_asset_key = tree.get("pak").asText();
+            } else {
+              this.key_id = -1;
+              this.proxy_source = null;
+              this.proxy_user_id = 0;
+              this.proxy_authority = null;
+              this.proxy_origin = null;
+              this.proxy_ip = null;
+              this.proxy_asset_key = null;
+            }
             if (_iss != null && _iss.isTextual() && _sub != null && _sub.isTextual()) {
               this.iss = _iss.textValue();
               this.sub = _sub.textValue();

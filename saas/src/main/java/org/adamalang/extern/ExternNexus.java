@@ -21,6 +21,7 @@ import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.io.JsonLogger;
 
 import java.io.File;
+import java.security.PrivateKey;
 
 public class ExternNexus {
   public final FrontendConfig config;
@@ -34,8 +35,10 @@ public class ExternNexus {
   public final String masterKey;
   public final MultiRegionClient adama;
   public final WebClientBase webBase;
+  public final PrivateKey webHostKey;
+  public final int publicKeyId;
 
-  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBase, Finder finder, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase) {
+  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBase, Finder finder, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, PrivateKey webHostKey, int publicKeyId) {
     this.config = config;
     this.email = email;
     this.uploader = uploader;
@@ -47,6 +50,8 @@ public class ExternNexus {
     this.masterKey = masterKey;
     this.adama = new MultiRegionClient(dataBase, client, finder);
     this.webBase = webBase;
+    this.webHostKey = webHostKey;
+    this.publicKeyId = publicKeyId;
     attachmentRoot.mkdir();
   }
 

@@ -30,6 +30,7 @@ import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.TargetsQuorum;
 import org.adamalang.net.client.routing.ClientRouter;
+import org.adamalang.transforms.Authenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,11 +60,12 @@ public class CommonServiceInit {
   public final AWSMetrics awsMetrics;
   public final String machine;
   public final org.adamalang.common.gossip.Engine engine;
+  public final int publicKeyId;
 
   public CommonServiceInit(Config config, Role role, int servicePort) throws Exception {
     MachineHeat.install();
     String identityFileName = config.get_string("identity_filename", "me.identity");
-    KeyPair keyPair = PublicPrivateKeyPartnership.genKeyPair();
+    KeyPair keyPair = Authenticator.inventHostKey();
     this.alive = new AtomicBoolean(true);
     this.region = config.get_string("region", null);
     this.role = role.name;
@@ -77,7 +79,7 @@ public class CommonServiceInit {
     this.finder = new Finder(database, region);
     this.system = SimpleExecutor.create("system");
     this.machine = this.identity.ip + ":" + servicePort;
-    Hosts.initializeHost(database, this.region, this.machine, role.name, PublicPrivateKeyPartnership.publicKeyOf(keyPair));
+    this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, Authenticator.encodePublicKey(keyPair));
 
     system.schedule(new NamedRunnable("database-ping") {
       @Override

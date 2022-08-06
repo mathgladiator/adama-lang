@@ -403,7 +403,7 @@ public class Service {
     Logger accessLog = LoggerFactory.getLogger("access");
     ExternNexus nexus = new ExternNexus(frontendConfig, email, init.s3, init.s3, init.database, init.finder, client, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
-    }, masterKey, webBase);
+    }, masterKey, webBase, init.hostKey, init.publicKeyId);
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus, http);
     // TODO: have some sense of health checking in the web package

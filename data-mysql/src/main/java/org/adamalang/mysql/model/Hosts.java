@@ -15,12 +15,13 @@ import org.adamalang.mysql.data.DocumentIndex;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Hosts {
   /** initialize the public key for a web host; this host has a private key that it will use to sign keys */
-  public static void initializeHost(DataBase dataBase, String region, String machine, String role, String publicKey) throws Exception {
+  public static int initializeHost(DataBase dataBase, String region, String machine, String role, String publicKey) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sqlDelete = "DELETE FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `machine`=? AND `role`=?";
       try (PreparedStatement statement = connection.prepareStatement(sqlDelete)) {
@@ -30,12 +31,13 @@ public class Hosts {
         statement.execute();
       }
       String sqlInsert = "INSERT INTO `" + dataBase.databaseName + "`.`hosts` (`region`, `machine`, `role`, `public_key`) VALUES (?,?,?,?)";
-      try (PreparedStatement statement = connection.prepareStatement(sqlInsert)) {
+      try (PreparedStatement statement = connection.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, region);
         statement.setString(2, machine);
         statement.setString(3, role);
         statement.setString(4, publicKey);
         statement.execute();
+        return DataBase.getInsertId(statement);
       }
     }
   }
@@ -58,13 +60,11 @@ public class Hosts {
   }
 
   /** get the public key for a machine within a region */
-  public static String getHostPublicKey(DataBase dataBase, String region, String machine, String role) throws Exception {
+  public static String getHostPublicKey(DataBase dataBase, int keyId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = "SELECT `public_key` FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `machine`=? AND `role`=?";
+      String sql = "SELECT `public_key` FROM `" + dataBase.databaseName + "`.`hosts` WHERE `id`=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
-        statement.setString(1, region);
-        statement.setString(2, machine);
-        statement.setString(3, role);
+        statement.setInt(1, keyId);
         try (ResultSet rs = statement.executeQuery()) {
           if (rs.next()) {
             return rs.getString(1);
