@@ -34,5 +34,6 @@ public class DComplexTests {
     Assert.assertEquals(
         "{\"r\":1.0,\"i\":2.0}{\"r\":3.0,\"i\":4.0}null{\"r\":1.0,\"i\":2.0}", stream.toString());
     Assert.assertEquals(48, db.__memory());
+    db.clear();
   }
 }

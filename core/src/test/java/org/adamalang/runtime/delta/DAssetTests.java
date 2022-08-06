@@ -34,6 +34,7 @@ public class DAssetTests {
     Assert.assertTrue(toTest.contains("\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\"}{\"id\":\""));
     Assert.assertTrue(toTest.contains("\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\"}null"));
     Assert.assertEquals(32, da.__memory());
+    da.clear();
   }
 
   @Test

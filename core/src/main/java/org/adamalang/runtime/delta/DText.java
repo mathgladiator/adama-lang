@@ -46,7 +46,7 @@ public class DText implements DeltaNode {
   /** memory usage */
   @Override
   public long __memory() {
-    return 1024;
+    return 64;
   }
 
   public void show(final RxText value, final PrivateLazyDeltaWriter writer) {
@@ -58,7 +58,7 @@ public class DText implements DeltaNode {
     PrivateLazyDeltaWriter obj = writer.planObject();
     if (initialized) {
       int start = seq;
-      String change = null;
+      String change;
       while ((change = value.current().changes.get(seq)) != null) {
         obj.planField("" + seq).writeString(change);
         seq++;

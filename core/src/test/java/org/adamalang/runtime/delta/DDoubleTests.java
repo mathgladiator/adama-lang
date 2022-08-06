@@ -36,5 +36,6 @@ public class DDoubleTests {
     db.show(2.71, writer);
     Assert.assertEquals("1.02.03.14null42.02.71", stream.toString());
     Assert.assertEquals(40, db.__memory());
+    db.clear();
   }
 }

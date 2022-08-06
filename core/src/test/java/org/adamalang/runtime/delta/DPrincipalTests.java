@@ -37,5 +37,6 @@ public class DPrincipalTests {
         "{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"}{\"@t\":1,\"agent\":\"a\",\"authority\":\"local\"}null{\"@t\":1,\"agent\":\"a\",\"authority\":\"local\"}{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"}",
         stream.toString());
     Assert.assertEquals(36, db.__memory());
+    db.clear();
   }
 }
