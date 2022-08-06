@@ -33,6 +33,7 @@ import java.util.Base64;
 import java.util.Iterator;
 import java.util.Map;
 
+/** a collection of keys used under an authority to validate a signed key */
 public class Keystore {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(Keystore.class);
   private final ArrayList<PublicKey> keys;

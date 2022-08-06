@@ -16,10 +16,18 @@ import org.adamalang.web.io.ConnectionContext;
 import java.security.PrivateKey;
 import java.util.TreeMap;
 
+/** a user that has been authenticated */
 public class AuthenticatedUser {
+  /** where did the user come from */
   public final Source source;
+
+  /** if the user is an adama developer, then this is their id */
   public final int id;
+
+  /** the principal of the developer */
   public final NtPrincipal who;
+
+  /** details about the connection */
   public final ConnectionContext context;
 
   public AuthenticatedUser(Source source, int id, NtPrincipal who, ConnectionContext context) {
@@ -36,6 +44,7 @@ public class AuthenticatedUser {
     Authority,
   }
 
+  /** convert the user to a token for cross-host transmission over the public interwebs */
   public String asIdentity(int keyId, PrivateKey key) {
     TreeMap<String, Object> claims = new TreeMap<>();
     claims.put("kid", keyId);

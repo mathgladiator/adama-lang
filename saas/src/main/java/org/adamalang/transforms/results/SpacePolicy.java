@@ -13,6 +13,7 @@ import org.adamalang.mysql.data.SpaceInfo;
 
 import java.util.Set;
 
+/** the policy backing a space */
 public class SpacePolicy {
   public final int id;
   public final int owner;

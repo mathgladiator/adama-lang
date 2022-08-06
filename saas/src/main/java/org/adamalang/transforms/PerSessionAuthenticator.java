@@ -31,15 +31,12 @@ import org.adamalang.web.io.ConnectionContext;
 
 import java.security.KeyFactory;
 import java.security.KeyPair;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-/** This is a per session Authenticator */
+/** This is a per session Authenticator. This is in 1:1 correspondence to a session/connection */
 public class PerSessionAuthenticator {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(PerSessionAuthenticator.class);
   private final ExternNexus nexus;
@@ -50,14 +47,17 @@ public class PerSessionAuthenticator {
     this.defaultContext = defaultContext;
   }
 
+  /** update the default asset key within the default context */
   public void updateAssetKey(String assetKey) {
     this.defaultContext = new ConnectionContext(defaultContext.origin, defaultContext.remoteIp, defaultContext.userAgent, assetKey);
   }
 
+  /** get the asset key for the default context. If the session's connection is a user, then this is the user's asset key. */
   public String assetKey() {
     return defaultContext.assetKey;
   }
 
+  /** log the user details into */
   public static void logInto(AuthenticatedUser user, ObjectNode node) {
     if (user != null) {
       node.put("user-source", user.source.toString());
@@ -68,17 +68,23 @@ public class PerSessionAuthenticator {
         node.put("principal-agent", user.who.agent);
         node.put("principal-authority", user.who.authority);
       }
+      node.put("user-ip", user.context.remoteIp);
+      node.put("user-origin", user.context.origin);
+      node.put("user-agent", user.context.userAgent);
     }
   }
 
+  /** Invent a key pair for the host to bind to */
   public static KeyPair inventHostKey() {
     return Keys.keyPairFor(SignatureAlgorithm.ES256);
   }
 
+  /** Encode a public key to store within a database */
   public static String encodePublicKey(KeyPair pair) {
     return new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
   }
 
+  /** Decode a public key stored from within a database */
   public static PublicKey decodePublicKey(String publicKey64) throws Exception {
     byte[] publicKey = Base64.getDecoder().decode(publicKey64);
     X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
@@ -86,9 +92,11 @@ public class PerSessionAuthenticator {
     return kf.generatePublic(spec);
   }
 
+  /** authenticate */
   public void execute(Session session, String identity, Callback<AuthenticatedUser> callback) {
     AuthenticatedUser cacheHit = session.identityCache.get(identity);
     if (cacheHit != null) {
+      // TODO: come up with a cache invalidation scheme
       callback.success(cacheHit);
       return;
     }
