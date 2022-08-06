@@ -3266,7 +3266,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    public void __killFields() {");
+    gold.append("\n      properties.__kill();");
+    gold.append("\n      properties2.__kill();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Z\";");
@@ -4349,7 +4352,9 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    public void __killFields() {");
+    gold.append("\n      z.__kill();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");

@@ -24,5 +24,11 @@ public class NtAssetTests {
     Assert.assertTrue(a.equals(a));
     Assert.assertFalse(a.equals(""));
     Assert.assertFalse(a.equals(b));
+    Assert.assertEquals("123", a.id());
+    Assert.assertEquals("name", a.name());
+    Assert.assertEquals("png", a.type());
+    Assert.assertEquals(42, a.size());
+    Assert.assertTrue(a.valid());
+    Assert.assertEquals(88, a.memory());
   }
 }

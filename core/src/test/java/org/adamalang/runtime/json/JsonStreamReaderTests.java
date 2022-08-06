@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class JsonStreamReaderTests {
   @Test
@@ -28,6 +29,63 @@ public class JsonStreamReaderTests {
     } catch (RuntimeException re) {
       Assert.assertEquals(
           "unexpected token: JsonToken{data='null', type=EndObject}", re.getMessage());
+    }
+  }
+
+  @Test
+  public void dupes() {
+    JsonStreamReader reader = new JsonStreamReader("{}");
+    HashSet<String> dupes = new HashSet<>();
+    dupes.add("x");
+    reader.ingestDedupe(dupes);
+  }
+
+  @Test
+  public void dedupeClient() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.beginArray();
+    writer.writeNtPrincipal(new NtPrincipal("jack", "jill"));
+    writer.writeNtPrincipal(new NtPrincipal("jack", "jill"));
+    writer.writeNtPrincipal(new NtPrincipal("jack", "jill"));
+    writer.endArray();
+    JsonStreamReader reader = new JsonStreamReader(writer.toString());
+    Assert.assertTrue(reader.startArray());
+    Assert.assertTrue(reader.notEndOfArray());
+    NtPrincipal A = reader.readNtPrincipal();
+    NtPrincipal B = reader.readNtPrincipal();
+    NtPrincipal C = reader.readNtPrincipal();
+    Assert.assertFalse(reader.notEndOfArray());
+    Assert.assertTrue(A == B && B == C);
+  }
+
+  @Test
+  public void dupeString() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.beginArray();
+    writer.writeString("XYZ");
+    writer.writeString("XYZ");
+    writer.writeString("XYZ");
+    writer.endArray();
+    JsonStreamReader reader = new JsonStreamReader(writer.toString());
+    Assert.assertTrue(reader.startArray());
+    Assert.assertTrue(reader.notEndOfArray());
+    String A = reader.readString();
+    String B = reader.readString();
+    String C = reader.readString();
+    Assert.assertFalse(reader.notEndOfArray());
+    Assert.assertTrue(A == B && B == C);
+  }
+
+  @Test
+  public void crash() {
+    JsonStreamReader reader = new JsonStreamReader("{}");
+    reader.fieldName();
+    reader.fieldName();
+    try {
+      reader.fieldName();
+      Assert.fail();
+    } catch (RuntimeException re) {
+      Assert.assertEquals("Unable to satisfy minimum limit", re.getMessage());
     }
   }
 

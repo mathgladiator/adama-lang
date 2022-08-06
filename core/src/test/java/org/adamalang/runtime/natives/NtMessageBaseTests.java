@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.natives;
 
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.junit.Test;
 
@@ -16,5 +17,9 @@ public class NtMessageBaseTests {
   @Test
   public void coverage() {
     NtMessageBase.NULL.__writeOut(new JsonStreamWriter());
+    NtMessageBase.NULL.to_dynamic();
+    NtMessageBase.NULL.ingest_dynamic(new NtDynamic("{}"));
+    NtMessageBase.NULL.__hash(null);
+    NtMessageBase.NULL.__ingest(new JsonStreamReader("{}"));
   }
 }

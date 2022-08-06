@@ -20,6 +20,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailRequiresResolveCall;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
@@ -29,6 +30,7 @@ import java.util.function.Consumer;
 
 public class TyReactiveTable extends TyType implements //
     DetailContainsAnEmbeddedType, //
+    IsKillable, //
     DetailTypeHasMethods {
   public final String recordName;
   public final TokenizedItem<Token> recordNameToken;

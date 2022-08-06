@@ -27,6 +27,8 @@ public class RxAssetTests {
     RxAsset b = new RxAsset(null, B);
     Assert.assertEquals(232, a.__memory());
     Assert.assertEquals(236, b.__memory());
+    a.set(A);
+    Assert.assertEquals(A, a.get());
   }
 
   @Test

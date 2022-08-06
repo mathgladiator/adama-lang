@@ -108,4 +108,39 @@ public class PrivateViewTests {
     pv2.kill();
     Assert.assertFalse(pv1.isAlive());
   }
+
+  @Test
+  public void futures() {
+    ArrayList<String> list = new ArrayList<>();
+    PrivateView pv =
+        new PrivateView(
+            NtPrincipal.NO_ONE,
+            new Perspective() {
+              @Override
+              public void data(String data) {
+                list.add(data);
+              }
+
+              @Override
+              public void disconnect() {}
+            }, null) {
+
+          @Override
+          public long memory() {
+            return 0;
+          }
+
+          @Override
+          public void ingest(JsonStreamReader reader) {}
+
+          @Override
+          public void dumpViewer(JsonStreamWriter writer) {}
+
+          @Override
+          public void update(JsonStreamWriter writer) {}
+        };
+    Assert.assertFalse(pv.futures("\"outstanding\":[],\"blockers\":[]"));
+    Assert.assertTrue(pv.futures("XYZ"));
+    Assert.assertFalse(pv.futures("XYZ"));
+  }
 }

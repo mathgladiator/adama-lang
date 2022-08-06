@@ -46,8 +46,12 @@ public class RxMapTests {
   }
 
   private RxMap<Integer, RxInt32> map() {
+    return map(new MockRxParent());
+  }
+
+  private RxMap<Integer, RxInt32> map(RxParent parent) {
     return new RxMap<Integer, RxInt32>(
-        new MockRxParent(),
+        parent,
         new RxMap.IntegerCodec<RxInt32>() {
           @Override
           public RxInt32 make(RxParent maker) {
@@ -62,6 +66,46 @@ public class RxMapTests {
     JsonStreamWriter writer = new JsonStreamWriter();
     m.__dump(writer);
     Assert.assertEquals("{}", writer.toString());
+  }
+
+  @Test
+  public void alive_with_parent() {
+    MockRxParent parent = new MockRxParent();
+    final var m = map(parent);
+    Assert.assertTrue(m.__isAlive());
+    parent.alive = false;
+    Assert.assertFalse(m.__isAlive());
+  }
+
+  @Test
+  public void alive_without_parent() {
+    final var m = map(null);
+    Assert.assertTrue(m.__isAlive());
+  }
+
+  @Test
+  public void killable_proxy() {
+    final var m = new RxMap<Integer, RxMap<Integer, RxInt32>>(new MockRxParent(), new RxMap.IntegerCodec<RxMap<Integer, RxInt32>>() {
+          @Override
+          public RxMap<Integer, RxInt32> make(RxParent maker) {
+            return map(maker);
+          }
+        });
+    m.getOrCreate(42).getOrCreate(100).set(10000);
+    {
+      JsonStreamWriter redo = new JsonStreamWriter();
+      JsonStreamWriter undo = new JsonStreamWriter();
+      m.__commit("x", redo, undo);
+      Assert.assertEquals("\"x\":{\"42\":{\"100\":10000}}", redo.toString());
+    }
+    m.__kill();
+    m.remove(42);
+    {
+      JsonStreamWriter redo = new JsonStreamWriter();
+      JsonStreamWriter undo = new JsonStreamWriter();
+      m.__commit("x", redo, undo);
+      Assert.assertEquals("\"x\":{\"42\":null}", redo.toString());
+    }
   }
 
   @Test

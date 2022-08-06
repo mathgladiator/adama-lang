@@ -10,6 +10,7 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.mocks.MockRxParent;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,6 +39,21 @@ public class RxLazyTests {
     lz.__insert(new JsonStreamReader("{}"));
     lz.__dump(null);
     lz.__patch(new JsonStreamReader("{}"));
+  }
+
+  @Test
+  public void alive_with_parent() {
+    MockRxParent parent = new MockRxParent();
+    final var val = new RxLazy(parent, () -> 123);
+    Assert.assertTrue(val.__raiseInvalid());
+    parent.alive = false;
+    Assert.assertFalse(val.__raiseInvalid());
+  }
+
+  @Test
+  public void alive_without_parent() {
+    final var val = new RxLazy(null, () -> 123);
+    Assert.assertTrue(val.__raiseInvalid());
   }
 
   @Test

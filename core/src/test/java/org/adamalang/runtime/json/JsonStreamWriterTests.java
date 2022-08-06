@@ -33,6 +33,21 @@ public class JsonStreamWriterTests {
   }
 
   @Test
+  public void force() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.force_comma_introduction();
+    writer.writeNull();
+    Assert.assertEquals(",null", writer.toString());
+  }
+
+  @Test
+  public void inline() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.inline(">INLINE<");
+    Assert.assertEquals(">INLINE<", writer.toString());
+  }
+
+  @Test
   public void asset() {
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.writeNtAsset(new NtAsset("123", "name", "png", 42, "hash", "sheesh"));

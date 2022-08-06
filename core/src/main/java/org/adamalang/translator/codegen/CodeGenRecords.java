@@ -9,6 +9,7 @@
  */
 package org.adamalang.translator.codegen;
 
+import org.adamalang.runtime.reactives.RxTable;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
@@ -21,6 +22,7 @@ import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
+import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.IsReactiveValue;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
@@ -79,6 +81,9 @@ public class CodeGenRecords {
         sb.append(fieldName).append(".get();").writeNewline();
         fieldsToKill.add("__c" + fieldName);
         sb.append("__c").append(fieldName).append(".__commit(\"__c").append(fieldName).append("\", __forward, __reverse);").writeNewline();
+      }
+      if (fieldType instanceof IsKillable) {
+        fieldsToKill.add(fieldName);
       }
     }
     if (!isRoot) {

@@ -12,6 +12,7 @@ package org.adamalang.runtime.reactives;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.adamalang.runtime.mocks.MockRxChild;
+import org.adamalang.runtime.mocks.MockRxParent;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -64,5 +65,22 @@ public class RxRecordBaseTest {
     Assert.assertEquals(123, mr.hashCode());
     Assert.assertTrue(mr.equals(mr));
     Assert.assertFalse(mr.equals(null));
+  }
+
+  @Test
+  public void alive_without_parent() {
+    final var mr = new MockRecord(null);
+    Assert.assertTrue(mr.__isAlive());
+    mr.__kill();
+    Assert.assertFalse(mr.__isAlive());
+  }
+
+  @Test
+  public void alive_with_parent() {
+    MockRxParent parent = new MockRxParent();
+    final var mr = new MockRecord(parent);
+    Assert.assertTrue(mr.__isAlive());
+    parent.alive = false;
+    Assert.assertFalse(mr.__isAlive());
   }
 }

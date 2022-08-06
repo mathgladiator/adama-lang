@@ -3335,7 +3335,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    public void __killFields() {");
+    gold.append("\n      tbl.__kill();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Z\";");
@@ -4530,7 +4532,12 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    public void __killFields() {");
+    gold.append("\n      i.__kill();");
+    gold.append("\n      s.__kill();");
+    gold.append("\n      b.__kill();");
+    gold.append("\n      d.__kill();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");

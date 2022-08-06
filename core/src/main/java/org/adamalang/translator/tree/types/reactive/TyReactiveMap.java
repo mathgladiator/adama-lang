@@ -20,6 +20,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
+import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
@@ -31,6 +32,7 @@ import java.util.function.Consumer;
 public class TyReactiveMap extends TyType implements //
     DetailTypeHasMethods, //
     IsMap, //
+    IsKillable, //
     DetailHasDeltaType {
   public final Token closeThing;
   public final Token commaToken;

@@ -3242,7 +3242,9 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    public void __killFields() {");
+    gold.append("\n      w.__kill();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
@@ -3987,7 +3989,9 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    public void __killFields() {");
+    gold.append("\n      mi.__kill();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
@@ -11306,7 +11310,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    public void __killFields() {");
+    gold.append("\n      tbl.__kill();");
+    gold.append("\n      y.__kill();");
+    gold.append("\n      ms.__kill();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");

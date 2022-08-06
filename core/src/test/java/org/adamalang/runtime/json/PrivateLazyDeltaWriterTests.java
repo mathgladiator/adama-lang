@@ -10,6 +10,7 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.delta.secure.TestKey;
+import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,6 +39,41 @@ public class PrivateLazyDeltaWriterTests {
     PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
     lazy.planObject().planField("x").planArray().writeFastString("x");
     Assert.assertEquals("{\"x\":[\"x\"", writer.toString());
+  }
+
+  @Test
+  public void donothing() {
+    PrivateLazyDeltaWriter.DO_NOTHING.run();
+  }
+
+  @Test
+  public void complex() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
+    PrivateLazyDeltaWriter obj = lazy.planObject();
+    obj.planField("x").writeNtComplex(new NtComplex(1, 2));
+    obj.end();
+    Assert.assertEquals("{\"x\":{\"r\":1.0,\"i\":2.0}}", writer.toString());
+  }
+
+  @Test
+  public void force() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
+    PrivateLazyDeltaWriter obj = lazy.planObject();
+    obj.planField("x").force();
+    obj.end();
+    Assert.assertEquals("{\"x\":}", writer.toString());
+  }
+
+  @Test
+  public void inject() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
+    PrivateLazyDeltaWriter obj = lazy.planObject();
+    obj.planField("x").injectJson(">INJECT<");
+    obj.end();
+    Assert.assertEquals("{\"x\":>INJECT<}", writer.toString());
   }
 
   @Test

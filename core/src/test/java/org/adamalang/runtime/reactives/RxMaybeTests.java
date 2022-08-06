@@ -50,15 +50,41 @@ public class RxMaybeTests {
     parent.assertDirtyCount(7);
     commitCheck(mi, "\"v\":50", "\"v\":null");
     mi.make().set(5000);
+    commitCheck(mi, "\"v\":5000", "\"v\":50");
   }
 
   private static void commitCheck(
-      final RxMaybe<RxInt32> mi, String expectedForward, String expectedReverse) {
+      final RxMaybe<?> mi, String expectedForward, String expectedReverse) {
     final var writer = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     mi.__commit("v", writer, reverse);
     Assert.assertEquals(expectedForward, writer.toString());
     Assert.assertEquals(expectedReverse, reverse.toString());
+  }
+
+  @Test
+  public void alive_without_parent() {
+    final var m = new RxMaybe<>(null, p -> new RxInt32(p, 1));
+    Assert.assertTrue(m.__isAlive());
+  }
+
+
+  @Test
+  public void killable_proxy() {
+    final var m = new RxMaybe<>(null, p -> new RxMaybe<>(p, p2 -> new RxInt32(p2, 1)));
+    m.make().make().set(100);
+    m.__kill();
+    commitCheck(m, "\"v\":100", "\"v\":null");
+    m.delete();
+  }
+
+  @Test
+  public void alive_with_parent() {
+    MockRxParent parent = new MockRxParent();
+    final var m = new RxMaybe<>(parent, p -> new RxInt32(p, 1));
+    Assert.assertTrue(m.__isAlive());
+    parent.alive = false;
+    Assert.assertFalse(m.__isAlive());
   }
 
   @Test

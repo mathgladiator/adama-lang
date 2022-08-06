@@ -57,5 +57,6 @@ public class NtPrincipalTests {
   @Test
   public void coverage() {
     NtPrincipal.NO_ONE.toString();
+    Assert.assertEquals(4, NtPrincipal.NO_ONE.memory());
   }
 }

@@ -21,7 +21,7 @@ import java.util.Comparator;
 import java.util.function.Function;
 
 /** a reactive maybe */
-public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxChild {
+public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxChild, RxKillable {
   private final Function<RxParent, Ty> maker;
   private Ty priorValue;
   private Ty value;
@@ -134,6 +134,13 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
       }
       value = null;
       __raiseDirty();
+    }
+  }
+
+  @Override
+  public void __kill() {
+    if (value instanceof RxKillable) {
+      ((RxKillable) value).__kill();
     }
   }
 

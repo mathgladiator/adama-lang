@@ -26,6 +26,7 @@ import org.adamalang.translator.tree.types.structures.DefineMethod;
 import org.adamalang.translator.tree.types.structures.IndexDefinition;
 import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
+import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
@@ -36,6 +37,7 @@ import java.util.function.Consumer;
 
 public class TyReactiveRecord extends TyType implements IsStructure, //
     DetailHasDeltaType, //
+    IsKillable, //
     DetailTypeProducesRootLevelCode, //
     DetailTypeHasMethods {
   public String name;

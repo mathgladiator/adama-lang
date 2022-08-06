@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NtMaybeTests {
   @Test
@@ -84,5 +85,38 @@ public class NtMaybeTests {
     Assert.assertFalse(copy.has());
     Assert.assertTrue(maybe.has());
     Assert.assertEquals(123, (int) maybe.get());
+  }
+
+  @Test
+  public void delete_chain() {
+    AtomicBoolean called = new AtomicBoolean(false);
+    final var maybe = new NtMaybe<>(123);
+    maybe.withDeleteChain(() -> {
+      called.set(true);
+    });
+    Assert.assertEquals(123, (int) maybe.getOrDefaultTo(42));
+    maybe.delete();
+    Assert.assertTrue(called.get());
+    Assert.assertEquals(42, (int) maybe.getOrDefaultTo(42));
+  }
+
+  @Test
+  public void unpack() {
+    final var maybe = new NtMaybe<>(123);
+    Assert.assertEquals(123 * 123, (int) ((maybe.unpack((x) -> x * x).get())));
+    Assert.assertEquals("123", maybe.toString());
+    maybe.delete();
+    Assert.assertFalse(maybe.unpack((x) -> x * x).has());
+    Assert.assertEquals("", maybe.toString());
+  }
+
+  @Test
+  public void unpackTransfer() {
+    final var maybe = new NtMaybe<>(123);
+    Assert.assertEquals(123 * 123, (int) ((maybe.unpackTransfer((x) -> new NtMaybe<>(x * x)).get())));
+    Assert.assertEquals("123", maybe.toString());
+    maybe.delete();
+    Assert.assertFalse(maybe.unpackTransfer((x) -> new NtMaybe<>(x * x)).has());
+    Assert.assertEquals("", maybe.toString());
   }
 }

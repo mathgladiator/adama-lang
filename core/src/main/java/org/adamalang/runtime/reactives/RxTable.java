@@ -10,6 +10,7 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.RxChild;
+import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.index.ReactiveIndex;
@@ -24,7 +25,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 /** a reactive table */
-public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iterable<Ty>, RxParent, RxChild {
+public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iterable<Ty>, RxParent, RxChild, RxKillable {
   public final LivingDocument document;
   public final Function<RxParent, Ty> maker;
   public final String className;
@@ -60,6 +61,13 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       return __parent.__isAlive();
     }
     return true;
+  }
+
+  @Override
+  public void __kill() {
+    for (Map.Entry<Integer, Ty> entry : itemsByKey.entrySet()) {
+      entry.getValue().__kill();
+    }
   }
 
   @Override

@@ -22,7 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /** a reactive map */
-public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements Iterable<Map.Entry<DomainTy, RangeTy>>, RxParent, RxChild {
+public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements Iterable<Map.Entry<DomainTy, RangeTy>>, RxParent, RxChild, RxKillable {
   public final Codec<DomainTy, RangeTy> codec;
   public final LinkedHashMap<DomainTy, RangeTy> deleted;
   public final HashSet<DomainTy> created;
@@ -79,6 +79,15 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
       forwardDelta.endObject();
       reverseDelta.endObject();
       __lowerDirtyCommit();
+    }
+  }
+
+  @Override
+  public void __kill() {
+    for (final Map.Entry<DomainTy, RangeTy> entry : objects.entrySet()) {
+      if (entry.getValue() instanceof RxKillable) {
+        ((RxKillable) entry.getValue()).__kill();
+      }
     }
   }
 

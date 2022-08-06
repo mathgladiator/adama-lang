@@ -15,6 +15,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.mocks.MockLivingDocument;
 import org.adamalang.runtime.mocks.MockRecord;
+import org.adamalang.runtime.mocks.MockRxParent;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,6 +39,23 @@ public class RxTableTests {
   }
 
   @Test
+  public void alive_without_parent() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, null, "name", MockRecord::new, 1);
+    Assert.assertTrue(table.__isAlive());
+  }
+
+  @Test
+  public void alive_with_parent() {
+    final var document = doc(7);
+    MockRxParent parent = new MockRxParent();
+    final var table = new RxTable<>(document, parent, "name", MockRecord::new, 1);
+    Assert.assertTrue(table.__isAlive());
+    parent.alive = false;
+    Assert.assertFalse(table.__isAlive());
+  }
+
+  @Test
   public void dump() {
     final var document = doc(7);
     final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
@@ -48,6 +66,7 @@ public class RxTableTests {
     Assert.assertEquals(
         "{\"4\":{\"data\":\"\",\"index\":13},\"5\":{\"data\":\"\",\"index\":12},\"6\":{\"data\":\"\",\"index\":13}}",
         writer.toString());
+    table.__kill();
   }
 
   @Test
@@ -161,6 +180,18 @@ public class RxTableTests {
     Assert.assertEquals(3, table.size());
     table.__insert(new JsonStreamReader("{\"4\":null,\"5\":null,\"6\":{\"index\":52}}"));
     Assert.assertEquals(1, table.size());
+  }
+
+
+  @Test
+  public void insert_change() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    table.__insert(new JsonStreamReader("{\"4\":{\"index\":13},\"5\":{\"index\":12},\"6\":{\"index\":13}}"));
+    table.getById(4).index.set(100);
+    JsonStreamWriter redo = new JsonStreamWriter();
+    table.__commit("x", redo, new JsonStreamWriter());
+    Assert.assertEquals("\"x\":{\"4\":{\"index\":100}}", redo.toString());
   }
 
   @Test

@@ -17,14 +17,9 @@ import org.junit.Test;
 
 public class ExceptionTests {
   @Test
-  public void coverage() {
+  public void detectOrWrap() {
     final var gwee = new GoodwillExhaustedException(0, 1, 2, 3);
     Assert.assertEquals("Good will exhausted:0,1 --> 2,3", gwee.getMessage());
-    new AbortMessageException();
-    new RetryProgressException(null);
-    new ComputeBlockedException(NtPrincipal.NO_ONE, "foo");
-    new ErrorCodeException(14, "Nope");
-
     ErrorCodeException eee = new ErrorCodeException(14, "Nope");
     Assert.assertTrue(
         eee
@@ -37,5 +32,16 @@ public class ExceptionTests {
                     t.printStackTrace();
                   }
                 }));
+  }
+
+  @Test
+  public void cons() {
+    new AbortMessageException();
+    new RetryProgressException(null);
+    new ComputeBlockedException(NtPrincipal.NO_ONE, "foo");
+    new ComputeBlockedException();
+    new ErrorCodeException(14, "Nope");
+    new PerformDocumentRewindException(100);
+    new PerformDocumentDeleteException();
   }
 }

@@ -14,6 +14,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
 
 public class PrivateLazyDeltaWriter {
+  public static final Runnable DO_NOTHING = () -> {};
   public final NtPrincipal who;
   public final Object viewerState;
   public final AssetIdEncoder assetIdEncoder;
@@ -35,9 +36,7 @@ public class PrivateLazyDeltaWriter {
   }
 
   public static PrivateLazyDeltaWriter bind(final NtPrincipal who, final JsonStreamWriter writer, Object viewerState, AssetIdEncoder encoder) {
-    return new PrivateLazyDeltaWriter(who, writer, null, () -> {
-    }, () -> {
-    }, viewerState, encoder);
+    return new PrivateLazyDeltaWriter(who, writer, null, DO_NOTHING, DO_NOTHING, viewerState, encoder);
   }
 
   public boolean end() {
@@ -62,13 +61,11 @@ public class PrivateLazyDeltaWriter {
   }
 
   public PrivateLazyDeltaWriter planField(final int fieldId) {
-    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.writeObjectFieldIntro("" + fieldId), () -> {
-    }, viewerState, assetIdEncoder);
+    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.writeObjectFieldIntro("" + fieldId), DO_NOTHING, viewerState, assetIdEncoder);
   }
 
   public PrivateLazyDeltaWriter planField(final String fieldName) {
-    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.writeObjectFieldIntro(fieldName), () -> {
-    }, viewerState, assetIdEncoder);
+    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.writeObjectFieldIntro(fieldName), DO_NOTHING, viewerState, assetIdEncoder);
   }
 
   public PrivateLazyDeltaWriter planObject() {

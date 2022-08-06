@@ -15,13 +15,16 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 import java.util.function.Consumer;
 
-public class TyReactiveLazy extends TyType implements DetailContainsAnEmbeddedType, DetailComputeRequiresGet // to get the native value
+public class TyReactiveLazy extends TyType implements //
+    DetailContainsAnEmbeddedType, //
+    DetailComputeRequiresGet // to get the native value
 {
   public final TyType computedType;
 
