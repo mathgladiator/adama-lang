@@ -20,6 +20,11 @@ public class LibPrincipal {
   }
 
   @Extension
+  public static boolean isAnonymous(final NtPrincipal principal) {
+    return "anonymous".equals(principal.authority);
+  }
+
+  @Extension
   public static boolean fromAuthority(final NtPrincipal principal, String authority) {
     return authority.equals(principal.authority);
   }

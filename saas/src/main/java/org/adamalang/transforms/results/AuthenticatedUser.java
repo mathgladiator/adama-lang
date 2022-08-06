@@ -25,6 +25,7 @@ public class AuthenticatedUser {
   public enum Source {
     Social,
     Adama,
+    Anonymous,
     Authority,
   }
 }

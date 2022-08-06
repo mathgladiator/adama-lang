@@ -58,6 +58,11 @@ public class Authenticator {
       return;
     }
     try {
+      if (identity.startsWith("anonymous:")) {
+        String agent = identity.substring("anonymous:".length());
+        callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Anonymous, -1, new NtPrincipal(agent, "anonymous")));
+        return;
+      }
       // TODO: check for Google Prefix
       ParsedToken parsedToken = new ParsedToken(identity);
       if ("adama".equals(parsedToken.iss)) {

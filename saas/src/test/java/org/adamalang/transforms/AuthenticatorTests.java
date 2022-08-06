@@ -9,9 +9,16 @@
  */
 package org.adamalang.transforms;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.connection.Session;
+import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.web.io.ConnectionContext;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class AuthenticatorTests {
   @Test
@@ -28,5 +35,26 @@ public class AuthenticatorTests {
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(908303, ece.code);
     }
+  }
+
+  @Test
+  public void anonymous() throws Exception {
+    Authenticator authenticator = new Authenticator(null);
+    Session session = new Session(new ConnectionContext("origin", "remote", "user-agent", "key"));
+    CountDownLatch success = new CountDownLatch(1);
+    authenticator.execute(session, "anonymous:jeffrey", new Callback<AuthenticatedUser>() {
+      @Override
+      public void success(AuthenticatedUser who) {
+        Assert.assertEquals("jeffrey", who.who.agent);
+        Assert.assertEquals("anonymous", who.who.authority);
+        success.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    Assert.assertTrue(success.await(1000, TimeUnit.MILLISECONDS));
   }
 }
