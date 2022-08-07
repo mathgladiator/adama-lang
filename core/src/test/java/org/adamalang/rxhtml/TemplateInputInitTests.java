@@ -79,7 +79,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     source.append("\n        <select name=\"email\" value=\"{value}\">");
     source.append("\n            <option value=\"foo\">FOOO</option>");
     source.append("\n        </select>");
-    source.append("\n        <input type=\"checkbox\" checked />");
+    source.append("\n        <input type=\"checkbox\" checked rx:debounce=\"nope\" />");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();
