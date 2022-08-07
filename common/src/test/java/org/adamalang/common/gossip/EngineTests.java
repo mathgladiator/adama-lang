@@ -62,7 +62,7 @@ public class EngineTests {
       latches.add(latch);
       return () -> {
         try {
-          Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
+          Assert.assertTrue(latch.await(15000, TimeUnit.MILLISECONDS));
         } catch (Exception ex) {
           Assert.fail();
         }

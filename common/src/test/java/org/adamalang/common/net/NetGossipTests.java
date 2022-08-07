@@ -29,7 +29,7 @@ public class NetGossipTests {
   public void flow() throws Exception {
     NetBase A = new NetBase(new NetMetrics(new NoOpMetricsFactory()), NetSuiteTests.identity(), 2, 4);
     NetBase B = new NetBase(new NetMetrics(new NoOpMetricsFactory()), NetSuiteTests.identity(), 2, 4);
-    int portA = (int) (25000 + Math.random() * 2000);
+    int portA = (int) (45000 + Math.random() * 2000);
 
     Engine a = A.startGossiping();
     Engine b = B.startGossiping();
