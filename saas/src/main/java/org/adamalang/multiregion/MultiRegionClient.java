@@ -81,9 +81,9 @@ public class MultiRegionClient {
       public void success(FinderService.Result value) {
         if (value.location == FinderService.Location.Machine) {
           if (region.equals(value.region)) {
-            stream.ready(local.connect(user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, viewerState, user.context.assetKey, events));
+            stream.ready(local.connect(value.machine, user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, viewerState, user.context.assetKey, events));
           } else {
-            // TODO: USE THE REGION
+            // TODO: USE THE REGION CLIENT
             events.error(0);
           }
         } else {

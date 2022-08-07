@@ -311,11 +311,19 @@ public class Client {
     });
   }
 
-  /** Connect to a document with a simplified state machine */
+  /** Connect to a document with a state machine */
   public Connection connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
     ConnectionBase base = new ConnectionBase(config, metrics, router.routerForDocuments, clientFinder, executors[rng.nextInt(executors.length)]);
     Connection connection = new Connection(base, ip, origin, agent, authority, space, key, viewerState, assetKey, 2500, events);
     connection.open();
+    return connection;
+  }
+
+  /** Connect to a machine directly */
+  public Connection connect(String machine, String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
+    ConnectionBase base = new ConnectionBase(config, metrics, router.routerForDocuments, clientFinder, executors[rng.nextInt(executors.length)]);
+    Connection connection = new Connection(base, ip, origin, agent, authority, space, key, viewerState, assetKey, 2500, events);
+    connection.open(machine);
     return connection;
   }
 

@@ -95,6 +95,62 @@ public class Connection implements AdamaStream {
     }
   }
 
+  public void open(String machine) {
+    base.mesh.find(machine, new Callback<>() {
+      @Override
+      public void success(InstanceClient client) {
+        client.connect(ip, origin, agent, authority, key.space, key.key, viewerState, assetKey, new Events() {
+          @Override
+          public void connected(Remote remote) {
+            base.executor.execute(new NamedRunnable("lcsm-connected") {
+              @Override
+              public void execute() throws Exception {
+                if (closed) {
+                  remote.disconnect();
+                } else {
+                  waitingInError = 0;
+                  queue.ready(remote);
+                  if (!connectedOnce) {
+                    events.connected();
+                    connectedOnce = true;
+                  }
+                }
+              }
+            });
+          }
+
+          @Override
+          public void delta(String data) {
+            events.delta(data);
+          }
+
+
+
+          @Override
+          public void error(int code) {
+            base.executor.execute(new NamedRunnable("lcsm-connected") {
+              @Override
+              public void execute() throws Exception {
+                queue.unready();
+                handleError(code);
+              }
+            });
+          }
+
+          @Override
+          public void disconnected() {
+            error(ErrorCodes.NET_LCSM_DISCONNECTED_PREMATURE);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        handleError(ex.code);
+      }
+    });
+  }
+
   public void open() {
     base.router.get(key, new RoutingSubscriber() {
       @Override
@@ -108,59 +164,7 @@ public class Connection implements AdamaStream {
           handleError(ErrorCodes.NET_LCSM_NO_MACHINE_FOUND);
           return;
         }
-        base.mesh.find(machine, new Callback<>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.connect(ip, origin, agent, authority, key.space, key.key, viewerState, assetKey, new Events() {
-              @Override
-              public void connected(Remote remote) {
-                base.executor.execute(new NamedRunnable("lcsm-connected") {
-                  @Override
-                  public void execute() throws Exception {
-                    if (closed) {
-                      remote.disconnect();
-                    } else {
-                      waitingInError = 0;
-                      queue.ready(remote);
-                      if (!connectedOnce) {
-                        events.connected();
-                        connectedOnce = true;
-                      }
-                    }
-                  }
-                });
-              }
-
-              @Override
-              public void delta(String data) {
-                events.delta(data);
-              }
-
-
-
-              @Override
-              public void error(int code) {
-                base.executor.execute(new NamedRunnable("lcsm-connected") {
-                  @Override
-                  public void execute() throws Exception {
-                    queue.unready();
-                    handleError(code);
-                  }
-                });
-              }
-
-              @Override
-              public void disconnected() {
-                error(ErrorCodes.NET_LCSM_DISCONNECTED_PREMATURE);
-              }
-            });
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            handleError(ex.code);
-          }
-        });
+        open(machine);
       }
 
       @Override

@@ -32,7 +32,6 @@ public class AuthenticatedUserTests {
     Assert.assertEquals("jeff", parsedToken.sub);
     Assert.assertEquals("host", parsedToken.iss);
     Assert.assertEquals("adama", parsedToken.proxy_authority);
-
     Assert.assertEquals("origin", parsedToken.proxy_origin);
     Assert.assertEquals("ip", parsedToken.proxy_ip);
     Assert.assertEquals("agent", parsedToken.proxy_useragent);
