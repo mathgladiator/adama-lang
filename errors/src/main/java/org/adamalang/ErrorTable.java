@@ -118,6 +118,10 @@ public class ErrorTable {
     descriptions.put(148095, "no description of error (yet)");
     names.put(146558, "FACTORY_CANT_INVOKE_CAN_INVENT");
     descriptions.put(146558, "no description of error (yet)");
+    names.put(116936, "CORE_DELAY_ADAMA_STREAM_TIMEOUT");
+    descriptions.put(116936, "no description of error (yet)");
+    names.put(115917, "CORE_DELAY_ADAMA_STREAM_REJECTED");
+    descriptions.put(115917, "no description of error (yet)");
     names.put(144416, "CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION");
     descriptions.put(144416, "no description of error (yet)");
     retry.add(144416);

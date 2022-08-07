@@ -58,6 +58,8 @@ public class ClientMetrics {
   public final Inflight client_host_set_database_size;
   public final Inflight client_host_set_gossip_size;
 
+  public final ItemActionMonitor multi_region_find;
+
   public ClientMetrics(MetricsFactory factory) {
     client_connection_alive = factory.inflight("client_connection_alive");
     client_state_machines_alive = factory.inflight("client_state_machines_alive");
@@ -97,5 +99,7 @@ public class ClientMetrics {
     client_host_set_invalid = factory.inflight("alarm_client_host_set_invalid");
     client_host_set_database_size = factory.inflight("client_host_set_database_size");
     client_host_set_gossip_size = factory.inflight("client_host_set_gossip_size");
+
+    multi_region_find = factory.makeItemActionMonitor("multi_region_find");
   }
 }

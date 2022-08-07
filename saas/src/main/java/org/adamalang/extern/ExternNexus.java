@@ -35,10 +35,11 @@ public class ExternNexus {
   public final String masterKey;
   public final MultiRegionClient adama;
   public final WebClientBase webBase;
+  public final String region;
   public final PrivateKey webHostKey;
   public final int publicKeyId;
 
-  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBase, Finder finder, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, PrivateKey webHostKey, int publicKeyId) {
+  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBase, Finder finder, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId) {
     this.config = config;
     this.email = email;
     this.uploader = uploader;
@@ -48,8 +49,9 @@ public class ExternNexus {
     this.attachmentRoot = attachmentRoot;
     this.accessLogger = accessLogger;
     this.masterKey = masterKey;
-    this.adama = new MultiRegionClient(dataBase, client, finder);
+    this.adama = new MultiRegionClient(dataBase, client, region, finder);
     this.webBase = webBase;
+    this.region = region;
     this.webHostKey = webHostKey;
     this.publicKeyId = publicKeyId;
     attachmentRoot.mkdir();

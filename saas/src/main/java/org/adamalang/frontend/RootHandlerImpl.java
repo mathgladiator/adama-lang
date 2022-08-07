@@ -495,7 +495,7 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void bind() {
-        connection = nexus.adama.connect(connect.who.context.remoteIp, connect.who.context.origin, connect.who.who.agent, connect.who.who.authority, connect.space, connect.key, connect.viewerState != null ? connect.viewerState.toString() : "{}", connect.who.context.assetKey, new SimpleEvents() {
+        connection = nexus.adama.connect(connect.who, connect.space, connect.key, connect.viewerState != null ? connect.viewerState.toString() : "{}", new SimpleEvents() {
           @Override
           public void connected() {
           }
@@ -581,7 +581,7 @@ public class RootHandlerImpl implements RootHandler {
     AtomicBoolean killed = new AtomicBoolean(false);
     AtomicReference<AdamaStream> connection = new AtomicReference<>(null);
     Runnable kickOff = () -> {
-      connection.set(nexus.adama.connect(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", request.who.context.assetKey, new SimpleEvents() {
+      connection.set(nexus.adama.connect(request.who, request.space, request.key, "{}", new SimpleEvents() {
         @Override
         public void connected() {
         }

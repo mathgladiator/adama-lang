@@ -32,7 +32,7 @@ import java.util.function.Consumer;
 /** the front-door to talking to the gRPC client. */
 public class Client {
   private final NetBase base;
-  private final ClientMetrics metrics;
+  public final ClientMetrics metrics;
   private final ClientRouter router;
   private final InstanceClientFinder clientFinder;
   private final SimpleExecutor[] executors;
