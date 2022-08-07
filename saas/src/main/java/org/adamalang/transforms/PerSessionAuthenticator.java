@@ -108,7 +108,7 @@ public class PerSessionAuthenticator {
       }
       // TODO: check for Google Prefix
       ParsedToken parsedToken = new ParsedToken(identity);
-      if ("web-host".equals(parsedToken.iss)) {
+      if ("host".equals(parsedToken.iss)) {
         PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(nexus.dataBase, parsedToken.key_id));
         Jwts.parserBuilder()
             .setSigningKey(publicKey)

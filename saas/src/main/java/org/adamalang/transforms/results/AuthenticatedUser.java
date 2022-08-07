@@ -59,6 +59,6 @@ public class AuthenticatedUser {
     claims.put("pip", context.remoteIp);
     claims.put("pak", context.assetKey);
     claims.put("pua", context.userAgent);
-    return Jwts.builder().setClaims(claims).setIssuer("web-host").setSubject(who.agent).signWith(key).compact();
+    return Jwts.builder().setClaims(claims).setIssuer("host").setSubject(who.agent).signWith(key).compact();
   }
 }
