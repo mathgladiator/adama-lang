@@ -60,5 +60,6 @@ public class ExternNexus {
   public void close() throws Exception {
     dataBase.close();
     adama.shutdown();
+    webBase.shutdown();
   }
 }

@@ -426,7 +426,11 @@ public class Service {
       public void run() {
         System.err.println("shutting down frontend");
         runnable.shutdown();
-        webBase.shutdown();
+        try {
+          nexus.close();
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
       }
     }));
     System.err.println("running frontend");
