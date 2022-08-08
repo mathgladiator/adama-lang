@@ -15,14 +15,12 @@ import org.adamalang.common.Hex;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class SignatureV4 {
-
   // for thread safety, these must be local to signature
   private final AWSConfig config;
   private final String method;
