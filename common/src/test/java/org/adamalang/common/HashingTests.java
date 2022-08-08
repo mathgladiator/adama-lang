@@ -24,6 +24,18 @@ public class HashingTests {
   }
 
   @Test
+  public void okSHA256() {
+    MessageDigest digest = Hashing.sha256();
+    digest.update("X".getBytes(StandardCharsets.UTF_8));
+    Assert.assertEquals("S2irOEf+2n1sYsH7y+6/o16rc1HtXnj03a3qXfZLgBU=", Hashing.finishAndEncode(digest));
+  }
+
+  @Test
+  public void okSHA256EmptyHex() {
+    Assert.assertEquals("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", Hex.of(Hashing.sha256().digest()));
+  }
+
+  @Test
   public void okSHA384() {
     MessageDigest digest = Hashing.sha384();
     digest.update("X".getBytes(StandardCharsets.UTF_8));

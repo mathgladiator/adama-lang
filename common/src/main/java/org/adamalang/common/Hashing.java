@@ -22,6 +22,10 @@ public class Hashing {
     return forKnownAlgorithm("SHA-384");
   }
 
+  public static MessageDigest sha256() {
+    return forKnownAlgorithm("SHA-256");
+  }
+
   public static MessageDigest forKnownAlgorithm(String algorithm) {
     try {
       return MessageDigest.getInstance(algorithm);

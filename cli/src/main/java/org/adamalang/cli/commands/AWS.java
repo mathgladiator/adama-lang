@@ -12,15 +12,19 @@ package org.adamalang.cli.commands;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.common.Callback;
 import org.adamalang.common.ConfigObject;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.extern.aws.AWSConfig;
-import org.adamalang.extern.aws.AWSMetrics;
-import org.adamalang.extern.aws.S3;
-import org.adamalang.extern.aws.SES;
+import org.adamalang.extern.aws.*;
+import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.service.WebConfig;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class AWS {
   public static void execute(Config config, String[] args) throws Exception {
@@ -36,6 +40,9 @@ public class AWS {
         return;
       case "test-email":
         awsTestEmail(config);
+        return;
+      case "test-new-clients":
+        awsTestNewStuff(config);
         return;
       case "memory-test":
         awsMemoryTest();
@@ -85,6 +92,41 @@ public class AWS {
 
     SES ses = new SES(awsConfig, new AWSMetrics(new NoOpMetricsFactory()));
     ses.sendCode(to, "TESTCODE");
+  }
+
+  public static void awsTestNewStuff(Config config) throws Exception{
+    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
+    WebClientBase base = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
+    try {
+
+      String url = "https://s3.us-east-2.amazonaws.com/us-east-2-adama-assets/demo.txt";
+      HashMap<String, String> headers = new HashMap<>();
+      headers.put("Host", "s3.us-east-2.amazonaws.com");
+
+      new SignatureV4(awsConfig, "s3", "GET", "s3.us-east-2.amazonaws.com", "/us-east-2-adama-assets/demo.txt") //
+          .withEmptyBody() //
+          .signInto(headers);
+
+      CountDownLatch latch = new CountDownLatch(1);
+      base.executeGet(url, headers, new Callback<String>() {
+        @Override
+        public void success(String value) {
+          System.err.println("Success:" + value);
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          System.err.println("Failure:" + ex.code + "/" + ex.getMessage());
+          latch.countDown();
+        }
+      });
+
+      latch.await(5000, TimeUnit.MILLISECONDS);
+
+    } finally {
+      base.shutdown();
+    }
   }
 
   public static void awsSetup(Config config) throws Exception {
