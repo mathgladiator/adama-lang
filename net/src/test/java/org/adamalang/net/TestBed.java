@@ -117,7 +117,6 @@ public class TestBed implements AutoCloseable {
   }
 
   public InstanceClient makeClient(HeatMonitor monitor) throws Exception {
-
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     return new InstanceClient(base, clientConfig, metrics, monitor, new RoutingTarget() {
       @Override
