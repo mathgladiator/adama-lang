@@ -14,29 +14,36 @@ import org.adamalang.common.capacity.BinaryEventOrGate;
 import org.adamalang.common.capacity.LoadEvent;
 import org.adamalang.common.capacity.LoadMonitor;
 import org.adamalang.common.capacity.RepeatingSignal;
+import org.adamalang.runtime.sys.metering.MeterReading;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Sketch of the capacity agent */
 public class CapacityAgent {
   private final LoadMonitor resources;
+  public final BinaryEventOrGate add_capacity;
+  public final BinaryEventOrGate rebalance;
+  public final BinaryEventOrGate rejectNew;
+  public final BinaryEventOrGate rejectExisting;
+  public final BinaryEventOrGate rejectMessages;
 
   public CapacityAgent(SimpleExecutor executor, AtomicBoolean alive) {
     resources = new LoadMonitor(executor, alive);
 
-    BinaryEventOrGate add_capacity = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 120000, (b) -> {
+    this.add_capacity = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 120000, (b) -> {
       // bring capacity online
     }));
-    BinaryEventOrGate rebalance = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 240000, (b) -> {
+    this.rebalance = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 240000, (b) -> {
       // build a map of what should belong on this host, then execute a load shed agent
     }));
-    BinaryEventOrGate rejectNew = new BinaryEventOrGate((b) -> {
+    this.rejectNew = new BinaryEventOrGate((b) -> {
       // reject connections that will load a document fresh
     });
-    BinaryEventOrGate rejectExisting = new BinaryEventOrGate((b) -> {
+    this.rejectExisting = new BinaryEventOrGate((b) -> {
       // reject connections to existing documents
     });
-    BinaryEventOrGate rejectMessages = new BinaryEventOrGate((b) -> {
+    this.rejectMessages = new BinaryEventOrGate((b) -> {
       // reject 100% of all requests
     });
 
@@ -54,5 +61,9 @@ public class CapacityAgent {
       resources.memory(new LoadEvent(0.87, rejectExisting::b));
       resources.memory(new LoadEvent(0.90, rejectMessages::b));
     }
+  }
+
+  public void deliverMeteringRecord(ArrayList<MeterReading> bills) {
+
   }
 }

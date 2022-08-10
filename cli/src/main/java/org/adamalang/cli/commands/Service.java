@@ -169,6 +169,7 @@ public class Service {
 
     init.engine.createLocalApplicationHeartbeat("adama", init.servicePort, init.monitoringPort, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
+        // TODO: capture this into the capacity agent
         hb.run();
         return true;
       });
