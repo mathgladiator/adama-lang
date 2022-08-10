@@ -10,12 +10,10 @@
 package org.adamalang.cli.commands;
 
 import org.adamalang.api.ApiMetrics;
-import org.adamalang.caravan.CaravanDataService;
-import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DiskMetrics;
-import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.ops.CapacityAgent;
 import org.adamalang.cli.commands.services.CaravanInit;
 import org.adamalang.cli.commands.services.CommonServiceInit;
 import org.adamalang.cli.commands.services.Role;
@@ -30,23 +28,20 @@ import org.adamalang.extern.prometheus.PrometheusDashboard;
 import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.mysql.DataBaseMetrics;
-import org.adamalang.mysql.model.Deployments;
-import org.adamalang.mysql.data.Deployment;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
+import org.adamalang.ops.CapacityMetrics;
 import org.adamalang.ops.DeploymentAgent;
 import org.adamalang.ops.DeploymentMetrics;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
-import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
-import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -68,7 +63,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
 public class Service {
   private static final Logger LOGGER = LoggerFactory.getLogger(Service.class);
@@ -152,6 +146,13 @@ public class Service {
     CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), data, TimeSource.REAL_TIME, coreThreads);
     deploymentFactoryBase.attachDeliverer(service);
 
+    CapacityAgent capacityAgent = new CapacityAgent(new CapacityMetrics(init.metricsFactory), init.database, init.system, init.alive, service.shield);
+    init.makeClient(capacityAgent);
+
+    init.engine.subscribe("adama", (hosts) -> {
+      capacityAgent.deliverAdamaHosts(hosts);
+    });
+
     // list all the documents on this machine, and spin them up
     init.finder.list(init.machine, new Callback<List<Key>>() {
       @Override
@@ -169,7 +170,7 @@ public class Service {
 
     init.engine.createLocalApplicationHeartbeat("adama", init.servicePort, init.monitoringPort, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
-        // TODO: capture this into the capacity agent
+        capacityAgent.deliverMeteringRecords(bills);
         hb.run();
         return true;
       });
@@ -389,6 +390,8 @@ public class Service {
     new CoreMetrics(metricsFactory);
     metricsFactory.page("deploy", "Deploy");
     new DeploymentMetrics(metricsFactory);
+    metricsFactory.page("capacity", "Capacity");
+    new CapacityMetrics(metricsFactory);
     metricsFactory.page("database", "Database");
     new DataBaseMetrics(metricsFactory);
     metricsFactory.page("disk", "Disk");

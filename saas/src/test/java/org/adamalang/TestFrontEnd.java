@@ -45,6 +45,8 @@ import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
+import org.adamalang.ops.CapacityAgent;
+import org.adamalang.ops.CapacityMetrics;
 import org.adamalang.ops.DeploymentAgent;
 import org.adamalang.ops.DeploymentMetrics;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
@@ -56,6 +58,7 @@ import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.runtime.sys.ServiceShield;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.transforms.PerSessionAuthenticator;
@@ -105,6 +108,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   private final WebClientBase webBase;
   private final KeyPair hostKeyPair;
   public final DeploymentAgent deploymentAgent;
+  public final CapacityAgent capacityAgent;
 
   public final File caravanPath;
   public TestFrontEnd() throws Exception {
@@ -159,6 +163,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
       public void delete(Key key, String archiveKey) {
       }
     };
+    capacityAgent = new CapacityAgent(new CapacityMetrics(new NoOpMetricsFactory()), dataBase, caravanExecutor, alive, new ServiceShield());
     CaravanDataService caravanDataService = new CaravanDataService(cloud, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
     Base managedBase = new Base(finder, caravanDataService, "test-region", identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
     ManagedDataService dataService = new ManagedDataService(managedBase);

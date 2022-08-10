@@ -7,29 +7,41 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.cli.commands.services;
+package org.adamalang.ops;
 
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.capacity.BinaryEventOrGate;
 import org.adamalang.common.capacity.LoadEvent;
 import org.adamalang.common.capacity.LoadMonitor;
 import org.adamalang.common.capacity.RepeatingSignal;
+import org.adamalang.mysql.DataBase;
+import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.runtime.sys.ServiceShield;
 import org.adamalang.runtime.sys.metering.MeterReading;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Sketch of the capacity agent */
-public class CapacityAgent {
+public class CapacityAgent implements HeatMonitor  {
+  private final CapacityMetrics metrics;
+  private final DataBase database;
+  private final SimpleExecutor executor;
   private final LoadMonitor resources;
+
   public final BinaryEventOrGate add_capacity;
   public final BinaryEventOrGate rebalance;
   public final BinaryEventOrGate rejectNew;
   public final BinaryEventOrGate rejectExisting;
   public final BinaryEventOrGate rejectMessages;
 
-  public CapacityAgent(SimpleExecutor executor, AtomicBoolean alive) {
-    resources = new LoadMonitor(executor, alive);
+  public CapacityAgent(CapacityMetrics metrics, DataBase database, SimpleExecutor executor, AtomicBoolean alive, ServiceShield shield) {
+    this.metrics = metrics;
+    this.database = database;
+    this.executor = executor;
+    this.resources = new LoadMonitor(executor, alive);
 
     this.add_capacity = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 120000, (b) -> {
       // bring capacity online
@@ -38,13 +50,16 @@ public class CapacityAgent {
       // build a map of what should belong on this host, then execute a load shed agent
     }));
     this.rejectNew = new BinaryEventOrGate((b) -> {
-      // reject connections that will load a document fresh
+      metrics.shield_active_new_documents.set(b ? 1 : 0);
+      shield.canConnectNew.set(b);
     });
     this.rejectExisting = new BinaryEventOrGate((b) -> {
-      // reject connections to existing documents
+      metrics.shield_active_existing_connections.set(b ? 1 : 0);
+      shield.canConnectExisting.set(b);
     });
     this.rejectMessages = new BinaryEventOrGate((b) -> {
-      // reject 100% of all requests
+      metrics.shield_active_messages.set(b ? 1 : 0);
+      shield.canSendMessageExisting.set(b);
     });
 
     {
@@ -63,7 +78,28 @@ public class CapacityAgent {
     }
   }
 
-  public void deliverMeteringRecord(ArrayList<MeterReading> bills) {
+  public void deliverMeteringRecords(ArrayList<MeterReading> bills) {
+    metrics.shield_count_metering.set(bills.size());
+    executor.execute(new NamedRunnable("capacity-agent-on-bills") {
+      @Override
+      public void execute() throws Exception {
 
+      }
+    });
+  }
+
+  public void deliverAdamaHosts(Collection<String> instances) {
+    metrics.shield_count_hosts.set(instances.size());
+    executor.execute(new NamedRunnable("capacity-agent-on-instances") {
+      @Override
+      public void execute() throws Exception {
+
+      }
+    });
+  }
+
+  @Override
+  public void heat(String target, double cpu, double memory) {
+    metrics.shield_heat.run();
   }
 }
