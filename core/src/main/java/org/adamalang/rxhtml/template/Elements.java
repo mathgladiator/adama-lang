@@ -41,12 +41,11 @@ public class Elements {
       env.element.attr("name", "default");
     }
     // TODO: validate that space and key are set
-    RxObject obj = new RxObject(env, "name", "space", "key");
+    RxObject obj = new RxObject(env, "name", "space", "key", "identity");
     env.writer.tab().append("$.CONNECT(") //
         .append(env.stateVar) //
         .append(",").append(obj.rxObj) //
-        .append(",'").append(env.val("identity", "default")) //
-        .append("','").append(env.val("redirect", "/sign-in")) //
+        .append(",'").append(env.val("redirect", "/sign-in")) //
         .append("');").newline();
     obj.finish();
     if (env.element.childNodeSize() > 0) {
