@@ -37,7 +37,7 @@ public class MeteringStateMachineTests {
     DocumentThreadBase[] bases = new DocumentThreadBase[5];
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
-          new DocumentThreadBase(
+          new DocumentThreadBase(new ServiceShield(),
               new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override
@@ -93,7 +93,7 @@ public class MeteringStateMachineTests {
     DocumentThreadBase[] bases = new DocumentThreadBase[5];
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
-          new DocumentThreadBase(
+          new DocumentThreadBase(new ServiceShield(),
               new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override
@@ -187,7 +187,7 @@ public class MeteringStateMachineTests {
     DocumentThreadBase[] bases = new DocumentThreadBase[5];
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
-          new DocumentThreadBase(
+          new DocumentThreadBase(new ServiceShield(),
               new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override

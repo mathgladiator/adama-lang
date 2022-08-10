@@ -44,7 +44,6 @@ public class CommonServiceInit {
   public final AtomicBoolean alive;
   public final String region;
   public final String role;
-
   public final int servicePort;
   public final int monitoringPort;
   public final MachineIdentity identity;

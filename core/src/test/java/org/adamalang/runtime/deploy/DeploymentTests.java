@@ -53,7 +53,7 @@ public class DeploymentTests {
 
               MockInstantDataService dataService = new MockInstantDataService();
               DocumentThreadBase docBase =
-                  new DocumentThreadBase(dataService, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, new MockTime());
+                  new DocumentThreadBase(new ServiceShield(), dataService, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, new MockTime());
               DurableLivingDocument.fresh(
                   new Key("space", "key"),
                   factory,

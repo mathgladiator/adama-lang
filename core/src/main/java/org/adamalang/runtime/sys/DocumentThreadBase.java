@@ -25,6 +25,7 @@ import java.util.function.Function;
  * thread without synchronization, access to a durable living document must be access via this base.
  */
 public class DocumentThreadBase {
+  public final ServiceShield shield;
   public final DataService service;
   public final CoreMetrics metrics;
   public final SimpleExecutor executor;
@@ -40,7 +41,8 @@ public class DocumentThreadBase {
   private int millisecondsToPerformInventoryJitter;
   private int millisecondsInactivityBeforeCleanup;
 
-  public DocumentThreadBase(DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
+  public DocumentThreadBase(ServiceShield shield, DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
+    this.shield = shield;
     this.service = service;
     this.metrics = metrics;
     this.executor = executor;

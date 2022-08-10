@@ -16,6 +16,7 @@ import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.cli.commands.services.CaravanInit;
 import org.adamalang.cli.commands.services.CommonServiceInit;
 import org.adamalang.cli.commands.services.Role;
 import org.adamalang.common.*;
@@ -140,39 +141,9 @@ public class Service {
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     FirstPartyServices.install(init.database);
 
-    final DataService data;
+    CaravanInit caravan = new CaravanInit(init, config);
+    final DataService data = caravan.service;
 
-    {
-      String caravanRoot = config.get_string("caravan_root", "caravan");
-      SimpleExecutor caravanExecutor = SimpleExecutor.create("caravan");
-      SimpleExecutor managedExecutor = SimpleExecutor.create("managed-base");
-      File caravanPath = new File(caravanRoot);
-      caravanPath.mkdir();
-      File walRoot = new File(caravanPath, "wal");
-      File dataRoot = new File(caravanPath, "data");
-      walRoot.mkdir();
-      dataRoot.mkdir();
-      File storePath = new File(dataRoot, "store");
-      DurableListStore store = new DurableListStore(new DiskMetrics(init.metricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
-      CaravanDataService caravanDataService = new CaravanDataService(init.s3, new FinderServiceToKeyToIdService(init.finder), store, caravanExecutor);
-      Base managedBase = new Base(init.finder, caravanDataService, init.region, init.machine, managedExecutor, 2 * 60 * 1000);
-      data = new ManagedDataService(managedBase);
-      Thread flusher = new Thread(new Runnable() {
-        @Override
-        public void run() {
-          while (init.alive.get()) {
-            try {
-              Thread.sleep(0, 800000);
-              caravanDataService.flush(false).await(1000, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException ie) {
-              return;
-            }
-          }
-        }
-      });
-      flusher.start();
-
-    }
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(init.metricsFactory);
     CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), data, TimeSource.REAL_TIME, coreThreads);
@@ -267,6 +238,7 @@ public class Service {
         // This will send to all connections an empty list which will remove from the routing table. At this point, we should wait all connections migrate away
 
         handle.kill();
+        caravan.shutdown();
       }
     })));
     System.err.println("backend running");

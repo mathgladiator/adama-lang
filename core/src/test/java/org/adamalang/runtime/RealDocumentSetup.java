@@ -23,10 +23,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
-import org.adamalang.runtime.sys.CoreMetrics;
-import org.adamalang.runtime.sys.CoreRequestContext;
-import org.adamalang.runtime.sys.DocumentThreadBase;
-import org.adamalang.runtime.sys.DurableLivingDocument;
+import org.adamalang.runtime.sys.*;
 import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
@@ -74,7 +71,7 @@ public class RealDocumentSetup implements Deliverer {
                 mirror.document().__insert(new JsonStreamReader(update.redo));
               }
             });
-    DocumentThreadBase base = new DocumentThreadBase(dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
+    DocumentThreadBase base = new DocumentThreadBase(new ServiceShield(), dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
     dds.setData(json);
     factory = LivingDocumentTests.compile(code, deliver);
     this.code = code;

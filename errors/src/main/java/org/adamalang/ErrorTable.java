@@ -125,6 +125,15 @@ public class ErrorTable {
     names.put(144416, "CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION");
     descriptions.put(144416, "no description of error (yet)");
     retry.add(144416);
+    names.put(146631, "SHIELD_REJECT_NEW_DOCUMENT");
+    descriptions.put(146631, "no description of error (yet)");
+    retry.add(146631);
+    names.put(183498, "SHIELD_REJECT_CONNECT_DOCUMENT");
+    descriptions.put(183498, "no description of error (yet)");
+    retry.add(183498);
+    names.put(199883, "SHIELD_REJECT_SEND_MESSAGE");
+    descriptions.put(199883, "no description of error (yet)");
+    retry.add(199883);
     names.put(146115, "DOCUMENT_SHEDDING_LOAD");
     descriptions.put(146115, "no description of error (yet)");
     names.put(133308, "DOCUMENT_WEB_GET_NOT_FOUND");

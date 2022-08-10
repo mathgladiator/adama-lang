@@ -55,6 +55,7 @@ public class CoreService implements Deliverer {
     }
   };
   public final DataService dataService;
+  public final ServiceShield shield;
   private final CoreMetrics metrics;
   private final LivingDocumentFactoryFactory livingDocumentFactoryFactory;
   private final DocumentThreadBase[] bases;
@@ -70,11 +71,12 @@ public class CoreService implements Deliverer {
   public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, DataService dataService, TimeSource time, int nThreads) {
     this.metrics = metrics;
     this.dataService = dataService;
+    this.shield = new ServiceShield();
     this.livingDocumentFactoryFactory = livingDocumentFactoryFactory;
     bases = new DocumentThreadBase[nThreads];
     this.alive = new AtomicBoolean(true);
     for (int k = 0; k < nThreads; k++) {
-      bases[k] = new DocumentThreadBase(dataService, metrics, SimpleExecutor.create("core-" + k), time);
+      bases[k] = new DocumentThreadBase(shield, dataService, metrics, SimpleExecutor.create("core-" + k), time);
       bases[k].kickOffInventory();
     }
     rng = new Random();
@@ -333,7 +335,10 @@ public class CoreService implements Deliverer {
 
   /** internal: do the connect with retry when connect executes create */
   private void connect(CoreRequestContext context, Key key, Streamback stream, String viewerState, AssetIdEncoder assetIdEncoder, boolean canRetry) {
-    // TODO: instrument the stream
+    if (!shield.canConnectExisting.get()) {
+      stream.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_CONNECT_DOCUMENT));
+      return;
+    }
     load(key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {

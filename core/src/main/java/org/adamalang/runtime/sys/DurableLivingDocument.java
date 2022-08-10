@@ -179,6 +179,11 @@ public class DurableLivingDocument {
 
   public static void load(final Key key, final LivingDocumentFactory factory, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
     try {
+      if (!base.shield.canConnectNew.get()) {
+        callback.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_NEW_DOCUMENT));
+        return;
+      }
+
       LivingDocument doc = factory.create(monitor);
       doc.__lateBind(key.space, key.key, factory.deliverer, factory.registry);
       base.service.get(key, new Callback<>() {

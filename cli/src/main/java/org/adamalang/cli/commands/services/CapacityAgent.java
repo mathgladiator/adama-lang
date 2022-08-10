@@ -27,23 +27,23 @@ public class CapacityAgent {
     BinaryEventOrGate add_capacity = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 120000, (b) -> {
       // bring capacity online
     }));
-    BinaryEventOrGate rejectMinor = new BinaryEventOrGate((b) -> {
+    BinaryEventOrGate rejectNew = new BinaryEventOrGate((b) -> {
       // reject 50% of new connections
     });
-    BinaryEventOrGate rejectMajor = new BinaryEventOrGate((b) -> {
+    BinaryEventOrGate rejectExisting = new BinaryEventOrGate((b) -> {
       // reject 100% of new connections
     });
-    BinaryEventOrGate rejectHard = new BinaryEventOrGate((b) -> {
+    BinaryEventOrGate rejectMessages = new BinaryEventOrGate((b) -> {
       // reject 100% of all requests
     });
 
     resources.cpu(new LoadEvent(0.70, add_capacity::a));
     resources.memory(new LoadEvent(0.70, add_capacity::b));
-    resources.cpu(new LoadEvent(0.80, rejectMinor::a));
-    resources.memory(new LoadEvent(0.80, rejectMinor::b));
-    resources.cpu(new LoadEvent(0.85, rejectMajor::a));
-    resources.memory(new LoadEvent(0.85, rejectMajor::b));
-    resources.cpu(new LoadEvent(0.90, rejectHard::a));
-    resources.memory(new LoadEvent(0.90, rejectHard::b));
+    resources.cpu(new LoadEvent(0.80, rejectNew::a));
+    resources.memory(new LoadEvent(0.80, rejectNew::b));
+    resources.cpu(new LoadEvent(0.85, rejectExisting::a));
+    resources.memory(new LoadEvent(0.85, rejectExisting::b));
+    resources.cpu(new LoadEvent(0.90, rejectMessages::a));
+    resources.memory(new LoadEvent(0.90, rejectMessages::b));
   }
 }

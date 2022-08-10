@@ -63,6 +63,11 @@ public class CoreStream implements AdamaStream {
   /** send a message to the document */
   @Override
   public void send(String channel, String marker, String message, Callback<Integer> callback) {
+    if (!document.base.shield.canSendMessageExisting.get()) {
+      callback.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_SEND_MESSAGE));
+      return;
+    }
+
     document.base.executor.execute(new NamedRunnable("core-stream-send") {
       @Override
       public void execute() throws Exception {
@@ -74,6 +79,10 @@ public class CoreStream implements AdamaStream {
 
   @Override
   public void canAttach(Callback<Boolean> callback) {
+    if (!document.base.shield.canSendMessageExisting.get()) {
+      callback.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_SEND_MESSAGE));
+      return;
+    }
     document.base.executor.execute(new NamedRunnable("core-stream-can-attach") {
       @Override
       public void execute() throws Exception {
