@@ -140,7 +140,7 @@ public class CommonServiceInit {
     ClientConfig clientConfig = new ClientConfig();
     ClientMetrics metrics = new ClientMetrics(metricsFactory);
     ClientRouter router = ClientRouter.FINDER(metrics, finder, region);
-    Client client = new Client(netBase, clientConfig, metrics, router, null);
+    Client client = new Client(netBase, clientConfig, metrics, router, heat);
 
     TargetsQuorum targetsQuorum = new TargetsQuorum(metrics, client.getTargetPublisher());
     system.schedule(new NamedRunnable("list-hosts-database") {
