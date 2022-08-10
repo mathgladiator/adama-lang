@@ -27,18 +27,23 @@ public class CapacityAgent {
     BinaryEventOrGate add_capacity = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 120000, (b) -> {
       // bring capacity online
     }));
+    BinaryEventOrGate rebalance = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 240000, (b) -> {
+      // build a map of what should belong on this host, then execute a load shed agent
+    }));
     BinaryEventOrGate rejectNew = new BinaryEventOrGate((b) -> {
-      // reject 50% of new connections
+      // reject connections that will load a document fresh
     });
     BinaryEventOrGate rejectExisting = new BinaryEventOrGate((b) -> {
-      // reject 100% of new connections
+      // reject connections to existing documents
     });
     BinaryEventOrGate rejectMessages = new BinaryEventOrGate((b) -> {
       // reject 100% of all requests
     });
 
-    resources.cpu(new LoadEvent(0.70, add_capacity::a));
-    resources.memory(new LoadEvent(0.70, add_capacity::b));
+    resources.cpu(new LoadEvent(0.65, add_capacity::a));
+    resources.memory(new LoadEvent(0.65, add_capacity::b));
+    resources.cpu(new LoadEvent(0.75, rebalance::a));
+    resources.memory(new LoadEvent(0.75, rebalance::b));
     resources.cpu(new LoadEvent(0.80, rejectNew::a));
     resources.memory(new LoadEvent(0.80, rejectNew::b));
     resources.cpu(new LoadEvent(0.85, rejectExisting::a));
