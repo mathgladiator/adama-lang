@@ -54,7 +54,7 @@ public class Capacity {
   }
 
   // list all the capacity for the given space within the given region
-  public static List<CapacityInstance> listRegion(DataBase dataBase, String region, String space) throws Exception {
+  public static List<CapacityInstance> listRegion(DataBase dataBase, String space, String region) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = "SELECT `region`, `machine` FROM `" + dataBase.databaseName + "`.`capacity` WHERE `space`=? AND `region`=? ORDER BY `region`, `machine`";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {

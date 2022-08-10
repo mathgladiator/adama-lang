@@ -45,7 +45,7 @@ public class CapacityTests {
         Assert.assertEquals("machine2", capacities.get(1).machine);
         Assert.assertEquals("machine3", capacities.get(2).machine);
 
-        capacities = Capacity.listRegion(dataBase, "region1", "space");
+        capacities = Capacity.listRegion(dataBase, "space", "region1");
         Assert.assertEquals(2, capacities.size());
         Assert.assertEquals("region1", capacities.get(0).region);
         Assert.assertEquals("region1", capacities.get(1).region);
@@ -54,7 +54,7 @@ public class CapacityTests {
 
         Capacity.remove(dataBase, "space", "region1", "machine2");
 
-        capacities = Capacity.listRegion(dataBase, "region1", "space");
+        capacities = Capacity.listRegion(dataBase, "space", "region1");
         Assert.assertEquals(1, capacities.size());
         Assert.assertEquals("region1", capacities.get(0).region);
         Assert.assertEquals("machine1", capacities.get(0).machine);
