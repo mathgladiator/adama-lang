@@ -140,6 +140,8 @@ public class JsonStreamWriter {
     writeString(a.md5);
     writeObjectFieldIntro("sha384");
     writeString(a.sha384);
+    writeObjectFieldIntro("@gc");
+    writeString("@yes");
     endObject();
   }
 

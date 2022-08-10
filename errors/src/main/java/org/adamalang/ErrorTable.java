@@ -476,6 +476,12 @@ public class ErrorTable {
     descriptions.put(949427, "no description of error (yet)");
     names.put(928959, "WEB_BASE_GET_FAILED_NOT_200");
     descriptions.put(928959, "no description of error (yet)");
+    names.put(947404, "WEB_BASE_POST_FAILED_EXECUTE");
+    descriptions.put(947404, "no description of error (yet)");
+    names.put(904399, "WEB_BASE_POST_FAILED_CONNECT");
+    descriptions.put(904399, "no description of error (yet)");
+    names.put(903375, "WEB_BASE_POST_FAILED_NOT_200");
+    descriptions.put(903375, "no description of error (yet)");
     names.put(998434, "NET_LCSM_UPDATE_TIMEOUT");
     descriptions.put(998434, "no description of error (yet)");
     names.put(930848, "NET_LCSM_UPDATE_REJECTED");

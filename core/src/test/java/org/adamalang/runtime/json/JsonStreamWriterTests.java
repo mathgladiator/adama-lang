@@ -52,7 +52,7 @@ public class JsonStreamWriterTests {
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.writeNtAsset(new NtAsset("123", "name", "png", 42, "hash", "sheesh"));
     Assert.assertEquals(
-        "{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}",
+        "{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\",\"@gc\":\"@yes\"}",
         writer.toString());
   }
 

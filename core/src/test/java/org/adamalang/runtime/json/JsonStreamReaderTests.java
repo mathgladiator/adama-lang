@@ -93,7 +93,7 @@ public class JsonStreamReaderTests {
   public void asset() {
     JsonStreamReader reader =
         new JsonStreamReader(
-            "{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}");
+            "{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\",\"@gc\":\"@yes\"}");
     NtAsset cmp = new NtAsset("123", "name", "png", 42, "hash", "sheesh");
     NtAsset tst = reader.readNtAsset();
     Assert.assertEquals(cmp, tst);
@@ -111,7 +111,7 @@ public class JsonStreamReaderTests {
   public void asset_ws() {
     JsonStreamReader reader =
         new JsonStreamReader(
-            "   { \t \"id\"  \r :  \n  \"123\" \n , \n \"size\" \n : \n \"42\" \n , \n \"name\" \n : \n \"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}");
+            "   { \t \"id\"  \r :  \n  \"123\" \n , \n \"size\" \n : \n \"42\" \n , \n \"name\" \n : \n \"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\",\"@gc\":\n\"@yes\"}");
     NtAsset cmp = new NtAsset("123", "name", "png", 42, "hash", "sheesh");
     NtAsset tst = reader.readNtAsset();
     Assert.assertEquals(cmp, tst);

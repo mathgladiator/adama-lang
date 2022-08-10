@@ -14,6 +14,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
 import org.adamalang.mysql.data.DocumentIndex;
+import org.adamalang.mysql.data.GCTask;
 import org.adamalang.mysql.mocks.SimpleFinderCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
 import org.adamalang.runtime.data.BackupResult;
@@ -65,6 +66,11 @@ public class FinderTests {
         }
         listing = FinderOperations.list(dataBase, "space-1", "", 4);
         Assert.assertEquals(1, listing.size());
+        Assert.assertEquals("key-1", listing.get(0).key);
+
+        List<GCTask> tasks = FinderOperations.produceGCTasks(dataBase);
+        Assert.assertEquals(0, tasks.size());
+
         Assert.assertEquals(KEY1.key, listing.get(0).key);
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
@@ -160,6 +166,12 @@ public class FinderTests {
           machine.free(KEY1, "machineB:523", callback);
           callback.assertSuccess();
         }
+        tasks = FinderOperations.produceGCTasks(dataBase);
+        Assert.assertEquals(1, tasks.size());
+        Assert.assertEquals(1, tasks.get(0).id);
+        Assert.assertEquals("space-1", tasks.get(0).space);
+        Assert.assertEquals("key-1", tasks.get(0).key);
+
         HashMap<String, Long> inventory = FinderOperations.inventoryStorage(dataBase);
         Assert.assertEquals(1, inventory.size());
         Assert.assertEquals(5, (long) inventory.get(KEY1.space));

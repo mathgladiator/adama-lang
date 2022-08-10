@@ -11,6 +11,9 @@ package org.adamalang.mysql.model;
 
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.DocumentIndex;
+import org.adamalang.mysql.data.GCTask;
+import org.adamalang.runtime.data.FinderService;
+import org.adamalang.runtime.data.Key;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,6 +49,23 @@ public class FinderOperations {
             keys.add(new DocumentIndex(rs.getString(1), rs.getDate(2).toString(), rs.getDate(3).toString(), rs.getInt(4)));
           }
           return keys;
+        }
+      }
+    }
+  }
+
+  public static ArrayList<GCTask> produceGCTasks(DataBase dataBase) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = "SELECT `id`, `space`, `key`, `head_seq` FROM `" + dataBase.databaseName + //
+          "`.`directory` WHERE `need_gc`=TRUE AND `type`=" + FinderService.Location.Archive.type +
+          " LIMIT 10";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (ResultSet rs = statement.executeQuery()) {
+          ArrayList<GCTask> tasks = new ArrayList<>();
+          while (rs.next()) {
+            tasks.add(new GCTask(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+          }
+          return tasks;
         }
       }
     }

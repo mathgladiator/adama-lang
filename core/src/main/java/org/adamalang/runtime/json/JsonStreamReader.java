@@ -165,6 +165,9 @@ public class JsonStreamReader {
     if (startObject()) {
       while (notEndOfObject()) {
         switch (fieldName()) {
+          case "@gc":
+            readString();
+            break;
           case "id":
             id = readString();
             break;
