@@ -9,7 +9,6 @@
  */
 package org.adamalang;
 
-import org.adamalang.transforms.UserIdResolver;
 import org.adamalang.transforms.results.Keystore;
 import org.junit.Assert;
 import org.junit.Test;

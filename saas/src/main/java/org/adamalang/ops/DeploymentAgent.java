@@ -1,6 +1,16 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See https://www.adama-platform.com/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
+ */
 package org.adamalang.ops;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.Deployment;
 import org.adamalang.mysql.model.Deployments;
@@ -15,7 +25,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /** agent of deployments */
-public class DeploymentAgent implements Consumer<String>, DeploymentMonitor {
+public class DeploymentAgent implements Consumer<String>, DeploymentMonitor, ExceptionLogger {
   private static final Logger LOGGER = LoggerFactory.getLogger(DeploymentAgent.class);
   public final DataBase database;
   public final DeploymentMetrics metrics;
@@ -31,16 +41,14 @@ public class DeploymentAgent implements Consumer<String>, DeploymentMonitor {
     this.service = service;
   }
 
-  private void deploy(Deployment deployment) {
+  public void deploy(Deployment deployment) {
     if ("".equals(deployment.plan)) {
       metrics.deploy_empty.run();
       return;
     }
     try {
       metrics.deploy_started.run();
-      deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (throwable, code) -> {
-        metrics.deploy_feedback.run();
-      }));
+      deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, this));
       service.deploy(this);
     } catch (Exception ex) {
       if (ex instanceof ErrorCodeException) {
@@ -88,5 +96,10 @@ public class DeploymentAgent implements Consumer<String>, DeploymentMonitor {
   @Override
   public void finished(int ms) {
     metrics.deploy_finished.run();
+  }
+
+  @Override
+  public void convertedToErrorCode(Throwable t, int errorCode) {
+    metrics.deploy_feedback.run();
   }
 }
