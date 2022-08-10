@@ -37,6 +37,8 @@ import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
+import org.adamalang.ops.DeploymentAgent;
+import org.adamalang.ops.DeploymentMetrics;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.heat.HeatTable;
@@ -172,50 +174,9 @@ public class Service {
       });
     });
 
-    DeploymentMonitor deploymentMonitor = new DeploymentMonitor() {
-      @Override
-      public void bumpDocument(boolean changed) {
+    DeploymentMetrics deploymentMetrics = new DeploymentMetrics(init.metricsFactory);
+    DeploymentAgent deployAgent = new DeploymentAgent(init.database, deploymentMetrics, init.machine, deploymentFactoryBase, service);
 
-      }
-
-      @Override
-      public void witnessException(ErrorCodeException ex) {
-
-      }
-    };
-
-    // TODO: clean this up, this ... kind of sucks
-    Consumer<String> scanForDeployments = (space) -> {
-      try {
-        if ("*".equals(space)) {
-          ArrayList<Deployment> deployments = Deployments.listSpacesOnTarget(init.database, init.machine);
-          for (Deployment deployment : deployments) {
-            try {
-              deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {
-              }));
-              service.deploy(deploymentMonitor);
-            } catch (Exception ex) {
-              if (ex instanceof ErrorCodeException) {
-                LOGGER.error("failed-scan-" + space + ":" + ((ErrorCodeException) ex).code);
-              } else {
-                LOGGER.error("failed-scan-" + space, ex);
-              }
-            }
-          }
-        } else {
-          Deployment deployment = Deployments.get(init.database, init.machine, space);
-          deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {
-          }));
-          service.deploy(deploymentMonitor);
-        }
-      } catch (Exception ex) {
-        if (ex instanceof ErrorCodeException) {
-          LOGGER.error("failed-scan-" + space + ":" + ((ErrorCodeException) ex).code);
-        } else {
-          LOGGER.error("failed-scan-" + space, ex);
-        }
-      }
-    };
     File billingRoot = new File(billingRootPath);
     billingRoot.mkdir();
     DiskMeteringBatchMaker billingBatchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot, 10 * 60000L);
@@ -227,8 +188,8 @@ public class Service {
     });
 
     // prime the host with spaces
-    scanForDeployments.accept("*");
-    ServerNexus nexus = new ServerNexus(init.netBase, init.identity, service, new ServerMetrics(init.metricsFactory), deploymentFactoryBase, scanForDeployments, meteringPubSub, billingBatchMaker, init.servicePort, 4);
+    deployAgent.accept("*");
+    ServerNexus nexus = new ServerNexus(init.netBase, init.identity, service, new ServerMetrics(init.metricsFactory), deploymentFactoryBase, deployAgent, meteringPubSub, billingBatchMaker, init.servicePort, 4);
     ServerHandle handle = init.netBase.serve(init.servicePort, (upstream) -> new Handler(nexus, upstream));
     Thread serverThread = new Thread(() -> handle.waitForEnd());
     serverThread.start();
@@ -425,6 +386,8 @@ public class Service {
     new ServerMetrics(metricsFactory);
     metricsFactory.page("adama", "Adama Core");
     new CoreMetrics(metricsFactory);
+    metricsFactory.page("deploy", "Deploy");
+    new DeploymentMetrics(metricsFactory);
     metricsFactory.page("database", "Database");
     new DataBaseMetrics(metricsFactory);
     metricsFactory.page("disk", "Disk");

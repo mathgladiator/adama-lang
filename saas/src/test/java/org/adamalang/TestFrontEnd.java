@@ -45,6 +45,8 @@ import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
+import org.adamalang.ops.DeploymentAgent;
+import org.adamalang.ops.DeploymentMetrics;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.ManagedDataService;
@@ -189,28 +191,12 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
     this.netBase = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity, 1, 2);
     this.clientExecutor = SimpleExecutor.create("disk");
-    ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, (space) -> {
-      try {
-        if (!"*".equals(space)) {
-          Deployment deployment = Deployments.get(dataBase, identity.ip + ":" + port, space);
-          deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {
-          }));
-          coreService.deploy(new DeploymentMonitor() {
-            @Override
-            public void bumpDocument(boolean changed) {
-
-            }
-
-            @Override
-            public void witnessException(ErrorCodeException ex) {
-
-            }
-          });
-        }
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    }, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(),  1800000L), port, 2);
+    DeploymentAgent deploymentAgent = new DeploymentAgent(dataBase, new DeploymentMetrics(new NoOpMetricsFactory()), identity.ip + ":" + port, deploymentFactoryBase, coreService);
+    deploymentAgent.witnessException(new ErrorCodeException(-1));
+    deploymentAgent.bumpDocument(true);
+    deploymentAgent.bumpDocument(false);
+    deploymentAgent.finished(1000);
+    ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, deploymentAgent, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(),  1800000L), port, 2);
     backendNexus.scanForDeployments.accept("ide");
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
     ClientConfig clientConfig = new ClientConfig();

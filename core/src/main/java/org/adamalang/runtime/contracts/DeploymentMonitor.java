@@ -18,4 +18,7 @@ public interface DeploymentMonitor {
 
   /** while deploying, an exception happened; oh no! */
   void witnessException(ErrorCodeException ex);
+
+  /** the deployment finished */
+  void finished(int ms);
 }

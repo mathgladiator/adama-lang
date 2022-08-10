@@ -449,13 +449,14 @@ public class CoreService implements Deliverer {
    * a change has been made to the factory, so try to fetch all the new factories and deploy them
    */
   public void deploy(DeploymentMonitor monitor) {
+    long started = System.currentTimeMillis();
     for (int kThread = 0; kThread < bases.length; kThread++) {
       final int kThreadLocal = kThread;
       bases[kThread].executor.execute(new NamedRunnable("deploy-" + kThreadLocal) {
         @Override
         public void execute() throws Exception {
           for (Map.Entry<Key, DurableLivingDocument> entry : bases[kThreadLocal].map.entrySet()) {
-            deploy(bases[kThreadLocal], entry.getKey(), entry.getValue(), monitor);
+            deploy(started, bases[kThreadLocal], entry.getKey(), entry.getValue(), monitor);
           }
         }
       });
@@ -463,7 +464,7 @@ public class CoreService implements Deliverer {
   }
 
   /** internal: deploy a specific document */
-  private void deploy(DocumentThreadBase base, Key key, DurableLivingDocument document, DeploymentMonitor monitor) {
+  private void deploy(long startedAt, DocumentThreadBase base, Key key, DurableLivingDocument document, DeploymentMonitor monitor) {
     livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchDeploy.wrap(new Callback<>() {
       @Override
       public void success(LivingDocumentFactory newFactory) {
@@ -477,6 +478,7 @@ public class CoreService implements Deliverer {
                 document.deploy(newFactory, metrics.deploy.wrap(new Callback<Integer>() {
                   @Override
                   public void success(Integer value) {
+                    monitor.finished((int) (System.currentTimeMillis() - startedAt));
                   }
 
                   @Override

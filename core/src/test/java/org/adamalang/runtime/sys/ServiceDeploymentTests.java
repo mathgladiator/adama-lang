@@ -72,6 +72,11 @@ public class ServiceDeploymentTests {
             public void witnessException(ErrorCodeException ex) {
               ex.printStackTrace();
             }
+
+            @Override
+            public void finished(int ms) {
+
+            }
           });
       Assert.assertTrue(deployed.await(1000, TimeUnit.MILLISECONDS));
       {
@@ -127,6 +132,11 @@ public class ServiceDeploymentTests {
             public void witnessException(ErrorCodeException ex) {
               deployed.countDown();
             }
+
+            @Override
+            public void finished(int ms) {
+
+            }
           });
       Assert.assertTrue(deployed.await(1000, TimeUnit.MILLISECONDS));
       {
@@ -176,6 +186,11 @@ public class ServiceDeploymentTests {
             @Override
             public void witnessException(ErrorCodeException ex) {
               deployed.countDown();
+            }
+
+            @Override
+            public void finished(int ms) {
+
             }
           });
       Assert.assertTrue(deployed.await(1000, TimeUnit.MILLISECONDS));
@@ -239,6 +254,11 @@ public class ServiceDeploymentTests {
             @Override
             public void witnessException(ErrorCodeException ex) {
               deployed.countDown();
+            }
+
+            @Override
+            public void finished(int ms) {
+
             }
           });
       Assert.assertTrue(deployed.await(1000, TimeUnit.MILLISECONDS));
