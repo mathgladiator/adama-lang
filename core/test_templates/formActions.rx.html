@@ -4,6 +4,7 @@
         <form rx:action="adama:sign-in" rx:failure="faied_to_signin" rx:forward="/yes">
             <input name="email" type="email" />
             <input name="password" type="password" />
+            <input name="remember" type="checkbox" />
             <input type="submit" />
         </form>
         <form rx:action="custom:foo">

@@ -1,0 +1,15 @@
+<forest>
+    <page uri="/">
+        <table>
+            <div rx:iterate="data:set">
+                <lookup path="key" />
+                <lookup path="value" />
+            </div>
+        </table>
+        <table>
+            <div rx:iterate="data:set" rx:expand-view-state>
+                [<span> <lookup path="key" /> - <lookup path="value" /> </span>]
+            </div>
+        </table>
+    </page>
+</forest>

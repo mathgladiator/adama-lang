@@ -100,7 +100,12 @@ public class Attributes {
     StatePath path = StatePath.resolve(env.element.attr("rx:iterate"), env.stateVar);
     String childStateVar = env.pool.ask();
     env.writer.tab().append("$.IT(").append(eVar).append(",").append(path.command).append(",'").append(path.name).append("',").append(expand ? "true" : "false").append(",function(").append(childStateVar).append(") {").tabUp().newline();
-    String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(env.soloChild(), true), true);
+    Element soloChild = env.soloChildIfPossible();
+    if (soloChild == null) {
+      soloChild = new Element("div");
+      soloChild.appendChildren(env.element.children());
+    }
+    String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(soloChild,  true), true);
     env.writer.tab().append("return ").append(childDomVar).append(";").newline();
     env.pool.give(childDomVar);
     env.writer.tabDown().tab().append("});").newline();

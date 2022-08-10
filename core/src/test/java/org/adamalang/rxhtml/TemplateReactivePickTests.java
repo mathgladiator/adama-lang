@@ -25,7 +25,8 @@ public class TemplateReactivePickTests extends BaseRxHtmlTest {
     gold.append("\n    c.name='default';");
     gold.append("\n    c.space='space';");
     gold.append("\n    c.key='key';");
-    gold.append("\n    $.CONNECT(a,c,'default','/sign-in');");
+    gold.append("\n    c.identity=true;");
+    gold.append("\n    $.CONNECT(a,c,'/sign-in');");
     gold.append("\n    c.__();");
     gold.append("\n    var d={};");
     gold.append("\n    d.name='default';");

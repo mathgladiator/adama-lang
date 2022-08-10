@@ -161,13 +161,9 @@ public class Base {
         try {
           Method method = Elements.class.getMethod(child.tagName(), Environment.class);
           method.invoke(null, childEnv);
-        } catch (IllegalAccessException | InvocationTargetException bad) {
-          bad.printStackTrace();
-        } catch (NoSuchMethodException nsme) {
+        } catch (Exception ex) {
           Base.write(childEnv, false);
         }
-      } else {
-        throw new UnsupportedOperationException("not sure how to handle node type:" + node.getClass());
       }
     }
   }

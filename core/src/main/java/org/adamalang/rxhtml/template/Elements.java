@@ -112,6 +112,7 @@ public class Elements {
       try {
         ms = Double.parseDouble(env.element.attr("rx:debounce"));
       } catch (NumberFormatException nfe) {
+        env.feedback.warn(env.element, env.element.attr("rx:debounce") + " should be a numeric value");
       }
       StatePath _path = StatePath.resolve(tuned ? path : ("view:" + path), env.stateVar);
       env.writer.tab().append("$.SY(").append(inputVar).append(",").append(_path.command).append(",'").append(_path.name).append("',").append("" + ms).append(");").newline();

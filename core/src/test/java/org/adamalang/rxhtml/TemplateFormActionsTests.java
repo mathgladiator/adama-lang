@@ -13,7 +13,7 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
-    issues.append("WARNING:Failed to find an input for 'remember'");
+    issues.append("");
     return issues.toString();
   }
   @Override
@@ -31,6 +31,10 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
     gold.append("\n    var d = $.E('input');");
     gold.append("\n    d.setAttribute('name','password');");
     gold.append("\n    d.setAttribute('type','password');");
+    gold.append("\n    c.append(d);");
+    gold.append("\n    var d = $.E('input');");
+    gold.append("\n    d.setAttribute('name','remember');");
+    gold.append("\n    d.setAttribute('type','checkbox');");
     gold.append("\n    c.append(d);");
     gold.append("\n    var d = $.E('input');");
     gold.append("\n    d.setAttribute('type','submit');");
@@ -100,6 +104,7 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
     source.append("\n        <form rx:action=\"adama:sign-in\" rx:failure=\"faied_to_signin\" rx:forward=\"/yes\">");
     source.append("\n            <input name=\"email\" type=\"email\" />");
     source.append("\n            <input name=\"password\" type=\"password\" />");
+    source.append("\n            <input name=\"remember\" type=\"checkbox\" />");
     source.append("\n            <input type=\"submit\" />");
     source.append("\n        </form>");
     source.append("\n        <form rx:action=\"custom:foo\">");

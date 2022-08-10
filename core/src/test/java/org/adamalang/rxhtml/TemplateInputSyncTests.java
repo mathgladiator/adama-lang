@@ -13,7 +13,9 @@ public class TemplateInputSyncTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
-    issues.append("");
+    issues.append("WARNING:zoop should be a numeric value");
+    issues.append("\nWARNING: should be a numeric value");
+    issues.append("\nWARNING: should be a numeric value");
     return issues.toString();
   }
   @Override
@@ -46,8 +48,8 @@ public class TemplateInputSyncTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <input name=\"email\" rx:sync=\"foo\"/>");
-    source.append("\n        <textarea name=\"email\" rx:sync=\"data:foo\"></textarea>");
+    source.append("\n        <input name=\"email\" rx:sync=\"foo\" rx:debounce=\"zoop\"/>");
+    source.append("\n        <textarea name=\"email\" rx:sync=\"data:foo\" ></textarea>");
     source.append("\n        <select name=\"email\" rx:sync=\"view:foo\">");
     source.append("\n            <option value=\"foo\">FOOO</option>");
     source.append("\n        </select>");

@@ -55,20 +55,20 @@ public class Environment {
     return defaultVal;
   }
 
-  public Element soloChild() {
+  public Element soloChildIfPossible() {
     Element result = null;
     for (int k = 0; k < element.childNodeSize(); k++) {
       Node node = element.childNode(k);
       if (node instanceof TextNode) {
         TextNode text = (TextNode) node;
         if (!text.text().trim().equalsIgnoreCase("")) {
-          throw new UnsupportedOperationException("<" + element.tagName() + "> was expecting a single child element (non-ws text elements not allowed)");
+          return null;
         }
       } else if (node instanceof Comment) {
         // ignore comments
       } else if (node instanceof Element) {
         if (result != null) {
-          throw new UnsupportedOperationException("<" + element.tagName() + "> was expecting a single child element");
+          return null;
         }
         result = (Element) node;
       }
