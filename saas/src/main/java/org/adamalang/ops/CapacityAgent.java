@@ -47,10 +47,20 @@ public class CapacityAgent implements HeatMonitor  {
     this.resources = new LoadMonitor(executor, alive);
 
     this.add_capacity = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 120000, (b) -> {
-      // bring capacity online
+      executor.execute(new NamedRunnable("capacity-add-capacity") {
+        @Override
+        public void execute() throws Exception {
+          addCapacityWhileInExecutor();
+        }
+      });
     }));
     this.rebalance = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 240000, (b) -> {
-      // build a map of what should belong on this host, then execute a load shed agent
+      executor.execute(new NamedRunnable("capacity-add-rebalance") {
+        @Override
+        public void execute() throws Exception {
+          rebalanceWhileInExecutor();
+        }
+      });
     }));
     this.rejectNew = new BinaryEventOrGate((b) -> {
       metrics.shield_active_new_documents.set(b ? 1 : 0);
@@ -79,6 +89,21 @@ public class CapacityAgent implements HeatMonitor  {
       resources.memory(new LoadEvent(0.87, rejectExisting::b));
       resources.memory(new LoadEvent(0.90, rejectMessages::b));
     }
+  }
+
+  private void addCapacityWhileInExecutor() {
+    // TODO:
+    // sort the metering records document count, then add capacity to the spaces that make up more than 50% of the host
+  }
+
+  private void rebalanceWhileInExecutor() {
+    // construct Map Space --> List<Hosts>
+    //    for each space on this host (from metering)
+    //       pull the capacity per space, intersect with the live hosts (from gossip)
+    service.shed((key) -> {
+      // if the key doesn't win a rendevouz hash, then return true
+      return false;
+    });
   }
 
   public void deliverMeteringRecords(ArrayList<MeterReading> bills) {
