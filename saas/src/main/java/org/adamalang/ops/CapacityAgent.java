@@ -45,7 +45,12 @@ public class CapacityAgent implements HeatMonitor  {
     this.service = service;
     this.executor = executor;
     this.resources = new LoadMonitor(executor, alive);
-
+    executor.schedule(new NamedRunnable("capacity-offload") {
+      @Override
+      public void execute() throws Exception {
+        offloadLowSpacesWhileInExecutor();
+      }
+    }, 120000);
     this.add_capacity = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 120000, (b) -> {
       executor.execute(new NamedRunnable("capacity-add-capacity") {
         @Override
@@ -91,15 +96,32 @@ public class CapacityAgent implements HeatMonitor  {
     }
   }
 
+  private void offloadLowSpacesWhileInExecutor() {
+    // TODO
+    // Download the spaces attached to this host
+    //   if this host has a capacity override, then skip this
+    //   if there are two or less capacity records, then skip this
+    //   if there are no metering records for this host, then unmap it
+
+    // COMPLEXITY: O(spaces on host)
+  }
+
   private void addCapacityWhileInExecutor() {
     // TODO:
     // sort the metering records document count, then add capacity to the spaces that make up more than 50% of the host
+    //    intersect the available hosts with hosts that have cpu/mem both less than 50% which don't have the space
+    //    of the hosts that remain, rendevouz hash to find the one to add.
+
+    // COMPLEXITY: O(spaces on host)
   }
 
   private void rebalanceWhileInExecutor() {
+    // TODO:
     // construct Map Space --> List<Hosts>
     //    for each space on this host (from metering)
     //       pull the capacity per space, intersect with the live hosts (from gossip)
+
+    // COMPLEXITY: O(spaces on host * hosts)
     service.shed((key) -> {
       // if the key doesn't win a rendevouz hash, then return true
       return false;
