@@ -10,12 +10,14 @@
 package org.adamalang.common.capacity;
 
 /** a load event fires when an associated metric is elevated */
-public abstract class LoadEvent {
+public class LoadEvent {
+  private final BoolConsumer event;
   private final double threshold;
   private boolean active;
 
-  public LoadEvent(double threshold) {
+  public LoadEvent(double threshold, BoolConsumer event) {
     this.threshold = threshold;
+    this.event = event;
     this.active = false;
   }
 
@@ -24,17 +26,7 @@ public abstract class LoadEvent {
     boolean next = metric > threshold;
     if (active != next) {
       active = next;
-      if (next) {
-        start();
-      } else {
-        stop();
-      }
+      event.accept(active);
     }
   }
-
-  /** The monitored value has breached the threshold */
-  public abstract void start();
-
-  /** The monitored value no longer breaches the threshold */
-  public abstract void stop();
 }

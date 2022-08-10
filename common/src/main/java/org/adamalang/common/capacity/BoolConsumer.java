@@ -9,25 +9,7 @@
  */
 package org.adamalang.common.capacity;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-public class LoadEventTests {
-  @Test
-  public void flow() {
-    StringBuilder sb = new StringBuilder();
-    LoadEvent le = new LoadEvent(0.5, (b) -> sb.append(b ? "START": "STOP"));
-    le.at(.4);
-    le.at(.4);
-    le.at(.4);
-    le.at(.6);
-    le.at(.6);
-    le.at(.6);
-    le.at(.4);
-    le.at(.4);
-    le.at(.4);
-    le.at(.6);
-    le.at(.4);
-    Assert.assertEquals("STARTSTOPSTARTSTOP", sb.toString());
-  }
+@FunctionalInterface
+public interface BoolConsumer {
+  void accept(boolean value);
 }

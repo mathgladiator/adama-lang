@@ -10,8 +10,10 @@
 package org.adamalang.cli.commands.services;
 
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.capacity.BinaryEventOrGate;
 import org.adamalang.common.capacity.LoadEvent;
 import org.adamalang.common.capacity.LoadMonitor;
+import org.adamalang.common.capacity.RepeatingSignal;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -21,49 +23,27 @@ public class CapacityAgent {
 
   public CapacityAgent(SimpleExecutor executor, AtomicBoolean alive) {
     resources = new LoadMonitor(executor, alive);
-    resources.cpu(new LoadEvent(0.75) {
-      @Override
-      public void start() {
-        // shed some 25% of documents
-      }
 
-      @Override
-      public void stop() {
-        // stop shedding
-      }
+    BinaryEventOrGate add_capacity = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 120000, (b) -> {
+      // bring capacity online
+    }));
+    BinaryEventOrGate rejectMinor = new BinaryEventOrGate((b) -> {
+      // reject 50% of new connections
     });
-    resources.memory(new LoadEvent(0.75) {
-      @Override
-      public void start() {
-        // shed some 25% of documents
-      }
+    BinaryEventOrGate rejectMajor = new BinaryEventOrGate((b) -> {
+      // reject 100% of new connections
+    });
+    BinaryEventOrGate rejectHard = new BinaryEventOrGate((b) -> {
+      // reject 100% of all requests
+    });
 
-      @Override
-      public void stop() {
-        // stop shedding
-      }
-    });
-    resources.cpu(new LoadEvent(0.85) {
-      @Override
-      public void start() {
-        // reject new connects
-      }
-
-      @Override
-      public void stop() {
-        // allow new connects
-      }
-    });
-    resources.memory(new LoadEvent(0.85) {
-      @Override
-      public void start() {
-        // reject new connects
-      }
-
-      @Override
-      public void stop() {
-        // allow new connects
-      }
-    });
+    resources.cpu(new LoadEvent(0.70, add_capacity::a));
+    resources.memory(new LoadEvent(0.70, add_capacity::b));
+    resources.cpu(new LoadEvent(0.80, rejectMinor::a));
+    resources.memory(new LoadEvent(0.80, rejectMinor::b));
+    resources.cpu(new LoadEvent(0.85, rejectMajor::a));
+    resources.memory(new LoadEvent(0.85, rejectMajor::b));
+    resources.cpu(new LoadEvent(0.90, rejectHard::a));
+    resources.memory(new LoadEvent(0.90, rejectHard::b));
   }
 }

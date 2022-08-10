@@ -16,17 +16,7 @@ public class BinaryEventOrGateTests {
   @Test
   public void flow() {
     StringBuilder sb = new StringBuilder();
-    BinaryEventOrGate gate = new BinaryEventOrGate() {
-      @Override
-      public void start() {
-        sb.append("START");
-      }
-
-      @Override
-      public void stop() {
-        sb.append("STOP");
-      }
-    };
+    BinaryEventOrGate gate = new BinaryEventOrGate((b) -> sb.append(b ? "START" : "STOP"));
     gate.a(true);
     gate.b(true);
     gate.a(false);

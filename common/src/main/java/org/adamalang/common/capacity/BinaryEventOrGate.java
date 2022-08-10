@@ -10,22 +10,25 @@
 package org.adamalang.common.capacity;
 
 /** Two events are deduped into one */
-public abstract class BinaryEventOrGate {
+public class BinaryEventOrGate {
+  private final BoolConsumer event;
   private boolean a;
   private boolean b;
   private boolean result;
-  public BinaryEventOrGate() {
+
+  public BinaryEventOrGate(final BoolConsumer event) {
+    this.event = event;
     this.a = false;
     this.b = false;
     this.result = false;
   }
 
-  public void a(boolean value) {
+  public void a(Boolean value) {
     this.a = value;
     update();
   }
 
-  public void b(boolean value) {
+  public void b(Boolean value) {
     this.b = value;
     update();
   }
@@ -34,14 +37,7 @@ public abstract class BinaryEventOrGate {
     boolean next = a || b;
     if (result != next) {
       this.result = next;
-      if (this.result) {
-        start();
-      } else {
-        stop();
-      }
+      event.accept(this.result);
     }
   }
-
-  public abstract void start();
-  public abstract void stop();
 }
