@@ -146,7 +146,7 @@ public class Service {
     CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), data, TimeSource.REAL_TIME, coreThreads);
     deploymentFactoryBase.attachDeliverer(service);
 
-    CapacityAgent capacityAgent = new CapacityAgent(new CapacityMetrics(init.metricsFactory), init.database, init.system, init.alive, service.shield);
+    CapacityAgent capacityAgent = new CapacityAgent(new CapacityMetrics(init.metricsFactory), init.database, service, init.system, init.alive, service.shield);
     init.makeClient(capacityAgent);
 
     init.engine.subscribe("adama", (hosts) -> {

@@ -163,7 +163,6 @@ public class TestFrontEnd implements AutoCloseable, Email {
       public void delete(Key key, String archiveKey) {
       }
     };
-    capacityAgent = new CapacityAgent(new CapacityMetrics(new NoOpMetricsFactory()), dataBase, caravanExecutor, alive, new ServiceShield());
     CaravanDataService caravanDataService = new CaravanDataService(cloud, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
     Base managedBase = new Base(finder, caravanDataService, "test-region", identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
     ManagedDataService dataService = new ManagedDataService(managedBase);
@@ -194,7 +193,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
             dataService, //
             TimeSource.REAL_TIME,
             1);
-
+    capacityAgent = new CapacityAgent(new CapacityMetrics(new NoOpMetricsFactory()), dataBase, coreService, caravanExecutor, alive, new ServiceShield());
     this.netBase = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity, 1, 2);
     this.clientExecutor = SimpleExecutor.create("disk");
     this.deploymentAgent = new DeploymentAgent(dataBase, new DeploymentMetrics(new NoOpMetricsFactory()), identity.ip + ":" + port, deploymentFactoryBase, coreService);

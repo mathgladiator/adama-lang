@@ -17,6 +17,7 @@ import org.adamalang.common.capacity.LoadMonitor;
 import org.adamalang.common.capacity.RepeatingSignal;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.ServiceShield;
 import org.adamalang.runtime.sys.metering.MeterReading;
 
@@ -28,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CapacityAgent implements HeatMonitor  {
   private final CapacityMetrics metrics;
   private final DataBase database;
+  private final CoreService service;
   private final SimpleExecutor executor;
   private final LoadMonitor resources;
 
@@ -37,9 +39,10 @@ public class CapacityAgent implements HeatMonitor  {
   public final BinaryEventOrGate rejectExisting;
   public final BinaryEventOrGate rejectMessages;
 
-  public CapacityAgent(CapacityMetrics metrics, DataBase database, SimpleExecutor executor, AtomicBoolean alive, ServiceShield shield) {
+  public CapacityAgent(CapacityMetrics metrics, DataBase database, CoreService service, SimpleExecutor executor, AtomicBoolean alive, ServiceShield shield) {
     this.metrics = metrics;
     this.database = database;
+    this.service = service;
     this.executor = executor;
     this.resources = new LoadMonitor(executor, alive);
 
