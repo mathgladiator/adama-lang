@@ -39,6 +39,8 @@ import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.overlord.OverlordMetrics;
+import org.adamalang.overlord.heat.HeatTable;
+import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.data.managed.Base;
@@ -262,8 +264,10 @@ public class Service {
         }
       }, 100);
     });
-    Client client = init.makeClient();
-    HttpHandler handler = Overlord.execute(client, init.engine, init.metricsFactory, targetsPath, init.database, scanPath);
+    ConcurrentCachedHttpHandler overlordHandler = new ConcurrentCachedHttpHandler();
+    HeatTable heatTable = new HeatTable(overlordHandler);
+    Client client = init.makeClient(heatTable::onSample);
+    HttpHandler handler = Overlord.execute(overlordHandler, heatTable, client, init.engine, init.metricsFactory, targetsPath, init.database, scanPath);
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
     final var runnable = new ServiceRunnable(webConfig, new WebMetrics(init.metricsFactory), serviceBase, () -> {});
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
@@ -286,7 +290,7 @@ public class Service {
     int gossipPort = config.get_int("gossip_frontend_port", 8004);
     System.err.println("gossiping on:" + gossipPort);
     System.err.println("standing up http on:" + webConfig.port);
-    Client client = init.makeClient();
+    Client client = init.makeClient(null);
     WebClientBase webBase = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
 
     // TODO: bring this out, and this whole file is getting CRAZY

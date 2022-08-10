@@ -25,10 +25,7 @@ import java.io.File;
 public class Overlord {
   private static final Logger LOGGER = LoggerFactory.getLogger(Overlord.class);
 
-  public static HttpHandler execute(Client client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath) throws Exception {
-    // the HTTP web server will render data that has been put/cached in this handler
-    ConcurrentCachedHttpHandler handler = new ConcurrentCachedHttpHandler();
-
+  public static HttpHandler execute(ConcurrentCachedHttpHandler handler, HeatTable heatTable, Client client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath) throws Exception {
     // the overlord has metrics
     OverlordMetrics metrics = new OverlordMetrics(metricsFactory);
 
@@ -39,9 +36,6 @@ public class Overlord {
     // make sure that we remove deployments from dead hosts
     DeploymentReconciliation.kickOff(metrics, engine, dataBase, handler);
     */
-
-    // we will be monitoring the heat on each host within this table
-    HeatTable heatTable = new HeatTable(handler);
 
     // kick off capacity management will will add/remove capacity per space
     CapacityManager.kickOffReturnHotTargetEvent(metrics, client, dataBase, handler, heatTable);

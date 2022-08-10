@@ -28,6 +28,7 @@ import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.TargetsQuorum;
+import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.slf4j.Logger;
@@ -135,7 +136,7 @@ public class CommonServiceInit {
     })));
   }
 
-  public Client makeClient() {
+  public Client makeClient(HeatMonitor heat) {
     ClientConfig clientConfig = new ClientConfig();
     ClientMetrics metrics = new ClientMetrics(metricsFactory);
     ClientRouter router = ClientRouter.FINDER(metrics, finder, region);

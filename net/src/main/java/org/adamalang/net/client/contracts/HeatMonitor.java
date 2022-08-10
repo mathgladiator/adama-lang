@@ -9,6 +9,8 @@
  */
 package org.adamalang.net.client.contracts;
 
+@FunctionalInterface
 public interface HeatMonitor {
+
   void heat(String target, double cpu, double memory);
 }

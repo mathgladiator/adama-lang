@@ -19,7 +19,7 @@ import java.util.List;
 public class Capacity {
 
   // Add the given machine to the capacity table
-  public static void add(DataBase dataBase, String space, String region, String machine) throws Exception {
+  public static boolean add(DataBase dataBase, String space, String region, String machine) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = "INSERT INTO `" + dataBase.databaseName + "`.`capacity` (`space`, `region`, `machine`) VALUES (?,?,?)";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -27,9 +27,11 @@ public class Capacity {
         statement.setString(2, region);
         statement.setString(3, machine);
         statement.execute();
+        return true;
       }
     } catch (SQLIntegrityConstraintViolationException sicve) {
       dataBase.metrics.capacity_duplicate.run();
+      return false;
     }
   }
 
@@ -52,7 +54,7 @@ public class Capacity {
   }
 
   // list all the capacity for the given space within the given region
-  public static List<CapacityInstance> listRegion(DataBase dataBase, String space, String region) throws Exception {
+  public static List<CapacityInstance> listRegion(DataBase dataBase, String region, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = "SELECT `region`, `machine` FROM `" + dataBase.databaseName + "`.`capacity` WHERE `space`=? AND `region`=? ORDER BY `region`, `machine`";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
