@@ -108,16 +108,23 @@ public class Elements {
     if (env.element.hasAttr("rx:sync")) {
       String path = env.element.attr("rx:sync");
       boolean tuned = path.startsWith("view:") | path.startsWith("data:");
-      double ms = 100;
-      try {
-        ms = Double.parseDouble(env.element.attr("rx:debounce"));
-      } catch (NumberFormatException nfe) {
-        env.feedback.warn(env.element, env.element.attr("rx:debounce") + " should be a numeric value");
-      }
+      double ms = _rxdebounce(env);
       StatePath _path = StatePath.resolve(tuned ? path : ("view:" + path), env.stateVar);
       env.writer.tab().append("$.SY(").append(inputVar).append(",").append(_path.command).append(",'").append(_path.name).append("',").append("" + ms).append(");").newline();
     }
     env.pool.give(inputVar);
+  }
+
+  private static double _rxdebounce(Environment env) {
+    if (env.element.hasAttr("rx:debounce")) {
+      try {
+        return Double.parseDouble(env.element.attr("rx:debounce"));
+      } catch (IllegalArgumentException nfe) {
+        env.feedback.warn(env.element, env.element.attr("rx:debounce") + " should be a numeric value");
+        return 50;
+      }
+    }
+    return 100;
   }
 
   public static void textarea(Environment env) {

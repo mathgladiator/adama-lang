@@ -14,8 +14,6 @@ public class TemplateInputSyncTests extends BaseRxHtmlTest {
   public String issues() {
     StringBuilder issues = new StringBuilder();
     issues.append("WARNING:zoop should be a numeric value");
-    issues.append("\nWARNING: should be a numeric value");
-    issues.append("\nWARNING: should be a numeric value");
     return issues.toString();
   }
   @Override
@@ -26,7 +24,7 @@ public class TemplateInputSyncTests extends BaseRxHtmlTest {
     gold.append("\n    var c = $.E('input');");
     gold.append("\n    c.setAttribute('name','email');");
     gold.append("\n    b.append(c);");
-    gold.append("\n    $.SY(c,$.pV(a),'foo',100.0);");
+    gold.append("\n    $.SY(c,$.pV(a),'foo',50.0);");
     gold.append("\n    var c = $.E('textarea');");
     gold.append("\n    c.setAttribute('name','email');");
     gold.append("\n    b.append(c);");
