@@ -40,15 +40,19 @@ public class CapacityAgent {
       // reject 100% of all requests
     });
 
-    resources.cpu(new LoadEvent(0.65, add_capacity::a));
-    resources.memory(new LoadEvent(0.65, add_capacity::b));
-    resources.cpu(new LoadEvent(0.75, rebalance::a));
-    resources.memory(new LoadEvent(0.75, rebalance::b));
-    resources.cpu(new LoadEvent(0.80, rejectNew::a));
-    resources.memory(new LoadEvent(0.80, rejectNew::b));
-    resources.cpu(new LoadEvent(0.85, rejectExisting::a));
-    resources.memory(new LoadEvent(0.85, rejectExisting::b));
-    resources.cpu(new LoadEvent(0.90, rejectMessages::a));
-    resources.memory(new LoadEvent(0.90, rejectMessages::b));
+    {
+      resources.cpu(new LoadEvent(0.65, add_capacity::a));
+      resources.cpu(new LoadEvent(0.75, rebalance::a));
+      resources.cpu(new LoadEvent(0.80, rejectNew::a));
+      resources.cpu(new LoadEvent(0.85, rejectExisting::a));
+      resources.cpu(new LoadEvent(0.90, rejectMessages::a));
+    }
+    {
+      resources.memory(new LoadEvent(0.75, add_capacity::b));
+      resources.memory(new LoadEvent(0.80, rebalance::b));
+      resources.memory(new LoadEvent(0.85, rejectNew::b));
+      resources.memory(new LoadEvent(0.87, rejectExisting::b));
+      resources.memory(new LoadEvent(0.90, rejectMessages::b));
+    }
   }
 }
