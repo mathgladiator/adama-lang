@@ -79,7 +79,7 @@ public class Finder implements FinderService {
       }
       String insertSQL = //
           "INSERT INTO `" + dataBase.databaseName + "`.`directory` (" + //
-              "`space`, `key`, `type`, `head_seq`, `active`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`, `need_gc`) VALUES (?, ?, " + Location.Machine.type + ", 0, FALSE, ?, ?, '', 0, 0, TRUE)" //
+              "`space`, `key`, `type`, `head_seq`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`, `need_gc`) VALUES (?, ?, " + Location.Machine.type + ", 0, ?, ?, '', 0, 0, TRUE)" //
           ;
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(insertSQL)) {
         statementInsertIndex.setString(1, key.space);
