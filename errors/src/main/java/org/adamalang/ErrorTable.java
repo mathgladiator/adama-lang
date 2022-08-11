@@ -54,6 +54,8 @@ public class ErrorTable {
     descriptions.put(194575, "no description of error (yet)");
     names.put(184335, "LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT");
     descriptions.put(184335, "no description of error (yet)");
+    names.put(145627, "LIVING_DOCUMENT_TRANSACTION_FAILED_PARSE_MESSAGE");
+    descriptions.put(145627, "no description of error (yet)");
     names.put(115724, "LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED");
     descriptions.put(115724, "no description of error (yet)");
     names.put(109775, "LIVING_DOCUMENT_TRANSACTION_NO_CHANGE");
@@ -206,8 +208,6 @@ public class ErrorTable {
     descriptions.put(602115, "no description of error (yet)");
     names.put(694287, "COMPUTE_EMPTY_REWIND");
     descriptions.put(694287, "no description of error (yet)");
-    names.put(656396, "COMPUTE_UNKNOWN_METHOD");
-    descriptions.put(656396, "no description of error (yet)");
     names.put(679948, "FRONTEND_SPACE_ALREADY_EXISTS");
     descriptions.put(679948, "The requested space already exists.");
     userspace.add(679948);
