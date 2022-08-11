@@ -36,6 +36,11 @@ public class Elements {
     }
   }
 
+  public static void title(Environment env) {
+    RxObject obj = new RxObject(env, "value");
+    env.writer.tab().append("$.ST(").append(obj.rxObj).append(");").newline();
+  }
+
   public static void connection(Environment env) {
     if (!env.element.hasAttr("name")) {
       env.element.attr("name", "default");
