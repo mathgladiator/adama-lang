@@ -33,6 +33,56 @@ public class JsonStreamReaderTests {
   }
 
   @Test
+  public void emptyIsZero() {
+    {
+      JsonStreamReader reader = new JsonStreamReader("{\"x\":\"\"}");
+      Assert.assertTrue(reader.startObject());
+      Assert.assertTrue(reader.notEndOfObject());
+      Assert.assertEquals("x", reader.fieldName());
+      Assert.assertEquals(0, reader.readInteger());
+    }
+    {
+      JsonStreamReader reader = new JsonStreamReader("{\"x\":\"\"}");
+      Assert.assertTrue(reader.startObject());
+      Assert.assertTrue(reader.notEndOfObject());
+      Assert.assertEquals("x", reader.fieldName());
+      Assert.assertTrue(Math.abs(reader.readDouble()) < 0.0001);
+    }
+    {
+      JsonStreamReader reader = new JsonStreamReader("{\"x\":\"\"}");
+      Assert.assertTrue(reader.startObject());
+      Assert.assertTrue(reader.notEndOfObject());
+      Assert.assertEquals("x", reader.fieldName());
+      Assert.assertEquals(0, reader.readLong());
+    }
+  }
+
+  @Test
+  public void nullIsZero() {
+    {
+      JsonStreamReader reader = new JsonStreamReader("{\"x\":null}");
+      Assert.assertTrue(reader.startObject());
+      Assert.assertTrue(reader.notEndOfObject());
+      Assert.assertEquals("x", reader.fieldName());
+      Assert.assertEquals(0, reader.readInteger());
+    }
+    {
+      JsonStreamReader reader = new JsonStreamReader("{\"x\":null}");
+      Assert.assertTrue(reader.startObject());
+      Assert.assertTrue(reader.notEndOfObject());
+      Assert.assertEquals("x", reader.fieldName());
+      Assert.assertTrue(Math.abs(reader.readDouble()) < 0.0001);
+    }
+    {
+      JsonStreamReader reader = new JsonStreamReader("{\"x\":null}");
+      Assert.assertTrue(reader.startObject());
+      Assert.assertTrue(reader.notEndOfObject());
+      Assert.assertEquals("x", reader.fieldName());
+      Assert.assertEquals(0, reader.readLong());
+    }
+  }
+
+  @Test
   public void dupes() {
     JsonStreamReader reader = new JsonStreamReader("{}");
     HashSet<String> dupes = new HashSet<>();

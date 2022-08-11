@@ -91,14 +91,23 @@ public class JsonStreamReader {
     return tokens.removeFirst().type == JsonTokenType.True;
   }
 
+  private String readValueWithDefaultZeros() {
+    JsonToken token = tokens.removeFirst();
+    if (token.type == JsonTokenType.Null || token.data.equals("")) {
+      return "0";
+    }
+    return token.data;
+  }
+
   public double readDouble() {
     ensureQueueHappy(1);
-    return Double.parseDouble(tokens.removeFirst().data);
+    String toParse = readValueWithDefaultZeros();
+    return Double.parseDouble(toParse);
   }
 
   public int readInteger() {
     ensureQueueHappy(1);
-    String toParse = tokens.removeFirst().data;
+    String toParse = readValueWithDefaultZeros();
     try {
       return Integer.parseInt(toParse);
     } catch (NumberFormatException nfe) {
@@ -108,7 +117,8 @@ public class JsonStreamReader {
 
   public long readLong() {
     ensureQueueHappy(1);
-    return Long.parseLong(tokens.removeFirst().data);
+    String toParse = readValueWithDefaultZeros();
+    return Long.parseLong(toParse);
   }
 
   public NtPrincipal readNtPrincipal() {

@@ -11,6 +11,7 @@ package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.contracts.DocumentMonitor;
@@ -37,6 +38,7 @@ import java.util.*;
 
 /** The central class for a living document (i.e. a tiny VM) */
 public abstract class LivingDocument implements RxParent, Caller {
+  private static ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LivingDocument.class);
   public final DocumentMonitor __monitor;
   public final LivingDocument __self;
   protected final RxInt32 __auto_future_id;
@@ -530,7 +532,7 @@ public abstract class LivingDocument implements RxParent, Caller {
                     ip = reader.readString();
                     break;
                   case "message":
-                    message = __parse_message(channel, reader);
+                      message = __parse_message(channel, reader);
                     break;
                   default:
                     reader.skipValue();
@@ -821,7 +823,11 @@ public abstract class LivingDocument implements RxParent, Caller {
               result = new RemoteResult(reader);
               break;
             case "message":
-              message = __parse_message(channel, reader);
+              try {
+                message = __parse_message(channel, reader);
+              } catch (Exception ex) {
+                throw ErrorCodeException.detectOrWrap(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_FAILED_PARSE_MESSAGE, ex, EXLOGGER);
+              }
               break;
             case "asset":
               asset = reader.readNtAsset();
