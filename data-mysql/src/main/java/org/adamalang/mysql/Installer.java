@@ -40,6 +40,7 @@ public class Installer {
         .append("  `space` VARCHAR(128) NOT NULL,") //
         .append("  `region` VARCHAR(256) NOT NULL,") //
         .append("  `machine` VARCHAR(256) NOT NULL,") //
+        .append("  `override` BOOLEAN DEFAULT FALSE,") //
         .append("  PRIMARY KEY (`id`),") //
         .append("  INDEX `s` (`space` ASC),") //
         .append("  INDEX `r` (`region` ASC),") //
@@ -77,6 +78,7 @@ public class Installer {
         .append("  `password` TEXT NOT NULL,") //
         .append("  `balance` INT(4) DEFAULT 0,") //
         .append("  `credit_carry_limit` INT(4) DEFAULT -500,") //
+        .append("  `payment_info_json` TEXT,") //
         .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
         .append("  `validations` INT(4) UNSIGNED NOT NULL,") //
         .append("  `last_validated` DATETIME NULL,") //

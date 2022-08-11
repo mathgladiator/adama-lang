@@ -26,7 +26,7 @@ public class CapacityTests {
       Installer installer = new Installer(dataBase);
       try {
         installer.install();
-        Capacity.add(dataBase, "space", "region1", "machine1");
+        int x = Capacity.add(dataBase, "space", "region1", "machine1");
         Capacity.add(dataBase, "space", "region1", "machine2");
         Capacity.add(dataBase, "space", "region2", "machine3");
         Capacity.add(dataBase, "spacex", "region2", "machine4");
@@ -35,6 +35,7 @@ public class CapacityTests {
         Capacity.add(dataBase, "space", "region1", "machine2");
         Capacity.add(dataBase, "space", "region2", "machine3");
         Capacity.add(dataBase, "spacex", "region2", "machine4");
+
 
         capacities = Capacity.listAll(dataBase, "space");
         Assert.assertEquals(3, capacities.size());
@@ -45,12 +46,19 @@ public class CapacityTests {
         Assert.assertEquals("machine2", capacities.get(1).machine);
         Assert.assertEquals("machine3", capacities.get(2).machine);
 
+        Assert.assertEquals(x, capacities.get(0).id);
+        Assert.assertFalse(capacities.get(0).override);
+        Capacity.setOverride(dataBase, x, true);
+
         capacities = Capacity.listRegion(dataBase, "space", "region1");
         Assert.assertEquals(2, capacities.size());
         Assert.assertEquals("region1", capacities.get(0).region);
         Assert.assertEquals("region1", capacities.get(1).region);
         Assert.assertEquals("machine1", capacities.get(0).machine);
         Assert.assertEquals("machine2", capacities.get(1).machine);
+
+        Assert.assertEquals(x, capacities.get(0).id);
+        Assert.assertTrue(capacities.get(0).override);
 
         Capacity.remove(dataBase, "space", "region1", "machine2");
 
