@@ -103,6 +103,8 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_value");
     writeAnnotations(writer);
+    writer.writeObjectFieldIntro("type");
+    writer.writeString("enum");
     writer.writeObjectFieldIntro("enum");
     writer.writeString(name);
     writer.writeObjectFieldIntro("options");
