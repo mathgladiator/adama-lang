@@ -175,6 +175,10 @@ public class CodeGenRecords {
         }
         result.append("new ").append(javaConcreteType).append("(").append(parent).append(", ");
         defaultValue.writeJava(result, environment.scopeWithComputeContext(ComputeContext.Computation));
+        if (fieldType instanceof TyReactiveEnum) {
+          String name = ((TyReactiveEnum) fieldType).name;
+          result.append(", (__v) -> __EnumFix_").append(name).append("(__v)");
+        }
         result.append(")");
       }
     } else if (fieldType instanceof TyReactiveMaybe) {

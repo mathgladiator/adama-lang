@@ -493,6 +493,16 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\n        return value - 1;");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  private static final int __EnumFix_E(int value) {");
+    gold.append("\n    switch (value) {");
+    gold.append("\n      case 0:");
+    gold.append("\n      case 1:");
+    gold.append("\n      case 2:");
+    gold.append("\n        return value;");
+    gold.append("\n      default:");
+    gold.append("\n        return 0;");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
     gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
     gold.append("\n    return __map;");

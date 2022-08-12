@@ -1863,6 +1863,15 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n        return value - 1;");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  private static final int __EnumFix_E(int value) {");
+    gold.append("\n    switch (value) {");
+    gold.append("\n      case 0:");
+    gold.append("\n      case 1:");
+    gold.append("\n        return value;");
+    gold.append("\n      default:");
+    gold.append("\n        return 0;");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  private int __FUNC_0_mesum(int[] s) {");
     gold.append("\n    __code_cost += 4;");
     gold.append("\n    __track(0);");

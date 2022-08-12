@@ -128,18 +128,32 @@ public class CodeGenEnums {
     sb.append("};").writeNewline();
   }
 
+  public static void writeEnumFixer(final StringBuilderWithTabs sb, final String name, final EnumStorage storage) {
+    sb.append("private static final int __EnumFix_").append(name).append("(int value) {").tabUp().writeNewline();
+    sb.append("switch (value) {").tabUp().writeNewline();
+    int countDown = storage.options.size();
+    for (Map.Entry<String, Integer> entry : storage.options.entrySet()) {
+      countDown--;
+      sb.append("case ").append("" + entry.getValue()).append(":");
+      if (countDown == 0) {
+        sb.tabUp();
+      }
+      sb.writeNewline();
+    }
+    sb.append("return value;").tabDown().writeNewline();
+    sb.append("default:").tabUp().writeNewline();
+    sb.append("return ").append("" + storage.getDefaultValue()).append(";").tabDown().tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+  }
 
-  public static void writeEnumNext(final StringBuilderWithTabs sb, final String name, final EnumStorage storage) {
+  public static void writeEnumNextPrev(final StringBuilderWithTabs sb, final String name, final EnumStorage storage) {
     if (storage.options.size() > 0) {
       HashMap<Integer, Integer> next = new HashMap<>();
       HashMap<Integer, Integer> prev = new HashMap<>();
       Integer prior = null;
-      Integer defaultValue = null;
       int start = 0;
       for (Map.Entry<String, Integer> entry : storage.options.entrySet()) {
-        if (entry.getKey().equals(storage.getDefaultLabel())) {
-          defaultValue = entry.getValue();
-        }
         if (prior == null) {
           start = entry.getValue();
         } else {

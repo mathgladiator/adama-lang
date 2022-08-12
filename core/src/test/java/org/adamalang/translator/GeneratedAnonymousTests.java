@@ -2654,6 +2654,14 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n        return value - 1;");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  private static final int __EnumFix_E(int value) {");
+    gold.append("\n    switch (value) {");
+    gold.append("\n      case 0:");
+    gold.append("\n        return value;");
+    gold.append("\n      default:");
+    gold.append("\n        return 0;");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord4 extends NtMessageBase {");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
@@ -2766,7 +2774,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n              this.d = __reader.readDouble();");
     gold.append("\n              break;");
     gold.append("\n            case \"e\":");
-    gold.append("\n              this.e = __reader.readInteger();");
+    gold.append("\n              this.e = __EnumFix_E(__reader.readInteger());");
     gold.append("\n              break;");
     gold.append("\n            case \"s\":");
     gold.append("\n              this.s = __reader.readString();");

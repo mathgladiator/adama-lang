@@ -117,7 +117,12 @@ public class CodeGenMessage {
 
   public static void writeValueReader(final String name, final TyType type, final StringBuilderWithTabs sb, final Environment environment, final AtomicInteger localVar) {
     if (type instanceof TySimpleNative) {
-      sb.append(name).append(" = ").append("__reader.read").append(type.getJavaBoxType(environment)).append("();").writeNewline();
+      if (type instanceof TyNativeEnum) {
+        String enumName = ((TyNativeEnum) type).name;
+        sb.append(name).append(" = ").append("__EnumFix_").append(enumName).append("(__reader.read").append(type.getJavaBoxType(environment)).append("());").writeNewline();
+      } else {
+        sb.append(name).append(" = ").append("__reader.read").append(type.getJavaBoxType(environment)).append("();").writeNewline();
+      }
     } else if (type instanceof TyNativeMaybe) {
       final var elementType = ((DetailContainsAnEmbeddedType) type).getEmbeddedType(environment);
       final var localItem = "__localItem_" + localVar.getAndIncrement();

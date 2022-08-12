@@ -30,7 +30,7 @@ public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
   public final EnumStorage storage;
 
   public TyReactiveEnum(final Token nameToken, final EnumStorage storage) {
-    super(nameToken, "RxInt32");
+    super(nameToken, "RxEnumInt32");
     name = nameToken.text;
     this.storage = storage;
   }

@@ -30,6 +30,7 @@ public class EnumStorage extends DocumentPosition {
   private final String name;
   private final HashMap<String, Integer> signatureToNameAndId;
   private String defaultLabel;
+  private int defaultValue;
   private boolean seenDefaultYet;
   private int signatureIdSource;
 
@@ -43,11 +44,11 @@ public class EnumStorage extends DocumentPosition {
     signatureIdSource = 0;
     signatureToNameAndId = new HashMap<>();
     duplicates = new HashSet<>();
+    defaultValue = 0;
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
     writer.beginObject();
-
     writer.writeObjectFieldIntro("values");
     writer.beginObject();
     for (Map.Entry<String, Integer> option : options.entrySet()) {
@@ -85,6 +86,7 @@ public class EnumStorage extends DocumentPosition {
     options.put(optionToken.text, value);
     if (isDefault != null || !seenDefaultYet) {
       defaultLabel = optionToken.text;
+      defaultValue = value;
       seenDefaultYet = true;
     }
   }
@@ -133,6 +135,10 @@ public class EnumStorage extends DocumentPosition {
 
   public String getDefaultLabel() {
     return defaultLabel;
+  }
+
+  public int getDefaultValue() {
+    return defaultValue;
   }
 
   public int getId(final String name, final String signature) {

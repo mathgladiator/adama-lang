@@ -3858,6 +3858,15 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n        return value - 1;");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  private static final int __EnumFix_E(int value) {");
+    gold.append("\n    switch (value) {");
+    gold.append("\n      case 0:");
+    gold.append("\n      case 1:");
+    gold.append("\n        return value;");
+    gold.append("\n      default:");
+    gold.append("\n        return 0;");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  private static class RTxX extends NtMessageBase {");
     gold.append("\n    private int e = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -3875,7 +3884,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n          String __fieldName = __reader.fieldName();");
     gold.append("\n          switch (__fieldName) {");
     gold.append("\n            case \"e\":");
-    gold.append("\n              this.e = __reader.readInteger();");
+    gold.append("\n              this.e = __EnumFix_E(__reader.readInteger());");
     gold.append("\n              break;");
     gold.append("\n            default:");
     gold.append("\n              __reader.skipValue();");
@@ -3946,7 +3955,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n          String __fieldName = __reader.fieldName();");
     gold.append("\n          switch (__fieldName) {");
     gold.append("\n            case \"e\":");
-    gold.append("\n              this.e = __reader.readInteger();");
+    gold.append("\n              this.e = __EnumFix_E(__reader.readInteger());");
     gold.append("\n              break;");
     gold.append("\n            default:");
     gold.append("\n              __reader.skipValue();");

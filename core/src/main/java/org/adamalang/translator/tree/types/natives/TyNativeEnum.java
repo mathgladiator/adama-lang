@@ -71,7 +71,8 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
   @Override
   public void compile(final StringBuilderWithTabs sb, final Environment environment) {
     CodeGenEnums.writeEnumArray(sb, name, "ALL_VALUES", "", storage);
-    CodeGenEnums.writeEnumNext(sb, name, storage);
+    CodeGenEnums.writeEnumNextPrev(sb, name, storage);
+    CodeGenEnums.writeEnumFixer(sb, name, storage);
     for (final Map.Entry<String, HashMap<String, ArrayList<DefineDispatcher>>> dispatchers : storage.dispatchersByNameThenSignature.entrySet()) {
       CodeGenEnums.writeDispatchers(sb, storage, dispatchers.getValue(), dispatchers.getKey(), environment);
     }

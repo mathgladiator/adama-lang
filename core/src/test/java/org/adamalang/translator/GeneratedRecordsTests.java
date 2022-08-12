@@ -4760,6 +4760,15 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n        return value - 1;");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  private static final int __EnumFix_E(int value) {");
+    gold.append("\n    switch (value) {");
+    gold.append("\n      case 1:");
+    gold.append("\n      case 0:");
+    gold.append("\n        return value;");
+    gold.append("\n      default:");
+    gold.append("\n        return 1;");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  private static class RTxX extends NtMessageBase {");
     gold.append("\n    private RTxY[] ay = new RTxY[]{};");
     gold.append("\n    private boolean b = false;");
@@ -4854,7 +4863,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n              this.d = __reader.readDouble();");
     gold.append("\n              break;");
     gold.append("\n            case \"e\":");
-    gold.append("\n              this.e = __reader.readInteger();");
+    gold.append("\n              this.e = __EnumFix_E(__reader.readInteger());");
     gold.append("\n              break;");
     gold.append("\n            case \"lbl\":");
     gold.append("\n              this.lbl = __reader.readString();");
@@ -4876,7 +4885,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n            case \"me\":");
     gold.append("\n              if (__reader.testLackOfNull()) {");
     gold.append("\n                int __localItem_5;");
-    gold.append("\n                __localItem_5 = __reader.readInteger();");
+    gold.append("\n                __localItem_5 = __EnumFix_E(__reader.readInteger());");
     gold.append("\n                this.me.set(__localItem_5);");
     gold.append("\n              }");
     gold.append("\n              break;");

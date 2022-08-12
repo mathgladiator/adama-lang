@@ -17,8 +17,8 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a reactive 32-bit integer (int) */
 public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet<Integer>, Indexable {
-  private int backup;
-  private int value;
+  protected int backup;
+  protected int value;
 
   public RxInt32(final RxParent parent, final int value) {
     super(parent);

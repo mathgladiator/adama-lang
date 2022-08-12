@@ -37,6 +37,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.function.Function;
 
 public class LivingDocumentTests {
   private static final NtAsset EXAMPLE =
@@ -568,6 +569,58 @@ public class LivingDocumentTests {
       gotIt = true;
     }
     Assert.assertTrue(gotIt);
+  }
+
+  @Test
+  public void enum_fix_rx() throws Exception {
+    final var setup =
+        new RealDocumentSetup(
+            "enum EEE { A:100, B, C } public EEE x; @connected { return true; } ",
+            "{\"x\":-123}",
+            false);
+    RealDocumentSetup.GotView gv = new RealDocumentSetup.GotView();
+    ArrayList<String> list = new ArrayList<>();
+    Perspective linked =
+        new Perspective() {
+          @Override
+          public void data(String data) {
+            list.add(data);
+          }
+
+          @Override
+          public void disconnect() {}
+        };
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+    Assert.assertEquals(1, list.size());
+    Assert.assertEquals("{\"data\":{\"x\":100},\"seq\":1}", list.get(0));
+  }
+
+  @Test
+  public void enum_fix_msg() throws Exception {
+    final var setup =
+        new RealDocumentSetup(
+            "enum EEE { A:100, B, C } public EEE x; public int y = 0; @connected { return true; } message M { EEE eee; } channel foo(M m) { x = m.eee; y = m.eee.to_int(); }",
+            "{\"x\":101}",
+            false);
+    RealDocumentSetup.GotView gv = new RealDocumentSetup.GotView();
+    ArrayList<String> list = new ArrayList<>();
+    Perspective linked =
+        new Perspective() {
+          @Override
+          public void data(String data) {
+            list.add(data);
+          }
+
+          @Override
+          public void disconnect() {}
+        };
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+    setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
+    setup.document.send(ContextSupport.WRAP(NtPrincipal.NO_ONE), null, "foo", "{\"eee\":10000}", new RealDocumentSetup.AssertInt(4));
+    Assert.assertEquals(3, list.size());
+    Assert.assertEquals("{\"data\":{\"x\":101,\"y\":0},\"seq\":1}", list.get(0));
+    Assert.assertEquals("{\"seq\":3}", list.get(1));
+    Assert.assertEquals("{\"data\":{\"x\":100,\"y\":100},\"seq\":4}", list.get(2));
   }
 
   @Test
