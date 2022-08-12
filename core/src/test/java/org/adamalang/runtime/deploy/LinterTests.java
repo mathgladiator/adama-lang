@@ -218,5 +218,4 @@ public class LinterTests {
     Assert.assertEquals(1, diagnostics.size());
     Assert.assertEquals("field 'x' in record at field 'r' in root document is change from a principal to a asset which will lose data.", diagnostics.get(0));
   }
-
 }
