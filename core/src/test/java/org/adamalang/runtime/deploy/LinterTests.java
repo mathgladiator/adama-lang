@@ -83,6 +83,37 @@ public class LinterTests {
   }
 
   @Test
+  public void recordLongToComplexWarns() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R { public long x; }"), reflect("record R { public complex x; }"));
+    Assert.assertEquals(1, diagnostics.size());
+    Assert.assertEquals("field 'x' in record 'R' is being compacted from long to complex and may result in data precision.", diagnostics.get(0));
+  }
+
+  @Test
+  public void recordIntToDoubleFine() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R { public int x; }"), reflect("record R { public double x; }"));
+    Assert.assertEquals(0, diagnostics.size());
+  }
+
+  @Test
+  public void recordIntToLongFine() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R { public int x; }"), reflect("record R { public long x; }"));
+    Assert.assertEquals(0, diagnostics.size());
+  }
+
+  @Test
+  public void recordIntToComplexeFine() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R { public int x; }"), reflect("record R { public complex x; }"));
+    Assert.assertEquals(0, diagnostics.size());
+  }
+
+  @Test
+  public void recordDoubleToComplexeFine() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R { public complex x; }"), reflect("record R { public complex x; }"));
+    Assert.assertEquals(0, diagnostics.size());
+  }
+
+  @Test
   public void rootStringToDoubleWarns() {
     ArrayList<String> diagnostics = Linter.compare(reflect("public string x;"), reflect("public double x;"));
     Assert.assertEquals(1, diagnostics.size());
@@ -173,6 +204,19 @@ public class LinterTests {
     ArrayList<String> diagnostics = Linter.compare(reflect("record R { public principal x; }"), reflect("record R { public int x; }"));
     Assert.assertEquals(1, diagnostics.size());
     Assert.assertEquals("field 'x' in record 'R' is change from a principal to a int which will lose data.", diagnostics.get(0));
+  }
+
+  @Test
+  public void recordToRecordFine() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R1 { public principal x; } R1 r;"), reflect("record R2 { public principal x; } R2 r;"));
+    Assert.assertEquals(0, diagnostics.size());
+  }
+
+  @Test
+  public void recordToRecordNotFine() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R1 { public principal x; } R1 r;"), reflect("record R2 { public asset x; } R2 r;"));
+    Assert.assertEquals(1, diagnostics.size());
+    Assert.assertEquals("field 'x' in record at field 'r' in root document is change from a principal to a asset which will lose data.", diagnostics.get(0));
   }
 
 }

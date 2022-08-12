@@ -52,6 +52,8 @@ public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
     writer.writeString("reactive_enum");
     writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
+    writer.writeString("enum");
+    writer.writeObjectFieldIntro("enum");
     writer.writeString(name);
     writer.writeObjectFieldIntro("options");
     storage.writeTypeReflectionJson(writer);

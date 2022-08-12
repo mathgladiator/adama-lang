@@ -24,9 +24,6 @@ public class Linter {
   private final ArrayList<String> diagnostics;
 
   private Linter(String reflectionFrom, String reflectionTo) {
-    //System.err.println(Json.parseJsonObject(reflectionFrom).toPrettyString());
-    //System.err.println(Json.parseJsonObject(reflectionTo).toPrettyString());
-
     this.rootFrom = (HashMap<String, Object>) new JsonStreamReader(reflectionFrom).readJavaTree();
     this.rootTo = (HashMap<String, Object>) new JsonStreamReader(reflectionTo).readJavaTree();
     this.typesFrom = (HashMap<String, Object>) rootFrom.get("types");
@@ -35,6 +32,13 @@ public class Linter {
   }
 
   private void pumpFieldCompare(String what, HashMap<String, Object> fieldTypeFrom, HashMap<String, Object> fieldTypeTo) {
+    if ("reactive_record".equals(fieldTypeFrom.get("nature"))) {
+      if ("reactive_record".equals(fieldTypeTo.get("nature"))) {
+        pumpCompareIssuesStructure("record at " + what, (HashMap<String, Object>) fieldTypeFrom.get("fields"), (HashMap<String, Object>) fieldTypeTo.get("fields"));
+        return;
+      }
+    }
+
     if ("reactive_maybe".equals(fieldTypeFrom.get("nature"))) {
       if ("reactive_maybe".equals(fieldTypeTo.get("nature"))) {
         pumpFieldCompare(what, (HashMap<String, Object>) fieldTypeFrom.get("type"), (HashMap<String, Object>) fieldTypeTo.get("type"));
@@ -42,6 +46,7 @@ public class Linter {
       } else {
         pumpFieldCompare(what, (HashMap<String, Object>) fieldTypeFrom.get("type"), fieldTypeTo);
         diagnostics.add(what + " is dropping the maybe and this may result in data invention of default data.");
+        return;
       }
     }
 
@@ -51,12 +56,12 @@ public class Linter {
         String recordTo = (String) fieldTypeTo.get("record_name");
         HashMap<String, Object> fieldsFrom = (HashMap<String, Object>) ((HashMap<String, Object>) typesFrom.get(recordFrom)).get("fields");
         HashMap<String, Object> fieldsTo = (HashMap<String, Object>) ((HashMap<String, Object>) typesTo.get(recordTo)).get("fields");
-
         pumpCompareIssuesStructure("table at " + what, fieldsFrom, fieldsTo);
       } else {
         diagnostics.add(what + " is a table dropping to another type.");
       }
     }
+
 
     // reactive_maybe
     if ("reactive_value".equals(fieldTypeFrom.get("nature"))) {
@@ -69,18 +74,20 @@ public class Linter {
         String toType = (String) fieldTypeTo.get("type");
         if ("long".equals(fromType) && "int".equals(toType)) {
           diagnostics.add(what + " is being compacted from long to int and may result in data loss.");
-        }
-        if ("string".equals(fromType) && !"string".equals(toType)) {
+        } else if ("string".equals(fromType) && !"string".equals(toType)) {
           diagnostics.add(what + " is change from a string to a " + toType + " which may lose data.");
-        }
-        if ("principal".equals(fromType) && !"principal".equals(toType)) {
+        } else if ("principal".equals(fromType) && !"principal".equals(toType)) {
           diagnostics.add(what + " is change from a principal to a " + toType + " which will lose data.");
-        }
-        if ("asset".equals(fromType) && !"asset".equals(toType)) {
-          diagnostics.add(what + " is change from a asset to a " + toType + " which will lose data.");
-        }
-        if ("long".equals(fromType) && "double".equals(toType)) {
+        } else if ("long".equals(fromType) && "double".equals(toType)) {
           diagnostics.add(what + " is being compacted from long to double and may result in data precision.");
+        } else if ("long".equals(fromType) && "complex".equals(toType)) {
+          diagnostics.add(what + " is being compacted from long to complex and may result in data precision.");
+        } else if ("int".equals(fromType) && ("long".equals(toType) || "double".equals(toType) || "complex".equals(toType))) {
+          return; // OK
+        } else if ("double".equals(fromType) && "complex".equals(toType)) {
+          return; // OK
+        } else if (fromType != null && !fromType.equals(toType)) {
+          diagnostics.add(what + " is change from a " + fromType + " to a " + toType + " which will lose data.");
         }
       }
     }
