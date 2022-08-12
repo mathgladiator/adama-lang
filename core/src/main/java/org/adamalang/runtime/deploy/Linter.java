@@ -9,7 +9,6 @@
  */
 package org.adamalang.runtime.deploy;
 
-import org.adamalang.common.Json;
 import org.adamalang.runtime.json.JsonStreamReader;
 
 import java.util.ArrayList;
@@ -18,85 +17,92 @@ import java.util.Map;
 
 /** Basic linter to compare two versions of Adama */
 public class Linter {
-  private static void pumpFieldCompare(String name, String field, HashMap<String, Object> fieldTypeFrom, HashMap<String, Object> fieldTypeTo, ArrayList<String> diagnostics) {
+  private final HashMap<String, Object> rootFrom;
+  private final HashMap<String, Object> rootTo;
+  private final HashMap<String, Object> typesFrom;
+  private final HashMap<String, Object> typesTo;
+  private final ArrayList<String> diagnostics;
+
+  private Linter(String reflectionFrom, String reflectionTo) {
+    //System.err.println(Json.parseJsonObject(reflectionFrom).toPrettyString());
+    //System.err.println(Json.parseJsonObject(reflectionTo).toPrettyString());
+
+    this.rootFrom = (HashMap<String, Object>) new JsonStreamReader(reflectionFrom).readJavaTree();
+    this.rootTo = (HashMap<String, Object>) new JsonStreamReader(reflectionTo).readJavaTree();
+    this.typesFrom = (HashMap<String, Object>) rootFrom.get("types");
+    this.typesTo = (HashMap<String, Object>) rootTo.get("types");
+    this.diagnostics = new ArrayList<>();
+  }
+
+  private void pumpFieldCompare(String what, HashMap<String, Object> fieldTypeFrom, HashMap<String, Object> fieldTypeTo) {
     if ("reactive_maybe".equals(fieldTypeFrom.get("nature"))) {
       if ("reactive_maybe".equals(fieldTypeTo.get("nature"))) {
-        pumpFieldCompare(name, field, (HashMap<String, Object>) fieldTypeFrom.get("type"), (HashMap<String, Object>) fieldTypeTo.get("type"), diagnostics);
+        pumpFieldCompare(what, (HashMap<String, Object>) fieldTypeFrom.get("type"), (HashMap<String, Object>) fieldTypeTo.get("type"));
         return;
       } else {
-        pumpFieldCompare(name, field, (HashMap<String, Object>) fieldTypeFrom.get("type"), fieldTypeTo, diagnostics);
-        if (name.equals("__Root")) {
-          diagnostics.add("Field '" + field + "' within the root document is dropping the maybe and this may result in data invention of default data.");
-        } else {
-          diagnostics.add("Field '" + field + "' within '" + name + "' is dropping the maybe and this may result in data invention of default data.");
-        }
+        pumpFieldCompare(what, (HashMap<String, Object>) fieldTypeFrom.get("type"), fieldTypeTo);
+        diagnostics.add(what + " is dropping the maybe and this may result in data invention of default data.");
+      }
+    }
+
+    if ("reactive_table".equals(fieldTypeFrom.get("nature"))) {
+      if ("reactive_table".equals(fieldTypeTo.get("nature"))) {
+        String recordFrom = (String) fieldTypeFrom.get("record_name");
+        String recordTo = (String) fieldTypeTo.get("record_name");
+        HashMap<String, Object> fieldsFrom = (HashMap<String, Object>) ((HashMap<String, Object>) typesFrom.get(recordFrom)).get("fields");
+        HashMap<String, Object> fieldsTo = (HashMap<String, Object>) ((HashMap<String, Object>) typesTo.get(recordTo)).get("fields");
+
+        pumpCompareIssuesStructure("table at " + what, fieldsFrom, fieldsTo);
+      } else {
+        diagnostics.add(what + " is a table dropping to another type.");
       }
     }
 
     // reactive_maybe
     if ("reactive_value".equals(fieldTypeFrom.get("nature"))) {
       if ("reactive_maybe".equals(fieldTypeTo.get("nature"))) {
-        pumpFieldCompare(name, field, fieldTypeFrom, (HashMap<String, Object>) fieldTypeTo.get("type"), diagnostics);
+        pumpFieldCompare(what, fieldTypeFrom, (HashMap<String, Object>) fieldTypeTo.get("type"));
         return;
       }
       if ("reactive_value".equals(fieldTypeTo.get("nature"))) {
         String fromType = (String) fieldTypeFrom.get("type");
         String toType = (String) fieldTypeTo.get("type");
         if ("long".equals(fromType) && "int".equals(toType)) {
-          if (name.equals("__Root")) {
-            diagnostics.add("Field '" + field + "' within the root document is being compacted from long to int and may result in data loss.");
-          } else {
-            diagnostics.add("Field '" + field + "' within '" + name + "' is being compacted from long to int and may result in data loss.");
-          }
+          diagnostics.add(what + " is being compacted from long to int and may result in data loss.");
         }
         if ("string".equals(fromType) && !"string".equals(toType)) {
-          if (name.equals("__Root")) {
-            diagnostics.add("Field '" + field + "' within the root document is change from a string to a " + toType + " which may lose data.");
-          } else {
-            diagnostics.add("Field '" + field + "' within '" + name + "' is change from a string to a " + toType + " which may lose data.");
-          }
+          diagnostics.add(what + " is change from a string to a " + toType + " which may lose data.");
         }
         if ("long".equals(fromType) && "double".equals(toType)) {
-          if (name.equals("__Root")) {
-            diagnostics.add("Field '" + field + "' within the root document is being compacted from long to double and may result in data precision.");
-          } else {
-            diagnostics.add("Field '" + field + "' within '" + name + "' is being compacted from long to double and may result in data precision.");
-          }
+          diagnostics.add(what + " is being compacted from long to double and may result in data precision.");
         }
       }
     }
   }
 
-  private static void pumpCompareIssuesStructure(String name, HashMap<String, Object> fieldsFrom, HashMap<String, Object> fieldsTo, ArrayList<String> diagnostics) {
+  private void pumpCompareIssuesStructure(String what, HashMap<String, Object> fieldsFrom, HashMap<String, Object> fieldsTo) {
     for (Map.Entry<String, Object> fieldFromEntry : fieldsFrom.entrySet()) {
       HashMap<String, Object> fieldFrom = (HashMap<String, Object>) fieldFromEntry.getValue();
       HashMap<String, Object> fieldTo = (HashMap<String, Object>) fieldsTo.get(fieldFromEntry.getKey());
       if (fieldTo != null) {
-        pumpFieldCompare(name, fieldFromEntry.getKey(), (HashMap<String, Object>) fieldFrom.get("type"), (HashMap<String, Object>) fieldTo.get("type"), diagnostics);
+        pumpFieldCompare("field '" + fieldFromEntry.getKey() + "' in " + what, (HashMap<String, Object>) fieldFrom.get("type"), (HashMap<String, Object>) fieldTo.get("type"));
       }
     }
   }
 
-  private static void pumpCompareIssuesEnum(String type, HashMap<String, Object> valuesFrom, HashMap<String, Object> valuesTo, ArrayList<String> diagnostics) {
+  private void pumpCompareIssuesEnum(String what, HashMap<String, Object> valuesFrom, HashMap<String, Object> valuesTo) {
     for (Map.Entry<String, Object> fromEntry : valuesFrom.entrySet()) {
       int fromValue = (int) fromEntry.getValue();
       Integer toValue = (Integer) valuesTo.get(fromEntry.getKey());
       if (toValue != null) {
         if (fromValue != toValue) {
-          diagnostics.add("Enumeration '" + type + "' has a label change for '" + fromEntry.getKey() + " from " + fromValue + " to " + toValue);
+          diagnostics.add(what + " has a label change for '" + fromEntry.getKey() + " from " + fromValue + " to " + toValue + ".");
         }
       }
     }
   }
 
-  public static ArrayList<String> compare(String reflectionFrom, String reflectionTo) {
-    System.err.println(Json.parseJsonObject(reflectionFrom).toPrettyString());
-    System.err.println(Json.parseJsonObject(reflectionTo).toPrettyString());
-    ArrayList<String> diagnostics = new ArrayList<>();
-    HashMap<String, Object> rootFrom = (HashMap<String, Object>) new JsonStreamReader(reflectionFrom).readJavaTree();
-    HashMap<String, Object> rootTo = (HashMap<String, Object>) new JsonStreamReader(reflectionTo).readJavaTree();
-    HashMap<String, Object> typesFrom = (HashMap<String, Object>) rootFrom.get("types");
-    HashMap<String, Object> typesTo = (HashMap<String, Object>) rootTo.get("types");
+  private void start() {
     for (String type : typesFrom.keySet()) {
       HashMap<String, Object> typeFrom = (HashMap<String, Object>) typesFrom.get(type);
       HashMap<String, Object> typeTo = (HashMap<String, Object>) typesTo.get(type);
@@ -107,17 +113,22 @@ public class Linter {
             if ("enum".equals(typeTo.get("type")) && "native_value".equals(typeTo.get("nature"))) {
               HashMap<String, Object> optionsFrom = (HashMap<String, Object>) typeFrom.get("options");
               HashMap<String, Object> optionsTo = (HashMap<String, Object>) typeTo.get("options");
-              pumpCompareIssuesEnum(type, (HashMap<String, Object>) optionsFrom.get("values"), (HashMap<String, Object>) optionsTo.get("values"), diagnostics);
+              pumpCompareIssuesEnum("enumeration '" + type + "'", (HashMap<String, Object>) optionsFrom.get("values"), (HashMap<String, Object>) optionsTo.get("values"));
             }
           }
         }
         if ("reactive_record".equals(nature) || "native_message".equals(nature)) {
+          String what = type.equals("__Root") ? "root document" : ("reactive_record".equals(nature) ? ("record '" + type + "'") : ("message '" + type + "'"));
           HashMap<String, Object> fieldsFrom = (HashMap<String, Object>) typeFrom.get("fields");
           HashMap<String, Object> fieldsTo = (HashMap<String, Object>) typeTo.get("fields");
-          pumpCompareIssuesStructure(type, fieldsFrom, fieldsTo, diagnostics);
+          pumpCompareIssuesStructure(what, fieldsFrom, fieldsTo);
         }
       }
     }
-    return diagnostics;
+  }
+  public static ArrayList<String> compare(String reflectionFrom, String reflectionTo) {
+    Linter linter = new Linter(reflectionFrom, reflectionTo);
+    linter.start();
+    return linter.diagnostics;
   }
 }

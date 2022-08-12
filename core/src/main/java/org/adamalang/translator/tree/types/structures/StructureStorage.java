@@ -73,10 +73,6 @@ public class StructureStorage extends DocumentPosition {
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
     writer.beginObject();
     for (FieldDefinition fd : fieldsByOrder) {
-      if (specialization == StorageSpecialization.Record && (fd.policy == null || fd.policy instanceof PrivatePolicy)) {
-        continue;
-      }
-
       writer.writeObjectFieldIntro(fd.name);
       writer.beginObject();
       if (fd.type != null) {

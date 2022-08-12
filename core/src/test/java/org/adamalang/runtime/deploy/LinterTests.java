@@ -52,93 +52,114 @@ public class LinterTests {
   public void enumLabelDataChangeWarns() {
     ArrayList<String> diagnostics = Linter.compare(reflect("enum EEE { A, B, C }"), reflect("enum EEE { A, D, B, C } "));
     Assert.assertEquals(2, diagnostics.size());
-    Assert.assertEquals("Enumeration 'EEE' has a label change for 'B from 1 to 2", diagnostics.get(0));
-    Assert.assertEquals("Enumeration 'EEE' has a label change for 'C from 2 to 3", diagnostics.get(1));
+    Assert.assertEquals("enumeration 'EEE' has a label change for 'B from 1 to 2.", diagnostics.get(0));
+    Assert.assertEquals("enumeration 'EEE' has a label change for 'C from 2 to 3.", diagnostics.get(1));
   }
 
   @Test
   public void rootLongToIntWarns() {
     ArrayList<String> diagnostics = Linter.compare(reflect("public long x;"), reflect("public int x;"));
     Assert.assertEquals(1, diagnostics.size());
-    Assert.assertEquals("Field 'x' within the root document is being compacted from long to int and may result in data loss.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in root document is being compacted from long to int and may result in data loss.", diagnostics.get(0));
   }
 
   @Test
   public void rootLongToDoubleWarns() {
     ArrayList<String> diagnostics = Linter.compare(reflect("public long x;"), reflect("public double x;"));
     Assert.assertEquals(1, diagnostics.size());
-    Assert.assertEquals("Field 'x' within the root document is being compacted from long to double and may result in data precision.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in root document is being compacted from long to double and may result in data precision.", diagnostics.get(0));
   }
 
   @Test
   public void recordLongToIntWarns() {
     ArrayList<String> diagnostics = Linter.compare(reflect("record R { public long x; }"), reflect("record R { public int x; }"));
     Assert.assertEquals(1, diagnostics.size());
-    Assert.assertEquals("Field 'x' within 'R' is being compacted from long to int and may result in data loss.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in record 'R' is being compacted from long to int and may result in data loss.", diagnostics.get(0));
   }
 
   @Test
   public void recordLongToDoubleWarns() {
     ArrayList<String> diagnostics = Linter.compare(reflect("record R { public long x; }"), reflect("record R { public double x; }"));
     Assert.assertEquals(1, diagnostics.size());
-    Assert.assertEquals("Field 'x' within 'R' is being compacted from long to double and may result in data precision.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in record 'R' is being compacted from long to double and may result in data precision.", diagnostics.get(0));
   }
 
   @Test
   public void rootStringToDoubleWarns() {
     ArrayList<String> diagnostics = Linter.compare(reflect("public string x;"), reflect("public double x;"));
     Assert.assertEquals(1, diagnostics.size());
-    Assert.assertEquals("Field 'x' within the root document is change from a string to a double which may lose data.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in root document is change from a string to a double which may lose data.", diagnostics.get(0));
   }
 
   @Test
   public void recordStringToIntWarns() {
     ArrayList<String> diagnostics = Linter.compare(reflect("record R { public string x; }"), reflect("record R { public int x; }"));
     Assert.assertEquals(1, diagnostics.size());
-    Assert.assertEquals("Field 'x' within 'R' is change from a string to a int which may lose data.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in record 'R' is change from a string to a int which may lose data.", diagnostics.get(0));
   }
 
   @Test
   public void recordLongToMaybeInt() {
     ArrayList<String> diagnostics = Linter.compare(reflect("record R { public long x; }"), reflect("record R { public maybe<int> x; }"));
     Assert.assertEquals(1, diagnostics.size());
-    Assert.assertEquals("Field 'x' within 'R' is being compacted from long to int and may result in data loss.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in record 'R' is being compacted from long to int and may result in data loss.", diagnostics.get(0));
   }
 
   @Test
   public void recordMaybeLongToInt() {
     ArrayList<String> diagnostics = Linter.compare(reflect("record R { public maybe<long> x; }"), reflect("record R { public int x; }"));
     Assert.assertEquals(2, diagnostics.size());
-    Assert.assertEquals("Field 'x' within 'R' is being compacted from long to int and may result in data loss.", diagnostics.get(0));
-    Assert.assertEquals("Field 'x' within 'R' is dropping the maybe and this may result in data invention of default data.", diagnostics.get(1));
+    Assert.assertEquals("field 'x' in record 'R' is being compacted from long to int and may result in data loss.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in record 'R' is dropping the maybe and this may result in data invention of default data.", diagnostics.get(1));
   }
 
   @Test
   public void rootLongToMaybeInt() {
     ArrayList<String> diagnostics = Linter.compare(reflect("public long x;"), reflect("public maybe<int> x;"));
     Assert.assertEquals(1, diagnostics.size());
-    Assert.assertEquals("Field 'x' within the root document is being compacted from long to int and may result in data loss.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in root document is being compacted from long to int and may result in data loss.", diagnostics.get(0));
   }
 
   @Test
   public void rootMaybeLongToInt() {
     ArrayList<String> diagnostics = Linter.compare(reflect("public maybe<long> x;"), reflect("public int x;"));
     Assert.assertEquals(2, diagnostics.size());
-    Assert.assertEquals("Field 'x' within the root document is being compacted from long to int and may result in data loss.", diagnostics.get(0));
-    Assert.assertEquals("Field 'x' within the root document is dropping the maybe and this may result in data invention of default data.", diagnostics.get(1));
+    Assert.assertEquals("field 'x' in root document is being compacted from long to int and may result in data loss.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in root document is dropping the maybe and this may result in data invention of default data.", diagnostics.get(1));
   }
 
   @Test
   public void rootMaybeLongToMaybeInt() {
     ArrayList<String> diagnostics = Linter.compare(reflect("public maybe<long> x;"), reflect("public maybe<int> x;"));
     Assert.assertEquals(1, diagnostics.size());
-    Assert.assertEquals("Field 'x' within the root document is being compacted from long to int and may result in data loss.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in root document is being compacted from long to int and may result in data loss.", diagnostics.get(0));
   }
 
   @Test
   public void recordMaybeLongToMaybeInt() {
     ArrayList<String> diagnostics = Linter.compare(reflect("record R { public maybe<long> x; }"), reflect("record R { public maybe<int> x; }"));
     Assert.assertEquals(1, diagnostics.size());
-    Assert.assertEquals("Field 'x' within 'R' is being compacted from long to int and may result in data loss.", diagnostics.get(0));
+    Assert.assertEquals("field 'x' in record 'R' is being compacted from long to int and may result in data loss.", diagnostics.get(0));
+  }
+
+  @Test
+  public void tableDropRoot() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R1 { public long x; } table<R1> t;"), reflect("public int t;"));
+    Assert.assertEquals(1, diagnostics.size());
+    Assert.assertEquals("field 't' in root document is a table dropping to another type.", diagnostics.get(0));
+  }
+
+  @Test
+  public void tableDropRecord() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R1 { public long x; } record R2 { table<R1> t; }"), reflect("record R2 { public int t; }"));
+    Assert.assertEquals(1, diagnostics.size());
+    Assert.assertEquals("field 't' in record 'R2' is a table dropping to another type.", diagnostics.get(0));
+  }
+
+  @Test
+  public void tableWithIssues() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R1 { public long x; } table<R1> t;"), reflect("record R2 { public int x; } table<R2> t;"));
+    Assert.assertEquals(1, diagnostics.size());
+    Assert.assertEquals("field 'x' in table at field 't' in root document is being compacted from long to int and may result in data loss.", diagnostics.get(0));
   }
 }
