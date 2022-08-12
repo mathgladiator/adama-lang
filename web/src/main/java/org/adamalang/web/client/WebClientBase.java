@@ -37,9 +37,7 @@ import org.adamalang.web.service.WebConfig;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class WebClientBase {
@@ -60,7 +58,7 @@ public class WebClientBase {
 
   /** start of a new simpler execute http request */
   public void execute(SimpleHttpRequest request, SimpleHttpResponder responder) {
-    URI uri = URI.create(request.uri);
+    URI uri = URI.create(request.url);
     String host = uri.getHost();
     boolean secure = uri.getScheme().equals("https");
     int port = uri.getPort() < 0 ? (secure ? 443 : 80) : uri.getPort();
@@ -80,20 +78,43 @@ public class WebClientBase {
         ch.pipeline().addLast(
             new SimpleChannelInboundHandler<HttpObject>() {
               boolean first = false;
+              byte[] chunk = new byte[8196];
 
               @Override
-              protected void channelRead0(ChannelHandlerContext channelHandlerContext, HttpObject msg) throws Exception {
-                // Need to test this
+              protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
                 if (msg instanceof HttpResponse) {
-                  HttpResponse response = (HttpResponse) msg;
+                  HttpResponse httpResponse = (HttpResponse) msg;
+                  TreeMap<String, String> headers = new TreeMap<>();
+                  for (Map.Entry<String, String> header : httpResponse.headers()) {
+                    headers.put(header.getKey().toLowerCase(Locale.ENGLISH), header.getValue());
+                  }
+                  String contentLength = headers.get("content-length");
+                  long size = -1;
+                  if (contentLength != null) {
+                    size = Long.parseLong(contentLength);
+                  } else {
+                    size = -1;
+                  }
+                  responder.bodyStart(size);
+                  responder.start(new SimpleHttpResponseHeader(httpResponse.status().code(), headers));
                 } else if (msg instanceof HttpContent) {
                   HttpContent content = (HttpContent) msg;
+                  ByteBuf body = content.content();
+                  while (body.readableBytes() > 0) {
+                    int rd = Math.min(body.readableBytes(), chunk.length);
+                    body.readBytes(chunk, 0, rd);
+                    responder.bodyFragment(chunk, 0, rd);
+                  }
+                  if (msg instanceof LastHttpContent) {
+                    responder.bodyEnd();
+                    ctx.close();
+                  }
                 }
               }
 
               @Override
               public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
-                // responder.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT, cause, EXLOGGER));
+                responder.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT, cause, EXLOGGER));
                 ctx.close();
               }
             });
@@ -152,7 +173,7 @@ public class WebClientBase {
           }
         }
       } else {
-        // responder.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_EXECUTE_FAILED_CONNECT));
+        responder.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_EXECUTE_FAILED_CONNECT));
       }
     });
   }

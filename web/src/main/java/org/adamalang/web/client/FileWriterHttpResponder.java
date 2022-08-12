@@ -22,6 +22,7 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
   public final Callback<Void> callback;
   private boolean good;
   private long left;
+  private boolean checkSize;
 
   public FileWriterHttpResponder(File fileToWrite, Callback<Void> callback) throws ErrorCodeException {
     try {
@@ -44,12 +45,13 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
   @Override
   public void bodyStart(long size) {
     this.left = size;
+    this.checkSize = size >= 0;
   }
 
   @Override
   public void bodyFragment(byte[] chunk, int offset, int len) {
     if (write(output, chunk, offset, len, callback)) {
-      if (good) {
+      if (good && checkSize) {
         left -= len;
       }
     }
@@ -59,7 +61,7 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
   public void bodyEnd() {
     if (finish(output, callback)) {
       if (good) {
-        if (left == 0) {
+        if (left == 0 || !checkSize) {
           callback.success(null);
         } else {
           callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_FILE_WRITER_PREMATURE_END));

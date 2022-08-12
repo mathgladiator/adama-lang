@@ -37,6 +37,21 @@ public class FileWriterHttpResponderTests {
   }
 
   @Test
+  public void happyNoLenCheck() throws Exception {
+    AtomicInteger callbackValue = new AtomicInteger(0);
+    File file = File.createTempFile("ADAMA_tempfile", "suffix");
+    file.deleteOnExit();
+    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, wrap(callbackValue));
+    writer.start(new SimpleHttpResponseHeader(200, Collections.emptyMap()));
+    writer.bodyStart(-1);
+    writer.bodyFragment("XYZ".getBytes(StandardCharsets.UTF_8), 0, 3);
+    Assert.assertEquals(0, callbackValue.get());
+    writer.bodyEnd();
+    Assert.assertEquals(1, callbackValue.get());
+    Assert.assertEquals("XYZ", Files.readString(file.toPath()));
+  }
+
+  @Test
   public void prematureEnd() throws Exception {
     AtomicInteger callbackValue = new AtomicInteger(0);
     File file = File.createTempFile("ADAMA_tempfile", "suffix");

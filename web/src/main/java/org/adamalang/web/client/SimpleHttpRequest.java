@@ -14,13 +14,13 @@ import java.util.Map;
 /** a simplified http request */
 public class SimpleHttpRequest {
   public final String method;
-  public final String uri;
+  public final String url;
   public final Map<String, String> headers;
   public final SimpleHttpRequestBody body;
 
-  public SimpleHttpRequest(String method, String uri, Map<String, String> headers, SimpleHttpRequestBody body) {
+  public SimpleHttpRequest(String method, String url, Map<String, String> headers, SimpleHttpRequestBody body) {
     this.method = method;
-    this.uri = uri;
+    this.url = url;
     this.headers = headers;
     this.body = body;
   }
