@@ -9,9 +9,7 @@
  */
 package org.adamalang.runtime.deploy;
 
-import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -162,4 +160,19 @@ public class LinterTests {
     Assert.assertEquals(1, diagnostics.size());
     Assert.assertEquals("field 'x' in table at field 't' in root document is being compacted from long to int and may result in data loss.", diagnostics.get(0));
   }
+
+  @Test
+  public void assetToAnythingElse() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R { public asset x; }"), reflect("record R { public int x; }"));
+    Assert.assertEquals(1, diagnostics.size());
+    Assert.assertEquals("field 'x' in record 'R' is change from a asset to a int which will lose data.", diagnostics.get(0));
+  }
+
+  @Test
+  public void principalToAnythingElse() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("record R { public principal x; }"), reflect("record R { public int x; }"));
+    Assert.assertEquals(1, diagnostics.size());
+    Assert.assertEquals("field 'x' in record 'R' is change from a principal to a int which will lose data.", diagnostics.get(0));
+  }
+
 }

@@ -73,6 +73,12 @@ public class Linter {
         if ("string".equals(fromType) && !"string".equals(toType)) {
           diagnostics.add(what + " is change from a string to a " + toType + " which may lose data.");
         }
+        if ("principal".equals(fromType) && !"principal".equals(toType)) {
+          diagnostics.add(what + " is change from a principal to a " + toType + " which will lose data.");
+        }
+        if ("asset".equals(fromType) && !"asset".equals(toType)) {
+          diagnostics.add(what + " is change from a asset to a " + toType + " which will lose data.");
+        }
         if ("long".equals(fromType) && "double".equals(toType)) {
           diagnostics.add(what + " is being compacted from long to double and may result in data precision.");
         }
