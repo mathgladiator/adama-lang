@@ -489,6 +489,10 @@ public class ErrorTable {
     descriptions.put(993487, "no description of error (yet)");
     names.put(913615, "WEB_BASE_FILE_WRITER_IOEXCEPTION_FRAGMENT");
     descriptions.put(913615, "no description of error (yet)");
+    names.put(921794, "WEB_BASE_EXECUTE_FAILED_CONNECT");
+    descriptions.put(921794, "no description of error (yet)");
+    names.put(950469, "WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT");
+    descriptions.put(950469, "no description of error (yet)");
     names.put(966835, "WEB_BASE_GET_FAILED_EXECUTE");
     descriptions.put(966835, "no description of error (yet)");
     names.put(949427, "WEB_BASE_GET_FAILED_CONNECT");
