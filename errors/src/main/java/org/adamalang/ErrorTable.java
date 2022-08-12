@@ -479,6 +479,16 @@ public class ErrorTable {
     descriptions.put(950384, "The given document ran out of compute tokens. This is most likely due to an infinite loop.");
     names.put(901232, "AWS_EMAIL_SEND_FAILURE");
     descriptions.put(901232, "no description of error (yet)");
+    names.put(928944, "WEB_BASE_FILE_WRITER_IOEXCEPTION_CREATE");
+    descriptions.put(928944, "no description of error (yet)");
+    names.put(903347, "WEB_BASE_FILE_WRITER_NOT_200");
+    descriptions.put(903347, "no description of error (yet)");
+    names.put(986319, "WEB_BASE_FILE_WRITER_PREMATURE_END");
+    descriptions.put(986319, "no description of error (yet)");
+    names.put(993487, "WEB_BASE_FILE_WRITER_IOEXCEPTION_CLOSE");
+    descriptions.put(993487, "no description of error (yet)");
+    names.put(913615, "WEB_BASE_FILE_WRITER_IOEXCEPTION_FRAGMENT");
+    descriptions.put(913615, "no description of error (yet)");
     names.put(966835, "WEB_BASE_GET_FAILED_EXECUTE");
     descriptions.put(966835, "no description of error (yet)");
     names.put(949427, "WEB_BASE_GET_FAILED_CONNECT");

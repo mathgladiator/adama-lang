@@ -11,21 +11,19 @@ package org.adamalang.web.client;
 
 import org.adamalang.common.ErrorCodeException;
 
-import java.security.MessageDigest;
-
 /** Simple http responder which receives */
 public interface SimpleHttpResponder {
   /** the response has come in */
   void start(SimpleHttpResponseHeader header);
 
   /** start the body */
-  int bodyStart(long size);
+  void bodyStart(long size);
 
   /** provide a body fragment */
   void bodyFragment(byte[] chunk, int offset, int len);
 
   /** end the body with a digest */
-  void bodyEnd(MessageDigest digest);
+  void bodyEnd();
 
   /** a failure occured */
   void failure(ErrorCodeException ex);
