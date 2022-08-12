@@ -48,14 +48,20 @@ public class EnumStorage extends DocumentPosition {
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
     writer.beginObject();
 
-    writer.writeObjectFieldIntro("options");
+    writer.writeObjectFieldIntro("values");
     writer.beginObject();
     for (Map.Entry<String, Integer> option : options.entrySet()) {
       writer.writeObjectFieldIntro(option.getKey());
       writer.writeInteger(option.getValue());
     }
     writer.endObject();
-
+    writer.writeObjectFieldIntro("names");
+    writer.beginObject();
+    for (Map.Entry<String, Integer> option : options.entrySet()) {
+      writer.writeObjectFieldIntro(option.getValue());
+      writer.writeString(option.getKey());
+    }
+    writer.endObject();
     writer.writeObjectFieldIntro("default");
     writer.writeString(defaultLabel);
     writer.endObject();
