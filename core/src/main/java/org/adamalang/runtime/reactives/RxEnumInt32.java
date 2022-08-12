@@ -14,7 +14,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 
 import java.util.function.Function;
 
-/** a reactive 32-bit integer (int) */
+/** a reactive 32-bit integer (int) used by enums with the ability to correct invalid values */
 public class RxEnumInt32 extends RxInt32 {
   private final Function<Integer, Integer> fixer;
 
@@ -38,5 +38,10 @@ public class RxEnumInt32 extends RxInt32 {
     super.__insert(reader);
     this.backup = fixer.apply(this.backup);
     this.value = fixer.apply(this.value);
+  }
+
+  @Override
+  public void forceSet(int id) {
+    super.forceSet(fixer.apply(id));
   }
 }

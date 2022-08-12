@@ -28,5 +28,7 @@ public class RxEnumInt32Tests {
     Assert.assertEquals(3, (int) iv.get());
     iv.__patch(new JsonStreamReader("45"));
     Assert.assertEquals(3, (int) iv.get());
+    iv.forceSet(1000);
+    Assert.assertEquals(3, (int) iv.get());
   }
 }
