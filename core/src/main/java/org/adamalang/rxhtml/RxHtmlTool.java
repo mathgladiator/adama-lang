@@ -9,6 +9,7 @@
  */
 package org.adamalang.rxhtml;
 
+import org.adamalang.common.web.UriMatcher;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
 import org.jsoup.Jsoup;
@@ -16,6 +17,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 /** the rxhtml tool for converting rxhtml into javascript templates */
@@ -45,7 +48,7 @@ public class RxHtmlTool {
     return Root.finish(env);
   }
 
-  public static String convertFilesToTemplateForest(List<File> files, Feedback feedback) throws Exception {
+  public static String convertFilesToTemplateForest(List<File> files, ArrayList<UriMatcher> matchers, Feedback feedback) throws Exception {
     Environment env = Environment.fresh(feedback);
     Root.start(env);
     for (File file : files) {
@@ -55,6 +58,7 @@ public class RxHtmlTool {
         Root.template(env.element(element, true));
       }
       for (Element element : document.getElementsByTag("page")) {
+        matchers.add(RxHtmlToAdama.uriOf(element.attr("uri")).matcher());
         Root.page(env.element(element, true), defaultRedirect);
       }
     }

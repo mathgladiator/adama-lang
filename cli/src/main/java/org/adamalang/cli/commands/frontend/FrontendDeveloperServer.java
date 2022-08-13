@@ -14,9 +14,11 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.common.web.UriMatcher;
 import org.adamalang.rxhtml.Feedback;
 import org.adamalang.rxhtml.RxHtmlToAdama;
 import org.adamalang.rxhtml.RxHtmlTool;
+import org.adamalang.translator.tree.definitions.web.Uri;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
@@ -31,6 +33,7 @@ import java.io.File;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -72,9 +75,11 @@ public class FrontendDeveloperServer {
     AtomicBoolean alive = new AtomicBoolean(true);
     HashMap<String, WatchKey> cache = new HashMap<>();
     Thread scanner = null;
+    AtomicReference<ArrayList<UriMatcher>> templateMatchers = new AtomicReference<>(new ArrayList<>());
+    AtomicReference<String> templateForest = new AtomicReference<>(RxHtmlTool.convertFilesToTemplateForest(rxhtml(new File(".")), templateMatchers.get(), Feedback.NoOp));
+
     try (WatchService watcher = FileSystems.getDefault().newWatchService()) {
       syncWatcher(watcher, cache, ".");
-      AtomicReference<String> templateForest = new AtomicReference<>(RxHtmlTool.convertFilesToTemplateForest(rxhtml(new File(".")), Feedback.NoOp));
 
       // Scan for cahnges
       scanner = new Thread(new Runnable() {
@@ -87,10 +92,11 @@ public class FrontendDeveloperServer {
               WatchKey wk = watcher.take();
               for (WatchEvent<?> event : wk.pollEvents()) {
                 final Path changed = (Path) event.context();
+                String filename = changed.toFile().getName();
                 if (changed.toFile().isDirectory()) {
                   rescanDir = true;
                 }
-                if (changed.getFileName().endsWith(".rx.html")) {
+                if (filename.contains(".rx.html")) {
                   rescanRx = true;
                 }
               }
@@ -98,7 +104,9 @@ public class FrontendDeveloperServer {
                 syncWatcher(watcher, cache, ".");
               }
               if (rescanRx) {
-                templateForest.set(RxHtmlTool.convertFilesToTemplateForest(rxhtml(new File(".")), Feedback.NoOp));
+                ArrayList<UriMatcher> matchers = new ArrayList<>();
+                templateForest.set(RxHtmlTool.convertFilesToTemplateForest(rxhtml(new File(".")), matchers, Feedback.NoOp));
+                templateMatchers.set(matchers);
               }
               wk.reset();
             } catch (Exception ex) {
@@ -133,7 +141,15 @@ public class FrontendDeveloperServer {
                 callback.success(new HttpResult("text/javascript", templateForest.get().getBytes(), false));
                 return;
               }
-              // TODO: check if part of RxHTML, then send to shell
+              // lame version for now, need to build a routable tree with type biases if this ever becomes a mainline
+              for (UriMatcher matcher : templateMatchers.get()) {
+                if (matcher.matches(uri)) {
+                  uri = "/index.html";
+                  break;
+                }
+              }
+              // TODO: instead of routing everything via an rxhtml path
+
               File file = new File(uri.substring(1));
               try {
                 if (file.exists()) {
