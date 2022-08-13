@@ -90,7 +90,6 @@ public class RxHtmlToAdama {
       Token isParameter = tokens.popIf((t) -> t.isSymbolWithTextEq("$"));
       if (isParameter != null) {
         Token parameter = id(tokens);
-
         var colon = tokens.popIf((t) -> t.isSymbolWithTextEq(":"));
         final TyType type;
         if (colon == null) {
