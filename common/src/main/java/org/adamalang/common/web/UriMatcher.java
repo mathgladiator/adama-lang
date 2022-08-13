@@ -15,10 +15,12 @@ import java.util.regex.Pattern;
 
 /** a simple uri matcher */
 public class UriMatcher {
+  public final String name;
   private final ArrayList<Function<String, Boolean>> matchers;
   private final boolean lastHasStar;
 
-  public UriMatcher(ArrayList<Function<String, Boolean>> matchers, boolean lastHasStar) {
+  public UriMatcher(String name, ArrayList<Function<String, Boolean>> matchers, boolean lastHasStar) {
+    this.name = name;
     this.matchers = matchers;
     this.lastHasStar = lastHasStar;
   }

@@ -119,7 +119,7 @@ public class Uri extends Definition {
   }
 
   public UriMatcher matcher() {
-    return new UriMatcher(matchers, lastHasStar);
+    return new UriMatcher(str.toString(), matchers, lastHasStar);
   }
 
   public void extendInto(Environment environment) {

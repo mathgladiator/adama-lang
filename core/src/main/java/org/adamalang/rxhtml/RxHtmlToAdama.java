@@ -27,6 +27,7 @@ import org.jsoup.nodes.Element;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 /** Tools to convert RxHTML scheme into Adama */
 public class RxHtmlToAdama {
@@ -83,8 +84,14 @@ public class RxHtmlToAdama {
 
   /** convert the raw string uri into a parsed Uri structure used by Adama */
   public static Uri uriOf(String uriRaw) throws AdamaLangException {
+    String[] uriRawParts = uriRaw.split(Pattern.quote("/"), -1);
+    for (int k = 0; k < uriRawParts.length; k++) {
+      if (!(uriRawParts[k].startsWith("$") || uriRawParts[k].equals(""))) {
+        uriRawParts[k] = "\"" + uriRawParts[k] + "\"";
+      }
+    }
     Uri uri = new Uri();
-    TokenEngine tokens = new TokenEngine("uri", uriRaw.codePoints().iterator());
+    TokenEngine tokens = new TokenEngine("uri", String.join("/", uriRawParts).codePoints().iterator());
     Token hasMore;
     while ((hasMore = tokens.popIf((t) -> t.isSymbolWithTextEq("/"))) != null) {
       Token isParameter = tokens.popIf((t) -> t.isSymbolWithTextEq("$"));
@@ -108,7 +115,7 @@ public class RxHtmlToAdama {
         }
         uri.push(hasMore, isParameter, parameter, null, colon, type);
       } else {
-        Token uriMore = tokens.popIf((t) -> t.isIdentifier());
+        Token uriMore = tokens.popIf((t) -> t.isIdentifier() || t.isStringLiteral());
         uri.push(hasMore, null, uriMore, null, null, null);
       }
     }

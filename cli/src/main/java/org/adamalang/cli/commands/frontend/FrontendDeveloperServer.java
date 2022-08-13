@@ -118,7 +118,6 @@ public class FrontendDeveloperServer {
       scanner.start();
 
       WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
-      // TODO: Scan for .rx.html files to register, then watch them for changes
       ServiceBase base = new ServiceBase() {
         @Override
         public ServiceConnection establish(ConnectionContext context) {
@@ -143,7 +142,8 @@ public class FrontendDeveloperServer {
               }
               // lame version for now, need to build a routable tree with type biases if this ever becomes a mainline
               for (UriMatcher matcher : templateMatchers.get()) {
-                if (matcher.matches(uri)) {
+                boolean result = matcher.matches(uri);
+                if (result) {
                   uri = "/index.html";
                   break;
                 }

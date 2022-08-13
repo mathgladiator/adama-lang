@@ -21,7 +21,7 @@ public class UriMatcherTests {
     ArrayList<Function<String, Boolean>> matchers = new ArrayList<>();
     matchers.add((s) -> true);
     matchers.add((s) -> "yes".equals(s));
-    UriMatcher matcher = new UriMatcher(matchers, false);
+    UriMatcher matcher = new UriMatcher("name", matchers, false);
     Assert.assertFalse(matcher.matches("/yo"));
     Assert.assertTrue(matcher.matches("/yo/yes"));
     Assert.assertTrue(matcher.matches("/asfasfgsagasg124sxz/yes"));
@@ -33,7 +33,7 @@ public class UriMatcherTests {
     ArrayList<Function<String, Boolean>> matchers = new ArrayList<>();
     matchers.add((s) -> true);
     matchers.add((s) -> "yes".equals(s));
-    UriMatcher matcher = new UriMatcher(matchers, true);
+    UriMatcher matcher = new UriMatcher("name", matchers, true);
     Assert.assertFalse(matcher.matches("/yo"));
     Assert.assertTrue(matcher.matches("/yo/yes"));
     Assert.assertTrue(matcher.matches("/yo/yes/yes-123541254asdg"));
