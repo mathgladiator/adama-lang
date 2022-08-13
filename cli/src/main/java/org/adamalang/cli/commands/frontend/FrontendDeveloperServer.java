@@ -77,6 +77,7 @@ public class FrontendDeveloperServer {
     Thread scanner = null;
     AtomicReference<ArrayList<UriMatcher>> templateMatchers = new AtomicReference<>(new ArrayList<>());
     AtomicReference<String> templateForest = new AtomicReference<>(RxHtmlTool.convertFilesToTemplateForest(rxhtml(new File(".")), templateMatchers.get(), Feedback.NoOp));
+    Files.writeString(new File("./template.js").toPath(), templateForest.get());
 
     try (WatchService watcher = FileSystems.getDefault().newWatchService()) {
       syncWatcher(watcher, cache, ".");
@@ -107,6 +108,7 @@ public class FrontendDeveloperServer {
                 ArrayList<UriMatcher> matchers = new ArrayList<>();
                 templateForest.set(RxHtmlTool.convertFilesToTemplateForest(rxhtml(new File(".")), matchers, Feedback.NoOp));
                 templateMatchers.set(matchers);
+                Files.writeString(new File("./template.js").toPath(), templateForest.get());
               }
               wk.reset();
             } catch (Exception ex) {
@@ -134,8 +136,8 @@ public class FrontendDeveloperServer {
             }
 
             @Override
-            public void handleGet(String uriRaw, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-              String uri = uriRaw + (uriRaw.endsWith("/") ? "index.html" : "");
+            public void handleGet(String uriOriginal, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+              String uri = uriOriginal;
               if ("/template.js".endsWith(uri)) {
                 callback.success(new HttpResult("text/javascript", templateForest.get().getBytes(), false));
                 return;
@@ -144,12 +146,13 @@ public class FrontendDeveloperServer {
               for (UriMatcher matcher : templateMatchers.get()) {
                 boolean result = matcher.matches(uri);
                 if (result) {
-                  uri = "/index.html";
+                  uri = "/200.html";
                   break;
                 }
               }
-              // TODO: instead of routing everything via an rxhtml path
-
+              if (uri.endsWith("/")) {
+                uri += "index.html";
+              }
               File file = new File(uri.substring(1));
               try {
                 if (file.exists()) {
