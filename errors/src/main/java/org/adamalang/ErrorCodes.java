@@ -123,17 +123,7 @@ public class ErrorCodes {
   @Description("The given document already exists")
   public static final int UNIVERSAL_INITIALIZE_FAILURE = 667658;
 
-  @Description("The document change was unable to be patched")
-  @RetryInternally
-  public static final int PATCH_FAILURE = 640009;
-  public static final int COMPUTE_FAILURE = 605195;
-
-  @RetryInternally
-  public static final int GET_FAILURE = 669710;
-  public static final int DELETE_FAILURE = 641036;
   public static final int DEPLOYMENT_NOT_FOUND = 643084;
-  public static final int COMPUTE_EMPTY_PATCH = 602115;
-  public static final int COMPUTE_EMPTY_REWIND = 694287;
 
   @User
   @Description("The requested space already exists.")

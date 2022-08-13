@@ -320,6 +320,8 @@ public class ErrorTable {
     descriptions.put(900104, "no description of error (yet)");
     names.put(909436, "API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION");
     descriptions.put(909436, "no description of error (yet)");
+    names.put(998384, "API_SPACE_CREATE_FAILED_NOT_ADAMA_DEVELOPER");
+    descriptions.put(998384, "no description of error (yet)");
     names.put(991368, "API_SET_PASSWORD_UNKNOWN_EXCEPTION");
     descriptions.put(991368, "no description of error (yet)");
     names.put(983199, "API_SET_PASSWORD_ONLY_ADAMA_DEV_EXCEPTION");
