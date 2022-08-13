@@ -9,6 +9,7 @@
  */
 package org.adamalang.translator.tree.definitions.web;
 
+import org.adamalang.common.web.UriMatcher;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -117,24 +118,8 @@ public class Uri extends Definition {
     }
   }
 
-  public boolean matches(String uri) {
-    String[] parts = uri.substring(1).split(Pattern.quote("/"), -1);
-    int at = 0;
-    for (Function<String, Boolean> match : matchers) {
-      if (at < parts.length) {
-        if (!match.apply(parts[at])) {
-          return false;
-        }
-      } else {
-        return false;
-      }
-      at++;
-    }
-    if (at < parts.length) {
-      return lastHasStar;
-    } else {
-      return true;
-    }
+  public UriMatcher matcher() {
+    return new UriMatcher(matchers, lastHasStar);
   }
 
   public void extendInto(Environment environment) {

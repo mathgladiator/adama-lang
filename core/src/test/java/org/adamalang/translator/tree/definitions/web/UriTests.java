@@ -9,6 +9,7 @@
  */
 package org.adamalang.translator.tree.definitions.web;
 
+import org.adamalang.common.web.UriMatcher;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.junit.Assert;
@@ -30,10 +31,10 @@ public class UriTests {
     Assert.assertTrue(Uri.isInteger("123"));
     Assert.assertFalse(Uri.isInteger("x"));
   }
-  private Uri of(String path) throws Exception {
+  private UriMatcher of(String path) throws Exception {
     TokenEngine engine = new TokenEngine("test", path.codePoints().iterator());
     Parser parser = new Parser(engine);
-    return parser.uri();
+    return parser.uri().matcher();
   }
   @Test
   public void matching_simple_fixed_1() throws Exception {
