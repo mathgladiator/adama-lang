@@ -44,6 +44,7 @@ public class RxHtmlTool {
     // TODO: do warnings about cross-page linking, etc...
     return Root.finish(env);
   }
+
   public static String convertFilesToTemplateForest(List<File> files, Feedback feedback) throws Exception {
     Environment env = Environment.fresh(feedback);
     Root.start(env);
@@ -57,7 +58,6 @@ public class RxHtmlTool {
         Root.page(env.element(element, true), defaultRedirect);
       }
     }
-    // TODO: do warnings about cross-page linking, etc...
     return Root.finish(env);
   }
 }

@@ -19,32 +19,44 @@ import java.util.Base64;
 public class BundleJavaScript {
   public static void main(String[] args) throws Exception {
     {
+      String str = Files.readString(new File("./release/libadama.js").toPath());
       StringBuilder sb = new StringBuilder();
       sb.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
       sb.append("package org.adamalang.web.service;\n\n");
       sb.append("import java.util.Base64;\n\n");
       sb.append("public class JavaScriptClient {\n");
-      sb.append("  public static final byte[] ADAMA_JS_CLIENT_BYTES = Base64.getDecoder().decode(\"");
-      String str = Files.readString(new File("./release/libadama.js").toPath());
-      str = new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8)));
-      sb.append(str);
-      sb.append("\");\n");
+      sb.append("  public static final byte[] ADAMA_JS_CLIENT_BYTES = ");
+      appendStringInChunks(sb, new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8))));
       sb.append("}");
       Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptClient.java").toPath(), sb.toString());
     }
     {
+      String str = Files.readString(new File("./release/rxhtml.js").toPath());
       StringBuilder sb = new StringBuilder();
       sb.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
       sb.append("package org.adamalang.web.service;\n\n");
       sb.append("import java.util.Base64;\n\n");
       sb.append("public class JavaScriptRxHtml {\n");
-      sb.append("  public static final byte[] RXHTML_JS_BYTES = Base64.getDecoder().decode(\"");
-      String str = Files.readString(new File("./release/rxhtml.js").toPath());
-      str = new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8)));
-      sb.append(str);
-      sb.append("\");\n");
+      sb.append("  public static final byte[] RXHTML_JS_BYTES = ");
+      appendStringInChunks(sb, new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8))));
       sb.append("}");
       Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptRxHtml.java").toPath(), sb.toString());
     }
+  }
+
+  private static void appendStringInChunks(StringBuilder sb, String str) {
+    sb.append("Base64.getDecoder().decode(make());\n");
+    sb.append("  private static String make() {\n");
+    sb.append("    StringBuilder sb = new StringBuilder();\n");
+    int len = str.length();
+    int at = 0;
+    while (at < len) {
+      int sz = Math.min(80, len - at);
+      String fragment = str.substring(at, at + sz);
+      sb.append("    sb.append(\"").append(fragment).append("\");\n");
+      at += sz;
+    }
+    sb.append("    return sb.toString();\n");
+    sb.append("  }\n");
   }
 }
