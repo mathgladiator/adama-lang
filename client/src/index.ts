@@ -1009,14 +1009,14 @@ export class Connection {
       request: {"method":"authority/destroy", "id":parId, "identity": identity, "authority": authority}
     });
   }
-  SpaceCreate(identity: string, space: string, responder: SimpleResponder) {
+  SpaceCreate(identity: string, space: string, template: string, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
     var parId = self.nextId;
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"space/create", "id":parId, "identity": identity, "space": space}
+      request: {"method":"space/create", "id":parId, "identity": identity, "space": space, "template": template}
     });
   }
   SpaceGenerateKey(identity: string, space: string, responder: KeyPairResponder) {

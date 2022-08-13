@@ -25,6 +25,12 @@
         <validate service="org.adamalang.validators.ValidateSpace"/>
     </parameter-definition>
 
+    <parameter-definition name="template" type="string" optional="true" logged="true">
+        <documentation>
+            When creating a space, the template is a known special identifier for how to bootstrap the defaults. Examples: none (default when template parameter not present).
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="key" type="string" missing-error="466947" logged="true">
         <documentation>
             Within a space, documents are organized within a map and the 'key' parameter will uniquely identify
@@ -599,6 +605,7 @@
     <method name="space/create" responder="simple">
         <parameter name="identity"/>
         <parameter name="space"/>
+        <parameter name="template"/>
         <documentation>
             Create a space.
         </documentation>
@@ -1272,7 +1279,6 @@
 428028
 402428
 488444
-471036
 -->
 
 </api>

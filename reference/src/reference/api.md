@@ -290,11 +290,12 @@ Create a space.
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are case insensitive using the regex a-z[a-z0-9\.]* to validation. |
+| template | no | String | When creating a space, the template is a known special identifier for how to bootstrap the defaults. Examples: none (default when template parameter not present). |
 
 
 ### Template
 ```js
-connection.SpaceCreate(identity, space, {
+connection.SpaceCreate(identity, space, template, {
   success: function() {
   },
   failure: function(reason) {

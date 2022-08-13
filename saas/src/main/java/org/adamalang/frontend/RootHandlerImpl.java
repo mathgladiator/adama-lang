@@ -21,19 +21,18 @@ import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.mysql.data.*;
 import org.adamalang.runtime.contracts.AdamaStream;
-import org.adamalang.mysql.data.DocumentIndex;
 import org.adamalang.mysql.model.*;
-import org.adamalang.mysql.data.BillingUsage;
-import org.adamalang.mysql.data.IdHashPairing;
-import org.adamalang.mysql.data.Role;
-import org.adamalang.mysql.data.SpaceListingItem;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateEmail;
+import org.adamalang.web.io.JsonResponder;
+import org.adamalang.web.io.NoOpJsonResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,10 +41,7 @@ import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.MessageDigest;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -285,22 +281,31 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SpaceCreateRequest request, SimpleResponder responder) {
     try {
-      int spaceId = Spaces.createSpace(nexus.dataBase, request.who.id, request.space);
-      nexus.adama.create(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, "ide", request.space, null, "{}", new Callback<Void>() {
-        @Override
-        public void success(Void value) {
-          responder.complete();
-        }
-        @Override
-        public void failure(ErrorCodeException ex) {
-          try {
-            Spaces.delete(nexus.dataBase, spaceId, request.who.id);
-          } catch (Exception failure) {
-            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION, ex, LOGGER));
+      if (request.who.source == AuthenticatedUser.Source.Adama) {
+        int spaceId = Spaces.createSpace(nexus.dataBase, request.who.id, request.space);
+        SpaceTemplates.SpaceTemplate template = SpaceTemplates.REGISTRY.of(request.template);
+        Json.newJsonObject();
+        nexus.adama.create(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, "ide", request.space, null, template.idearg(), new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            SpacePolicy policy = new SpacePolicy(new SpaceInfo(spaceId, request.who.id, Collections.singleton(request.who.id), true, 0));
+            handle(session, new SpaceSetRequest(request.identity, request.who, request.space, policy, template.plan()), new SimpleResponder(new NoOpJsonResponder()));
+            responder.complete();
           }
-          responder.error(ex);
-        }
-      });
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            try {
+              Spaces.delete(nexus.dataBase, spaceId, request.who.id);
+            } catch (Exception failure) {
+              responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION, ex, LOGGER));
+            }
+            responder.error(ex);
+          }
+        });
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_CREATE_FAILED_NOT_ADAMA_DEVELOPER));
+      }
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -348,7 +353,7 @@ public class RootHandlerImpl implements RootHandler {
         Spaces.setPlan(nexus.dataBase, request.policy.id, planJson, hash);
         // iterate the targets with this space loaded
         nexus.adama.deploy(request.space, hash, planJson);
-        nexus.adama.waitForCapacity(request.space, 7500, (found) -> {
+        nexus.adama.waitForCapacity(request.space, 30000, (found) -> {
           if (found) {
             responder.complete();
           } else {

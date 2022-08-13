@@ -23,11 +23,13 @@ public class SpaceCreateRequest {
   public final String identity;
   public final AuthenticatedUser who;
   public final String space;
+  public final String template;
 
-  public SpaceCreateRequest(final String identity, final AuthenticatedUser who, final String space) {
+  public SpaceCreateRequest(final String identity, final AuthenticatedUser who, final String space, final String template) {
     this.identity = identity;
     this.who = who;
     this.space = space;
+    this.template = template;
   }
 
   public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceCreateRequest> callback) {
@@ -37,7 +39,8 @@ public class SpaceCreateRequest {
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getString("space", true, 461828);
       ValidateSpace.validate(space);
-      _latch.with(() -> new SpaceCreateRequest(identity, who.get(), space));
+      final String template = request.getString("template", false, 0);
+      _latch.with(() -> new SpaceCreateRequest(identity, who.get(), space, template));
       nexus.identityService.execute(session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("spacecreate-error") {
@@ -52,5 +55,6 @@ public class SpaceCreateRequest {
   public void logInto(ObjectNode _node) {
     org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
     _node.put("space", space);
+    _node.put("template", template);
   }
 }

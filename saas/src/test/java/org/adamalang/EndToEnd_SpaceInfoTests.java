@@ -91,7 +91,7 @@ public class EndToEnd_SpaceInfoTests {
       Assert.assertEquals("ERROR:920576", c10.next());
       Iterator<String> c11  =
           fe.execute("{\"id\":7,\"identity\":\"" + userIdentity + "\",\"method\":\"space/create\",\"space\":\"newspace\"}");
-      Assert.assertEquals("ERROR:900104", c11.next());
+      Assert.assertEquals("ERROR:998384", c11.next());
       Iterator<String> c12  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/create\",\"space\":\"myspace\"}");
       Assert.assertEquals("FINISH:{}", c12.next());
@@ -100,7 +100,7 @@ public class EndToEnd_SpaceInfoTests {
       Assert.assertEquals("ERROR:965635", c13.next());
       Iterator<String> c14  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/get\",\"space\":\"myspace\"}");
-      Assert.assertEquals("FINISH:{\"plan\":{}}", c14.next());
+      Assert.assertTrue(c14.next().startsWith("FINISH:{\"plan\":{"));
       Iterator<String> c15  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/set\",\"space\":\"myspace\",\"plan\":"+planFor("@static { create { return true; } } ")+ "}");
       Assert.assertEquals("FINISH:{}", c15.next());
