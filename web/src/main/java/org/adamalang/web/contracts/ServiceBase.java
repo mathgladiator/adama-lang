@@ -50,6 +50,11 @@ public interface ServiceBase {
       public AssetDownloader downloader() {
         return null;
       }
+
+      @Override
+      public AssetUploader uploader() {
+        return null;
+      }
     };
   }
 
@@ -59,4 +64,6 @@ public interface ServiceBase {
   HttpHandler http();
 
   AssetDownloader downloader();
+
+  AssetUploader uploader();
 }

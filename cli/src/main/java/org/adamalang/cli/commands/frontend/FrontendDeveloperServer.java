@@ -19,10 +19,7 @@ import org.adamalang.rxhtml.Feedback;
 import org.adamalang.rxhtml.RxHtmlToAdama;
 import org.adamalang.rxhtml.RxHtmlTool;
 import org.adamalang.translator.tree.definitions.web.Uri;
-import org.adamalang.web.contracts.AssetDownloader;
-import org.adamalang.web.contracts.HttpHandler;
-import org.adamalang.web.contracts.ServiceBase;
-import org.adamalang.web.contracts.ServiceConnection;
+import org.adamalang.web.contracts.*;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.service.ContentType;
 import org.adamalang.web.service.ServiceRunnable;
@@ -181,6 +178,11 @@ public class FrontendDeveloperServer {
         @Override
         public AssetDownloader downloader() {
           // TODO: decide if we support this here or not
+          return null;
+        }
+
+        @Override
+        public AssetUploader uploader() {
           return null;
         }
       };

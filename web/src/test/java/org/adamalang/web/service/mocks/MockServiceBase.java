@@ -11,10 +11,9 @@ package org.adamalang.web.service.mocks;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.web.contracts.AssetDownloader;
-import org.adamalang.web.contracts.HttpHandler;
-import org.adamalang.web.contracts.ServiceBase;
-import org.adamalang.web.contracts.ServiceConnection;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.web.contracts.*;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
@@ -162,6 +161,20 @@ public class MockServiceBase implements ServiceBase {
           stream.body(chunk2, 0, chunk2.length, false);
           stream.body(chunk3, 0, chunk3.length, true);
           return;
+        }
+      }
+    };
+  }
+
+  @Override
+  public AssetUploader uploader() {
+    return new AssetUploader() {
+      @Override
+      public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
+        if ("failure".equals(key.key)) {
+          callback.failure(new ErrorCodeException(-1));
+        } else {
+          callback.success(null);
         }
       }
     };
