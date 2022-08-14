@@ -20,6 +20,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
+import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;

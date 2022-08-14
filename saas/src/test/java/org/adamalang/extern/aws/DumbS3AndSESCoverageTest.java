@@ -17,7 +17,7 @@ import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.web.contracts.AssetUploadBody;
+import org.adamalang.web.assets.AssetUploadBody;
 import org.junit.Assert;
 import org.junit.Test;
 

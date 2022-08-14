@@ -7,10 +7,9 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.web.service;
+package org.adamalang.web.assets;
 
 import org.adamalang.common.Hashing;
-import org.adamalang.web.contracts.AssetUploadBody;
 
 import java.io.File;
 import java.io.FileInputStream;

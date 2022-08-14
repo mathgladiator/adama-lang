@@ -23,6 +23,9 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
+import org.adamalang.web.assets.AssetDownloader;
+import org.adamalang.web.assets.AssetUploadBody;
+import org.adamalang.web.assets.AssetUploader;
 import org.adamalang.web.contracts.*;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
@@ -64,7 +67,7 @@ import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonLogger;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
-import org.adamalang.web.service.AssetRequest;
+import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.service.WebConfig;
 import org.junit.Assert;
 

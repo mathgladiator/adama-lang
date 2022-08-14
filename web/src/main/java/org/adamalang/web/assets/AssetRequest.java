@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.web.service;
+package org.adamalang.web.assets;
 
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;

@@ -17,8 +17,8 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Finder;
 import org.adamalang.net.client.Client;
 import org.adamalang.web.client.WebClientBase;
-import org.adamalang.web.contracts.AssetDownloader;
-import org.adamalang.web.contracts.AssetUploader;
+import org.adamalang.web.assets.AssetDownloader;
+import org.adamalang.web.assets.AssetUploader;
 import org.adamalang.web.io.JsonLogger;
 
 import java.io.File;

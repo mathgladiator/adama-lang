@@ -10,6 +10,8 @@
 package org.adamalang.web.contracts;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.web.assets.AssetDownloader;
+import org.adamalang.web.assets.AssetUploader;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;

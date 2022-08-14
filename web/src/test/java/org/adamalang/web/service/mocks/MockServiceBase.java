@@ -13,14 +13,16 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.web.assets.AssetDownloader;
+import org.adamalang.web.assets.AssetUploadBody;
+import org.adamalang.web.assets.AssetUploader;
 import org.adamalang.web.contracts.*;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
-import org.adamalang.web.service.AssetRequest;
+import org.adamalang.web.assets.AssetRequest;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 public class MockServiceBase implements ServiceBase {

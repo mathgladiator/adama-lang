@@ -7,8 +7,9 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.web.contracts;
+package org.adamalang.web.assets;
 
+import org.adamalang.web.assets.AssetUploadBody;
 import org.junit.Assert;
 import org.junit.Test;
 

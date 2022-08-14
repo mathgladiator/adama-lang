@@ -7,9 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.web.contracts;
-
-import org.adamalang.web.service.AssetRequest;
+package org.adamalang.web.assets;
 
 public interface AssetDownloader {
 
