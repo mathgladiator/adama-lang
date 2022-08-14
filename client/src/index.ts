@@ -906,7 +906,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"init/setup-account", "id":parId, "email": email}
+      request: {"method": "init/setup-account", "id": parId, "email": email}
     });
   }
   InitConvertGoogleUser(accessToken: string, responder: InitiationResponder) {
@@ -916,7 +916,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"init/convert-google-user", "id":parId, "access-token": accessToken}
+      request: {"method": "init/convert-google-user", "id": parId, "access-token": accessToken}
     });
   }
   InitCompleteAccount(email: string, revoke: boolean, code: string, responder: InitiationResponder) {
@@ -926,7 +926,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"init/complete-account", "id":parId, "email": email, "revoke": revoke, "code": code}
+      request: {"method": "init/complete-account", "id": parId, "email": email, "revoke": revoke, "code": code}
     });
   }
   AccountSetPassword(identity: string, password: string, responder: SimpleResponder) {
@@ -936,7 +936,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"account/set-password", "id":parId, "identity": identity, "password": password}
+      request: {"method": "account/set-password", "id": parId, "identity": identity, "password": password}
     });
   }
   AccountLogin(email: string, password: string, responder: InitiationResponder) {
@@ -946,7 +946,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"account/login", "id":parId, "email": email, "password": password}
+      request: {"method": "account/login", "id": parId, "email": email, "password": password}
     });
   }
   Probe(identity: string, responder: SimpleResponder) {
@@ -956,7 +956,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"probe", "id":parId, "identity": identity}
+      request: {"method": "probe", "id": parId, "identity": identity}
     });
   }
   AuthorityCreate(identity: string, responder: ClaimResultResponder) {
@@ -966,7 +966,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"authority/create", "id":parId, "identity": identity}
+      request: {"method": "authority/create", "id": parId, "identity": identity}
     });
   }
   AuthoritySet(identity: string, authority: string, keyStore: any, responder: SimpleResponder) {
@@ -976,7 +976,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"authority/set", "id":parId, "identity": identity, "authority": authority, "key-store": keyStore}
+      request: {"method": "authority/set", "id": parId, "identity": identity, "authority": authority, "key-store": keyStore}
     });
   }
   AuthorityGet(identity: string, authority: string, responder: KeystoreResponder) {
@@ -986,7 +986,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"authority/get", "id":parId, "identity": identity, "authority": authority}
+      request: {"method": "authority/get", "id": parId, "identity": identity, "authority": authority}
     });
   }
   AuthorityList(identity: string, responder: AuthorityListingResponder) {
@@ -996,7 +996,7 @@ export class Connection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: {"method":"authority/list", "id":parId, "identity": identity}
+      request: {"method": "authority/list", "id": parId, "identity": identity}
     });
   }
   AuthorityDestroy(identity: string, authority: string, responder: SimpleResponder) {
@@ -1006,7 +1006,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"authority/destroy", "id":parId, "identity": identity, "authority": authority}
+      request: {"method": "authority/destroy", "id": parId, "identity": identity, "authority": authority}
     });
   }
   SpaceCreate(identity: string, space: string, template: string, responder: SimpleResponder) {
@@ -1016,7 +1016,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"space/create", "id":parId, "identity": identity, "space": space, "template": template}
+      request: {"method": "space/create", "id": parId, "identity": identity, "space": space, "template": template}
     });
   }
   SpaceGenerateKey(identity: string, space: string, responder: KeyPairResponder) {
@@ -1026,7 +1026,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"space/generate-key", "id":parId, "identity": identity, "space": space}
+      request: {"method": "space/generate-key", "id": parId, "identity": identity, "space": space}
     });
   }
   SpaceUsage(identity: string, space: string, limit: number, responder: BillingUsageResponder) {
@@ -1036,7 +1036,7 @@ export class Connection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: {"method":"space/usage", "id":parId, "identity": identity, "space": space, "limit": limit}
+      request: {"method": "space/usage", "id": parId, "identity": identity, "space": space, "limit": limit}
     });
   }
   SpaceGet(identity: string, space: string, responder: PlanResponder) {
@@ -1046,7 +1046,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"space/get", "id":parId, "identity": identity, "space": space}
+      request: {"method": "space/get", "id": parId, "identity": identity, "space": space}
     });
   }
   SpaceSet(identity: string, space: string, plan: any, responder: SimpleResponder) {
@@ -1056,7 +1056,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"space/set", "id":parId, "identity": identity, "space": space, "plan": plan}
+      request: {"method": "space/set", "id": parId, "identity": identity, "space": space, "plan": plan}
     });
   }
   SpaceDelete(identity: string, space: string, responder: SimpleResponder) {
@@ -1066,7 +1066,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"space/delete", "id":parId, "identity": identity, "space": space}
+      request: {"method": "space/delete", "id": parId, "identity": identity, "space": space}
     });
   }
   SpaceSetRole(identity: string, space: string, email: string, role: string, responder: SimpleResponder) {
@@ -1076,7 +1076,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"space/set-role", "id":parId, "identity": identity, "space": space, "email": email, "role": role}
+      request: {"method": "space/set-role", "id": parId, "identity": identity, "space": space, "email": email, "role": role}
     });
   }
   SpaceReflect(identity: string, space: string, key: string, responder: ReflectionResponder) {
@@ -1086,7 +1086,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"space/reflect", "id":parId, "identity": identity, "space": space, "key": key}
+      request: {"method": "space/reflect", "id": parId, "identity": identity, "space": space, "key": key}
     });
   }
   SpaceList(identity: string, marker: string, limit: number, responder: SpaceListingResponder) {
@@ -1096,7 +1096,7 @@ export class Connection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: {"method":"space/list", "id":parId, "identity": identity, "marker": marker, "limit": limit}
+      request: {"method": "space/list", "id": parId, "identity": identity, "marker": marker, "limit": limit}
     });
   }
   DocumentCreate(identity: string, space: string, key: string, entropy: string, arg: any, responder: SimpleResponder) {
@@ -1106,7 +1106,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"document/create", "id":parId, "identity": identity, "space": space, "key": key, "entropy": entropy, "arg": arg}
+      request: {"method": "document/create", "id": parId, "identity": identity, "space": space, "key": key, "entropy": entropy, "arg": arg}
     });
   }
   DocumentList(identity: string, space: string, marker: string, limit: number, responder: KeyListingResponder) {
@@ -1116,7 +1116,7 @@ export class Connection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: {"method":"document/list", "id":parId, "identity": identity, "space": space, "marker": marker, "limit": limit}
+      request: {"method": "document/list", "id": parId, "identity": identity, "space": space, "marker": marker, "limit": limit}
     });
   }
   ConnectionCreate(identity: string, space: string, key: string, viewerState: any, responder: DataResponder) {
@@ -1126,7 +1126,7 @@ export class Connection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: {"method":"connection/create", "id":parId, "identity": identity, "space": space, "key": key, "viewer-state": viewerState},
+      request: {"method": "connection/create", "id": parId, "identity": identity, "space": space, "key": key, "viewer-state": viewerState},
       send: function(channel: string, message: any, subResponder: SeqResponder) {
         self.nextId++;
         var subId = self.nextId;
@@ -1190,7 +1190,7 @@ export class Connection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"configure/make-or-get-asset-key", "id":parId}
+      request: {"method": "configure/make-or-get-asset-key", "id": parId}
     });
   }
   AttachmentStart(identity: string, space: string, key: string, filename: string, contentType: string, responder: ProgressResponder) {
@@ -1200,7 +1200,7 @@ export class Connection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: {"method":"attachment/start", "id":parId, "identity": identity, "space": space, "key": key, "filename": filename, "content-type": contentType},
+      request: {"method": "attachment/start", "id": parId, "identity": identity, "space": space, "key": key, "filename": filename, "content-type": contentType},
       append: function(chunkMd5: string, base64Bytes: string, subResponder: SimpleResponder) {
         self.nextId++;
         var subId = self.nextId;

@@ -17,10 +17,12 @@ import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.web.contracts.AssetUploadBody;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 public class DumbS3AndSESCoverageTest {
   @Test
@@ -37,7 +39,21 @@ public class DumbS3AndSESCoverageTest {
     SES ses = new SES(config, new AWSMetrics(new NoOpMetricsFactory()));
     Assert.assertFalse(ses.sendCode("x@x.com", "123"));
     S3 s3 = new S3(config, new AWSMetrics(new NoOpMetricsFactory()));
-    s3.upload(new Key("space", "key"), NtAsset.NOTHING, File.createTempFile("ADAMATEST_", "y1234"), new Callback<Void>() {
+    s3.upload(new Key("space", "key"), NtAsset.NOTHING, new AssetUploadBody() {
+      @Override
+      public File getFileIsExists() {
+        try {
+          return File.createTempFile("ADAMATEST_", "y1234");
+        } catch (IOException ioe) {
+          return null;
+        }
+      }
+
+      @Override
+      public byte[] getBytes() {
+        return new byte[0];
+      }
+    }, new Callback<Void>() {
       @Override
       public void success(Void value) {
         Assert.fail();

@@ -15,7 +15,8 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedThreadFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
-import org.adamalang.extern.AssetUploader;
+import org.adamalang.web.contracts.AssetUploadBody;
+import org.adamalang.web.contracts.AssetUploader;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.contracts.AssetDownloader;
@@ -59,12 +60,17 @@ public class S3 implements AssetUploader, AssetDownloader, Cloud {
   }
 
   @Override
-  public void upload(Key key, NtAsset asset, File localFile, Callback<Void> callback) {
+  public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.upload_file.start();
     PutObjectRequest request = PutObjectRequest.builder().bucket(bucket).key("assets/" + key.space + "/" + key.key + "/" + asset.id).contentType(asset.contentType).build();
     executors.execute(() -> {
       try {
-        s3.putObject(request, RequestBody.fromFile(localFile));
+        File localFile = body.getFileIsExists();
+        if (localFile != null) {
+          s3.putObject(request, RequestBody.fromFile(localFile));
+        } else {
+          s3.putObject(request, RequestBody.fromBytes(body.getBytes()));
+        }
         instance.success();
         callback.success(null);
       } catch (Exception ex) {

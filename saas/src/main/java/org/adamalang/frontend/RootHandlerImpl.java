@@ -31,6 +31,7 @@ import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateEmail;
+import org.adamalang.web.contracts.AssetUploadBody;
 import org.adamalang.web.io.JsonResponder;
 import org.adamalang.web.io.NoOpJsonResponder;
 import org.slf4j.Logger;
@@ -694,7 +695,7 @@ public class RootHandlerImpl implements RootHandler {
           String md5_64 = Hashing.finishAndEncode(digestMD5);
           String sha384_64 = Hashing.finishAndEncode(digestSHA384);
           NtAsset asset = new NtAsset(id, request.filename, request.contentType, this.size, md5_64, sha384_64);
-          nexus.uploader.upload(new Key(request.space, request.key), asset, file, new Callback<Void>() {
+          nexus.uploader.upload(new Key(request.space, request.key), asset, AssetUploadBody.WRAP(file), new Callback<Void>() {
             @Override
             public void success(Void value) {
               clean.set(true);

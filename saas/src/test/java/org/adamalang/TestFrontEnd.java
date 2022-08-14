@@ -23,7 +23,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
-import org.adamalang.extern.AssetUploader;
+import org.adamalang.web.contracts.*;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.frontend.BootstrapFrontend;
@@ -33,7 +33,6 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.Installer;
 import org.adamalang.mysql.model.Deployments;
-import org.adamalang.mysql.data.Deployment;
 import org.adamalang.mysql.model.Finder;
 import org.adamalang.mysql.model.Hosts;
 import org.adamalang.mysql.model.Spaces;
@@ -49,12 +48,10 @@ import org.adamalang.ops.CapacityAgent;
 import org.adamalang.ops.CapacityMetrics;
 import org.adamalang.ops.DeploymentAgent;
 import org.adamalang.ops.DeploymentMetrics;
-import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.ManagedDataService;
 import org.adamalang.runtime.data.managed.Base;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
-import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
@@ -63,10 +60,6 @@ import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.web.client.WebClientBase;
-import org.adamalang.web.contracts.AssetDownloader;
-import org.adamalang.web.contracts.HttpHandler;
-import org.adamalang.web.contracts.ServiceBase;
-import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonLogger;
 import org.adamalang.web.io.JsonRequest;
@@ -233,10 +226,15 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.attachmentRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "inflight." + System.currentTimeMillis());
     AssetUploader uploader = new AssetUploader() {
       @Override
-      public void upload(Key key, NtAsset asset, File localFile, Callback<Void> callback) {
+      public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
         try {
-          Files.copy(localFile.toPath(), new File(localFile.getParent(), localFile.getName() + ".done").toPath());
-          callback.success(null);
+          File localFile = body.getFileIsExists();
+          if (localFile != null) {
+            Files.copy(localFile.toPath(), new File(localFile.getParent(), localFile.getName() + ".done").toPath());
+            callback.success(null);
+          } else {
+            callback.failure(new ErrorCodeException(-2));
+          }
         } catch (Exception ex) {
           callback.failure(new ErrorCodeException(-1, ex));
         }

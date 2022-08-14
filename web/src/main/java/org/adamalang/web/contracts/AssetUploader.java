@@ -7,14 +7,15 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.extern;
+package org.adamalang.web.contracts;
 
 import org.adamalang.common.Callback;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 
-import java.io.File;
-
+/** interface to upload an asset */
 public interface AssetUploader {
-  void upload(Key key, NtAsset asset, File localFile, Callback<Void> callback);
+
+  /** upload an asset at the given key */
+  void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback);
 }
