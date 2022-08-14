@@ -61,7 +61,7 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
     pipeline.addLast(new HttpObjectAggregator(webConfig.maxContentLengthSize));
     pipeline.addLast(new WebSocketServerCompressionHandler());
     pipeline.addLast(new WebSocketServerProtocolHandler("/~s", null, true, webConfig.maxWebSocketFrameSize, false, true, webConfig.timeoutWebsocketHandshake));
-    pipeline.addLast(new WebHandler(webConfig, metrics, base.http(), base.downloader(), base.uploader()));
+    pipeline.addLast(new WebHandler(webConfig, metrics, base.http(), base.assets()));
     pipeline.addLast(new WebSocketHandler(webConfig, metrics, base));
   }
 }

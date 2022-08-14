@@ -10,8 +10,7 @@
 package org.adamalang.web.contracts;
 
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.web.assets.AssetDownloader;
-import org.adamalang.web.assets.AssetUploader;
+import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
@@ -49,12 +48,7 @@ public interface ServiceBase {
       }
 
       @Override
-      public AssetDownloader downloader() {
-        return null;
-      }
-
-      @Override
-      public AssetUploader uploader() {
+      public AssetSystem assets() {
         return null;
       }
     };
@@ -65,7 +59,5 @@ public interface ServiceBase {
 
   HttpHandler http();
 
-  AssetDownloader downloader();
-
-  AssetUploader uploader();
+  AssetSystem assets();
 }

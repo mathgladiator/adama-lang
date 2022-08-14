@@ -29,7 +29,7 @@ public class SpacePolicyLocator {
 
   public SpacePolicyLocator(SimpleExecutor executor, ExternNexus nexus) {
     this.executor = executor;
-    this.dataBase = nexus.dataBase;
+    this.dataBase = nexus.database;
     this.policies = new ConcurrentHashMap<>();
   }
 

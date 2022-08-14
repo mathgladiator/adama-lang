@@ -15,11 +15,10 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedThreadFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
+import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetUploadBody;
-import org.adamalang.web.assets.AssetUploader;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.web.assets.AssetDownloader;
 import org.adamalang.web.assets.AssetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
-public class S3 implements AssetUploader, AssetDownloader, Cloud {
+public class S3 implements Cloud {
   private ExecutorService executors;
   private static final Logger LOGGER = LoggerFactory.getLogger(S3.class);
   private final S3Client s3;
@@ -59,7 +58,6 @@ public class S3 implements AssetUploader, AssetDownloader, Cloud {
     }
   }
 
-  @Override
   public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.upload_file.start();
     PutObjectRequest request = PutObjectRequest.builder().bucket(bucket).key("assets/" + key.space + "/" + key.key + "/" + asset.id).contentType(asset.contentType).build();
@@ -81,7 +79,6 @@ public class S3 implements AssetUploader, AssetDownloader, Cloud {
     });
   }
 
-  @Override
   public void request(AssetRequest asset, AssetStream stream) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.download_file.start();
     executors.execute(() -> {

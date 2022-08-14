@@ -21,6 +21,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Authorities;
 import org.adamalang.mysql.model.Hosts;
 import org.adamalang.mysql.model.Users;
@@ -39,11 +40,11 @@ import java.util.regex.Pattern;
 /** This is a per session Authenticator. This is in 1:1 correspondence to a session/connection */
 public class PerSessionAuthenticator {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(PerSessionAuthenticator.class);
-  private final ExternNexus nexus;
+  private final DataBase database;
   private ConnectionContext defaultContext;
 
-  public PerSessionAuthenticator(ExternNexus nexus, ConnectionContext defaultContext) {
-    this.nexus = nexus;
+  public PerSessionAuthenticator(DataBase database, ConnectionContext defaultContext) {
+    this.database = database;
     this.defaultContext = defaultContext;
   }
 
@@ -109,7 +110,7 @@ public class PerSessionAuthenticator {
       // TODO: check for Google Prefix
       ParsedToken parsedToken = new ParsedToken(identity);
       if ("host".equals(parsedToken.iss)) {
-        PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(nexus.dataBase, parsedToken.key_id));
+        PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(database, parsedToken.key_id));
         Jwts.parserBuilder()
             .setSigningKey(publicKey)
             .requireIssuer("adama")
@@ -123,7 +124,7 @@ public class PerSessionAuthenticator {
       }
       if ("adama".equals(parsedToken.iss)) {
         int userId = Integer.parseInt(parsedToken.sub);
-        for (String publicKey64 : Users.listKeys(nexus.dataBase, userId)) {
+        for (String publicKey64 : Users.listKeys(database, userId)) {
           PublicKey publicKey = decodePublicKey(publicKey64);
           try {
             Jwts.parserBuilder()
@@ -141,7 +142,7 @@ public class PerSessionAuthenticator {
         }
         callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_FINDING_DEVELOPER_KEY));
       } else {
-        String keystoreJson = Authorities.getKeystoreInternal(nexus.dataBase, parsedToken.iss);
+        String keystoreJson = Authorities.getKeystoreInternal(database, parsedToken.iss);
         Keystore keystore = Keystore.parse(keystoreJson);
         NtPrincipal who = keystore.validate(parsedToken.iss, identity);
         AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who, defaultContext, false);

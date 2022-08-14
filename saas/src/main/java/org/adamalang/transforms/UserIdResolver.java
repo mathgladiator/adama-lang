@@ -24,7 +24,7 @@ public class UserIdResolver {
 
   public UserIdResolver(SimpleExecutor executor, ExternNexus nexus) {
     this.executor = executor;
-    this.dataBase = nexus.dataBase;
+    this.dataBase = nexus.database;
   }
 
   public static void logInto(Integer userId, ObjectNode node) {

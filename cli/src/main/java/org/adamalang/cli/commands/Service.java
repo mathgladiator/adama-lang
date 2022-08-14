@@ -13,6 +13,8 @@ import org.adamalang.api.ApiMetrics;
 import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.extern.AssetSystemImpl;
+import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.ops.CapacityAgent;
 import org.adamalang.cli.commands.services.CaravanInit;
 import org.adamalang.cli.commands.services.CommonServiceInit;
@@ -342,7 +344,9 @@ public class Service {
     Email email = new SES(init.awsConfig, init.awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
-    ExternNexus nexus = new ExternNexus(frontendConfig, email, init.s3, init.s3, init.database, init.finder, client, init.metricsFactory, new File("inflight"), (item) -> {
+    MultiRegionClient adama = new MultiRegionClient(init.database, client, init.region, init.finder);
+    AssetSystemImpl assets = new AssetSystemImpl(init.database, adama, init.s3);
+    ExternNexus nexus = new ExternNexus(frontendConfig, email, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
     }, masterKey, webBase, init.region, init.hostKey, init.publicKeyId);
     System.err.println("nexus constructed");

@@ -13,9 +13,9 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.web.assets.AssetDownloader;
+import org.adamalang.web.assets.AssetStream;
+import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.AssetUploadBody;
-import org.adamalang.web.assets.AssetUploader;
 import org.adamalang.web.contracts.*;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
@@ -131,8 +131,8 @@ public class MockServiceBase implements ServiceBase {
   }
 
   @Override
-  public AssetDownloader downloader() {
-    return new AssetDownloader() {
+  public AssetSystem assets() {
+    return new AssetSystem() {
       @Override
       public void request(AssetRequest request, AssetStream stream) {
         if (request.key.equals("1")) {
@@ -142,13 +142,13 @@ public class MockServiceBase implements ServiceBase {
           return;
         }
         if (request.key.equals("fail")) {
-          stream.headers(-1,"text/plain");
+          stream.headers(-1, "text/plain");
           stream.failure(1234);
           return;
         }
 
         if (request.key.equals("incomplete")) {
-          stream.headers(-1,"text/plain");
+          stream.headers(-1, "text/plain");
           byte[] chunk = "Chunk".getBytes(StandardCharsets.UTF_8);
           stream.body(chunk, 0, chunk.length, false);
           stream.failure(1234);
@@ -165,12 +165,12 @@ public class MockServiceBase implements ServiceBase {
           return;
         }
       }
-    };
-  }
 
-  @Override
-  public AssetUploader uploader() {
-    return new AssetUploader() {
+      @Override
+      public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback) {
+        callback.failure(new ErrorCodeException(-123));
+      }
+
       @Override
       public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
         if ("failure".equals(key.key)) {

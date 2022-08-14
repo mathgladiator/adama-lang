@@ -18,8 +18,7 @@ import org.adamalang.extern.ExternNexus;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
-import org.adamalang.web.assets.AssetDownloader;
-import org.adamalang.web.assets.AssetUploader;
+import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.contracts.*;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
@@ -39,7 +38,7 @@ public class BootstrapFrontend {
       @Override
       public ServiceConnection establish(ConnectionContext context) {
         return new ServiceConnection() {
-          final Session session = new Session(new PerSessionAuthenticator(extern, context));
+          final Session session = new Session(new PerSessionAuthenticator(extern.database, context));
           final ConnectionNexus nexus =
               new ConnectionNexus(extern.accessLogger, //
                   extern.metrics, //
@@ -72,13 +71,8 @@ public class BootstrapFrontend {
       }
 
       @Override
-      public AssetDownloader downloader() {
-        return extern.downloader;
-      }
-
-      @Override
-      public AssetUploader uploader() {
-        return extern.uploader;
+      public AssetSystem assets() {
+        return extern.assets;
       }
     };
   }

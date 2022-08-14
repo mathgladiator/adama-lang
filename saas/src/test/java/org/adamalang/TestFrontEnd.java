@@ -23,9 +23,10 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
-import org.adamalang.web.assets.AssetDownloader;
+import org.adamalang.multiregion.MultiRegionClient;
+import org.adamalang.web.assets.AssetStream;
+import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.AssetUploadBody;
-import org.adamalang.web.assets.AssetUploader;
 import org.adamalang.web.contracts.*;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
@@ -227,7 +228,23 @@ public class TestFrontEnd implements AutoCloseable, Email {
     } while (!waitForRouting.await(250, TimeUnit.MILLISECONDS));
 
     this.attachmentRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "inflight." + System.currentTimeMillis());
-    AssetUploader uploader = new AssetUploader() {
+    FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
+
+    this.webBase = new WebClientBase(new WebConfig(new ConfigObject(Json.parseJsonObject("{}"))));
+    this.hostKeyPair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+    int keyId = Hosts.initializeHost(dataBase, "test-region", "127.0.0.1:" + port, "web", PerSessionAuthenticator.encodePublicKey(hostKeyPair));
+    MultiRegionClient adama = new MultiRegionClient(dataBase, client, "test-region", finder);
+    AssetSystem assets = new AssetSystem() {
+      @Override
+      public void request(AssetRequest request, AssetStream stream) {
+        stream.failure(-12);
+      }
+
+      @Override
+      public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback) {
+        callback.failure(new ErrorCodeException(-13));
+      }
+
       @Override
       public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
         try {
@@ -243,17 +260,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
         }
       }
     };
-    AssetDownloader downloader = new AssetDownloader() {
-      @Override
-      public void request(AssetRequest request, AssetStream stream) {
 
-      }
-    };
-    FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
-    this.webBase = new WebClientBase(new WebConfig(new ConfigObject(Json.parseJsonObject("{}"))));
-    this.hostKeyPair = Keys.keyPairFor(SignatureAlgorithm.ES256);
-    int keyId = Hosts.initializeHost(dataBase, "test-region", "127.0.0.1:" + port, "web", PerSessionAuthenticator.encodePublicKey(hostKeyPair));
-    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, finder, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId);
+    this.nexus = new ExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId);
 
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);
@@ -263,8 +271,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
   }
 
   public void kill(String table) throws Exception {
-    try (Connection connection = nexus.dataBase.pool.getConnection()) {
-      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(nexus.dataBase.databaseName).append("`.`").append(table).append("`;").toString());
+    try (Connection connection = nexus.database.pool.getConnection()) {
+      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(nexus.database.databaseName).append("`.`").append(table).append("`;").toString());
     }
   }
 

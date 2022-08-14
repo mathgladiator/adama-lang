@@ -1,35 +1,64 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See https://www.adama-platform.com/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
+ */
 package org.adamalang.extern;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.connection.Session;
+import org.adamalang.extern.aws.S3;
+import org.adamalang.multiregion.MultiRegionClient;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.web.assets.AssetRequest;
+import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;
+import org.adamalang.web.assets.AssetUploadBody;
 import org.adamalang.web.io.ConnectionContext;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a concrete implementation of the asset system */
 public class AssetSystemImpl implements AssetSystem {
-  public final ExternNexus nexus;
+  public final DataBase database;
+  public final MultiRegionClient adama;
+  public final S3 s3;
 
-  public AssetSystemImpl(ExternNexus nexus) {
-    this.nexus = nexus;
+  public AssetSystemImpl(DataBase database, MultiRegionClient adama, S3 s3) {
+    this.database = database;
+    this.adama = adama;
+    this.s3 = s3;
+  }
+
+  @Override
+  public void request(AssetRequest request, AssetStream stream) {
+    s3.request(request, stream);
+  }
+
+  @Override
+  public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
+    s3.upload(key, asset, body, callback);
   }
 
   @Override
   public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback) {
-    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(nexus, context);
+    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(database, context);
     authenticator.execute(new Session(authenticator), identity, new Callback<AuthenticatedUser>() {
       @Override
       public void success(AuthenticatedUser who) {
         AtomicBoolean responded = new AtomicBoolean(false);
-        AdamaStream stream = nexus.adama.connect(who, key.space, key.key, "{}", new SimpleEvents() {
+        AdamaStream stream = adama.connect(who, key.space, key.key, "{}", new SimpleEvents() {
           @Override
           public void connected() { /* don't care */ }
 
@@ -79,4 +108,5 @@ public class AssetSystemImpl implements AssetSystem {
       }
     });
   }
+
 }

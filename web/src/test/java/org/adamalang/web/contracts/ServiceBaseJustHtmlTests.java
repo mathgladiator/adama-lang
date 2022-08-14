@@ -64,7 +64,7 @@ public class ServiceBaseJustHtmlTests {
     });
     base.establish(null).keepalive();
     base.establish(null).kill();
-    base.downloader();
+    base.assets();
     CountDownLatch latch = new CountDownLatch(4);
     base.http().handleOptions("/opt=yes", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
       @Override

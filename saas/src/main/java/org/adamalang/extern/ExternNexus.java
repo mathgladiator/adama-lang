@@ -14,12 +14,8 @@ import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.model.Finder;
-import org.adamalang.net.client.Client;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.client.WebClientBase;
-import org.adamalang.web.assets.AssetDownloader;
-import org.adamalang.web.assets.AssetUploader;
 import org.adamalang.web.io.JsonLogger;
 
 import java.io.File;
@@ -28,41 +24,37 @@ import java.security.PrivateKey;
 public class ExternNexus {
   public final FrontendConfig config;
   public final Email email;
-  public final AssetUploader uploader;
-  public final DataBase dataBase;
+  public final DataBase database;
   public final ApiMetrics metrics;
   public final File attachmentRoot;
   public final JsonLogger accessLogger;
-  public final AssetDownloader downloader;
   public final String masterKey;
   public final MultiRegionClient adama;
   public final WebClientBase webBase;
   public final String region;
   public final PrivateKey webHostKey;
   public final int publicKeyId;
-  public final AssetSystemImpl assets;
+  public final AssetSystem assets;
 
-  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBase, Finder finder, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId) {
+  public ExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId) {
     this.config = config;
     this.email = email;
-    this.uploader = uploader;
-    this.downloader = downloader;
-    this.dataBase = dataBase;
+    this.database = database;
     this.metrics = new ApiMetrics(metricsFactory);
     this.attachmentRoot = attachmentRoot;
     this.accessLogger = accessLogger;
     this.masterKey = masterKey;
-    this.adama = new MultiRegionClient(dataBase, client, region, finder);
+    this.adama = adama;
+    this.assets = assets;
     this.webBase = webBase;
     this.region = region;
     this.webHostKey = webHostKey;
     this.publicKeyId = publicKeyId;
-    this.assets = new AssetSystemImpl(this);
     attachmentRoot.mkdir();
   }
 
   public void close() throws Exception {
-    dataBase.close();
+    database.close();
     adama.shutdown();
     webBase.shutdown();
   }

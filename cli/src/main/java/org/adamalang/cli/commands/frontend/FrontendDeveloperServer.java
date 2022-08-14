@@ -17,8 +17,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.web.UriMatcher;
 import org.adamalang.rxhtml.Feedback;
 import org.adamalang.rxhtml.RxHtmlTool;
-import org.adamalang.web.assets.AssetDownloader;
-import org.adamalang.web.assets.AssetUploader;
+import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.contracts.*;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.assets.ContentType;
@@ -175,13 +174,7 @@ public class FrontendDeveloperServer {
         }
 
         @Override
-        public AssetDownloader downloader() {
-          // TODO: decide if we support this here or not
-          return null;
-        }
-
-        @Override
-        public AssetUploader uploader() {
+        public AssetSystem assets() {
           return null;
         }
       };

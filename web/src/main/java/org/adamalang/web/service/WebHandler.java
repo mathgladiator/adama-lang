@@ -29,6 +29,7 @@ import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.assets.*;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.firewall.WebRequestShield;
+import org.adamalang.web.io.ConnectionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,15 +50,13 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final HttpHandler httpHandler;
-  private final AssetDownloader downloader;
-  private final AssetUploader uploader;
+  private final AssetSystem assets;
 
-  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetDownloader downloader, AssetUploader uploader) {
+  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetSystem assets) {
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.httpHandler = httpHandler;
-    this.downloader = downloader;
-    this.uploader = uploader;
+    this.assets = assets;
   }
 
   /** internal: copy the origin to access control when allowed */
@@ -83,7 +82,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
   /** handle an asset request */
   private void handleAsset(FullHttpRequest req, final ChannelHandlerContext ctx, AssetRequest assetRequest, boolean cors) {
-    downloader.request(assetRequest, new AssetDownloader.AssetStream() {
+    assets.request(assetRequest, new AssetStream() {
       private boolean started = false;
       private String contentType = null;
 
@@ -198,8 +197,31 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
           };
           AssetFact fact = AssetFact.of(body);
           NtAsset asset = new NtAsset(ProtectedUUID.generate(), upload.getFilename(), upload.getContentType(), fact.size, fact.md5, fact.sha384);
-          uploader.upload(uploadKey, asset, body, Callback.DONT_CARE_VOID);
-          // TODO: need to attach the document
+          final String identityFinal = identity;
+          // TODO
+          ConnectionContext context = new ConnectionContext("origin", "ip", "user-agent", "");
+          assets.upload(uploadKey, asset, body, new Callback<>() {
+            @Override
+            public void success(Void value) {
+              assets.attach(identityFinal, context, uploadKey, asset, new Callback<Integer>() {
+                @Override
+                public void success(Integer value) {
+
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+
+                }
+              });
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+
+            }
+          });
+              // TODO: need to attach the document
         }
       } else {
         sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.BAD_REQUEST, ASSET_UPLOAD_INCOMPLETE_FIELDS, "text/html; charset=UTF-8", true);

@@ -9,15 +9,11 @@
  */
 package org.adamalang.web.assets;
 
-public interface AssetDownloader {
+/** an asset being streamed */
+public interface AssetStream {
+  void headers(long length, String contentType);
 
-  void request(AssetRequest request, AssetStream stream);
+  void body(byte[] chunk, int offset, int length, boolean last);
 
-  interface AssetStream {
-    void headers(long length, String contentType);
-
-    void body(byte[] chunk, int offset, int length, boolean last);
-
-    void failure(int code);
-  }
+  void failure(int code);
 }
