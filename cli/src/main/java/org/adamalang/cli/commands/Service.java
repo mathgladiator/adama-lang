@@ -255,17 +255,16 @@ public class Service {
     Client client = init.makeClient(null);
     WebClientBase webBase = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
 
-    // TODO: bring this out, and this whole file is getting CRAZY
     HttpHandler http = new HttpHandler() {
       @Override
-      public void handleOptions(String uri, Callback<Boolean> callback) {
+      public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
         if (skr != null) {
           WebGet get = new WebGet(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, new TreeMap<>(), new NtDynamic("{}"));
           client.webOptions(skr.space, skr.key, get, new Callback<>() {
             @Override
             public void success(WebResponse value) {
-              callback.success(value.cors);
+              callback.success(new HttpResult("", null, value.cors));
             }
 
             @Override
@@ -273,10 +272,14 @@ public class Service {
               callback.failure(ex);
             }
           });
-          callback.success(true);
         } else {
-          callback.success(false);
+          callback.success(new HttpResult("", null, false));
         }
+      }
+
+      @Override
+      public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+        callback.failure(new ErrorCodeException(-1));
       }
 
       @Override

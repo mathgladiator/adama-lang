@@ -19,12 +19,17 @@ public interface HttpHandler {
   HttpHandler NULL = new HttpHandler() {
 
     @Override
-    public void handleOptions(String uri, Callback<Boolean> callback) {
-      callback.success(false);
+    public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+      callback.success(null);
     }
 
     @Override
     public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+      callback.success(null);
+    }
+
+    @Override
+    public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
       callback.success(null);
     }
 
@@ -34,9 +39,11 @@ public interface HttpHandler {
     }
   };
 
-  void handleOptions(String uri, Callback<Boolean> callback);
+  void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback);
 
   void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback);
+
+  void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback);
 
   void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback);
 

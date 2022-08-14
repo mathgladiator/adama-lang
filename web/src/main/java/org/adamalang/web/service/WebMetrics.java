@@ -22,6 +22,7 @@ public class WebMetrics {
   public final Runnable websockets_end_exception;
   public final Runnable webhandler_get;
   public final Runnable webhandler_post;
+  public final Runnable webhandler_delete;
   public final Runnable webhandler_options;
   public final Runnable webhandler_exception;
   public final Runnable webhandler_found;
@@ -61,6 +62,7 @@ public class WebMetrics {
 
     this.webhandler_get = factory.counter("webhandler_get");
     this.webhandler_post = factory.counter("webhandler_post");
+    this.webhandler_delete = factory.counter("webhandler_delete");
     this.webhandler_exception = factory.counter("webhandler_exception");
     this.webhandler_found = factory.counter("webhandler_found");
     this.webhandler_notfound = factory.counter("webhandler_notfound");

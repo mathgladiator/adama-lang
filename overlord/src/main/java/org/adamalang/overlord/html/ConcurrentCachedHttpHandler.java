@@ -10,6 +10,7 @@
 package org.adamalang.overlord.html;
 
 import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.web.contracts.HttpHandler;
 
 import java.nio.charset.StandardCharsets;
@@ -26,8 +27,13 @@ public class ConcurrentCachedHttpHandler implements HttpHandler {
   }
 
   @Override
-  public void handleOptions(String uri, Callback<Boolean> callback) {
-    callback.success(false);
+  public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+    callback.success(new HttpResult("", new byte[0], false));
+  }
+
+  @Override
+  public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+    callback.success(new HttpResult("", new byte[0], false));
   }
 
   @Override

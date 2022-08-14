@@ -131,7 +131,12 @@ public class FrontendDeveloperServer {
         public HttpHandler http() {
           return new HttpHandler() {
             @Override
-            public void handleOptions(String uri, Callback<Boolean> callback) {
+            public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+              callback.failure(new ErrorCodeException(0));
+            }
+
+            @Override
+            public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
               callback.failure(new ErrorCodeException(0));
             }
 

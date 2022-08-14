@@ -27,12 +27,17 @@ public class ServiceBaseJustHtmlTests {
     ServiceBase base = ServiceBase.JUST_HTTP(new HttpHandler() {
 
       @Override
-      public void handleOptions(String uri, Callback<Boolean> callback) {
-        callback.success(uri.equalsIgnoreCase("/opt=yes"));
+      public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+        callback.success(new HttpResult("","".getBytes(StandardCharsets.UTF_8), uri.equalsIgnoreCase("/opt=yes")));
       }
 
       @Override
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+        callback.success(new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8), true));
+      }
+
+      @Override
+      public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         callback.success(new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8), true));
       }
 
@@ -60,11 +65,11 @@ public class ServiceBaseJustHtmlTests {
     base.establish(null).keepalive();
     base.establish(null).kill();
     base.downloader();
-    CountDownLatch latch = new CountDownLatch(3);
-    base.http().handleOptions("/opt=yes", new Callback<Boolean>() {
+    CountDownLatch latch = new CountDownLatch(4);
+    base.http().handleOptions("/opt=yes", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
       @Override
-      public void success(Boolean value) {
-        Assert.assertTrue(value);;
+      public void success(HttpHandler.HttpResult value) {
+        Assert.assertTrue(value.cors);
         latch.countDown();
       }
 
@@ -74,6 +79,18 @@ public class ServiceBaseJustHtmlTests {
       }
     });
     base.http().handleGet("x", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+      @Override
+      public void success(HttpHandler.HttpResult value) {
+        Assert.assertEquals("yay", new String(value.body, StandardCharsets.UTF_8));
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    base.http().handleDelete("x", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         Assert.assertEquals("yay", new String(value.body, StandardCharsets.UTF_8));

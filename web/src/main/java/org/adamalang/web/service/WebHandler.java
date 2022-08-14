@@ -62,13 +62,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
   }
 
-  /** handle the pre-flight options request */
-  private void handlePreflight(final ChannelHandlerContext ctx, final FullHttpRequest req, boolean allow) {
-    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(EMPTY_RESPONSE));
-    transferCors(res, req, allow);
-    sendWithKeepAlive(webConfig, ctx, req, res);
-  }
-
   /** send an immediate data result */
   private void sendImmediate(Runnable metric, FullHttpRequest req, final ChannelHandlerContext ctx, HttpResponseStatus status, byte[] content, String contentType, boolean cors) {
     metric.run();
@@ -245,7 +238,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     metrics.webhandler_found.run();
     final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(httpResult.body));
     HttpUtil.setContentLength(res, httpResult.body.length);
-    res.headers().set(HttpHeaderNames.CONTENT_TYPE, httpResult.contentType);
+    if (httpResult.contentType.length() > 0) {
+      res.headers().set(HttpHeaderNames.CONTENT_TYPE, httpResult.contentType);
+    }
     transferCors(res, req, httpResult.cors);
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
@@ -284,15 +279,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       AdamaWebRequest wta = new AdamaWebRequest(req);
       if (req.method() == HttpMethod.OPTIONS) {
         metrics.webhandler_options.run();
-        httpHandler.handleOptions(wta.uri, new Callback<Boolean>() {
-          @Override
-          public void success(Boolean allow) { handlePreflight(ctx, req, allow); }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            sendImmediate(metrics.webhandler_wta_crash, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, EMPTY_RESPONSE, null, false);
-          }
-        });
+        httpHandler.handleOptions(wta.uri, wta.headers, wta.parameters, callback);
+      } else if (req.method() == HttpMethod.DELETE) {
+        metrics.webhandler_delete.run();
+        httpHandler.handleDelete(wta.uri, wta.headers, wta.parameters, callback);
       } else if (req.method() == HttpMethod.POST || req.method() == HttpMethod.PUT) {
         metrics.webhandler_post.run();
         httpHandler.handlePost(wta.uri, wta.headers, wta.parameters, wta.body, callback);

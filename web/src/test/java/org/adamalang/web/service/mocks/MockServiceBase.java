@@ -88,8 +88,17 @@ public class MockServiceBase implements ServiceBase {
     return new HttpHandler() {
 
       @Override
-      public void handleOptions(String uri, Callback<Boolean> callback) {
-        callback.success(uri.equalsIgnoreCase("/ok-cors"));
+      public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+        callback.success(new HttpResult("", new byte[0], uri.equalsIgnoreCase("/ok-cors")));
+      }
+
+      @Override
+      public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+        if ("/foo".equals(uri)){
+          callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", "deleted".getBytes(StandardCharsets.UTF_8), true));
+          return;
+        }
+        callback.failure(new ErrorCodeException(1000));
       }
 
       @Override
