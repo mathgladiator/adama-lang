@@ -7,7 +7,6 @@ import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.assets.AssetSystem;
