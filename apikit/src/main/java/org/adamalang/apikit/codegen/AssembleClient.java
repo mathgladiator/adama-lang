@@ -104,7 +104,7 @@ public class AssembleClient {
         }
         ts.append("      id: parId,\n");
         ts.append("      responder: responder,\n");
-        ts.append("      request: {\"method\":\"").append(method.name).append("\", \"id\":parId");
+        ts.append("      request: {\"method\": \"").append(method.name).append("\", \"id\": parId");
         for (ParameterDefinition parameter : method.parameters) {
           ts.append(", ").append("\"").append(parameter.name).append("\": ").append(parameter.camelName);
         }
