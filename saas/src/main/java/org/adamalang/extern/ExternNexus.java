@@ -16,6 +16,7 @@ import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Finder;
 import org.adamalang.net.client.Client;
+import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.assets.AssetDownloader;
 import org.adamalang.web.assets.AssetUploader;
@@ -39,6 +40,7 @@ public class ExternNexus {
   public final String region;
   public final PrivateKey webHostKey;
   public final int publicKeyId;
+  public final AssetSystemImpl assets;
 
   public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, AssetDownloader downloader, DataBase dataBase, Finder finder, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId) {
     this.config = config;
@@ -55,6 +57,7 @@ public class ExternNexus {
     this.region = region;
     this.webHostKey = webHostKey;
     this.publicKeyId = publicKeyId;
+    this.assets = new AssetSystemImpl(this);
     attachmentRoot.mkdir();
   }
 
