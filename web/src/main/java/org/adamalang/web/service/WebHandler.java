@@ -23,12 +23,18 @@ import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ProtectedUUID;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.contracts.AssetDownloader;
+import org.adamalang.web.contracts.AssetUploadBody;
+import org.adamalang.web.contracts.AssetUploader;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.firewall.WebRequestShield;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,18 +45,21 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private static final byte[] ASSET_FAILED_ATTACHMENT = ("<html><head><title>Asset Failure</title></head><body>Failure to initiate asset attachment.</body></html>").getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_COOKIE_LACKING = "<html><head><title>Bad Request</title></head><body>Asset cookie was not set.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] NOT_FOUND_RESPONSE = "<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>".getBytes(StandardCharsets.UTF_8);
-
+  private static final byte[] ASSET_UPLOAD_FAILURE = "<html><head><title>Bad Request; Internal Error Uploading</title></head><body>Sorry, the upload failed.</body></html>".getBytes(StandardCharsets.UTF_8);
+  private static final byte[] ASSET_UPLOAD_INCOMPLETE_FIELDS = "<html><head><title>Bad Request; Incomplete</title></head><body>Sorry, the post request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final Logger LOG = LoggerFactory.getLogger(WebHandler.class);
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final HttpHandler httpHandler;
   private final AssetDownloader downloader;
+  private final AssetUploader uploader;
 
-  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetDownloader downloader) {
+  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetDownloader downloader, AssetUploader uploader) {
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.httpHandler = httpHandler;
     this.downloader = downloader;
+    this.uploader = uploader;
   }
 
   /** internal: copy the origin to access control when allowed */
@@ -136,59 +145,79 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
   }
 
+  private void handleAssetUpload(final ChannelHandlerContext ctx, final FullHttpRequest req) {
+    try {
+      HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(req);
+      ArrayList<FileUpload> files = new ArrayList<>();
+      String identity = null;
+      String space = null;
+      String key = null;
+      for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
+        switch (data.getHttpDataType()) {
+          case Attribute:
+            Attribute attribute = (Attribute) data;
+            switch (attribute.getName()) {
+              case "identity":
+                identity = attribute.getValue();
+                break;
+              case "space":
+                space = attribute.getValue();
+                break;
+              case "key":
+                key = attribute.getValue();
+                break;
+            }
+            break;
+          case FileUpload:
+            files.add((FileUpload) data);
+            break;
+          default:
+            break;
+        }
+      }
+      if (identity != null && space != null && key != null) {
+        Key uploadKey = new Key(space, key);
+        sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.OK, EMPTY_RESPONSE, "text/html; charset=UTF-8", true);
+        for (FileUpload upload : files) {
+          AssetUploadBody body = new AssetUploadBody() {
+            @Override
+            public File getFileIsExists() {
+              try {
+                return upload.getFile();
+              } catch (Exception ex) {
+                return null;
+              }
+            }
+
+            @Override
+            public byte[] getBytes() {
+              try {
+                return upload.get();
+              } catch (Exception ex) {
+                return null;
+              }
+            }
+          };
+          AssetFact fact = AssetFact.of(body);
+          NtAsset asset = new NtAsset(ProtectedUUID.generate(), upload.getFilename(), upload.getContentType(), fact.size, fact.md5, fact.sha384);
+          uploader.upload(uploadKey, asset, body, Callback.DONT_CARE_VOID);
+          // TODO: need to attach the document
+        }
+      } else {
+        sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.BAD_REQUEST, ASSET_UPLOAD_INCOMPLETE_FIELDS, "text/html; charset=UTF-8", true);
+      }
+    } catch (Exception ex) {
+      sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ASSET_UPLOAD_FAILURE, "text/html; charset=UTF-8", true);
+    }
+  }
+
   private boolean handleInternal(final ChannelHandlerContext ctx, final FullHttpRequest req) {
     if (webConfig.healthCheckPath.equals(req.uri())) { // health checks
       sendImmediate(metrics.webhandler_healthcheck, req, ctx, HttpResponseStatus.OK, ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8), "text/text; charset=UTF-8", true);
       return true;
     } else if (req.uri().startsWith("/~upload") && req.method() == HttpMethod.POST) {
-      try {
-        HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(req);
-        ArrayList<FileUpload> files = new ArrayList<>();
-        String identity = null;
-        String space = null;
-        String key = null;
-
-        for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
-          switch (data.getHttpDataType()) {
-            case Attribute:
-              // TODO: accept identity, space, key
-              Attribute attribute = (Attribute) data;
-              switch (attribute.getName()) {
-                case "identity":
-                  identity = attribute.getValue();
-                  break;
-                case "space":
-                  space = attribute.getValue();
-                  break;
-                case "key":
-                  key = attribute.getValue();
-                  break;
-              }
-
-              // attribute.getName()
-              // attribute.getValue();
-              break;
-            case FileUpload:
-              FileUpload fileUpload = (FileUpload) data;
-              if (fileUpload.isInMemory()) {
-                // fileUpload.get()
-              } else {
-                // fileUpload.getFile();
-              }
-              // for each one, compute SHA384 and MD5
-              files.add(fileUpload);
-              break;
-            default:
-              break;
-          }
-        }
-        if (identity != null && space != null && key != null) {
-
-
-        }
-      } catch (Exception ex) {
-
-      }
+      handleAssetUpload(ctx, req);
+      return true;
     } else if (req.uri().startsWith("/libadama.js")) { // in-memory JavaScript library for the client
       sendImmediate(metrics.webhandler_client_download, req, ctx, HttpResponseStatus.OK, JavaScriptClient.ADAMA_JS_CLIENT_BYTES, "text/javascript; charset=UTF-8", true);
       return true;
@@ -198,8 +227,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     } else if (req.uri().startsWith("/~assets/")) { // assets that are encrypted and private to the connection
       handleEncryptedAsset(req, ctx);
       return true;
-    } else if (req.uri().startsWith("/~upload")) {
-      // TODO: post upload to an asset
     } else if (req.uri().startsWith("/~p")) { // set an asset key
       final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(OK_RESPONSE));
       String value = req.uri().substring(3);

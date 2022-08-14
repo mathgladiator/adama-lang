@@ -27,6 +27,7 @@ public class WebMetrics {
   public final Runnable webhandler_exception;
   public final Runnable webhandler_found;
   public final Runnable webhandler_notfound;
+  public final Runnable webhandler_upload_asset_failure;
   public final Runnable webhandler_wta_crash;
   public final Runnable webhandler_options_failure;
   public final Runnable webhandler_healthcheck;
@@ -66,6 +67,7 @@ public class WebMetrics {
     this.webhandler_exception = factory.counter("webhandler_exception");
     this.webhandler_found = factory.counter("webhandler_found");
     this.webhandler_notfound = factory.counter("webhandler_notfound");
+    this.webhandler_upload_asset_failure = factory.counter("webhandler_upload_asset_failure");
     this.webhandler_healthcheck = factory.counter("webhandler_healthcheck");
     this.webhandler_firewall = factory.counter("webhandler_firewall");
     this.webhandler_asset_failed = factory.counter("webhandler_asset_failed");
