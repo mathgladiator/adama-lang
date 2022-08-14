@@ -47,6 +47,7 @@ public class Tool {
     String packageName = DocumentHelper.attribute(api, "package");
     String docsFile = DocumentHelper.attribute(api, "docs");
     String clientFile = DocumentHelper.attribute(api, "client");
+    String clientFileJs = DocumentHelper.attribute(api, "clientjs");
     Map<String, ParameterDefinition> parameters = ParameterDefinition.buildMap(doc);
     Map<String, FieldDefinition> fields = FieldDefinition.buildMap(doc);
     Map<String, Responder> responders = Responder.respondersOf(doc, fields);
@@ -89,6 +90,11 @@ public class Tool {
     client = AssembleClient.injectInvoke(client, methods);
     client = AssembleClient.injectResponders(client, responders);
     diskWrites.put(new File(root, clientFile), client);
+
+    String clientJs = Files.readString(new File(root, clientFileJs).toPath());
+    clientJs = AssembleClient.injectInvokePlainJs(clientJs, methods);
+    diskWrites.put(new File(root, clientFileJs), clientJs);
+
     return diskWrites;
   }
 
