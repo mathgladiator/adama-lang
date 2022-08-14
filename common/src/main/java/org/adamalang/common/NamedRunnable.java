@@ -14,12 +14,12 @@ import org.slf4j.LoggerFactory;
 
 /** for complex executor bouncing, this helps understand what is going on */
 public abstract class NamedRunnable implements Runnable {
-  private static final Logger LOGGER = LoggerFactory.getLogger("nrex");
-  public final String name;
+  private static final Logger RUNNABLE_LOGGER = LoggerFactory.getLogger("nrex");
+  public final String __runnableName;
 
   public NamedRunnable(String first, String... tail) {
     if (tail == null || tail.length == 0) {
-      this.name = first;
+      this.__runnableName = first;
     } else {
       StringBuilder sb = new StringBuilder();
       sb.append(first);
@@ -27,7 +27,7 @@ public abstract class NamedRunnable implements Runnable {
         sb.append("/");
         sb.append(fragment);
       }
-      this.name = sb.toString();
+      this.__runnableName = sb.toString();
     }
   }
 
@@ -38,9 +38,9 @@ public abstract class NamedRunnable implements Runnable {
     } catch (Exception ex) {
       boolean noise = ex instanceof java.util.concurrent.RejectedExecutionException;
       if (noise) {
-        LOGGER.error("noise:" + name + ex.getMessage());
+        RUNNABLE_LOGGER.error("noise:" + __runnableName + ex.getMessage());
       } else {
-        LOGGER.error(name, ex);
+        RUNNABLE_LOGGER.error(__runnableName, ex);
       }
     }
   }
@@ -49,6 +49,6 @@ public abstract class NamedRunnable implements Runnable {
 
   @Override
   public String toString() {
-    return name;
+    return __runnableName;
   }
 }

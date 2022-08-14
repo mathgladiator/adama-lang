@@ -46,7 +46,7 @@ public class SpaceTemplates {
 
   private SpaceTemplates() {
     this.templates = new TreeMap<>();
-    this.templates.put("none", new SpaceTemplate("@construct { return true; }\n", "<forest>\n  <page uri=\"/\">Hello World</page></forest>"));
+    this.templates.put("none", new SpaceTemplate("@construct { }\n", "<forest>\n  <page uri=\"/\">Hello World</page></forest>"));
   }
 
   public SpaceTemplate of(String name) {

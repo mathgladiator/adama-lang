@@ -130,14 +130,12 @@ public class Documents {
       try (WebSocketClient client = new WebSocketClient(config)) {
         try (Connection connection = client.open()) {
           ObjectNode request = Json.newJsonObject();
-
           request.put("method", "attachment/start");
           request.put("identity", identity);
           request.put("space", space);
           request.put("key", key);
           request.put("filename", filename);
           request.put("content-type", contentType);
-          System.err.println(request.toPrettyString());
           connection.stream(request, (cId, ask) -> {
             executor.execute(new NamedRunnable("name") {
               @Override
@@ -147,6 +145,7 @@ public class Documents {
                 try {
                   int rd = input.read(chunk);
                   if (rd > 0) {
+                    System.err.println("Uploading..." + rd + " bytes");
                     MessageDigest digest = Hashing.md5();
                     digest.update(chunk, 0, rd);
                     ObjectNode append = Json.newJsonObject();
@@ -154,19 +153,19 @@ public class Documents {
                     append.put("upload", cId.intValue());
                     append.put("chunk-md5", Hashing.finishAndEncode(digest));
                     append.put("base64-bytes", Base64.getEncoder().encodeToString(Arrays.copyOfRange(chunk, 0, rd)));
-                    ObjectNode response = connection.execute(append);
-                    System.err.println(response);
+                    connection.execute(append);
                   } else {
+                    System.err.println("Finishing");
                     ObjectNode append = Json.newJsonObject();
                     append.put("method", "attachment/finish");
                     append.put("upload", cId.intValue());
-                    ObjectNode response = connection.execute(append);
-                    System.err.println(response);
+                    connection.execute(append);
+                    connection.close();
+                    executor.shutdown();
                   }
                 } catch (Exception ioe) {
-
+                  executor.shutdown();
                 }
-                System.err.println(ask.toPrettyString());
               }
             });
           });
