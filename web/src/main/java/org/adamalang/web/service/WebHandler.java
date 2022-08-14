@@ -17,6 +17,10 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.CookieHeaderNames;
 import io.netty.handler.codec.http.cookie.DefaultCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
+import io.netty.handler.codec.http.multipart.Attribute;
+import io.netty.handler.codec.http.multipart.FileUpload;
+import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
+import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.web.contracts.AssetDownloader;
@@ -26,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
@@ -142,6 +147,55 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     if (webConfig.healthCheckPath.equals(req.uri())) { // health checks
       sendImmediate(metrics.webhandler_healthcheck, req, ctx, HttpResponseStatus.OK, ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8), "text/text; charset=UTF-8", true);
       return true;
+    } else if (req.uri().startsWith("/~upload") && req.method() == HttpMethod.POST) {
+      try {
+        HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(req);
+        ArrayList<FileUpload> files = new ArrayList<>();
+        String identity = null;
+        String space = null;
+        String key = null;
+
+        for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
+          switch (data.getHttpDataType()) {
+            case Attribute:
+              // TODO: accept identity, space, key
+              Attribute attribute = (Attribute) data;
+              switch (attribute.getName()) {
+                case "identity":
+                  identity = attribute.getValue();
+                  break;
+                case "space":
+                  space = attribute.getValue();
+                  break;
+                case "key":
+                  key = attribute.getValue();
+                  break;
+              }
+
+              // attribute.getName()
+              // attribute.getValue();
+              break;
+            case FileUpload:
+              FileUpload fileUpload = (FileUpload) data;
+              if (fileUpload.isInMemory()) {
+                // fileUpload.get()
+              } else {
+                // fileUpload.getFile();
+              }
+              // for each one, compute SHA384 and MD5
+              files.add(fileUpload);
+              break;
+            default:
+              break;
+          }
+        }
+        if (identity != null && space != null && key != null) {
+
+
+        }
+      } catch (Exception ex) {
+
+      }
     } else if (req.uri().startsWith("/libadama.js")) { // in-memory JavaScript library for the client
       sendImmediate(metrics.webhandler_client_download, req, ctx, HttpResponseStatus.OK, JavaScriptClient.ADAMA_JS_CLIENT_BYTES, "text/javascript; charset=UTF-8", true);
       return true;
