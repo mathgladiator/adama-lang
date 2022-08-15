@@ -364,18 +364,27 @@ public class Service {
       System.err.println("failed to register");
       return;
     }
-
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(init.metricsFactory), serviceBase, heartbeat.get());
-    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-      @Override
-      public void run() {
-        System.err.println("shutting down frontend");
+    WebMetrics webMetrics = new WebMetrics(init.metricsFactory);
+    final var redirect = new RedirectAndWellknownServiceRunnable(webConfig, webMetrics, () -> {});
+    Thread redirectThread = new Thread(redirect);
+    redirectThread.start();
+    final var runnable = new ServiceRunnable(webConfig, webMetrics, serviceBase, heartbeat.get());
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      System.err.println("shutting down frontend");
+      try {
         runnable.shutdown();
-        try {
-          nexus.close();
-        } catch (Exception ex) {
-          ex.printStackTrace();
-        }
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
+      try {
+        redirect.shutdown();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
+      try {
+        nexus.close();
+      } catch (Exception ex) {
+        ex.printStackTrace();
       }
     }));
     System.err.println("running frontend");

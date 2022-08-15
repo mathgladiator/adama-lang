@@ -34,17 +34,15 @@ public class RedirectAndWellknownServiceRunnable implements Runnable {
   private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRunnable.class);
   private final WebConfig webConfig;
   private final WebMetrics metrics;
-  private final ServiceBase base;
   private final CountDownLatch ready;
   private final AtomicBoolean started;
   private final Runnable heartbeat;
   private Channel channel;
   private boolean stopped;
 
-  public RedirectAndWellknownServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, ServiceBase base, Runnable heartbeat) {
+  public RedirectAndWellknownServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, Runnable heartbeat) {
     this.webConfig = webConfig;
     this.metrics = metrics;
-    this.base = base;
     started = new AtomicBoolean();
     channel = null;
     stopped = false;

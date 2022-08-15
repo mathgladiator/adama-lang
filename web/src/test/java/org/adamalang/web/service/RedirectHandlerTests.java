@@ -11,24 +11,18 @@ package org.adamalang.web.service;
 
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.handler.codec.http.cookie.ClientCookieEncoder;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.web.client.TestClientCallback;
 import org.adamalang.web.client.TestClientRequestBuilder;
-import org.adamalang.web.service.mocks.MockServiceBase;
 import org.junit.Assert;
 import org.junit.Test;
-
-import javax.crypto.SecretKey;
 
 public class RedirectHandlerTests {
   @Test
   public void flow() throws Exception {
     EventLoopGroup group = new NioEventLoopGroup();
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ProdScope);
-    MockServiceBase base = new MockServiceBase();
-    final var runnable = new RedirectAndWellknownServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, () -> {});
+    final var runnable = new RedirectAndWellknownServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), () -> {});
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);
