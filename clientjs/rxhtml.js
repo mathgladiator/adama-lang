@@ -1088,6 +1088,26 @@ var RxHTML = (function () {
     }
   };
 
+  self.aUP = function (form, state, identityName, failureVar, redirectTo) {
+    var idLookup = self.ID(identityName, redirectTo);
+    if (idLookup.abort) {
+      return;
+    }
+    form.action = "https://aws-us-east-2.adama-platform.com/~upload";
+    form.method = "post";
+    form.enctype = "multipart/form-data";
+    var identityInput = document.createElement("input");
+    identityInput.type = "hidden";
+    identityInput.name = "identity";
+    identityInput.value = idLookup.identity;
+    form.appendChild(identityInput);
+    var iframeTarget = document.createElement("iframe");
+    iframeTarget.name = "UPLOAD_" + Math.random();
+
+    form.appendChild(iframeTarget);
+    form.target = iframeTarget.name;
+  };
+
   // RUNTIME | rx:action=adama:sign-in
   self.aSO = function (form, state, identityName, failureVar, forwardTo) {
     var signal = make_failure_signal(state, failureVar);
