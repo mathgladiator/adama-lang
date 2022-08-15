@@ -261,6 +261,24 @@ public class Attributes {
     }, "email", "password", "remember");
   }
 
+  private void check_action_upload() {
+    walkAndValidateAndCheck(env, (el) -> {
+      String name = el.attr("name");
+      String type = el.attr("type");
+      if ("space".equals(name)) {
+        return true;
+      }
+      if ("key".equals(name)) {
+        return true;
+      }
+      if ("submit".equals(type)) {
+        return true;
+      }
+      env.feedback.warn(el, "The input '" + name + "' is excessive.");
+      return false;
+    }, "space", "key");
+  }
+
   private void check_action_sign_up() {
     walkAndValidateAndCheck(env, (el) -> {
       if ("email".equals(el.attr("name"))) {
@@ -308,6 +326,14 @@ public class Attributes {
           .append(",").append(env.stateVar) //
           .append(",'").append(customCommandName) //
           .append("','").append(env.val("rx:status", "custom_status")) //
+          .append("');").newline();
+    } else if ("adama:upload-asset".equalsIgnoreCase(action)) { // upload an asset
+      check_action_upload();
+      env.writer.tab().append("$.aUP(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'").append(env.val("rx:identity", "default")) //
+          .append("','").append(env.val("rx:failure", "sign_in_failed")) //
+          .append("','").append(env.val("rx:forward", "/")) //
           .append("');").newline();
     } else if ("adama:sign-up".equalsIgnoreCase(action)) { // sign up as an Adama user
       check_action_sign_up();

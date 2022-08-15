@@ -27,6 +27,10 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     issues.append("\nWARNING:Emails should have type 'email'");
     issues.append("\nWARNING:Emails should have type 'email'");
     issues.append("\nWARNING:Passwords should have type 'password'.");
+    issues.append("\nWARNING:The input 'spacex' is excessive.");
+    issues.append("\nWARNING:The input 'keyx' is excessive.");
+    issues.append("\nWARNING:Failed to find an input for 'space'");
+    issues.append("\nWARNING:Failed to find an input for 'key'");
     return issues.toString();
   }
   @Override
@@ -113,6 +117,15 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n    d.setAttribute('type','submit');");
     gold.append("\n    c.append(d);");
     gold.append("\n    b.append(c);");
+    gold.append("\n    var c = $.E('form');");
+    gold.append("\n    $.aUP(c,a,'default','sign_in_failed','/');");
+    gold.append("\n    var d = $.E('input');");
+    gold.append("\n    d.setAttribute('name','spacex');");
+    gold.append("\n    c.append(d);");
+    gold.append("\n    var d = $.E('input');");
+    gold.append("\n    d.setAttribute('name','keyx');");
+    gold.append("\n    c.append(d);");
+    gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     return gold.toString();
@@ -158,6 +171,10 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     source.append("\n        <form rx:action=\"send:channel\">");
     source.append("\n            <input name=\"param\" />");
     source.append("\n            <input type=\"submit\" />");
+    source.append("\n        </form>");
+    source.append("\n        <form rx:action=\"adama:upload-asset\">");
+    source.append("\n            <input name=\"spacex\" />");
+    source.append("\n            <input name=\"keyx\" />");
     source.append("\n        </form>");
     source.append("\n    </page>");
     source.append("\n</forest>");
