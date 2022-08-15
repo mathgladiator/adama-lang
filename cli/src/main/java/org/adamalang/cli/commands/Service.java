@@ -56,6 +56,7 @@ import org.adamalang.services.FirstPartyServices;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
+import org.adamalang.web.contracts.WellKnownHandler;
 import org.adamalang.web.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -365,7 +366,13 @@ public class Service {
       return;
     }
     WebMetrics webMetrics = new WebMetrics(init.metricsFactory);
-    final var redirect = new RedirectAndWellknownServiceRunnable(webConfig, webMetrics, () -> {});
+    WellKnownHandler handler = new WellKnownHandler() {
+      @Override
+      public void handle(String uri, Callback<String> callback) {
+        callback.success("true");
+      }
+    };
+    final var redirect = new RedirectAndWellknownServiceRunnable(webConfig, webMetrics, handler, () -> {});
     Thread redirectThread = new Thread(redirect);
     redirectThread.start();
     final var runnable = new ServiceRunnable(webConfig, webMetrics, serviceBase, heartbeat.get());

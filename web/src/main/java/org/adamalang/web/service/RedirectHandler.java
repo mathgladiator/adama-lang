@@ -14,20 +14,40 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.web.contracts.WellKnownHandler;
 
 import java.nio.charset.StandardCharsets;
 
 public class RedirectHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private static final byte[] EMPTY_RESPONSE = new byte[0];
   private final WebConfig webConfig;
-  public RedirectHandler(WebConfig webConfig) {
+  private final WellKnownHandler wellKnownHandler;
+
+  public RedirectHandler(WebConfig webConfig, WellKnownHandler wellKnownHandler) {
     this.webConfig = webConfig;
+    this.wellKnownHandler = wellKnownHandler;
   }
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
     if (webConfig.healthCheckPath.equals(req.uri())) { // health checks
-      sendImmediate(req, ctx, HttpResponseStatus.OK, ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8), "text/text; charset=UTF-8", true);
+      sendImmediate(req, ctx, HttpResponseStatus.OK, ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8), "text/plain; charset=UTF-8", true);
+      return;
+    }
+    if (req.uri().startsWith("/.well-known/")) {
+      wellKnownHandler.handle(req.uri(), new Callback<String>() {
+        @Override
+        public void success(String response) {
+          sendImmediate(req, ctx, HttpResponseStatus.OK, (response).getBytes(StandardCharsets.UTF_8), "text/plain", true);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          sendImmediate(req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, EMPTY_RESPONSE, "text/plain", true);
+        }
+      });
       return;
     }
     final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.PERMANENT_REDIRECT, Unpooled.wrappedBuffer(EMPTY_RESPONSE));

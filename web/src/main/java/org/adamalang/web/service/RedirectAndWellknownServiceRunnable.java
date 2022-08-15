@@ -23,6 +23,7 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import io.netty.util.concurrent.ScheduledFuture;
 import org.adamalang.web.contracts.ServiceBase;
+import org.adamalang.web.contracts.WellKnownHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,10 +40,12 @@ public class RedirectAndWellknownServiceRunnable implements Runnable {
   private final Runnable heartbeat;
   private Channel channel;
   private boolean stopped;
+  private final WellKnownHandler wellKnownHandler;
 
-  public RedirectAndWellknownServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, Runnable heartbeat) {
+  public RedirectAndWellknownServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, WellKnownHandler wellKnownHandler, Runnable heartbeat) {
     this.webConfig = webConfig;
     this.metrics = metrics;
+    this.wellKnownHandler = wellKnownHandler;
     started = new AtomicBoolean();
     channel = null;
     stopped = false;
@@ -78,7 +81,7 @@ public class RedirectAndWellknownServiceRunnable implements Runnable {
                 pipeline.addLast(new WriteTimeoutHandler(webConfig.writeTimeoutSeconds));
                 pipeline.addLast(new IdleStateHandler(webConfig.idleReadSeconds, webConfig.idleWriteSeconds, webConfig.idleAllSeconds, TimeUnit.SECONDS));
                 pipeline.addLast(new HttpObjectAggregator(webConfig.maxContentLengthSize));
-                pipeline.addLast(new RedirectHandler(webConfig));
+                pipeline.addLast(new RedirectHandler(webConfig, wellKnownHandler));
               }
             });
             final var ch = b.bind(webConfig.redirectPort).sync().channel();
