@@ -184,6 +184,8 @@ public class ErrorTable {
     descriptions.put(213708, "no description of error (yet)");
     names.put(233120, "USERLAND_REQUEST_NO_ID_PROPERTY");
     descriptions.put(233120, "no description of error (yet)");
+    names.put(144583, "ASSET_KEY_WRONG_LENGTH");
+    descriptions.put(144583, "no description of error (yet)");
     names.put(621580, "UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF");
     descriptions.put(621580, "no description of error (yet)");
     names.put(625676, "UNIVERSAL_LOOKUP_FAILED");
