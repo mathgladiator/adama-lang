@@ -20,6 +20,8 @@ public class WebMetrics {
   public final Runnable websockets_server_heartbeat;
   public final Runnable websockets_uncaught_exception;
   public final Runnable websockets_end_exception;
+  public final Runnable redirect_server_heartbeat;
+
   public final Runnable webhandler_get;
   public final Runnable webhandler_post;
   public final Runnable webhandler_delete;
@@ -61,6 +63,7 @@ public class WebMetrics {
     this.webhandler_assets_start = factory.counter("webhandler_assets_start");
     this.webhandler_assets_failed_start = factory.counter("webhandler_assets_failed_start");
 
+    this.redirect_server_heartbeat = factory.counter("redirect_server_heartbeat");
     this.webhandler_get = factory.counter("webhandler_get");
     this.webhandler_post = factory.counter("webhandler_post");
     this.webhandler_delete = factory.counter("webhandler_delete");

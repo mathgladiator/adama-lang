@@ -16,6 +16,7 @@ public class WebConfig {
   public final int maxContentLengthSize;
   public final int maxWebSocketFrameSize;
   public final int port;
+  public final int redirectPort;
   public final int timeoutWebsocketHandshake;
   public final int heartbeatTimeMilliseconds;
   public final int readTimeoutSeconds;
@@ -29,6 +30,7 @@ public class WebConfig {
   public WebConfig(ConfigObject config) {
     // HTTP properties
     this.port = config.intOf("http_port", 8080);
+    this.redirectPort = config.intOf("http_redirect_port", 8085);
     this.maxContentLengthSize = config.intOf("http_max_content_length_size", 4194304);
     this.healthCheckPath = config.strOf("http_health_check_path", "/~health_check_lb");
     // WebSocket properties

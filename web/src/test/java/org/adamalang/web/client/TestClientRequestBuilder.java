@@ -159,8 +159,6 @@ public class TestClientRequestBuilder {
                         postContent,
                         headers,
                         new DefaultHttpHeaders(true));
-                request.headers().set("host", "localhost");
-                request.headers().set("origin", "localhost");
                 request.headers().set("Content-Length", postContent.readableBytes());
               } else {
                 request =
@@ -172,7 +170,6 @@ public class TestClientRequestBuilder {
                         headers,
                         new DefaultHttpHeaders(true));
               }
-
               if (junk) {
                 request.headers().set("Content-Length", 25);
               }
@@ -227,6 +224,7 @@ public class TestClientRequestBuilder {
   public TestClientRequestBuilder server(final String host, final int port) {
     this.host = host;
     this.port = port;
+    headers.add("Host", host);
     return this;
   }
 
