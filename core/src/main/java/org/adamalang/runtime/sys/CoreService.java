@@ -395,7 +395,7 @@ public class CoreService implements Deliverer {
     Callback<Integer> onConnected = new Callback<>() {
       @Override
       public void success(Integer dontCare) {
-        document.createPrivateView(context.who, new Perspective() {
+        Perspective perspective = new Perspective() {
           @Override
           public void data(String data) {
             stream.next(data);
@@ -407,7 +407,8 @@ public class CoreService implements Deliverer {
           public void disconnect() {
             stream.status(Streamback.StreamStatus.Disconnected);
           }
-        }, viewerState, assetIdEncoder, metrics.create_private_view.wrap(new Callback<>() {
+        };
+        document.createPrivateView(context.who, perspective, viewerState, assetIdEncoder, metrics.create_private_view.wrap(new Callback<>() {
           @Override
           public void success(PrivateView view) {
             stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, view));

@@ -20,7 +20,7 @@ public interface AssetSystem {
   void request(AssetRequest request, AssetStream stream);
 
   /** attach the asset to the given document under the given principal */
-  public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback);
+  void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback);
 
   /** upload an asset at the given key */
   void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback);

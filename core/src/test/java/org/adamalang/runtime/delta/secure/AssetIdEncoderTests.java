@@ -16,7 +16,7 @@ import javax.crypto.SecretKey;
 
 public class AssetIdEncoderTests {
   @Test
-  public void flow() {
+  public void flow() throws Exception {
     String key = SecureAssetUtil.makeAssetKeyHeader();
     AssetIdEncoder encoder = new AssetIdEncoder(key);
     String enc = encoder.encrypt("1234");

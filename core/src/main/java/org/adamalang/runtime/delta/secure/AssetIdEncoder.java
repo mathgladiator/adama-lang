@@ -9,13 +9,15 @@
  */
 package org.adamalang.runtime.delta.secure;
 
+import org.adamalang.common.ErrorCodeException;
+
 import javax.crypto.SecretKey;
 
 /** encode assets for secure usage by clients */
 public class AssetIdEncoder {
   private final SecretKey key;
 
-  public AssetIdEncoder(String keyHeader) {
+  public AssetIdEncoder(String keyHeader) throws ErrorCodeException  {
     this.key = SecureAssetUtil.secretKeyOf(keyHeader);
   }
 

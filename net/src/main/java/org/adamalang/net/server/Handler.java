@@ -417,7 +417,12 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void handle(ClientMessage.StreamConnect payload) {
     monitorStreamback = nexus.metrics.server_stream.start();
     CoreRequestContext context = new CoreRequestContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
-    nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, payload.assetKey != null ? new AssetIdEncoder(payload.assetKey) : null, this);
+    try {
+      AssetIdEncoder assetIdEncoder = payload.assetKey != null ? new AssetIdEncoder(payload.assetKey) : null;
+      nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, assetIdEncoder, this);
+    } catch (ErrorCodeException ex) {
+      failure(ex);
+    }
   }
 
   @Override

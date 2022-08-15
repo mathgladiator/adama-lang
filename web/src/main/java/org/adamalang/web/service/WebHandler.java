@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+  private static final Logger LOG = LoggerFactory.getLogger(WebHandler.class);
+
   private static final byte[] EMPTY_RESPONSE = new byte[0];
   private static final byte[] OK_RESPONSE = "OK".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_FAILED_ATTACHMENT = ("<html><head><title>Asset Failure</title></head><body>Failure to initiate asset attachment.</body></html>").getBytes(StandardCharsets.UTF_8);
@@ -46,7 +48,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private static final byte[] NOT_FOUND_RESPONSE = "<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_UPLOAD_FAILURE = "<html><head><title>Bad Request; Internal Error Uploading</title></head><body>Sorry, the upload failed.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_UPLOAD_INCOMPLETE_FIELDS = "<html><head><title>Bad Request; Incomplete</title></head><body>Sorry, the post request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
-  private static final Logger LOG = LoggerFactory.getLogger(WebHandler.class);
+
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final HttpHandler httpHandler;
@@ -172,9 +174,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             break;
         }
       }
+      ConnectionContext context = ConnectionContextFactory.of(ctx, req.headers());
       if (identity != null && space != null && key != null) {
         Key uploadKey = new Key(space, key);
-        sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.OK, EMPTY_RESPONSE, "text/html; charset=UTF-8", true);
+        // TODO Need a multi-latch to report success
         for (FileUpload upload : files) {
           AssetUploadBody body = new AssetUploadBody() {
             @Override
@@ -198,31 +201,30 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
           AssetFact fact = AssetFact.of(body);
           NtAsset asset = new NtAsset(ProtectedUUID.generate(), upload.getFilename(), upload.getContentType(), fact.size, fact.md5, fact.sha384);
           final String identityFinal = identity;
-          // TODO
-          ConnectionContext context = new ConnectionContext("origin", "ip", "user-agent", "");
           assets.upload(uploadKey, asset, body, new Callback<>() {
             @Override
             public void success(Void value) {
               assets.attach(identityFinal, context, uploadKey, asset, new Callback<Integer>() {
                 @Override
                 public void success(Integer value) {
-
+                  // TODO: multi-latch report success
                 }
 
                 @Override
                 public void failure(ErrorCodeException ex) {
-
+                  // TODO: multi-latch report failure @ attach
                 }
               });
             }
 
             @Override
             public void failure(ErrorCodeException ex) {
-
+              // TODO: multi-latch report failure @ upload
             }
           });
-              // TODO: need to attach the document
         }
+        // TODO: leverage a multi-latch
+        sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.OK, EMPTY_RESPONSE, "text/html; charset=UTF-8", true);
       } else {
         sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.BAD_REQUEST, ASSET_UPLOAD_INCOMPLETE_FIELDS, "text/html; charset=UTF-8", true);
       }

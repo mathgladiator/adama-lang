@@ -9,6 +9,9 @@
  */
 package org.adamalang.runtime.delta.secure;
 
+import org.adamalang.ErrorCodes;
+import org.adamalang.common.ErrorCodeException;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -38,8 +41,11 @@ public class SecureAssetUtil {
     }
   }
 
-  public static SecretKey secretKeyOf(String base64) {
+  public static SecretKey secretKeyOf(String base64) throws ErrorCodeException {
     byte[] raw = Base64.getDecoder().decode(base64);
+    if (raw.length != 24) {
+      throw new ErrorCodeException(ErrorCodes.ASSET_KEY_WRONG_LENGTH);
+    }
     return new SecretKey() {
       @Override
       public String getAlgorithm() {

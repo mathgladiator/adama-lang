@@ -47,11 +47,6 @@ public class AssetSystemImpl implements AssetSystem {
   }
 
   @Override
-  public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
-    s3.upload(key, asset, body, callback);
-  }
-
-  @Override
   public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback) {
     PerSessionAuthenticator authenticator = new PerSessionAuthenticator(database, context);
     authenticator.execute(new Session(authenticator), identity, new Callback<AuthenticatedUser>() {
@@ -60,7 +55,9 @@ public class AssetSystemImpl implements AssetSystem {
         AtomicBoolean responded = new AtomicBoolean(false);
         AdamaStream stream = adama.connect(who, key.space, key.key, "{}", new SimpleEvents() {
           @Override
-          public void connected() { /* don't care */ }
+          public void connected() {
+            /* don't care */
+          }
 
           @Override
           public void delta(String data) { /* don't care */ }
@@ -79,15 +76,31 @@ public class AssetSystemImpl implements AssetSystem {
             }
           }
         });
-        stream.canAttach(new Callback<Boolean>() {
+        stream.canAttach(new Callback<>() {
           @Override
           public void success(Boolean value) {
-            if (responded.compareAndSet(false, true)) {
-              if (value) {
-                stream.attach(asset.id, asset.name, asset.contentType, asset.size, asset.md5, asset.sha384, callback);
-                stream.close();
-              } else {
+            if (value) {
+              stream.attach(asset.id, asset.name, asset.contentType, asset.size, asset.md5, asset.sha384, new Callback<Integer>() {
+                @Override
+                public void success(Integer value) {
+                  if (responded.compareAndSet(false, true)) {
+                    callback.success(value);
+                    stream.close();
+                  }
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  if (responded.compareAndSet(false, true)) {
+                    callback.failure(ex);
+                    stream.close();
+                  }
+                }
+              });
+            } else {
+              if (responded.compareAndSet(false, true)) {
                 callback.failure(new ErrorCodeException(-123));
+                stream.close();
               }
             }
           }
@@ -107,6 +120,11 @@ public class AssetSystemImpl implements AssetSystem {
         callback.failure(ex);
       }
     });
+  }
+
+  @Override
+  public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
+    s3.upload(key, asset, body, callback);
   }
 
 }

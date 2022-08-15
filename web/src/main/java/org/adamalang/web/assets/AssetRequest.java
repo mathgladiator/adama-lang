@@ -11,6 +11,7 @@ package org.adamalang.web.assets;
 
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.web.contracts.HttpHandler;
 
@@ -32,7 +33,7 @@ public class AssetRequest {
     return null;
   }
 
-  public static AssetRequest parse(String uri, String assetKey) {
+  public static AssetRequest parse(String uri, String assetKey) throws ErrorCodeException {
     int firstSlash = uri.indexOf('/');
     int lastSlash = uri.lastIndexOf("/id=");
     String space = uri.substring(0, firstSlash);

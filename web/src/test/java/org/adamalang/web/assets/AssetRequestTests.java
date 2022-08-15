@@ -16,7 +16,7 @@ import org.junit.Test;
 public class AssetRequestTests {
 
   @Test
-  public void flow() {
+  public void flow() throws Exception {
     String assetKey = SecureAssetUtil.makeAssetKeyHeader();
     String uri = "space/key/id=" + SecureAssetUtil.encryptToBase64(SecureAssetUtil.secretKeyOf(assetKey), "my-id");
     AssetRequest ar = AssetRequest.parse(uri, assetKey);
@@ -26,7 +26,7 @@ public class AssetRequestTests {
   }
 
   @Test
-  public void flowWithSlash() {
+  public void flowWithSlash() throws Exception {
     String assetKey = SecureAssetUtil.makeAssetKeyHeader();
     String uri = "space/key/path/path2/id=" + SecureAssetUtil.encryptToBase64(SecureAssetUtil.secretKeyOf(assetKey), "my-id");
     AssetRequest ar = AssetRequest.parse(uri, assetKey);

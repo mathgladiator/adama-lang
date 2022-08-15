@@ -97,26 +97,13 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   @Override
   public void userEventTriggered(final ChannelHandlerContext ctx, final Object evt) {
     if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete && !closed) {
-
       HttpHeaders headers = ((WebSocketServerProtocolHandler.HandshakeComplete) evt).requestHeaders();
-      String origin = headers.get("origin");
-      String ip = ctx.channel().remoteAddress().toString().replaceAll(Pattern.quote("/"), ""); // Describe a reason this introduces a slash
-      String xForwardedFor = headers.get("x-forwarded-for");
-      if (xForwardedFor != null && !("".equals(xForwardedFor))) {
-        ip = xForwardedFor;
-      }
-      String userAgent = headers.get(HttpHeaderNames.USER_AGENT);
-      String assetKey = AssetRequest.extractAssetKey(headers.get(HttpHeaderNames.COOKIE));
-
+      context = ConnectionContextFactory.of(ctx, headers);
       // tell client all is ok
-      ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\",\"assets\":" + (assetKey != null ? "true" : "false") + "}"));
-
-      context = new ConnectionContext(origin, ip, userAgent, assetKey);
-
+      ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\",\"assets\":" + (context.assetKey != null ? "true" : "false") + "}"));
       // establish the service
       connection = base.establish(context);
       metrics.websockets_active_child_connections.up();
-
       // start the heartbeat loop
       Runnable heartbeatLoop = () -> {
         if (connection != null && !connection.keepalive()) {
