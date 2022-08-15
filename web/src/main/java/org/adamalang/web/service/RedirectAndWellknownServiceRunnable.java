@@ -78,7 +78,7 @@ public class RedirectAndWellknownServiceRunnable implements Runnable {
                 pipeline.addLast(new WriteTimeoutHandler(webConfig.writeTimeoutSeconds));
                 pipeline.addLast(new IdleStateHandler(webConfig.idleReadSeconds, webConfig.idleWriteSeconds, webConfig.idleAllSeconds, TimeUnit.SECONDS));
                 pipeline.addLast(new HttpObjectAggregator(webConfig.maxContentLengthSize));
-                pipeline.addLast(new RedirectHandler());
+                pipeline.addLast(new RedirectHandler(webConfig));
               }
             });
             final var ch = b.bind(webConfig.redirectPort).sync().channel();
