@@ -1,6 +1,8 @@
 # Summary
 
+- [Overview](./overview.md)
 - [The Basics of Adama](./basics.md)
+- [Adama as a ?](./adama-as-a.md)
 - [Tutorial - Hands on /w CLI](./tutorial/start.md)
   - [Installing the tool](./tutorial/00-install.md)
   - [Initializing your developer account](./tutorial/01-init.md)
@@ -67,3 +69,4 @@
   - [Mixed Storage and Compute Engine](./what/mixed-storage-compute-engine.md)
   - [Privacy respecting storage](./what/privacy.md)  
   - [Single file infrastructure](./what/single-file-infrastructure.md)
+- [Cheatsheet](./cheatsheet.md)
