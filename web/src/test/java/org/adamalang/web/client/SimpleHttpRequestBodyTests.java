@@ -12,11 +12,26 @@ package org.adamalang.web.client;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
+
 public class SimpleHttpRequestBodyTests {
   @Test
   public void empty() {
     Assert.assertEquals(0, SimpleHttpRequestBody.EMPTY.size());
     SimpleHttpRequestBody.EMPTY.read(null);
     SimpleHttpRequestBody.EMPTY.finished();
+  }
+  @Test
+  public void bytearray() {
+    SimpleHttpRequestBody body = SimpleHttpRequestBody.WRAP("Hello World".getBytes(StandardCharsets.UTF_8));
+    Assert.assertEquals(11, body.size());
+    byte[] chunk = new byte[4];
+    Assert.assertEquals(4, body.read(chunk));
+    Assert.assertEquals("Hell", new String(chunk, StandardCharsets.UTF_8));
+    Assert.assertEquals(4, body.read(chunk));
+    Assert.assertEquals("o Wo", new String(chunk, StandardCharsets.UTF_8));
+    Assert.assertEquals(3, body.read(chunk));
+    Assert.assertEquals("rld", new String(chunk, 0, 3, StandardCharsets.UTF_8));
+    body.finished();
   }
 }

@@ -9,6 +9,9 @@
  */
 package org.adamalang.web.client;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 /** a simplified http body */
 public interface SimpleHttpRequestBody {
   /** the size of the body */
@@ -35,4 +38,31 @@ public interface SimpleHttpRequestBody {
     public void finished() {
     }
   };
+
+  public static SimpleHttpRequestBody WRAP(byte[] bytes) {
+    ByteArrayInputStream memory = new ByteArrayInputStream(bytes);
+    return new SimpleHttpRequestBody() {
+        @Override
+        public long size() {
+          return bytes.length;
+        }
+
+        @Override
+        public int read(byte[] chunk) {
+          try {
+            return memory.read(chunk);
+          } catch (IOException impossible) {
+            return 0;
+          }
+        }
+
+        @Override
+        public void finished() {
+          try {
+            memory.close();
+          } catch (IOException impossible) {
+          }
+        }
+      };
+  }
 }

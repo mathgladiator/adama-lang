@@ -65,7 +65,7 @@ public class SlowSingleThreadedExecutorFactory implements SimpleExecutorFactory,
     return () -> {
       for (Runnable runnable : copy) {
         if (runnable instanceof NamedRunnable) {
-          System.err.println(name + "|RUN:" + ((NamedRunnable) runnable).name);
+          System.err.println(name + "|RUN:" + ((NamedRunnable) runnable).__runnableName);
         }
         runnable.run();
       }
@@ -88,16 +88,16 @@ public class SlowSingleThreadedExecutorFactory implements SimpleExecutorFactory,
   }
 
   private synchronized NamedRunnable addSync(NamedRunnable command) {
-    if (command.name.startsWith("client-heartbeat")) {
+    if (command.__runnableName.startsWith("client-heartbeat")) {
       return null;
     }
-    if (command.name.startsWith("instance-client-heartbeat")) {
+    if (command.__runnableName.startsWith("instance-client-heartbeat")) {
       return null;
     }
-    if (command.name.startsWith("expire-action")) {
+    if (command.__runnableName.startsWith("expire-action")) {
       return null;
     }
-    if (command.name.startsWith("finder-proxy-add")) {
+    if (command.__runnableName.startsWith("finder-proxy-add")) {
       System.err.println(name + "|NOW:" + command);
       return command;
     }

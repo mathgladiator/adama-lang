@@ -342,7 +342,7 @@ public class Service {
       }
     };
 
-    Email email = new SES(init.awsConfig, init.awsMetrics);
+    Email email = new SES(webBase, init.awsConfig, init.awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
     MultiRegionClient adama = new MultiRegionClient(init.database, client, init.region, init.finder);

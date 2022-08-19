@@ -36,7 +36,7 @@ public class DumbS3AndSESCoverageTest {
     aws.put("region", "us-west-2");
     aws.put("archive", "archive");
     AWSConfig config = new AWSConfig(new ConfigObject(aws));
-    SES ses = new SES(config, new AWSMetrics(new NoOpMetricsFactory()));
+    SES ses = new SES(null, config, new AWSMetrics(new NoOpMetricsFactory()));
     Assert.assertFalse(ses.sendCode("x@x.com", "123"));
     S3 s3 = new S3(config, new AWSMetrics(new NoOpMetricsFactory()));
     s3.upload(new Key("space", "key"), NtAsset.NOTHING, new AssetUploadBody() {

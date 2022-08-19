@@ -84,16 +84,16 @@ public class SelectiveExecutorFactory implements SimpleExecutorFactory, SimpleEx
 
   private void test(NamedRunnable command) {
     if (prefixBlocking != null) {
-      if (command.name.startsWith(prefixBlocking)) {
-        System.err.println("PAUSED["+this.name+"]:" + command.name);
+      if (command.__runnableName.startsWith(prefixBlocking)) {
+        System.err.println("PAUSED["+this.name+"]:" + command.__runnableName);
         this.blocked = true;
         this.prefixBlocking = null;
         this.latch.countDown();
       } else {
-        System.err.println("CHECKED["+this.name+"]:" + command.name);
+        System.err.println("CHECKED["+this.name+"]:" + command.__runnableName);
       }
     } else {
-      System.err.println("SKIP["+this.name+"]:" + command.name);
+      System.err.println("SKIP["+this.name+"]:" + command.__runnableName);
     }
   }
 
@@ -101,9 +101,9 @@ public class SelectiveExecutorFactory implements SimpleExecutorFactory, SimpleEx
   public synchronized void execute(NamedRunnable command) {
     test(command);
     if (blocked) {
-      System.err.println("BACKLOG["+this.name+"]:" + command.name);
+      System.err.println("BACKLOG["+this.name+"]:" + command.__runnableName);
       backlog.add(() -> {
-        System.err.println("EXECUTE["+this.name+"]:" + command.name);
+        System.err.println("EXECUTE["+this.name+"]:" + command.__runnableName);
         executor.execute(command);
       });
       return;
@@ -114,7 +114,7 @@ public class SelectiveExecutorFactory implements SimpleExecutorFactory, SimpleEx
   @Override
   public synchronized Runnable schedule(NamedRunnable command, long milliseconds) {
     inflight.incrementAndGet();
-    NamedRunnable tracked = new NamedRunnable(command.name) {
+    NamedRunnable tracked = new NamedRunnable(command.__runnableName) {
       @Override
       public void execute() throws Exception {
         try {
@@ -126,9 +126,9 @@ public class SelectiveExecutorFactory implements SimpleExecutorFactory, SimpleEx
     };
     test(tracked);
     if (blocked) {
-      System.err.println("BACKLOG["+this.name+"]:" + tracked.name);
+      System.err.println("BACKLOG["+this.name+"]:" + tracked.__runnableName);
       backlog.add(() -> {
-        System.err.println("EXECUTE["+this.name+"]:" + tracked.name);
+        System.err.println("EXECUTE["+this.name+"]:" + tracked.__runnableName);
         executor.schedule(tracked, milliseconds);
       });
       return () -> {};

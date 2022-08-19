@@ -9,6 +9,7 @@
  */
 package org.adamalang.extern.aws;
 
+import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 
@@ -20,6 +21,7 @@ public class AWSMetrics {
   public final RequestResponseMonitor upload_file;
   public final RequestResponseMonitor download_file;
   public final RequestResponseMonitor send_email;
+  public final Inflight alarm_send_failures;
 
   public AWSMetrics(MetricsFactory factory) {
     restore_document = factory.makeRequestResponseMonitor("aws_restore_document");
@@ -29,5 +31,6 @@ public class AWSMetrics {
     upload_file = factory.makeRequestResponseMonitor("aws_upload_file");
     download_file = factory.makeRequestResponseMonitor("aws_download_file");
     send_email = factory.makeRequestResponseMonitor("aws_send_email");
+    alarm_send_failures = factory.inflight("alarm_send_failures");
   }
 }

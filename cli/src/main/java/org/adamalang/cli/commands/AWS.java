@@ -88,9 +88,13 @@ public class AWS {
     System.out.println();
     System.out.print(Util.prefix("To:", Util.ANSI.Yellow));
     String to = System.console().readLine();
-
-    SES ses = new SES(awsConfig, new AWSMetrics(new NoOpMetricsFactory()));
-    ses.sendCode(to, "TESTCODE");
+    WebClientBase base = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
+    try {
+      SES ses = new SES(base, awsConfig, new AWSMetrics(new NoOpMetricsFactory()));
+      ses.sendCode(to, "TESTCODE");
+    } finally {
+      base.shutdown();
+    }
   }
 
   public static void awsTestNewStuff(Config config) throws Exception{
