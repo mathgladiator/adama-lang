@@ -118,7 +118,7 @@ public class RootHandlerImpl implements RootHandler {
             Users.addKey(nexus.database, userId, publicKey, expiry);
             responder.complete(Jwts.builder().setSubject("" + userId).setExpiration(new Date(expiry)).setIssuer("adama").signWith(pair.getPrivate()).compact());
           } catch (Exception ex) {
-            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CONVERT_TOKEN_VALIDATE_EXCEPTION, ex, LOGGER));
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CONVERT_TOKEN_VALIDATE_EXCEPTION, ex, RootHandlerImpl.LOGGER));
           }
         }
 
@@ -298,7 +298,7 @@ public class RootHandlerImpl implements RootHandler {
             try {
               Spaces.delete(nexus.database, spaceId, request.who.id);
             } catch (Exception failure) {
-              responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION, ex, LOGGER));
+              responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION, ex, RootHandlerImpl.LOGGER));
             }
             responder.error(ex);
           }

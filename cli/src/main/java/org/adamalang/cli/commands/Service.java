@@ -155,21 +155,6 @@ public class Service {
       capacityAgent.deliverAdamaHosts(hosts);
     });
 
-    // list all the documents on this machine, and spin them up
-    init.finder.list(init.machine, new Callback<List<Key>>() {
-      @Override
-      public void success(List<Key> keys) {
-        for (Key key : keys) {
-          service.startupLoad(key);
-        }
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        System.exit(-1);
-      }
-    });
-
     init.engine.createLocalApplicationHeartbeat("adama", init.servicePort, init.monitoringPort, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
         capacityAgent.deliverMeteringRecords(bills);
@@ -193,6 +178,22 @@ public class Service {
 
     // prime the host with spaces
     deployAgent.accept("*");
+
+    // list all the documents on this machine, and spin them up
+    init.finder.list(init.machine, new Callback<List<Key>>() {
+      @Override
+      public void success(List<Key> keys) {
+        for (Key key : keys) {
+          service.startupLoad(key);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        System.exit(-1);
+      }
+    });
+
     ServerNexus nexus = new ServerNexus(init.netBase, init.identity, service, new ServerMetrics(init.metricsFactory), deploymentFactoryBase, deployAgent, meteringPubSub, billingBatchMaker, init.servicePort, 4);
     ServerHandle handle = init.netBase.serve(init.servicePort, (upstream) -> new Handler(nexus, upstream));
     Thread serverThread = new Thread(() -> handle.waitForEnd());
