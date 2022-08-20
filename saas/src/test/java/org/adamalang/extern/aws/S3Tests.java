@@ -149,11 +149,11 @@ public class S3Tests {
   }
 
   @Test
-  public void moderateAsset() throws Exception {
+  public void bigAsset() throws Exception {
     flow((s3) -> {
       File tempAsset = File.createTempFile("ADAMATEST_", "temp");
       StringBuilder expected = new StringBuilder();
-      for (int k = 0; k < 1024; k++) {
+      for (int k = 0; k < 32 * 1024; k++) {
         expected.append("ABC-0123456789-XYZ");
       }
       Files.write(tempAsset.toPath(), expected.toString().getBytes(StandardCharsets.UTF_8));
@@ -219,9 +219,13 @@ public class S3Tests {
       String archiveKey = ProtectedUUID.generate();
       File root = new File(s3.path(), "space");
       root.mkdir();
+      StringBuilder expected = new StringBuilder();
+      for (int k = 0; k < 10; k++) {
+        expected.append("This is an object to backup");
+      }
 
       File archiveObject = new File(root, archiveKey);
-      Files.writeString(archiveObject.toPath(), "This is an object to backup");
+      Files.writeString(archiveObject.toPath(), expected.toString());
       CountDownLatch latchBackup = new CountDownLatch(1);
       s3.backup(new Key("space", "key"), archiveObject, new Callback<Void>() {
         @Override
@@ -253,7 +257,69 @@ public class S3Tests {
       Assert.assertTrue(latchRestore.await(30000, TimeUnit.MILLISECONDS));
       archiveObject = new File(root, archiveKey);
       Assert.assertTrue(archiveObject.exists());
-      Assert.assertEquals("This is an object to backup", Files.readString(archiveObject.toPath()));
+      Assert.assertEquals(expected.toString(), Files.readString(archiveObject.toPath()));
+      CountDownLatch latchDelete = new CountDownLatch(1);
+      s3.delete(new Key("space", "key"), archiveKey, new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          latchDelete.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+      Assert.assertTrue(latchDelete.await(30000, TimeUnit.MILLISECONDS));
+    });
+  }
+
+  @Test
+  public void cloudBig() throws Exception {
+    flow((s3) -> {
+      Assert.assertTrue(s3.path().exists());
+      String archiveKey = ProtectedUUID.generate();
+      File root = new File(s3.path(), "space");
+      root.mkdir();
+      StringBuilder expected = new StringBuilder();
+      for (int k = 0; k < 32 * 1024; k++) {
+        expected.append("This is an object to backup");
+      }
+
+      File archiveObject = new File(root, archiveKey);
+      Files.writeString(archiveObject.toPath(), expected.toString());
+      CountDownLatch latchBackup = new CountDownLatch(1);
+      s3.backup(new Key("space", "key"), archiveObject, new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          latchBackup.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+        }
+      });
+      Assert.assertTrue(latchBackup.await(30000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(archiveObject.delete());
+      Assert.assertFalse(archiveObject.exists());
+      CountDownLatch latchRestore = new CountDownLatch(1);
+      s3.restore(new Key("space", "key"), archiveKey, new Callback<File>() {
+        @Override
+        public void success(File value) {
+          Assert.assertTrue(value.exists());
+          latchRestore.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+      Assert.assertTrue(latchRestore.await(30000, TimeUnit.MILLISECONDS));
+      archiveObject = new File(root, archiveKey);
+      Assert.assertTrue(archiveObject.exists());
+      Assert.assertEquals(expected.toString(), Files.readString(archiveObject.toPath()));
       CountDownLatch latchDelete = new CountDownLatch(1);
       s3.delete(new Key("space", "key"), archiveKey, new Callback<Void>() {
         @Override

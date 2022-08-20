@@ -27,10 +27,7 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import io.netty.util.CharsetUtil;
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.Json;
+import org.adamalang.common.*;
 import org.adamalang.web.contracts.WebJsonStream;
 import org.adamalang.web.contracts.WebLifecycle;
 import org.adamalang.web.service.WebConfig;
@@ -155,10 +152,10 @@ public class WebClientBase {
             }
             future.channel().writeAndFlush(new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, path, content, headers, new DefaultHttpHeaders(true)));
           } else {
-            future.channel().write(new DefaultHttpRequest(HttpVersion.HTTP_1_1, method, path, headers));
+            future.channel().writeAndFlush(new DefaultHttpRequest(HttpVersion.HTTP_1_1, method, path, headers));
             long left = bodySize;
-            byte[] buffer = new byte[8196];
             while (left > 0) {
+              byte[] buffer = new byte[8196];
               int sz = request.body.read(buffer);
               final ByteBuf content;
               if (sz == buffer.length) {
@@ -168,9 +165,9 @@ public class WebClientBase {
               }
               left -= sz;
               if (left == 0) {
-                future.channel().write(new DefaultLastHttpContent(content));
+                future.channel().writeAndFlush(new DefaultLastHttpContent(content));
               } else {
-                future.channel().write(new DefaultHttpContent(content));
+                future.channel().writeAndFlush(new DefaultHttpContent(content));
               }
             }
           }

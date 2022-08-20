@@ -122,9 +122,15 @@ public class S3 implements Cloud {
     String s3key = "assets/" + key.space + "/" + key.key + "/" + assetId;
     SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "DELETE", s3key).buildWithEmptyBody();
     base.execute(request, new VoidCallbackHttpResponder(LOGGER, metrics.delete_asset.start(), callback));
-  }  @Override
+  }
+
+  @Override
   public File path() {
     return archive;
+  }
+
+  public static boolean shouldConsiderForUpload(String name) {
+    return COMPLETE_LOG.matcher(name).matches();
   }
 
   public void uploadLogs(File directory, String prefix) throws Exception {
@@ -145,7 +151,9 @@ public class S3 implements Cloud {
         }));
       }
     }
-  }  @Override
+  }
+
+  @Override
   public void restore(Key key, String archiveKey, Callback<File> callback) {
     File root = new File(path(), key.space);
     if (!root.exists()) {
@@ -181,13 +189,12 @@ public class S3 implements Cloud {
     }
   }
 
-  public static boolean shouldConsiderForUpload(String name) {
-    return COMPLETE_LOG.matcher(name).matches();
-  }  @Override
+  @Override
   public void backup(Key key, File archiveFile, Callback<Void> callback) {
     try {
       String s3key = "backups/" + key.space + "/" + key.key + "/#" + archiveFile.getName();
-      SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "PUT", s3key).buildWithFileAsBody(new FileReaderHttpRequestBody(archiveFile));
+      FileReaderHttpRequestBody body = new FileReaderHttpRequestBody(archiveFile);
+      SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "PUT", s3key).buildWithFileAsBody(body);
       base.execute(request, new VoidCallbackHttpResponder(LOGGER, metrics.backup_document.start(), callback));
     } catch (Exception ex) {
       callback.failure(new ErrorCodeException(ErrorCodes.BACKUP_FILE_FAILURE, ex));
@@ -200,10 +207,4 @@ public class S3 implements Cloud {
     SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "DELETE", s3key).buildWithEmptyBody();
     base.execute(request, new VoidCallbackHttpResponder(LOGGER, metrics.delete_document.start(), callback));
   }
-
-
-
-
-
-
 }
