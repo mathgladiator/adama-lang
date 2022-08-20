@@ -181,7 +181,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         for (FileUpload upload : files) {
           AssetUploadBody body = new AssetUploadBody() {
             @Override
-            public File getFileIsExists() {
+            public File getFileIfExists() {
               try {
                 return upload.getFile();
               } catch (Exception ex) {

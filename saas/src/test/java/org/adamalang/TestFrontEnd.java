@@ -157,7 +157,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
       }
 
       @Override
-      public void delete(Key key, String archiveKey) {
+      public void delete(Key key, String archiveKey, Callback<Void> callback) {
       }
     };
     CaravanDataService caravanDataService = new CaravanDataService(cloud, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
@@ -248,7 +248,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
       @Override
       public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
         try {
-          File localFile = body.getFileIsExists();
+          File localFile = body.getFileIfExists();
           if (localFile != null) {
             Files.copy(localFile.toPath(), new File(localFile.getParent(), localFile.getName() + ".done").toPath());
             callback.success(null);

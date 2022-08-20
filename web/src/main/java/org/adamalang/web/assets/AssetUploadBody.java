@@ -13,14 +13,14 @@ import java.io.File;
 
 /** wrapper around the body of an assets */
 public interface AssetUploadBody {
-  public File getFileIsExists();
+  public File getFileIfExists();
 
   public byte[] getBytes();
 
   public static AssetUploadBody WRAP(File file) {
     return new AssetUploadBody() {
       @Override
-      public File getFileIsExists() {
+      public File getFileIfExists() {
         return file;
       }
 
@@ -34,7 +34,7 @@ public interface AssetUploadBody {
   public static AssetUploadBody WRAP(byte[] bytes) {
     return new AssetUploadBody() {
       @Override
-      public File getFileIsExists() {
+      public File getFileIfExists() {
         return null;
       }
 

@@ -10,59 +10,51 @@
 package org.adamalang.web.client;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 /** a simplified http body */
 public interface SimpleHttpRequestBody {
-  /** the size of the body */
-  long size();
-
-  /** read a chunk */
-  int read(byte[] chunk);
-
-  /** the body is finished being read */
-  void finished();
-
-  public static SimpleHttpRequestBody EMPTY = new SimpleHttpRequestBody() {
+  SimpleHttpRequestBody EMPTY = new SimpleHttpRequestBody() {
     @Override
     public long size() {
       return 0;
     }
 
     @Override
-    public int read(byte[] chunk) {
+    public int read(byte[] chunk) throws Exception {
       return 0;
     }
 
     @Override
-    public void finished() {
+    public void finished(boolean success) throws Exception {
     }
   };
 
-  public static SimpleHttpRequestBody WRAP(byte[] bytes) {
+  static SimpleHttpRequestBody WRAP(byte[] bytes) {
     ByteArrayInputStream memory = new ByteArrayInputStream(bytes);
     return new SimpleHttpRequestBody() {
-        @Override
-        public long size() {
-          return bytes.length;
-        }
+      @Override
+      public long size() {
+        return bytes.length;
+      }
 
-        @Override
-        public int read(byte[] chunk) {
-          try {
-            return memory.read(chunk);
-          } catch (IOException impossible) {
-            return 0;
-          }
-        }
+      @Override
+      public int read(byte[] chunk) throws Exception {
+        return memory.read(chunk);
+      }
 
-        @Override
-        public void finished() {
-          try {
-            memory.close();
-          } catch (IOException impossible) {
-          }
-        }
-      };
+      @Override
+      public void finished(boolean success) throws Exception {
+        memory.close();
+      }
+    };
   }
+
+  /** the size of the body */
+  long size();
+
+  /** read a chunk */
+  int read(byte[] chunk) throws Exception;
+
+  /** the body is finished being read */
+  void finished(boolean success) throws Exception;
 }

@@ -27,8 +27,7 @@ public class AWSConfigTests {
     aws.put("region", "region");
     aws.put("archive", "archive");
     AWSConfig config = new AWSConfig(new ConfigObject(aws));
-    Assert.assertEquals("secret", config.secretAccessKey());
-    Assert.assertEquals("key", config.accessKeyId());
-    Assert.assertEquals(config, config.resolveCredentials());
+    Assert.assertEquals("secret", config.secretKey);
+    Assert.assertEquals("key", config.accessKeyId);
   }
 }

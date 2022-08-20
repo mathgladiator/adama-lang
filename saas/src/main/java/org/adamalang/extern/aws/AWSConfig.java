@@ -10,12 +10,10 @@
 package org.adamalang.extern.aws;
 
 import org.adamalang.common.ConfigObject;
-import software.amazon.awssdk.auth.credentials.AwsCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 
-public class AWSConfig implements AwsCredentialsProvider, AwsCredentials {
-  private final String accessKeyId;
-  private final String secretKey;
+public class AWSConfig {
+  public final String accessKeyId;
+  public final String secretKey;
   public final String fromEmailAddressForInit;
   public final String replyToEmailAddressForInit;
   public final String region;
@@ -30,20 +28,5 @@ public class AWSConfig implements AwsCredentialsProvider, AwsCredentials {
     this.replyToEmailAddressForInit = config.strOfButCrash("init_reply_email", "No reply email address set for init");
     this.bucket = config.strOfButCrash("bucket", "No bucket for assets");
     this.archivePath = config.strOfButCrash("archive", "No archive path for backups/restore");
-  }
-
-  @Override
-  public String accessKeyId() {
-    return accessKeyId;
-  }
-
-  @Override
-  public String secretAccessKey() {
-    return secretKey;
-  }
-
-  @Override
-  public AwsCredentials resolveCredentials() {
-    return this;
   }
 }

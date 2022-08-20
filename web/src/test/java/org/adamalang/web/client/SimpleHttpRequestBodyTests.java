@@ -16,13 +16,13 @@ import java.nio.charset.StandardCharsets;
 
 public class SimpleHttpRequestBodyTests {
   @Test
-  public void empty() {
+  public void empty() throws Exception {
     Assert.assertEquals(0, SimpleHttpRequestBody.EMPTY.size());
     SimpleHttpRequestBody.EMPTY.read(null);
-    SimpleHttpRequestBody.EMPTY.finished();
+    SimpleHttpRequestBody.EMPTY.finished(true);
   }
   @Test
-  public void bytearray() {
+  public void bytearray() throws Exception {
     SimpleHttpRequestBody body = SimpleHttpRequestBody.WRAP("Hello World".getBytes(StandardCharsets.UTF_8));
     Assert.assertEquals(11, body.size());
     byte[] chunk = new byte[4];
@@ -32,6 +32,6 @@ public class SimpleHttpRequestBodyTests {
     Assert.assertEquals("o Wo", new String(chunk, StandardCharsets.UTF_8));
     Assert.assertEquals(3, body.read(chunk));
     Assert.assertEquals("rld", new String(chunk, 0, 3, StandardCharsets.UTF_8));
-    body.finished();
+    body.finished(true);
   }
 }

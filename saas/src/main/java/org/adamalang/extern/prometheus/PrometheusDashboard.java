@@ -21,9 +21,9 @@ public class PrometheusDashboard implements MetricsFactory {
 
   private String filename;
   private StringBuilder current;
-  private HashMap<String, String> files;
-  private StringBuilder nav;
-  private StringBuilder alerts;
+  private final HashMap<String, String> files;
+  private final StringBuilder nav;
+  private final StringBuilder alerts;
   private int id;
 
   public PrometheusDashboard() {
@@ -35,32 +35,6 @@ public class PrometheusDashboard implements MetricsFactory {
     this.alerts = new StringBuilder();
     alerts.append("groups:\n");
     nav.append(" [<a href=\"index.html\">Home</a>] ");
-  }
-
-  String makeId() {
-    return "ID" + (id++);
-  }
-
-  @Override
-  public void page(String name, String title) {
-    if (filename != null) {
-      cut();
-    }
-    alerts.append("- name: ").append(name).append("\n");
-    alerts.append("  rules:\n");
-    nav.append(" [<a href=\"adama-").append(name).append(".html").append("\">").append(title).append("</a>] ");
-    this.filename = "adama-" + name + ".html";
-    this.current = new StringBuilder();
-    begin(title);
-  }
-
-  private void begin(String title) {
-    current.append("{{ template \"head\" . }}\n");
-    current.append("{{ template \"prom_right_table_head\" }}");
-    current.append("##NAV##\n");
-    current.append("{{ template \"prom_right_table_tail\" }}");
-    current.append("{{ template \"prom_content_head\" . }}\n");
-    current.append("<h1>").append(title).append("</h1>\n");
   }
 
   public void finish(File consolesDirectory) throws Exception {
@@ -217,16 +191,8 @@ public class PrometheusDashboard implements MetricsFactory {
 
   }
 
-  @Override
-  public void section(String title) {
-    current.append("<h3>").append(title).append("</h3>\n");
-  }
-
-  public void cut() {
-    current.append("\n");
-    current.append("{{ template \"prom_content_tail\" . }}\n");
-    current.append("{{ template \"tail\" . }}\n");
-    files.put(filename, current.toString());
+  String makeId() {
+    return "ID" + (id++);
   }
 
   @Override
@@ -596,5 +562,39 @@ public class PrometheusDashboard implements MetricsFactory {
     }
     current.append("</td></tr></table>");
     return null;
+  }
+
+  @Override
+  public void page(String name, String title) {
+    if (filename != null) {
+      cut();
+    }
+    alerts.append("- name: ").append(name).append("\n");
+    alerts.append("  rules:\n");
+    nav.append(" [<a href=\"adama-").append(name).append(".html").append("\">").append(title).append("</a>] ");
+    this.filename = "adama-" + name + ".html";
+    this.current = new StringBuilder();
+    begin(title);
+  }
+
+  @Override
+  public void section(String title) {
+    current.append("<h3>").append(title).append("</h3>\n");
+  }
+
+  public void cut() {
+    current.append("\n");
+    current.append("{{ template \"prom_content_tail\" . }}\n");
+    current.append("{{ template \"tail\" . }}\n");
+    files.put(filename, current.toString());
+  }
+
+  private void begin(String title) {
+    current.append("{{ template \"head\" . }}\n");
+    current.append("{{ template \"prom_right_table_head\" }}");
+    current.append("##NAV##\n");
+    current.append("{{ template \"prom_right_table_tail\" }}");
+    current.append("{{ template \"prom_content_head\" . }}\n");
+    current.append("<h1>").append(title).append("</h1>\n");
   }
 }

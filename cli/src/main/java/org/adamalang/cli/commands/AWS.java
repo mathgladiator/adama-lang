@@ -19,11 +19,7 @@ import org.adamalang.extern.aws.*;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.service.WebConfig;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public class AWS {
   public static void execute(Config config, String[] args) throws Exception {
@@ -39,9 +35,6 @@ public class AWS {
         return;
       case "test-email":
         awsTestEmail(config);
-        return;
-      case "test-new-clients":
-        awsTestNewStuff(config);
         return;
       case "memory-test":
         awsMemoryTest();
@@ -92,84 +85,6 @@ public class AWS {
     try {
       SES ses = new SES(base, awsConfig, new AWSMetrics(new NoOpMetricsFactory()));
       ses.sendCode(to, "TESTCODE");
-    } finally {
-      base.shutdown();
-    }
-  }
-
-  public static void awsTestNewStuff(Config config) throws Exception{
-    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
-    WebClientBase base = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
-    try {
-
-      CountDownLatch latch = new CountDownLatch(2);
-      {
-        String url = "https://s3.us-east-2.amazonaws.com/us-east-2-adama-assets/demo.txt";
-        HashMap<String, String> headers = new HashMap<>();
-
-        new SignatureV4(awsConfig, "s3", "GET", "s3.us-east-2.amazonaws.com", "/us-east-2-adama-assets/demo.txt") //
-            .withEmptyBody() //
-            .signInto(headers);
-
-        base.executeGet(url, headers, new Callback<String>() {
-          @Override
-          public void success(String value) {
-            System.err.println("Success:" + value);
-            latch.countDown();
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            System.err.println("Failure:" + ex.code + "/" + ex.getMessage());
-            latch.countDown();
-          }
-        });
-      }
-      {
-        String url = "https://email.us-east-2.amazonaws.com/v2/email/outbound-emails";
-        HashMap<String, String> headers = new HashMap<>();
-
-        final byte[] postBody;
-        {
-          ObjectNode request = Json.newJsonObject();
-          request.put("FromEmailAddress", awsConfig.fromEmailAddressForInit);
-          request.putArray("ReplyToAddresses").add(awsConfig.fromEmailAddressForInit);
-          request.putObject("Destination").putArray("ToAddresses").add("test@mathgladiator.com");
-          ObjectNode content = request.putObject("Content").putObject("Simple");
-
-          ObjectNode subject = content.putObject("Subject");
-          subject.put("Data", "Test Subject");
-          subject.put("Charset", "UTF-8");
-
-          ObjectNode body = content.putObject("Body").putObject("Text");
-          body.put("Data", "Test Body");
-          body.put("Charset", "UTF-8");
-
-          postBody = request.toString().getBytes(StandardCharsets.UTF_8);
-        }
-        String sha256 = Hex.of(Hashing.sha256().digest(postBody));
-
-        new SignatureV4(awsConfig, "ses", "POST", "email.us-east-2.amazonaws.com", "/v2/email/outbound-emails") //
-            .withHeader("Content-Type", "application/json") //
-            .withHeader("Content-Length", postBody.length + "") //
-            .withContentHashSha256(sha256) //
-            .signInto(headers);
-
-        base.executePost(url, headers, postBody, new Callback<>() {
-          @Override
-          public void success(String value) {
-            System.err.println("Success:" + value);
-            latch.countDown();
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            System.err.println("OK Failure:" + ex.code + "/" + ex.getMessage());
-            latch.countDown();
-          }
-        });
-      }
-      latch.await(5000, TimeUnit.MILLISECONDS);
     } finally {
       base.shutdown();
     }

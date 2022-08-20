@@ -17,7 +17,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 public class SignatureV4 {
@@ -31,7 +33,7 @@ public class SignatureV4 {
   private final DateTimeFormatter iso8601;
   private final String service;
   private String contentHashSha256;
-  private String path;
+  private final String path;
 
   public SignatureV4(AWSConfig config, String service, String method, String host, String path) {
     this.config = config;
@@ -41,7 +43,7 @@ public class SignatureV4 {
     this.now = Instant.now();
     this.headers = new TreeMap<>();
     this.parameters = new TreeMap<>();
-    this.date = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(java.time.ZoneOffset.UTC);;
+    this.date = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(java.time.ZoneOffset.UTC);
     this.iso8601 = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'").withZone(java.time.ZoneOffset.UTC);
     headers.put("Host", host);
     headers.put("X-Amz-Date", iso8601.format(now));
@@ -50,26 +52,6 @@ public class SignatureV4 {
   public void signInto(Map<String, String> writeTo) {
     writeTo.putAll(this.headers);
     writeTo.put("Authorization", getAuthorizationHeader());
-  }
-
-  public SignatureV4 withHeader(String header, String value) {
-    this.headers.put(header, value);
-    return this;
-  }
-
-  public SignatureV4 withParameter(String key, String value) {
-    this.parameters.put(key, value);
-    return this;
-  }
-
-  public SignatureV4 withContentHashSha256(String contentHashSha256) {
-    this.contentHashSha256 = contentHashSha256;
-    headers.put("X-Amz-Content-Sha256", contentHashSha256);
-    return this;
-  }
-
-  public SignatureV4 withEmptyBody() {
-    return withContentHashSha256("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
   }
 
   private String getAuthorizationHeader() {
@@ -112,12 +94,32 @@ public class SignatureV4 {
       canonicalRequestSha256 = Hex.of(Hashing.sha256().digest(canonicalRequest.getBytes(StandardCharsets.UTF_8)));
     }
     final String toSign = "AWS4-HMAC-SHA256" + "\n" + iso8601.format(now) + "\n" + scope + "\n" + canonicalRequestSha256;
-    final byte[] kSecret = ("AWS4" + config.secretAccessKey()).getBytes(StandardCharsets.UTF_8);
+    final byte[] kSecret = ("AWS4" + config.secretKey).getBytes(StandardCharsets.UTF_8);
     final byte[] kDate = HMACSHA256.of(kSecret, date.format(now));
     final byte[] kRegion = HMACSHA256.of(kDate, config.region);
     final byte[] kService = HMACSHA256.of(kRegion, service);
     final byte[] kSigning = HMACSHA256.of(kService, "aws4_request");
     final byte[] signature = HMACSHA256.of(kSigning, toSign);
-    return "AWS4-HMAC-SHA256 Credential=" + config.accessKeyId() + "/" + scope + ", SignedHeaders=" + signedHeaders + ", Signature=" + Hex.of(signature);
+    return "AWS4-HMAC-SHA256 Credential=" + config.accessKeyId + "/" + scope + ", SignedHeaders=" + signedHeaders + ", Signature=" + Hex.of(signature);
+  }
+
+  public SignatureV4 withHeader(String header, String value) {
+    this.headers.put(header, value);
+    return this;
+  }
+
+  public SignatureV4 withParameter(String key, String value) {
+    this.parameters.put(key, value);
+    return this;
+  }
+
+  public SignatureV4 withEmptyBody() {
+    return withContentHashSha256("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
+  }
+
+  public SignatureV4 withContentHashSha256(String contentHashSha256) {
+    this.contentHashSha256 = contentHashSha256;
+    headers.put("X-Amz-Content-Sha256", contentHashSha256);
+    return this;
   }
 }

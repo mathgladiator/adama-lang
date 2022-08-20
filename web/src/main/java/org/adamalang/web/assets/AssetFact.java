@@ -32,7 +32,7 @@ public class AssetFact {
     MessageDigest md5 = Hashing.md5();
     MessageDigest sha384 = Hashing.sha384();
     long size = 0;
-    File file = body.getFileIsExists();
+    File file = body.getFileIfExists();
     if (file != null && file.exists()) {
       try(FileInputStream input = new FileInputStream(file)) {
         byte[] chunk = new byte[8196];

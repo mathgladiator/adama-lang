@@ -9,7 +9,6 @@
  */
 package org.adamalang.web.assets;
 
-import org.adamalang.web.assets.AssetUploadBody;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,14 +19,14 @@ public class AssetUploadBodyTests {
   @Test
   public void just_file() {
     AssetUploadBody body = AssetUploadBody.WRAP(new File("."));
-    Assert.assertNotNull(body.getFileIsExists());
+    Assert.assertNotNull(body.getFileIfExists());
     Assert.assertNull(body.getBytes());
   }
 
   @Test
   public void just_bytes() {
     AssetUploadBody body = AssetUploadBody.WRAP("XYZ".getBytes(StandardCharsets.UTF_8));
-    Assert.assertNull(body.getFileIsExists());
+    Assert.assertNull(body.getFileIfExists());
     Assert.assertNotNull(body.getBytes());
   }
 }

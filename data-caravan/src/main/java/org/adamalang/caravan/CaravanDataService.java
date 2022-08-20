@@ -57,7 +57,7 @@ public class CaravanDataService implements ArchivingDataService {
 
   @Override
   public void cleanUp(Key key, String archiveKey) {
-    cloud.delete(key, archiveKey);
+    cloud.delete(key, archiveKey, Callback.DONT_CARE_VOID);
     File local = new File(new File(cloud.path(), key.space), archiveKey);
     if (local.exists()) {
       local.delete();

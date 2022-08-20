@@ -95,8 +95,8 @@ public class WebClientBase {
                   } else {
                     size = -1;
                   }
-                  responder.bodyStart(size);
                   responder.start(new SimpleHttpResponseHeader(httpResponse.status().code(), headers));
+                  responder.bodyStart(size);
                 } else if (msg instanceof HttpContent) {
                   HttpContent content = (HttpContent) msg;
                   ByteBuf body = content.content();
@@ -123,119 +123,63 @@ public class WebClientBase {
 
     b.connect(host, port).addListeners((ChannelFutureListener) future -> {
       if (future.isSuccess()) {
-        // convert the method
-        HttpMethod method = HttpMethod.valueOf(request.method.toUpperCase());
-        // initialiize the headers
-        HttpHeaders headers = new DefaultHttpHeaders(true);
-        headers.set("Host", host);
-        // get the body size
-        long bodySize = request.body.size();
-        if (method != HttpMethod.GET || bodySize > 0) {
-          headers.set(HttpHeaderNames.CONTENT_LENGTH, bodySize);
-        }
-        // apply the headers
-        for (Map.Entry<String, String> entry : request.headers.entrySet()) {
-          headers.set(entry.getKey(), entry.getValue());
-        }
-        if (bodySize < 32 * 1024) {
-          final ByteBuf content;
-          if (bodySize == 0) {
-            content = Unpooled.wrappedBuffer(EMPTY_BODY);
+        boolean success = false;
+        try {
+          // convert the method
+          HttpMethod method = HttpMethod.valueOf(request.method.toUpperCase());
+          // initialiize the headers
+          HttpHeaders headers = new DefaultHttpHeaders(true);
+          headers.set("Host", host);
+          // get the body size
+          long bodySize = request.body.size();
+          if (method != HttpMethod.GET || bodySize > 0) {
+            headers.set(HttpHeaderNames.CONTENT_LENGTH, bodySize);
+          }
+          // apply the headers
+          for (Map.Entry<String, String> entry : request.headers.entrySet()) {
+            headers.set(entry.getKey(), entry.getValue());
+          }
+          if (bodySize < 32 * 1024) {
+            final ByteBuf content;
+            if (bodySize == 0) {
+              content = Unpooled.wrappedBuffer(EMPTY_BODY);
+            } else {
+              byte[] buffer = new byte[8196];
+              content = Unpooled.buffer((int) bodySize);
+              int left = (int) bodySize;
+              while (left > 0) {
+                int sz = request.body.read(buffer);
+                content.writeBytes(buffer, 0, sz);
+                left -= sz;
+              }
+            }
+            future.channel().writeAndFlush(new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, path, content, headers, new DefaultHttpHeaders(true)));
           } else {
+            future.channel().write(new DefaultHttpRequest(HttpVersion.HTTP_1_1, method, path, headers));
+            long left = bodySize;
             byte[] buffer = new byte[8196];
-            content = Unpooled.buffer((int) bodySize);
-            int left = (int) bodySize;
             while (left > 0) {
               int sz = request.body.read(buffer);
-              content.writeBytes(buffer, 0, sz);
+              final ByteBuf content;
+              if (sz == buffer.length) {
+                content = Unpooled.wrappedBuffer(buffer);
+              } else {
+                content = Unpooled.wrappedBuffer(Arrays.copyOfRange(buffer, 0, sz));
+              }
               left -= sz;
+              if (left == 0) {
+                future.channel().write(new DefaultLastHttpContent(content));
+              } else {
+                future.channel().write(new DefaultHttpContent(content));
+              }
             }
           }
-          future.channel().writeAndFlush(new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, path, content, headers, new DefaultHttpHeaders(true)));
-        } else {
-          future.channel().write(new DefaultHttpRequest(HttpVersion.HTTP_1_1, method, path, headers));
-          long left = bodySize;
-          byte[] buffer = new byte[8196];
-          while (left > 0) {
-            int sz = request.body.read(buffer);
-            final ByteBuf content;
-            if (sz == buffer.length) {
-              content = Unpooled.wrappedBuffer(buffer);
-            } else {
-              content = Unpooled.wrappedBuffer(Arrays.copyOfRange(buffer, 0, sz));
-            }
-            left -= sz;
-            if (left == 0) {
-              future.channel().write(new DefaultLastHttpContent(content));
-            } else {
-              future.channel().write(new DefaultHttpContent(content));
-            }
-          }
+          success = true;
+        } finally {
+          request.body.finished(success);
         }
       } else {
-        responder.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_EXECUTE_FAILED_CONNECT));
-      }
-    });
-  }
-
-  public void executePost(String url, HashMap<String, String> headersRaw, byte[] body, Callback<String> callback) {
-    URI uri = URI.create(url);
-    String host = uri.getHost();
-    boolean secure = uri.getScheme().equals("https");
-    int port = uri.getPort() < 0 ? (secure ? 443 : 80) : uri.getPort();
-    String path = uri.getRawPath();
-    final var b = new Bootstrap();
-    b.group(group);
-    b.channel(NioSocketChannel.class);
-    b.handler(new ChannelInitializer<SocketChannel>() {
-      @Override
-      protected void initChannel(final SocketChannel ch) throws Exception {
-        if (secure) {
-          ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc(), host, port));
-        }
-        ch.pipeline().addLast(new HttpClientCodec());
-        ch.pipeline().addLast(new HttpObjectAggregator(2424242));
-        ch.pipeline().addLast(new WriteTimeoutHandler(3));
-        ch.pipeline().addLast(new ReadTimeoutHandler(3));
-        ch.pipeline().addLast(
-            new SimpleChannelInboundHandler<FullHttpResponse>() {
-              boolean first = false;
-              @Override
-              protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpResponse msg) throws Exception {
-                if (!first) {
-                  first = true;
-                  if (msg.status() == HttpResponseStatus.OK) {
-                    callback.success(msg.content().toString(CharsetUtil.UTF_8));
-                  } else {
-                    callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_GET_FAILED_NOT_200, msg.content().toString(StandardCharsets.UTF_8)));
-                  }
-                } else {
-                  System.err.println("ANOTHER MESSAGE?");
-                }
-                ctx.close();
-              }
-
-              @Override
-              public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
-                callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_GET_FAILED_EXECUTE, cause, EXLOGGER));
-                ctx.close();
-              }
-            });
-      }
-    });
-
-    b.connect(host, port).addListeners((ChannelFutureListener) future -> {
-      if (future.isSuccess()) {
-        System.err.println("SENDING");
-        HttpHeaders headers = new DefaultHttpHeaders(true);
-        for (Map.Entry<String, String> entry : headersRaw.entrySet()) {
-          headers.set(entry.getKey(), entry.getValue());
-        }
-        headers.set("Host", host);
-        HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, path, Unpooled.wrappedBuffer(body), headers, new DefaultHttpHeaders(true));
-        future.channel().writeAndFlush(request);
-      } else {
-        callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_GET_FAILED_CONNECT));
+        responder.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_EXECUTE_FAILED_CONNECT, "Failed to connect[" + host + ":" + port + "]"));
       }
     });
   }

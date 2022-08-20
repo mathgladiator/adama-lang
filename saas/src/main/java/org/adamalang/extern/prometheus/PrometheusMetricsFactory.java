@@ -26,14 +26,12 @@ import java.util.regex.Pattern;
 
 public class PrometheusMetricsFactory implements MetricsFactory {
   private static final Logger LOGGER = LoggerFactory.getLogger(PrometheusMetricsFactory.class);
-  private final HTTPServer server;
   private static final double[] LATENCY_BUCKETS = new double[]{0.001D, 0.005D, 0.01D, 0.02D, 0.03D, 0.04D, 0.05D, 0.075D, 0.1D, 0.2D, 0.3D, 0.4D, 0.5D, 1.0D, 2.0D, 5.0D, 10.0D};
+  private final HTTPServer server;
   private final SimpleExecutor executor;
 
   public PrometheusMetricsFactory(int metricsHttpPort) throws Exception {
-    server = new HTTPServer.Builder()
-        .withPort(metricsHttpPort)
-        .build();
+    server = new HTTPServer.Builder().withPort(metricsHttpPort).build();
     new MemoryPoolsExports().register();
     new GarbageCollectorExports().register();
     new StandardExports().register();
@@ -63,18 +61,18 @@ public class PrometheusMetricsFactory implements MetricsFactory {
       return new RequestResponseMonitor.RequestResponseMonitorInstance() {
         boolean first = true;
 
+        @Override
+        public void success() {
+          time();
+          success.inc();
+        }
+
         private void time() {
           if (first) {
             timer.close();
             inflight.dec();
             first = false;
           }
-        }
-
-        @Override
-        public void success() {
-          time();
-          success.inc();
         }
 
         @Override
@@ -117,12 +115,25 @@ public class PrometheusMetricsFactory implements MetricsFactory {
         boolean first = true;
         boolean lowered = false;
 
+        @Override
+        public void progress() {
+          time();
+          progress.inc();
+        }
+
         private void time() {
           if (first) {
             timer.close();
             first = false;
             responded.set(true);
           }
+        }
+
+        @Override
+        public void finish() {
+          time();
+          finish.inc();
+          dec();
         }
 
         private void dec() {
@@ -133,61 +144,10 @@ public class PrometheusMetricsFactory implements MetricsFactory {
         }
 
         @Override
-        public void progress() {
-          time();
-          progress.inc();
-        }
-
-        @Override
-        public void finish() {
-          time();
-          finish.inc();
-          dec();
-        }
-
-        @Override
         public void failure(int code) {
           time();
           failure.inc();
           dec();
-        }
-      };
-    };
-  }
-
-  @Override
-  public ItemActionMonitor makeItemActionMonitor(String name) {
-    Counter start = Counter.build().name("im_" + name + "_start").help("Item Monitor started for " + name).register();
-    Counter executed = Counter.build().name("im_" + name + "_executed").help("Item Monitor executed for " + name).register();
-    Counter rejected = Counter.build().name("im_" + name + "_rejected").help("Item Monitor rejected for " + name).register();
-    Counter timeout = Counter.build().name("im_" + name + "_timeout").help("Item Monitor timeout for " + name).register();
-    Gauge inflight = Gauge.build().name("im_" + name + "_inflight").help("Inprogress Item Monitors for " + name).register();
-    Histogram latency = Histogram.build().name("im_" + name + "_latency").buckets(LATENCY_BUCKETS).help("Latency Item Monitor to succeed " + name).register();
-    return () -> {
-      start.inc();
-      inflight.inc();
-      Histogram.Timer timer = latency.startTimer();
-      return new ItemActionMonitor.ItemActionMonitorInstance() {
-        void fin() {
-          inflight.dec();
-          timer.close();
-        }
-        @Override
-        public void executed() {
-          executed.inc();
-          fin();
-        }
-
-        @Override
-        public void rejected() {
-          rejected.inc();
-          fin();
-        }
-
-        @Override
-        public void timeout() {
-          timeout.inc();
-          fin();
         }
       };
     };
@@ -211,6 +171,12 @@ public class PrometheusMetricsFactory implements MetricsFactory {
         return new CallbackMonitorInstance() {
           boolean first = true;
 
+          @Override
+          public void success() {
+            success.inc();
+            time();
+          }
+
           private void time() {
             if (first) {
               timer.observeDuration();
@@ -218,12 +184,6 @@ public class PrometheusMetricsFactory implements MetricsFactory {
               first = false;
               responded.set(true);
             }
-          }
-
-          @Override
-          public void success() {
-            success.inc();
-            time();
           }
 
           @Override
@@ -262,6 +222,45 @@ public class PrometheusMetricsFactory implements MetricsFactory {
       public void set(int value) {
         inflight.set(value);
       }
+    };
+  }
+
+  @Override
+  public ItemActionMonitor makeItemActionMonitor(String name) {
+    Counter start = Counter.build().name("im_" + name + "_start").help("Item Monitor started for " + name).register();
+    Counter executed = Counter.build().name("im_" + name + "_executed").help("Item Monitor executed for " + name).register();
+    Counter rejected = Counter.build().name("im_" + name + "_rejected").help("Item Monitor rejected for " + name).register();
+    Counter timeout = Counter.build().name("im_" + name + "_timeout").help("Item Monitor timeout for " + name).register();
+    Gauge inflight = Gauge.build().name("im_" + name + "_inflight").help("Inprogress Item Monitors for " + name).register();
+    Histogram latency = Histogram.build().name("im_" + name + "_latency").buckets(LATENCY_BUCKETS).help("Latency Item Monitor to succeed " + name).register();
+    return () -> {
+      start.inc();
+      inflight.inc();
+      Histogram.Timer timer = latency.startTimer();
+      return new ItemActionMonitor.ItemActionMonitorInstance() {
+        @Override
+        public void executed() {
+          executed.inc();
+          fin();
+        }
+
+        void fin() {
+          inflight.dec();
+          timer.close();
+        }
+
+        @Override
+        public void rejected() {
+          rejected.inc();
+          fin();
+        }
+
+        @Override
+        public void timeout() {
+          timeout.inc();
+          fin();
+        }
+      };
     };
   }
 

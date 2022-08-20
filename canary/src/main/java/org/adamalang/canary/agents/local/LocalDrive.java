@@ -101,7 +101,7 @@ public class LocalDrive {
         }
 
         @Override
-        public void delete(Key key, String archiveKey) {
+        public void delete(Key key, String archiveKey, Callback<Void> callback) {
         }
       };
       CaravanDataService service = new CaravanDataService(cloud, new FinderServiceToKeyToIdService(finder), dls, executor);

@@ -41,7 +41,7 @@ public class DumbS3AndSESCoverageTest {
     S3 s3 = new S3(null, config, new AWSMetrics(new NoOpMetricsFactory()));
     s3.upload(new Key("space", "key"), NtAsset.NOTHING, new AssetUploadBody() {
       @Override
-      public File getFileIsExists() {
+      public File getFileIfExists() {
         try {
           return File.createTempFile("ADAMATEST_", "y1234");
         } catch (IOException ioe) {

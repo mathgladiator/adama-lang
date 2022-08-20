@@ -467,8 +467,12 @@ public class ErrorTable {
     descriptions.put(967804, "no description of error (yet)");
     names.put(950384, "API_GOODWILL_EXCEPTION");
     descriptions.put(950384, "The given document ran out of compute tokens. This is most likely due to an infinite loop.");
-    names.put(901232, "AWS_EMAIL_SEND_FAILURE");
+    names.put(982212, "AWS_EMAIL_SEND_FAILURE_HARD_EXCEPTION");
+    descriptions.put(982212, "no description of error (yet)");
+    names.put(901232, "AWS_EMAIL_SEND_FAILURE_EXCEPTION");
     descriptions.put(901232, "no description of error (yet)");
+    names.put(986308, "AWS_EMAIL_SEND_FAILURE_NOT_200");
+    descriptions.put(986308, "no description of error (yet)");
     names.put(928944, "WEB_BASE_FILE_WRITER_IOEXCEPTION_CREATE");
     descriptions.put(928944, "no description of error (yet)");
     names.put(903347, "WEB_BASE_FILE_WRITER_NOT_200");
@@ -533,6 +537,14 @@ public class ErrorTable {
     descriptions.put(924877, "no description of error (yet)");
     names.put(984268, "WEB_CLIENT_STREAM_REJECTED");
     descriptions.put(984268, "no description of error (yet)");
+    names.put(931015, "WEB_VOID_CALLBACK_NOT_200");
+    descriptions.put(931015, "no description of error (yet)");
+    names.put(903364, "UPLOAD_SCAN_FILE_FAILURE");
+    descriptions.put(903364, "no description of error (yet)");
+    names.put(979143, "BACKUP_FILE_FAILURE");
+    descriptions.put(979143, "no description of error (yet)");
+    names.put(967879, "STREAM_ASSET_NOT_200");
+    descriptions.put(967879, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");

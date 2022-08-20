@@ -20,7 +20,7 @@ public class AssetRequest {
   public final String key;
   public final String id;
 
-  private AssetRequest(String space, String key, String id) {
+  public AssetRequest(String space, String key, String id) {
     this.space = space;
     this.key = key;
     this.id = id;
