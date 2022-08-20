@@ -19,6 +19,7 @@ import org.adamalang.web.assets.AssetUploadBody;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.service.WebConfig;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -47,6 +48,7 @@ public class S3Tests {
       if (!configFile.exists()) {
         configFile = new File("./aws.config.json");
       }
+      Assume.assumeTrue(configFile.exists());
       ConfigObject co = new ConfigObject(Json.parseJsonObject(Files.readString(configFile.toPath())));
       co.strOf("archive", archivePath.getAbsolutePath());
       System.err.println("archive-path:" + archivePath.getAbsolutePath());
