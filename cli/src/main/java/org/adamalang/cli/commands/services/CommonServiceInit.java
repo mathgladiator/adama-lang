@@ -31,6 +31,8 @@ import org.adamalang.net.client.TargetsQuorum;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.transforms.PerSessionAuthenticator;
+import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.service.WebConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,15 +62,29 @@ public class CommonServiceInit {
   public final String machine;
   public final org.adamalang.common.gossip.Engine engine;
   public final int publicKeyId;
+  public final WebConfig webConfig;
+  public final WebClientBase webBase;
 
-  public CommonServiceInit(Config config, Role role, int servicePort) throws Exception {
+  public CommonServiceInit(Config config, Role role) throws Exception {
     MachineHeat.install();
+    ConfigObject configObjectForWeb = new ConfigObject(config.get_or_create_child(role == Role.Overlord ? "overlord_web" : "web"));
+    if (role == Role.Overlord) {
+      configObjectForWeb.intOf("http_port", 8081);
+    }
+    this.webConfig = new WebConfig(configObjectForWeb);
+    WebConfig webConfig = new WebConfig(configObjectForWeb);
     String identityFileName = config.get_string("identity_filename", "me.identity");
     KeyPair keyPair = PerSessionAuthenticator.inventHostKey();
     this.alive = new AtomicBoolean(true);
     this.region = config.get_string("region", null);
     this.role = role.name;
-    this.servicePort = servicePort;
+    switch (role) {
+      case Adama:
+        this.servicePort = config.get_int("adama_port", 8001);
+        break;
+      default:
+        this.servicePort = webConfig.port;
+    }
     this.monitoringPort = config.get_int("monitoring_" + role.name + "_port", role.monitoringPort);
     this.identity = MachineIdentity.fromFile(identityFileName);
     this.hostKey = keyPair.getPrivate();
@@ -79,6 +95,7 @@ public class CommonServiceInit {
     this.system = SimpleExecutor.create("system");
     this.machine = this.identity.ip + ":" + servicePort;
     this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, PerSessionAuthenticator.encodePublicKey(keyPair));
+    this.webBase = new WebClientBase(this.webConfig);
 
     system.schedule(new NamedRunnable("database-ping") {
       @Override
@@ -96,7 +113,7 @@ public class CommonServiceInit {
 
     this.awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
     this.awsMetrics = new AWSMetrics(metricsFactory);
-    this.s3 = new S3(awsConfig, awsMetrics);
+    this.s3 = new S3(webBase, awsConfig, awsMetrics);
     String prefix = "logs/" + role.name + "/" + identity.ip + "/" + monitoringPort;
     system.schedule(new NamedRunnable("archive-s3") {
       @Override
@@ -126,12 +143,19 @@ public class CommonServiceInit {
     System.out.println("  logs-prefix: " + prefix);
     System.out.println("[/Setup]");
 
-    Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
-      @Override
-      public void run() throws Exception {
-        alive.set(false);
+    Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
+      alive.set(false);
+      try {
         system.shutdown();
+      } catch (Exception ex) {
+      }
+      try {
         netBase.shutdown();
+      } catch (Exception ex) {
+      }
+      try {
+        webBase.shutdown();
+      } catch (Exception ex) {
       }
     })));
   }

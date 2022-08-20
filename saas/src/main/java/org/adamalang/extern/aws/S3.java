@@ -20,6 +20,7 @@ import org.adamalang.web.assets.AssetUploadBody;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.assets.AssetRequest;
+import org.adamalang.web.client.WebClientBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -39,13 +40,15 @@ import java.util.regex.Pattern;
 public class S3 implements Cloud {
   private ExecutorService executors;
   private static final Logger LOGGER = LoggerFactory.getLogger(S3.class);
+  private final WebClientBase base;
   private final S3Client s3;
   private final AWSMetrics metrics;
   private final String bucket;
   private final File archive;
 
-  public S3(AWSConfig config, AWSMetrics metrics) {
-    executors = Executors.newCachedThreadPool(new NamedThreadFactory("s3"));
+  public S3(WebClientBase base, AWSConfig config, AWSMetrics metrics) {
+    this.base = base;
+    this.executors = Executors.newCachedThreadPool(new NamedThreadFactory("s3"));
     this.s3 = S3Client.builder().region(Region.of(config.region)).credentialsProvider(config).build();
     this.metrics = metrics;
     this.bucket = config.bucket;

@@ -53,7 +53,6 @@ import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.runtime.sys.web.*;
 import org.adamalang.services.FirstPartyServices;
-import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.WellKnownHandler;
@@ -134,7 +133,7 @@ public class Service {
   }
 
   public static void serviceBackend(Config config) throws Exception {
-    CommonServiceInit init = new CommonServiceInit(config, Role.Adama, config.get_int("adama_port", 8001));
+    CommonServiceInit init = new CommonServiceInit(config, Role.Adama);
     int coreThreads = config.get_int("service_thread_count", 8);
     String billingRootPath = config.get_string("billing_path", "billing");
 
@@ -212,13 +211,10 @@ public class Service {
   }
 
   public static void serviceOverlord(Config config) throws Exception {
-    ConfigObject co = new ConfigObject(config.get_or_create_child("overlord_web"));
-    co.intOf("http_port", 8081);
-    WebConfig webConfig = new WebConfig(co);
-    CommonServiceInit init = new CommonServiceInit(config, Role.Overlord, webConfig.port);
+    CommonServiceInit init = new CommonServiceInit(config, Role.Overlord);
     String scanPath = config.get_string("scan_path", "web_root");
     File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
-    init.engine.createLocalApplicationHeartbeat("overlord", webConfig.port, init.monitoringPort, (hb) -> {
+    init.engine.createLocalApplicationHeartbeat("overlord", init.webConfig.port, init.monitoringPort, (hb) -> {
       init.system.schedule(new NamedRunnable("overlord-hb") {
         @Override
         public void execute() throws Exception {
@@ -234,7 +230,7 @@ public class Service {
     Client client = init.makeClient(heatTable::onSample);
     HttpHandler handler = Overlord.execute(overlordHandler, heatTable, client, init.engine, init.metricsFactory, targetsPath, init.database, scanPath);
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(init.metricsFactory), serviceBase, () -> {});
+    final var runnable = new ServiceRunnable(init.webConfig, new WebMetrics(init.metricsFactory), serviceBase, () -> {});
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {
@@ -248,15 +244,13 @@ public class Service {
   }
 
   public static void serviceFrontend(Config config) throws Exception {
-    WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
-    CommonServiceInit init = new CommonServiceInit(config, Role.Web, webConfig.port);
+    CommonServiceInit init = new CommonServiceInit(config, Role.Web);
     System.err.println("starting frontend");
     String masterKey = config.get_string("master-key", null);
     int gossipPort = config.get_int("gossip_frontend_port", 8004);
     System.err.println("gossiping on:" + gossipPort);
-    System.err.println("standing up http on:" + webConfig.port);
+    System.err.println("standing up http on:" + init.servicePort);
     Client client = init.makeClient(null);
-    WebClientBase webBase = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
 
     HttpHandler http = new HttpHandler() {
       @Override
@@ -342,21 +336,21 @@ public class Service {
       }
     };
 
-    Email email = new SES(webBase, init.awsConfig, init.awsMetrics);
+    Email email = new SES(init.webBase, init.awsConfig, init.awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
     MultiRegionClient adama = new MultiRegionClient(init.database, client, init.region, init.finder);
     AssetSystemImpl assets = new AssetSystemImpl(init.database, adama, init.s3);
     ExternNexus nexus = new ExternNexus(frontendConfig, email, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
-    }, masterKey, webBase, init.region, init.hostKey, init.publicKeyId);
+    }, masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId);
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus, http);
     // TODO: have some sense of health checking in the web package
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();
     CountDownLatch latchForHeartbeat = new CountDownLatch(1);
 
-    init.engine.createLocalApplicationHeartbeat("web", webConfig.port, init.monitoringPort, (hb) -> {
+    init.engine.createLocalApplicationHeartbeat("web", init.webConfig.port, init.monitoringPort, (hb) -> {
       heartbeat.set(hb);
       latchForHeartbeat.countDown();
     });
@@ -366,16 +360,11 @@ public class Service {
       return;
     }
     WebMetrics webMetrics = new WebMetrics(init.metricsFactory);
-    WellKnownHandler handler = new WellKnownHandler() {
-      @Override
-      public void handle(String uri, Callback<String> callback) {
-        callback.success("true");
-      }
-    };
-    final var redirect = new RedirectAndWellknownServiceRunnable(webConfig, webMetrics, handler, () -> {});
+    WellKnownHandler handler = (uri, callback) -> callback.success("true");
+    final var redirect = new RedirectAndWellknownServiceRunnable(init.webConfig, webMetrics, handler, () -> {});
     Thread redirectThread = new Thread(redirect);
     redirectThread.start();
-    final var runnable = new ServiceRunnable(webConfig, webMetrics, serviceBase, heartbeat.get());
+    final var runnable = new ServiceRunnable(init.webConfig, webMetrics, serviceBase, heartbeat.get());
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       System.err.println("shutting down frontend");
       try {
