@@ -9,47 +9,36 @@
  */
 package org.adamalang.rxhtml;
 
-import org.adamalang.rxhtml.template.Environment;
-import org.adamalang.rxhtml.template.Root;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.junit.Test;
-
-import java.io.File;
 
 public class SimpleTests {
 
-  private static String drive(String html) {
-    Document document = Jsoup.parse(html);
-    Environment env = Environment.fresh(Feedback.NoOp);
-    for (Element element : document.getElementsByTag("template")) {
-      Root.template(env.element(element, true));
-    }
-    return Root.finish(env);
+  private static void drive(String rxhtml) {
+    System.err.println(RxHtmlTool.convertStringToTemplateForest(rxhtml, (e, x) -> System.err.println(x)).toString());
   }
 
   @Test
   public void emptyvalue() {
-    String result = drive("<template name=\"foo\">how<input checked /></template>");
-    System.err.println(result);
+    drive("<template name=\"foo\">how<input checked /></template>");
   }
 
   @Test
   public void basic() {
-    String result = drive("<template name=\"foo\">how<b class=\"foo bar\">d</b>y<img src=\"imgurl\"/></template>");
-    System.err.println(result);
+    drive("<template name=\"foo\">how<b class=\"foo bar\">d</b>y<img src=\"imgurl\"/></template>");
   }
 
   @Test
   public void single_var() {
-    String result = drive("<template name=\"foo\"><lookup name=\"x\"/></template>");
-    System.err.println(result);
+    drive("<template name=\"foo\"><lookup name=\"x\"/></template>");
   }
 
   @Test
   public void repeat_var() {
-    String result = drive("<template name=\"foo\"><lookup name=\"x\"/><lookup name=\"x\"/><lookup name=\"x\"/></template>");
-    System.err.println(result);
+    drive("<template name=\"foo\"><lookup name=\"x\"/><lookup name=\"x\"/><lookup name=\"x\"/></template>");
+  }
+
+  @Test
+  public void sanityStyle() {
+    drive("<forest><style>XYZ</style></forest>");
   }
 }

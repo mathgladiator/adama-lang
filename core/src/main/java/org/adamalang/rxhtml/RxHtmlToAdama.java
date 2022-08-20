@@ -26,15 +26,14 @@ import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Random;
 import java.util.regex.Pattern;
 
 /** Tools to convert RxHTML scheme into Adama */
 public class RxHtmlToAdama {
 
   public static String codegen(String rxhtml) throws AdamaLangException {
-    String template = RxHtmlTool.convertStringToTemplateForest(rxhtml, Feedback.NoOp);
-    String escapedTemplate = Escapes.escape34(template);
+    RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(rxhtml, Feedback.NoOp);
+    String escapedTemplate = Escapes.escape34(result.javascript);
     String path = "t_" + Long.toString(System.currentTimeMillis(), 16) + ".js";
 
     StringBuilder adama = new StringBuilder();
@@ -45,27 +44,10 @@ public class RxHtmlToAdama {
     adama.append("}\n");
 
      for (Uri uri : assembleUrisFrom(rxhtml)) {
-       // TODO: make a pure shell function; Or a add CONST to adama?
-       StringBuilder shell = new StringBuilder();
-       shell.append("<!DOCTYPE html>");
-       shell.append("<html>");
-       shell.append("<head>");
-       shell.append("<title>SHELL</title>"); // TODO
-       shell.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-       shell.append("<script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script>");
-       shell.append("<script src=\"https://aws-us-east-2.adama-platform.com/rxhtml.js\"></script>");
-       shell.append("<script>\n\n").append(template).append("\n\n</script>");
-       // TODO: need to path relative to the URI back to the root
-       shell.append("</head>");
-       shell.append("<body></body>"); // TODO: server side rendering could be neat, but it is tricky given the multiple connections
-       shell.append("<script>");
-       shell.append("RxHTML.init();");
-       shell.append("</script>");
-       shell.append("</html>");
-
+      String shell = result.shell.makeShell(result, true, -1);
       adama.append("@web get ").append(uri.rxhtmlPath()).append(" {\n");
       adama.append("  return {\n");
-      adama.append("    html: \"").append(Escapes.escape34(shell.toString())).append("\"\n");
+      adama.append("    html: \"").append(Escapes.escape34(shell)).append("\"\n");
       adama.append("  };\n");
       adama.append("}\n");
     }

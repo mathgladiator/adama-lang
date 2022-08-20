@@ -36,7 +36,7 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
   @Override
   public String gold() {
     StringBuilder gold = new StringBuilder();
-    gold.append("(function($){");
+    gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n    var c = $.E('form');");
@@ -128,6 +128,10 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
+    gold.append("\nStyle:");
+    gold.append("\nShell:<!DOCTYPE html>");
+    gold.append("\n<html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script src=\"https://aws-us-east-2.adama-platform.com/rxhtml.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

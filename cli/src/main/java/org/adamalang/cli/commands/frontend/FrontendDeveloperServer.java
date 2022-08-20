@@ -16,6 +16,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.web.UriMatcher;
 import org.adamalang.rxhtml.Feedback;
+import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.contracts.*;
@@ -71,12 +72,14 @@ public class FrontendDeveloperServer {
     HashMap<String, WatchKey> cache = new HashMap<>();
     Thread scanner = null;
     AtomicReference<ArrayList<UriMatcher>> templateMatchers = new AtomicReference<>(new ArrayList<>());
-    AtomicReference<String> templateForest = new AtomicReference<>(RxHtmlTool.convertFilesToTemplateForest(rxhtml(new File(".")), templateMatchers.get(), Feedback.NoOp));
+    RxHtmlResult initial = RxHtmlTool.convertFilesToTemplateForest(rxhtml(new File(".")), templateMatchers.get(), Feedback.NoOp);
+    AtomicReference<String> templateForest = new AtomicReference<>(initial.javascript);
     Files.writeString(new File("./template.js").toPath(), templateForest.get());
+    AtomicReference<String> templateStyle = new AtomicReference<>(initial.style);
+    Files.writeString(new File("./template.css").toPath(), templateStyle.get());
 
     try (WatchService watcher = FileSystems.getDefault().newWatchService()) {
       syncWatcher(watcher, cache, ".");
-
       // Scan for cahnges
       scanner = new Thread(new Runnable() {
         @Override
@@ -101,9 +104,12 @@ public class FrontendDeveloperServer {
               }
               if (rescanRx) {
                 ArrayList<UriMatcher> matchers = new ArrayList<>();
-                templateForest.set(RxHtmlTool.convertFilesToTemplateForest(rxhtml(new File(".")), matchers, Feedback.NoOp));
+                RxHtmlResult updated = RxHtmlTool.convertFilesToTemplateForest(rxhtml(new File(".")), matchers, Feedback.NoOp);
+                templateForest.set(updated.javascript);
+                templateStyle.set(updated.style);
                 templateMatchers.set(matchers);
                 Files.writeString(new File("./template.js").toPath(), templateForest.get());
+                Files.writeString(new File("./template.css").toPath(), templateStyle.get());
               }
               wk.reset();
             } catch (Exception ex) {

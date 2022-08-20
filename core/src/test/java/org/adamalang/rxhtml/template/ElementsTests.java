@@ -16,5 +16,9 @@ public class ElementsTests {
   public void coverage() {
     Elements.page(null);
     Elements.template(null);
+    Elements.shell(null);
+    Elements.style(null);
+    Elements.script(null);
+    Elements.meta(null);
   }
 }

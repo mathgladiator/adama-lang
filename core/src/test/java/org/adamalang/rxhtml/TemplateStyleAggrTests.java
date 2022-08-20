@@ -9,7 +9,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateSetTitleTests extends BaseRxHtmlTest {
+public class TemplateStyleAggrTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
@@ -21,18 +21,17 @@ public class TemplateSetTitleTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c={};");
-    gold.append("\n    c._={};");
-    gold.append("\n    c._.value={};");
-    gold.append("\n    c._._ = function() {");
-    gold.append("\n      c.value=c._.value['val'] + \" - YO\"");
-    gold.append("\n      c.__();");
-    gold.append("\n    }");
-    gold.append("\n    $.Y(a,c._.value,'val', c._._);");
-    gold.append("\n    $.ST(c);");
+    gold.append("\n    var c = $.E('button');");
+    gold.append("\n    $.onT(c,'click',$.pV(a),'open');");
+    gold.append("\n    c.append($.T('Toggle'));");
+    gold.append("\n    b.append(c);");
+    gold.append("\n    var c = $.E('button');");
+    gold.append("\n    $.onT(c,'mouseenter',$.pV(a),'enter');");
+    gold.append("\n    c.append($.T('Toggle'));");
+    gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
-    gold.append("\nStyle:");
+    gold.append("\nStyle:common style here also common also common");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
     gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script src=\"https://aws-us-east-2.adama-platform.com/rxhtml.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
@@ -42,8 +41,18 @@ public class TemplateSetTitleTests extends BaseRxHtmlTest {
   public String source() {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
+    source.append("\n    <style>");
+    source.append("\n        common style here");
+    source.append("\n    </style>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <title value=\"{val} - YO\" />");
+    source.append("\n        <style>");
+    source.append("\n            also common");
+    source.append("\n        </style>");
+    source.append("\n        <button rx:click=\"toggle:open\">Toggle</button>");
+    source.append("\n        <button rx:mouseenter=\"toggle:enter\">Toggle</button>");
+    source.append("\n        <style>");
+    source.append("\n            also common");
+    source.append("\n        </style>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

@@ -28,7 +28,7 @@ public abstract class BaseRxHtmlTest {
   public void stable() throws Exception {
     StringBuilder issuesLive = new StringBuilder();
     Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
-    String live = RxHtmlTool.convertStringToTemplateForest(source(), feedback);
+    String live = RxHtmlTool.convertStringToTemplateForest(source(), feedback).toString();
     Assert.assertEquals(gold(), live.trim());
     Assert.assertEquals(issues().trim(), issuesLive.toString().trim());
   }

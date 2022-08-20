@@ -12,12 +12,12 @@ package org.adamalang.rxhtml;
 import org.adamalang.common.web.UriMatcher;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
+import org.adamalang.rxhtml.template.Shell;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,35 +33,49 @@ public class RxHtmlTool {
     return defaultRedirect;
   }
 
-  public static String convertStringToTemplateForest(String str, Feedback feedback) {
+  public static RxHtmlResult convertStringToTemplateForest(String str, Feedback feedback) {
     Environment env = Environment.fresh(feedback);
     Root.start(env);
     Document document = Jsoup.parse(str);
     String defaultRedirect = getDefaultRedirect(document);
+    StringBuilder style = new StringBuilder();
+    Shell shell = new Shell(feedback);
+    shell.scan(document);
     for (Element element : document.getElementsByTag("template")) {
       Root.template(env.element(element, true));
+    }
+    for (Element element : document.getElementsByTag("style")) {
+      style.append(element.html()).append(" ");
     }
     for (Element element : document.getElementsByTag("page")) {
       Root.page(env.element(element, true), defaultRedirect);
     }
     // TODO: do warnings about cross-page linking, etc...
-    return Root.finish(env);
+    String javascript = Root.finish(env);
+    return new RxHtmlResult(javascript, style.toString(), shell);
   }
 
-  public static String convertFilesToTemplateForest(List<File> files, ArrayList<UriMatcher> matchers, Feedback feedback) throws Exception {
+  public static RxHtmlResult convertFilesToTemplateForest(List<File> files, ArrayList<UriMatcher> matchers, Feedback feedback) throws Exception {
     Environment env = Environment.fresh(feedback);
     Root.start(env);
+    Shell shell = new Shell(feedback);
+    StringBuilder style = new StringBuilder();
     for (File file : files) {
       Document document = Jsoup.parse(file, "UTF-8");
+      shell.scan(document);
       String defaultRedirect = getDefaultRedirect(document);
       for (Element element : document.getElementsByTag("template")) {
         Root.template(env.element(element, true));
+      }
+      for (Element element : document.getElementsByTag("style")) {
+        style.append(element.html()).append(" ");
       }
       for (Element element : document.getElementsByTag("page")) {
         matchers.add(RxHtmlToAdama.uriOf(element.attr("uri")).matcher());
         Root.page(env.element(element, true), defaultRedirect);
       }
     }
-    return Root.finish(env);
+    String javascript = Root.finish(env);
+    return new RxHtmlResult(javascript, style.toString(), shell);
   }
 }

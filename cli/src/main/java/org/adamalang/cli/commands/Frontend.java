@@ -86,6 +86,6 @@ public class Frontend {
   private static void makeRxHTMLTemplate(String[] args) throws Exception {
     ArrayList<File> files = convertArgsToFileList(args);
     String output = Util.extractOrCrash("--output", "-o", args);
-    Files.writeString(new File(output).toPath(), RxHtmlTool.convertFilesToTemplateForest(files, new ArrayList<>(), (element, warning) -> System.err.println(warning)));
+    Files.writeString(new File(output).toPath(), RxHtmlTool.convertFilesToTemplateForest(files, new ArrayList<>(), (element, warning) -> System.err.println(warning)).javascript);
   }
 }

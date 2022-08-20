@@ -15,8 +15,11 @@ import java.util.ArrayList;
 
 public class Elements {
   public static void template(Environment env) { /* no-op */ }
-
   public static void page(Environment env) { /* no-op */ }
+  public static void shell(Environment env) { /* no-op */ }
+  public static void style(Environment env) { /* no-op */ }
+  public static void script(Environment env) { /* no-op */ }
+  public static void meta(Environment env) { /* no-op */ }
 
   public static void fragment(Environment env) {
     String caseToUse = "";

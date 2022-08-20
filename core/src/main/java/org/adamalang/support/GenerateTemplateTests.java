@@ -52,7 +52,7 @@ public class GenerateTemplateTests {
           System.out.println("  " + warning);
           issues.append("WARNING:").append(warning).append("\n");
         };
-        String gold = RxHtmlTool.convertFilesToTemplateForest(Collections.singletonList(file), new ArrayList<>(), feedback);
+        String gold = RxHtmlTool.convertFilesToTemplateForest(Collections.singletonList(file), new ArrayList<>(), feedback).toString();
         String name = file.getName().substring(0, file.getName().length() - 8).replace(Pattern.quote("."), "_");
         name = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);
         String classname = "Template" + name + "Tests";
