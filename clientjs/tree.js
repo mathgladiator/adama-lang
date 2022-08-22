@@ -1,4 +1,5 @@
-function AdamaTreeSimple() {
+/** a simplified pub/sub differential tree */
+function AdamaTree() {
   var id = 0;
 
   var root = {};

@@ -179,8 +179,7 @@ public class AssembleClient {
         }
         js.append("responder) {\n");
         js.append("    var self = this;\n");
-        js.append("    self.nextId++;\n");
-        js.append("    var parId = self.nextId;\n");
+        js.append("    var parId = self.__id();\n");
         if (method.responder.stream) {
           js.append("    return self.__execute_stream({\n");
         } else {
@@ -221,8 +220,7 @@ public class AssembleClient {
               js.append(", ");
             }
             js.append("subResponder) {\n");
-            js.append("        self.nextId++;\n");
-            js.append("        var subId = self.nextId;\n");
+            js.append("        var subId = self.__id();\n");
             js.append("        self.__execute_rr({\n");
             js.append("          id: subId,\n");
             js.append("          responder: subResponder,\n");

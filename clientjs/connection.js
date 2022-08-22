@@ -1,27 +1,36 @@
-const Production = "aws-us-east-2.adama-platform.com";
-
-class AdamaConnection {
+/** The WebSocket connection to Adama */
+class WebSocketAdamaConnection {
   constructor(host) {
+    // on failure, we back-off with this milliseconds
     this.backoff = 1;
+    // the host we are connecting to
     this.host = host;
+    // form the URL of the host
     this.url = "wss://" + host + "/~s";
-    this.assets = true;
+    // is the connection connected
     this.connected = false;
+    // TODO
+    this.assets = true;
+    // is the connection dead
     this.dead = false;
-    this.maximum_backoff = 2500;
+    // the maximum period of time between waiting for a retry
+    this.maximum_backoff = 5000;
+    // when the connection times out from the server, how long to wait until we reconnect
+    this.reset_backoff = 1000;
+    // the actual websocket
     this.socket = null;
-    this.onstatuschange = function (status) {
-    };
-    this.onping = function (seconds, latency) {
-    };
-    this.onauthneeded = function (tryagain) {
-    };
+    // what happens when the status changes
+    this.onstatuschange = function (status) {};
+    // what happens when we learn the latency
+    this.onping = function (seconds, latency) {};
+    // is a retry scheduled
     this.scheduled = false;
+    // callback mapping
     this.callbacks = new Map();
+    // id generation
     this.nextId = 0;
+    // events to execute on reconnect
     this.onreconnect = new Map();
-    this.sessionId = "";
-    this.sendId = 0;
   }
 
   /** stop the connection */
@@ -92,20 +101,16 @@ class AdamaConnection {
         // hey, are we connected?
         if (result.status != "connected") {
           // nope, OK, let's make this a dead socket
-          self.dead = true;
           self.socket.close();
           self.socket = null;
-          // inform the client to try again
-          self.onauthneeded(function () {
-            self.start();
-          });
+          self.backoff = self.reset_backoff;
+          _retry();
           return;
         }
         // tell the client that we are good!
         self.backoff = 1;
         self.connected = true;
         self.assets = result.assets;
-        self.sessionId = result.session_id;
         self.onstatuschange(true);
         self.ConfigureMakeOrGetAssetKey({
           success: function (payload) {
@@ -160,7 +165,6 @@ class AdamaConnection {
   /** private: send a raw message */
   _write(request, callback) {
     if (!this.connected) {
-      // TODO: queue here, and start a timer for timeouts
       callback({failure: 600, reason: 9999});
       return;
     }
@@ -195,6 +199,7 @@ class AdamaConnection {
     });
   }
 
+  /** execute a requese response with the given state machine */
   __execute_rr(sm) {
     var self = this;
     sm.first = true;
@@ -216,6 +221,7 @@ class AdamaConnection {
     return sm;
   }
 
+  /** execute a stream request with the given state machine */
   __execute_stream(sm) {
     var self = this;
     self._write(sm.request, function (response) {
@@ -239,11 +245,15 @@ class AdamaConnection {
     return sm;
   }
 
+  __id() {
+    this.nextId++;
+    return this.nextId;
+  }
+
   /**[BEGIN-INVOKE]**/
   InitSetupAccount(email, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -252,8 +262,7 @@ class AdamaConnection {
   }
   InitConvertGoogleUser(accessToken, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -262,8 +271,7 @@ class AdamaConnection {
   }
   InitCompleteAccount(email, revoke, code, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -272,8 +280,7 @@ class AdamaConnection {
   }
   AccountSetPassword(identity, password, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -282,8 +289,7 @@ class AdamaConnection {
   }
   AccountLogin(email, password, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -292,8 +298,7 @@ class AdamaConnection {
   }
   Probe(identity, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -302,8 +307,7 @@ class AdamaConnection {
   }
   AuthorityCreate(identity, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -312,8 +316,7 @@ class AdamaConnection {
   }
   AuthoritySet(identity, authority, keyStore, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -322,8 +325,7 @@ class AdamaConnection {
   }
   AuthorityGet(identity, authority, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -332,8 +334,7 @@ class AdamaConnection {
   }
   AuthorityList(identity, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_stream({
       id: parId,
       responder: responder,
@@ -342,8 +343,7 @@ class AdamaConnection {
   }
   AuthorityDestroy(identity, authority, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -352,8 +352,7 @@ class AdamaConnection {
   }
   SpaceCreate(identity, space, template, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -362,8 +361,7 @@ class AdamaConnection {
   }
   SpaceGenerateKey(identity, space, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -372,8 +370,7 @@ class AdamaConnection {
   }
   SpaceUsage(identity, space, limit, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_stream({
       id: parId,
       responder: responder,
@@ -382,8 +379,7 @@ class AdamaConnection {
   }
   SpaceGet(identity, space, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -392,8 +388,7 @@ class AdamaConnection {
   }
   SpaceSet(identity, space, plan, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -402,8 +397,7 @@ class AdamaConnection {
   }
   SpaceDelete(identity, space, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -412,8 +406,7 @@ class AdamaConnection {
   }
   SpaceSetRole(identity, space, email, role, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -422,8 +415,7 @@ class AdamaConnection {
   }
   SpaceReflect(identity, space, key, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -432,8 +424,7 @@ class AdamaConnection {
   }
   SpaceList(identity, marker, limit, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_stream({
       id: parId,
       responder: responder,
@@ -442,8 +433,7 @@ class AdamaConnection {
   }
   DocumentCreate(identity, space, key, entropy, arg, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -452,8 +442,7 @@ class AdamaConnection {
   }
   DocumentList(identity, space, marker, limit, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_stream({
       id: parId,
       responder: responder,
@@ -462,15 +451,13 @@ class AdamaConnection {
   }
   ConnectionCreate(identity, space, key, viewerState, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_stream({
       id: parId,
       responder: responder,
       request: {"method":"connection/create", "id":parId, "identity": identity, "space": space, "key": key, "viewer-state": viewerState},
       send: function(channel, message, subResponder) {
-        self.nextId++;
-        var subId = self.nextId;
+        var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -478,8 +465,7 @@ class AdamaConnection {
         });
       },
       sendOnce: function(channel, dedupe, message, subResponder) {
-        self.nextId++;
-        var subId = self.nextId;
+        var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -487,8 +473,7 @@ class AdamaConnection {
         });
       },
       canAttach: function(subResponder) {
-        self.nextId++;
-        var subId = self.nextId;
+        var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -496,8 +481,7 @@ class AdamaConnection {
         });
       },
       attach: function(assetId, filename, contentType, size, digestMd5, digestSha384, subResponder) {
-        self.nextId++;
-        var subId = self.nextId;
+        var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -505,8 +489,7 @@ class AdamaConnection {
         });
       },
       update: function(viewerState, subResponder) {
-        self.nextId++;
-        var subId = self.nextId;
+        var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -514,8 +497,7 @@ class AdamaConnection {
         });
       },
       end: function(subResponder) {
-        self.nextId++;
-        var subId = self.nextId;
+        var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -526,8 +508,7 @@ class AdamaConnection {
   }
   ConfigureMakeOrGetAssetKey(responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
@@ -536,15 +517,13 @@ class AdamaConnection {
   }
   AttachmentStart(identity, space, key, filename, contentType, responder) {
     var self = this;
-    self.nextId++;
-    var parId = self.nextId;
+    var parId = self.__id();
     return self.__execute_stream({
       id: parId,
       responder: responder,
       request: {"method":"attachment/start", "id":parId, "identity": identity, "space": space, "key": key, "filename": filename, "content-type": contentType},
       append: function(chunkMd5, base64Bytes, subResponder) {
-        self.nextId++;
-        var subId = self.nextId;
+        var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -552,8 +531,7 @@ class AdamaConnection {
         });
       },
       finish: function(subResponder) {
-        self.nextId++;
-        var subId = self.nextId;
+        var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -565,3 +543,8 @@ class AdamaConnection {
 
   /**[END-INVOKE]**/
 }
+
+var Adama = {
+  Production: "aws-us-east-2.adama-platform.com",
+  Connection: WebSocketAdamaConnection
+};

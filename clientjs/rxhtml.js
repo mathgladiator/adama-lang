@@ -6,6 +6,25 @@ var RxHTML = (function () {
   var connection = new Adama.Connection(Adama.Production);
   var connections = {};
 
+  var connectionMonitorDom = document.createElement("div");
+  var _latency = document.createElement("span");
+  var _status = document.createElement("span");
+  connection.onstatuschange = function(status) {
+    _status.innerHTML = status ? "Yes" : "No";
+    if (!status) {
+      _latency.innerHTML = "";
+      connection.onping = function(_1, _2) {};
+    } else {
+      connection.onping = function(_, latency) {
+        if (latency >= 1) {
+          _latency.innerHTML = "" + latency;
+        }
+      };
+    }
+  };
+  connectionMonitorDom.appendChild(_status);
+  connectionMonitorDom.appendChild(_latency);
+  connectionMonitorDom.style = "position:fixed; bottom:0px; right:0px";
   connection.start();
 
   var rootReplace = "/";
@@ -35,7 +54,7 @@ var RxHTML = (function () {
       var obj = {
         name: name,
         ptr: null,
-        tree: new AdamaTreeSimple(),
+        tree: new AdamaTree(),
         outstanding: {},
         decisions: {},
         id: 0
@@ -70,7 +89,7 @@ var RxHTML = (function () {
   };
 
   self.make = function () {
-    return new AdamaTreeSimple();
+    return new AdamaTree();
   };
 
   // HELPER | subscribe the given 'sub' to changes within state for the given field named name
@@ -87,7 +106,7 @@ var RxHTML = (function () {
   // HELPER | create fresh state
   var fresh = function (where) {
     return {
-      tree: new AdamaTreeSimple(),
+      tree: new AdamaTree(),
       delta: {},
       parent: null,
       path: null,
@@ -847,7 +866,6 @@ var RxHTML = (function () {
   self.init = function () {
     self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
     window.onpopstate = function () {
-      console.log("popstate:" + fixPath(window.location.pathname));
       self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
     };
   };
@@ -860,8 +878,8 @@ var RxHTML = (function () {
     var parts = (path.startsWith("/") ? path.substring(1) : path).split("/");
     var init = {"session_id": "R" + Math.random()};
     var foo = route(parts, 0, router, init);
+    nuke(where);
     if (foo != null) {
-      nuke(where);
       var state = {service: connection, data: null, view: fresh(where), current: "view"};
       foo(where, state);
       state.view.tree.subscribe(state.view.delta);
@@ -876,6 +894,7 @@ var RxHTML = (function () {
         // default 404
       }
     }
+    where.appendChild(connectionMonitorDom);
   };
 
   var identities = {};
@@ -969,7 +988,7 @@ var RxHTML = (function () {
         }
       }
       if (!customTree) {
-        customTree = new AdamaTreeSimple();
+        customTree = new AdamaTree();
       }
       var state = {
         service: priorState.service,
@@ -1066,7 +1085,7 @@ var RxHTML = (function () {
   self.INTERNAL = function (priorState) {
     return {
       service: priorState.service,
-      data: {connection: null, tree: new AdamaTreeSimple(), delta: {}, parent: null, path: null},
+      data: {connection: null, tree: new AdamaTree(), delta: {}, parent: null, path: null},
       view: new_delta_copy(priorState.view),
       current: "data"
     };

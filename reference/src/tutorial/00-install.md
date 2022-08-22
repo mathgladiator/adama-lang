@@ -21,5 +21,11 @@ That's all you need for Adama to work. Once Java is working, you can download th
 wget https://github.com/mathgladiator/adama-lang/releases/download/nightly/adama.jar
 java -jar adama.jar
 ```
+or (if you lack wget)
+
+```shell
+curl -fSLO https://github.com/mathgladiator/adama-lang/releases/download/nightly/adama.jar
+java -jar adama.jar
+```
 
 to get help on how to use the jar. [The next step is to initialize your developer account.](01-init.md)
