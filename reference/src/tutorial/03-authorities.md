@@ -61,8 +61,8 @@ This is the string that you use as the identity parameter with the Client API. F
 
 ```shell
 java -jar adama.jar authority sign \
-  --key first.private.key.json
-  --agent user002 \\
+  --key first.private.key.json \
+  --agent user002
 ```
 
 We will use the corresponding tokens for user001 and user002 to [chat with each other by configuring the space.](04-space.md)
