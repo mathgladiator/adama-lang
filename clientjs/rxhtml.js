@@ -57,8 +57,16 @@ var RxHTML = (function () {
         tree: new AdamaTree(),
         outstanding: {},
         decisions: {},
+        resets: {},
         id: 0
       };
+      obj.subscribe_any = function(callback) {
+        var s = "-|" + this.id++;
+        this.decisions[s] = callback;
+        return function () {
+          delete this.decisions[s];
+        }.bind(this);
+      }.bind(obj);
       obj.subscribe = function (channel, callback) {
         var s = channel + "|" + this.id++;
         this.decisions[s] = callback;
@@ -66,7 +74,24 @@ var RxHTML = (function () {
           delete this.decisions[s];
         }.bind(this);
       }.bind(obj);
+      obj.subscribe_reset = function(callback) {
+        var dr = "reset|" + this.id++;
+        this.resets[dr] = callback;
+        return function () {
+          delete this.resets[dr];
+        }.bind(this);
+      }.bind(obj);
       obj.ondecide = function (outstanding) {
+        var axeReset = [];
+        for (var dr in obj.resets) {
+          var r = obj.resets[dr];
+          if (!(r())) {
+            axeReset.push(dr);
+          }
+        }
+        for (var k = 0; k < axeReset.length; k++) {
+          delete obj.resets[axeReset[k]];
+        }
         for (var ch in obj.outstanding) {
           obj.outstanding[ch] = {options: []};
         }
@@ -76,10 +101,17 @@ var RxHTML = (function () {
           obj.outstanding[o.channel] = o;
         }
         for (var ch in obj.outstanding) {
+          var out = obj.outstanding[ch];
+          var axe = [];
           for (var sub in obj.decisions) {
-            if (sub.startsWith(ch + "|")) {
-              obj.decisions[sub]();
+            if (sub.startsWith(ch + "|") || sub.startsWith("-|")) {
+              if (!obj.decisions[sub](out, ch)) {
+                axe.push(sub);
+              }
             }
+          }
+          for (var k = 0; k < axe.length; k++) {
+            delete obj.decisions[axe[k]];
           }
         }
       };
@@ -629,6 +661,8 @@ var RxHTML = (function () {
 
     priorState.data.connection.subscribe(channel, function () {
       decide.update();
+      // TODO: return whether or not this needs to be axed
+      return true;
     });
 
     subscribe(evalState, name, function (value) {
@@ -781,6 +815,15 @@ var RxHTML = (function () {
     };
   };
 
+  var wrappers = {};
+  self.PRWP = function(name, foo) {
+    wrappers[name] = foo;
+  };
+
+  // <... rx:wrap=const >
+  self.WP = function(dom, state, name, childMakerWithCase) {
+    wrappers[name](dom, state, childMakerWithCase, self);
+  };
   /**
    /$$$$$$$$ /$$$$$$  /$$$$$$$   /$$$$$$
    |__  $$__//$$__  $$| $$__  $$ /$$__  $$
