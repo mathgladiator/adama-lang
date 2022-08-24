@@ -10,6 +10,7 @@
 package org.adamalang.caravan.index;
 
 import io.netty.buffer.ByteBuf;
+import org.adamalang.caravan.data.DiskMetrics;
 
 import java.util.*;
 
@@ -41,6 +42,33 @@ public class Index {
     return regions.iterator();
   }
 
+  /** report on what is within the index */
+  public void report(DiskMetrics metrics) {
+    metrics.active_entries.set(index.size());
+    int over_10K = 0;
+    int over_20K = 0;
+    int over_50K = 0;
+    int over_100K = 0;
+    for (List<AnnotatedRegion> regions : index.values()) {
+      if (regions.size() > 10000) {
+        over_10K++;
+      }
+      if (regions.size() > 20000) {
+        over_20K++;
+      }
+      if (regions.size() > 50000) {
+        over_50K++;
+      }
+      if (regions.size() > 100000) {
+        over_100K++;
+      }
+    }
+    metrics.items_over_tenk.set(over_10K);
+    metrics.items_over_twentyk.set(over_20K);
+    metrics.items_over_fiftyk.set(over_50K);
+    metrics.items_over_onehundredk.set(over_100K);
+  }
+
   /** does the index contain the given id */
   public boolean exists(long id) {
     return index.containsKey(id);
@@ -51,12 +79,13 @@ public class Index {
     return index.remove(id);
   }
 
-  /** trim the head of an object (by id) the given count; returned the returned regions */
-  public ArrayList<AnnotatedRegion> trim(long id, int count) {
+  /** trim the head of an object (by id) the given maximum size; returned the returned regions */
+  public ArrayList<AnnotatedRegion> trim(long id, int maxSize) {
     ArrayList<AnnotatedRegion> regions = index.get(id);
     if (regions != null) {
       ArrayList<AnnotatedRegion> trimmed = new ArrayList<>();
       Iterator<AnnotatedRegion> it = regions.iterator();
+      int count = regions.size() - maxSize;
       int k = 0;
       while (k < count && it.hasNext()) {
         AnnotatedRegion region = it.next();

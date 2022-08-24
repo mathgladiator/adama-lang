@@ -44,6 +44,7 @@ public class CoreMetrics {
   public final Runnable document_queue_running_behind;
   public final Runnable document_catastrophic_failure;
   public final Runnable document_load_shed;
+  public final Runnable document_compacting_skipped;
   public final Runnable document_compacting;
   public final Runnable failed_invention;
   public final Runnable internal_seq_drift;
@@ -81,6 +82,7 @@ public class CoreMetrics {
     document_queue_running_behind = metricsFactory.counter("core_document_queue_running_behind");
     document_catastrophic_failure = metricsFactory.counter("core_document_catastrophic_failure");
     document_load_shed = metricsFactory.counter("core_document_load_shed");
+    document_compacting_skipped = metricsFactory.counter("core_document_compacting_skipped");
     document_compacting = metricsFactory.counter("core_document_compacting");
     failed_invention = metricsFactory.counter("core_document_failed_invention");
     internal_seq_drift = metricsFactory.counter("core_document_internal_seq_drift");

@@ -25,14 +25,12 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
   private final ArrayDeque<SeqString> undos;
   public int currentAppendIndex;
   public SeqString document;
-  private int itemsInRemote;
   private int seq;
   public LocalCache() {
     this.document = null;
     this.redos = new ArrayList<>();
     this.undos = new ArrayDeque<>();
     this.seq = 0;
-    this.itemsInRemote = 0;
   }
 
   public int seq() {
@@ -43,17 +41,6 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
   public void next(int appendIndex, byte[] value, int seq, long assetBytes) throws Exception {
     this.currentAppendIndex = appendIndex;
     EventCodec.route(Unpooled.wrappedBuffer(value), this);
-    this.itemsInRemote++;
-  }
-
-  public void bump() {
-    this.itemsInRemote++;
-  }
-
-  public int reset() {
-    int toTrim = itemsInRemote;
-    itemsInRemote = 0;
-    return toTrim;
   }
 
   @Override
@@ -163,8 +150,8 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
       merger.next(document.data);
     }
     for (SeqString ss : redos) {
+      count++;
       if (ss.seq > seqAt) {
-        count++;
         merger.next(ss.data);
         seqAt = ss.seq;
       }

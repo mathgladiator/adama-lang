@@ -243,7 +243,7 @@ public class CaravanDataServiceTests {
         setup.service.get(KEY1, cb_GetCompactedResults);
         cb_GetCompactedResults.assertSuccess();
         Assert.assertEquals("{\"x\":10,\"y\":10}", cb_GetCompactedResults.value);
-        Assert.assertEquals(1, cb_GetCompactedResults.reads);
+        Assert.assertEquals(5, cb_GetCompactedResults.reads);
       }
       {
         SimpleIntCallback cbCompactFailsNegHistory = new SimpleIntCallback();
@@ -259,7 +259,7 @@ public class CaravanDataServiceTests {
         setup.service.get(KEY1, cb_GetCompactedResults);
         cb_GetCompactedResults.assertSuccess();
         Assert.assertEquals("{\"x\":4,\"y\":11}", cb_GetCompactedResults.value);
-        Assert.assertEquals(4, cb_GetCompactedResults.reads);
+        Assert.assertEquals(5, cb_GetCompactedResults.reads);
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
@@ -392,7 +392,7 @@ public class CaravanDataServiceTests {
         setup.service.get(KEY2, cb_GetCompactedResults);
         cb_GetCompactedResults.assertSuccess();
         Assert.assertEquals("{\"x\":10,\"y\":10}", cb_GetCompactedResults.value);
-        Assert.assertEquals(1, cb_GetCompactedResults.reads);
+        Assert.assertEquals(2, cb_GetCompactedResults.reads);
       }
     });
   }

@@ -106,16 +106,6 @@ public class CoreStream implements AdamaStream {
     disconnect();
   }
 
-  public void attach(NtAsset asset, Callback<Integer> callback) {
-    document.base.executor.execute(new NamedRunnable("core-stream-attach") {
-      @Override
-      public void execute() throws Exception {
-        inventory.message();
-        document.attach(context, asset, callback);
-      }
-    });
-  }
-
   /** disconnect this stream from the document */
   public void disconnect() {
     metrics.inflight_streams.down();
@@ -136,6 +126,16 @@ public class CoreStream implements AdamaStream {
         }
         // tell the client
         view.perspective.disconnect();
+      }
+    });
+  }
+
+  public void attach(NtAsset asset, Callback<Integer> callback) {
+    document.base.executor.execute(new NamedRunnable("core-stream-attach") {
+      @Override
+      public void execute() throws Exception {
+        inventory.message();
+        document.attach(context, asset, callback);
       }
     });
   }

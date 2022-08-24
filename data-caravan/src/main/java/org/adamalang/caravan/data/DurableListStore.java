@@ -100,6 +100,7 @@ public class DurableListStore {
     metrics.total_storage_allocated.set((int) (report.getTotalBytes() / 1000000L));
     metrics.free_storage_available.set((int) (report.getFreeBytesAvailable() / 1000000L));
     metrics.alarm_storage_over_80_percent.set(report.alarm(0.2) ? 1 : 0);
+    this.index.report(metrics);
   }
 
   /** internal: load and commit the data from the write-ahead log */
@@ -307,18 +308,21 @@ public class DurableListStore {
   }
 
   /** remove the $count appends from the head of the object */
-  public boolean trim(long id, int count, Runnable notification) {
-    ArrayList<AnnotatedRegion> regions = index.trim(id, count);
-    if (regions != null && regions.size() > 0) {
-      this.notifications.add(notification);
-      new Trim(id, regions.size()).write(buffer);
-      for (Region region : regions) {
-        heap.free(region);
+  public boolean trim(long id, int maxSize, Runnable notification) {
+    if (maxSize > 0) {
+      ArrayList<AnnotatedRegion> regions = index.trim(id, maxSize);
+      if (regions != null && regions.size() > 0) {
+        this.notifications.add(notification);
+        new Trim(id, regions.size()).write(buffer);
+        for (Region region : regions) {
+          metrics.items_trimmed.run();
+          heap.free(region);
+        }
+        if (buffer.writerIndex() > flushCutOffBytes) {
+          flush(false);
+        }
+        return true;
       }
-      if (buffer.writerIndex() > flushCutOffBytes) {
-        flush(false);
-      }
-      return true;
     }
     return false;
   }

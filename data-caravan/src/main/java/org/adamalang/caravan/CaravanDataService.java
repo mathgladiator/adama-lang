@@ -310,7 +310,6 @@ public class CaravanDataService implements ArchivingDataService {
         }
       };
       builder.handle(change);
-      builder.bump();
       if (store.append(id, ByteArrayHelper.convert(buf), patch.seqEnd, 0L, () -> {
         executor.execute(new NamedRunnable("commit-cache") {
           @Override
@@ -349,7 +348,6 @@ public class CaravanDataService implements ArchivingDataService {
           @Override
           public void execute() throws Exception {
             cached.handle(batch);
-            cached.bump();
             callback.success(null);
           }
         });
@@ -415,12 +413,8 @@ public class CaravanDataService implements ArchivingDataService {
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_OUT_OF_SPACE_SNAPSHOT));
       } else {
         cached.handle(snap);
-        cached.bump();
-        int toTrim = Math.min(size - 1, cached.reset()) - snapshot.history;
-        if (toTrim > 0) {
-          store.trim(id, toTrim, () -> {
-          });
-        }
+        store.trim(id, snapshot.history, () -> {
+        });
       }
     });
   }

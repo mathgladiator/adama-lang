@@ -31,8 +31,6 @@ import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.web.WebPutRaw;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -78,6 +76,7 @@ public class DurableLivingDocument {
     this.requiresInvalidateMilliseconds = document.__computeRequiresInvalidateMilliseconds();
     this.pending = new ArrayDeque<>(8);
     this.inflightPatch = false;
+    this.inflightCompact = false;
     this.catastrophicFailureOccurred = false;
     this.lastExpire = 0;
     this.outstandingExecutionsWhichRequireDrain = 0;
@@ -154,29 +153,6 @@ public class DurableLivingDocument {
     return writer;
   }
 
-  public JsonStreamWriter forgeWithContext(final String command, final CoreRequestContext context) {
-    this.lastActivityMS = base.time.nowMilliseconds();
-    final var writer = new JsonStreamWriter();
-    writer.beginObject();
-    writer.writeObjectFieldIntro("command");
-    writer.writeFastString(command);
-    writer.writeObjectFieldIntro("timestamp");
-    writer.writeLong(base.time.nowMilliseconds());
-    if (context != null) {
-      if (context.who != null) {
-        writer.writeObjectFieldIntro("who");
-        writer.writeNtPrincipal(context.who);
-      }
-      writer.writeObjectFieldIntro("key");
-      writer.writeString(context.key);
-      writer.writeObjectFieldIntro("origin");
-      writer.writeString(context.origin);
-      writer.writeObjectFieldIntro("ip");
-      writer.writeString(context.ip);
-    }
-    return writer;
-  }
-
   public static void load(final Key key, final LivingDocumentFactory factory, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
     try {
       if (!base.shield.canConnectNew.get()) {
@@ -200,6 +176,7 @@ public class DurableLivingDocument {
             @Override
             public void success(LivingDocumentChange change) {
               callback.success(document);
+              document.queueCompact();
             }
 
             @Override
@@ -237,11 +214,41 @@ public class DurableLivingDocument {
     };
   }
 
+  public JsonStreamWriter forgeWithContext(final String command, final CoreRequestContext context) {
+    this.lastActivityMS = base.time.nowMilliseconds();
+    final var writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("command");
+    writer.writeFastString(command);
+    writer.writeObjectFieldIntro("timestamp");
+    writer.writeLong(base.time.nowMilliseconds());
+    if (context != null) {
+      if (context.who != null) {
+        writer.writeObjectFieldIntro("who");
+        writer.writeNtPrincipal(context.who);
+      }
+      writer.writeObjectFieldIntro("key");
+      writer.writeString(context.key);
+      writer.writeObjectFieldIntro("origin");
+      writer.writeString(context.origin);
+      writer.writeObjectFieldIntro("ip");
+      writer.writeString(context.ip);
+    }
+    return writer;
+  }
+
+  private void testQueueSizeAndThenMaybeCompact() {
+    if (size.get() * 2 > currentFactory.maximum_history * 3) {
+      queueCompact();
+    }
+  }
+
   private void queueCompact() {
     base.executor.execute(new NamedRunnable("document-compacting") {
       @Override
       public void execute() throws Exception {
         if (inflightCompact) {
+          base.metrics.document_compacting_skipped.run();
           return;
         }
         inflightCompact = true;
@@ -259,7 +266,7 @@ public class DurableLivingDocument {
           }
         };
         document.__dump(writer);
-        int toCompactNow = size.get();
+        int toCompactNow = Math.max(0, size.get() - currentFactory.maximum_history);
         base.service.snapshot(key, new DocumentSnapshot(document.__seq.get(), writer.toString(), currentFactory.maximum_history, assetBytes.get()), new Callback<>() {
           @Override
           public void success(Integer value) {
@@ -268,9 +275,8 @@ public class DurableLivingDocument {
               public void execute() throws Exception {
                 inflightCompact = false;
                 size.getAndAdd(-toCompactNow);
-                if (size.get() >= currentFactory.maximum_history) {
-                  queueCompact();
-                }
+                testQueueSizeAndThenMaybeCompact();
+
               }
             });
           }
@@ -478,9 +484,7 @@ public class DurableLivingDocument {
                 if (shouldCleanUp && document.__canRemoveFromMemory()) {
                   scheduleCleanup();
                 }
-                if (size.get() > currentFactory.maximum_history) {
-                  queueCompact();
-                }
+                testQueueSizeAndThenMaybeCompact();
               } finally {
                 finishSuccessDataServicePatchWhileInExecutor(true);
               }
@@ -510,9 +514,7 @@ public class DurableLivingDocument {
                         document.__insert(new JsonStreamReader(value.patch));
                         IngestRequest[] requestsAfterCatchUp = new IngestRequest[requests.length + 1];
                         requestsAfterCatchUp[0] = new IngestRequest(NtPrincipal.NO_ONE, forgeInvalidate(), DONT_CARE_CHANGE, false);
-                        for (int j = 0; j < requests.length; j++) {
-                          requestsAfterCatchUp[j + 1] = requests[j];
-                        }
+                        System.arraycopy(requests, 0, requestsAfterCatchUp, 1, requests.length);
                         executeNow(requestsAfterCatchUp);
                       }
                     });
@@ -779,6 +781,7 @@ public class DurableLivingDocument {
     if (document.__state.has() && !document.__blocked.get()) {
       invalidate(Callback.DONT_CARE_INTEGER);
     }
+    testQueueSizeAndThenMaybeCompact();
   }
 
   private static class IngestRequest {

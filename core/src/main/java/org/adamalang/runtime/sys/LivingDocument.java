@@ -25,8 +25,8 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
@@ -38,7 +38,7 @@ import java.util.*;
 
 /** The central class for a living document (i.e. a tiny VM) */
 public abstract class LivingDocument implements RxParent, Caller {
-  private static ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LivingDocument.class);
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LivingDocument.class);
   public final DocumentMonitor __monitor;
   public final LivingDocument __self;
   protected final RxInt32 __auto_future_id;
@@ -532,7 +532,7 @@ public abstract class LivingDocument implements RxParent, Caller {
                     ip = reader.readString();
                     break;
                   case "message":
-                      message = __parse_message(channel, reader);
+                    message = __parse_message(channel, reader);
                     break;
                   default:
                     reader.skipValue();
@@ -703,7 +703,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   public long __memory() {
     long memory = 384;
     for (String dedupeKey : __dedupe.keySet()) {
-      memory += dedupeKey.length() * 2 + 16;
+      memory += dedupeKey.length() * 2L + 16;
     }
     for (Map.Entry<NtPrincipal, ArrayList<PrivateView>> entry : __trackedViews.entrySet()) {
       memory += entry.getKey().memory();

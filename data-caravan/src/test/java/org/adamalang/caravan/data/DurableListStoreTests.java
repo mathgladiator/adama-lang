@@ -58,9 +58,9 @@ public class DurableListStoreTests {
       {
         MockByteArrayStream stream = new MockByteArrayStream();
         store.read(1, stream);
-        stream.assertIs("[0=K:90/91:100][1=K:91/92:100][2=K:92/93:100][3=K:93/94:100][4=K:94/95:100][5=K:95/96:100][6=K:96/97:100][7=K:97/98:100][8=K:98/99:100][9=K:99/100:100]FINISHED");
+        stream.assertIs("[0=K:10/11:100][1=K:11/12:100][2=K:12/13:100][3=K:13/14:100][4=K:14/15:100][5=K:15/16:100][6=K:16/17:100][7=K:17/18:100][8=K:18/19:100][9=K:19/20:100][10=K:20/21:100][11=K:21/22:100][12=K:22/23:100][13=K:23/24:100][14=K:24/25:100][15=K:25/26:100][16=K:26/27:100][17=K:27/28:100][18=K:28/29:100][19=K:29/30:100][20=K:30/31:100][21=K:31/32:100][22=K:32/33:100][23=K:33/34:100][24=K:34/35:100][25=K:35/36:100][26=K:36/37:100][27=K:37/38:100][28=K:38/39:100][29=K:39/40:100][30=K:40/41:100][31=K:41/42:100][32=K:42/43:100][33=K:43/44:100][34=K:44/45:100][35=K:45/46:100][36=K:46/47:100][37=K:47/48:100][38=K:48/49:100][39=K:49/50:100][40=K:50/51:100][41=K:51/52:100][42=K:52/53:100][43=K:53/54:100][44=K:54/55:100][45=K:55/56:100][46=K:56/57:100][47=K:57/58:100][48=K:58/59:100][49=K:59/60:100][50=K:60/61:100][51=K:61/62:100][52=K:62/63:100][53=K:63/64:100][54=K:64/65:100][55=K:65/66:100][56=K:66/67:100][57=K:67/68:100][58=K:68/69:100][59=K:69/70:100][60=K:70/71:100][61=K:71/72:100][62=K:72/73:100][63=K:73/74:100][64=K:74/75:100][65=K:75/76:100][66=K:76/77:100][67=K:77/78:100][68=K:78/79:100][69=K:79/80:100][70=K:80/81:100][71=K:81/82:100][72=K:82/83:100][73=K:83/84:100][74=K:84/85:100][75=K:85/86:100][76=K:86/87:100][77=K:87/88:100][78=K:88/89:100][79=K:89/90:100][80=K:90/91:100][81=K:91/92:100][82=K:92/93:100][83=K:93/94:100][84=K:94/95:100][85=K:95/96:100][86=K:96/97:100][87=K:97/98:100][88=K:98/99:100][89=K:99/100:100]FINISHED");
       }
-      Assert.assertEquals(65496, store.available());
+      Assert.assertEquals(65176, store.available());
       store.delete(1, event);
       store.flush(false);
       Assert.assertEquals(104, count.get()); // 1 PUT, 100 PUT, 1 DELETE, 1 TRIM, 1 DELETE
@@ -193,10 +193,14 @@ public class DurableListStoreTests {
         Assert.assertNull(store.append(100, batch3, 10, 1024, event));
       }
       Assert.assertEquals(3806, store.available());
-      Assert.assertTrue(store.trim(100, 10000, () -> {}));
-      Assert.assertEquals(60093, store.available());
-      Assert.assertTrue(store.trim(42, 10000, () -> {}));
-      Assert.assertEquals(65536, store.available());
+      Assert.assertTrue(store.trim(100, 1000, () -> {}));
+      Assert.assertEquals(5145, store.available());
+      Assert.assertTrue(store.trim(42, 1, () -> {}));
+      Assert.assertEquals(10534, store.available());
+      Assert.assertTrue(store.trim(100, 10, () -> {}));
+      Assert.assertEquals(64922, store.available());
+      Assert.assertTrue(store.trim(100, 1, () -> {}));
+      Assert.assertEquals(65426, store.available());
       store.shutdown();
     } finally {
       for (File file : testRoot.listFiles()) {
