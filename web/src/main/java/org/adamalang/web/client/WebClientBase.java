@@ -70,13 +70,11 @@ public class WebClientBase {
           ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc(), host, port));
         }
         ch.pipeline().addLast(new HttpClientCodec());
-        ch.pipeline().addLast(new WriteTimeoutHandler(3));
-        ch.pipeline().addLast(new ReadTimeoutHandler(3));
+        ch.pipeline().addLast(new WriteTimeoutHandler(60));
+        ch.pipeline().addLast(new ReadTimeoutHandler(10 * 60));
         ch.pipeline().addLast(
             new SimpleChannelInboundHandler<HttpObject>() {
-              boolean first = false;
               byte[] chunk = new byte[8196];
-
               @Override
               protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
                 if (msg instanceof HttpResponse) {

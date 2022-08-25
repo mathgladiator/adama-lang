@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ServerMessage.QueryResult;
 import org.adamalang.net.codec.ServerMessage.WebResponseNet;
 import org.adamalang.net.codec.ServerMessage.ProxyLocalDataChange;
 import org.adamalang.net.codec.ServerMessage.ProxyIntResponse;
@@ -63,6 +64,41 @@ public class ServerCodec {
     switch (buf.readIntLE()) {
       case 9004:
         handler.handle(readBody_9004(buf, new ProxyIntResponse()));
+        return;
+    }
+  }
+
+
+  public static abstract class StreamQuery implements ByteStream {
+    public abstract void handle(QueryResult payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 2001:
+          handle(readBody_2001(buf, new QueryResult()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerQuery {
+    public void handle(QueryResult payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerQuery handler) {
+    switch (buf.readIntLE()) {
+      case 2001:
+        handler.handle(readBody_2001(buf, new QueryResult()));
         return;
     }
   }
@@ -472,6 +508,20 @@ public class ServerCodec {
   }
 
 
+  public static QueryResult read_QueryResult(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 2001:
+        return readBody_2001(buf, new QueryResult());
+    }
+    return null;
+  }
+
+
+  private static QueryResult readBody_2001(ByteBuf buf, QueryResult o) {
+    o.result = Helper.readString(buf);
+    return o;
+  }
+
   public static WebResponseNet read_WebResponseNet(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 1721:
@@ -719,6 +769,15 @@ public class ServerCodec {
 
   private static PingResponse readBody_24322(ByteBuf buf, PingResponse o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, QueryResult o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(2001);
+    Helper.writeString(buf, o.result);;
   }
 
   public static void write(ByteBuf buf, WebResponseNet o) {

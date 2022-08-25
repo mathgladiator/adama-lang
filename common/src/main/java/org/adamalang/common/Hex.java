@@ -22,4 +22,25 @@ public class Hex {
     }
     return new String(encoded);
   }
+  public static int single(char hex) {
+    if ('0' <= hex && hex <= '9') {
+      return hex - '0';
+    }
+    if ('a' <= hex && hex <= 'f') {
+      return 10 + (hex - 'a');
+    }
+    if ('A' <= hex && hex <= 'F') {
+      return 10 + (hex - 'A');
+    }
+    return 0;
+  }
+  public static byte[] from(String hex) {
+    byte[] result = new byte[hex.length() >> 1];
+    int at = 0;
+    for (int k = 0; k < hex.length(); k += 2) {
+      result[at] = (byte)((single(hex.charAt(k)) << 4) + single(hex.charAt(k + 1)));
+      at++;
+    }
+    return result;
+  }
 }

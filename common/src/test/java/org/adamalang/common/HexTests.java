@@ -18,4 +18,38 @@ public class HexTests {
   public void flow() {
     Assert.assertEquals("000102030405060708090a0b0c0d0e0f101112", Hex.of(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18}));
   }
+
+  @Test
+  public void singles() {
+    Assert.assertEquals(0, Hex.single('0'));
+    Assert.assertEquals(1, Hex.single('1'));
+    Assert.assertEquals(2, Hex.single('2'));
+    Assert.assertEquals(3, Hex.single('3'));
+    Assert.assertEquals(4, Hex.single('4'));
+    Assert.assertEquals(5, Hex.single('5'));
+    Assert.assertEquals(6, Hex.single('6'));
+    Assert.assertEquals(7, Hex.single('7'));
+    Assert.assertEquals(8, Hex.single('8'));
+    Assert.assertEquals(9, Hex.single('9'));
+    Assert.assertEquals(10, Hex.single('a'));
+    Assert.assertEquals(10, Hex.single('A'));
+    Assert.assertEquals(11, Hex.single('b'));
+    Assert.assertEquals(11, Hex.single('B'));
+    Assert.assertEquals(12, Hex.single('c'));
+    Assert.assertEquals(12, Hex.single('C'));
+    Assert.assertEquals(13, Hex.single('d'));
+    Assert.assertEquals(13, Hex.single('D'));
+    Assert.assertEquals(14, Hex.single('e'));
+    Assert.assertEquals(14, Hex.single('E'));
+    Assert.assertEquals(15, Hex.single('f'));
+    Assert.assertEquals(15, Hex.single('F'));
+  }
+
+  @Test
+  public void inverse() {
+    byte[] check = Hex.from("000102030405060708090a0b0c0d0e0f101112");
+    for (var k = 0; k < check.length; k++) {
+      Assert.assertEquals((byte) k, check[k]);
+    }
+  }
 }

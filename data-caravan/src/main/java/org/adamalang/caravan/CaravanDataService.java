@@ -19,6 +19,8 @@ import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.events.*;
 import org.adamalang.common.*;
 import org.adamalang.runtime.data.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -30,6 +32,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 
 public class CaravanDataService implements ArchivingDataService {
+  private final Logger LOGGER = LoggerFactory.getLogger(CaravanDataService.class);
   private final Cloud cloud;
   private final KeyToIdService keyToIdService;
   private final DurableListStore store;
@@ -111,6 +114,7 @@ public class CaravanDataService implements ArchivingDataService {
             try {
               store.read(id, newBuilderToCache);
             } catch (Exception ex) {
+              LOGGER.error("failed-restore", ex);
               callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_RESTORE_CANT_READ, ex));
               return;
             }
@@ -161,6 +165,7 @@ public class CaravanDataService implements ArchivingDataService {
         output.close();
         Files.move(tempOutput.toPath(), finalOutput.toPath(), StandardCopyOption.ATOMIC_MOVE);
       } catch (Exception ioex) {
+        LOGGER.error("failed-backup", ioex);
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_BACKUP_EXCEPTION, ioex));
         return;
       }
@@ -240,7 +245,8 @@ public class CaravanDataService implements ArchivingDataService {
       };
       store.read(id, builder);
     } catch (Exception ex) {
-      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_LOAD_FAILURE_EXCEPTION));
+      LOGGER.error("failed-load", ex);
+      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_LOAD_FAILURE_EXCEPTION, ex));
     }
   }
 

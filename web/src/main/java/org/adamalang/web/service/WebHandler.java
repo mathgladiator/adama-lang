@@ -257,6 +257,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
         res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
       }
+      res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
       DefaultCookie cookie = new DefaultCookie("SAK", value);
       cookie.setSameSite(CookieHeaderNames.SameSite.None);
       cookie.setMaxAge(60 * 60 * 24 * 7);

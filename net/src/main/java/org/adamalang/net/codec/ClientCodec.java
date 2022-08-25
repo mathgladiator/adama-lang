@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ClientMessage.ExecuteQuery;
 import org.adamalang.net.codec.ClientMessage.WebOptions;
 import org.adamalang.net.codec.ClientMessage.WebPut;
 import org.adamalang.net.codec.ClientMessage.WebGet;
@@ -43,6 +44,8 @@ import org.adamalang.net.codec.ClientMessage.PingRequest;
 public class ClientCodec {
 
   public static abstract class StreamServer implements ByteStream {
+    public abstract void handle(ExecuteQuery payload);
+
     public abstract void handle(WebOptions payload);
 
     public abstract void handle(WebPut payload);
@@ -103,6 +106,9 @@ public class ClientCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
+        case 1999:
+          handle(readBody_1999(buf, new ExecuteQuery()));
+          return;
         case 1725:
           handle(readBody_1725(buf, new WebOptions()));
           return;
@@ -180,6 +186,7 @@ public class ClientCodec {
   }
 
   public static interface HandlerServer {
+    public void handle(ExecuteQuery payload);
     public void handle(WebOptions payload);
     public void handle(WebPut payload);
     public void handle(WebGet payload);
@@ -208,6 +215,9 @@ public class ClientCodec {
 
   public static void route(ByteBuf buf, HandlerServer handler) {
     switch (buf.readIntLE()) {
+      case 1999:
+        handler.handle(readBody_1999(buf, new ExecuteQuery()));
+        return;
       case 1725:
         handler.handle(readBody_1725(buf, new WebOptions()));
         return;
@@ -353,6 +363,20 @@ public class ClientCodec {
     }
   }
 
+
+  public static ExecuteQuery read_ExecuteQuery(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 1999:
+        return readBody_1999(buf, new ExecuteQuery());
+    }
+    return null;
+  }
+
+
+  private static ExecuteQuery readBody_1999(ByteBuf buf, ExecuteQuery o) {
+    o.headers = Helper.readArray(buf, (n) -> new Header[n], () -> read_Header(buf));
+    return o;
+  }
 
   public static WebOptions read_WebOptions(ByteBuf buf) {
     switch (buf.readIntLE()) {
@@ -785,6 +809,15 @@ public class ClientCodec {
 
   private static PingRequest readBody_24321(ByteBuf buf, PingRequest o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, ExecuteQuery o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(1999);
+    Helper.writeArray(buf, o.headers, (item) -> write(buf, item));
   }
 
   public static void write(ByteBuf buf, WebOptions o) {

@@ -80,6 +80,25 @@ public class ServiceCleanupTests {
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback.get(1));
+      TreeMap<String, String> query = new TreeMap<>();
+      CountDownLatch latchQuery = new CountDownLatch(1);
+      query.put("space", KEY.space);
+      query.put("key", KEY.key);
+      AtomicReference<String> queryResult = new AtomicReference<>();
+      service.query(query, new Callback<String>() {
+        @Override
+        public void success(String value) {
+          queryResult.set(value);
+          latchQuery.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+      Assert.assertTrue(latchQuery.await(5000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(queryResult.get().startsWith("{\"space\":\"space\",\"key\":\"key\""));
       LatchCallback cb1 = new LatchCallback();
       streamback.get().send("foo", null, "{}", cb1);
       cb1.await_success(5);

@@ -374,4 +374,11 @@ public class ClientMessage {
     @FieldOrder(9)
     public String ip;
   }
+
+  @TypeId(1999)
+  @Flow("Server")
+  public static class ExecuteQuery {
+    @FieldOrder(1)
+    public Header[] headers;
+  }
 }

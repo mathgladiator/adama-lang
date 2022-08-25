@@ -170,4 +170,11 @@ public class ServerMessage {
     @FieldOrder(10)
     public String asset_transform;
   }
+
+  @TypeId(2001)
+  @Flow("Query")
+  public static class QueryResult {
+    @FieldOrder(1)
+    public String result;
+  }
 }

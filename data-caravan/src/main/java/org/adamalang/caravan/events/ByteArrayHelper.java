@@ -14,7 +14,7 @@ import io.netty.buffer.ByteBuf;
 public class ByteArrayHelper {
   public static byte[] convert(ByteBuf buf) {
     byte[] memory = new byte[buf.writerIndex()];
-    while (buf.isReadable()) {
+    while (buf.readerIndex() < buf.writerIndex()) {
       buf.readBytes(memory, buf.readerIndex(), memory.length - buf.readerIndex());
     }
     return memory;

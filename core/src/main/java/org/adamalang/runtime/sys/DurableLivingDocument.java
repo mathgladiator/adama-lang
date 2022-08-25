@@ -10,12 +10,10 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
+import org.adamalang.runtime.contracts.Queryable;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.exceptions.PerformDocumentDeleteException;
@@ -35,12 +33,13 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 /** A LivingDocument tied to a document id and DataService */
-public class DurableLivingDocument {
+public class DurableLivingDocument implements Queryable {
   public static final int MAGIC_MAXIMUM_DOCUMENT_QUEUE = 256;
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(DurableLivingDocument.class);
   private static final Callback<LivingDocumentChange> DONT_CARE_CHANGE = new Callback<LivingDocumentChange>() {
@@ -235,6 +234,20 @@ public class DurableLivingDocument {
       writer.writeString(context.ip);
     }
     return writer;
+  }
+
+  @Override
+  public void query(TreeMap<String, String> query, Callback<String> callback) {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("space");
+    writer.writeString(key.space);
+    writer.writeObjectFieldIntro("key");
+    writer.writeString(key.key);
+    writer.writeObjectFieldIntro("size");
+    writer.writeInteger(size.get());
+    writer.endObject();
+    callback.success(writer.toString());
   }
 
   private void testQueueSizeAndThenMaybeCompact() {

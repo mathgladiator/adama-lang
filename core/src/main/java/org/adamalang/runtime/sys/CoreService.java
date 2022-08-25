@@ -11,10 +11,7 @@ package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
-import org.adamalang.runtime.contracts.DeploymentMonitor;
-import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
-import org.adamalang.runtime.contracts.Perspective;
-import org.adamalang.runtime.contracts.Streamback;
+import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
@@ -32,10 +29,7 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,7 +37,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /** The core service enables consumers to manage an in-process Adama */
-public class CoreService implements Deliverer {
+public class CoreService implements Deliverer, Queryable {
   private static final Logger LOGGER = LoggerFactory.getLogger(CoreService.class);
   public static Callback<DurableLivingDocument> DONT_CARE_DOCUMENT = new Callback<DurableLivingDocument>() {
     @Override
@@ -130,6 +124,28 @@ public class CoreService implements Deliverer {
         callback.failure(ex);
       }
     });
+  }
+
+  @Override
+  public void query(TreeMap<String, String> query, Callback<String> callback) {
+    if (query.containsKey("space") && query.containsKey("key")) {
+      Key key = new Key(query.get("space"), query.get("key"));
+      load(key, new Callback<>() {
+        @Override
+        public void success(DurableLivingDocument document) {
+          document.query(query, callback);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
+    } else if ("dump-datastore".equals(query.get("method"))) {
+      callback.success("{\"result\":\"TODO\"}");
+    } else {
+      callback.failure(new ErrorCodeException(ErrorCodes.QUERY_MADE_NO_SENSE));
+    }
   }
 
   private void load(Key key, Callback<DurableLivingDocument> callbackReal) {

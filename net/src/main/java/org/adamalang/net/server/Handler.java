@@ -175,6 +175,30 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     nexus.service.dataService.compute(key, ComputeMethod.fromType(payload.method), payload.seq, respondViaLocalDataChange());
   }
 
+  @Override
+  public void handle(ClientMessage.ExecuteQuery payload) {
+    TreeMap<String, String> query = new TreeMap<>();
+    for (ClientMessage.Header header : payload.headers) {
+      query.put(header.key, header.value);
+    }
+    nexus.service.query(query, new Callback<>() {
+      @Override
+      public void success(String value) {
+        ServerMessage.QueryResult response = new ServerMessage.QueryResult();
+        response.result = value;
+        ByteBuf buf = upstream.create(response.result.length() + 60);
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
+  }
+
   private void commonWebHandle(WebResponse value) {
     ServerMessage.WebResponseNet response = new ServerMessage.WebResponseNet();
     response.body = value.body;
