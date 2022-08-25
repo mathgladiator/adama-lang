@@ -112,6 +112,7 @@ class WebSocketAdamaConnection {
         self.connected = true;
         self.assets = result.assets;
         self.onstatuschange(true);
+        self._reconnect();
         self.ConfigureMakeOrGetAssetKey({
           success: function (payload) {
             try {
@@ -126,7 +127,6 @@ class WebSocketAdamaConnection {
           failure: function () {
           }
         });
-        self._reconnect();
         return;
       }
       // the result was a failure...

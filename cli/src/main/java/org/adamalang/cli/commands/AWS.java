@@ -10,16 +10,25 @@
 package org.adamalang.cli.commands;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.netty.buffer.Unpooled;
+import org.adamalang.caravan.events.EventCodec;
+import org.adamalang.caravan.events.Events;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.extern.aws.*;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.service.WebConfig;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class AWS {
   public static void execute(Config config, String[] args) throws Exception {
@@ -35,6 +44,9 @@ public class AWS {
         return;
       case "test-email":
         awsTestEmail(config);
+        return;
+      case "download-archive":
+        awsDownloadArchive(next, config);
         return;
       case "memory-test":
         awsMemoryTest();
@@ -71,8 +83,72 @@ public class AWS {
     System.out.println(Util.prefix("AWSSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("setup", Util.ANSI.Green) + "             Interactive setup for the config");
     System.out.println("    " + Util.prefix("test-email", Util.ANSI.Green) + "        Test Email via AWS");
+    System.out.println("    " + Util.prefix("download-archive", Util.ANSI.Green) + "  Download (and validate) an archive");
     System.out.println("    " + Util.prefix("memory-test", Util.ANSI.Green) + "       Crash by allocating memory");
     System.out.println("    " + Util.prefix("release", Util.ANSI.Green) + "           Release the binary to the world");
+  }
+
+  public static void awsDownloadArchive(String[] args, Config config) throws Exception {
+    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
+    String archiveKey = Util.extractOrCrash("--archive", "-a", args);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    String key = Util.extractOrCrash("--key", "-k", args);
+    WebClientBase base = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
+    try {
+      CountDownLatch latch = new CountDownLatch(123);
+      S3 s3 = new S3(base, awsConfig, new AWSMetrics(new NoOpMetricsFactory()));
+      s3.restore(new Key(space, key), archiveKey, new Callback<File>() {
+        @Override
+        public void success(File archiveFile) {
+          try {
+            System.err.println("LOADED");
+            int good = 0;
+            try (DataInputStream input = new DataInputStream(new FileInputStream(archiveFile))) {
+              while (input.readBoolean()) {
+                byte[] bytes = new byte[input.readInt()];
+                input.readFully(bytes);
+                try {
+                  EventCodec.route(Unpooled.wrappedBuffer(bytes), new EventCodec.HandlerEvent() {
+                    @Override
+                    public void handle(Events.Snapshot payload) {
+
+                    }
+
+                    @Override
+                    public void handle(Events.Batch payload) {
+
+                    }
+
+                    @Override
+                    public void handle(Events.Change payload) {
+
+                    }
+                  });
+                  good++;
+                } catch (Exception failedRoute) {
+                  System.err.println("BAD! (prior good:" + good + "): " + failedRoute.getMessage());
+                  failedRoute.printStackTrace();
+                  good = 0;
+                }
+              }
+            }
+          } catch (Exception failedToScan) {
+            failedToScan.printStackTrace();
+          }
+          archiveFile.delete();
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          System.err.println("Error:" + ex);
+          latch.countDown();
+        }
+      });
+      latch.await(60000, TimeUnit.MILLISECONDS);
+    } finally {
+      base.shutdown();
+    }
   }
 
   public static void awsTestEmail(Config config) throws Exception {
