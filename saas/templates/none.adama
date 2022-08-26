@@ -1,0 +1,15 @@
+@static {
+  create {
+    return @who.isAnonymous() || @who.isAdamaDeveloper();
+  }
+}
+
+private principal owner;
+
+@construct {
+  owner = @who;
+}
+
+@connected {
+  return owner == @who;
+}

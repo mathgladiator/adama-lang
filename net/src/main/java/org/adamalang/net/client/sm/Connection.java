@@ -24,9 +24,12 @@ import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.Key;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Assumes a fixed routing decision and heads until first failure */
 public class Connection implements AdamaStream {
+  private static final Logger LOG = LoggerFactory.getLogger(Connection.class);
   // these can be put under a base
   private final ConnectionBase base;
   // these are critical to the request (i.e they are the request)
@@ -77,6 +80,7 @@ public class Connection implements AdamaStream {
     if (ErrorTable.INSTANCE.shouldRetry(error)) {
       if (waitingInError > timeoutMilliseconds) {
         base.metrics.lcsm_timeout.run();
+        LOG.error("connection-timeout;original=" + error);
         signalError(ErrorCodes.NET_LCSM_TIMEOUT);
         return;
       }

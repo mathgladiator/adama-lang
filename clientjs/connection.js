@@ -104,7 +104,7 @@ class WebSocketAdamaConnection {
           self.socket.close();
           self.socket = null;
           self.backoff = self.reset_backoff;
-          _retry();
+          self._retry();
           return;
         }
         // tell the client that we are good!
@@ -207,9 +207,13 @@ class WebSocketAdamaConnection {
       if (sm.first) {
         sm.first = false;
         if ("failure" in response) {
-          sm.responder.failure(response.reason);
+          if ('failure' in sm.responder) {
+            sm.responder.failure(response.reason);
+          }
         } else {
-          sm.responder.success(response.response);
+          if ('success' in sm.responder) {
+            sm.responder.success(response.response);
+          }
         }
       }
       self.onreconnect.delete(sm.id);
@@ -226,15 +230,21 @@ class WebSocketAdamaConnection {
     var self = this;
     self._write(sm.request, function (response) {
       if ("failure" in response) {
-        sm.responder.failure(response.reason);
+        if ('failure' in sm.responder) {
+          sm.responder.failure(response.reason);
+        }
         self.onreconnect.delete(sm.id);
         return;
       }
       if (response.response) {
-        sm.responder.next(response.response);
+        if ('next' in sm.responder) {
+          sm.responder.next(response.response);
+        }
       }
       if (response.done) {
-        sm.responder.complete();
+        if ('complete' in sm.responder) {
+          sm.responder.complete();
+        }
         self.onreconnect.delete(sm.id);
       }
     });

@@ -949,7 +949,7 @@ var RxHTML = (function () {
     for (var cid in connections) {
       var co = connections[cid];
       if (co.ptr != null) {
-        co.ptr.end();
+        co.ptr.end({success:function(){}, failure:function(){}});
       }
       axe.push(cid);
     }
@@ -1090,7 +1090,7 @@ var RxHTML = (function () {
         return;
       }
       if (co.ptr != null) {
-        co.ptr.end();
+        co.ptr.end({success:function(){}, failure:function(){}});
       }
       co.bound = desired;
       var idLookup = self.ID(rxobj.identity, redirectTo);
@@ -1109,6 +1109,8 @@ var RxHTML = (function () {
           if ("outstanding" in payload.delta) {
             co.ondecide(payload.delta.outstanding);
           }
+        },
+        complete: function() {
         },
         failure: function (reason) {
           // TODO: if not authorized

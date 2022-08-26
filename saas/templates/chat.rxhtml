@@ -1,0 +1,29 @@
+<forest>
+  <template name="chatter">
+    <h2><fragment /></h2>
+    <table border="1">
+    <thead><tr><th>Who</th><th>What</th><th>When</th></thead>
+    <tbody rx:iterate="chat">
+      <tr>
+        <td><lookup path="who" transform="principal.agent" /></td>
+        <td><lookup path="what" /></td>
+        <td><lookup path="when" /></td>
+      </tr>
+    </tbody></table>
+    <form rx:action="send:say">
+      <input type="text" name="what">
+      <button type="submit">Say</button>
+    </form>
+  </template>
+  <page uri="/">
+    <table><tr><td>
+      <connection space="$TEMPLATE_SPACE" key="talk" identity="direct:anonymous:alice">
+        <div rx:template="chatter">Alice</div>
+      </connection>
+    </td><td>
+      <connection space="$TEMPLATE_SPACE" key="talk" identity="direct:anonymous:bob">
+        <div rx:template="chatter">Bob</div>
+      </connection>
+    </td></tr></table>
+  </page>
+</forest>

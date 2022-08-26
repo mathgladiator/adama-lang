@@ -137,13 +137,18 @@ public class Space {
     String singleFile = Util.extractWithDefault("--file", "-f", null, args);
     final String planJson;
     if (singleFile != null) {
+      String rxHTML = Util.extractWithDefault("--rxhtml", "-r", null, args);
       System.out.println("validating file...");
       if (!Code.compileFile(config, args)) {
         return;
       }
       String singleScript = Files.readString(new File(singleFile).toPath());
       ObjectNode plan = Json.newJsonObject();
-      plan.putObject("versions").put("file", singleScript);
+      ObjectNode version = plan.putObject("versions").putObject("file");
+      version.put("main", singleScript);
+      if (rxHTML != null) {
+        version.put("rxhtml", Files.readString(new File(rxHTML).toPath()));
+      }
       plan.put("default", "file");
       plan.putArray("plan");
       planJson = plan.toString();

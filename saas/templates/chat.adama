@@ -1,0 +1,42 @@
+@static {
+  create {
+    return true;
+  }
+
+  invent {
+    return true;
+  }
+}
+
+@connected {
+  return true;
+}
+
+// `who said `what `when
+record Line {
+  public principal who;
+  public string what;
+  public long when;
+}
+
+// a table will privately store messages
+table<Line> _chat;
+
+// since we want all connected parties to
+// see everything, just reactively expose it
+public formula chat = iterate _chat;
+
+message Say {
+  string what;
+}
+
+// the "channel" enables someone to send a message
+// bound to some code
+channel say(Say what) {
+  // ingest the line into the chat
+  _chat <- {who:@who, what:what.what, when: Time.now()};
+
+  // since you are paying for the chat, let's cap the
+  // size to 50 total messages.
+  (iterate _chat order by when desc offset 50).delete();
+}

@@ -20,6 +20,8 @@ import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.ServiceShield;
 import org.adamalang.runtime.sys.metering.MeterReading;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Sketch of the capacity agent */
 public class CapacityAgent implements HeatMonitor  {
+  private final Logger LOG = LoggerFactory.getLogger(CapacityAgent.class);
   private final CapacityMetrics metrics;
   private final DataBase database;
   private final CoreService service;
@@ -68,16 +71,19 @@ public class CapacityAgent implements HeatMonitor  {
       });
     }));
     this.rejectNew = new BinaryEventOrGate((b) -> {
+      LOG.error(b ? "rejecting new documents" : "accepting new documents");
       metrics.shield_active_new_documents.set(b ? 1 : 0);
-      shield.canConnectNew.set(b);
+      shield.canConnectNew.set(!b);
     });
     this.rejectExisting = new BinaryEventOrGate((b) -> {
+      LOG.error(b ? "rejecting traffic to existing documents" : "allowing traffic to existing documents");
       metrics.shield_active_existing_connections.set(b ? 1 : 0);
-      shield.canConnectExisting.set(b);
+      shield.canConnectExisting.set(!b);
     });
     this.rejectMessages = new BinaryEventOrGate((b) -> {
+      LOG.error(b ? "rejecting messages" : "allowing messages");
       metrics.shield_active_messages.set(b ? 1 : 0);
-      shield.canSendMessageExisting.set(b);
+      shield.canSendMessageExisting.set(!b);
     });
 
     {

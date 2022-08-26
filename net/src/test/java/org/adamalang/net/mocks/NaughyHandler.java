@@ -124,6 +124,11 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
+  public void handle(ClientMessage.ExecuteQuery payload) {
+    real.failure(new ErrorCodeException(-1230));
+  }
+
+  @Override
   public void failure(ErrorCodeException exception) {
     real.failure(exception);
   }

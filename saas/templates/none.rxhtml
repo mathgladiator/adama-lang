@@ -1,0 +1,17 @@
+<forest>
+  <template name="perspective">
+    <h2><fragment /></h2>
+    Here is where you bind data...
+  </template>
+  <page uri="/">
+    <table><tr><td>
+      <connection space="$TEMPLATE_SPACE" key="demo" identity="direct:anonymous:alice">
+        <div rx:template="perspective">Alice</div>
+      </connection>
+    </td><td>
+      <connection space="$TEMPLATE_SPACE" key="demo" identity="direct:anonymous:bob">
+        <div rx:template="perspective">Bob</div>
+      </connection>
+    </td></tr></table>
+  </page>
+</forest>
