@@ -9,7 +9,6 @@
  */
 package org.adamalang.common;
 
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Function;
 
 /**
