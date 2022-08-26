@@ -62,28 +62,6 @@ public interface Callback<T> {
   /** the action failed outright, and the reason is the exception */
   void failure(ErrorCodeException ex);
 
-  static <T> Callback<T> bind(ScheduledExecutorService service, int exceptionErrorCode, Callback<T> next) {
-    return new Callback<T>() {
-      @Override
-      public void success(T value) {
-        service.execute(() -> {
-          try {
-            next.success(value);
-          } catch (Throwable ex) {
-            next.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex, CALLBACK_LOGGER));
-          }
-        });
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        service.execute(() -> {
-          next.failure(ex);
-        });
-      }
-    };
-  }
-
   static <T> Callback<Void> handoff(Callback<T> next, int exceptionErrorCode, Runnable success) {
     return new Callback<>() {
       @Override

@@ -28,56 +28,10 @@ public class CallbackTests {
     Assert.assertEquals(50, (int) callback.result);
   }
 
-  @Test
-  public void bind_happy() throws Exception {
-    MockCallback<Integer> callback = new MockCallback<Integer>();
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    Callback<Integer> bound = Callback.bind(executor, 40, callback);
-    bound.success(42);
-    waitFor(executor);
-    Assert.assertEquals(42, (int) callback.result);
-  }
-
   private void waitFor(ScheduledExecutorService executor) throws Exception {
     CountDownLatch latch = new CountDownLatch(1);
     executor.execute(() -> latch.countDown());
     latch.await(1000, TimeUnit.MILLISECONDS);
-  }
-
-  @Test
-  public void bind_throws() throws Exception {
-    MockCallback<Integer> callback = new MockCallback<Integer>();
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    Callback<Integer> bound = Callback.bind(executor, 40, callback);
-    bound.failure(new ErrorCodeException(42));
-    waitFor(executor);
-    Assert.assertTrue(callback.exception instanceof ErrorCodeException);
-    Assert.assertEquals(42, callback.exception.code);
-  }
-
-  @Test
-  public void bind_crash() throws Exception {
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    AtomicReference<ErrorCodeException> error = new AtomicReference<>();
-    Callback<Integer> bound =
-        Callback.bind(
-            executor,
-            40,
-            new Callback<Integer>() {
-              @Override
-              public void success(Integer value) {
-                throw new RuntimeException("nope");
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {
-                error.set(ex);
-              }
-            });
-    bound.success(4000);
-    waitFor(executor);
-    Assert.assertTrue(error.get() instanceof ErrorCodeException);
-    Assert.assertEquals(40, error.get().code);
   }
 
   @Test
