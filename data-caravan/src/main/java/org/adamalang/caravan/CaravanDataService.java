@@ -70,7 +70,7 @@ public class CaravanDataService implements ArchivingDataService {
   @Override
   public void restore(Key key, String archiveKey, Callback<Void> callback) {
     // ask the cloud to ensure the archive key has been downloaded
-    cloud.restore(key, archiveKey, new Callback<File>() {
+    cloud.restore(key, archiveKey, new Callback<>() {
       @Override
       public void success(File archiveFile) {
         // load the writes from the backup
@@ -245,7 +245,7 @@ public class CaravanDataService implements ArchivingDataService {
       };
       store.read(id, builder);
     } catch (Exception ex) {
-      LOGGER.error("failed-load", ex);
+      LOGGER.error("failed-load-" + id, ex);
       callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_LOAD_FAILURE_EXCEPTION, ex));
     }
   }
@@ -332,18 +332,22 @@ public class CaravanDataService implements ArchivingDataService {
 
   @Override
   public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
-    Events.Batch batch = new Events.Batch();
-    batch.changes = new Events.Change[patches.length];
-    long assetBytesSum = 0;
-    for (int k = 0; k < patches.length; k++) {
-      batch.changes[k] = new Events.Change();
-      batch.changes[k].copyFrom(patches[k]);
-      assetBytesSum += patches[k].assetBytes;
+    final Events.Batch batch = new Events.Batch();
+    final byte[] write;
+    final long assetBytes;
+    {
+      batch.changes = new Events.Change[patches.length];
+      long assetBytesSum = 0;
+      for (int k = 0; k < patches.length; k++) {
+        batch.changes[k] = new Events.Change();
+        batch.changes[k].copyFrom(patches[k]);
+        assetBytesSum += patches[k].assetBytes;
+      }
+      assetBytes = assetBytesSum;
+      ByteBuf buf = Unpooled.buffer();
+      EventCodec.write(buf, batch);
+      write = ByteArrayHelper.convert(buf);
     }
-    final long assetBytes = assetBytesSum;
-    ByteBuf buf = Unpooled.buffer();
-    EventCodec.write(buf, batch);
-    byte[] write = ByteArrayHelper.convert(buf);
     execute("patch", key, true, callback, (id, cached) -> {
       if (!cached.check(patches[0].seqBegin)) {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));

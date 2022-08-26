@@ -132,6 +132,7 @@ public class AWS {
                 }
               }
             }
+            System.err.println("Finished:" + good);
           } catch (Exception failedToScan) {
             failedToScan.printStackTrace();
           }

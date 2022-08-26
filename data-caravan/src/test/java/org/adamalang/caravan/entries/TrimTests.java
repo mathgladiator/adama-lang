@@ -23,6 +23,6 @@ public class TrimTests {
     Assert.assertEquals(0x13, buf.readByte());
     Trim trim2 = Trim.readAfterTypeId(buf);
     Assert.assertEquals(4L, trim2.id);
-    Assert.assertEquals(3, trim2.count);
+    Assert.assertEquals(3, trim2.maxSize);
   }
 }

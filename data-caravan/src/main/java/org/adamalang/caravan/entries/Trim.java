@@ -14,23 +14,23 @@ import org.adamalang.caravan.contracts.WALEntry;
 
 public class Trim implements WALEntry {
   public final long id;
-  public final int count;
+  public final int maxSize;
 
-  public Trim(long id, int count) {
+  public Trim(long id, int maxSize) {
     this.id = id;
-    this.count = count;
+    this.maxSize = maxSize;
   }
 
   public static Trim readAfterTypeId(ByteBuf buf) {
     long id = buf.readLongLE();
-    int count = buf.readIntLE();
-    return new Trim(id, count);
+    int maxSize = buf.readIntLE();
+    return new Trim(id, maxSize);
   }
 
   public void write(ByteBuf buf) {
     // Type ID
     buf.writeByte(0x13);
     buf.writeLongLE(id);
-    buf.writeIntLE(count);
+    buf.writeIntLE(maxSize);
   }
 }

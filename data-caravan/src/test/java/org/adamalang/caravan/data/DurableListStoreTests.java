@@ -228,7 +228,7 @@ public class DurableListStoreTests {
           store.append(3, ("K:" + k).getBytes(StandardCharsets.UTF_8), 10, 1024, event);
         }
 
-        store.trim(2, 90, event);
+        store.trim(2, 5, event);
         Assert.assertTrue(store.exists(3));
         store.delete(3, event);
         Assert.assertFalse(store.exists(3));
@@ -252,7 +252,7 @@ public class DurableListStoreTests {
         {
           MockByteArrayStream stream = new MockByteArrayStream();
           store.read(2, stream);
-          stream.assertIs("[0=K:90/10:1024][1=K:91/10:1024][2=K:92/10:1024][3=K:93/10:1024][4=K:94/10:1024][5=K:95/10:1024][6=K:96/10:1024][7=K:97/10:1024][8=K:98/10:1024][9=K:99/10:1024]FINISHED");
+          stream.assertIs("[0=K:95/10:1024][1=K:96/10:1024][2=K:97/10:1024][3=K:98/10:1024][4=K:99/10:1024]FINISHED");
         }
         Assert.assertFalse(store.exists(3));
         store.flush(true);
@@ -273,7 +273,7 @@ public class DurableListStoreTests {
         {
           MockByteArrayStream stream = new MockByteArrayStream();
           store.read(2, stream);
-          stream.assertIs("[0=K:90/10:1024][1=K:91/10:1024][2=K:92/10:1024][3=K:93/10:1024][4=K:94/10:1024][5=K:95/10:1024][6=K:96/10:1024][7=K:97/10:1024][8=K:98/10:1024][9=K:99/10:1024]FINISHED");
+          stream.assertIs("[0=K:95/10:1024][1=K:96/10:1024][2=K:97/10:1024][3=K:98/10:1024][4=K:99/10:1024]FINISHED");
         }
         store.shutdown();
       }

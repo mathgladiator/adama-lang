@@ -119,7 +119,7 @@ public class DurableListStore {
             {
               Append append = Append.readAfterTypeId(buf);
               Region region = heap.ask(append.bytes.length);
-              if (region.position != append.position) {
+              if (region.position != append.position || region.size != append.bytes.length) {
                 throw new IOException("heap corruption!");
               }
               index.append(append.id, new AnnotatedRegion(region.position, region.size, append.seq, append.assetBytes));
@@ -136,7 +136,7 @@ public class DurableListStore {
               break;
             case 0x13: // trim
               Trim trim = Trim.readAfterTypeId(buf);
-              for (Region region : index.trim(trim.id, trim.count)) {
+              for (Region region : index.trim(trim.id, trim.maxSize)) {
                 heap.free(region);
               }
               break;
@@ -199,20 +199,30 @@ public class DurableListStore {
     return heap.available();
   }
 
+  /** helper: pair a region to a byte array */
+  private class RegionByteArrayPairing {
+    private final Region where;
+    private final byte[] bytes;
+    private RegionByteArrayPairing(Region where, byte[] bytes) {
+      this.where = where;
+      this.bytes = bytes;
+    }
+  }
+
   /** append a byte array to the given id */
   public Integer append(long id, ArrayList<byte[]> batch, int seq, long assetBytes, Runnable notification) {
     // allocate the items in the batch
-    ArrayList<Region> wheres = new ArrayList<>();
+    ArrayList<RegionByteArrayPairing> wheres = new ArrayList<>();
     for (byte[] bytes : batch) {
       Region where = heap.ask(bytes.length);
       if (where == null) {
         // we failed to allocate one, so we free everything and return a null
-        for (Region prior : wheres) {
-          heap.free(prior);
+        for (RegionByteArrayPairing prior : wheres) {
+          heap.free(prior.where);
         }
         return null;
       } else {
-        wheres.add(where);
+        wheres.add(new RegionByteArrayPairing(where, bytes));
       }
     }
 
@@ -220,17 +230,13 @@ public class DurableListStore {
     this.notifications.add(notification);
 
     // walk the regions allocated and the bytes
-    Iterator<Region> whereIt = wheres.iterator();
-    Iterator<byte[]> bytesIt = batch.iterator();
     int lastSize = -1;
-    while (whereIt.hasNext()) {
-      Region where = whereIt.next();
-      byte[] bytes = bytesIt.next();
+    for (RegionByteArrayPairing pairing : wheres) {
       RestoreWalker walker = new RestoreWalker();
-      EventCodec.route(Unpooled.wrappedBuffer(bytes), walker);
-      storage.write(where, bytes);
-      lastSize = index.append(id, new AnnotatedRegion(where.position, where.size, walker.seq, walker.assetBytes));
-      new Append(id, where.position, bytes, seq, assetBytes).write(buffer);
+      EventCodec.route(Unpooled.wrappedBuffer(pairing.bytes), walker);
+      storage.write(pairing.where, pairing.bytes);
+      lastSize = index.append(id, new AnnotatedRegion(pairing.where.position, pairing.bytes.length, walker.seq, walker.assetBytes));
+      new Append(id, pairing.where.position, pairing.bytes, seq, assetBytes).write(buffer);
     }
 
     if (buffer.writerIndex() > flushCutOffBytes) {
@@ -313,7 +319,7 @@ public class DurableListStore {
       ArrayList<AnnotatedRegion> regions = index.trim(id, maxSize);
       if (regions != null && regions.size() > 0) {
         this.notifications.add(notification);
-        new Trim(id, regions.size()).write(buffer);
+        new Trim(id, maxSize).write(buffer);
         for (Region region : regions) {
           metrics.items_trimmed.run();
           heap.free(region);
