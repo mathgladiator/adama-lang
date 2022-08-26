@@ -23,6 +23,9 @@ public class DiskMetrics {
   public final Inflight items_over_fiftyk;
   public final Inflight items_over_onehundredk;
   public final Runnable items_trimmed;
+  public final Runnable appends;
+  public final Runnable failed_append;
+  public final Runnable reads;
 
   public DiskMetrics(MetricsFactory factory) {
     this.flush = factory.counter("disk_flush");
@@ -35,5 +38,8 @@ public class DiskMetrics {
     this.items_over_fiftyk = factory.inflight("storage_items_over_fiftyk");
     this.items_over_onehundredk = factory.inflight("alarm_storage_items_over_onehundredk");
     this.items_trimmed = factory.counter("storage_items_trimmed");
+    this.failed_append = factory.counter("alarm_failed_append");
+    this.appends = factory.counter("storage_appends");
+    this.reads = factory.counter("storage_reads");
   }
 }

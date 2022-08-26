@@ -232,6 +232,7 @@ public class DurableListStore {
     // walk the regions allocated and the bytes
     int lastSize = -1;
     for (RegionByteArrayPairing pairing : wheres) {
+      metrics.appends.run();
       RestoreWalker walker = new RestoreWalker();
       EventCodec.route(Unpooled.wrappedBuffer(pairing.bytes), walker);
       storage.write(pairing.where, pairing.bytes);
@@ -286,9 +287,11 @@ public class DurableListStore {
   public Integer append(long id, byte[] bytes, int seq, long assetBytes, Runnable notification) {
     Region where = heap.ask(bytes.length);
     if (where == null) {
+      metrics.failed_append.run();
       // we are out of space
       return null;
     }
+    metrics.appends.run();
     this.notifications.add(notification);
     storage.write(where, bytes);
     int size = index.append(id, new AnnotatedRegion(where.position, where.size, seq, assetBytes));
@@ -305,6 +308,7 @@ public class DurableListStore {
     Iterator<AnnotatedRegion> it = index.get(id);
     int at = 0;
     while (it.hasNext()) {
+      metrics.reads.run();
       AnnotatedRegion region = it.next();
       byte[] mem = storage.read(region);
       streamback.next(at, mem, region.seq, region.assetBytes);
