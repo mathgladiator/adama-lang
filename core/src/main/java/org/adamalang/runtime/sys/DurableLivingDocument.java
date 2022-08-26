@@ -42,7 +42,7 @@ import java.util.function.Consumer;
 public class DurableLivingDocument implements Queryable {
   public static final int MAGIC_MAXIMUM_DOCUMENT_QUEUE = 256;
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(DurableLivingDocument.class);
-  private static final Callback<LivingDocumentChange> DONT_CARE_CHANGE = new Callback<LivingDocumentChange>() {
+  private static final Callback<LivingDocumentChange> DONT_CARE_CHANGE = new Callback<>() {
     @Override
     public void success(LivingDocumentChange value) {
     }

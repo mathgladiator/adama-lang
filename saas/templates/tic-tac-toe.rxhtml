@@ -1,17 +1,37 @@
 <forest>
-  <template name="perspective">
-    <h2><fragment /></h2>
-    Here is where you bind data...
+  <template name="cell">
+    <span rx:switch="state">
+      <span rx:case="0">
+        <span rx:if="decide:play">
+          <button rx:click="decide:play">Play</button>
+        </span>
+      </span>
+      <span rx:case="1">X</span>
+      <span rx:case="2">O</span>
+    </span>
+  </template>
+
+  <template name="game">
+    <h2><fragment /> - <lookup path="your_role" /> (Won: <lookup path="your_wins" />)</h2>
+    <table border="1">
+      <tr rx:iterate="row1">
+        <td rx:template="cell"></td>
+      </tr>
+      <tr rx:iterate="row2">
+        <td rx:template="cell"></td>
+      </tr>
+      <tr rx:iterate="row3">
+        <td rx:template="cell"></td>
+      </tr>
+    </table>
   </template>
   <page uri="/">
-    <table><tr><td>
-      <connection space="$TEMPLATE_SPACE" key="demo" identity="direct:anonymous:alice">
-        <div rx:template="perspective">Alice</div>
-      </connection>
-    </td><td>
-      <connection space="$TEMPLATE_SPACE" key="demo" identity="direct:anonymous:bob">
-        <div rx:template="perspective">Bob</div>
-      </connection>
-    </td></tr></table>
+    <connection name="player1" identity="direct:anonymous:alice" space="$TEMPLATE_SPACE" key="demo-{view:session_id}">
+      <div rx:template="game">Alice</div>
+    </connection>
+    <hr />
+    <connection name="player2" identity="direct:anonymous:bob" space="$TEMPLATE_SPACE" key="demo-{view:session_id}">
+      <div rx:template="game">Bob</div>
+    </connection>
   </page>
 </forest>
