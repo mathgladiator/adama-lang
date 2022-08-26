@@ -274,6 +274,8 @@ public class ErrorTable {
     names.put(146561, "DEPLOYMENT_UNKNOWN_EXCEPTION");
     descriptions.put(146561, "The deployment plan failed for an unknown reason");
     userspace.add(146561);
+    names.put(130242, "QUERY_MADE_NO_SENSE");
+    descriptions.put(130242, "The query did make sense");
     names.put(684039, "USER_NOT_FOUND_GET_PASSWORD");
     descriptions.put(684039, "no description of error (yet)");
     names.put(605208, "USER_NOT_FOUND_GET_BALANCE");

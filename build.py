@@ -29,13 +29,10 @@ if clean:
 
 if client:
     cwd = os.getcwd()
-    os.chdir("client")
-    if production:
-        os.system("npm run build")
-    else:
-        os.system("npm run devbuild")
+    os.chdir("clientjs")
+    os.system("./build.sh")
     os.chdir(cwd)
-    args = ["cp", "./client/dist/libadama.js", "./release/"]
+    args = ["cp", "./clientjs/libadama.js", "./release/"]
     os.system(" ".join(args))
 
 if jar:
