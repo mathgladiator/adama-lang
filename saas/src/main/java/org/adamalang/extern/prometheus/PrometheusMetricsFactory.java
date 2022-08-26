@@ -283,7 +283,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
           timeout.inc();
         }
       }
-    }, 2500);
+    }, 10000);
     return responded;
   }
 }
