@@ -144,18 +144,7 @@ public class WebHandlerTests {
             .get("/libadama.js")
             .execute(callback);
         callback.awaitFirst();
-        callback.assertDataPrefix("!function(e,t){");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        callback.keepPings = true; // Hack since the rxhtml.js MAY have ping in it
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
-            .get("/rxhtml.js")
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertDataPrefix("function AdamaTreeSimple() {");
+        callback.assertDataPrefix("function AdamaTree(");
       }
 
       {
