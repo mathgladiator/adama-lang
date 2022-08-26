@@ -243,9 +243,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     } else if (req.uri().startsWith("/libadama.js")) { // in-memory JavaScript library for the client
       sendImmediate(metrics.webhandler_client_download, req, ctx, HttpResponseStatus.OK, JavaScriptClient.ADAMA_JS_CLIENT_BYTES, "text/javascript; charset=UTF-8", true);
       return true;
-    } else if (req.uri().startsWith("/rxhtml.js")) { // in-memory JavaScript library for RxHTML (to be integrated into client)
-      sendImmediate(metrics.webhandler_client_download, req, ctx, HttpResponseStatus.OK, JavaScriptRxHtml.RXHTML_JS_BYTES, "text/javascript; charset=UTF-8", true);
-      return true;
     } else if (req.uri().startsWith("/~assets/")) { // assets that are encrypted and private to the connection
       handleEncryptedAsset(req, ctx);
       return true;

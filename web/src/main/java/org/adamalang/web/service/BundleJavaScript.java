@@ -30,18 +30,6 @@ public class BundleJavaScript {
       sb.append("}");
       Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptClient.java").toPath(), sb.toString());
     }
-    {
-      String str = Files.readString(new File("./release/rxhtml.js").toPath());
-      StringBuilder sb = new StringBuilder();
-      sb.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
-      sb.append("package org.adamalang.web.service;\n\n");
-      sb.append("import java.util.Base64;\n\n");
-      sb.append("public class JavaScriptRxHtml {\n");
-      sb.append("  public static final byte[] RXHTML_JS_BYTES = ");
-      appendStringInChunks(sb, new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8))));
-      sb.append("}");
-      Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptRxHtml.java").toPath(), sb.toString());
-    }
   }
 
   private static void appendStringInChunks(StringBuilder sb, String str) {
