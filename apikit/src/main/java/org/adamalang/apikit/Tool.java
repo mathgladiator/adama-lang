@@ -46,7 +46,6 @@ public class Tool {
     String testOutputPathStr = DocumentHelper.attribute(api, "test-output-path");
     String packageName = DocumentHelper.attribute(api, "package");
     String docsFile = DocumentHelper.attribute(api, "docs");
-    String clientFile = DocumentHelper.attribute(api, "client");
     String clientFileJs = DocumentHelper.attribute(api, "clientjs");
     Map<String, ParameterDefinition> parameters = ParameterDefinition.buildMap(doc);
     Map<String, FieldDefinition> fields = FieldDefinition.buildMap(doc);
@@ -86,11 +85,6 @@ public class Tool {
     }
 
     diskWrites.put(new File(root, docsFile), AssembleAPIDocs.docify(methods));
-    String client = Files.readString(new File(root, clientFile).toPath());
-    client = AssembleClient.injectInvoke(client, methods);
-    client = AssembleClient.injectResponders(client, responders);
-    diskWrites.put(new File(root, clientFile), client);
-
     String clientJs = Files.readString(new File(root, clientFileJs).toPath());
     clientJs = AssembleClient.injectInvokePlainJs(clientJs, methods);
     diskWrites.put(new File(root, clientFileJs), clientJs);
