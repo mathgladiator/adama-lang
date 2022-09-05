@@ -12,6 +12,7 @@ package org.adamalang.extern;
 import org.adamalang.api.ApiMetrics;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.frontend.FrontendConfig;
+import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.web.assets.AssetSystem;
@@ -35,12 +36,14 @@ public class ExternNexus {
   public final PrivateKey webHostKey;
   public final int publicKeyId;
   public final AssetSystem assets;
+  public final FrontendMetrics frontendMetrics;
 
   public ExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId) {
     this.config = config;
     this.email = email;
     this.database = database;
     this.metrics = new ApiMetrics(metricsFactory);
+    this.frontendMetrics = new FrontendMetrics(metricsFactory);
     this.attachmentRoot = attachmentRoot;
     this.accessLogger = accessLogger;
     this.masterKey = masterKey;

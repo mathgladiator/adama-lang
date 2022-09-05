@@ -14,6 +14,7 @@ import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.extern.AssetSystemImpl;
+import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.ops.CapacityAgent;
 import org.adamalang.cli.commands.services.CaravanInit;
@@ -394,6 +395,7 @@ public class Service {
     metricsFactory.page("web", "Web");
     new WebMetrics(metricsFactory);
     metricsFactory.page("api", "Public API");
+    new FrontendMetrics(metricsFactory);
     new ApiMetrics(metricsFactory);
     metricsFactory.page("client", "Web to Adama");
     new ClientMetrics(metricsFactory);

@@ -32,36 +32,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class WebClientBaseTests {
   @Test
-  public void get() throws Exception {
-    WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest5);
-    WebClientBase clientBase = new WebClientBase(webConfig);
-    try {
-      CountDownLatch latch = new CountDownLatch(2);
-
-      Callback<String> callback = new Callback<String>() {
-        @Override
-        public void success(String value) {
-          latch.countDown();
-        }
-
-        @Override
-        public void failure(ErrorCodeException ex) {
-          latch.countDown();
-        }
-      };
-
-      clientBase.executeGet("https://nope.nope.nope.nope.nope.localhost/the-path", new HashMap<>(), callback);
-      clientBase.executeGet("https://www.adama-platform.com", new HashMap<>(), callback);
-      HashMap<String, String> google = new HashMap<>();
-      google.put("Authorization", "Bearer XYZ");
-      clientBase.executeGet("https://www.googleapis.com/oauth2/v1/userinfo", google, callback);
-      Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
-
-    } finally {
-      clientBase.shutdown();
-    }
-  }
-  @Test
   public void happy() throws Exception {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest1);
     MockServiceBase base = new MockServiceBase();

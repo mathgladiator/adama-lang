@@ -243,6 +243,24 @@
         </documentation>
     </parameter-definition>
 
+    <parameter-definition name="domain" type="string" missing-error="488444">
+        <documentation>
+            A domain name.
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="certificate" type="string" missing-error="428028">
+        <documentation>
+            A TLS/SSL Certificate encoded as json.
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="rxhtml" type="string" missing-error="402428">
+        <documentation>
+            A RxHTML forest which provides simplified web hosting.
+        </documentation>
+    </parameter-definition>
+
     <field-definition name="success" type="boolean">
         <documentation>
             Indicates if the operation or method was successful.
@@ -427,6 +445,18 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="rxhtml" type="string">
+        <documentation>
+            The RxHTML forest for a space.
+        </documentation>
+    </field-definition>
+
+    <field-definition name="domain" type="string">
+        <documentation>
+            A domain name.
+        </documentation>
+    </field-definition>
+
     <responder name="asset-key">
         <field name="asset-key"/>
     </responder>
@@ -453,6 +483,14 @@
 
     <responder name="authority-listing" stream="true">
         <field name="authority"/>
+    </responder>
+
+    <responder name="domain-policy">
+        <field name="space"/>
+    </responder>
+
+    <responder name="rxhtml">
+        <field name="rxhtml"/>
     </responder>
 
     <responder name="billing-usage" stream="true">
@@ -651,6 +689,23 @@
         </documentation>
     </method>
 
+    <method name="space/set-rxhtml" responder="simple">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="rxhtml"/>
+        <documentation>
+            Set the RxHTML forest for the space when viewed via a domain name.
+        </documentation>
+    </method>
+
+    <method name="space/get-rxhtml" responder="rxhtml">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <documentation>
+            Get the RxHTML forest for the space when viewed via a domain name.
+        </documentation>
+    </method>
+
     <method name="space/delete" responder="simple">
         <parameter name="identity"/>
         <parameter name="space"/>
@@ -689,6 +744,32 @@
         <parameter name="limit"/>
         <documentation>
             List the spaces available to the user.
+        </documentation>
+    </method>
+
+    <method name="domain/map" responder="simple">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <parameter name="space"/>
+        <parameter name="certificate"/>
+        <documentation>
+            Map a domain to a space.
+        </documentation>
+    </method>
+
+    <method name="domain/unmap" responder="simple">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <documentation>
+            Unmap a domain
+        </documentation>
+    </method>
+
+    <method name="domain/get" responder="domain-policy">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <documentation>
+            Get the domain mapping
         </documentation>
     </method>
 
@@ -1276,9 +1357,6 @@
 451582
 439295
 439292
-428028
-402428
-488444
 -->
 
 </api>

@@ -127,6 +127,7 @@ public class Installer {
         .append("  `unbilled_third_party_service_calls` INT(4) DEFAULT 0,") //
         .append("  `latest_billing_hour` INT(4) UNSIGNED DEFAULT 0,") //
         .append("  `plan` TEXT NOT NULL,") //
+        .append("  `rxhtml` TEXT,") //
         .append("  `hash` VARCHAR(256) NOT NULL,") //
         .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
         .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
@@ -216,6 +217,23 @@ public class Installer {
         .append(" DEFAULT CHARACTER SET = utf8mb4;") //
         .toString();
 
+    String createDomainsTableSQL = new StringBuilder() //
+        .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`domains` (") //
+        .append("  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,") //
+        .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
+        .append("  `space` VARCHAR(128) NOT NULL,") //
+        .append("  `domain` VARCHAR(254) NOT NULL,") //
+        .append("  `certificate` LONGTEXT NOT NULL,") //
+        .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
+        .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
+        .append("  PRIMARY KEY (`id`),") //
+        .append("  UNIQUE `d` (`domain`),") //
+        .append("  INDEX `o` (`owner`),") //
+        .append("  INDEX `s` (`space`))") //
+        .append(" ENGINE = InnoDB") //
+        .append(" DEFAULT CHARACTER SET = utf8mb4;") //
+        .toString();
+
     Connection connection = dataBase.pool.getConnection();
     try {
       DataBase.execute(connection, createDatabaseSQL);
@@ -232,6 +250,7 @@ public class Installer {
       DataBase.execute(connection, createBillingTableSQL);
       DataBase.execute(connection, createHostsTableSQL);
       DataBase.execute(connection, createSecretsTableSQL);
+      DataBase.execute(connection, createDomainsTableSQL);
     } finally {
       connection.close();
     }

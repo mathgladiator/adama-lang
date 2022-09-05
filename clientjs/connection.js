@@ -405,6 +405,24 @@ class WebSocketAdamaConnection {
       request: {"method":"space/set", "id":parId, "identity": identity, "space": space, "plan": plan}
     });
   }
+  SpaceSetRxhtml(identity, space, rxhtml, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"space/set-rxhtml", "id":parId, "identity": identity, "space": space, "rxhtml": rxhtml}
+    });
+  }
+  SpaceGetRxhtml(identity, space, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"space/get-rxhtml", "id":parId, "identity": identity, "space": space}
+    });
+  }
   SpaceDelete(identity, space, responder) {
     var self = this;
     var parId = self.__id();
@@ -439,6 +457,33 @@ class WebSocketAdamaConnection {
       id: parId,
       responder: responder,
       request: {"method":"space/list", "id":parId, "identity": identity, "marker": marker, "limit": limit}
+    });
+  }
+  DomainMap(identity, domain, space, certificate, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"domain/map", "id":parId, "identity": identity, "domain": domain, "space": space, "certificate": certificate}
+    });
+  }
+  DomainUnmap(identity, domain, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"domain/unmap", "id":parId, "identity": identity, "domain": domain}
+    });
+  }
+  DomainGet(identity, domain, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"domain/get", "id":parId, "identity": identity, "domain": domain}
     });
   }
   DocumentCreate(identity, space, key, entropy, arg, responder) {

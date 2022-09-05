@@ -117,6 +117,33 @@ public class Spaces {
     }
   }
 
+  public static void setRxHtml(DataBase dataBase, int spaceId, String rxhtml) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `rxhtml`=? WHERE `id`=" + spaceId + " LIMIT 1";
+      try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        statement.setString(1, rxhtml);
+        statement.execute();
+      }
+    }
+  }
+
+  public static String getRxHtml(DataBase dataBase, int spaceId) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = "SELECT `rxhtml` FROM `" + dataBase.databaseName + "`.`spaces` WHERE id=" + spaceId;
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (ResultSet rs = statement.executeQuery()) {
+          if (rs.next()) {
+            String rxhtml = rs.getString(1);
+            if (rxhtml != null) {
+              return rxhtml;
+            }
+          }
+          throw new ErrorCodeException(ErrorCodes.FRONTEND_RXHTML_DOESNT_EXIST);
+        }
+      }
+    }
+  }
+
   public static InternalDeploymentPlan getPlanByNameForInternalDeployment(DataBase dataBase, String spaceName) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = "SELECT `plan`, `hash` FROM `" + dataBase.databaseName + "`.`spaces` WHERE `name`=?";

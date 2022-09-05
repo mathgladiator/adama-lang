@@ -44,6 +44,10 @@ public interface RootHandler {
 
   public void handle(Session session, SpaceSetRequest request, SimpleResponder responder);
 
+  public void handle(Session session, SpaceSetRxhtmlRequest request, SimpleResponder responder);
+
+  public void handle(Session session, SpaceGetRxhtmlRequest request, RxhtmlResponder responder);
+
   public void handle(Session session, SpaceDeleteRequest request, SimpleResponder responder);
 
   public void handle(Session session, SpaceSetRoleRequest request, SimpleResponder responder);
@@ -51,6 +55,12 @@ public interface RootHandler {
   public void handle(Session session, SpaceReflectRequest request, ReflectionResponder responder);
 
   public void handle(Session session, SpaceListRequest request, SpaceListingResponder responder);
+
+  public void handle(Session session, DomainMapRequest request, SimpleResponder responder);
+
+  public void handle(Session session, DomainUnmapRequest request, SimpleResponder responder);
+
+  public void handle(Session session, DomainGetRequest request, DomainPolicyResponder responder);
 
   public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder);
 

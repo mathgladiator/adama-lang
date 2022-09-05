@@ -42,17 +42,19 @@ public class GeneratedResponderErrorProxyTest {
     new BillingUsageResponder(responder).error(new ErrorCodeException(3));
     new ClaimResultResponder(responder).error(new ErrorCodeException(4));
     new DataResponder(responder).error(new ErrorCodeException(5));
-    new InitiationResponder(responder).error(new ErrorCodeException(6));
-    new KeyListingResponder(responder).error(new ErrorCodeException(7));
-    new KeyPairResponder(responder).error(new ErrorCodeException(8));
-    new KeystoreResponder(responder).error(new ErrorCodeException(9));
-    new PlanResponder(responder).error(new ErrorCodeException(10));
-    new ProgressResponder(responder).error(new ErrorCodeException(11));
-    new ReflectionResponder(responder).error(new ErrorCodeException(12));
-    new SeqResponder(responder).error(new ErrorCodeException(13));
-    new SimpleResponder(responder).error(new ErrorCodeException(14));
-    new SpaceListingResponder(responder).error(new ErrorCodeException(15));
-    new YesResponder(responder).error(new ErrorCodeException(16));
-    Assert.assertEquals(136, errorCount.get());
+    new DomainPolicyResponder(responder).error(new ErrorCodeException(6));
+    new InitiationResponder(responder).error(new ErrorCodeException(7));
+    new KeyListingResponder(responder).error(new ErrorCodeException(8));
+    new KeyPairResponder(responder).error(new ErrorCodeException(9));
+    new KeystoreResponder(responder).error(new ErrorCodeException(10));
+    new PlanResponder(responder).error(new ErrorCodeException(11));
+    new ProgressResponder(responder).error(new ErrorCodeException(12));
+    new ReflectionResponder(responder).error(new ErrorCodeException(13));
+    new RxhtmlResponder(responder).error(new ErrorCodeException(14));
+    new SeqResponder(responder).error(new ErrorCodeException(15));
+    new SimpleResponder(responder).error(new ErrorCodeException(16));
+    new SpaceListingResponder(responder).error(new ErrorCodeException(17));
+    new YesResponder(responder).error(new ErrorCodeException(18));
+    Assert.assertEquals(171, errorCount.get());
   }
 }

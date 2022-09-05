@@ -35,6 +35,13 @@ public class SpacesTests {
         int bob = Users.getOrCreateUserId(dataBase, "bob@x.com");
         Assert.assertEquals(1, Spaces.createSpace(dataBase, alice, "space1"));
         Assert.assertEquals(1, Spaces.createSpace(dataBase, alice, "space1"));
+        try {
+          Spaces.getRxHtml(dataBase, 1);
+        } catch (ErrorCodeException ex) {
+          Assert.assertEquals(656403, ex.code);
+        }
+        Spaces.setRxHtml(dataBase, 1, "<forest>");
+        Assert.assertEquals("<forest>", Spaces.getRxHtml(dataBase, 1));
         Assert.assertEquals(1, Spaces.getSpaceInfo(dataBase, "space1").id);
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));

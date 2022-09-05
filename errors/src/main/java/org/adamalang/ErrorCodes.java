@@ -138,6 +138,10 @@ public class ErrorCodes {
   @Description("The requested space does not exist, or the plan is not set")
   public static final int FRONTEND_PLAN_DOESNT_EXIST = 609294;
 
+  @User
+  @Description("The requested space does not exist, or the plan is not set")
+  public static final int FRONTEND_RXHTML_DOESNT_EXIST = 656403;
+
   public static final int FRONTEND_INTERNAL_PLAN_DOESNT_EXIST = 654341;
   public static final int INVALID_ROLE = 688141;
   public static final int FRONTEND_AUTHORITY_ALREADY_EXISTS = 601088;
@@ -244,7 +248,7 @@ public class ErrorCodes {
   public static final int USER_FAILED_TO_SET_PROFILE = 634899;
 
   /**
-   * 695327 647199 642079 604191 656403
+   * 695327 647199 642079 604191
    * 634900 643095 605227 639018 668719 684079 602158 642094 622624 605216 618532 605223 687163
    * 640056 654392 656443 639034 654394 684089 662591 603196 650300 666687 629822 691261 652350
    * 684082 620592 601136 658483 605235 678960 688176 635955 605234 651316 625716 688180 647244
@@ -344,24 +348,23 @@ public class ErrorCodes {
   public static final int API_CREATE_DOCUMENT_SPACE_RESERVED = 995505;
   public static final int API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION = 933907;
 
-  public static final int API_SEND_TIMEOUT = 984080;
-  public static final int API_SEND_REJECTED = 916520;
+  public static final int API_DOMAIN_GET_NOT_FOUND = 984080;
+  public static final int API_DOMAIN_GET_NOT_AUTHORIZED = 916520;
+  public static final int API_DOMAIN_GET_UNKNOWN_EXCEPTION = 997516;
 
-  @Description("Was unable to update the viewer state within the document")
-  public static final int API_UPDATE_TIMEOUT = 997516;
-  @Description("The document was busy and unable to accept view state updates")
-  public static final int API_UPDATE_REJECTED = 998539;
-  @Description("Was unable to ask the document whether an attachment could be made")
-  public static final int API_CAN_ATTACH_TIMEOUT = 984111;
-  @Description("The document was busy and unable to accept any attachment requests")
-  public static final int API_CAN_ATTACH_REJECTED = 901163;
-  @Description("Was unable to attach to the document")
-  public static final int API_ATTACH_TIMEOUT = 916527;
-  @Description("The document was busy and unable to attach the data")
-  public static final int API_ATTACH_REJECTED = 913447;
+  public static final int API_DOMAIN_MAP_FAILED = 904343;
+  public static final int API_DOMAIN_MAP_NOT_AUTHORIZED = 998539;
+  public static final int API_DOMAIN_MAP_UNKNOWN_EXCEPTION = 984111;
 
-  public static final int STATE_MACHINE_TOO_MANY_FAILURES = 992319;
-  public static final int STATE_MACHINE_UNABLE_TO_RECONNECT = 947263;
+  public static final int API_DOMAIN_UNMAP_FAILED = 901163;
+  public static final int API_DOMAIN_UNMAP_NOT_AUTHORIZED = 916527;
+  public static final int API_DOMAIN_UNMAP_UNKNOWN_EXCEPTION = 913447;
+
+  public static final int API_SPACE_SET_RXHTML_NOT_AUTHORIZED = 966835;
+  public static final int API_SPACE_SET_RXHTML_UNKNOWN_EXCEPTION = 949427;
+
+  public static final int API_SPACE_GET_RXHTML_NOT_AUTHORIZED = 928959;
+  public static final int API_SPACE_GET_RXHTML_UNKNOWN_EXCEPTION = 992319;
 
   public static final int API_METHOD_NOT_FOUND = 945213;
   public static final int API_INVALID_KEY_EMPTY = 919676;
@@ -385,8 +388,6 @@ public class ErrorCodes {
   public static final int API_ASSET_DOWNLOAD_FAILED = 901251;
 
   public static final int API_CLOUD_RESTORE_FAILED = 904348;
-  public static final int API_CLOUD_BACKUP_FAILED = 904343;
-  public static final int API_CLOUD_DELETE_FAILED = 928915;
 
   @Description("Corruption between client and server caused a chunk fail an integrity check")
   public static final int API_ASSET_CHUNK_BAD_DIGEST = 999472;
@@ -430,10 +431,6 @@ public class ErrorCodes {
   public static final int WEB_BASE_EXECUTE_FAILED_CONNECT = 921794;
   public static final int WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT = 950469;
 
-  public static final int WEB_BASE_GET_FAILED_EXECUTE = 966835;
-  public static final int WEB_BASE_GET_FAILED_CONNECT = 949427;
-  public static final int WEB_BASE_GET_FAILED_NOT_200 = 928959;
-
   public static final int WEB_BASE_POST_FAILED_EXECUTE = 947404;
   public static final int WEB_BASE_POST_FAILED_CONNECT = 904399;
   public static final int WEB_BASE_POST_FAILED_NOT_200 = 903375;
@@ -467,14 +464,14 @@ public class ErrorCodes {
   public static final int WEB_CLIENT_STREAM_REJECTED = 984268;
 
   public static final int WEB_VOID_CALLBACK_NOT_200 = 931015;
+  public static final int WEB_STRING_CALLBACK_NOT_200 = 979143;
 
   public static final int UPLOAD_SCAN_FILE_FAILURE = 903364;
   public static final int BACKUP_FILE_FAILURE = 979143;
   public static final int STREAM_ASSET_NOT_200 = 967879;
 
-
   /**
-   * 979145 904394 920777 929990 998599 979143
+   * 979145 904394 920777 929990 998599
    * 999619 929987 977091 934083 962752 998593 914626 950465 919774 921823 928991 909532 973020
    * 988380 966875 916689 920787 990417 942318 990447 915695 980204 917740 982253 995563 920811
    * 966888 901348 998625 998624 993504 997631 994558 983294 902399 994556 979194 999675 909563

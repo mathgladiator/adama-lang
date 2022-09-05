@@ -63,14 +63,14 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
         }
       }
       if (factory == null) {
-        factory = compile(name, spacePrefix + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes, entry.getValue().rxhtml, deliverer);
+        factory = compile(name, spacePrefix + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes, deliverer);
       }
       factories.put(entry.getKey(), factory);
     }
     this.plan = plan;
   }
 
-  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, String rxhtml, Deliverer deliverer) throws ErrorCodeException {    try {
+  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer) throws ErrorCodeException {    try {
       final var options = CompilerOptions.start().make();
       final var globals = GlobalObjectPool.createPoolWithStdLib();
       final var state = new EnvironmentState(globals, options);
@@ -80,12 +80,6 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
       final var tokenEngine = new TokenEngine(spaceName, code.codePoints().iterator());
       final var parser = new Parser(tokenEngine);
       parser.document().accept(document);
-      if (rxhtml != null) {
-        String rxhtmlAdama = RxHtmlToAdama.codegen(rxhtml);
-        final var tokenEngineRxHtml = new TokenEngine("rxhtml", rxhtmlAdama.codePoints().iterator());
-        final var parserRxHtml = new Parser(tokenEngineRxHtml);
-        parserRxHtml.document().accept(document);
-      }
       if (!document.check(state)) {
         throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_TYPE_LANGUAGE, document.errorsJson());
       }

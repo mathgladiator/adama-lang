@@ -19,8 +19,10 @@ import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.*;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.mysql.model.*;
@@ -32,6 +34,9 @@ import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateEmail;
 import org.adamalang.web.assets.AssetUploadBody;
+import org.adamalang.web.client.SimpleHttpRequest;
+import org.adamalang.web.client.SimpleHttpRequestBody;
+import org.adamalang.web.client.StringCallbackHttpResponder;
 import org.adamalang.web.io.NoOpJsonResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,8 +90,8 @@ public class RootHandlerImpl implements RootHandler {
     try {
       HashMap<String, String> headers = new HashMap<>();
       headers.put("Authorization", "Bearer " + request.accessToken);
-      CountDownLatch timeout = new CountDownLatch(1);
-      nexus.webBase.executeGet("https://www.googleapis.com/oauth2/v1/userinfo", headers, new Callback<String>() {
+      SimpleHttpRequest get = new SimpleHttpRequest("GET", "https://www.googleapis.com/oauth2/v1/userinfo", headers, SimpleHttpRequestBody.EMPTY);
+      nexus.webBase.execute(get, new StringCallbackHttpResponder(LOG, nexus.frontendMetrics.google_account_translate.start(), new Callback<String>() {
         @Override
         public void success(String value) {
           ObjectNode googleProfile = Json.parseJsonObject(value);
@@ -126,7 +131,7 @@ public class RootHandlerImpl implements RootHandler {
         public void failure(ErrorCodeException ex) {
           responder.error(ex);
         }
-      });
+      }));
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CONVERT_TOKEN_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -275,6 +280,86 @@ public class RootHandlerImpl implements RootHandler {
       }
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DELETE_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
+  public void handle(Session session, DomainGetRequest request, DomainPolicyResponder responder) {
+    try {
+      if (request.who.source == AuthenticatedUser.Source.Adama) {
+        Domain domain = Domains.get(nexus.database, request.domain);
+        if (domain != null) {
+          responder.complete(domain.space);
+        } else {
+          responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_GET_NOT_FOUND));
+        }
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_GET_NOT_AUTHORIZED));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DOMAIN_GET_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
+  public void handle(Session session, DomainMapRequest request, SimpleResponder responder) {
+    try {
+      if (request.who.source == AuthenticatedUser.Source.Adama) {
+        // Domains.map ensures ownership on UPDATE
+        if (Domains.map(nexus.database, request.who.id, request.domain, request.space, request.certificate)) {
+          responder.complete();
+        } else {
+          responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_MAP_FAILED));
+        }
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_MAP_NOT_AUTHORIZED));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DOMAIN_MAP_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
+  public void handle(Session session, DomainUnmapRequest request, SimpleResponder responder) {
+    try {
+      if (request.who.source == AuthenticatedUser.Source.Adama) {
+        if (Domains.unmap(nexus.database, request.who.id, request.domain)) {
+          responder.complete();
+        } else {
+          responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_UNMAP_FAILED));
+        }
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_UNMAP_NOT_AUTHORIZED));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DOMAIN_UNMAP_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
+  public void handle(Session session, SpaceGetRxhtmlRequest request, RxhtmlResponder responder) {
+    try {
+      if (request.policy.canUserGetRxHTML(request.who)) {
+        responder.complete(Spaces.getRxHtml(nexus.database, request.policy.id));
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_RXHTML_NOT_AUTHORIZED));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_GET_RXHTML_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
+  public void handle(Session session, SpaceSetRxhtmlRequest request, SimpleResponder responder) {
+    try {
+      if (request.policy.canUserGetRxHTML(request.who)) {
+        Spaces.setRxHtml(nexus.database, request.policy.id, request.rxhtml);
+        responder.complete();
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_SET_RXHTML_NOT_AUTHORIZED));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_RXHTML_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 

@@ -18,8 +18,14 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.web.client.SimpleHttpRequest;
+import org.adamalang.web.client.SimpleHttpRequestBody;
+import org.adamalang.web.client.StringCallbackHttpResponder;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.service.WebConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashMap;
@@ -27,6 +33,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class Account {
+  private static final Logger LOGGER = LoggerFactory.getLogger(Account.class);
   public static void execute(Config config, String[] args) throws Exception {
     if (args.length == 0) {
       accountHelp();
@@ -55,7 +62,8 @@ public class Account {
       HashMap<String, String> headers = new HashMap<>();
       headers.put("Authorization", "Bearer " + token);
       CountDownLatch timeout = new CountDownLatch(1);
-      base.executeGet("https://www.googleapis.com/oauth2/v1/userinfo", headers, new Callback<String>() {
+      SimpleHttpRequest get = new SimpleHttpRequest("GET", "https://www.googleapis.com/oauth2/v1/userinfo", headers, SimpleHttpRequestBody.EMPTY);
+      base.execute(get, new StringCallbackHttpResponder(LOGGER, new NoOpMetricsFactory().makeRequestResponseMonitor("x").start(), new Callback<>() {
         @Override
         public void success(String value) {
           System.err.println("Success:" + value);
@@ -70,7 +78,7 @@ public class Account {
             ex.printStackTrace();
           }
         }
-      });
+      }));
       timeout.await(1250, TimeUnit.MILLISECONDS);
     } finally {
       base.shutdown();
