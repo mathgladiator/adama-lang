@@ -74,6 +74,7 @@ public class Document implements TopLevelDocumentHandler {
   public final UriTable webGet;
   public final UriTable webPut;
   public final UriTable webOptions;
+  public final UriTable webDelete;
   private final HashMap<String, String> includes;
   public final LinkedHashMap<String, DefineService> services;
   private final HashSet<String> defined;
@@ -104,6 +105,7 @@ public class Document implements TopLevelDocumentHandler {
     webGet = new UriTable();
     webPut = new UriTable();
     webOptions = new UriTable();
+    webDelete = new UriTable();
     includes = new HashMap<>();
     services = new LinkedHashMap<>();
     defined = new HashSet<>();
@@ -392,6 +394,16 @@ public class Document implements TopLevelDocumentHandler {
     });
     if (!webGet.map(dwg.uri, dwg)) {
       createError(dwg, String.format("Web get path %s has a conflict", dwg.uri), "Web");
+    }
+  }
+
+  @Override
+  public void add(DefineWebDelete dwd) {
+    typeCheckOrder.add((env) -> {
+      dwd.typing(env);
+    });
+    if (!webDelete.map(dwd.uri, dwd)) {
+      createError(dwd, String.format("Web delete path %s has a conflict", dwd.uri), "Web");
     }
   }
 

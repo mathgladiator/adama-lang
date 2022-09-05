@@ -26,7 +26,9 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.remote.ServiceRegistry;
-import org.adamalang.runtime.sys.web.WebPutRaw;
+import org.adamalang.runtime.sys.web.WebContext;
+import org.adamalang.runtime.sys.web.WebDelete;
+import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
@@ -760,17 +762,47 @@ public class DurableLivingDocument implements Queryable {
     ingest(who, writer.toString(), JUST_SEQ(base.metrics.document_attach.wrap(callback)), false, false);
   }
 
-  public void webPut(NtPrincipal who, WebPutRaw put, Callback<WebResponse> callback) {
-    final var writer = forge("web_put", who);
-    put.writeBody(writer);
+  private JsonStreamWriter forge_web(String command, WebContext context) {
+    final var writer = forge(command, context.who);
+    writer.writeObjectFieldIntro("origin");
+    writer.writeString(context.origin);
+    writer.writeObjectFieldIntro("ip");
+    writer.writeString(context.ip);
+    return writer;
+  }
+
+  public void webPut(WebPut put, Callback<WebResponse> callback) {
+    final var writer = forge_web("web_put", put.context);
+    put.write(writer);
     writer.endObject();
-    ingest(who, writer.toString(), base.metrics.document_web_put.wrap(new Callback<LivingDocumentChange>() {
+    ingest(put.context.who, writer.toString(), base.metrics.document_web_put.wrap(new Callback<LivingDocumentChange>() {
       @Override
       public void success(LivingDocumentChange value) {
         if (value.response != null) {
           callback.success((WebResponse) value.response);
         } else {
           callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_PUT_NOT_FOUND));
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    }), false, false);
+  }
+
+  public void webDelete(WebDelete delete, Callback<WebResponse> callback) {
+    final var writer = forge_web("web_delete", delete.context);
+    delete.write(writer);
+    writer.endObject();
+    ingest(delete.context.who, writer.toString(), base.metrics.document_web_delete.wrap(new Callback<LivingDocumentChange>() {
+      @Override
+      public void success(LivingDocumentChange value) {
+        if (value.response != null) {
+          callback.success((WebResponse) value.response);
+        } else {
+          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_DELETE_NOT_FOUND));
         }
       }
 

@@ -594,6 +594,9 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** code generated: respond to a put request */
   protected abstract WebResponse __put_internal(WebPut __put);
 
+  /** code generated: respond to a put request */
+  protected abstract WebResponse __delete_internal(WebDelete __delete);
+
   public boolean __isConnected(final NtPrincipal __who) {
     return __clients.containsKey(__who);
   }
@@ -775,7 +778,8 @@ public abstract class LivingDocument implements RxParent, Caller {
       String origin = null;
       String ip = null;
       String key = null;
-      WebPutRaw put = null;
+      WebPut put = null;
+      WebDelete delete = null;
       if (reader.startObject()) {
         while (reader.notEndOfObject()) {
           final var fieldName = reader.fieldName();
@@ -814,7 +818,10 @@ public abstract class LivingDocument implements RxParent, Caller {
               patch = reader.skipValueIntoJson();
               break;
             case "put":
-              put = WebPutRaw.read(reader);
+              put = WebPut.read(new WebContext(who, origin, ip), reader);
+              break;
+            case "delete":
+              delete = WebDelete.read(new WebContext(who, origin, ip), reader);
               break;
             case "delivery_id":
               delivery_id = reader.readInteger();
@@ -924,7 +931,15 @@ public abstract class LivingDocument implements RxParent, Caller {
           if (put == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_PUT);
           }
-          return __transaction_web_put(requestJson, new WebPut(new WebContext(who, origin, ip), put));
+          return __transaction_web_put(requestJson, put);
+        case "web_delete":
+          if (who == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+          }
+          if (delete == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_DELETE);
+          }
+          return __transaction_web_delete(requestJson, delete);
         case "apply":
           if (who == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
@@ -964,7 +979,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     final var startedTime = System.nanoTime();
     boolean exception = true;
     if (__monitor != null) {
-      __monitor.push("TransactionWebPut");
+      __monitor.push("TransactionDeliver");
     }
     try {
       RxCache route = __routing.get(deliveryId);
@@ -1007,6 +1022,28 @@ public abstract class LivingDocument implements RxParent, Caller {
       WebResponse response = __put_internal(put);
       exception = false;
       return __simple_commit(put.context.who, request, response);
+    } finally {
+      if (exception) {
+        __revert();
+      }
+      if (__monitor != null) {
+        __monitor.pop(System.nanoTime() - startedTime, exception);
+      }
+    }
+  }
+
+  private LivingDocumentChange __transaction_web_delete(final String request, final WebDelete del) throws ErrorCodeException {
+    final var startedTime = System.nanoTime();
+    boolean exception = true;
+    if (__monitor != null) {
+      __monitor.push("TransactionWebDelete");
+    }
+    try {
+      __seq.bumpUpPre();
+      __randomizeOutOfBand();
+      WebResponse response = __delete_internal(del);
+      exception = false;
+      return __simple_commit(del.context.who, request, response);
     } finally {
       if (exception) {
         __revert();

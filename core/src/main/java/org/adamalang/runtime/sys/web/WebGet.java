@@ -18,14 +18,12 @@ import java.util.TreeMap;
 public class WebGet {
   public final WebContext context;
   public final String uri;
-  public final WebRouter router;
   public final NtMap<String, String> headers;
   public final NtDynamic parameters;
 
   public WebGet(WebContext context, String uri, TreeMap<String, String> headers, NtDynamic parameters) {
     this.context = context;
     this.uri = uri;
-    this.router = new WebRouter(uri);
     this.headers = new NtMap<>();
     this.headers.storage.putAll(headers);
     this.parameters = parameters;

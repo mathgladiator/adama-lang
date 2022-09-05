@@ -375,6 +375,29 @@ public class ClientMessage {
     public String ip;
   }
 
+  @TypeId(1727)
+  @Flow("Server")
+  public static class WebDelete {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+    @FieldOrder(3)
+    public String agent;
+    @FieldOrder(4)
+    public String authority;
+    @FieldOrder(5)
+    public String uri;
+    @FieldOrder(6)
+    public Header[] headers;
+    @FieldOrder(7)
+    public String parametersJson;
+    @FieldOrder(8)
+    public String origin;
+    @FieldOrder(9)
+    public String ip;
+  }
+
   @TypeId(1999)
   @Flow("Server")
   public static class ExecuteQuery {

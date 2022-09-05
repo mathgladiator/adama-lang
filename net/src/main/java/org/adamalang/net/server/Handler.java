@@ -31,10 +31,7 @@ import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.runtime.sys.metering.MeterReading;
-import org.adamalang.runtime.sys.web.WebContext;
-import org.adamalang.runtime.sys.web.WebGet;
-import org.adamalang.runtime.sys.web.WebPutRaw;
-import org.adamalang.runtime.sys.web.WebResponse;
+import org.adamalang.runtime.sys.web.*;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -226,7 +223,29 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     for (ClientMessage.Header header : payload.headers) {
       headers.put(header.key, header.value);
     }
-    nexus.service.webPut(new WebContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip), key, new WebPutRaw(payload.uri, headers, new NtDynamic(payload.parametersJson), payload.bodyJson), new Callback<>() {
+    WebPut put = new WebPut(new WebContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip), payload.uri, headers, new NtDynamic(payload.parametersJson), payload.bodyJson);
+    nexus.service.webPut(key, put, new Callback<>() {
+      @Override
+      public void success(WebResponse value) {
+        commonWebHandle(value);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
+  }
+
+  @Override
+  public void handle(ClientMessage.WebDelete payload) {
+    Key key = new Key(payload.space, payload.key);
+    TreeMap<String, String> headers = new TreeMap<>();
+    for (ClientMessage.Header header : payload.headers) {
+      headers.put(header.key, header.value);
+    }
+    WebDelete delete = new WebDelete(new WebContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip), payload.uri, headers, new NtDynamic(payload.parametersJson));
+    nexus.service.webDelete(key, delete, new Callback<>() {
       @Override
       public void success(WebResponse value) {
         commonWebHandle(value);

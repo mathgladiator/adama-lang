@@ -24,6 +24,7 @@ import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
 import org.adamalang.runtime.sys.mocks.NullCallbackLatch;
 import org.adamalang.runtime.sys.web.WebContext;
+import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -47,6 +48,7 @@ public class ServiceWebTests {
       "@web get /path2/$x:long {\n" + "  return {html:\"path long without child:\" + x};\n" + "}\n" + "\n" + //
       "@web get /path2/$x:long/child {\n" + "  return {html:\"path long with child: \" + x + \"!\"};\n" + "}\n" + "\n" + //
       "@web get /path3/$a* {\n" + "  return {html:\"tail:\" + a};\n" + "}\n" + "\n" +
+      "@web delete /medelete/$a* {\n" + "  return {html:\"deleted:\" + a};\n" + "}\n" + "\n" +
       "@web get /\"something.js\" {\n" + "  return {js:\"function... blah...blah...blah\"};\n" + "}\n" + "\n" +
       "@web get /\"something.css\" {\n" + "  return {css:\".class{}\"};\n" + "}\n" + "\n" +
       "@web get /asset/$a* {\n" + "  return {asset:@nothing,asset_transform:\"foo\"};\n" + "}\n" + "\n" +
@@ -64,7 +66,7 @@ public class ServiceWebTests {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
-      CountDownLatch latch = new CountDownLatch(8);
+      CountDownLatch latch = new CountDownLatch(9);
       service.webGet(KEY, new WebGet(CONTEXT, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
@@ -100,6 +102,20 @@ public class ServiceWebTests {
         @Override
         public void failure(ErrorCodeException ex) {
 
+        }
+      });
+      System.err.println("web deleted --> ");
+      service.webDelete(KEY, new WebDelete(CONTEXT, "/medelete/14", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          System.err.println("web delete success");
+          Assert.assertEquals("deleted:14", value.body);
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          System.err.println("web delete failure-" + ex.code);
         }
       });
       service.webGet(KEY, new WebGet(CONTEXT, "/something.js", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {

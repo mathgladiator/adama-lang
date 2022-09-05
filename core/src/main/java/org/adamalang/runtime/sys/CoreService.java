@@ -21,9 +21,9 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
-import org.adamalang.runtime.sys.web.WebContext;
+import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
-import org.adamalang.runtime.sys.web.WebPutRaw;
+import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.slf4j.Logger;
@@ -569,15 +569,47 @@ public class CoreService implements Deliverer, Queryable {
   }
 
   /** execute a web put against the document */
-  public void webPut(WebContext context, Key key, WebPutRaw request, Callback<WebResponse> callback) {
+  public void webPut(Key key, WebPut put, Callback<WebResponse> callback) {
     load(key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
         PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
-        document.webPut(context.who, request, new Callback<WebResponse>() {
+        document.webPut(put, new Callback<>() {
           @Override
           public void success(WebResponse response) {
             document.base.executor.execute(new NamedRunnable("web-put-accounting") {
+              @Override
+              public void execute() throws Exception {
+                response.account(inventory);
+              }
+            });
+            callback.success(response);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
+  /** execute a web put against the document */
+  public void webDelete(Key key, WebDelete delete, Callback<WebResponse> callback) {
+    load(key, new Callback<>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
+        document.webDelete(delete, new Callback<>() {
+          @Override
+          public void success(WebResponse response) {
+            document.base.executor.execute(new NamedRunnable("web-delete-accounting") {
               @Override
               public void execute() throws Exception {
                 response.account(inventory);

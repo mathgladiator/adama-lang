@@ -80,6 +80,8 @@ public class ErrorTable {
     descriptions.put(122896, "no description of error (yet)");
     names.put(129727, "LIVING_DOCUMENT_TRANSACTION_NO_PUT");
     descriptions.put(129727, "no description of error (yet)");
+    names.put(121027, "LIVING_DOCUMENT_TRANSACTION_NO_DELETE");
+    descriptions.put(121027, "no description of error (yet)");
     names.put(146448, "LIVING_DOCUMENT_TRANSACTION_NO_LIMIT");
     descriptions.put(146448, "no description of error (yet)");
     names.put(187586, "LIVING_DOCUMENT_TRANSACTION_NO_DELIVERY_ID");
@@ -144,6 +146,8 @@ public class ErrorTable {
     descriptions.put(127692, "no description of error (yet)");
     names.put(114881, "DOCUMENT_WEB_PUT_NOT_FOUND");
     descriptions.put(114881, "no description of error (yet)");
+    names.put(110832, "DOCUMENT_WEB_DELETE_NOT_FOUND");
+    descriptions.put(110832, "no description of error (yet)");
     names.put(130092, "SERVICE_DOCUMENT_ALREADY_CREATED");
     descriptions.put(130092, "The document is already created, so please try connecting instead. This happens when two create calls are executed");
     userspace.add(130092);
@@ -600,6 +604,8 @@ public class ErrorTable {
     descriptions.put(773309, "no description of error (yet)");
     names.put(703539, "ADAMA_NET_WEBPUT_FOUND_REGION_RATHER_THAN_MACHINE");
     descriptions.put(703539, "no description of error (yet)");
+    names.put(787645, "ADAMA_NET_WEBDELETE_FOUND_REGION_RATHER_THAN_MACHINE");
+    descriptions.put(787645, "no description of error (yet)");
     names.put(737336, "ADAMA_NET_CREATE_REJECTED");
     descriptions.put(737336, "no description of error (yet)");
     names.put(788543, "ADAMA_NET_CLOSE_TIMEOUT");

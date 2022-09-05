@@ -12,28 +12,32 @@ package org.adamalang.runtime.sys.web;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.NtMap;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-public class WebPutRaw {
+/** a web delete */
+public class WebDelete {
+  public final WebContext context;
   public final String uri;
-  public final TreeMap<String, String> headers;
+  public final WebRouter router;
+  public final NtMap<String, String> headers;
   public final NtDynamic parameters;
-  public String bodyJson;
 
-  public WebPutRaw(String uri, TreeMap<String, String> headers, NtDynamic parameters, String bodyJson) {
+  public WebDelete(WebContext context, String uri, TreeMap<String, String> headers, NtDynamic parameters) {
+    this.context = context;
     this.uri = uri;
-    this.headers = headers;
+    this.router = new WebRouter(uri);
+    this.headers = new NtMap<>();
+    this.headers.storage.putAll(headers);
     this.parameters = parameters;
-    this.bodyJson = bodyJson;
   }
 
-  public static WebPutRaw read(JsonStreamReader reader) {
+  public static WebDelete read(WebContext context, JsonStreamReader reader) {
     String uri = null;
     NtDynamic parameters = null;
     TreeMap<String, String> headers = null;
-    String bodyJson = null;
 
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
@@ -54,35 +58,30 @@ public class WebPutRaw {
           case "parameters":
             parameters = reader.readNtDynamic();
             break;
-          case "bodyJson":
-            bodyJson = reader.skipValueIntoJson();
-            break;
         }
       }
     }
 
-    if (uri != null && headers != null && parameters != null && bodyJson != null) {
-      return new WebPutRaw(uri, headers, parameters, bodyJson);
+    if (uri != null && headers != null && parameters != null) {
+      return new WebDelete(context, uri, headers, parameters);
     }
     return null;
   }
 
-  public void writeBody(JsonStreamWriter writer) {
-    writer.writeObjectFieldIntro("put");
+  public void write(JsonStreamWriter writer) {
+    writer.writeObjectFieldIntro("delete");
     writer.beginObject();
     writer.writeObjectFieldIntro("uri");
     writer.writeString(uri);
     writer.writeObjectFieldIntro("headers");
     writer.beginObject();
-    for (Map.Entry<String, String> entry : headers.entrySet()) {
+    for (Map.Entry<String, String> entry : headers.entries()) {
       writer.writeObjectFieldIntro(entry.getKey());
       writer.writeString(entry.getValue());
     }
     writer.endObject();
     writer.writeObjectFieldIntro("parameters");
     writer.writeNtDynamic(parameters);
-    writer.writeObjectFieldIntro("bodyJson");
-    writer.writeNtDynamic(new NtDynamic(bodyJson));
     writer.endObject();
   }
 }

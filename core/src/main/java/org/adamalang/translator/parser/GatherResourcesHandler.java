@@ -131,6 +131,11 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
   }
 
   @Override
+  public void add(DefineWebDelete dwd) {
+
+  }
+
+  @Override
   public void add(Include in) {
     includes.add(in.resource.text);
     String code = resolver.apply(in.resource.text);

@@ -57,6 +57,8 @@ public interface TopLevelDocumentHandler {
 
   void add(DefineWebOptions dwo);
 
+  void add(DefineWebDelete dwd);
+
   void add(Include in);
 
   void add(DefineService ds);

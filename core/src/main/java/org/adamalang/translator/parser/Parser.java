@@ -468,7 +468,7 @@ public class Parser {
   }
 
   public Consumer<TopLevelDocumentHandler> define_web(Token webToken) throws AdamaLangException {
-    Token methodToken = tokens.popIf((t) -> t.isIdentifier("get", "put", "options"));
+    Token methodToken = tokens.popIf((t) -> t.isIdentifier("get", "put", "options", "delete"));
     if (methodToken == null) {
       throw new ParseException("Parser was get or put after @web to indicate a read (i.e. get), write (i.e. put) request, or the prelight options for CORS.", tokens.getLastTokenIfAvailable());
     }
@@ -489,6 +489,12 @@ public class Parser {
       // }
       DefineWebOptions dwo = new DefineWebOptions(webToken, methodToken, uri, body);
       return (doc) -> doc.add(dwo);
+    } else if ("delete".equals(methodToken.text)) {
+      final var body = block();
+      // @web delete URI / childPath / $var {
+      // }
+      DefineWebDelete dwd = new DefineWebDelete(webToken, methodToken, uri, body);
+      return (doc) -> doc.add(dwd);
     } else { // GET
       // @web get URI / childPath / $var {
       // }

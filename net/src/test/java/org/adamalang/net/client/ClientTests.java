@@ -175,6 +175,7 @@ public class ClientTests {
                  "@static { create { return true; } }" +
                      "@web get / { return {html:\"root\"};\n" + "} " +
                      "@web get /cors { return {html:\"my-cors\", cors:true, cache_ttl_seconds:42};\n" + "} " +
+                     "@web delete /deldel { return {html:\"deleted\", cors:true, cache_ttl_seconds:42};\n" + "} " +
                      "message M { int x; } public int z = 1000; @web put / (M m) { z = m.x; return {html:\"c:\" + z}; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
@@ -263,8 +264,8 @@ public class ClientTests {
           }
         });
 
-        CountDownLatch putLatches = new CountDownLatch(2);
-        client.webPut("space", "key1", new WebPut(CONTEXT, new WebPutRaw("/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
+        CountDownLatch putLatches = new CountDownLatch(3);
+        client.webPut("space", "key1", new WebPut(CONTEXT, "/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}"), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("c:123", value.body);
@@ -276,7 +277,7 @@ public class ClientTests {
           }
         });
 
-        client.webPut("space", "key1", new WebPut(CONTEXT, new WebPutRaw("/nope", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}")), new Callback<>() {
+        client.webPut("space", "key1", new WebPut(CONTEXT, "/nope", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}"), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             System.err.println(value.body);
@@ -285,6 +286,20 @@ public class ClientTests {
           @Override
           public void failure(ErrorCodeException ex) {
             putLatches.countDown();
+          }
+        });
+
+        client.webDelete("space", "key1", new WebDelete(CONTEXT, "/deldel", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+          @Override
+          public void success(WebResponse value) {
+            System.err.println(value.body);
+            Assert.assertEquals("deleted", value.body);
+            putLatches.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            ex.printStackTrace();
           }
         });
 

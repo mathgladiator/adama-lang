@@ -136,6 +136,11 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   }
 
   @Override
+  public void add(DefineWebDelete dwd) {
+    dwd.emit(this);
+  }
+
+  @Override
   public void add(Include in) {
     in.emit(this);
   }

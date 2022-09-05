@@ -24,6 +24,7 @@ import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.LivingDocument;
+import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
@@ -94,6 +95,11 @@ public class MockLivingDocument extends LivingDocument {
 
   @Override
   protected WebResponse __put_internal(WebPut __get) {
+    return null;
+  }
+
+  @Override
+  protected WebResponse __delete_internal(WebDelete __delete) {
     return null;
   }
 

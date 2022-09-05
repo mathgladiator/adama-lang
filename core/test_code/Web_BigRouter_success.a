@@ -29,3 +29,7 @@
 @web get /path3/$a:string/child {
   return {html:"abort tail and go with direct child:" + a};
 }
+
+@web delete /foo {
+  return {html:"OK...",cors:true};
+}

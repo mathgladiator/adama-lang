@@ -9,11 +9,11 @@
  */
 package org.adamalang.cli.commands;
 
-import io.netty.handler.ssl.SslContext;
 import org.adamalang.api.ApiMetrics;
 import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.cli.commands.services.FrontendHttpHandler;
 import org.adamalang.extern.AssetSystemImpl;
 import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
@@ -46,25 +46,19 @@ import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
-import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
-import org.adamalang.runtime.sys.web.*;
 import org.adamalang.services.FirstPartyServices;
-import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
-import org.adamalang.web.contracts.WellKnownHandler;
 import org.adamalang.web.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -256,89 +250,7 @@ public class Service {
     System.err.println("standing up http on:" + init.servicePort);
     Client client = init.makeClient(null);
 
-    HttpHandler http = new HttpHandler() {
-      @Override
-      public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
-        if (skr != null) {
-          WebGet get = new WebGet(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, new TreeMap<>(), new NtDynamic("{}"));
-          client.webOptions(skr.space, skr.key, get, new Callback<>() {
-            @Override
-            public void success(WebResponse value) {
-              callback.success(new HttpResult("", null, value.cors));
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              callback.failure(ex);
-            }
-          });
-        } else {
-          callback.success(new HttpResult("", null, false));
-        }
-      }
-
-      @Override
-      public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        callback.failure(new ErrorCodeException(-1));
-      }
-
-      @Override
-      public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
-        if (skr != null) {
-          // TODO: need a way to get an NtPrincipal token
-          WebGet get = new WebGet(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson));
-          client.webGet(skr.space, skr.key, get, new Callback<>() {
-            @Override
-            public void success(WebResponse value) {
-              if (value != null) {
-                if (value.asset != null) {
-                  callback.success(new HttpResult(skr.space, skr.key, value.asset, value.cors));
-                } else {
-                  callback.success(new HttpResult(value.contentType, value.body.getBytes(StandardCharsets.UTF_8), value.cors));
-                }
-              } else {
-                callback.success(null);
-              }
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              callback.failure(ex);
-            }
-          });
-        } else {
-          callback.success(null);
-        }
-      }
-
-      @Override
-      public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
-        SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
-        if (skr != null) {
-          // TODO: need a way to get an NtPrincipal token
-          WebPut put = new WebPut(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), new WebPutRaw(skr.uri, headers, new NtDynamic(parametersJson), body));
-          client.webPut(skr.space, skr.key, put, new Callback<>() {
-            @Override
-            public void success(WebResponse value) {
-              if (value != null) {
-                callback.success(new HttpResult(value.contentType, value.body.getBytes(StandardCharsets.UTF_8), value.cors));
-              } else {
-                callback.success(null);
-              }
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              callback.failure(ex);
-            }
-          });
-        } else {
-          callback.success(null);
-        }
-      }
-    };
+    FrontendHttpHandler http = new FrontendHttpHandler(init, client);
 
     Email email = new SES(init.webBase, init.awsConfig, init.awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));

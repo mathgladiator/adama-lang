@@ -19,7 +19,9 @@ import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.net.client.sm.ConnectionBase;
 import org.adamalang.net.client.sm.Connection;
+import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
@@ -262,6 +264,38 @@ public class Client {
           @Override
           public void success(InstanceClient client) {
             client.webPut(space, key, request, callback);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
+  public void webDelete(String space, String key, WebDelete request, Callback<WebResponse> callback) {
+    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_webdelete_found_machine.start();
+    router.routerForDocuments.get(new Key(space, key), new RoutingSubscriber() {
+      @Override
+      public void onRegion(String region) {
+        mInstance.failure(ErrorCodes.ADAMA_NET_WEBDELETE_FOUND_REGION_RATHER_THAN_MACHINE);
+        callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_WEBDELETE_FOUND_REGION_RATHER_THAN_MACHINE));
+      }
+
+      @Override
+      public void onMachine(String machine) {
+        mInstance.success();
+        clientFinder.find(machine,  new Callback<InstanceClient>() {
+          @Override
+          public void success(InstanceClient client) {
+            client.webDelete(space, key, request, callback);
           }
 
           @Override

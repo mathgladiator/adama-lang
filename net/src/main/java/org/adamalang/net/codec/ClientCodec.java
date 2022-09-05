@@ -14,6 +14,7 @@ import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.codec.ClientMessage.ExecuteQuery;
+import org.adamalang.net.codec.ClientMessage.WebDelete;
 import org.adamalang.net.codec.ClientMessage.WebOptions;
 import org.adamalang.net.codec.ClientMessage.WebPut;
 import org.adamalang.net.codec.ClientMessage.WebGet;
@@ -45,6 +46,8 @@ public class ClientCodec {
 
   public static abstract class StreamServer implements ByteStream {
     public abstract void handle(ExecuteQuery payload);
+
+    public abstract void handle(WebDelete payload);
 
     public abstract void handle(WebOptions payload);
 
@@ -108,6 +111,9 @@ public class ClientCodec {
       switch (buf.readIntLE()) {
         case 1999:
           handle(readBody_1999(buf, new ExecuteQuery()));
+          return;
+        case 1727:
+          handle(readBody_1727(buf, new WebDelete()));
           return;
         case 1725:
           handle(readBody_1725(buf, new WebOptions()));
@@ -187,6 +193,7 @@ public class ClientCodec {
 
   public static interface HandlerServer {
     public void handle(ExecuteQuery payload);
+    public void handle(WebDelete payload);
     public void handle(WebOptions payload);
     public void handle(WebPut payload);
     public void handle(WebGet payload);
@@ -217,6 +224,9 @@ public class ClientCodec {
     switch (buf.readIntLE()) {
       case 1999:
         handler.handle(readBody_1999(buf, new ExecuteQuery()));
+        return;
+      case 1727:
+        handler.handle(readBody_1727(buf, new WebDelete()));
         return;
       case 1725:
         handler.handle(readBody_1725(buf, new WebOptions()));
@@ -375,6 +385,28 @@ public class ClientCodec {
 
   private static ExecuteQuery readBody_1999(ByteBuf buf, ExecuteQuery o) {
     o.headers = Helper.readArray(buf, (n) -> new Header[n], () -> read_Header(buf));
+    return o;
+  }
+
+  public static WebDelete read_WebDelete(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 1727:
+        return readBody_1727(buf, new WebDelete());
+    }
+    return null;
+  }
+
+
+  private static WebDelete readBody_1727(ByteBuf buf, WebDelete o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    o.agent = Helper.readString(buf);
+    o.authority = Helper.readString(buf);
+    o.uri = Helper.readString(buf);
+    o.headers = Helper.readArray(buf, (n) -> new Header[n], () -> read_Header(buf));
+    o.parametersJson = Helper.readString(buf);
+    o.origin = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
     return o;
   }
 
@@ -818,6 +850,23 @@ public class ClientCodec {
     }
     buf.writeIntLE(1999);
     Helper.writeArray(buf, o.headers, (item) -> write(buf, item));
+  }
+
+  public static void write(ByteBuf buf, WebDelete o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(1727);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
+    Helper.writeString(buf, o.agent);;
+    Helper.writeString(buf, o.authority);;
+    Helper.writeString(buf, o.uri);;
+    Helper.writeArray(buf, o.headers, (item) -> write(buf, item));
+    Helper.writeString(buf, o.parametersJson);;
+    Helper.writeString(buf, o.origin);;
+    Helper.writeString(buf, o.ip);;
   }
 
   public static void write(ByteBuf buf, WebOptions o) {

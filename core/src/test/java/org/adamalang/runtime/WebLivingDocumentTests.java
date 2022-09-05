@@ -13,10 +13,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
-import org.adamalang.runtime.sys.web.WebContext;
-import org.adamalang.runtime.sys.web.WebGet;
-import org.adamalang.runtime.sys.web.WebPutRaw;
-import org.adamalang.runtime.sys.web.WebResponse;
+import org.adamalang.runtime.sys.web.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -83,8 +80,8 @@ public class WebLivingDocumentTests {
   @Test
   public void put() throws Exception {
     final var setup = new RealDocumentSetup("public int x; message M { int x; } @web put / (M m) { x = m.x; return {html:\"Got it! \" + m.x}; }");
-
-    setup.document.webPut(NtPrincipal.NO_ONE, new WebPutRaw("/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":42}"), new Callback<WebResponse>() {
+    WebPut put = new WebPut(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), "/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":42}");
+    setup.document.webPut(put, new Callback<WebResponse>() {
       @Override
       public void success(WebResponse value) {
 
@@ -94,6 +91,22 @@ public class WebLivingDocumentTests {
       @Override
       public void failure(ErrorCodeException ex) {
 
+      }
+    });
+  }
+
+  @Test
+  public void delete() throws Exception {
+    final var setup = new RealDocumentSetup("message M { int x; } @web delete / { return {html:\"Deleted\"}; }");
+    WebDelete delete = new WebDelete(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), "/", new TreeMap<>(), new NtDynamic("{}"));
+    setup.document.webDelete(delete, new Callback<>() {
+      @Override
+      public void success(WebResponse value) {
+        Assert.assertEquals("Deleted", value.body);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
       }
     });
   }
