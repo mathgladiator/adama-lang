@@ -20,15 +20,17 @@ import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetUploadBody;
 import org.adamalang.web.client.*;
+import org.adamalang.web.contracts.WellKnownHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.regex.Pattern;
 
-public class S3 implements Cloud {
+public class S3 implements Cloud, WellKnownHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(S3.class);
   private static final Pattern COMPLETE_LOG = Pattern.compile("[a-z]*\\.[0-9]*-[0-9]*-[0-9]*\\.[0-9]*\\.log");
   private final WebClientBase base;
@@ -206,5 +208,12 @@ public class S3 implements Cloud {
     String s3key = "backups/" + key.space + "/" + key.key + "/#" + archiveKey;
     SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "DELETE", s3key).buildWithEmptyBody();
     base.execute(request, new VoidCallbackHttpResponder(LOGGER, metrics.delete_document.start(), callback));
+  }
+
+  @Override
+  public void handle(String uri, Callback<String> callback) {
+    String s3key = "wellknown" + uri;
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key).buildWithEmptyBody();
+    base.execute(request, new StringCallbackHttpResponder(LOGGER, metrics.well_known_get.start(), callback));
   }
 }

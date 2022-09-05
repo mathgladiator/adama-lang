@@ -22,7 +22,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import io.netty.util.concurrent.ScheduledFuture;
-import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.WellKnownHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

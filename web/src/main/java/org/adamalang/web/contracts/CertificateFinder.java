@@ -7,15 +7,12 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.web.client;
+package org.adamalang.web.contracts;
 
-import org.junit.Test;
+import io.netty.handler.ssl.SslContext;
+import org.adamalang.common.Callback;
 
-import java.util.HashMap;
-
-public class SimpleHttpRequestTests {
-  @Test
-  public void coverage() {
-    SimpleHttpRequest request = new SimpleHttpRequest("GET", "url", new HashMap<>(), SimpleHttpRequestBody.EMPTY);
-  }
+/** create the ssl context from a given domain */
+public interface CertificateFinder {
+  void fetch(String domain, Callback<SslContext> callback);
 }

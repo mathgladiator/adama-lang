@@ -9,6 +9,8 @@
  */
 package org.adamalang.cli.commands.services;
 
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
 import org.adamalang.cli.Config;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
@@ -21,6 +23,8 @@ import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
+import org.adamalang.mysql.data.Domain;
+import org.adamalang.mysql.model.Domains;
 import org.adamalang.mysql.model.Finder;
 import org.adamalang.mysql.model.Health;
 import org.adamalang.mysql.model.Hosts;
@@ -32,6 +36,7 @@ import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.service.WebConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.security.KeyPair;
 import java.security.PrivateKey;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Common service initialization */
@@ -176,5 +182,32 @@ public class CommonServiceInit {
     this.engine.subscribe("adama", targetsQuorum::deliverGossip);
     return client;
   }
+
+  public CertificateFinder makeCertificateFinder() {
+    ConcurrentHashMap<String, SslContext> cache = new ConcurrentHashMap<>();
+
+    return new CertificateFinder() {
+      @Override
+      public void fetch(String domain, Callback<SslContext> callback) {
+        SslContext cached = cache.get(domain);
+        if (cached != null) {
+          callback.success(cached);
+          return;
+        }
+        // ends with suffix -> use default
+        callback.success(null);
+        try {
+          Domain found = Domains.get(database, domain);
+          if (found != null) {
+            // SslContextBuilder.forServer(certChainInputStream, keyInputStream);
+          }
+        } catch (Exception ex) {
+
+        }
+        callback.success(null);
+      }
+    };
+  }
+
 
 }

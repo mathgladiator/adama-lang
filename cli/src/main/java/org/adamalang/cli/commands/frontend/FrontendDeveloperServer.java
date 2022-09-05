@@ -9,6 +9,7 @@
  */
 package org.adamalang.cli.commands.frontend;
 
+import io.netty.handler.ssl.SslContext;
 import org.adamalang.cli.Config;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ConfigObject;
@@ -184,7 +185,12 @@ public class FrontendDeveloperServer {
           return null;
         }
       };
-      ServiceRunnable webServer = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, () -> {
+      ServiceRunnable webServer = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new CertificateFinder() {
+        @Override
+        public void fetch(String domain, Callback<SslContext> callback) {
+          callback.success(null);
+        }
+      }, () -> {
       });
       webServer.run();
     } finally {

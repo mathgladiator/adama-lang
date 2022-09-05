@@ -544,8 +544,8 @@ public class ErrorTable {
     descriptions.put(979143, "no description of error (yet)");
     names.put(903364, "UPLOAD_SCAN_FILE_FAILURE");
     descriptions.put(903364, "no description of error (yet)");
-    names.put(979143, "BACKUP_FILE_FAILURE");
-    descriptions.put(979143, "no description of error (yet)");
+    names.put(998599, "BACKUP_FILE_FAILURE");
+    descriptions.put(998599, "no description of error (yet)");
     names.put(967879, "STREAM_ASSET_NOT_200");
     descriptions.put(967879, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");

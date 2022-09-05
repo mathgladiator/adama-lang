@@ -17,6 +17,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.util.concurrent.ScheduledFuture;
+import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,16 +32,18 @@ public class ServiceRunnable implements Runnable {
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final ServiceBase base;
+  private final CertificateFinder certificateFinder;
   private final CountDownLatch ready;
   private final AtomicBoolean started;
   private final Runnable heartbeat;
   private Channel channel;
   private boolean stopped;
 
-  public ServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, ServiceBase base, Runnable heartbeat) {
+  public ServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, ServiceBase base, CertificateFinder certificateFinder, Runnable heartbeat) {
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.base = base;
+    this.certificateFinder = certificateFinder;
     started = new AtomicBoolean();
     channel = null;
     stopped = false;
@@ -74,7 +77,7 @@ public class ServiceRunnable implements Runnable {
           final EventLoopGroup workerGroup = new NioEventLoopGroup(webConfig.workerThreads);
           try {
             final var b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new Initializer(webConfig, metrics, base, context));
+            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new Initializer(webConfig, metrics, base, certificateFinder, context));
             final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
             LOGGER.info("channel-registered");

@@ -9,6 +9,7 @@
  */
 package org.adamalang.cli.commands;
 
+import io.netty.handler.ssl.SslContext;
 import org.adamalang.api.ApiMetrics;
 import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.cli.Config;
@@ -54,6 +55,7 @@ import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.runtime.sys.web.*;
 import org.adamalang.services.FirstPartyServices;
+import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.WellKnownHandler;
@@ -232,7 +234,7 @@ public class Service {
     Client client = init.makeClient(heatTable::onSample);
     HttpHandler handler = Overlord.execute(overlordHandler, heatTable, client, init.engine, init.metricsFactory, targetsPath, init.database, scanPath);
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
-    final var runnable = new ServiceRunnable(init.webConfig, new WebMetrics(init.metricsFactory), serviceBase, () -> {});
+    final var runnable = new ServiceRunnable(init.webConfig, new WebMetrics(init.metricsFactory), serviceBase, init.makeCertificateFinder(), () -> {});
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {
@@ -362,11 +364,10 @@ public class Service {
       return;
     }
     WebMetrics webMetrics = new WebMetrics(init.metricsFactory);
-    WellKnownHandler handler = (uri, callback) -> callback.success("true");
-    final var redirect = new RedirectAndWellknownServiceRunnable(init.webConfig, webMetrics, handler, () -> {});
+    final var redirect = new RedirectAndWellknownServiceRunnable(init.webConfig, webMetrics, init.s3, () -> {});
     Thread redirectThread = new Thread(redirect);
     redirectThread.start();
-    final var runnable = new ServiceRunnable(init.webConfig, webMetrics, serviceBase, heartbeat.get());
+    final var runnable = new ServiceRunnable(init.webConfig, webMetrics, serviceBase, init.makeCertificateFinder(), heartbeat.get());
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       System.err.println("shutting down frontend");
       try {

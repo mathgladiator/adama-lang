@@ -20,6 +20,9 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +34,15 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final ServiceBase base;
+  private final CertificateFinder certificateFinder;
   private final SslContext context;
 
-  public Initializer(final WebConfig webConfig, final WebMetrics metrics, final ServiceBase base, SslContext context) {
+  public Initializer(final WebConfig webConfig, final WebMetrics metrics, final ServiceBase base, final CertificateFinder certificateFinder, SslContext context) {
     this.logger = LoggerFactory.getLogger("Initializer");
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.base = base;
+    this.certificateFinder = certificateFinder;
     this.context = context;
   }
 
@@ -47,10 +52,21 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
     final var pipeline = ch.pipeline();
     if (context != null) {
       pipeline.addLast("sni", new SniHandler((domain, promise) -> {
-        // IF domain == NULL or domain == DEFAULT, then GO; maybe we even
-        // TODO: LOOKUP context otherwise
-        // IF LOOKUP fails, then use context? TODO... consider
-        promise.setSuccess(context);
+        certificateFinder.fetch(domain, new Callback<SslContext>() {
+          @Override
+          public void success(SslContext contextToUse) {
+            if (contextToUse != null) {
+              promise.setSuccess(contextToUse);
+            } else {
+              promise.setSuccess(context);
+            }
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            promise.setFailure(ex);
+          }
+        });
         return promise;
       }));
     }

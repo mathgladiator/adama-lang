@@ -21,6 +21,7 @@ import org.adamalang.web.service.WebConfig;
 import org.adamalang.web.service.WebConfigTests;
 import org.adamalang.web.service.WebMetrics;
 import org.adamalang.web.service.mocks.MockServiceBase;
+import org.adamalang.web.service.mocks.NullCertificateFinder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -35,7 +36,7 @@ public class WebClientBaseTests {
   public void happy() throws Exception {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest1);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, () -> {});
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), () -> {});
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);
@@ -99,7 +100,7 @@ public class WebClientBaseTests {
   public void quickclose() throws Exception {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest1);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, () -> {});
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), () -> {});
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);
@@ -144,7 +145,7 @@ public class WebClientBaseTests {
   public void remoteCrash() throws Exception {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest2);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, () -> {});
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), () -> {});
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);
@@ -191,7 +192,7 @@ public class WebClientBaseTests {
   public void localCrash() throws Exception {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest3);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, () -> {});
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), () -> {});
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);

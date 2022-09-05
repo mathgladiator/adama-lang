@@ -7,15 +7,15 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.web.client;
+package org.adamalang.web.service.mocks;
 
-import org.junit.Test;
+import io.netty.handler.ssl.SslContext;
+import org.adamalang.common.Callback;
+import org.adamalang.web.contracts.CertificateFinder;
 
-import java.util.HashMap;
-
-public class SimpleHttpRequestTests {
-  @Test
-  public void coverage() {
-    SimpleHttpRequest request = new SimpleHttpRequest("GET", "url", new HashMap<>(), SimpleHttpRequestBody.EMPTY);
+public class NullCertificateFinder implements CertificateFinder {
+  @Override
+  public void fetch(String domain, Callback<SslContext> callback) {
+    callback.success(null);
   }
 }
