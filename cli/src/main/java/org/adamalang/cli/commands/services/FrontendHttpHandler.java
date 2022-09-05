@@ -55,7 +55,7 @@ public class FrontendHttpHandler implements HttpHandler {
   }
 
   private Callback<WebResponse> route(SpaceKeyRequest skr, Callback<HttpResult> callback) {
-    return new Callback<WebResponse>() {
+    return new Callback<>() {
       @Override
       public void success(WebResponse response) {
         if (response != null) {
