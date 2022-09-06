@@ -226,6 +226,7 @@ public class ErrorCodes {
   public static final int QUERY_MADE_NO_SENSE = 130242;
 
   public static final int DOMAIN_LOOKUP_FAILURE = 177395;
+  public static final int FRONTEND_FAILED_RXHTML_LOOKUP = 120048;
 
   /**
    * 139469 128208 114384 113884 197852 199907 191713 180978 147186 120048

@@ -207,6 +207,7 @@ public class CommonServiceInit {
             callback.success(null);
             return;
           }
+          // TODO: sort out a plan for global domains
           SslContext cached = cache.get(domain); // check cache
           if (cached != null) {
             callback.success(cached);

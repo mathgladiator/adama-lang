@@ -50,6 +50,7 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Pattern;
 
 public class RootHandlerImpl implements RootHandler {
   private static final Logger LOG = LoggerFactory.getLogger(RootHandlerImpl.class);
@@ -370,11 +371,11 @@ public class RootHandlerImpl implements RootHandler {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         int spaceId = Spaces.createSpace(nexus.database, request.who.id, request.space);
         SpaceTemplates.SpaceTemplate template = SpaceTemplates.REGISTRY.of(request.template);
-        nexus.adama.create(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, "ide", request.space, null, template.idearg(), new Callback<Void>() {
+        nexus.adama.create(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, "ide", request.space, null, template.idearg(request.space), new Callback<Void>() {
           @Override
           public void success(Void value) {
             SpacePolicy policy = new SpacePolicy(new SpaceInfo(spaceId, request.who.id, Collections.singleton(request.who.id), true, 0));
-            handle(session, new SpaceSetRequest(request.identity, request.who, request.space, policy, template.plan(request.space)), new SimpleResponder(new NoOpJsonResponder()));
+            handle(session, new SpaceSetRequest(request.identity, request.who, request.space, policy, template.plan()), new SimpleResponder(new NoOpJsonResponder()));
             responder.complete();
           }
 

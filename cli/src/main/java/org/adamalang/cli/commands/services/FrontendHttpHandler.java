@@ -9,8 +9,10 @@
  */
 package org.adamalang.cli.commands.services;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.Client;
@@ -31,13 +33,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /** the http handler for the service */
 public class FrontendHttpHandler implements HttpHandler {
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(FrontendHttpHandler.class);
   private static final Logger LOGGER = LoggerFactory.getLogger(FrontendHttpHandler.class);
   private final CommonServiceInit init;
   private final Client client;
+  private final ConcurrentHashMap<String, Integer> spaceIds;
 
   public FrontendHttpHandler(CommonServiceInit init, Client client) {
     this.init = init;
     this.client = client;
+    this.spaceIds = new ConcurrentHashMap<>();
   }
 
   @Override
@@ -106,8 +111,6 @@ public class FrontendHttpHandler implements HttpHandler {
     }
   }
 
-  private ConcurrentHashMap<String, Integer> spaceIds;
-
   private void getSpace(String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     try {
       Integer spaceId = spaceIds.get(space);
@@ -117,20 +120,20 @@ public class FrontendHttpHandler implements HttpHandler {
         spaceIds.put(space, spaceInfo.id);
       }
       String rxhtml = Spaces.getRxHtml(init.database, spaceId);
-      RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, Feedback.NoOp);
-      // TODO: cache this along with a timestamp (OR, tie it to the document)
-      if (rxhtmlResult.test(uri)) {
-        String html = rxhtmlResult.shell.makeShell(rxhtmlResult, true);
-        HttpResult result = new HttpResult("text/html", html.getBytes(StandardCharsets.UTF_8), false);
-        callback.success(result);
-        return;
+      if (rxhtml != null) {
+        RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, Feedback.NoOp);
+        // TODO: cache this along with a timestamp (OR, tie it to the document)
+        if (rxhtmlResult.test(uri)) {
+          String html = rxhtmlResult.shell.makeShell(rxhtmlResult, true);
+          HttpResult result = new HttpResult("text/html", html.getBytes(StandardCharsets.UTF_8), false);
+          callback.success(result);
+          return;
+        }
       }
     } catch (Exception ex) {
-      callback.failure(new ErrorCodeException(-123));
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_FAILED_RXHTML_LOOKUP, ex, EXLOGGER));
       return;
     }
-    // TODO: check RxHTML if the URI applies here
-    // TODO: if so, then return shell; otherwise, do an asset lookup
     get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
   }
 
