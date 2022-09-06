@@ -11,10 +11,15 @@ package org.adamalang.cli.commands.services;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.mysql.data.SpaceInfo;
+import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.Client;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.web.*;
+import org.adamalang.rxhtml.Feedback;
+import org.adamalang.rxhtml.RxHtmlResult;
+import org.adamalang.rxhtml.RxHtmlTool;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.service.SpaceKeyRequest;
 import org.slf4j.Logger;
@@ -22,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** the http handler for the service */
 public class FrontendHttpHandler implements HttpHandler {
@@ -100,7 +106,29 @@ public class FrontendHttpHandler implements HttpHandler {
     }
   }
 
+  private ConcurrentHashMap<String, Integer> spaceIds;
+
   private void getSpace(String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+    try {
+      Integer spaceId = spaceIds.get(space);
+      if (spaceId == null) {
+        SpaceInfo spaceInfo = Spaces.getSpaceInfo(init.database, space);
+        spaceId = spaceInfo.id;
+        spaceIds.put(space, spaceInfo.id);
+      }
+      String rxhtml = Spaces.getRxHtml(init.database, spaceId);
+      RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, Feedback.NoOp);
+      // TODO: cache this along with a timestamp (OR, tie it to the document)
+      if (rxhtmlResult.test(uri)) {
+        String html = rxhtmlResult.shell.makeShell(rxhtmlResult, true);
+        HttpResult result = new HttpResult("text/html", html.getBytes(StandardCharsets.UTF_8), false);
+        callback.success(result);
+        return;
+      }
+    } catch (Exception ex) {
+      callback.failure(new ErrorCodeException(-123));
+      return;
+    }
     // TODO: check RxHTML if the URI applies here
     // TODO: if so, then return shell; otherwise, do an asset lookup
     get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);

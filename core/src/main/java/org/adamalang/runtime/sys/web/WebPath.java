@@ -12,11 +12,11 @@ package org.adamalang.runtime.sys.web;
 import java.util.ArrayList;
 
 /** Tear down a URI into fragments */
-public class WebRouter {
+public class WebPath {
   public String uri;
   public WebFragment[] fragments;
 
-  public WebRouter(String uri) {
+  public WebPath(String uri) {
     this.uri = uri;
     ArrayList<WebFragment> fragments = new ArrayList<>();
     int at = uri.indexOf('/') + 1; // skip the first slash
@@ -38,5 +38,9 @@ public class WebRouter {
       return fragments[k];
     }
     return null;
+  }
+
+  public int size() {
+    return fragments.length;
   }
 }

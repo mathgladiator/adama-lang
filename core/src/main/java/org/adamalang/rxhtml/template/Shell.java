@@ -34,7 +34,7 @@ public class Shell {
     }
   }
 
-  public String makeShell(RxHtmlResult result, boolean inline, int pathOffset) {
+  public String makeShell(RxHtmlResult result, boolean inline) {
     StringBuilder sb = new StringBuilder();
     sb.append("<!DOCTYPE html>\n<html>\n<head>");
 
@@ -51,7 +51,6 @@ public class Shell {
         sb.append(element.toString());
       }
       // TODO: think about scripts
-      // TODO: need to path relative to the URI back to the root
       for (Element element : shell.getElementsByTag("link")) {
         sb.append(element.toString());
       }

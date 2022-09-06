@@ -44,7 +44,7 @@ public class RxHtmlToAdama {
     adama.append("}\n");
 
      for (Uri uri : assembleUrisFrom(rxhtml)) {
-      String shell = result.shell.makeShell(result, true, -1);
+      String shell = result.shell.makeShell(result, true);
       adama.append("@web get ").append(uri.rxhtmlPath()).append(" {\n");
       adama.append("  return {\n");
       adama.append("    html: \"").append(Escapes.escape34(shell)).append("\"\n");

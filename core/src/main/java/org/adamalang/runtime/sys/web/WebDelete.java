@@ -21,14 +21,14 @@ import java.util.TreeMap;
 public class WebDelete {
   public final WebContext context;
   public final String uri;
-  public final WebRouter router;
+  public final WebPath router;
   public final NtMap<String, String> headers;
   public final NtDynamic parameters;
 
   public WebDelete(WebContext context, String uri, TreeMap<String, String> headers, NtDynamic parameters) {
     this.context = context;
     this.uri = uri;
-    this.router = new WebRouter(uri);
+    this.router = new WebPath(uri);
     this.headers = new NtMap<>();
     this.headers.storage.putAll(headers);
     this.parameters = parameters;

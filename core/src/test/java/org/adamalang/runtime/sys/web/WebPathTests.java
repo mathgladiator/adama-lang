@@ -12,10 +12,10 @@ package org.adamalang.runtime.sys.web;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class WebRouterTests {
+public class WebPathTests {
   @Test
   public void flow() {
-    WebRouter router = new WebRouter("/xyz/kstar/123");
+    WebPath router = new WebPath("/xyz/kstar/123");
     Assert.assertEquals("xyz", router.at(0).fragment);
     Assert.assertEquals("kstar", router.at(1).fragment);
     Assert.assertEquals("123", router.at(2).fragment);
@@ -24,14 +24,14 @@ public class WebRouterTests {
 
   @Test
   public void root() {
-    WebRouter router = new WebRouter("/");
+    WebPath router = new WebPath("/");
     Assert.assertEquals("", router.at(0).fragment);
     Assert.assertNull(router.at(1));
   }
 
   @Test
   public void bigtail() {
-    WebRouter router = new WebRouter("/xyz/123/wtf");
+    WebPath router = new WebPath("/xyz/123/wtf");
     Assert.assertEquals("xyz", router.at(0).fragment);
     Assert.assertEquals("xyz/123/wtf", router.at(0).tail());
     Assert.assertEquals("123", router.at(1).fragment);

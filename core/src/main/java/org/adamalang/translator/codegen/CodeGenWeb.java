@@ -52,7 +52,7 @@ public class CodeGenWeb {
     if (!level.check()) {
       return;
     }
-    sb.append("WebFragment ").append("_" + at).append(" = __router.at(").append("" + at).append(");").writeNewline();
+    sb.append("WebFragment ").append("_" + at).append(" = __path.at(").append("" + at).append(");").writeNewline();
     sb.append("if (_").append("" + at).append(" != null) {").tabUp().writeNewline();
     for (Map.Entry<String, UriTable.UriLevel> entry : level.fixed.entrySet()) {
       sb.append("if (_" + at).append(".fragment.equals(\"").append(entry.getKey()).append("\")) {").tabUp().writeNewline();
@@ -146,7 +146,7 @@ public class CodeGenWeb {
     {
       sb.append("@Override").writeNewline();
       sb.append("public WebResponse __get(WebGet __request) {").tabUp().writeNewline();
-      sb.append("WebRouter __router = new WebRouter(__request.uri);").writeNewline();
+      sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webGet.ready("GET");
       CodeGenWeb get = new CodeGenWeb(environment, environment.document.webGet, "get");
       get.table(sb);
@@ -159,7 +159,7 @@ public class CodeGenWeb {
     {
       sb.append("@Override").writeNewline();
       sb.append("protected WebResponse __put_internal(WebPut __request) {").tabUp().writeNewline();
-      sb.append("WebRouter __router = new WebRouter(__request.uri);").writeNewline();
+      sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webPut.ready("PUT");
       CodeGenWeb put = new CodeGenWeb(environment, environment.document.webPut, "put");
       put.table(sb);
@@ -172,7 +172,7 @@ public class CodeGenWeb {
     {
       sb.append("@Override").writeNewline();
       sb.append("protected WebResponse __delete_internal(WebDelete __request) {").tabUp().writeNewline();
-      sb.append("WebRouter __router = new WebRouter(__request.uri);").writeNewline();
+      sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webDelete.ready("DELETE");
       CodeGenWeb delete = new CodeGenWeb(environment, environment.document.webDelete, "delete");
       delete.table(sb);
@@ -185,7 +185,7 @@ public class CodeGenWeb {
     {
       sb.append("@Override").writeNewline();
       sb.append("public WebResponse __options(WebGet __request) {").tabUp().writeNewline();
-      sb.append("WebRouter __router = new WebRouter(__request.uri);").writeNewline();
+      sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webOptions.ready("OPTIONS");
       CodeGenWeb options = new CodeGenWeb(environment, environment.document.webOptions, "options");
       options.table(sb);

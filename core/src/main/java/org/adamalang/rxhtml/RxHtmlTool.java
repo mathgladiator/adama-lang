@@ -41,6 +41,7 @@ public class RxHtmlTool {
     StringBuilder style = new StringBuilder();
     Shell shell = new Shell(feedback);
     shell.scan(document);
+    ArrayList<String> patterns = new ArrayList<>();
     for (Element element : document.getElementsByTag("template")) {
       Root.template(env.element(element, true));
     }
@@ -48,11 +49,12 @@ public class RxHtmlTool {
       style.append(element.html()).append(" ");
     }
     for (Element element : document.getElementsByTag("page")) {
+      patterns.add(element.attr("uri"));
       Root.page(env.element(element, true), defaultRedirect);
     }
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
-    return new RxHtmlResult(javascript, style.toString(), shell);
+    return new RxHtmlResult(javascript, style.toString(), shell, patterns);
   }
 
   public static RxHtmlResult convertFilesToTemplateForest(List<File> files, ArrayList<UriMatcher> matchers, Feedback feedback) throws Exception {
@@ -60,6 +62,7 @@ public class RxHtmlTool {
     Root.start(env);
     Shell shell = new Shell(feedback);
     StringBuilder style = new StringBuilder();
+    ArrayList<String> patterns = new ArrayList<>();
     for (File file : files) {
       Document document = Jsoup.parse(file, "UTF-8");
       shell.scan(document);
@@ -72,10 +75,11 @@ public class RxHtmlTool {
       }
       for (Element element : document.getElementsByTag("page")) {
         matchers.add(RxHtmlToAdama.uriOf(element.attr("uri")).matcher());
+        patterns.add(element.attr("uri"));
         Root.page(env.element(element, true), defaultRedirect);
       }
     }
     String javascript = Root.finish(env);
-    return new RxHtmlResult(javascript, style.toString(), shell);
+    return new RxHtmlResult(javascript, style.toString(), shell, patterns);
   }
 }
