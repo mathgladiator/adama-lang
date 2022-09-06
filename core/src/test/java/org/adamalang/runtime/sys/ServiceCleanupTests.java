@@ -104,7 +104,7 @@ public class ServiceCleanupTests {
       cb1.await_success(5);
       latch2.run();
       Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":5}", streamback.get(2));
-      streamback.get().disconnect();
+      streamback.get().close();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
       Assert.assertTrue(latchSet.await(5000, TimeUnit.MILLISECONDS));

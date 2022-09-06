@@ -9,10 +9,13 @@
  */
 package org.adamalang.runtime.delta.secure;
 
+import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class SecureAssetUtilTests {
   @Test
@@ -37,6 +40,18 @@ public class SecureAssetUtilTests {
       Assert.fail();
     } catch (RuntimeException re) {
 
+    }
+    try {
+      SecureAssetUtil.decryptFromBase64(null, Base64.getEncoder().encodeToString("XYZ".getBytes(StandardCharsets.UTF_8)));
+      Assert.fail();
+    } catch (RuntimeException re) {
+
+    }
+    try {
+      SecureAssetUtil.secretKeyOf(Base64.getEncoder().encodeToString("XYZ".getBytes(StandardCharsets.UTF_8)));
+      Assert.fail();
+    } catch (ErrorCodeException re) {
+      Assert.assertEquals(144583, re.code);
     }
     try {
       SecureAssetUtil.getKeyGenerator("X");

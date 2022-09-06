@@ -201,6 +201,10 @@ public class RxCacheTests {
       Assert.assertEquals("", redo.toString());
       Assert.assertEquals("", undo.toString());
     }
+    {
+      cache.__patch(new JsonStreamReader("{\"1\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":42}},\"result\":{\"result\":null,\"failure\":null,\"failure_code\":null}},\"6\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":50}},\"result\":{\"result\":null,\"failure\":null,\"failure_code\":null}}}"));
+      cache.__patch(new JsonStreamReader("{\"1\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":42}},\"result\":{\"result\":null,\"failure\":null,\"failure_code\":null}},\"6\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":50}},\"result\":{\"result\":null,\"failure\":null,\"failure_code\":null}}}"));
+    }
 
   }
 }

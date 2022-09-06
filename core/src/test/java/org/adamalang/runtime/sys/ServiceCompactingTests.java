@@ -36,7 +36,7 @@ public class ServiceCompactingTests {
 
   private static final Key KEY = new Key("space", "key");
   private static final String SUPER_COMPACT =
-      "@static { create { return true; } maximum_history = 0; } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create { return true; } maximum_history = 0; } public int x; public asset a; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String MODERATE_COMPACT =
       "@static { create { return true; } maximum_history = 10; } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
 

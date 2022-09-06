@@ -286,6 +286,26 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void reject_queued_message() throws Exception {
+    final var setup =
+        new RealDocumentSetup(
+            "@connected { return @who == @no_one; } @construct { } private int t = 0; message Set { int v; } channel<Set> chan; channel foo(Set x) { t = 100; t = chan.fetch(@who).await().v; abort; }");
+    setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
+    setup.document.send(
+        ContextSupport.WRAP(NtPrincipal.NO_ONE),
+        "marker-1",
+        "foo",
+        "{\"v\":1000}",
+        new RealDocumentSetup.AssertInt(4));
+    setup.document.send(
+        ContextSupport.WRAP(NtPrincipal.NO_ONE),
+        "marker-2",
+        "chan",
+        "{\"v\":1000}",
+        new RealDocumentSetup.AssertInt(6));
+  }
+
+  @Test
   public void blocking_test() throws Exception {
     final var setup =
         new RealDocumentSetup(
@@ -307,6 +327,7 @@ public class LivingDocumentTests {
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
                 .get("x")));
   }
+
 
   @Test
   @SuppressWarnings("unchecked")

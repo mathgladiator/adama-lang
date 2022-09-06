@@ -14,6 +14,7 @@ import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.translator.reflect.Extension;
 import org.adamalang.translator.reflect.HiddenType;
+import org.adamalang.translator.tree.Document;
 
 import java.util.Map;
 
@@ -25,6 +26,9 @@ public class LibDynamic {
       Object value = ((Map<?, ?>) dyn.cached()).get(field);
       if (value instanceof String) {
         return new NtMaybe<>((String) value);
+      }
+      if (value instanceof Double || value instanceof Integer || value instanceof Long) {
+        return new NtMaybe<>("" + value);
       }
     }
     return new NtMaybe<>();

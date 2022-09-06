@@ -117,14 +117,14 @@ public class ServiceTemporalTests {
         MockStreamback streamback = new MockStreamback();
         service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
         streamback.await_began();
-        streamback.get().disconnect();
+        streamback.get().close();
       }
       Thread.sleep(100);
       {
         MockStreamback streamback = new MockStreamback();
         service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
         streamback.await_began();
-        streamback.get().disconnect();
+        streamback.get().close();
       }
 
       latch.run();

@@ -18,23 +18,22 @@ import org.junit.Test;
 
 import java.util.TreeMap;
 
-public class WebPutTests {
+public class WebDeleteTests {
   @Test
   public void flow() {
     WebContext context = new WebContext(NtPrincipal.NO_ONE, "origin", "ip");
     TreeMap<String, String> headers = new TreeMap<>();
     headers.put("x", "abc");
-    WebPut put = new WebPut(context, "/uri", headers, new NtDynamic("{\"p\":123}"), "{}");
+    WebDelete delete = new WebDelete(context, "/uri", headers, new NtDynamic("{\"p\":123}"));
     JsonStreamWriter writer = new JsonStreamWriter();
-    put.write(writer);
-    Assert.assertEquals("\"put\":{\"uri\":\"/uri\",\"headers\":{\"x\":\"abc\"},\"parameters\":{\"p\":123},\"bodyJson\":{}}", writer.toString());
+    delete.write(writer);
+    Assert.assertEquals("\"delete\":{\"uri\":\"/uri\",\"headers\":{\"x\":\"abc\"},\"parameters\":{\"p\":123}}", writer.toString());
     JsonStreamReader reader = new JsonStreamReader(writer.toString());
-    Assert.assertEquals("put", reader.fieldName());
-    WebPut clone = WebPut.read(context, reader);
+    Assert.assertEquals("delete", reader.fieldName());
+    WebDelete clone = WebDelete.read(context, reader);
     Assert.assertEquals("/uri", clone.uri);
     Assert.assertEquals("{\"p\":123}", clone.parameters.json);
-    Assert.assertEquals("{}", clone.bodyJson);
     Assert.assertEquals("abc", clone.headers.storage.get("x"));
-    Assert.assertNull(WebPut.read(context, new JsonStreamReader("{}")));
+    Assert.assertNull(WebDelete.read(context, new JsonStreamReader("{}")));
   }
 }

@@ -269,7 +269,7 @@ public class ServiceCatastropheTests {
       MockStreamback streamback3 = new MockStreamback();
       service.connect(ContextSupport.WRAP(BOB), KEY, "{}", null, streamback3);
       streamback3.await_began();
-      streamback3.get().disconnect();
+      streamback3.get().close();
       latch.run();
     } finally {
       service.shutdown();

@@ -24,5 +24,7 @@ public class ServiceRegistryTests {
     registry.resolve("space", config);
     Assert.assertTrue(registry.contains("xyz"));
     Assert.assertTrue(registry.find("nooop") == Service.FAILURE);
+    Assert.assertFalse(ServiceRegistry.NOT_READY.contains("x"));
+    ServiceRegistry.NOT_READY.resolve("x", null);
   }
 }

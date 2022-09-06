@@ -61,7 +61,7 @@ public class ServiceDocumentControlTests {
       cb1.await_success(4);
       latch2.run();
       Assert.assertEquals("{\"data\":{\"x\":1000},\"seq\":4}", streamback.get(2));
-      streamback.get().disconnect();
+      streamback.get().close();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
     } finally {
@@ -110,7 +110,7 @@ public class ServiceDocumentControlTests {
       latch2.run();
       Assert.assertEquals("{\"data\":{\"x\":43},\"seq\":4}", streamback.get(2));
       Assert.assertEquals("{\"data\":{\"x\":1000},\"seq\":5}", streamback.get(3));
-      streamback.get().disconnect();
+      streamback.get().close();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(4));
     } finally {

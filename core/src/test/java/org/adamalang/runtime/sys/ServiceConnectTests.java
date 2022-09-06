@@ -70,7 +70,7 @@ public class ServiceConnectTests {
       cb1.await_success(5);
       latch2.run();
       Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":5}", streamback.get(2));
-      streamback.get().disconnect();
+      streamback.get().close();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
     } finally {
@@ -147,7 +147,7 @@ public class ServiceConnectTests {
       cb1.await_success(4);
       latch2.run();
       Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":4}", streamback.get(2));
-      streamback.get().disconnect();
+      streamback.get().close();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
     } finally {
@@ -189,7 +189,7 @@ public class ServiceConnectTests {
       LatchCallback cb1 = new LatchCallback();
       streamback.get().canAttach(cb1.toBool(-5, 5));
       cb1.await_success(5);
-      streamback.get().disconnect();
+      streamback.get().close();
       latch2.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(2));
     } finally {
@@ -249,11 +249,11 @@ public class ServiceConnectTests {
       LatchCallback cb2 = new LatchCallback();
       streamback.get().canAttach(cb1.toBool(-5, 5));
       cb1.await_success(-5);
-      streamback.get().attach(new NtAsset("id", "name", "meme", 1, "", ""), cb2);
+      streamback.get().attach("id", "name", "meme", 1, "", "", cb2);
       cb2.await_success(4);
       latch2.run();
       Assert.assertEquals("{\"data\":{\"x\":43},\"seq\":4}", streamback.get(2));
-      streamback.get().disconnect();
+      streamback.get().close();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
     } finally {
@@ -284,7 +284,7 @@ public class ServiceConnectTests {
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"x\":42,\"zpx\":42},\"seq\":3}", streamback.get(1));
-      streamback.get().updateView(new JsonStreamReader("{\"z\":100}"));
+      streamback.get().update("{\"z\":100}");
       latch2.run();
       Assert.assertEquals("{\"data\":{\"zpx\":142},\"seq\":4}", streamback.get(2));
     } finally {
@@ -320,8 +320,8 @@ public class ServiceConnectTests {
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback1.get(1));
       Assert.assertEquals("STATUS:Connected", streamback2.get(0));
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":5}", streamback2.get(1));
-      streamback1.get().disconnect();
-      streamback2.get().disconnect();
+      streamback1.get().close();
+      streamback2.get().close();
       latch1b.run();
       latch2b.run();
       Assert.assertEquals("{\"seq\":5}", streamback1.get(2));

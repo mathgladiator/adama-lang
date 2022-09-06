@@ -70,7 +70,7 @@ public class Utility {
     return maybe;
   }
 
-  public <T> T[] readArray(JsonStreamReader reader, Function<JsonStreamReader, T> transform, Function<Integer, T[]> makeArray) {
+  public static <T> T[] readArray(JsonStreamReader reader, Function<JsonStreamReader, T> transform, Function<Integer, T[]> makeArray) {
     ArrayList<T> items = new ArrayList<T>();
     if (reader.startArray()) {
       while (reader.notEndOfArray()) {

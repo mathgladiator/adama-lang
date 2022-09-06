@@ -44,11 +44,7 @@ public class CoreStream implements AdamaStream {
 
   @Override
   public void update(String newViewerState) {
-    updateView(new JsonStreamReader(newViewerState));
-  }
-
-  /** update the viewer state */
-  public void updateView(JsonStreamReader patch) {
+    JsonStreamReader patch = new JsonStreamReader(newViewerState);
     document.base.executor.execute(new NamedRunnable("core-stream-send") {
       @Override
       public void execute() throws Exception {
@@ -98,16 +94,18 @@ public class CoreStream implements AdamaStream {
 
   @Override
   public void attach(String id, String name, String contentType, long size, String md5, String sha384, Callback<Integer> callback) {
-    attach(new NtAsset(id, name, contentType, size, md5, sha384), callback);
+    NtAsset asset = new NtAsset(id, name, contentType, size, md5, sha384);
+    document.base.executor.execute(new NamedRunnable("core-stream-attach") {
+      @Override
+      public void execute() throws Exception {
+        inventory.message();
+        document.attach(context, asset, callback);
+      }
+    });
   }
 
   @Override
   public void close() {
-    disconnect();
-  }
-
-  /** disconnect this stream from the document */
-  public void disconnect() {
     metrics.inflight_streams.down();
     document.base.executor.execute(new NamedRunnable("core-stream-disconnect") {
       @Override
@@ -126,16 +124,6 @@ public class CoreStream implements AdamaStream {
         }
         // tell the client
         view.perspective.disconnect();
-      }
-    });
-  }
-
-  public void attach(NtAsset asset, Callback<Integer> callback) {
-    document.base.executor.execute(new NamedRunnable("core-stream-attach") {
-      @Override
-      public void execute() throws Exception {
-        inventory.message();
-        document.attach(context, asset, callback);
       }
     });
   }

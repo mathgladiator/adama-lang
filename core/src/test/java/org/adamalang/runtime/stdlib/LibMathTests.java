@@ -24,6 +24,7 @@ public class LibMathTests {
     Assert.assertTrue(LibMath.near(1.6, LibMath.floor(1.67, 0.1)));
     Assert.assertTrue(LibMath.near(1.7, LibMath.ceil(1.67, 0.1)));
 
+
     Assert.assertTrue(LibMath.near(1, LibMath.floor(new NtMaybe<>(1.6)).get()));
     Assert.assertTrue(LibMath.near(2, LibMath.ceil(new NtMaybe<>(1.6)).get()));
     Assert.assertTrue(LibMath.near(1, LibMath.floor(new NtMaybe<>(1.6), 1.0).get()));
@@ -51,6 +52,8 @@ public class LibMathTests {
 
   @Test
   public void absolute_value() {
+    Assert.assertEquals(4, LibMath.abs(-4));
+    Assert.assertEquals(4L, LibMath.abs(-4L));
     Assert.assertTrue(LibMath.near(2, LibMath.abs(new NtMaybe<>(-2.0)).get()));
     Assert.assertFalse(LibMath.abs(new NtMaybe<>()).has());
   }
@@ -64,11 +67,14 @@ public class LibMathTests {
     Assert.assertTrue(LibMath.near(new NtComplex(1, -2), LibMath.conj(new NtMaybe<>(a)).get()));
     Assert.assertFalse(LibMath.conj(new NtMaybe<>()).has());
     Assert.assertFalse(LibMath.length(new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.abs2(new NtMaybe<>()).has());
     NtComplex t = new NtComplex(1, 0.0);
     Assert.assertTrue(LibMath.near(t, 1.0));
     Assert.assertTrue(LibMath.near(t, 1L));
     Assert.assertTrue(LibMath.near(t, 1));
     Assert.assertTrue(LibMath.near(t, t));
+    Assert.assertTrue(LibMath.near(1.0, LibMath.abs2(new NtMaybe<>(t)).get()));
+    Assert.assertTrue(LibMath.near(5, LibMath.abs2(new NtMaybe<>(new NtComplex(3, 4))).get()));
   }
 
   @Test

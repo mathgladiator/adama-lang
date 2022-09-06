@@ -64,7 +64,8 @@ public class ServiceBadCodeTests {
           latch.countDown();
         }
       });
-      streamback.get().attach(NtAsset.NOTHING, new Callback<Integer>() {
+      NtAsset a = NtAsset.NOTHING;
+      streamback.get().attach(a.id, a.name, a.contentType, a.size, a.md5, a.sha384, new Callback<Integer>() {
         @Override
         public void success(Integer value) {
 

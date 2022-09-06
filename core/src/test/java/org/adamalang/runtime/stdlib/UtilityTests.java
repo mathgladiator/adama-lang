@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.stdlib;
 
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,6 +26,15 @@ public class UtilityTests {
     final var arr = Utility.convertMultiple(data, makeArray, conv);
     Assert.assertEquals(123, (int) arr[0]);
     Assert.assertEquals(42, (int) arr[1]);
+  }
+
+  @Test
+  public void read_array() {
+    JsonStreamReader reader = new JsonStreamReader("[1,2,3]");
+    Integer[] x = Utility.readArray(reader, (r) -> r.readInteger(), (n) -> new Integer[n]);
+    Assert.assertEquals(1, (int) x[0]);
+    Assert.assertEquals(2, (int) x[1]);
+    Assert.assertEquals(3, (int) x[2]);
   }
 
   @Test

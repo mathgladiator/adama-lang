@@ -23,10 +23,7 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
 import org.adamalang.runtime.sys.mocks.NullCallbackLatch;
-import org.adamalang.runtime.sys.web.WebContext;
-import org.adamalang.runtime.sys.web.WebDelete;
-import org.adamalang.runtime.sys.web.WebGet;
-import org.adamalang.runtime.sys.web.WebResponse;
+import org.adamalang.runtime.sys.web.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class ServiceWebTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
+  private static final Key BADKEY = new Key("space", "key-bad");
   private static WebContext CONTEXT = new WebContext(NtPrincipal.NO_ONE, "Origin", "1.2.3.4");
   private static final String SIMPLE_CODE_MSG = "@static { create { return true; } }" +
       "@web get / {\n" + "  return {html:\"root\"};\n" + "}\n" + "\n" + //
@@ -49,6 +47,7 @@ public class ServiceWebTests {
       "@web get /path2/$x:long/child {\n" + "  return {html:\"path long with child: \" + x + \"!\"};\n" + "}\n" + "\n" + //
       "@web get /path3/$a* {\n" + "  return {html:\"tail:\" + a};\n" + "}\n" + "\n" +
       "@web delete /medelete/$a* {\n" + "  return {html:\"deleted:\" + a};\n" + "}\n" + "\n" +
+      "message M {int x; } @web put /meput/$a* (M m) {\n" + "  return {html:\"put:\" + a + \":\" + m.x};\n" + "}\n" + "\n" +
       "@web get /\"something.js\" {\n" + "  return {js:\"function... blah...blah...blah\"};\n" + "}\n" + "\n" +
       "@web get /\"something.css\" {\n" + "  return {css:\".class{}\"};\n" + "}\n" + "\n" +
       "@web get /asset/$a* {\n" + "  return {asset:@nothing,asset_transform:\"foo\"};\n" + "}\n" + "\n" +
@@ -66,7 +65,7 @@ public class ServiceWebTests {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
-      CountDownLatch latch = new CountDownLatch(9);
+      CountDownLatch latch = new CountDownLatch(17);
       service.webGet(KEY, new WebGet(CONTEXT, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
@@ -104,11 +103,9 @@ public class ServiceWebTests {
 
         }
       });
-      System.err.println("web deleted --> ");
       service.webDelete(KEY, new WebDelete(CONTEXT, "/medelete/14", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
         @Override
         public void success(WebResponse value) {
-          System.err.println("web delete success");
           Assert.assertEquals("deleted:14", value.body);
           latch.countDown();
         }
@@ -116,6 +113,105 @@ public class ServiceWebTests {
         @Override
         public void failure(ErrorCodeException ex) {
           System.err.println("web delete failure-" + ex.code);
+        }
+      });
+      service.webPut(KEY, new WebPut(CONTEXT, "/meput/14", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}"), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.assertEquals("put:14:123", value.body);
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          System.err.println("web put failure-" + ex.code);
+        }
+      });
+
+      service.webPut(KEY, new WebPut(CONTEXT, "/badput", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}"), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.fail();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.assertEquals(114881, ex.code);
+          latch.countDown();
+        }
+      });
+
+      service.webDelete(KEY, new WebDelete(CONTEXT, "/baddelete", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.fail();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.assertEquals(110832, ex.code);
+          latch.countDown();
+        }
+      });
+
+      service.webPut(BADKEY, new WebPut(CONTEXT, "/badput", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}"), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.fail();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.assertEquals(625676, ex.code);
+          latch.countDown();
+        }
+      });
+      service.webDelete(BADKEY, new WebDelete(CONTEXT, "/baddelete", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.fail();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.assertEquals(625676, ex.code);
+          latch.countDown();
+        }
+      });
+      service.webOptions(KEY, new WebGet(CONTEXT, "/badput", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.fail();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.assertEquals(127692, ex.code);
+          latch.countDown();
+        }
+      });
+      service.webGet(BADKEY, new WebGet(CONTEXT, "/something.js", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.fail();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.assertEquals(625676, ex.code);
+          latch.countDown();
+        }
+      });
+      service.webOptions(BADKEY, new WebGet(CONTEXT, "/something.js", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+          Assert.fail();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.assertEquals(625676, ex.code);
+          latch.countDown();
         }
       });
       service.webGet(KEY, new WebGet(CONTEXT, "/something.js", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {

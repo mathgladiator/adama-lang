@@ -9,6 +9,8 @@
  */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.ContextSupport;
@@ -48,10 +50,27 @@ public class ServiceDefenseTests {
       MockStreamback streamback1 = new MockStreamback();
       service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback1);
       streamback1.await_began();
+      {
+        SimpleIntCallback failedSend = new SimpleIntCallback();
+        streamback1.get().send("channel", "marker", "{}", failedSend);
+        failedSend.assertFailure(199883);
+      }
+      {
+        SimpleIntCallback failedAttach = new SimpleIntCallback();
+        streamback1.get().canAttach(new Callback<Boolean>() {
+          @Override
+          public void success(Boolean value) {
+            failedAttach.success(0);
+          }
 
-      SimpleIntCallback failedSend = new SimpleIntCallback();
-      streamback1.get().send("channel", "marker", "{}", failedSend);
-      failedSend.assertFailure(199883);
+          @Override
+          public void failure(ErrorCodeException ex) {
+            failedAttach.failure(ex);
+          }
+        });
+        failedAttach.assertFailure(199883);
+      }
+
     } finally {
       service.shutdown();
     }

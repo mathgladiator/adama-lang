@@ -80,7 +80,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     nexus.metrics.server_handlers_active.down();
     alive.set(false);
     if (stream != null) {
-      stream.disconnect();
+      stream.close();
       stream = null;
     }
     if (upstream != null) {
@@ -361,7 +361,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.StreamAttach payload) {
     if (stream != null) {
-      stream.attach(new NtAsset(payload.id, payload.filename, payload.contentType, payload.size, payload.md5, payload.sha384), nexus.metrics.server_stream_attach.wrap(new Callback<Integer>() {
+      stream.attach(payload.id, payload.filename, payload.contentType, payload.size, payload.md5, payload.sha384, nexus.metrics.server_stream_attach.wrap(new Callback<Integer>() {
         @Override
         public void success(Integer seq) {
           ServerMessage.StreamSeqResponse response = new ServerMessage.StreamSeqResponse();
@@ -416,7 +416,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void handle(ClientMessage.StreamDisconnect payload) {
     if (stream != null) {
       nexus.metrics.server_stream_disconnect.run();
-      stream.disconnect();
+      stream.close();
       stream = null;
     }
   }
@@ -425,7 +425,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void handle(ClientMessage.StreamUpdate payload) {
     if (stream != null) {
       nexus.metrics.server_stream_update.run();
-      stream.updateView(new JsonStreamReader(payload.viewerState));
+      stream.update(payload.viewerState);
     }
   }
 

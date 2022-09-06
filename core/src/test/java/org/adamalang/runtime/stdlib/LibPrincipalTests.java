@@ -21,5 +21,7 @@ public class LibPrincipalTests {
     Assert.assertFalse(LibPrincipal.isAdamaDeveloper(NtPrincipal.NO_ONE));
     Assert.assertTrue(LibPrincipal.fromAuthority(a, "adama"));
     Assert.assertFalse(LibPrincipal.fromAuthority(a, "x"));
+    Assert.assertTrue(LibPrincipal.isAnonymous(new NtPrincipal("agent", "anonymous")));
+    Assert.assertFalse(LibPrincipal.isAnonymous(new NtPrincipal("agent", "adama")));
   }
 }

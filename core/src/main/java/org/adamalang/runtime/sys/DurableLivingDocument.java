@@ -291,7 +291,6 @@ public class DurableLivingDocument implements Queryable {
                 inflightCompact = false;
                 size.getAndAdd(-toCompactNow);
                 testQueueSizeAndThenMaybeCompact();
-
               }
             });
           }
