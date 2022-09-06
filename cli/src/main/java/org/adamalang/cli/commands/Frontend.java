@@ -43,7 +43,6 @@ public class Frontend {
     }
   }
 
-
   public static void frontendHelp() {
     System.out.println(Util.prefix("Tools to help with frontend.", Util.ANSI.Green));
     System.out.println();

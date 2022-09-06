@@ -53,6 +53,10 @@ public class Main {
         case "document":
           Documents.execute(config, next);
           return;
+        case "domain":
+        case "domains":
+          Domains.execute(config, next);
+          return;
         case "frontend":
           Frontend.execute(config, next);
           return;
@@ -108,6 +112,7 @@ public class Main {
     System.out.println("    " + Util.prefix("contrib", Util.ANSI.Green) + "           Open source contributor tools");
     System.out.println("    " + Util.prefix("database", Util.ANSI.Green) + "          Prepare database for usage");
     System.out.println("    " + Util.prefix("document", Util.ANSI.Green) + "          Interact with documents");
+    System.out.println("    " + Util.prefix("domains", Util.ANSI.Green) + "           Manage Domains");
     System.out.println("    " + Util.prefix("fleet", Util.ANSI.Green) + "             Fleet management via EC2");
     System.out.println("    " + Util.prefix("frontend", Util.ANSI.Green) + "          Frontend tools (rxhtml)");
     System.out.println("    " + Util.prefix("init", Util.ANSI.Green) + "              Initializes the config with a valid token");

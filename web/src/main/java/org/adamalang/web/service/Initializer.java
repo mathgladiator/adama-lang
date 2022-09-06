@@ -57,7 +57,7 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
           public void success(SslContext contextToUse) {
             if (contextToUse != null) {
               promise.setSuccess(contextToUse);
-            } else {
+            } else { // the default context when given a null
               promise.setSuccess(context);
             }
           }

@@ -82,4 +82,18 @@ public class ConfigObject {
     }
     throw new NullPointerException(errorMessage);
   }
+
+  public String[] stringsOf(String key, String[] defaultStrings) {
+    JsonNode vs = node.get(key);
+    if (vs != null && vs.isArray()) {
+      ArrayList<String> strings = new ArrayList<>();
+      for (int k = 0; k < vs.size(); k++) {
+        if (vs.get(k).isTextual()) {
+          strings.add(vs.get(k).textValue());
+        }
+      }
+      return strings.toArray(new String[strings.size()]);
+    }
+    return defaultStrings;
+  }
 }

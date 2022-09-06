@@ -11,20 +11,21 @@ package org.adamalang.cli.commands.services;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.mysql.data.Domain;
-import org.adamalang.mysql.model.Domains;
 import org.adamalang.net.client.Client;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.web.*;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.service.SpaceKeyRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.TreeMap;
 
 /** the http handler for the service */
 public class FrontendHttpHandler implements HttpHandler {
+  private static final Logger LOGGER = LoggerFactory.getLogger(FrontendHttpHandler.class);
   private final CommonServiceInit init;
   private final Client client;
 
@@ -80,43 +81,58 @@ public class FrontendHttpHandler implements HttpHandler {
   public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
     if (skr != null) {
-      WebDelete delete = new WebDelete(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson));
+      WebDelete delete = new WebDelete(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson));
       client.webDelete(skr.space, skr.key, delete, route(skr, callback));
     }
     callback.failure(new ErrorCodeException(-1));
   }
 
-  @Override
-  public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-    /*
-    try {
-      String host = headers.get("host");
-      Domain domain = Domains.get(init.database, host);
-      // TODO: cache the domain for faster lookup (if not null) (if not, cache a negative result for 5 minutes)
-      // TODO: get the space's RxHTML, parse the tree, and return shell if the shell is applicable
-      // TODO: if shell is not applicable, then route to ("ide", $space, $uri) a SpaceKeyRequest
-    } catch (Exception ex) {
+  private WebContext contextOf(TreeMap<String, String> headers) {
+    return new WebContext(NtPrincipal.NO_ONE, headers.get("origin"), headers.get("remote-ip"));
+  }
 
-    }
-    */
-
-    // TODO: look up domain, If domain was found, then
-    SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
+  private void get(SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     if (skr != null) {
-      // TODO: need a way to get an NtPrincipal token
-      WebGet get = new WebGet(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson));
+      WebGet get = new WebGet(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson));
       client.webGet(skr.space, skr.key, get, route(skr, callback));
     } else {
       callback.success(null);
     }
   }
 
+  private void getSpace(String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+    // TODO: check RxHTML if the URI applies here
+    // TODO: if so, then return shell; otherwise, do an asset lookup
+    get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
+  }
+
+  @Override
+  public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+    String host = headers.get("host");
+    if (host.endsWith("." + init.webConfig.regionalDomain)) {
+      get(SpaceKeyRequest.parse(uri), headers, parametersJson, callback);
+      return;
+    }
+
+    for (String suffix : init.webConfig.globalDomains) {
+      if (host.endsWith("." + suffix)) {
+        String space = host.substring(0, host.length() - suffix.length() - 1);
+        getSpace(space, uri, headers, parametersJson, callback);
+        return;
+      }
+    }
+
+    // Domain domin = Domains.get(init.database, host);
+
+    // TODO: look up the domain to pull the space, cache it, then call getSpace
+    callback.success(null);
+  }
+
   @Override
   public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
     SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
     if (skr != null) {
-      // TODO: need a way to get an NtPrincipal token
-      WebPut put = new WebPut(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson), body);
+      WebPut put = new WebPut(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson), body);
       client.webPut(skr.space, skr.key, put, route(skr, callback));
     } else {
       callback.success(null);

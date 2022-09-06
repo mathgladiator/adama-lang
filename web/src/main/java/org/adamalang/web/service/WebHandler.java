@@ -323,7 +323,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     // Step 3: Parse the request and then route to the appropriate handler
     try {
-      AdamaWebRequest wta = new AdamaWebRequest(req);
+      AdamaWebRequest wta = new AdamaWebRequest(req, ctx);
       if (req.method() == HttpMethod.OPTIONS) {
         metrics.webhandler_options.run();
         httpHandler.handleOptions(wta.uri, wta.headers, wta.parameters, callback);

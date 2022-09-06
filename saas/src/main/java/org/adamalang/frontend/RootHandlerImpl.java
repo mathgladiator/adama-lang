@@ -306,7 +306,8 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // Domains.map ensures ownership on UPDATE
-        if (Domains.map(nexus.database, request.who.id, request.domain, request.space, request.certificate)) {
+        String cert = MasterKey.encrypt(nexus.masterKey, request.certificate);
+        if (Domains.map(nexus.database, request.who.id, request.domain, request.space, cert)) {
           responder.complete();
         } else {
           responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_MAP_FAILED));

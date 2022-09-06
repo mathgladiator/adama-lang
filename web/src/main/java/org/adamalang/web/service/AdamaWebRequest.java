@@ -11,10 +11,12 @@ package org.adamalang.web.service;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import org.adamalang.common.Json;
+import org.adamalang.web.io.ConnectionContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -28,7 +30,7 @@ public class AdamaWebRequest {
   public final String parameters;
   public final String body;
 
-  public AdamaWebRequest(final FullHttpRequest req) {
+  public AdamaWebRequest(final FullHttpRequest req, ChannelHandlerContext ctx) {
     headers = new TreeMap<>();
     for (Map.Entry<String, String> entry : req.headers()) {
       String headerName = entry.getKey().toLowerCase(Locale.ROOT);
@@ -37,7 +39,9 @@ public class AdamaWebRequest {
       }
       headers.put(headerName, entry.getValue());
     }
-
+    ConnectionContext context = ConnectionContextFactory.of(ctx, req.headers());
+    headers.put("origin", context.origin + "");
+    headers.put("remote-ip", context.remoteIp + "");
     QueryStringDecoder qsd = new QueryStringDecoder(req.uri());
     this.uri = qsd.path();
     {

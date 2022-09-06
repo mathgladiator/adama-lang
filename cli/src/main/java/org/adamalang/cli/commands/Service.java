@@ -244,7 +244,7 @@ public class Service {
   public static void serviceFrontend(Config config) throws Exception {
     CommonServiceInit init = new CommonServiceInit(config, Role.Web);
     System.err.println("starting frontend");
-    String masterKey = config.get_string("master-key", null);
+
     int gossipPort = config.get_int("gossip_frontend_port", 8004);
     System.err.println("gossiping on:" + gossipPort);
     System.err.println("standing up http on:" + init.servicePort);
@@ -259,7 +259,7 @@ public class Service {
     AssetSystemImpl assets = new AssetSystemImpl(init.database, adama, init.s3);
     ExternNexus nexus = new ExternNexus(frontendConfig, email, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
-    }, masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId);
+    }, init.masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId);
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus, http);
     // TODO: have some sense of health checking in the web package

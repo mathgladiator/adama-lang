@@ -26,6 +26,8 @@ public class WebConfig {
   public final int idleAllSeconds;
   public final int bossThreads;
   public final int workerThreads;
+  public final String regionalDomain;
+  public final String[] globalDomains;
 
   public WebConfig(ConfigObject config) {
     // HTTP properties
@@ -44,5 +46,7 @@ public class WebConfig {
     this.heartbeatTimeMilliseconds = config.intOf("websocket_heart_beat_ms", 1000);
     this.bossThreads = config.intOf("http_boss_threads", 2);
     this.workerThreads = config.intOf("http_worker_threads", 16);
+    this.regionalDomain = config.strOf("regional_domain", "adama-platform.com");
+    this.globalDomains = config.stringsOf("global_domains", new String[] { "adama.games" });
   }
 }

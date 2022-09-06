@@ -25,7 +25,6 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketCl
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
-import io.netty.util.CharsetUtil;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.web.contracts.WebJsonStream;
@@ -33,7 +32,6 @@ import org.adamalang.web.contracts.WebLifecycle;
 import org.adamalang.web.service.WebConfig;
 
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -179,61 +177,6 @@ public class WebClientBase {
     });
   }
 
-  public void executeGet(String url, HashMap<String, String> headersRaw, Callback<String> callback) {
-    URI uri = URI.create(url);
-    String host = uri.getHost();
-    boolean secure = uri.getScheme().equals("https");
-    int port = uri.getPort() < 0 ? (secure ? 443 : 80) : uri.getPort();
-    String path = uri.getRawPath();
-    final var b = new Bootstrap();
-    b.group(group);
-    b.channel(NioSocketChannel.class);
-    b.handler(new ChannelInitializer<SocketChannel>() {
-      @Override
-      protected void initChannel(final SocketChannel ch) throws Exception {
-        if (secure) {
-          ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc(), host, port));
-        }
-        ch.pipeline().addLast(new HttpClientCodec());
-        ch.pipeline().addLast(new HttpObjectAggregator(2424242));
-        ch.pipeline().addLast(new WriteTimeoutHandler(3));
-        ch.pipeline().addLast(new ReadTimeoutHandler(3));
-        ch.pipeline().addLast(
-          new SimpleChannelInboundHandler<FullHttpResponse>() {
-            @Override
-            protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpResponse msg) throws Exception {
-              if (msg.status() == HttpResponseStatus.OK) {
-                callback.success(msg.content().toString(CharsetUtil.UTF_8));
-              } else {
-                callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_POST_FAILED_NOT_200, msg.content().toString(StandardCharsets.UTF_8)));
-              }
-              ctx.close();
-            }
-
-            @Override
-            public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
-              callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_POST_FAILED_EXECUTE, cause, EXLOGGER));
-              ctx.close();
-            }
-          });
-      }
-    });
-
-    b.connect(host, port).addListeners((ChannelFutureListener) future -> {
-      if (future.isSuccess()) {
-        HttpHeaders headers = new DefaultHttpHeaders(true);
-        for (Map.Entry<String, String> entry : headersRaw.entrySet()) {
-          headers.set(entry.getKey(), entry.getValue());
-        }
-        headers.set("Host", host);
-        HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, path, Unpooled.buffer(0), headers, new DefaultHttpHeaders(true));
-        future.channel().writeAndFlush(request);
-      } else {
-        callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_POST_FAILED_CONNECT));
-      }
-    });
-  }
-
   public void open(String endpoint, WebLifecycle lifecycle) {
     URI uri = URI.create(endpoint);
     String host = uri.getHost();
@@ -247,7 +190,7 @@ public class WebClientBase {
       @Override
       protected void initChannel(final SocketChannel ch) throws Exception {
         if (secure) {
-          ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc()));
+          ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc(), host, port));
         }
         ch.pipeline().addLast(new HttpClientCodec());
         ch.pipeline().addLast(new HttpObjectAggregator(2424242));

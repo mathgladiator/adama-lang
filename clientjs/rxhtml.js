@@ -398,6 +398,9 @@ var RxHTML = (function () {
   self.P = function (parent, priorState, rxObj, childMaker) {
     var unsub = make_unsub();
     rxObj.__ = function () {
+      if (!('name' in rxObj)) {
+        return;
+      }
       if (this.name == rxObj.name) {
         return;
       }
@@ -810,7 +813,6 @@ var RxHTML = (function () {
       var obj = {};
       obj[failureVar] = fail;
       var delta = path_to(self.pV(state), obj);
-      console.log(delta);
       state.view.tree.update(delta);
     };
   };
@@ -1059,11 +1061,13 @@ var RxHTML = (function () {
       }
     };
     rxobj.__ = debounce(10, function () {
+      var valid = 'key' in rxobj && 'space' in rxobj && 'name' in rxobj;
+      if (!valid) {
+        return;
+      }
       var co = get_connection_obj(rxobj.name);
       var desired = rxobj.space + "/" + rxobj.key;
       var bind = function (sendNow) {
-        co.space = rxobj.space;
-        co.key = rxobj.key;
         unsub.view = state.view.tree.subscribe(function () {
           if (co.ptr == null) {
             return;
@@ -1076,7 +1080,6 @@ var RxHTML = (function () {
           });
         });
         if (sendNow) {
-          console.log(state.view.tree.str());
           co.ptr.update(state.view.tree.copy(), {
             success: function () {
             },
@@ -1089,8 +1092,11 @@ var RxHTML = (function () {
         bind(true);
         return;
       }
+      co.space = rxobj.space;
+      co.key = rxobj.key;
       if (co.ptr != null) {
         co.ptr.end({success:function(){}, failure:function(){}});
+        co.ptr = null;
       }
       co.bound = desired;
       var idLookup = self.ID(rxobj.identity, redirectTo);
@@ -1120,9 +1126,11 @@ var RxHTML = (function () {
           }
           */
           co.ptr = null;
+          console.log("Document Failure: " + reason);
           // TODO: schedule a retry? invoke:  rxobj.__();
         }
       });
+      co.tree.update({});
       bind(false);
     });
   };
@@ -1196,7 +1204,7 @@ var RxHTML = (function () {
         failure: function (code) {
           signal(true);
           // TODO: sort out console logging
-          console.log("FAILURE:" + code);
+          console.log("Sign in failure:" + code);
         }
       });
     };
@@ -1216,7 +1224,7 @@ var RxHTML = (function () {
         },
         failure: function (code) {
           signal(true);
-          console.log("FAILURE:");
+          console.log("Sign up failure:");
         }
       });
     };
@@ -1233,7 +1241,6 @@ var RxHTML = (function () {
       }
       connection.InitCompleteAccount(req.email, false, req.code, {
         success: function (init) {
-          console.log(init);
           var identity = init.identity;
           connection.AccountSetPassword(init.identity, req.password, {
             success: function () {
@@ -1267,7 +1274,7 @@ var RxHTML = (function () {
         },
         failure: function (reason) {
           signal(true);
-          console.log("FAILURE TO SEND: " + reason); // TODO: log it
+          console.log("Send failure:" + reason); // TODO: log it
         }
       });
     };

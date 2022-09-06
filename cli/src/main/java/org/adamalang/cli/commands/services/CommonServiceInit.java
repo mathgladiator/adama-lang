@@ -9,11 +9,14 @@
  */
 package org.adamalang.cli.commands.services;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import org.adamalang.ErrorCodes;
 import org.adamalang.cli.Config;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
+import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.extern.aws.AWSConfig;
@@ -41,15 +44,18 @@ import org.adamalang.web.service.WebConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.PrivateKey;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Common service initialization */
 public class CommonServiceInit {
   private static final Logger LOGGER = LoggerFactory.getLogger(CommonServiceInit.class);
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(CommonServiceInit.class);
   public final AtomicBoolean alive;
   public final String region;
   public final String role;
@@ -70,6 +76,7 @@ public class CommonServiceInit {
   public final int publicKeyId;
   public final WebConfig webConfig;
   public final WebClientBase webBase;
+  public final String masterKey;
 
   public CommonServiceInit(Config config, Role role) throws Exception {
     MachineHeat.install();
@@ -77,6 +84,7 @@ public class CommonServiceInit {
     if (role == Role.Overlord) {
       configObjectForWeb.intOf("http_port", 8081);
     }
+    this.masterKey = config.get_string("master-key", null);
     this.webConfig = new WebConfig(configObjectForWeb);
     WebConfig webConfig = new WebConfig(configObjectForWeb);
     String identityFileName = config.get_string("identity_filename", "me.identity");
@@ -185,26 +193,51 @@ public class CommonServiceInit {
 
   public CertificateFinder makeCertificateFinder() {
     ConcurrentHashMap<String, SslContext> cache = new ConcurrentHashMap<>();
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     return new CertificateFinder() {
       @Override
       public void fetch(String domain, Callback<SslContext> callback) {
-        SslContext cached = cache.get(domain);
-        if (cached != null) {
-          callback.success(cached);
-          return;
-        }
-        // ends with suffix -> use default
-        callback.success(null);
-        try {
-          Domain found = Domains.get(database, domain);
-          if (found != null) {
-            // SslContextBuilder.forServer(certChainInputStream, keyInputStream);
+        { // hyper fast optimistic path
+          if (domain == null) { // no SNI provided -> use default
+            callback.success(null);
+            return;
           }
-        } catch (Exception ex) {
-
+          if (domain.endsWith("." + webConfig.regionalDomain)) { // the regional domain -> use default
+            callback.success(null);
+            return;
+          }
+          SslContext cached = cache.get(domain); // check cache
+          if (cached != null) {
+            callback.success(cached);
+            return;
+          }
         }
-        callback.success(null);
+
+        executor.execute(() -> {
+          // check cache within the executor
+          SslContext cached = cache.get(domain);
+          if (cached != null) {
+            callback.success(cached);
+            return;
+          }
+
+          try {
+            Domain lookup = Domains.get(database, domain);
+            if (lookup != null) {
+              ObjectNode certificate = Json.parseJsonObject(MasterKey.decrypt(masterKey, lookup.certificate));
+              ByteArrayInputStream keyInput = new ByteArrayInputStream(certificate.get("key").textValue().getBytes(StandardCharsets.UTF_8));
+              ByteArrayInputStream certInput = new ByteArrayInputStream(certificate.get("cert").textValue().getBytes(StandardCharsets.UTF_8));
+              SslContext contextToUse = SslContextBuilder.forServer(certInput, keyInput).build();
+              callback.success(contextToUse);
+              cache.put(domain, contextToUse);
+              return;
+            }
+            callback.success(null);
+          } catch (Exception ex) {
+            callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DOMAIN_LOOKUP_FAILURE, ex, EXLOGGER));
+          }
+        });
       }
     };
   }
