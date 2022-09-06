@@ -283,6 +283,8 @@ public class ErrorTable {
     userspace.add(146561);
     names.put(130242, "QUERY_MADE_NO_SENSE");
     descriptions.put(130242, "The query did make sense");
+    names.put(177395, "DOMAIN_LOOKUP_FAILURE");
+    descriptions.put(177395, "no description of error (yet)");
     names.put(684039, "USER_NOT_FOUND_GET_PASSWORD");
     descriptions.put(684039, "no description of error (yet)");
     names.put(605208, "USER_NOT_FOUND_GET_BALANCE");
