@@ -24,5 +24,9 @@ public class VariablePoolTests {
     Assert.assertEquals("c", c);
     pool.give(a);
     Assert.assertEquals("a", pool.ask());
+    while (!pool.ask().equals("_if")) {
+    }
+    while (!pool.ask().equals("_do")) {
+    }
   }
 }

@@ -122,7 +122,7 @@ public class WebSocketHandlerTests {
         CountDownLatch latch = box.latch(1);
         b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":500,\"method\":\"ex\"}"));
         Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
-        box.assertData(0, "{\"failure\":500,\"reason\":1234}");
+        box.assertData(0, "{\"failure\":500,\"reason\":1234,\"retry\":false}");
       }
 
       {

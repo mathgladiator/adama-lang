@@ -30,6 +30,7 @@ public class Machine {
   private int writesInFlight;
   private String lastArchiveKey;
   private boolean attemptClose;
+  private boolean deleted;
 
   public Machine(Key key, Base base) {
     this.key = key;
@@ -42,6 +43,7 @@ public class Machine {
     this.writesInFlight = 0;
     this.lastArchiveKey = null;
     this.attemptClose = false;
+    this.deleted = false;
   }
 
   private void queue(Action action) {
@@ -96,6 +98,11 @@ public class Machine {
           base.data.cleanUp(key, lastArchiveKey);
         }
         lastArchiveKey = result.archiveKey;
+        if (deleted) {
+          base.data.cleanUp(key, lastArchiveKey);
+          failQueueWhileInExecutor(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_DELETED));
+          return;
+        }
         cancelArchive = null;
         pendingWrites -= writesInFlight;
         writesInFlight = 0;
@@ -108,12 +115,17 @@ public class Machine {
     });
   }
 
-  private void archive_Failure(Exception ex) {
+  private void archive_Failure(Exception ex, BackupResult result) {
     base.executor.execute(new NamedRunnable("machine-archive-failure") {
       @Override
       public void execute() throws Exception {
+        if (result != null) {
+          base.data.cleanUp(key, result.archiveKey);
+        }
         cancelArchive = null;
-        scheduleArchiveWhileInExecutor(true);
+        if (!(closed || deleted)) {
+          scheduleArchiveWhileInExecutor(true);
+        }
       }
     });
   }
@@ -130,14 +142,15 @@ public class Machine {
 
           @Override
           public void failure(ErrorCodeException ex) {
-            archive_Failure(ex);
+            archive_Failure(ex, result);
           }
         });
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-        archive_Failure(ex);
+        ex.printStackTrace();
+        archive_Failure(ex, null);
       }
     });
   }
@@ -158,6 +171,11 @@ public class Machine {
     base.executor.execute(new NamedRunnable("machine-found-machine") {
       @Override
       public void execute() throws Exception {
+        if (deleted) {
+          state = State.Unknown;
+          failQueueWhileInExecutor(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_DELETED));
+          return;
+        }
         if (closed || attemptClose) {
           state = State.Unknown;
           base.documents.remove(key);
@@ -266,6 +284,7 @@ public class Machine {
     }
     if (closed) {
       action.callback.failure(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_WRITE_FAILED_CLOSED));
+      base.documents.remove(key);
       return;
     }
     pendingWrites++;
@@ -289,6 +308,7 @@ public class Machine {
     }
     if (closed) {
       action.callback.failure(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_READ_FAILED_CLOSED));
+      base.documents.remove(key);
       return;
     }
     switch (state) {
@@ -308,6 +328,7 @@ public class Machine {
     attemptClose = true;
     if (state == State.Unknown) {
       closed = true;
+      base.documents.remove(key);
       return;
     }
     if (state == State.OnMachine && pendingWrites == 0) {
@@ -316,6 +337,10 @@ public class Machine {
   }
 
   public void delete() {
+    attemptClose = false;
+    closed = true;
+    deleted = true;
+    base.documents.remove(key);
     if (lastArchiveKey != null) {
       base.data.cleanUp(key, lastArchiveKey);
       lastArchiveKey = null;

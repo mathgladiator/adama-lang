@@ -33,7 +33,6 @@ public class VariablePool {
       it.remove();
       return result;
     }
-
     String result = make(at);
     at++;
     return result;
@@ -46,7 +45,19 @@ public class VariablePool {
       sb.append(basis[v % 26]);
       v /= 26;
     }
-    return sb.toString();
+    String x = sb.toString();
+    switch (x) { // TODO: add a more complete list of javascript keywords
+      case "if":
+      case "in":
+      case "int":
+      case "var":
+      case "new":
+      case "do":
+      case "for":
+        return "_" + x;
+      default:
+        return x;
+    }
   }
 
   public void give(String p) {

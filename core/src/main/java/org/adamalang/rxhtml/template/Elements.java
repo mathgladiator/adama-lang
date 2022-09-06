@@ -10,6 +10,7 @@
 package org.adamalang.rxhtml.template;
 
 import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
 
@@ -102,13 +103,27 @@ public class Elements {
       env.element.attr("name", "default");
     }
     RxObject obj = new RxObject(env, "name");
-    String sVar = env.pool.ask();
+    String childStateVar = env.pool.ask();
     String parentVar = soloParent(env);
-    env.writer.tab().append("$.P(").append(parentVar).append(",").append(env.stateVar).append(",").append(obj.rxObj).append(",function(").append(sVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(sVar).parentVariable(parentVar));
+    env.writer.tab().append("$.P(").append(parentVar).append(",").append(env.stateVar).append(",").append(obj.rxObj).append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
+      if (node instanceof Element) {
+        return !(node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
+      } else {
+        return true;
+      }
+    });
+    env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
+      if (node instanceof Element) {
+        return (node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
+      } else {
+        return false;
+      }
+    });
     env.writer.tabDown().tab().append("});").newline();
     obj.finish();
-    env.pool.give(sVar);
+    env.pool.give(childStateVar);
   }
 
   public static void input(Environment env) {

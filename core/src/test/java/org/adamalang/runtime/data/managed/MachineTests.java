@@ -12,6 +12,7 @@ package org.adamalang.runtime.data.managed;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.*;
+import org.adamalang.runtime.data.mocks.MockArchiveDataSource;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.junit.Assert;
@@ -19,7 +20,6 @@ import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MachineTests {
@@ -93,6 +93,33 @@ public class MachineTests {
         machine.close();
         machine.read(new Action(() -> {}, cb));
         machine.close();
+        machine.write(new Action(() -> {}, cb));
+      });
+      Assert.assertTrue(latchFailure.await(1000, TimeUnit.MILLISECONDS));
+    }, archive);
+  }
+
+  @Test
+  public void deleting() throws Exception {
+    MockInstantDataService data = new MockInstantDataService();
+    MockArchiveDataSource archive = new MockArchiveDataSource(data);
+    BaseTests.flow((base) -> {
+      CountDownLatch latchFailure = new CountDownLatch(2);
+      base.on(KEY, (machine) -> {
+        Callback<Void> cb = new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            latchFailure.countDown();
+          }
+        };
+        machine.delete();
+        machine.read(new Action(() -> {}, cb));
+        machine.delete();
         machine.write(new Action(() -> {}, cb));
       });
       Assert.assertTrue(latchFailure.await(1000, TimeUnit.MILLISECONDS));

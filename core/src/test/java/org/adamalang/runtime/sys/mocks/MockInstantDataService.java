@@ -56,6 +56,10 @@ public class MockInstantDataService implements DataService {
   public void get(Key key, Callback<LocalDocumentChange> callback) {
     ArrayList<RemoteDocumentUpdate> log = logByKey.get(key);
     if (log == null) {
+      if ("delete-while-archive".equals(key.key)) {
+        callback.success(new LocalDocumentChange("{}", 1, 1000));
+        return;
+      }
       callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
       return;
     }

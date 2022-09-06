@@ -21,21 +21,18 @@ public class TemplateSetTitleTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c={};");
-    gold.append("\n    c._={};");
-    gold.append("\n    c._.value={};");
-    gold.append("\n    c._._ = function() {");
-    gold.append("\n      c.value=c._.value['val'] + \" - YO\"");
+    gold.append("\n    var c=$.RX(['value']);");
+    gold.append("\n    $.Y2(a,c,'value','val',function(d) {");
+    gold.append("\n      c.value=d['val'] + \" - YO\"");
     gold.append("\n      c.__();");
-    gold.append("\n    }");
-    gold.append("\n    $.Y(a,c._.value,'val', c._._);");
+    gold.append("\n    });");
     gold.append("\n    $.ST(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script src=\"https://aws-us-east-2.adama-platform.com/rxhtml.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

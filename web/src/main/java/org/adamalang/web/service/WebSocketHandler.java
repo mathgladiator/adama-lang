@@ -17,6 +17,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import org.adamalang.ErrorCodes;
+import org.adamalang.ErrorTable;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
@@ -160,7 +161,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
 
         @Override
         public void error(ErrorCodeException ex) {
-          ctx.writeAndFlush(new TextWebSocketFrame("{\"failure\":" + id + ",\"reason\":" + ex.code + "}"));
+          boolean retry = ErrorTable.INSTANCE.shouldRetry(ex.code);
+          ctx.writeAndFlush(new TextWebSocketFrame("{\"failure\":" + id + ",\"reason\":" + ex.code + ",\"retry\":" + (retry ? "true" : "false") + "}"));
         }
       };
       // execute the request

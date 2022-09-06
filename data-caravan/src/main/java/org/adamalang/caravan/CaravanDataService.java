@@ -207,6 +207,7 @@ public class CaravanDataService implements ArchivingDataService {
 
                 @Override
                 public void failure(ErrorCodeException ex) {
+                  LOGGER.error("caravan-failure-load", ex);
                   callback.failure(ex);
                 }
               });
@@ -219,6 +220,7 @@ public class CaravanDataService implements ArchivingDataService {
 
       @Override
       public void failure(ErrorCodeException ex) {
+        LOGGER.error("caravan-failure-translate", ex);
         callback.failure(ex);
       }
     });
@@ -395,8 +397,9 @@ public class CaravanDataService implements ArchivingDataService {
     execute("delete", key, false, callback, (id, cached) -> {
       store.delete(id, () -> {
       });
-      callback.success(null);
+      keyToIdService.forget(key);
       cache.remove(id);
+      callback.success(null);
     });
   }
 

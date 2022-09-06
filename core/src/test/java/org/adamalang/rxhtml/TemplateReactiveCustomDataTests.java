@@ -21,22 +21,20 @@ public class TemplateReactiveCustomDataTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c={};");
+    gold.append("\n    var c=$.RX(['two','three']);");
     gold.append("\n    c.one='one';");
-    gold.append("\n    c._={};");
-    gold.append("\n    c._.two={};");
-    gold.append("\n    c._._ = function() {");
-    gold.append("\n      c.two=c._.two['var']");
+    gold.append("\n    $.Y2(a,c,'two','var',function(d) {");
+    gold.append("\n      c.two=d['var']");
     gold.append("\n      c.__();");
-    gold.append("\n    }");
-    gold.append("\n    $.Y(a,c._.two,'var', c._._);");
-    gold.append("\n    c._.three={};");
-    gold.append("\n    c._._ = function() {");
-    gold.append("\n      c.three=c._.three['var1'] + c._.three['var2']");
+    gold.append("\n    });");
+    gold.append("\n    $.Y2(a,c,'three','var1',function(d) {");
+    gold.append("\n      c.three=d['var1'] + d['var2']");
     gold.append("\n      c.__();");
-    gold.append("\n    }");
-    gold.append("\n    $.Y(a,c._.three,'var1', c._._);");
-    gold.append("\n    $.Y(a,c._.three,'var2', c._._);");
+    gold.append("\n    });");
+    gold.append("\n    $.Y2(a,c,'three','var2',function(d) {");
+    gold.append("\n      c.three=d['var1'] + d['var2']");
+    gold.append("\n      c.__();");
+    gold.append("\n    });");
     gold.append("\n    c.present='';");
     gold.append("\n    $.CUDA(b,a,'',c,'/sign-in',function(d) {");
     gold.append("\n    });");
@@ -45,7 +43,7 @@ public class TemplateReactiveCustomDataTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script src=\"https://aws-us-east-2.adama-platform.com/rxhtml.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

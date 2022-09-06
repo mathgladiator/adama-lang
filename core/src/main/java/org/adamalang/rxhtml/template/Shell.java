@@ -56,7 +56,6 @@ public class Shell {
       }
     }
     sb.append("<script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script>");
-    sb.append("<script src=\"https://aws-us-east-2.adama-platform.com/rxhtml.js\"></script>");
     if (inline) {
       sb.append("<script>\n\n").append(result.javascript).append("\n\n</script>");
       sb.append("<style>\n\n").append(result.style).append("\n\n</style>");

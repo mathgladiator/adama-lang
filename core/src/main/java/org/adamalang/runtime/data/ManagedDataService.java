@@ -14,9 +14,12 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.runtime.data.managed.Action;
 import org.adamalang.runtime.data.managed.Base;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** a managed data source will convert and archiving data source into a dataservice such that the local state is managed by a finder. This lets data be uploaded/downloaded as needed. */
 public class ManagedDataService implements DataService {
+  private final Logger LOG = LoggerFactory.getLogger(ManagedDataService.class);
   private final Base base;
 
   public ManagedDataService(Base base) {
@@ -79,6 +82,9 @@ public class ManagedDataService implements DataService {
 
       @Override
       public void failure(ErrorCodeException ex) {
+        LOG.error("delete-from-finder-failed:", ex);
+        base.on(key, machine -> machine.close());
+        base.data.close(key, Callback.DONT_CARE_VOID);
         /* There are two core failure modes.
 
            (I) It failed and the mapping is still valid. In this case, failing the request is appropriate and the user is free to retry.
@@ -101,8 +107,6 @@ public class ManagedDataService implements DataService {
           base.executor.execute(new NamedRunnable("managed-delete") {
             @Override
             public void execute() throws Exception {
-              machine.close();
-              base.documents.remove(key);
               callback.success(null);
             }
           });
@@ -110,6 +114,7 @@ public class ManagedDataService implements DataService {
 
         @Override
         public void failure(ErrorCodeException ex) {
+          LOG.error("delete-from-storage-failed:", ex);
           callback.failure(ex);
         }
       });

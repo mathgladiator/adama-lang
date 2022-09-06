@@ -11,9 +11,7 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.data.managed.Base;
-import org.adamalang.runtime.data.mocks.SimpleDataCallback;
-import org.adamalang.runtime.data.mocks.SimpleIntCallback;
-import org.adamalang.runtime.data.mocks.SimpleVoidCallback;
+import org.adamalang.runtime.data.mocks.*;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.junit.Assert;
@@ -29,9 +27,11 @@ public class ManagedDataServiceTests {
   public static final Key KEY_FAIL_RESTORE = new Key("space", "fail-restore");
   public static final Key KEY_CANT_BIND = new Key("space", "cant-bind");
   public static final Key KEY_SLOW_FIND = new Key("space", "slow-find");
+  public static final Key KEY_SLOW_FIND_WHILE_FINDING = new Key("space", "slow-find-delete-while-finding");
   public static final Key KEY_OFFBOX = new Key("space", "offbox");
   public static final Key KEY_RETRY_KEY = new Key("space", "retry-key");
   public static final Key KEY_CANT_DELETE_LOCAL = new Key("space", "cant-delete-delete");
+  public static final Key KEY_DELETE_WHILE_ARCHIVE = new Key("space", "delete-while-archive");
 
   private static final RemoteDocumentUpdate UPDATE_1 =
       new RemoteDocumentUpdate(
@@ -70,6 +70,42 @@ public class ManagedDataServiceTests {
   }
 
   @Test
+  public void delete_while_archive_is_happening() throws Exception {
+    try (Setup setup = new Setup()) {
+      Runnable firstArchive = setup.archive.latchLogAt(1);
+      Runnable secondArchive = setup.archive.latchLogAt(2);
+      {
+        SimpleVoidCallback cb_Init = new SimpleVoidCallback();
+        setup.managed.initialize(KEY_DELETE_WHILE_ARCHIVE, UPDATE_1, cb_Init);
+        cb_Init.assertSuccess();
+        firstArchive.run();
+        {
+          SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
+          setup.managed.delete(KEY_DELETE_WHILE_ARCHIVE, cb_Delete);
+          cb_Delete.assertSuccess();
+        }
+        setup.archive.driveBackup();
+        secondArchive.run();
+      }
+    }
+  }
+
+  @Test
+  public void delete_while_starting() throws Exception {
+    try (Setup setup = new Setup()) {
+      setup.finder.bindLocal(KEY_SLOW_FIND_WHILE_FINDING);
+      Runnable gotSlow = setup.finder.latchOnSlowFind();
+      SimpleDataCallback cb_Get = new SimpleDataCallback();
+      setup.managed.get(KEY_SLOW_FIND_WHILE_FINDING, cb_Get);
+      SimpleVoidCallback cb_Close = new SimpleVoidCallback();
+      setup.managed.delete(KEY_SLOW_FIND_WHILE_FINDING, cb_Close);
+      cb_Close.assertSuccess();
+      gotSlow.run();
+      cb_Get.assertFailure(786620);
+    }
+  }
+
+  @Test
   public void flow() throws Exception {
     try (Setup setup = new Setup()) {
       Runnable firstArchive = setup.archive.latchLogAt(1);
@@ -86,11 +122,11 @@ public class ManagedDataServiceTests {
       Runnable cantRestoreFailure = setup.archive.latchLogAt(13);
       Runnable restoreWorks = setup.archive.latchLogAt(15);
       Runnable retryBackup = setup.archive.latchLogAt(17);
-      Runnable retryBackupAgain = setup.archive.latchLogAt(19);
+      Runnable retryBackupAgain = setup.archive.latchLogAt(20);
       Runnable waitForRetryDelete = setup.data.latchLogAt(21);
-      Runnable restoreAgain = setup.archive.latchLogAt(21);
-      Runnable backupLoadedContent = setup.archive.latchLogAt(24);
-      Runnable backupFinished = setup.archive.latchLogAt(25);
+      Runnable restoreAgain = setup.archive.latchLogAt(22);
+      Runnable backupLoadedContent = setup.archive.latchLogAt(25);
+      Runnable backupFinished = setup.archive.latchLogAt(26);
 
       {
         SimpleVoidCallback cb_Init = new SimpleVoidCallback();
@@ -302,8 +338,9 @@ public class ManagedDataServiceTests {
 
       setup.archive.assertLogAt(16, "BACKUP:space/retry-key");
       setup.archive.assertLogAt(17, "BACKUP-EXEC:space/retry-key");
-      setup.archive.assertLogAt(18, "BACKUP:space/retry-key");
-      setup.archive.assertLogAt(19, "BACKUP-EXEC:space/retry-key");
+      setup.archive.assertLogAt(18, "CLEAN:space/retry-key");
+      setup.archive.assertLogAt(19, "BACKUP:space/retry-key");
+      setup.archive.assertLogAt(20, "BACKUP-EXEC:space/retry-key");
 
       setup.data.assertLogAt(16, "INIT:space/cant-bind:1->{}");
       setup.data.assertLogAt(17, "INIT:space/retry-key:1->{\"x\":1,\"y\":4}");
@@ -326,7 +363,7 @@ public class ManagedDataServiceTests {
         Assert.assertEquals("{\"x\":4,\"y\":4}", cb_Get.value);
       }
 
-      setup.archive.assertLogAt(20, "RESTORE-INIT:space/123");
+      setup.archive.assertLogAt(21, "RESTORE-INIT:space/123");
 
       {
         SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
@@ -363,10 +400,10 @@ public class ManagedDataServiceTests {
         backupFinished.run();
       }
 
-      setup.archive.assertLogAt(21, "RESTORE-EXEC:space/123");
-      setup.archive.assertLogAt(22, "CLEAN:space/123");
-      setup.archive.assertLogAt(23, "BACKUP:space/456");
-      setup.archive.assertLogAt(24, "BACKUP-EXEC:space/456");
+      setup.archive.assertLogAt(22, "RESTORE-EXEC:space/123");
+      setup.archive.assertLogAt(23, "CLEAN:space/123");
+      setup.archive.assertLogAt(24, "BACKUP:space/456");
+      setup.archive.assertLogAt(25, "BACKUP-EXEC:space/456");
     }
   }
 }

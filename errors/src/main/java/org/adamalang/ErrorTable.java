@@ -626,6 +626,7 @@ public class ErrorTable {
     descriptions.put(787514, "no description of error (yet)");
     names.put(718908, "ADAMA_NET_CONNECT_DOCUMENT_TIMEOUT");
     descriptions.put(718908, "no description of error (yet)");
+    retry.add(718908);
     names.put(702524, "ADAMA_NET_CONNECT_DOCUMENT_REJECTED");
     descriptions.put(702524, "no description of error (yet)");
     names.put(783411, "ADAMA_NET_WEBGET_TIMEOUT");
@@ -699,6 +700,8 @@ public class ErrorTable {
     descriptions.put(768112, "no description of error (yet)");
     names.put(791691, "MANAGED_STORAGE_CLOSED_BEFORE_FOUND");
     descriptions.put(791691, "no description of error (yet)");
+    names.put(786620, "MANAGED_STORAGE_DELETED");
+    descriptions.put(786620, "no description of error (yet)");
     names.put(707675, "CARAVAN_KEY_NOT_LOADED_PATCH");
     descriptions.put(707675, "no description of error (yet)");
     names.put(790622, "CARAVAN_KEY_NOT_LOADED_COMPUTE");

@@ -21,25 +21,27 @@ public class TemplateReactivePickTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c={};");
+    gold.append("\n    var c=$.RX([]);");
     gold.append("\n    c.name='default';");
     gold.append("\n    c.space='space';");
     gold.append("\n    c.key='key';");
     gold.append("\n    c.identity=true;");
     gold.append("\n    $.CONNECT(a,c,'/sign-in');");
     gold.append("\n    c.__();");
-    gold.append("\n    var d={};");
+    gold.append("\n    var d=$.RX([]);");
     gold.append("\n    d.name='default';");
     gold.append("\n    var f=$.E('div');");
     gold.append("\n    b.append(f);");
-    gold.append("\n    $.P(f,a,d,function(e) {");
+    gold.append("\n    $.P(f,a,d,function(f,e) {");
+    gold.append("\n    },function(f,e) {");
     gold.append("\n    });");
     gold.append("\n    d.__();");
-    gold.append("\n    var e={};");
+    gold.append("\n    var e=$.RX([]);");
     gold.append("\n    e.name='default';");
     gold.append("\n    var h=$.E('div');");
     gold.append("\n    b.append(h);");
-    gold.append("\n    $.P(h,a,e,function(g) {");
+    gold.append("\n    $.P(h,a,e,function(h,g) {");
+    gold.append("\n    },function(h,g) {");
     gold.append("\n    });");
     gold.append("\n    e.__();");
     gold.append("\n  });");
@@ -47,7 +49,7 @@ public class TemplateReactivePickTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script src=\"https://aws-us-east-2.adama-platform.com/rxhtml.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

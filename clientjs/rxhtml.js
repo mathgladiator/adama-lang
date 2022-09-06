@@ -58,8 +58,33 @@ var RxHTML = (function () {
         outstanding: {},
         decisions: {},
         resets: {},
-        id: 0
+        connection_events: {},
+        id: 0,
+        connection_state: false,
       };
+      obj.set_connected = function(cs) {
+        if (this.connection_state == cs) {
+          return;
+        }
+        this.connection_state = cs;
+        var axe = [];
+        for (var sub in obj.connection_events) {
+          if (!(obj.connection_events[sub](cs))) {
+            axe.push(sub);
+          }
+        }
+        for (var k = 0; k < axe.length; k++) {
+          delete obj.connection_events[axe[k]];
+        }
+      }.bind(obj);
+      obj.connected = function(callback) {
+        var s = "-|" + this.id++;
+        this.connection_events[s] = callback;
+        callback(this.connection_state);
+        return function () {
+          delete this.connection_events[s];
+        }.bind(this);
+      }.bind(obj);
       obj.subscribe_any = function(callback) {
         var s = "-|" + this.id++;
         this.decisions[s] = callback;
@@ -350,10 +375,31 @@ var RxHTML = (function () {
     subscribe(state, name, sub);
   };
 
+  self.Y2 = function (state, r, key, name, recompute) {
+    var sub = function (value) {
+      var obj = r._[key];
+      obj[name] = value;
+      recompute(obj);
+      return true;
+    };
+    subscribe(state, name, sub);
+  };
+
+  // RUNTIME: build an rxobj
+  self.RX = function(vars) {
+    var o = {};
+    o._ = {};
+    for (var k = 0; k < vars.length; k++) {
+      o._[vars[k]] = {};
+    }
+    return o;
+  };
+
   // RUNTIME | Just subscribee value to the object field of name (no-recompute)
   self.YS = function (state, obj, name) {
     var sub = function (value) {
       obj[name] = value;
+      return true;
     };
     subscribe(state, name, sub);
   };
@@ -395,7 +441,7 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | <pick name=...>
-  self.P = function (parent, priorState, rxObj, childMaker) {
+  self.P = function (parent, priorState, rxObj, childMakerConnected, childMakerDisconnected) {
     var unsub = make_unsub();
     rxObj.__ = function () {
       if (!('name' in rxObj)) {
@@ -404,18 +450,26 @@ var RxHTML = (function () {
       if (this.name == rxObj.name) {
         return;
       }
-      fire_unsub(unsub);
-      this.name = rxObj.name;
-      nuke(parent);
       var co = get_connection_obj(rxObj.name);
-      var state = {
-        service: priorState.service,
-        data: {connection: co, tree: co.tree, delta: {}, parent: null, path: null},
-        view: new_delta_copy(priorState.view),
-        current: "data"
-      };
-      childMaker(state);
-      subscribe_state(state, unsub);
+      this.name = rxObj.name;
+      co.connected(function(cs) {
+        nuke(parent);
+        fire_unsub(unsub);
+        var state = {
+          service: priorState.service,
+          data: {connection: co, tree: co.tree, delta: {}, parent: null, path: null},
+          view: new_delta_copy(priorState.view),
+          current: "data"
+        };
+        if (cs) {
+          childMakerConnected(parent, state);
+        } else {
+          childMakerDisconnected(parent, state);
+        }
+        subscribe_state(state, unsub);
+        // TODO: return false to unsub
+        return true;
+      });
     }.bind({name: ""});
   };
 
@@ -993,7 +1047,6 @@ var RxHTML = (function () {
     if (identityName.startsWith("direct:")) {
       // Use, as is
       identity = identityName.substr(7);
-      console.log("toUse:" + identity);
     } else if (identityName in identities) {
       identity = identities[identityName];
       cleanup = function () {
@@ -1060,7 +1113,7 @@ var RxHTML = (function () {
       view: function () {
       }
     };
-    rxobj.__ = debounce(10, function () {
+    rxobj.__ = debounce(5, function () {
       var valid = 'key' in rxobj && 'space' in rxobj && 'name' in rxobj;
       if (!valid) {
         return;
@@ -1106,9 +1159,10 @@ var RxHTML = (function () {
       var identity = idLookup.identity;
       var cleanup = idLookup.cleanup;
       unsub.view();
-      var vw = state.view.tree.copy();
-      co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, vw, {
+      co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), {
         next: function (payload) {
+          console.log("CONNECT SUCCESS:" + rxobj.space + "/" + rxobj.key + " [" + rxobj.name + "]");
+          co.set_connected(true);
           if ("data" in payload.delta) {
             co.tree.update(payload.delta.data);
           }
@@ -1117,8 +1171,11 @@ var RxHTML = (function () {
           }
         },
         complete: function() {
+          co.set_connected(false);
         },
         failure: function (reason) {
+          console.log("CONNECT FAILURE:" + rxobj.space + "/" + rxobj.key + " [" + rxobj.name + "]");
+          co.set_connected(false);
           // TODO: if not authorized
           /*
           if (false) {
@@ -1175,6 +1232,8 @@ var RxHTML = (function () {
     form.appendChild(identityInput);
     var iframeTarget = document.createElement("iframe");
     iframeTarget.name = "UPLOAD_" + Math.random();
+    iframeTarget.width = "1";
+    iframeTarget.height = "1";
 
     form.appendChild(iframeTarget);
     form.target = iframeTarget.name;

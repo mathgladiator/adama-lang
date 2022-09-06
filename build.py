@@ -15,6 +15,7 @@ for arg in sys.argv:
         production = True
     if arg == "generate":
         generate = True
+        client = True
     if arg == "clean":
         clean = True
     if arg == "client" or arg == "all":

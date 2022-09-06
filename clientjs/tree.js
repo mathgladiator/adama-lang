@@ -25,7 +25,7 @@ function AdamaTree() {
   };
 
   this.nuke = function () {
-    this.all_subscriptions = {};
+    all_subscriptions = {};
   };
 
   this.copy = function () {
@@ -53,7 +53,7 @@ function AdamaTree() {
   };
 
   // fire events at the current subscription
-  var fire = function (s, value) {
+  var fire = function (s, value, events) {
     // for each subscription
     for (var j = 0; j < s.length; j++) {
       var v = s[j];
@@ -62,7 +62,9 @@ function AdamaTree() {
         // fire each event
         var evts = v["@e"];
         for (var k = 0; k < evts.length; k++) {
-          evts[k](value);
+          events.push(function() {
+            this.f(this.v);
+          }.bind({f:evts[k],v:value}));
         }
       }
     }
@@ -167,7 +169,7 @@ function AdamaTree() {
   };
 
   // merge the given delta into the tree and fire subscriptions (s)
-  var merge = function (tree, delta, s) {
+  var merge = function (tree, delta, s, events) {
     for (var key in delta) { // for each bit of data within the tree
       var eKey = "#" + key; // compute the secret data path
       var prior = tree[key]; // find the prior state within the tree
@@ -227,13 +229,13 @@ function AdamaTree() {
                     eBase[aKey].__key = aKey;
                   }
                   delay[aKey] = function (x) {
-                    merge(eBase[x], next[x], sub(eSub, x)); // recurse: merge the difference into the secret tree and publish to all element subscriptions
-                    fire(sub(eSub, x), eBase[x]);
+                    merge(eBase[x], next[x], sub(eSub, x), events); // recurse: merge the difference into the secret tree and publish to all element subscriptions
+                    fire(sub(eSub, x), eBase[x], events);
                   };
                 } else { // otherwise, set the value into the tree
                   eBase[aKey] = nVal;
                   delay[aKey] = function (x) {
-                    fire(sub(eSub, x), eBase[x]);
+                    fire(sub(eSub, x), eBase[x], events);
                   };
                 }
                 // and tell everyone the new value for this
@@ -261,7 +263,7 @@ function AdamaTree() {
                 }
               }
               delayOrder.push(function () {
-                fire(sub(eSub, "~"), msg); // tell subscriptions about the new ordering
+                fire(sub(eSub, "~"), msg, events); // tell subscriptions about the new ordering
               });
               tree[key] = after;
             } else if (resize != null) { // alternatively, an array without keys is being resized
@@ -272,7 +274,7 @@ function AdamaTree() {
                 msg.push("" + k);
               }
               delayOrder.push(function () {
-                fire(sub(eSub, "~"), msg); // tell subscriptions about the new ordering
+                fire(sub(eSub, "~"), msg, events); // tell subscriptions about the new ordering
               });
               tree[key] = after;
             }
@@ -282,30 +284,38 @@ function AdamaTree() {
             for (var k = 0; k < delayOrder; k++) {
               delayOrder[k]();
             }
-            fire(eSub, tree[key]); // tell everyone about the new value
+            fire(eSub, tree[key], events); // tell everyone about the new value
           } else {
             if (!(key in tree) || typeof (tree[key]) != "object") {
               tree[key] = {};
             }
             var e = sub(s, key);
-            merge(tree[key], next, e);
-            fire(e, tree[key]);
+            merge(tree[key], next, e, events);
+            fire(e, tree[key], events);
           }
         } else { // not an object, so it is a value
           tree[key] = next; // stash the new value
-          fire(sub(s, key), next); // and tell everyone about it
+          fire(sub(s, key), next, events); // and tell everyone about it
         }
       }
     }
-    fire(s, tree);
+    fire(s, tree, events);
+  };
+
+  var fire_events = function(events) {
+    for (var k = 0; k < events.length; k++) {
+      events[k]();
+    }
   };
 
   this.update = function (delta) {
-    var flat = []; // flatten the subcriptions objects
+    var arr = []; // convert the subscriptions into an array
     for (var k in all_subscriptions) {
-      flat.push(all_subscriptions[k]);
+      arr.push(all_subscriptions[k]);
     }
-    merge(root, delta, flat); // execute the merge and fire events
+    var events = [];
+    merge(root, delta, arr, events); // execute the merge and fire events
+    fire_events(events);
   };
 
   // fix the callback structure from the user's happy land to the rigor of the format needed
@@ -371,7 +381,9 @@ function AdamaTree() {
     var sub = {};
     transform_callback_into_sub(callback, sub);  // transform the callback into a safe callback
     var delta = make_delta(root);
-    merge({}, delta, [sub]); // execute the callback now on a callback of all data to fire events and fill the subscription object
+    var events = [];
+    merge({}, delta, [sub], events); // execute the callback now on a callback of all data to fire events and fill the subscription object
+    fire_events(events);
     var S = "" + id++; // create an id for the subscription
     all_subscriptions[S] = sub; // record the subscription
     return function () { // return a method to unsubscribe

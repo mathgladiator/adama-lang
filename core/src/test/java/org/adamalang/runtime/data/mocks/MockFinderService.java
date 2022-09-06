@@ -7,11 +7,14 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.runtime.data;
+package org.adamalang.runtime.data.mocks;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.data.BackupResult;
+import org.adamalang.runtime.data.FinderService;
+import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 
 import java.util.HashMap;
@@ -32,9 +35,10 @@ public class MockFinderService implements FinderService {
 
   public Runnable latchOnSlowFind() {
     slowFindLatch = new CountDownLatch(1);
+    CountDownLatch copy = slowFindLatch;
     return () -> {
       try {
-        Assert.assertTrue(slowFindLatch.await(10000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(copy.await(10000, TimeUnit.MILLISECONDS));
         slowFind.run();
         slowFindLatch = null;
       } catch (Exception ex) {
@@ -61,6 +65,7 @@ public class MockFinderService implements FinderService {
     if (key.key.contains("slow-find") && slowFindLatch != null) {
       slowFind = action;
       slowFindLatch.countDown();
+      slowFindLatch = null;
     } else {
       action.run();
     }
@@ -129,6 +134,10 @@ public class MockFinderService implements FinderService {
 
   @Override
   public void backup(Key key, BackupResult backupResult, String machineOn, Callback<Void> callback) {
+    if ("delete-while-archive".equals(key.key)) {
+      callback.success(null);
+      return;
+    }
     if (key.key.equals("retry-key")) {
       if (!failedRetryKeyInBackup) {
         failedRetryKeyInBackup = true;
@@ -152,8 +161,16 @@ public class MockFinderService implements FinderService {
 
   @Override
   public void delete(Key key, String machineOn, Callback<Void> callback) {
+    if ("keep-finder".equals(key.key)) {
+      callback.success(null);
+      return;
+    }
     if ("cant-delete".equals(key.key)) {
       callback.failure(new ErrorCodeException(-123456));
+      return;
+    }
+    if ("slow-find-delete-while-finding".equals(key.key)) {
+      callback.success(null);
       return;
     }
     map.remove(key);
