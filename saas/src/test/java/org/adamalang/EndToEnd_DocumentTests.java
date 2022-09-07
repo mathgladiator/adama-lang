@@ -25,6 +25,7 @@ public class EndToEnd_DocumentTests {
           fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/set\",\"space\":\"newspace\",\"plan\":"+ EndToEnd_SpaceInfoTests.planFor(
               "@static { create { return true; } }" +
                   "@connected { return true; }" +
+                  "@delete { return true; }" +
                   "public int x = 1;" +
                   "message M { int z; }" +
                   "channel foo(M m) { x += m.z; }" +
@@ -58,7 +59,10 @@ public class EndToEnd_DocumentTests {
       Assert.assertEquals("ERROR:995505", c13.next());
       Iterator<String> c14 = fe.execute("{\"id\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"ide\",\"key\":\"newspace\"}");
       Assert.assertEquals("ERROR:184333", c14.next());
-      // LIVING_DOCUMENT_TRANSACTION_CLIENT_REJECTED provdes the document exists
+      Iterator<String> c15 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/delete\",\"space\":\"nope\",\"key\":\"a\",\"arg\":{}}");
+      Assert.assertEquals("ERROR:625678", c15.next());
+      Iterator<String> c16 = fe.execute("{\"id\":8,\"identity\":\"" + devIdentity + "\",\"method\":\"document/delete\",\"space\":\"newspace\",\"key\":\"a\",\"arg\":{}}");
+      Assert.assertEquals("FINISH:{}", c16.next());
     }
   }
 }
