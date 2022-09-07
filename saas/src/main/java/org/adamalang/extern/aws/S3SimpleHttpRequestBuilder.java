@@ -70,7 +70,7 @@ public class S3SimpleHttpRequestBuilder {
       }
       return sb.toString();
     }
-    return null;
+    return "";
   }
 
   private String url() {
