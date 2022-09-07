@@ -495,6 +495,15 @@ class WebSocketAdamaConnection {
       request: {"method":"document/create", "id":parId, "identity": identity, "space": space, "key": key, "entropy": entropy, "arg": arg}
     });
   }
+  DocumentDelete(identity, space, key, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"document/delete", "id":parId, "identity": identity, "space": space, "key": key}
+    });
+  }
   DocumentList(identity, space, marker, limit, responder) {
     var self = this;
     var parId = self.__id();

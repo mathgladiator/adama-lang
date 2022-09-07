@@ -74,6 +74,10 @@ public class MultiRegionClient {
     local.create(ip, origin, agent, authority, space, key, entropy, arg, callback);
   }
 
+  public void delete(String ip, String origin, String agent, String authority, String space, String key, Callback<Void> callback) {
+    local.delete(ip, origin, agent, authority, space, key, callback);
+  }
+
   public AdamaStream connect(AuthenticatedUser user, String space, String key, String viewerState, SimpleEvents events) {
     DelayAdamaStream stream = new DelayAdamaStream(executor, local.metrics.multi_region_find);
     finder.find(new Key(space, key), new Callback<>() {

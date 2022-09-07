@@ -334,6 +334,15 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
+  public void handle(ClientMessage.DeleteRequest payload) {
+    if (bits.fail) {
+      upstream.error(123456789);
+      return;
+    }
+    real.handle(payload);
+  }
+
+  @Override
   public void handle(ClientMessage.PingRequest payload) {
     if (bits.fail) {
       upstream.error(123456789);

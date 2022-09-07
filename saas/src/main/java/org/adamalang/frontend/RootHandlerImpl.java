@@ -525,26 +525,37 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder) {
-    try {
-      if ("ide".equals(request.space)) {
-        responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_DOCUMENT_SPACE_RESERVED));
-        return;
+  public void handle(Session session, DocumentDeleteRequest request, SimpleResponder responder) {
+    nexus.adama.delete(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, new Callback<>() {
+      @Override
+      public void success(Void value) {
+        responder.complete();
       }
-      nexus.adama.create(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
-        @Override
-        public void success(Void value) {
-          responder.complete();
-        }
 
-        @Override
-        public void failure(ErrorCodeException ex) {
-          responder.error(ex);
-        }
-      });
-    } catch (Exception ex) {
-      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
+  @Override
+  public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder) {
+    if ("ide".equals(request.space)) {
+      responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_DOCUMENT_SPACE_RESERVED));
+      return;
     }
+    nexus.adama.create(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        responder.complete();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
   }
 
   @Override

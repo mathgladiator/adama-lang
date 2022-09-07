@@ -64,6 +64,8 @@ public interface RootHandler {
 
   public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder);
 
+  public void handle(Session session, DocumentDeleteRequest request, SimpleResponder responder);
+
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder);
 
   public DocumentStreamHandler handle(Session session, ConnectionCreateRequest request, DataResponder responder);

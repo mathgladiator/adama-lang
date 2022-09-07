@@ -786,6 +786,15 @@
         </documentation>
     </method>
 
+    <method name="document/delete" responder="simple">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <documentation>
+            Delete a document (invokes the @delete document policy).
+        </documentation>
+    </method>
+
     <method name="document/list" responder="key-listing">
         <parameter name="identity"/>
         <parameter name="space"/>

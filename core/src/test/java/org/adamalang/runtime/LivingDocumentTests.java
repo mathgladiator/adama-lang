@@ -217,14 +217,28 @@ public class LivingDocumentTests {
   }
 
   @Test
-  public void deletion_not_allowed() throws Exception {
+  public void deletion_not_allowed_explicit() throws Exception {
     try {
       RealDocumentSetup setup = new RealDocumentSetup(
           "@connected { return true; }" +
               "@delete { return false; }",
           null);
       setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
-      RealDocumentSetup.AssertJustFailure failure = new RealDocumentSetup.AssertJustFailure(120048);
+      RealDocumentSetup.AssertJustFailure failure = new RealDocumentSetup.AssertJustFailure(147186);
+      setup.document.delete(ContextSupport.WRAP(A), failure);
+      failure.test();
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+      Assert.fail();
+    }
+  }
+
+  @Test
+  public void deletion_not_allowed_implicit() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup("@connected { return true; }", null);
+      setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
+      RealDocumentSetup.AssertJustFailure failure = new RealDocumentSetup.AssertJustFailure(147186);
       setup.document.delete(ContextSupport.WRAP(A), failure);
       failure.test();
     } catch (RuntimeException re) {

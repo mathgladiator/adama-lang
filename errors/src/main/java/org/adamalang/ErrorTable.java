@@ -78,8 +78,8 @@ public class ErrorTable {
     descriptions.put(125966, "no description of error (yet)");
     names.put(184333, "LIVING_DOCUMENT_TRANSACTION_CLIENT_REJECTED");
     descriptions.put(184333, "no description of error (yet)");
-    names.put(120048, "LIVING_DOCUMENT_TRANSACTION_DELETE_REJECTED");
-    descriptions.put(120048, "no description of error (yet)");
+    names.put(147186, "LIVING_DOCUMENT_TRANSACTION_DELETE_REJECTED");
+    descriptions.put(147186, "no description of error (yet)");
     names.put(122896, "LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO");
     descriptions.put(122896, "no description of error (yet)");
     names.put(129727, "LIVING_DOCUMENT_TRANSACTION_NO_PUT");
@@ -391,8 +391,6 @@ public class ErrorTable {
     descriptions.put(901144, "no description of error (yet)");
     names.put(995505, "API_CREATE_DOCUMENT_SPACE_RESERVED");
     descriptions.put(995505, "no description of error (yet)");
-    names.put(933907, "API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION");
-    descriptions.put(933907, "no description of error (yet)");
     names.put(984080, "API_DOMAIN_GET_NOT_FOUND");
     descriptions.put(984080, "no description of error (yet)");
     names.put(916520, "API_DOMAIN_GET_NOT_AUTHORIZED");

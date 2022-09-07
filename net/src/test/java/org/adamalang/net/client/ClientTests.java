@@ -161,6 +161,19 @@ public class ClientTests {
         Assert.assertTrue(latchFailedOnReflectionBadSpace.await(5000, TimeUnit.MILLISECONDS));
         connection.close();
         Assert.assertTrue(latchGotDisconnect.await(5000, TimeUnit.MILLISECONDS));
+        CountDownLatch deleteByOverlord = new CountDownLatch(1);
+        client.delete("127.0.0.1", "origin", "me", "overlord", "space", "key1", new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            deleteByOverlord.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            ex.printStackTrace();
+          }
+        });
+        Assert.assertTrue(deleteByOverlord.await(5000, TimeUnit.MILLISECONDS));
       } finally{
         client.shutdown();
       }
@@ -405,6 +418,22 @@ public class ClientTests {
             latch3Failed.countDown();
           }
         });
+
+        CountDownLatch deleteByOverlord = new CountDownLatch(1);
+        client.delete("127.0.0.1", "origin", "me", "overlord", "space", "key1", new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            System.err.println("Successful delete?");
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            Assert.assertEquals(753724, ex.code);
+            deleteByOverlord.countDown();
+          }
+        });
+        Assert.assertTrue(deleteByOverlord.await(5000, TimeUnit.MILLISECONDS));
+
         CountDownLatch latch4 = new CountDownLatch(1);
         AtomicReference<Boolean> got = new AtomicReference<>(null);
         client.waitForCapacity("xyz", 500, new Consumer<Boolean>() {
@@ -419,6 +448,7 @@ public class ClientTests {
         Assert.assertTrue(latch3Failed.await(5000, TimeUnit.MILLISECONDS));
         Assert.assertTrue(latch4.await(5000, TimeUnit.MILLISECONDS));
         Assert.assertFalse(got.get());
+
       } finally{
         client.shutdown();
       }
@@ -450,6 +480,49 @@ public class ClientTests {
           }
         });
         Assert.assertTrue(latchFailed.await(5000, TimeUnit.MILLISECONDS));
+
+      } finally{
+        client.shutdown();
+      }
+    }
+  }
+
+  @Test
+  public void not_allowed_delete() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 12503,
+                 "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+      bed.startServer();
+      ClientConfig clientConfig = new TestClientConfig();
+      Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+      try {
+        waitForRouting(bed, client);
+        CountDownLatch created = new CountDownLatch(1);
+        client.create("127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            created.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+          }
+        });
+        Assert.assertTrue(created.await(5000, TimeUnit.MILLISECONDS));
+        CountDownLatch deleted = new CountDownLatch(1);
+        client.delete("127.0.0.1", "origin", "me", "dev", "space", "key1", new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            Assert.assertEquals(147186, ex.code);
+            deleted.countDown();
+          }
+        });
+        Assert.assertTrue(deleted.await(5000, TimeUnit.MILLISECONDS));
       } finally{
         client.shutdown();
       }
@@ -538,6 +611,19 @@ public class ClientTests {
           failures.countDown();
         }
       });
+      CountDownLatch deleted = new CountDownLatch(1);
+      client.delete("127.0.0.1", "origin", "me", "dev", "space", "key1", new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.assertEquals(123456789, ex.code);
+          deleted.countDown();
+        }
+      });
+      Assert.assertTrue(deleted.await(5000, TimeUnit.MILLISECONDS));
       client.connect("127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", null, new SimpleEvents() {
         @Override
         public void connected() {

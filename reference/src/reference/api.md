@@ -1,6 +1,6 @@
 # API Reference 
  Methods: 
-[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [AccountSetPassword](#method-accountsetpassword), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceUsage](#method-spaceusage), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [DomainMap](#method-domainmap), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentCreate](#method-documentcreate), [DocumentList](#method-documentlist), [ConnectionCreate](#method-connectioncreate), [ConnectionSend](#method-connectionsend), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
+[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [AccountSetPassword](#method-accountsetpassword), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceUsage](#method-spaceusage), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [DomainMap](#method-domainmap), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [ConnectionCreate](#method-connectioncreate), [ConnectionSend](#method-connectionsend), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
 
 ## Method: InitSetupAccount
 This initiates developer machine via email verification.
@@ -696,6 +696,29 @@ The entropy allows the randomization of the document to be fixed at construction
 ### Template
 ```js
 connection.DocumentCreate(identity, space, key, entropy, arg, {
+  success: function() {
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+This method simply returns void.
+
+## Method: DocumentDelete
+Delete a document (invokes the @delete document policy).
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| identity | yes | String | Identity is a token to authenticate a user. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are case insensitive using the regex a-z[a-z0-9\.]* to validation. |
+| key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are case insensitive using the regex [a-z0-9\.-_]* for validation |
+
+
+### Template
+```js
+connection.DocumentDelete(identity, space, key, {
   success: function() {
   },
   failure: function(reason) {
