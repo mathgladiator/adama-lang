@@ -52,13 +52,13 @@ channel publish(PublishMessage message) {
      order by when desc
      offset 10).delete();
 
-  transition #clean in 30;
+  transition #clean in 1;
 }
 
 #clean {
   expire_publishes();
   if (_publishes.size() > 0) {
-    transition #clean in 30;
+    transition #clean in 1;
   }
 }
 
