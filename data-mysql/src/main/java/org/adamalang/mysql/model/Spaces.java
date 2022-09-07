@@ -191,6 +191,17 @@ public class Spaces {
     }
   }
 
+  public static ArrayList<DeletedSpace> listDeletedSpaces(DataBase dataBase) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = "SELECT `id`,`name` FROM `" + dataBase.databaseName + "`.`spaces` WHERE `owner`=0";
+      ArrayList<DeletedSpace> results = new ArrayList<>();
+      DataBase.walk(connection, (rs) -> {
+        results.add(new DeletedSpace(rs.getInt(1), rs.getString(2)));
+      }, sql);
+      return results;
+    }
+  }
+
   public static boolean changePrimaryOwner(DataBase dataBase, int spaceId, int oldOwner, int newOwner) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `owner`=" + newOwner + " WHERE `id`=" + spaceId + " AND `owner`=" + oldOwner + " LIMIT 1";

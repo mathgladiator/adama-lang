@@ -12,10 +12,7 @@ package org.adamalang.mysql.model;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
-import org.adamalang.mysql.data.InternalDeploymentPlan;
-import org.adamalang.mysql.data.Role;
-import org.adamalang.mysql.data.SpaceInfo;
-import org.adamalang.mysql.data.SpaceListingItem;
+import org.adamalang.mysql.data.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -152,11 +149,22 @@ public class SpacesTests {
         {
           Assert.assertEquals(2, Spaces.list(dataBase, bob, null, 5).size());
           int space1 = Spaces.getSpaceInfo(dataBase, "space1").id;
+          int space2 = Spaces.getSpaceInfo(dataBase, "space2").id;
           Spaces.delete(dataBase, space1, alice);
           Assert.assertEquals(2, Spaces.list(dataBase, bob, null, 5).size());
-          Spaces.delete(dataBase, space1, bob);
+          ArrayList<DeletedSpace> ds = Spaces.listDeletedSpaces(dataBase);
+          Assert.assertEquals(0, ds.size());
+          Spaces.changePrimaryOwner(dataBase, space1, bob, 0);
+          ds = Spaces.listDeletedSpaces(dataBase);
+          Assert.assertEquals(1, ds.size());
+          Assert.assertEquals(space1, ds.get(0).id);
+          Spaces.delete(dataBase, space1, 0);
+          ds = Spaces.listDeletedSpaces(dataBase);
+          Assert.assertEquals(0, ds.size());
           Assert.assertEquals(1, Spaces.list(dataBase, bob, null, 5).size());
           Assert.assertEquals(3, Spaces.createSpace(dataBase, alice, "space1"));
+          Spaces.delete(dataBase, space2, bob);
+          Assert.assertEquals(0, Spaces.list(dataBase, bob, null, 5).size());
         }
       } finally {
         installer.uninstall();
