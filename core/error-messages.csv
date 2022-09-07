@@ -177,6 +177,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Define_InappropriateType_failure.a,1,2,1,5,"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)"
 ./test_code/Define_RightSideFailTyping_failure.a,1,10,1,18,"Could not find a meaning for 'string' + '__ViewerType' (OperatorTable)"
 ./test_code/Define_ValueDoesntAssign_failure.a,6,2,6,5,"Type check failure: the type 'int' is unable to store type 'table<R>'. (TypeCheckReferences)"
+./test_code/DeleteEvents_DeleteMustReturn_failure.a,0,8,1,1,"The @delete handler must return a boolean (DocumentEvents)"
 ./test_code/Delta_BadThingsOnLazy_failure.a,9,0,9,15,"Lazy type has inappropriate type `channel<M>` (Lazy)"
 ./test_code/Delta_BadThingsOnLazy_failure.a,9,0,11,26,"Lazy type has inappropriate type `maybe<channel<M>>` (Lazy)"
 ./test_code/Document_CantMixChannelAndFunctions_failure.a,5,0,7,1,"The function 'foo' was already defined. (DocumentDefine)"

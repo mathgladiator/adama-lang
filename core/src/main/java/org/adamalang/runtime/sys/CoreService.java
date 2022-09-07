@@ -265,7 +265,17 @@ public class CoreService implements Deliverer, Queryable {
 
   /** delete a document */
   public void delete(CoreRequestContext context, Key key, Callback<Void> callback) {
+    load(key, new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument value) {
+        value.delete(context, callback);
+      }
 
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   /** internal: actually create with the given callback */

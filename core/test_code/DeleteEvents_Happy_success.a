@@ -1,0 +1,7 @@
+@delete {
+  return false;
+}
+
+@delete {
+  return @who.isAdamaDeveloper();
+}

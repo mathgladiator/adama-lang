@@ -32,6 +32,8 @@ public class ErrorTable {
     descriptions = new HashMap<>();
     userspace = new HashSet<>();
     retry = new HashSet<>();
+    names.put(101386, "IMPOSSIBLE");
+    descriptions.put(101386, "no description of error (yet)");
     names.put(123392, "DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE");
     descriptions.put(123392, "no description of error (yet)");
     retry.add(123392);
@@ -76,6 +78,8 @@ public class ErrorTable {
     descriptions.put(125966, "no description of error (yet)");
     names.put(184333, "LIVING_DOCUMENT_TRANSACTION_CLIENT_REJECTED");
     descriptions.put(184333, "no description of error (yet)");
+    names.put(120048, "LIVING_DOCUMENT_TRANSACTION_DELETE_REJECTED");
+    descriptions.put(120048, "no description of error (yet)");
     names.put(122896, "LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO");
     descriptions.put(122896, "no description of error (yet)");
     names.put(129727, "LIVING_DOCUMENT_TRANSACTION_NO_PUT");
@@ -602,6 +606,8 @@ public class ErrorTable {
     descriptions.put(720955, "no description of error (yet)");
     names.put(717952, "ADAMA_NET_CREATE_FOUND_REGION_RATHER_THAN_MACHINE");
     descriptions.put(717952, "no description of error (yet)");
+    names.put(789668, "ADAMA_NET_DELETE_FOUND_REGION_RATHER_THAN_MACHINE");
+    descriptions.put(789668, "no description of error (yet)");
     names.put(797824, "ADAMA_NET_WEBGET_FOUND_REGION_RATHER_THAN_MACHINE");
     descriptions.put(797824, "no description of error (yet)");
     names.put(773309, "ADAMA_NET_WEBOPTIONS_FOUND_REGION_RATHER_THAN_MACHINE");
@@ -612,6 +618,10 @@ public class ErrorTable {
     descriptions.put(787645, "no description of error (yet)");
     names.put(737336, "ADAMA_NET_CREATE_REJECTED");
     descriptions.put(737336, "no description of error (yet)");
+    names.put(716947, "ADAMA_NET_DELETE_TIMEOUT");
+    descriptions.put(716947, "no description of error (yet)");
+    names.put(798890, "ADAMA_NET_DELETE_REJECTED");
+    descriptions.put(798890, "no description of error (yet)");
     names.put(788543, "ADAMA_NET_CLOSE_TIMEOUT");
     descriptions.put(788543, "no description of error (yet)");
     names.put(796735, "ADAMA_NET_CLOSE_REJECTED");
@@ -754,7 +764,5 @@ public class ErrorTable {
     descriptions.put(707651, "no description of error (yet)");
     names.put(792643, "FINDER_SERVICE_MYSQL_UPDATE_EXCEPTION");
     descriptions.put(792643, "no description of error (yet)");
-    names.put(101386, "DURABLE_LIVING_DOCUMENT_STAGE_LOAD_READ");
-    descriptions.put(101386, "no description of error (yet)");
   }
 }

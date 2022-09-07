@@ -589,6 +589,10 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n    __onAssetAttached__0(__cvalue, __cvalue.who, __pvalue);");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public boolean __delete(CoreRequestContext __cvalue) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(CoreRequestContext __cvalue) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -1224,6 +1228,10 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(CoreRequestContext __cvalue, NtAsset __pvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public boolean __delete(CoreRequestContext __cvalue) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(CoreRequestContext __cvalue) {");
     gold.append("\n    return false;");

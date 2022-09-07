@@ -11,46 +11,86 @@ package org.adamalang.translator;
 
 import org.junit.Test;
 
-public class GeneratedOperationsEqualityTests extends GeneratedBase {
-  private String cached_Testing_1 = null;
-  private String get_Testing_1() {
-    if (cached_Testing_1 != null) {
-      return cached_Testing_1;
+public class GeneratedDeleteEventsTests extends GeneratedBase {
+  private String cached_DeleteMustReturn_1 = null;
+  private String get_DeleteMustReturn_1() {
+    if (cached_DeleteMustReturn_1 != null) {
+      return cached_DeleteMustReturn_1;
     }
-    cached_Testing_1 = generateTestOutput(true, "Testing_1", "./test_code/OperationsEquality_Testing_success.a");
-    return cached_Testing_1;
+    cached_DeleteMustReturn_1 = generateTestOutput(false, "DeleteMustReturn_1", "./test_code/DeleteEvents_DeleteMustReturn_failure.a");
+    return cached_DeleteMustReturn_1;
   }
 
   @Test
-  public void testTestingEmission() {
-    assertEmissionGood(get_Testing_1());
+  public void testDeleteMustReturnFailure() {
+    assertLiveFail(get_DeleteMustReturn_1());
   }
 
   @Test
-  public void testTestingSuccess() {
-    assertLivePass(get_Testing_1());
+  public void testDeleteMustReturnNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DeleteMustReturn_1());
   }
 
   @Test
-  public void testTestingGoodWillHappy() {
-    assertGoodWillHappy(get_Testing_1());
+  public void testDeleteMustReturnExceptionFree() {
+    assertExceptionFree(get_DeleteMustReturn_1());
   }
 
   @Test
-  public void testTestingExceptionFree() {
-    assertExceptionFree(get_Testing_1());
+  public void testDeleteMustReturnTODOFree() {
+    assertTODOFree(get_DeleteMustReturn_1());
   }
 
   @Test
-  public void testTestingTODOFree() {
-    assertTODOFree(get_Testing_1());
-  }
-
-  @Test
-  public void stable_Testing_1() {
-    String live = get_Testing_1();
+  public void stable_DeleteMustReturn_1() {
+    String live = get_DeleteMustReturn_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:OperationsEquality_Testing_success.a");
+    gold.append("Path:DeleteEvents_DeleteMustReturn_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":8,\"byte\":8},\"end\":{\"line\":1,\"character\":1,\"byte\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"The @delete handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_Happy_2 = null;
+  private String get_Happy_2() {
+    if (cached_Happy_2 != null) {
+      return cached_Happy_2;
+    }
+    cached_Happy_2 = generateTestOutput(true, "Happy_2", "./test_code/DeleteEvents_Happy_success.a");
+    return cached_Happy_2;
+  }
+
+  @Test
+  public void testHappyEmission() {
+    assertEmissionGood(get_Happy_2());
+  }
+
+  @Test
+  public void testHappySuccess() {
+    assertLivePass(get_Happy_2());
+  }
+
+  @Test
+  public void testHappyGoodWillHappy() {
+    assertGoodWillHappy(get_Happy_2());
+  }
+
+  @Test
+  public void testHappyExceptionFree() {
+    assertExceptionFree(get_Happy_2());
+  }
+
+  @Test
+  public void testHappyTODOFree() {
+    assertTODOFree(get_Happy_2());
+  }
+
+  @Test
+  public void stable_Happy_2() {
+    String live = get_Happy_2();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:DeleteEvents_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -81,86 +121,14 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Testing_1 extends LivingDocument {");
-    gold.append("\n  private final RxLazy<Boolean> b0;");
-    gold.append("\n  private final RxLazy<Boolean> b1;");
-    gold.append("\n  private final RxLazy<Boolean> b2;");
-    gold.append("\n  private final RxLazy<Boolean> b3;");
-    gold.append("\n  private final RxLazy<Boolean> b4;");
-    gold.append("\n  private final RxLazy<Boolean> b5;");
-    gold.append("\n  private final RxLazy<Boolean> b6;");
-    gold.append("\n  private final RxLazy<Boolean> b7;");
-    gold.append("\n  private final RxLazy<Boolean> b8;");
-    gold.append("\n  private final RxLazy<Boolean> b9;");
-    gold.append("\n  private final RxLazy<Boolean> b10;");
-    gold.append("\n  private final RxLazy<Boolean> b11;");
-    gold.append("\n  private final RxLazy<Boolean> b12;");
-    gold.append("\n  private final RxLazy<Boolean> b13;");
-    gold.append("\n  private final RxLazy<Boolean> b14;");
-    gold.append("\n  private final RxLazy<Boolean> b15;");
-    gold.append("\n  private final RxLazy<Boolean> b16;");
-    gold.append("\n  private final RxLazy<Boolean> b17;");
-    gold.append("\n  private final RxLazy<Boolean> e0;");
-    gold.append("\n  private final RxLazy<Boolean> e1;");
-    gold.append("\n  private final RxLazy<Boolean> e2;");
-    gold.append("\n  private final RxLazy<Boolean> e3;");
-    gold.append("\n  private final RxLazy<Boolean> e4;");
-    gold.append("\n  private final RxLazy<Boolean> e5;");
+    gold.append("\npublic class Happy_2 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
-    gold.append("\n    __sum += b0.__memory();");
-    gold.append("\n    __sum += b1.__memory();");
-    gold.append("\n    __sum += b2.__memory();");
-    gold.append("\n    __sum += b3.__memory();");
-    gold.append("\n    __sum += b4.__memory();");
-    gold.append("\n    __sum += b5.__memory();");
-    gold.append("\n    __sum += b6.__memory();");
-    gold.append("\n    __sum += b7.__memory();");
-    gold.append("\n    __sum += b8.__memory();");
-    gold.append("\n    __sum += b9.__memory();");
-    gold.append("\n    __sum += b10.__memory();");
-    gold.append("\n    __sum += b11.__memory();");
-    gold.append("\n    __sum += b12.__memory();");
-    gold.append("\n    __sum += b13.__memory();");
-    gold.append("\n    __sum += b14.__memory();");
-    gold.append("\n    __sum += b15.__memory();");
-    gold.append("\n    __sum += b16.__memory();");
-    gold.append("\n    __sum += b17.__memory();");
-    gold.append("\n    __sum += e0.__memory();");
-    gold.append("\n    __sum += e1.__memory();");
-    gold.append("\n    __sum += e2.__memory();");
-    gold.append("\n    __sum += e3.__memory();");
-    gold.append("\n    __sum += e4.__memory();");
-    gold.append("\n    __sum += e5.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Testing_1(DocumentMonitor __monitor) {");
+    gold.append("\n  public Happy_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    b0 = new RxLazy<Boolean>(this, () -> (1 == 1));");
-    gold.append("\n    b1 = new RxLazy<Boolean>(this, () -> (1 != 1));");
-    gold.append("\n    b2 = new RxLazy<Boolean>(this, () -> (1 == 2L));");
-    gold.append("\n    b3 = new RxLazy<Boolean>(this, () -> (1 != 2L));");
-    gold.append("\n    b4 = new RxLazy<Boolean>(this, () -> (1L == 2));");
-    gold.append("\n    b5 = new RxLazy<Boolean>(this, () -> (1L != 2));");
-    gold.append("\n    b6 = new RxLazy<Boolean>(this, () -> (1L == 2L));");
-    gold.append("\n    b7 = new RxLazy<Boolean>(this, () -> (1L != 2L));");
-    gold.append("\n    b8 = new RxLazy<Boolean>(this, () -> (LibMath.equality(new NtMaybe<Integer>(1), 1, (__x, __y) -> __x == __y)));");
-    gold.append("\n    b9 = new RxLazy<Boolean>(this, () -> (LibMath.equality(new NtMaybe<Integer>(1), 1, (__x, __y) -> __x == __y)));");
-    gold.append("\n    b10 = new RxLazy<Boolean>(this, () -> (!LibMath.equality(new NtMaybe<Long>(3L), 1L, (__x, __y) -> __x == __y)));");
-    gold.append("\n    b11 = new RxLazy<Boolean>(this, () -> (!LibMath.equality(new NtMaybe<Long>(1L), 1L, (__x, __y) -> __x == __y)));");
-    gold.append("\n    b12 = new RxLazy<Boolean>(this, () -> (LibMath.near(1.23, 4.5)));");
-    gold.append("\n    b13 = new RxLazy<Boolean>(this, () -> (!LibMath.near(1.23, 4.5)));");
-    gold.append("\n    b14 = new RxLazy<Boolean>(this, () -> ((NtPrincipal.NO_ONE).equals(NtPrincipal.NO_ONE)));");
-    gold.append("\n    b15 = new RxLazy<Boolean>(this, () -> (!(NtPrincipal.NO_ONE).equals(NtPrincipal.NO_ONE)));");
-    gold.append("\n    b16 = new RxLazy<Boolean>(this, () -> (LibMath.near(LibArithmetic.Add.CI(LibArithmetic.Multiply.CI(new NtComplex(0.0, 1.0), 2), 1), LibArithmetic.Add.CI(LibArithmetic.Multiply.CI(new NtComplex(0.0, 1.0), 2), 1))));");
-    gold.append("\n    b17 = new RxLazy<Boolean>(this, () -> (!LibMath.near(LibArithmetic.Add.CI(LibArithmetic.Multiply.CI(new NtComplex(0.0, 1.0), 2), 1), LibArithmetic.Add.CI(LibArithmetic.Multiply.CI(new NtComplex(0.0, 1.0), 3), 1))));");
-    gold.append("\n    e0 = new RxLazy<Boolean>(this, () -> (0 == 1));");
-    gold.append("\n    e1 = new RxLazy<Boolean>(this, () -> (0 != 1));");
-    gold.append("\n    e2 = new RxLazy<Boolean>(this, () -> (LibMath.equality(new NtMaybe<Integer>(0), 1, (__x, __y) -> __x == __y)));");
-    gold.append("\n    e3 = new RxLazy<Boolean>(this, () -> (!LibMath.equality(new NtMaybe<Integer>(1), 0, (__x, __y) -> __x == __y)));");
-    gold.append("\n    e4 = new RxLazy<Boolean>(this, () -> (LibMath.equality(new NtMaybe<Integer>(), 1, (__x, __y) -> __x == __y)));");
-    gold.append("\n    e5 = new RxLazy<Boolean>(this, () -> (!LibMath.equality(new NtMaybe<Integer>(), 0, (__x, __y) -> __x == __y)));");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -369,9 +337,9 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaTesting_1 implements DeltaNode {");
+    gold.append("\n  private class DeltaHappy_2 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaTesting_1() {");
+    gold.append("\n    private DeltaHappy_2() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -379,7 +347,7 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Testing_1 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Happy_2 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -407,8 +375,8 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Testing_1 __self = this;");
-    gold.append("\n    DeltaTesting_1 __state = new DeltaTesting_1();");
+    gold.append("\n    Happy_2 __self = this;");
+    gold.append("\n    DeltaHappy_2 __state = new DeltaHappy_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -476,33 +444,6 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static final int [] __ALL_VALUES_E = new int[] {0, 1, 2};");
-    gold.append("\n  private static final int __EnumCycleNext_E(int value) {");
-    gold.append("\n    switch (value) {");
-    gold.append("\n      case 2:");
-    gold.append("\n        return 0;");
-    gold.append("\n      default:");
-    gold.append("\n        return value + 1;");
-    gold.append("\n    }");
-    gold.append("\n  }");
-    gold.append("\n  private static final int __EnumCyclePrev_E(int value) {");
-    gold.append("\n    switch (value) {");
-    gold.append("\n      case 0:");
-    gold.append("\n        return 2;");
-    gold.append("\n      default:");
-    gold.append("\n        return value - 1;");
-    gold.append("\n    }");
-    gold.append("\n  }");
-    gold.append("\n  private static final int __EnumFix_E(int value) {");
-    gold.append("\n    switch (value) {");
-    gold.append("\n      case 0:");
-    gold.append("\n      case 1:");
-    gold.append("\n      case 2:");
-    gold.append("\n        return value;");
-    gold.append("\n      default:");
-    gold.append("\n        return 0;");
-    gold.append("\n    }");
-    gold.append("\n  }");
     gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
     gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
     gold.append("\n    return __map;");
@@ -553,6 +494,16 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
+    gold.append("\n  public boolean __delete__0(CoreRequestContext __context, NtPrincipal __who) {");
+    gold.append("\n    __code_cost += 2;");
+    gold.append("\n    __track(0);");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  public boolean __delete__1(CoreRequestContext __context, NtPrincipal __who) {");
+    gold.append("\n    __code_cost += 2;");
+    gold.append("\n    __track(1);");
+    gold.append("\n    return LibPrincipal.isAdamaDeveloper(__who);");
+    gold.append("\n  }");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -572,7 +523,10 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\n  public void __onAssetAttached(CoreRequestContext __cvalue, NtAsset __pvalue) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __delete(CoreRequestContext __cvalue) {");
-    gold.append("\n    return false;");
+    gold.append("\n    boolean __result = false;");
+    gold.append("\n    if (__delete__0(__cvalue, __cvalue.who)) __result = true;");
+    gold.append("\n    if (__delete__1(__cvalue, __cvalue.who)) __result = true;");
+    gold.append("\n    return __result;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(CoreRequestContext __cvalue) {");
@@ -604,12 +558,12 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\nBegin");
     gold.append("\nEnd");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"b0\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b1\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b2\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b3\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b4\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b5\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b6\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b7\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b8\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b9\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b10\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b11\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b12\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b13\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b14\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b15\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b16\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"b17\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"e0\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"e1\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"e2\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"e3\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"e4\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}},\"e5\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"}}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"E\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"X\":0,\"Y\":1,\"Z\":2},\"names\":{\"0\":\"X\",\"1\":\"Y\",\"2\":\"Z\"},\"default\":\"X\"}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:1344");
+    gold.append("\nMEMORY:384");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -623,7 +577,7 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:1462");
+    gold.append("\nMEMORY:502");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

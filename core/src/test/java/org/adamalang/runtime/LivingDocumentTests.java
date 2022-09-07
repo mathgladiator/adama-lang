@@ -37,7 +37,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.function.Function;
 
 public class LivingDocumentTests {
   private static final NtAsset EXAMPLE =
@@ -179,6 +178,57 @@ public class LivingDocumentTests {
       Assert.assertEquals("{\"data\":{\"x\":10323},\"outstanding\":[],\"blockers\":[],\"seq\":8}", list.get(2));
     } catch (Exception ex) {
       ex.printStackTrace();
+      Assert.fail();
+    }
+  }
+
+  @Test
+  public void deletion() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup(
+          "@connected { return true; }" +
+              "@delete { return true; }",
+          null);
+      setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
+      RealDocumentSetup.AssertSuccess success = new RealDocumentSetup.AssertSuccess();
+      setup.document.delete(ContextSupport.WRAP(A), success);
+      success.test();
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+      Assert.fail();
+    }
+  }
+
+  @Test
+  public void deletion_allowed_by_overlord() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup(
+          "@connected { return true; }" +
+              "@delete { return false; }",
+          null);
+      setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
+      RealDocumentSetup.AssertSuccess success = new RealDocumentSetup.AssertSuccess();
+      setup.document.delete(ContextSupport.WRAP(new NtPrincipal("?", "overlord")), success);
+      success.test();
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+      Assert.fail();
+    }
+  }
+
+  @Test
+  public void deletion_not_allowed() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup(
+          "@connected { return true; }" +
+              "@delete { return false; }",
+          null);
+      setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
+      RealDocumentSetup.AssertJustFailure failure = new RealDocumentSetup.AssertJustFailure(120048);
+      setup.document.delete(ContextSupport.WRAP(A), failure);
+      failure.test();
+    } catch (RuntimeException re) {
+      re.printStackTrace();
       Assert.fail();
     }
   }

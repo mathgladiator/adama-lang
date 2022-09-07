@@ -29,6 +29,8 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class RealDocumentSetup implements Deliverer {
   public final LivingDocumentFactory factory;
@@ -129,6 +131,52 @@ public class RealDocumentSetup implements Deliverer {
     @Override
     public void failure(ErrorCodeException ex) {
       throw new RuntimeException(ex);
+    }
+  }
+
+  public static class AssertSuccess implements Callback<Void> {
+
+    CountDownLatch latch;
+    public AssertSuccess() {
+      latch = new CountDownLatch(1);
+    }
+
+    @Override
+    public void success(Void v) {
+      latch.countDown();
+    }
+
+    public void test() throws Exception{
+      Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+    }
+
+    @Override
+    public void failure(ErrorCodeException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  public static class AssertJustFailure implements Callback<Void> {
+    int codeToExpect;
+    CountDownLatch latch;
+    public AssertJustFailure(int codeToExpect) {
+      this.codeToExpect = codeToExpect;
+      latch = new CountDownLatch(1);
+    }
+
+    @Override
+    public void success(Void v) {
+      Assert.fail();
+    }
+
+    public void test() throws Exception{
+      Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+    }
+
+    @Override
+    public void failure(ErrorCodeException ex) {
+      Assert.assertEquals(codeToExpect, ex.code);
+      latch.countDown();
     }
   }
 

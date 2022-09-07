@@ -73,6 +73,9 @@ public class DefineDocumentEvent extends Definition {
         case ClientConnected:
           environment.document.createError(this, String.format("The @connected handler must return a boolean"), "DocumentEvents");
           return;
+        case Delete:
+          environment.document.createError(this, String.format("The @delete handler must return a boolean"), "DocumentEvents");
+          return;
         case AskCreation:
           environment.document.createError(this, String.format("The 'create' policy must return a boolean"), "DocumentEvents");
           return;
@@ -100,7 +103,7 @@ public class DefineDocumentEvent extends Definition {
     }
     boolean readonly = which == DocumentEvent.AskAssetAttachment;
     final var next = readonly ? environment.scopeAsReadOnlyBoundary().scopeAsDocumentEvent() : environment.scopeAsDocumentEvent();
-    if (which == DocumentEvent.ClientConnected || which == DocumentEvent.AskAssetAttachment) {
+    if ("boolean".equals(which.returnType)) {
       next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, eventToken).withPosition(this));
     }
     if (which == DocumentEvent.AssetAttachment && parameterNameToken != null) {

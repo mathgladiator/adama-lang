@@ -19,6 +19,7 @@ public enum DocumentEvent {
 
   AskAssetAttachment(false, true, "__onCanAssetAttached", "boolean"), //
   AssetAttachment(false, true, "__onAssetAttached", "void", "NtAsset"), //
+  Delete(false, true, "__delete", "boolean"), //
   ClientConnected(false, true, "__onConnected", "boolean"), //
   ClientDisconnected(false, true, "__onDisconnected", "void"); //
 

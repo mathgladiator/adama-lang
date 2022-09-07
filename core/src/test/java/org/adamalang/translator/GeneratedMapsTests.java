@@ -586,6 +586,10 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(CoreRequestContext __cvalue, NtAsset __pvalue) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public boolean __delete(CoreRequestContext __cvalue) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(CoreRequestContext __cvalue) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -1717,6 +1721,10 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(CoreRequestContext __cvalue, NtAsset __pvalue) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public boolean __delete(CoreRequestContext __cvalue) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(CoreRequestContext __cvalue) {");
     gold.append("\n    boolean __result = false;");
     gold.append("\n    if (__onConnected__0(__cvalue, __cvalue.who)) __result = true;");
@@ -2607,6 +2615,10 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(CoreRequestContext __cvalue, NtAsset __pvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public boolean __delete(CoreRequestContext __cvalue) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(CoreRequestContext __cvalue) {");
     gold.append("\n    return false;");

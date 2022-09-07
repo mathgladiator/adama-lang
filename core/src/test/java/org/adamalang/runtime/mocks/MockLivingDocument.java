@@ -135,6 +135,11 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public boolean __delete(CoreRequestContext context) {
+    return context.who.authority.equals("overlord");
+  }
+
+  @Override
   public void __onDisconnected(final CoreRequestContext context) {
     disconnects.add(context.who);
   }

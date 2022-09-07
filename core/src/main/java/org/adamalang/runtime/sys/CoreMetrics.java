@@ -34,6 +34,7 @@ public class CoreMetrics {
   public final Inflight inflight_documents;
   public final CallbackMonitor document_invalidate;
   public final CallbackMonitor document_send;
+  public final CallbackMonitor document_delete;
   public final CallbackMonitor document_attach;
   public final CallbackMonitor document_web_put;
   public final CallbackMonitor document_web_delete;
@@ -71,6 +72,7 @@ public class CoreMetrics {
     catch_up_patch = metricsFactory.makeCallbackMonitor("core_catch_up_patch");
     document_invalidate = metricsFactory.makeCallbackMonitor("core_document_invalidate");
     document_send = metricsFactory.makeCallbackMonitor("core_document_send");
+    document_delete = metricsFactory.makeCallbackMonitor("core_document_delete");
     document_attach = metricsFactory.makeCallbackMonitor("core_document_attach");
     document_web_put = metricsFactory.makeCallbackMonitor("core_document_web_put");
     document_web_delete = metricsFactory.makeCallbackMonitor("core_document_web_delete");

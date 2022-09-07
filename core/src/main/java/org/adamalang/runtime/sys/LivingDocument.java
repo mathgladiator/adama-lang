@@ -604,6 +604,9 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** code generated: allow the document to accept/reject the client */
   public abstract boolean __onConnected(CoreRequestContext clientValue);
 
+  /** code generated: allow the document to be deleted via a standard message */
+  public abstract boolean __delete(CoreRequestContext clientValue);
+
   /** ran with loaded */
   public abstract void __onLoad();
 
@@ -879,6 +882,11 @@ public abstract class LivingDocument implements RxParent, Caller {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
           }
           return __transaction_construct(requestJson, context, arg, entropy);
+        case "delete":
+          if (context == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
+          }
+          return __transaction_delete(requestJson, context);
         case "connect":
           if (context == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
@@ -1133,6 +1141,29 @@ public abstract class LivingDocument implements RxParent, Caller {
         return new LivingDocumentChange(result, null, null);
       } else {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CLIENT_REJECTED);
+      }
+    } finally {
+      if (exception) {
+        __revert();
+      }
+      if (__monitor != null) {
+        __monitor.pop(System.nanoTime() - startedTime, exception);
+      }
+    }
+  }
+
+  /** transaction: a person connects to document */
+  private LivingDocumentChange __transaction_delete(final String request, final CoreRequestContext context) throws ErrorCodeException {
+    final var startedTime = System.nanoTime();
+    var exception = true;
+    if (__monitor != null) {
+      __monitor.push("TransactionDelete");
+    }
+    try {
+      if (context.who.authority.equals("overlord") || __delete(context)) {
+        throw new PerformDocumentDeleteException();
+      } else {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_DELETE_REJECTED);
       }
     } finally {
       if (exception) {

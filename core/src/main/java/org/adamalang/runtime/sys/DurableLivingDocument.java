@@ -730,6 +730,27 @@ public class DurableLivingDocument implements Queryable {
     ingest(context.who, writer.toString(), JUST_SEQ(base.metrics.document_send.wrap(callback)), false, false);
   }
 
+  public void delete(CoreRequestContext context, Callback<Void> callbackRaw) {
+    Callback<Void> callback = base.metrics.document_send.wrap(callbackRaw);
+    final var writer = forgeWithContext("delete", context);
+    writer.endObject();
+    ingest(context.who, writer.toString(), new Callback<>() {
+      @Override
+      public void success(LivingDocumentChange value) {
+        callback.failure(new ErrorCodeException(ErrorCodes.IMPOSSIBLE));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        if (ex.code == 134195) {
+          callback.success(null);
+        } else {
+          callback.failure(ex);
+        }
+      }
+    }, false, false);
+  }
+
   public void apply(NtPrincipal who, String patch, Callback<Integer> callback) {
     final var writer = forge("apply", who);
     writer.writeObjectFieldIntro("patch");
