@@ -312,7 +312,6 @@ public class Client {
     });
   }
 
-
   public void create(String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_create_found_machine.start();
     router.routerForDocuments.get(new Key(space, key), new RoutingSubscriber() {
@@ -334,6 +333,38 @@ public class Client {
           @Override
           public void success(InstanceClient client) {
             client.create(ip, origin, agent, authority, space, key, entropy, arg, callback);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+      }
+    });
+  }
+
+  public void delete(String ip, String origin, String agent, String authority, String space, String key, Callback<Void> callback) {
+    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_delete_found_machine.start();
+    router.routerForDocuments.get(new Key(space, key), new RoutingSubscriber() {
+      @Override
+      public void onRegion(String region) {
+        mInstance.failure(ErrorCodes.ADAMA_NET_DELETE_FOUND_REGION_RATHER_THAN_MACHINE);
+        callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_DELETE_FOUND_REGION_RATHER_THAN_MACHINE));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+
+      @Override
+      public void onMachine(String machine) {
+        mInstance.success();
+        clientFinder.find(machine,  new Callback<InstanceClient>() {
+          @Override
+          public void success(InstanceClient client) {
+            client.delete(ip, origin, agent, authority, space, key, callback);
           }
 
           @Override

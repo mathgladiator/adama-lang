@@ -17,10 +17,12 @@ public class ClientMetrics {
 
   public final ItemActionMonitor client_ping;
   public final ItemActionMonitor client_create;
+  public final ItemActionMonitor client_delete;
   public final ItemActionMonitor client_webget;
   public final ItemActionMonitor client_weboptions;
   public final ItemActionMonitor client_webput;
   public final CallbackMonitor client_create_cb;
+  public final CallbackMonitor client_delete_cb;
   public final ItemActionMonitor client_close;
   public final ItemActionMonitor client_reflection;
   public final CallbackMonitor client_reflection_cb;
@@ -42,6 +44,7 @@ public class ClientMetrics {
   public final ItemActionMonitor client_proxy;
 
   public final RequestResponseMonitor client_create_found_machine;
+  public final RequestResponseMonitor client_delete_found_machine;
   public final RequestResponseMonitor client_webget_found_machine;
   public final RequestResponseMonitor client_weboptions_found_machine;
   public final RequestResponseMonitor client_webput_found_machine;
@@ -70,10 +73,12 @@ public class ClientMetrics {
     client_metering_exchange = factory.makeItemActionMonitor("client_metering_exchange");
     client_ping = factory.makeItemActionMonitor("client_ping");
     client_create = factory.makeItemActionMonitor("client_create");
+    client_delete = factory.makeItemActionMonitor("client_delete");
     client_webget = factory.makeItemActionMonitor("client_webget");
     client_webput = factory.makeItemActionMonitor("client_webput");
     client_weboptions = factory.makeItemActionMonitor("client_weboptions");
     client_create_cb = factory.makeCallbackMonitor("client_create");
+    client_delete_cb = factory.makeCallbackMonitor("client_delete");
     client_reflection = factory.makeItemActionMonitor("client_reflection");
     client_reflection_cb = factory.makeCallbackMonitor("client_reflection");
     client_close = factory.makeItemActionMonitor("client_close");
@@ -87,6 +92,7 @@ public class ClientMetrics {
     client_info_failed_ask = factory.counter("client_info_failed_ask");
     client_proxy = factory.makeItemActionMonitor("client_proxy");
     client_create_found_machine = factory.makeRequestResponseMonitor("client_create_found_machine");
+    client_delete_found_machine = factory.makeRequestResponseMonitor("client_delete_found_machine");
     client_webget_found_machine = factory.makeRequestResponseMonitor("client_webget_found_machine");
     client_weboptions_found_machine = factory.makeRequestResponseMonitor("client_weboptions_found_machine");
     client_webput_found_machine = factory.makeRequestResponseMonitor("client_webput_found_machine");

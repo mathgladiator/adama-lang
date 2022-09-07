@@ -505,6 +505,55 @@ public class InstanceClient implements AutoCloseable {
     });
   }
 
+  /** delete a document */
+  public void delete(String ip, String origin, String agent, String authority, String space, String key, Callback<Void> callbackRaw) {
+    Callback<Void> callback = metrics.client_delete_cb.wrap(callbackRaw);
+    executor.execute(new NamedRunnable("execute-delete") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_DELETE_TIMEOUT, ErrorCodes.ADAMA_NET_DELETE_REJECTED, metrics.client_delete.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamDeletion() {
+              @Override
+              public void handle(ServerMessage.DeleteResponse payload) {
+                callback.success(null);
+              }
+
+              @Override
+              public void completed() {
+              }
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new CallbackByteStreamWriter(callback) {
+              @Override
+              public void write(ByteStream stream) {
+                ByteBuf toWrite = stream.create(agent.length() + authority.length() + space.length() + key.length() + origin.length() + 40);
+                ClientMessage.DeleteRequest delete = new ClientMessage.DeleteRequest();
+                delete.origin = origin;
+                delete.agent = agent;
+                delete.authority = authority;
+                delete.space = space;
+                delete.key = key;
+                delete.ip = ip;
+                ClientCodec.write(toWrite, delete);
+                stream.next(toWrite);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
   public void reflect(String space, String key, Callback<String> callbackRaw) {
     Callback<String> callback = metrics.client_reflection_cb.wrap(callbackRaw);
     executor.execute(new NamedRunnable("execute-reflect") {
