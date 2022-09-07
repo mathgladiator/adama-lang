@@ -11,6 +11,7 @@ package org.adamalang.extern.aws;
 
 import org.adamalang.common.Hashing;
 import org.adamalang.common.Hex;
+import org.adamalang.common.URL;
 import org.adamalang.web.client.FileReaderHttpRequestBody;
 import org.adamalang.web.client.SimpleHttpRequest;
 import org.adamalang.web.client.SimpleHttpRequestBody;
@@ -25,13 +26,15 @@ public class S3SimpleHttpRequestBuilder {
   private final String method;
   private final String s3key;
   private final TreeMap<String, String> headers;
+  private final TreeMap<String, String> parameters;
 
-  public S3SimpleHttpRequestBuilder(AWSConfig config, String method, String s3key) {
+  public S3SimpleHttpRequestBuilder(AWSConfig config, String method, String s3key, TreeMap<String, String> parameters) {
     this.config = config;
     this.host = "s3." + config.region + ".amazonaws.com";
     this.headers = new TreeMap<>();
     this.method = method;
     this.s3key = s3key;
+    this.parameters = parameters;
   }
 
   public S3SimpleHttpRequestBuilder withContentType(String contentType) {
@@ -39,26 +42,53 @@ public class S3SimpleHttpRequestBuilder {
     return this;
   }
 
-  public SimpleHttpRequest buildWithEmptyBody() {
-    startSigning().withEmptyBody().signInto(headers);
-    return new SimpleHttpRequest(method, "https://" + host + "/" + config.bucket + "/" + s3key.replaceAll(Pattern.quote("#"), "%23"), headers, SimpleHttpRequestBody.EMPTY);
-  }
-
   private SignatureV4 startSigning() {
     SignatureV4 v4 = new SignatureV4(config, "s3", method, host, "/" + config.bucket + "/" + s3key);
     for (Map.Entry<String, String> entry : headers.entrySet()) {
       v4.withHeader(entry.getKey(), entry.getValue());
     }
+    if (parameters != null) {
+      for (Map.Entry<String, String> param : parameters.entrySet()) {
+        v4.withParameter(param.getKey(), param.getValue());
+      }
+    }
     return v4;
+  }
+
+  private String params() {
+    if (parameters != null) {
+      StringBuilder sb = new StringBuilder();
+      boolean first = true;
+      for (Map.Entry<String, String> param : parameters.entrySet()) {
+        if (first) {
+          sb.append("?");
+          first = false;
+        } else {
+          sb.append("&");
+        }
+        sb.append(param.getKey()).append("=").append(URL.encode(param.getValue(), false));
+      }
+      return sb.toString();
+    }
+    return null;
+  }
+
+  private String url() {
+    return "https://" + host + "/" + config.bucket + "/" + URL.encode(s3key, true) + params();
+  }
+
+  public SimpleHttpRequest buildWithEmptyBody() {
+    startSigning().withEmptyBody().signInto(headers);
+    return new SimpleHttpRequest(method, url(), headers, SimpleHttpRequestBody.EMPTY);
   }
 
   public SimpleHttpRequest buildWithFileAsBody(FileReaderHttpRequestBody body) {
     startSigning().withContentHashSha256(body.sha256).withHeader("Content-Length", body.size + "").signInto(headers);
-    return new SimpleHttpRequest(method, "https://" + host + "/" + config.bucket + "/" + s3key.replaceAll(Pattern.quote("#"), "%23"), headers, body);
+    return new SimpleHttpRequest(method, url(), headers, body);
   }
 
   public SimpleHttpRequest buildWithBytesAsBody(byte[] body) {
     startSigning().withContentHashSha256(Hex.of(Hashing.sha256().digest(body))).withHeader("Content-Length", body.length + "").signInto(headers);
-    return new SimpleHttpRequest(method, "https://" + host + "/" + config.bucket + "/" + s3key.replaceAll(Pattern.quote("#"), "%23"), headers, SimpleHttpRequestBody.WRAP(body));
+    return new SimpleHttpRequest(method, url(), headers, SimpleHttpRequestBody.WRAP(body));
   }
 }

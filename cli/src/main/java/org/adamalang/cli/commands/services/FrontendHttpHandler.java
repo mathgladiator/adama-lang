@@ -33,8 +33,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /** the http handler for the service */
 public class FrontendHttpHandler implements HttpHandler {
-  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(FrontendHttpHandler.class);
   private static final Logger LOGGER = LoggerFactory.getLogger(FrontendHttpHandler.class);
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private final CommonServiceInit init;
   private final Client client;
   private final ConcurrentHashMap<String, Integer> spaceIds;

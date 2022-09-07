@@ -54,7 +54,7 @@ import java.util.regex.Pattern;
 
 public class RootHandlerImpl implements RootHandler {
   private static final Logger LOG = LoggerFactory.getLogger(RootHandlerImpl.class);
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(RootHandlerImpl.class);
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LOG);
   private final ExternNexus nexus;
   private final Random rng;
 

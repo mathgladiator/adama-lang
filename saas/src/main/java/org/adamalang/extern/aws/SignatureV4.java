@@ -12,8 +12,8 @@ package org.adamalang.extern.aws;
 import org.adamalang.common.HMACSHA256;
 import org.adamalang.common.Hashing;
 import org.adamalang.common.Hex;
+import org.adamalang.common.URL;
 
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -71,7 +71,17 @@ public class SignatureV4 {
     }
     final String canonicalQuery;
     {
-      canonicalQuery = ""; // TODO
+      StringBuilder sb = new StringBuilder();
+      boolean notFirst = false;
+      for (String name : parameters.keySet()) {
+        if (notFirst) {
+          sb.append("&");
+        } else {
+          notFirst = true;
+        }
+        sb.append(name).append("=").append(URL.encode(parameters.get(name), false));
+      }
+      canonicalQuery = sb.toString();
     }
     final String canonicalHeaders;
     {
@@ -87,7 +97,7 @@ public class SignatureV4 {
       }
       canonicalHeaders = sb.toString();
     }
-    String canonicalResource = URLEncoder.encode(path, StandardCharsets.UTF_8).replaceAll(Pattern.quote("%2F"), "/");
+    String canonicalResource = URL.encode(path, true);
     String canonicalRequest = method + "\n" + canonicalResource + "\n" + canonicalQuery + "\n" + canonicalHeaders + "\n" + signedHeaders + "\n" + contentHashSha256;
     final String canonicalRequestSha256;
     {

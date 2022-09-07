@@ -17,6 +17,7 @@ public class AWSMetrics {
   public final RequestResponseMonitor restore_document;
   public final RequestResponseMonitor backup_document;
   public final RequestResponseMonitor delete_document;
+  public final RequestResponseMonitor list_assets;
   public final RequestResponseMonitor well_known_get;
   public final RequestResponseMonitor well_known_put;
 
@@ -33,6 +34,7 @@ public class AWSMetrics {
     delete_document = factory.makeRequestResponseMonitor("aws_delete_document");
     well_known_get = factory.makeRequestResponseMonitor("aws_well_known_get");
     well_known_put = factory.makeRequestResponseMonitor("aws_well_known_put");
+    list_assets = factory.makeRequestResponseMonitor("aws_list_assets");
 
     upload_file = factory.makeRequestResponseMonitor("aws_upload_file");
     download_file = factory.makeRequestResponseMonitor("aws_download_file");

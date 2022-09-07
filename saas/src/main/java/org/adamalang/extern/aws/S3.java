@@ -13,6 +13,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
@@ -25,13 +26,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 public class S3 implements Cloud, WellKnownHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(S3.class);
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private static final Pattern COMPLETE_LOG = Pattern.compile("[a-z]*\\.[0-9]*-[0-9]*-[0-9]*\\.[0-9]*\\.log");
   private final WebClientBase base;
   private final AWSMetrics metrics;
@@ -54,7 +58,7 @@ public class S3 implements Cloud, WellKnownHandler {
   public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.upload_file.start();
     String s3key = "assets/" + key.space + "/" + key.key + "/" + asset.id;
-    S3SimpleHttpRequestBuilder builder = new S3SimpleHttpRequestBuilder(config, "PUT", s3key);
+    S3SimpleHttpRequestBuilder builder = new S3SimpleHttpRequestBuilder(config, "PUT", s3key, null);
     builder.withContentType(asset.contentType);
     final SimpleHttpRequest request;
     if (body.getFileIfExists() != null) {
@@ -73,7 +77,7 @@ public class S3 implements Cloud, WellKnownHandler {
   public void request(AssetRequest asset, AssetStream stream) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.download_file.start();
     String s3key = "assets/" + asset.space + "/" + asset.key + "/" + asset.id;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key).buildWithEmptyBody();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key, null).buildWithEmptyBody();
     base.execute(request, new SimpleHttpResponder() {
       private String contentType;
       private long written;
@@ -122,7 +126,7 @@ public class S3 implements Cloud, WellKnownHandler {
 
   public void deleteAsset(Key key, String assetId, Callback<Void> callback) {
     String s3key = "assets/" + key.space + "/" + key.key + "/" + assetId;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "DELETE", s3key).buildWithEmptyBody();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "DELETE", s3key, null).buildWithEmptyBody();
     base.execute(request, new VoidCallbackHttpResponder(LOGGER, metrics.delete_asset.start(), callback));
   }
 
@@ -139,7 +143,7 @@ public class S3 implements Cloud, WellKnownHandler {
     for (File file : directory.listFiles()) {
       if (shouldConsiderForUpload(file.getName())) {
         String s3key = "logs/" + prefix + "/" + file.getName();
-        SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "PUT", s3key).buildWithFileAsBody(new FileReaderHttpRequestBody(file));
+        SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "PUT", s3key, null).buildWithFileAsBody(new FileReaderHttpRequestBody(file));
         final File fileToDeleteOnSuccess = file;
         base.execute(request, new VoidCallbackHttpResponder(LOGGER, metrics.upload_log_document.start(), new Callback<Void>() {
           @Override
@@ -163,7 +167,7 @@ public class S3 implements Cloud, WellKnownHandler {
     }
     File temp = new File(root, archiveKey + ".temp");
     String s3key = "backups/" + key.space + "/" + key.key + "/#" + archiveKey;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key).buildWithEmptyBody();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key, null).buildWithEmptyBody();
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.restore_document.start();
     try {
       base.execute(request, new FileWriterHttpResponder(temp, new Callback<Void>() {
@@ -196,7 +200,7 @@ public class S3 implements Cloud, WellKnownHandler {
     try {
       String s3key = "backups/" + key.space + "/" + key.key + "/#" + archiveFile.getName();
       FileReaderHttpRequestBody body = new FileReaderHttpRequestBody(archiveFile);
-      SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "PUT", s3key).buildWithFileAsBody(body);
+      SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "PUT", s3key, null).buildWithFileAsBody(body);
       base.execute(request, new VoidCallbackHttpResponder(LOGGER, metrics.backup_document.start(), callback));
     } catch (Exception ex) {
       callback.failure(new ErrorCodeException(ErrorCodes.BACKUP_FILE_FAILURE, ex));
@@ -206,14 +210,45 @@ public class S3 implements Cloud, WellKnownHandler {
   @Override
   public void delete(Key key, String archiveKey, Callback<Void> callback) {
     String s3key = "backups/" + key.space + "/" + key.key + "/#" + archiveKey;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "DELETE", s3key).buildWithEmptyBody();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "DELETE", s3key, null).buildWithEmptyBody();
     base.execute(request, new VoidCallbackHttpResponder(LOGGER, metrics.delete_document.start(), callback));
   }
 
   @Override
   public void handle(String uri, Callback<String> callback) {
     String s3key = "wellknown" + uri;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key).buildWithEmptyBody();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key, null).buildWithEmptyBody();
     base.execute(request, new StringCallbackHttpResponder(LOGGER, metrics.well_known_get.start(), callback));
+  }
+
+  public void listAssets(Key key, Callback<List<String>> callback) {
+    final ArrayList<String> ids = new ArrayList<>();
+    final TreeMap<String, String> parameters = new TreeMap<>();
+    String prefix = "assets/" + key.space + "/" + key.key + "/";
+    parameters.put("prefix", prefix);
+    base.execute(new S3SimpleHttpRequestBuilder(config, "GET", "", parameters).buildWithEmptyBody(), new StringCallbackHttpResponder(LOGGER, metrics.list_assets.start(), new Callback<String>() {
+      @Override
+      public void success(String xml) {
+        try {
+          S3XmlParsing.ListResult results = S3XmlParsing.listResultOf(xml);
+          for (String key : results.keys) {
+            ids.add(key.substring(prefix.length()));
+          }
+          if (results.truncated) {
+            parameters.put("marker", results.last());
+            base.execute(new S3SimpleHttpRequestBuilder(config, "GET", "", parameters).buildWithEmptyBody(), new StringCallbackHttpResponder(LOGGER, metrics.list_assets.start(), this));
+          } else {
+            callback.success(ids);
+          }
+        } catch (Exception ex) {
+          callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.LIST_ASSETS_PARSE_FAILURE, ex, EXLOGGER));
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    }));
   }
 }

@@ -27,6 +27,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +45,9 @@ public class AWS {
         return;
       case "test-email":
         awsTestEmail(config);
+        return;
+      case "test-asset-listing":
+        awsTestAssetListing(next, config);
         return;
       case "download-archive":
         awsDownloadArchive(next, config);
@@ -95,7 +99,7 @@ public class AWS {
     String key = Util.extractOrCrash("--key", "-k", args);
     WebClientBase base = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
     try {
-      CountDownLatch latch = new CountDownLatch(123);
+      CountDownLatch latch = new CountDownLatch(1);
       S3 s3 = new S3(base, awsConfig, new AWSMetrics(new NoOpMetricsFactory()));
       s3.restore(new Key(space, key), archiveKey, new Callback<File>() {
         @Override
@@ -147,6 +151,35 @@ public class AWS {
         }
       });
       latch.await(60000, TimeUnit.MILLISECONDS);
+    } finally {
+      base.shutdown();
+    }
+  }
+
+  public static void awsTestAssetListing(String[] args, Config config) throws Exception {
+    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
+    String space = Util.extractOrCrash("--space", "-s", args);
+    String key = Util.extractOrCrash("--key", "-k", args);
+    WebClientBase base = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
+    try {
+      S3 s3 = new S3(base, awsConfig, new AWSMetrics(new NoOpMetricsFactory()));
+      CountDownLatch latch = new CountDownLatch(1);
+      s3.listAssets(new Key(space, key), new Callback<List<String>>() {
+        @Override
+        public void success(List<String> value) {
+          for (String id : value) {
+            System.err.println(id);
+          }
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+          latch.countDown();
+        }
+      });
+      latch.await(2500, TimeUnit.MILLISECONDS);
     } finally {
       base.shutdown();
     }

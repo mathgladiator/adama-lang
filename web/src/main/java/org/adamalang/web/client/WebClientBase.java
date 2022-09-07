@@ -57,7 +57,7 @@ public class WebClientBase {
     String host = uri.getHost();
     boolean secure = uri.getScheme().equals("https");
     int port = uri.getPort() < 0 ? (secure ? 443 : 80) : uri.getPort();
-    String path = uri.getRawPath();
+    String requestPath = uri.getRawPath() + (uri.getRawQuery() != null ? ("?" + uri.getRawQuery()) : "");
     final var b = new Bootstrap();
     b.group(group);
     b.channel(NioSocketChannel.class);
@@ -146,9 +146,9 @@ public class WebClientBase {
                 left -= sz;
               }
             }
-            future.channel().writeAndFlush(new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, path, content, headers, new DefaultHttpHeaders(true)));
+            future.channel().writeAndFlush(new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, requestPath, content, headers, new DefaultHttpHeaders(true)));
           } else {
-            future.channel().writeAndFlush(new DefaultHttpRequest(HttpVersion.HTTP_1_1, method, path, headers));
+            future.channel().writeAndFlush(new DefaultHttpRequest(HttpVersion.HTTP_1_1, method, requestPath, headers));
             long left = bodySize;
             while (left > 0) {
               byte[] buffer = new byte[8196];

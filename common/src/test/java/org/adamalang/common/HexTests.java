@@ -15,12 +15,25 @@ import org.junit.Test;
 public class HexTests {
 
   @Test
-  public void flow() {
+  public void flow_lower() {
     Assert.assertEquals("000102030405060708090a0b0c0d0e0f101112", Hex.of(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18}));
   }
 
   @Test
-  public void singles() {
+  public void flow_upper() {
+    Assert.assertEquals("000102030405060708090A0B0C0D0E0F101112", Hex.of_upper(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18}));
+  }
+
+  @Test
+  public void single_of() {
+    Assert.assertEquals("bb", Hex.of((byte) 187));
+    Assert.assertEquals("BB", Hex.of_upper((byte) 187));
+    Assert.assertEquals("ef", Hex.of((byte) (14 * 16 + 15)));
+    Assert.assertEquals("EF", Hex.of_upper((byte) (14 * 16 + 15)));
+  }
+
+  @Test
+  public void singles_from() {
     Assert.assertEquals(0, Hex.single('0'));
     Assert.assertEquals(1, Hex.single('1'));
     Assert.assertEquals(2, Hex.single('2'));

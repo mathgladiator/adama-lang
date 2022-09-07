@@ -20,6 +20,11 @@ public interface ExceptionLogger {
       logger.error("exception", t);
     };
   }
+  static ExceptionLogger FOR(Logger logger) {
+    return (t, ec) -> {
+      logger.error("exception", t);
+    };
+  }
 
   /**
    * an issue emerged which was not understood by an error code, and was returned to use as the

@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 /** defines the threading base for the common networking library */
 public class NetBase {
   private static final Logger LOGGER = LoggerFactory.getLogger(NetBase.class);
-  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(NetBase.class);
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   public final NetMetrics metrics;
   public final NioEventLoopGroup bossGroup;
   public final NioEventLoopGroup workerGroup;

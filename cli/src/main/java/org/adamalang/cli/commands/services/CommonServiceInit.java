@@ -55,7 +55,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** Common service initialization */
 public class CommonServiceInit {
   private static final Logger LOGGER = LoggerFactory.getLogger(CommonServiceInit.class);
-  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(CommonServiceInit.class);
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   public final AtomicBoolean alive;
   public final String region;
   public final String role;

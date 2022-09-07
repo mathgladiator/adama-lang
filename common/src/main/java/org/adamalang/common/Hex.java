@@ -12,6 +12,7 @@ package org.adamalang.common;
 /** Hex encodings */
 public class Hex {
   private static final char[] HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+  private static final char[] HEX_UPPER = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
   public static String of(final byte[] bytes) {
     final int n = bytes.length;
     final char[] encoded = new char[n * 2];
@@ -20,6 +21,28 @@ public class Hex {
       encoded[j++] = HEX[(0xF0 & bytes[i]) >>> 4];
       encoded[j++] = HEX[0x0F & bytes[i]];
     }
+    return new String(encoded);
+  }
+  public static String of(final byte b) {
+    final char[] encoded = new char[2];
+    encoded[0] = HEX[(0xF0 & b) >>> 4];
+    encoded[1] = HEX[0x0F & b];
+    return new String(encoded);
+  }
+  public static String of_upper(final byte[] bytes) {
+    final int n = bytes.length;
+    final char[] encoded = new char[n * 2];
+    int j = 0;
+    for (int i = 0; i < n; i++) {
+      encoded[j++] = HEX_UPPER[(0xF0 & bytes[i]) >>> 4];
+      encoded[j++] = HEX_UPPER[0x0F & bytes[i]];
+    }
+    return new String(encoded);
+  }
+  public static String of_upper(final byte b) {
+    final char[] encoded = new char[2];
+    encoded[0] = HEX_UPPER[(0xF0 & b) >>> 4];
+    encoded[1] = HEX_UPPER[0x0F & b];
     return new String(encoded);
   }
   public static int single(char hex) {

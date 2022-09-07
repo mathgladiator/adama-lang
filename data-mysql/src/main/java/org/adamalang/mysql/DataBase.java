@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 /** the connection pool and helpers for interacting with MySQL */
 public class DataBase implements AutoCloseable {
   private static Logger LOG = LoggerFactory.getLogger(DataBase.class);
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(DataBase.class);
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LOG);
   public final ComboPooledDataSource pool;
   public final String databaseName;
   public final DataBaseMetrics metrics;

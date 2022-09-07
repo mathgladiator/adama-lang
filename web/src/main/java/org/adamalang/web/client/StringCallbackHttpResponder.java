@@ -50,11 +50,16 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
 
   @Override
   public void bodyStart(long size) {
-    this.memory = new ByteArrayOutputStream((int) size);
+    if (size > 0) {
+      this.memory = new ByteArrayOutputStream((int) size);
+    }
   }
 
   @Override
   public void bodyFragment(byte[] chunk, int offset, int len) {
+    if (memory == null) { // unknown size due to an error
+      this.memory = new ByteArrayOutputStream();
+    }
     memory.write(chunk, offset, len);
   }
 
