@@ -39,6 +39,7 @@ import org.adamalang.net.codec.ClientMessage.MeteringDeleteBatch;
 import org.adamalang.net.codec.ClientMessage.MeteringBegin;
 import org.adamalang.net.codec.ClientMessage.ScanDeployment;
 import org.adamalang.net.codec.ClientMessage.ReflectRequest;
+import org.adamalang.net.codec.ClientMessage.DeleteRequest;
 import org.adamalang.net.codec.ClientMessage.CreateRequest;
 import org.adamalang.net.codec.ClientMessage.PingRequest;
 
@@ -92,6 +93,8 @@ public class ClientCodec {
     public abstract void handle(ScanDeployment payload);
 
     public abstract void handle(ReflectRequest payload);
+
+    public abstract void handle(DeleteRequest payload);
 
     public abstract void handle(CreateRequest payload);
 
@@ -181,6 +184,9 @@ public class ClientCodec {
         case 6735:
           handle(readBody_6735(buf, new ReflectRequest()));
           return;
+        case 12525:
+          handle(readBody_12525(buf, new DeleteRequest()));
+          return;
         case 12523:
           handle(readBody_12523(buf, new CreateRequest()));
           return;
@@ -216,6 +222,7 @@ public class ClientCodec {
     public void handle(MeteringBegin payload);
     public void handle(ScanDeployment payload);
     public void handle(ReflectRequest payload);
+    public void handle(DeleteRequest payload);
     public void handle(CreateRequest payload);
     public void handle(PingRequest payload);
   }
@@ -293,6 +300,9 @@ public class ClientCodec {
         return;
       case 6735:
         handler.handle(readBody_6735(buf, new ReflectRequest()));
+        return;
+      case 12525:
+        handler.handle(readBody_12525(buf, new DeleteRequest()));
         return;
       case 12523:
         handler.handle(readBody_12523(buf, new CreateRequest()));
@@ -809,6 +819,25 @@ public class ClientCodec {
     return o;
   }
 
+  public static DeleteRequest read_DeleteRequest(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 12525:
+        return readBody_12525(buf, new DeleteRequest());
+    }
+    return null;
+  }
+
+
+  private static DeleteRequest readBody_12525(ByteBuf buf, DeleteRequest o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    o.agent = Helper.readString(buf);
+    o.authority = Helper.readString(buf);
+    o.origin = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
+    return o;
+  }
+
   public static CreateRequest read_CreateRequest(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 12523:
@@ -1146,6 +1175,20 @@ public class ClientCodec {
     buf.writeIntLE(6735);
     Helper.writeString(buf, o.space);;
     Helper.writeString(buf, o.key);;
+  }
+
+  public static void write(ByteBuf buf, DeleteRequest o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(12525);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
+    Helper.writeString(buf, o.agent);;
+    Helper.writeString(buf, o.authority);;
+    Helper.writeString(buf, o.origin);;
+    Helper.writeString(buf, o.ip);;
   }
 
   public static void write(ByteBuf buf, CreateRequest o) {

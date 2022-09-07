@@ -18,6 +18,7 @@ public class ServerMetrics {
   public final Inflight server_handlers_active;
 
   public final CallbackMonitor server_create;
+  public final CallbackMonitor server_delete;
   public final CallbackMonitor server_reflect;
   public final CallbackMonitor server_stream_ask;
   public final CallbackMonitor server_stream_attach;
@@ -34,6 +35,7 @@ public class ServerMetrics {
   public ServerMetrics(MetricsFactory factory) {
     server_handlers_active = factory.inflight("server_handlers_active");
     server_create = factory.makeCallbackMonitor("server_create");
+    server_delete = factory.makeCallbackMonitor("server_delete");
     server_reflect = factory.makeCallbackMonitor("server_reflect");
 
     server_stream_ask = factory.makeCallbackMonitor("server_stream_ask");

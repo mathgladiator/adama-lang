@@ -26,6 +26,11 @@ public class ServerMessage {
   public static class CreateResponse {
   }
 
+  @TypeId(12526)
+  @Flow("Deletion")
+  public static class DeleteResponse {
+  }
+
   @TypeId(6736)
   @Flow("Reflection")
   public static class ReflectResponse {

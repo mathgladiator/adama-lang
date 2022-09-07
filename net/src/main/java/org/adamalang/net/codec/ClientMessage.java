@@ -45,6 +45,23 @@ public class ClientMessage {
     public String ip;
   }
 
+  @TypeId(12525)
+  @Flow("Server")
+  public static class DeleteRequest {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+    @FieldOrder(3)
+    public String agent;
+    @FieldOrder(4)
+    public String authority;
+    @FieldOrder(5)
+    public String origin;
+    @FieldOrder(6)
+    public String ip;
+  }
+
   @TypeId(6735)
   @Flow("Server")
   public static class ReflectRequest {

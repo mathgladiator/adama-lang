@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Handler implements ByteStream, ClientCodec.HandlerServer, Streamback {
   private static final ServerMessage.CreateResponse SHARED_CREATE_RESPONSE_EMPTY = new ServerMessage.CreateResponse();
+  private static final ServerMessage.DeleteResponse SHARED_DELETE_RESPONSE_EMPTY = new ServerMessage.DeleteResponse();
   private final ServerNexus nexus;
   private final ByteStream upstream;
   private final AtomicBoolean alive;
@@ -544,6 +545,25 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
       public void success(Void value) {
         ByteBuf buf = upstream.create(8);
         ServerCodec.write(buf, SHARED_CREATE_RESPONSE_EMPTY);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    }));
+  }
+
+  @Override
+  public void handle(ClientMessage.DeleteRequest payload) {
+    CoreRequestContext context = new CoreRequestContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
+    nexus.service.delete(context, new Key(payload.space, payload.key),  nexus.metrics.server_delete.wrap(new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        ByteBuf buf = upstream.create(8);
+        ServerCodec.write(buf, SHARED_DELETE_RESPONSE_EMPTY);
         upstream.next(buf);
         upstream.completed();
       }

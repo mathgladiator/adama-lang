@@ -263,6 +263,11 @@ public class CoreService implements Deliverer, Queryable {
     createInternal(context, key, arg, entropy, metrics.serviceCreate.wrap(callbackReal));
   }
 
+  /** delete a document */
+  public void delete(CoreRequestContext context, Key key, Callback<Void> callback) {
+
+  }
+
   /** internal: actually create with the given callback */
   private void createInternal(CoreRequestContext context, Key key, String arg, String entropy, Callback<Void> callback) {
     // jump into thread caching which thread
