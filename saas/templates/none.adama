@@ -13,3 +13,7 @@ private principal owner;
 @connected {
   return owner == @who;
 }
+
+@delete {
+  return owner == @who;
+}

@@ -1,0 +1,64 @@
+@static {
+  // anyone can create/invent
+  create { return true; }
+  invent { return true; }
+}
+
+// let everyone connect; sure, what can go wrong
+@connected {
+  return true;
+}
+
+// let everyone delete; sure, what can go wrong
+@delete {
+  return true;
+}
+
+// we build a table of publishes with who published it and when they did so
+record Publish {
+  public principal who;
+  public long when;
+  public string payload;
+}
+
+table<Publish> _publishes;
+
+// since tables are private, we expose all publishes to all connected people
+public formula publishes = iterate _publishes order by when asc;
+
+// we wrap a payload inside a message
+message PublishMessage {
+  string payload;
+}
+
+procedure expire_publishes() {
+  (iterate _publishes where when < Time.now() - 30000).delete();
+}
+
+// and then open a channel to accept the publish from any connected client
+channel publish(PublishMessage message) {
+  _publishes <- {who: @who, when: Time.now(), payload: message.payload };
+
+  // At this point, we encounter a key problem with maintaining a
+  // log of publishes. Namely, the log is potentially infinite, so
+  // we have to leverage some product intelligence to reduce it to
+  // a reasonably finite set which is important for the product.
+
+  // First, we age out publishes too old (sad face)
+  expire_publishes();
+
+  // Second, we hard cap the publishes biasing younger ones
+  (iterate _publishes
+     order by when desc
+     offset 10).delete();
+
+  transition #clean in 30;
+}
+
+#clean {
+  expire_publishes();
+  if (_publishes.size() > 0) {
+    transition #clean in 30;
+  }
+}
+

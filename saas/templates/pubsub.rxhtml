@@ -1,0 +1,29 @@
+<forest>
+  <template name="history">
+    <h2><fragment /></h2>
+    <table border="1">
+    <thead><tr><th>Who</th><th>Payload</th><th>When</th></thead>
+    <tbody rx:iterate="publishes">
+      <tr>
+        <td><lookup path="who" transform="principal.agent" /></td>
+        <td><lookup path="payload" /></td>
+        <td><lookup path="when" /></td>
+      </tr>
+    </tbody></table>
+    <form rx:action="send:publish">
+      <input type="text" name="payload">
+      <button type="submit">Publish</button>
+    </form>
+  </template>
+  <page uri="/">
+    <table><tr><td>
+      <connection name="alice" space="$TEMPLATE_SPACE" key="demo-log" identity="direct:anonymous:alice">
+        <div rx:template="history">Alice's View</div>
+      </connection>
+    </td><td>
+      <connection name="bob" space="$TEMPLATE_SPACE" key="demo-log" identity="direct:anonymous:bob">
+        <div rx:template="history">Bob's View</div>
+      </connection>
+    </td></tr></table>
+  </page>
+</forest>

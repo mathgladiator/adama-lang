@@ -423,7 +423,9 @@ var RxHTML = (function () {
   self.LT = function (state, name, transform) {
     var dom = document.createTextNode("");
     var sub = function (value) {
-      dom.nodeValue = transform(value);
+      if (value != null) {
+        dom.nodeValue = transform(value);
+      }
     };
     subscribe(state, name, sub);
     return dom;
@@ -1161,7 +1163,6 @@ var RxHTML = (function () {
       unsub.view();
       co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), {
         next: function (payload) {
-          console.log("CONNECT SUCCESS:" + rxobj.space + "/" + rxobj.key + " [" + rxobj.name + "]");
           co.set_connected(true);
           if ("data" in payload.delta) {
             co.tree.update(payload.delta.data);
@@ -1173,18 +1174,19 @@ var RxHTML = (function () {
         complete: function() {
           co.set_connected(false);
         },
+        should_retry:true,
+        retry_task_name: "Document Connection:" + rxobj.space + "/" + rxobj.key,
         failure: function (reason) {
-          console.log("CONNECT FAILURE:" + rxobj.space + "/" + rxobj.key + " [" + rxobj.name + "]");
+          console.log("CONNECT FAILURE:" + rxobj.space + "/" + rxobj.key + " [" + rxobj.name + "] " + reason);
           co.set_connected(false);
           // TODO: if not authorized
+          // TODO: schedule a retry? invoke:  rxobj.__();
           /*
           if (false) {
             cleanup();
           }
           */
           co.ptr = null;
-          console.log("Document Failure: " + reason);
-          // TODO: schedule a retry? invoke:  rxobj.__();
         }
       });
       co.tree.update({});
