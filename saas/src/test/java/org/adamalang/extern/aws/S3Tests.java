@@ -28,6 +28,8 @@ import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -89,13 +91,14 @@ public class S3Tests {
   }
 
   @Test
-  public void smallAsset() throws Exception {
+  public void smallAssetWithListing() throws Exception {
     flow((s3) -> {
+      String key = "key-" + ProtectedUUID.generate();
       File tempAsset = File.createTempFile("ADAMATEST_", "temp");
       Files.write(tempAsset.toPath(), "This is a small file".getBytes(StandardCharsets.UTF_8));
       NtAsset asset = assetOf(tempAsset, "text/plain");
       CountDownLatch latchPut = new CountDownLatch(1);
-      s3.upload(new Key("space", "key"), asset, AssetUploadBody.WRAP(tempAsset), new Callback<Void>() {
+      s3.upload(new Key("space", key), asset, AssetUploadBody.WRAP(tempAsset), new Callback<Void>() {
         @Override
         public void success(Void value) {
           latchPut.countDown();
@@ -109,7 +112,7 @@ public class S3Tests {
       Assert.assertTrue(latchPut.await(30000, TimeUnit.MILLISECONDS));
       CountDownLatch latchGet = new CountDownLatch(2);
       ByteArrayOutputStream getResults = new ByteArrayOutputStream();
-      s3.request(new AssetRequest("space", "key", asset.id), new AssetStream() {
+      s3.request(new AssetRequest("space", key, asset.id), new AssetStream() {
         @Override
         public void headers(long length, String contentType) {
           Assert.assertEquals(asset.size, length);
@@ -132,8 +135,26 @@ public class S3Tests {
       });
       Assert.assertTrue(latchGet.await(60000, TimeUnit.MILLISECONDS));
       Assert.assertEquals("This is a small file", new String(getResults.toByteArray(), StandardCharsets.UTF_8));
+      ArrayList<String> ids = new ArrayList<>();
+      CountDownLatch latch = new CountDownLatch(1);
+      s3.listAssets(new Key("space", key), new Callback<List<String>>() {
+        @Override
+        public void success(List<String> value) {
+          System.err.println("Success:" + value.size());
+          ids.addAll(value);
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+        }
+      });
+      Assert.assertTrue(latch.await(35000, TimeUnit.MILLISECONDS));
+      Assert.assertEquals(1, ids.size());
+      Assert.assertEquals(asset.id, ids.get(0));
       CountDownLatch latchDelete = new CountDownLatch(1);
-      s3.deleteAsset(new Key("space", "key"), asset.id, new Callback<Void>() {
+      s3.deleteAsset(new Key("space", key), asset.id, new Callback<Void>() {
         @Override
         public void success(Void value) {
           latchDelete.countDown();
