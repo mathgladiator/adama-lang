@@ -45,6 +45,9 @@ public class Documents {
       case "create":
         documentsCreate(config, next);
         return;
+      case "delete":
+        documentsDelete(config, next);
+        return;
       case "list":
         documentsList(config, next);
         return;
@@ -72,6 +75,7 @@ public class Documents {
     System.out.println(Util.prefix("SPACESUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("connect", Util.ANSI.Green) + "           Connect to a document");
     System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Create a document");
+    System.out.println("    " + Util.prefix("delete", Util.ANSI.Green) + "            Delete a document");
     System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List documents");
     System.out.println("    " + Util.prefix("attach", Util.ANSI.Green) + "            Attach an asset to a document");
   }
@@ -112,6 +116,22 @@ public class Documents {
           request.put("entropy", entropy);
         }
         request.set("arg", argNode);
+        System.err.println(connection.execute(request).toPrettyString());
+      }
+    }
+  }
+
+  private static void documentsDelete(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    String key = Util.extractOrCrash("--key", "-k", args);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "document/delete");
+        request.put("identity", identity);
+        request.put("space", space);
+        request.put("key", key);
         System.err.println(connection.execute(request).toPrettyString());
       }
     }
