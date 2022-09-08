@@ -59,7 +59,7 @@ public class OverlordMetrics {
   public final CallbackMonitor delete_bot_delete_document;
   public final CallbackMonitor delete_bot_delete_ide;
   public final Runnable delete_bot_delete_space;
-  
+
   public OverlordMetrics(MetricsFactory factory) {
     targets_watcher_fired = factory.counter("overlord_targets_watcher_fired");
     targets_made = factory.counter("overlord_targets_made");
