@@ -173,6 +173,15 @@ The disconnect signal is an informational event only, and is available via the `
 
 This allows us to mutate the document on a person disconnecting.
 
+### Delete
+When document deletion is requested from via the API, the ```@delete``` event runs to validate the principal can delete the document.
+
+```adama
+@delete {
+  return @who == owner; 
+}
+```
+
 ### Asset Attachments
 
 Adama allows you to attach assets to documents.

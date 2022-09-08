@@ -103,7 +103,7 @@ Messages will hit a document exactly once, run the associated logic, change the 
 Access control is possible per channel, but it is worth noting that only connected clients can send to a document (by default).
 
 ## Deleting
-Deleting happens from within the document via logic.
+Deleting happens from within the document via logic within a message handler.
 
 ```adama
 channel kill(Nothing n) {
@@ -113,7 +113,16 @@ channel kill(Nothing n) {
 }
 ```
 
-The core motivation for this is that access control for deletion requires business logic. Since Adama documents can run code [based on time passing](./guide/state-machine.md), this also enables documents to self-destruct.
+Or, there is an API "document/delete" which allows creation from the outside which will invoke the [```@delete``` event](/guide/static-policies-document-events.md#delete).
+
+```adama
+@delete {
+  return @who == creator;
+}
+```
+
+The core motivation for this is that access control for deletion requires business logic.
+Since Adama documents can run code [based on time passing](./guide/state-machine.md), this also enables documents to self-destruct.
 
 ## Buzzword Bingo Summary
 With the CRUD operations laid bare, we can analyze the buzzword bingo aspects in a table:
