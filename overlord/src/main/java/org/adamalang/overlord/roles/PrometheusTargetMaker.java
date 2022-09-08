@@ -31,20 +31,19 @@ public class PrometheusTargetMaker {
   public static void kickOff(OverlordMetrics metrics, Engine engine, File targetsDestination, ConcurrentCachedHttpHandler handler) {
     AtomicReference<String> lastWritten = new AtomicReference<>("");
     HashMap<String, GossipProtocol.Endpoint> cached = new HashMap<>();
-    /*
-    engine.setWatcher((endpointsLatest) -> {
+    engine.setWatcher((endpoints) -> {
       // this is a hack to keep everything available so things just don't go pop due to a gossip failure
       // TODO: add a system here to keep an endpoint for at least an hour for monitoring
-      for (Endpoint endpoint : endpointsLatest) {
-        cached.put(endpoint.getIp() + ":" + endpoint.getPort(), endpoint);
+      for (GossipProtocol.Endpoint endpoint : endpoints) {
+        cached.put(endpoint.ip + ":" + endpoint.port, endpoint);
       }
       metrics.targets_watcher_fired.run();
       HashSet<String> seen = new HashSet<>();
       JsonStreamWriter writer = new JsonStreamWriter();
       writer.beginArray();
-      for (Endpoint endpoint : cached.values()) {
-        if (endpoint.getMonitoringPort() >= 0) {
-          String target = endpoint.getIp() + ":" + endpoint.getMonitoringPort();
+      for (GossipProtocol.Endpoint endpoint : cached.values()) {
+        if (endpoint.monitoringPort >= 0) {
+          String target = endpoint.ip + ":" + endpoint.monitoringPort;
           if (seen.contains(target)) {
             continue;
           }
@@ -55,7 +54,7 @@ public class PrometheusTargetMaker {
             {
               writer.beginObject();
               writer.writeObjectFieldIntro("service");
-              writer.writeString(classifyByPort(endpoint.getMonitoringPort()));
+              writer.writeString(classifyByPort(endpoint.monitoringPort));
               writer.endObject();
             }
             writer.writeObjectFieldIntro("targets");
@@ -84,7 +83,6 @@ public class PrometheusTargetMaker {
         LOGGER.error("failed-write-to-disk", ex);
       }
     });
-    */
   }
 
   private static String classifyByPort(int port) {

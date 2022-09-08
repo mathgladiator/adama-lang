@@ -49,6 +49,16 @@ public class Domains {
     }
   }
 
+  public static int deleteSpace(DataBase dataBase, String space) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = "DELETE FROM `" + dataBase.databaseName + "`.`domains` WHERE `space`=?";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, space);
+        return statement.executeUpdate();
+      }
+    }
+  }
+
   public static Domain get(DataBase dataBase, String domain) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = "SELECT `owner`, `space`, `certificate` FROM `" + dataBase.databaseName + "`.`domains` WHERE `domain`=?";

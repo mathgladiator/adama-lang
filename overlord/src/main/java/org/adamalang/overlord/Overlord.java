@@ -21,21 +21,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Overlord {
   private static final Logger LOGGER = LoggerFactory.getLogger(Overlord.class);
 
-  public static HttpHandler execute(ConcurrentCachedHttpHandler handler, HeatTable heatTable, Client client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath) throws Exception {
+  public static HttpHandler execute(ConcurrentCachedHttpHandler handler, HeatTable heatTable, Client client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath, AtomicBoolean alive) throws Exception {
     // the overlord has metrics
     OverlordMetrics metrics = new OverlordMetrics(metricsFactory);
 
     // start producing the prometheus targets.json from the gossip engine
-    /*
     PrometheusTargetMaker.kickOff(metrics, engine, targetsDestination, handler);
 
     // make sure that we remove deployments from dead hosts
+    /*
     DeploymentReconciliation.kickOff(metrics, engine, dataBase, handler);
     */
+
+    SpaceDeleteBot.kickOff(metrics, dataBase, client, alive);
 
     // kick off capacity management will will add/remove capacity per space
     CapacityManager.kickOffReturnHotTargetEvent(metrics, client, dataBase, handler, heatTable);

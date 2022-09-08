@@ -62,6 +62,15 @@ public class Engine {
     }, 500);
   }
 
+  public void setWatcher(Consumer<GossipProtocol.Endpoint[]> watcher) {
+    executor.execute(new NamedRunnable("set-watcher") {
+      @Override
+      public void execute() throws Exception {
+        chain.setWatcher(watcher);
+      }
+    });
+  }
+
   public void shutdown() {
     executor.shutdown();
   }

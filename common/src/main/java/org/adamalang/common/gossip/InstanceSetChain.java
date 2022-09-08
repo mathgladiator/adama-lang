@@ -9,10 +9,12 @@
  */
 package org.adamalang.common.gossip;
 
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.gossip.codec.GossipProtocol;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * This consolidates all the instances and provides a historical chain of history so updates can
@@ -25,6 +27,7 @@ public class InstanceSetChain {
   private final GarbageMap<Instance> recentlyLearnedAbout;
   private final GarbageMap<Instance> recentlyDeleted;
   private InstanceSet current;
+  private Consumer<GossipProtocol.Endpoint[]> watcher;
 
   public InstanceSetChain(TimeSource time) {
     this.time = time;
@@ -33,6 +36,18 @@ public class InstanceSetChain {
     this.current = new InstanceSet(new TreeSet<>(), time.nowMilliseconds());
     this.recentlyLearnedAbout = new GarbageMap<>(Constants.MAX_RECENT_ENTRIES);
     this.recentlyDeleted = new GarbageMap<>(Constants.MAX_DELETES);
+    this.watcher = null;
+  }
+
+  public void setWatcher(Consumer<GossipProtocol.Endpoint[]> watcher) {
+    this.watcher = watcher;
+    broadcast();
+  }
+
+  private void broadcast() {
+    if (watcher != null) {
+      watcher.accept(all());
+    }
   }
 
   public InstanceSet find(String hash) {
@@ -99,6 +114,7 @@ public class InstanceSetChain {
     if (clone != null) {
       history.put(current.hash(), current, now);
       current = new InstanceSet(clone, now);
+      broadcast();
     }
     return min;
   }
@@ -149,6 +165,7 @@ public class InstanceSetChain {
     if (clone != null) {
       history.put(current.hash(), current, now);
       current = new InstanceSet(clone, now);
+      broadcast();
       return true;
     }
     return false;

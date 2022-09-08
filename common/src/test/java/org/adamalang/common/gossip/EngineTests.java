@@ -10,6 +10,7 @@
 package org.adamalang.common.gossip;
 
 import org.adamalang.common.TimeSource;
+import org.adamalang.common.gossip.codec.GossipProtocol;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.ByteStream;
 import org.junit.Assert;
@@ -124,6 +125,13 @@ public class EngineTests {
   @Test
   public void single() throws Exception {
     Engine a = new Engine("127.0.0.1", new GossipMetrics(new NoOpMetricsFactory()), TimeSource.REAL_TIME);
+    ArrayList<GossipProtocol.Endpoint[]> history = new ArrayList<>();
+    a.setWatcher(new Consumer<GossipProtocol.Endpoint[]>() {
+      @Override
+      public void accept(GossipProtocol.Endpoint[] endpoints) {
+        history.add(endpoints);
+      }
+    });
     Runnable hb = createApp(a, "role", 100, 101);
     hb.run();
     Engine b = new Engine("127.0.0.2", new GossipMetrics(new NoOpMetricsFactory()), TimeSource.REAL_TIME);
@@ -136,6 +144,9 @@ public class EngineTests {
     exchange(a, b);
     second.run();
     Assert.assertEquals("127.0.0.1:100", blog.logAt(1));
+    Assert.assertEquals(2, history.size());
+    Assert.assertEquals(0, history.get(0).length);
+    Assert.assertEquals(1, history.get(1).length);
   }
 
   @Test

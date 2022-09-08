@@ -45,6 +45,10 @@ public class DomainsTest {
         Assert.assertTrue(Domains.unmap(dataBase, 141, "www.domain.com"));
         result = Domains.get(dataBase, "www.domain.com");
         Assert.assertNull(result);
+        Assert.assertTrue(Domains.map(dataBase, 42, "www.domain1.com", "space", "certificate-ok"));
+        Assert.assertTrue(Domains.map(dataBase, 42, "www.domain2.com", "space", "certificate-ok"));
+        Assert.assertTrue(Domains.map(dataBase, 42, "www.domain3.com", "space", "certificate-ok"));
+        Assert.assertEquals(3, Domains.deleteSpace(dataBase, "space"));
       } finally {
         installer.uninstall();
       }

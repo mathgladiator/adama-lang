@@ -9,25 +9,96 @@
  */
 package org.adamalang.overlord.roles;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.DeletedSpace;
+import org.adamalang.mysql.data.DocumentIndex;
+import org.adamalang.mysql.model.Domains;
+import org.adamalang.mysql.model.FinderOperations;
 import org.adamalang.mysql.model.Spaces;
+import org.adamalang.net.client.Client;
+import org.adamalang.overlord.OverlordMetrics;
+import org.adamalang.runtime.data.Key;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SpaceDeleteBot {
+  private static Logger LOG = LoggerFactory.getLogger(SpaceDeleteBot.class);
+  private final OverlordMetrics metrics;
   private final DataBase dataBase;
-  private SpaceDeleteBot(DataBase dataBase) {
+  private final Client client;
+  private SpaceDeleteBot(OverlordMetrics metrics, DataBase dataBase, Client client) {
+    this.metrics = metrics;
     this.dataBase = dataBase;
+    this.client = client;
   }
 
-  public void round() throws Exception {
-    for (DeletedSpace ds : Spaces.listDeletedSpaces(dataBase)) {
-      // TODO: make sure the space is empty; this is tricky -> make it empty
-      // TODO: delete space's IDE (if it exists)
-      // TODO: delete space's assets within IDE
+  private void item(DeletedSpace ds) throws Exception {
+    metrics.delete_bot_found.run();
+    Domains.deleteSpace(dataBase, ds.name);
+    ArrayList<DocumentIndex> found = FinderOperations.list(dataBase, ds.name, "", 100);
+    LOG.error("cleaning-up:" + ds.name + ";size=" + found.size());
+    if (found.size() == 0) {
+      CountDownLatch latch = new CountDownLatch(1);
+      AtomicBoolean success = new AtomicBoolean(false);
+      client.delete("overlord", "overlord", "overlord", "overlord", "ide", ds.name, metrics.delete_bot_delete_ide.wrap(new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          success.get();
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          LOG.error("failed-delete-ide: " + ds.name, ex);
+          latch.countDown();
+        }
+      }));
+      if (latch.await(2500, TimeUnit.MILLISECONDS) && success.get()) {
+        LOG.error("cleaned:" + ds.name);
+        metrics.delete_bot_delete_space.run();
+        Spaces.delete(dataBase, ds.id, 0);
+      }
+    } else {
+      for (DocumentIndex doc : found) {
+        client.delete("overlord", "overlord", "overlord", "overlord", ds.name, doc.key, metrics.delete_bot_delete_document.wrap(Callback.DONT_CARE_VOID));
+      }
     }
   }
 
-  public static void kickOff(DataBase dataBase) {
-    SpaceDeleteBot bot = new SpaceDeleteBot(dataBase);
+  public void round() throws Exception {
+    metrics.delete_bot_wake.run();
+    for (final DeletedSpace ds : Spaces.listDeletedSpaces(dataBase)) {
+      try {
+        item(ds);
+      } catch (Exception ex) {
+        LOG.error("failed-delete:" + ds.name, ex);
+      }
+    }
+  }
+
+  public static void kickOff(OverlordMetrics metrics, DataBase dataBase, Client client, AtomicBoolean alive) {
+    SimpleExecutor executor = SimpleExecutor.create("space-delete-bot");
+    SpaceDeleteBot bot = new SpaceDeleteBot(metrics, dataBase, client);
+    executor.schedule(new NamedRunnable("space-delete-bot") {
+      @Override
+      public void execute() throws Exception {
+        if (alive.get()) {
+          try {
+            bot.round();
+          } finally {
+            executor.schedule(this, (int) (30000 + Math.random() * 30000));
+          }
+        }
+      }
+    }, 1000);
   }
 }
