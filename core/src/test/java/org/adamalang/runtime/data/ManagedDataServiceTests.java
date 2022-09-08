@@ -53,13 +53,15 @@ public class ManagedDataServiceTests {
     public final MockArchiveDataSource archive;
     public final Base base;
     public final ManagedDataService managed;
+    public final MockPostDocumentDelete delete;
 
     public Setup() throws Exception {
       this.finder = new MockFinderService();
       this.executor = SimpleExecutor.create("setup");
       this.data = new MockInstantDataService();
       this.archive = new MockArchiveDataSource(data);
-      this.base = new Base(finder, archive, "test-region", "test-machine", executor, 250);
+      this.delete = new MockPostDocumentDelete();
+      this.base = new Base(finder, archive, delete, "test-region", "test-machine", executor, 250);
       this.managed = new ManagedDataService(base);
     }
 
@@ -86,6 +88,7 @@ public class ManagedDataServiceTests {
         }
         setup.archive.driveBackup();
         secondArchive.run();
+        Assert.assertTrue(setup.delete.deleted.contains(KEY_DELETE_WHILE_ARCHIVE));
       }
     }
   }
@@ -102,6 +105,7 @@ public class ManagedDataServiceTests {
       cb_Close.assertSuccess();
       gotSlow.run();
       cb_Get.assertFailure(786620);
+      Assert.assertTrue(setup.delete.deleted.contains(KEY_SLOW_FIND_WHILE_FINDING));
     }
   }
 
@@ -370,6 +374,8 @@ public class ManagedDataServiceTests {
         setup.managed.delete(KEY1, cb_Delete);
         cb_Delete.assertSuccess();
       }
+
+      Assert.assertTrue(setup.delete.deleted.contains(KEY1));
 
       {
         SimpleVoidCallback cb_Delete = new SimpleVoidCallback();

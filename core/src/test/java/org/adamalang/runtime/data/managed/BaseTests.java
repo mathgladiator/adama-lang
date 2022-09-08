@@ -14,6 +14,7 @@ import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.data.mocks.MockArchiveDataSource;
 import org.adamalang.runtime.data.mocks.MockFinderService;
+import org.adamalang.runtime.data.mocks.MockPostDocumentDelete;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -51,8 +52,9 @@ public class BaseTests {
   public static void flow(ThrowConsumer<Base> body, ArchivingDataService data) throws Exception {
     MockFinderService mockFinder = new MockFinderService();
     mockFinder.bindLocal(new Key("space", "key"));
+    MockPostDocumentDelete delete = new MockPostDocumentDelete();
     SimpleExecutor bexecutor = SimpleExecutor.create("executor");
-    Base base = new Base(mockFinder, data, "test-region", "test-machine", bexecutor, 1000);
+    Base base = new Base(mockFinder, data, delete, "test-region", "test-machine", bexecutor, 1000);
     try {
       body.run(base);
     } finally {

@@ -107,7 +107,7 @@ public class ManagedDataService implements DataService {
           base.executor.execute(new NamedRunnable("managed-delete") {
             @Override
             public void execute() throws Exception {
-              callback.success(null);
+              base.delete.deleteAllAssets(key, callback);
             }
           });
         }

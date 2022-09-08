@@ -14,6 +14,7 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.data.ArchivingDataService;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.PostDocumentDelete;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,6 +24,7 @@ import java.util.function.Consumer;
 public class Base {
   public final FinderService finder;
   public final ArchivingDataService data;
+  public final PostDocumentDelete delete;
   public final String region;
   public final String target;
   public final HashMap<Key, Machine> documents;
@@ -30,9 +32,10 @@ public class Base {
   public final int archiveTimeMilliseconds;
   private final AtomicInteger failureBackoff;
 
-  public Base(FinderService finder, ArchivingDataService data, String region, String target, SimpleExecutor executor, int archiveTimeMilliseconds) {
+  public Base(FinderService finder, ArchivingDataService data, final PostDocumentDelete delete, String region, String target, SimpleExecutor executor, int archiveTimeMilliseconds) {
     this.finder = finder;
     this.data = data;
+    this.delete = delete;
     this.region = region;
     this.target = target;
     this.documents = new HashMap<>();

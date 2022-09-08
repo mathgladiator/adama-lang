@@ -23,6 +23,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
+import org.adamalang.extern.MockPostDocumentDelete;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;
@@ -106,8 +107,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
   private final KeyPair hostKeyPair;
   public final DeploymentAgent deploymentAgent;
   public final CapacityAgent capacityAgent;
-
   public final File caravanPath;
+  public final MockPostDocumentDelete delete;
   public TestFrontEnd() throws Exception {
     int port = 10000;
     codesSentToEmail = new ConcurrentHashMap<>();
@@ -161,7 +162,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
       }
     };
     CaravanDataService caravanDataService = new CaravanDataService(cloud, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
-    Base managedBase = new Base(finder, caravanDataService, "test-region", identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
+    delete = new MockPostDocumentDelete();
+    Base managedBase = new Base(finder, caravanDataService, delete, "test-region", identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
     ManagedDataService dataService = new ManagedDataService(managedBase);
     threadDeath = new CountDownLatch(1);
     Thread flusher = new Thread(new Runnable() {

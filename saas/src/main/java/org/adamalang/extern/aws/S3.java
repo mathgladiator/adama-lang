@@ -16,6 +16,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.PostDocumentDelete;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.assets.AssetStream;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-public class S3 implements Cloud, WellKnownHandler {
+public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete {
   private static final Logger LOGGER = LoggerFactory.getLogger(S3.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private static final Pattern COMPLETE_LOG = Pattern.compile("[a-z]*\\.[0-9]*-[0-9]*-[0-9]*\\.[0-9]*\\.log");
@@ -250,5 +251,23 @@ public class S3 implements Cloud, WellKnownHandler {
         callback.failure(ex);
       }
     }));
+  }
+
+  @Override
+  public void deleteAllAssets(Key key, Callback<Void> callback) {
+    listAssets(key, new Callback<List<String>>() {
+      @Override
+      public void success(List<String> ids) {
+        for (String id : ids) {
+          deleteAsset(key, id, Callback.DONT_CARE_VOID);
+        }
+        callback.success(null);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 }
