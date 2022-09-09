@@ -6,6 +6,6 @@ The aspiration is that Adama is simple, becomes well understood, and changes the
 This is why Adama is 100% open source.
 
 Since "What is Adama" is hard to pin down, you can gain insights by reading [Adama as a ?](./adama-as-a.md).
-Adama has [a history in board games which you can read more about](./history/origins.md).
+Adama has [a history in board games which you can read more about](./history/origins.md), and you can [learn more from the requirements that drove Adama's engineering](./requirements-of-adama.md).
 
 You can also jump in today with the [CLI by following the tutorial](./tutorial/00-install.md).

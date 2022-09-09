@@ -59,6 +59,13 @@ public class SpacePolicy {
     return false;
   }
 
+  public boolean canUserManageDomain(AuthenticatedUser user) {
+    if (user.source == AuthenticatedUser.Source.Adama) {
+      return user.id == owner;
+    }
+    return false;
+  }
+
   public boolean canUserSetRxHTML(AuthenticatedUser user) {
     if (user.source == AuthenticatedUser.Source.Adama) {
       if (user.id == owner) {

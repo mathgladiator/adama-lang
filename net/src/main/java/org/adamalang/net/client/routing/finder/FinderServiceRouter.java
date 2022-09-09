@@ -50,11 +50,11 @@ public class FinderServiceRouter implements Router {
 
   private void retryFailure(ErrorCodeException ex, Key key, RoutingSubscriber callback) {
     if (ex.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED) {
-      pickHost(key, callback);
+      pickHost(key, callback, true);
       return;
     }
     int backoff = reportFindFailureGetRetryBackoff();
-    if (backoff > 2500) {
+    if (backoff > 500) {
       callback.failure(new ErrorCodeException(ErrorCodes.NET_FINDER_GAVE_UP));
       return;
     }
@@ -66,7 +66,7 @@ public class FinderServiceRouter implements Router {
     }, backoff);
   }
 
-  private void pickHost(Key key, RoutingSubscriber callback) {
+  private void pickHost(Key key, RoutingSubscriber callback, boolean retry) {
     picker.pickHost(key, new Callback<>() {
       @Override
       public void success(String newMachine) {
@@ -75,7 +75,16 @@ public class FinderServiceRouter implements Router {
 
       @Override
       public void failure(ErrorCodeException ex) {
-        retryFailure(ex, key, callback);
+        if (retry) {
+          executor.schedule(new NamedRunnable("pick-host-retry") {
+            @Override
+            public void execute() throws Exception {
+              pickHost(key, callback, false);
+            }
+          }, 50 + reportFindFailureGetRetryBackoff());
+        } else {
+          callback.failure(new ErrorCodeException(ErrorCodes.NET_FINDER_FAILED_PICK_HOST));
+        }
       }
     });
   }
@@ -94,7 +103,7 @@ public class FinderServiceRouter implements Router {
             callback.onRegion(finderResult.region);
           }
         } else {
-          pickHost(key, callback);
+          pickHost(key, callback, true);
         }
       }
 

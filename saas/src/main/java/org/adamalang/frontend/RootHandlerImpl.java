@@ -305,10 +305,9 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, DomainMapRequest request, SimpleResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
-        // Domains.map ensures ownership on UPDATE
+      if (request.policy.canUserManageDomain(request.who)) {
         String cert = MasterKey.encrypt(nexus.masterKey, request.certificate);
-        if (Domains.map(nexus.database, request.who.id, request.domain, request.space, cert)) {
+        if (Domains.map(nexus.database, request.who.id, request.domain, request.space, cert)) { // Domains.map ensures ownership on UPDATE to prevent conflicts
           responder.complete();
         } else {
           responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_MAP_FAILED));
@@ -354,7 +353,7 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SpaceSetRxhtmlRequest request, SimpleResponder responder) {
     try {
-      if (request.policy.canUserGetRxHTML(request.who)) {
+      if (request.policy.canUserSetRxHTML(request.who)) {
         Spaces.setRxHtml(nexus.database, request.policy.id, request.rxhtml);
         responder.complete();
       } else {

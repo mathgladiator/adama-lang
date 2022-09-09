@@ -9,6 +9,7 @@
  */
 package org.adamalang.overlord.roles;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
@@ -48,25 +49,30 @@ public class SpaceDeleteBot {
     LOG.error("cleaning-up:" + ds.name + ";size=" + found.size());
     if (found.size() == 0) {
       CountDownLatch latch = new CountDownLatch(1);
-      AtomicBoolean success = new AtomicBoolean(false);
       client.delete("overlord", "overlord", "overlord", "overlord", "ide", ds.name, metrics.delete_bot_delete_ide.wrap(new Callback<Void>() {
         @Override
         public void success(Void value) {
-          success.get();
+          LOG.error("cleaned:" + ds.name);
+          metrics.delete_bot_delete_space.run();
+          try {
+            Spaces.delete(dataBase, ds.id, 0);
+          } catch (Exception ex) {
+            LOG.error("failed-delete-space", ex);
+          }
           latch.countDown();
         }
 
         @Override
         public void failure(ErrorCodeException ex) {
+          if (ex.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED || ex.code == ErrorCodes.NET_FINDER_GAVE_UP || ex.code == ErrorCodes.NET_FINDER_FAILED_PICK_HOST) {
+            success(null);
+            return;
+          }
           LOG.error("failed-delete-ide: " + ds.name, ex);
           latch.countDown();
         }
       }));
-      if (latch.await(2500, TimeUnit.MILLISECONDS) && success.get()) {
-        LOG.error("cleaned:" + ds.name);
-        metrics.delete_bot_delete_space.run();
-        Spaces.delete(dataBase, ds.id, 0);
-      }
+      latch.await(10000, TimeUnit.MILLISECONDS);
     } else {
       for (DocumentIndex doc : found) {
         client.delete("overlord", "overlord", "overlord", "overlord", ds.name, doc.key, metrics.delete_bot_delete_document.wrap(Callback.DONT_CARE_VOID));
