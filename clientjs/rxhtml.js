@@ -874,13 +874,31 @@ var RxHTML = (function () {
   };
 
   var wrappers = {};
+  var wrappers_onload = {};
   self.PRWP = function(name, foo) {
     wrappers[name] = foo;
+    if (name in wrappers_onload) {
+      var toload = wrappers_onload[name];
+      for (var k = 0; k < toload.length; k++) {
+        toload[k]();
+      }
+    }
   };
 
   // <... rx:wrap=const >
   self.WP = function(dom, state, name, childMakerWithCase) {
-    wrappers[name](dom, state, childMakerWithCase, self);
+    if (name in wrappers) {
+      wrappers[name](dom, state, childMakerWithCase, self);
+    } else {
+      var loader = function() {
+        wrappers[name](dom, state, childMakerWithCase, self);
+      };
+      if (name in wrappers_onload) {
+        wrappers_onload[name].push(loader);
+      } else {
+        wrappers_onload[name] = [loader];
+      }
+    }
   };
   /**
    /$$$$$$$$ /$$$$$$  /$$$$$$$   /$$$$$$
