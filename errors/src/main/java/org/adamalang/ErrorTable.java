@@ -594,6 +594,8 @@ public class ErrorTable {
     descriptions.put(724001, "no description of error (yet)");
     names.put(705583, "NET_FINDER_GAVE_UP");
     descriptions.put(705583, "no description of error (yet)");
+    names.put(776396, "NET_FINDER_FAILED_PICK_HOST");
+    descriptions.put(776396, "no description of error (yet)");
     names.put(724012, "NET_FINDER_ROUTER_REGION_NOT_EXPECTED");
     descriptions.put(724012, "no description of error (yet)");
     names.put(783395, "NET_FINDER_ROUTER_NULL_MACHINE");
