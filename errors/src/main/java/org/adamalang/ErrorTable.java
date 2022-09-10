@@ -391,6 +391,8 @@ public class ErrorTable {
     descriptions.put(901144, "no description of error (yet)");
     names.put(995505, "API_CREATE_DOCUMENT_SPACE_RESERVED");
     descriptions.put(995505, "no description of error (yet)");
+    names.put(947404, "API_CREATE_SPACE_RESERVED");
+    descriptions.put(947404, "no description of error (yet)");
     names.put(984080, "API_DOMAIN_GET_NOT_FOUND");
     descriptions.put(984080, "no description of error (yet)");
     names.put(916520, "API_DOMAIN_GET_NOT_AUTHORIZED");
@@ -504,8 +506,6 @@ public class ErrorTable {
     descriptions.put(921794, "no description of error (yet)");
     names.put(950469, "WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT");
     descriptions.put(950469, "no description of error (yet)");
-    names.put(947404, "WEB_BASE_POST_FAILED_EXECUTE");
-    descriptions.put(947404, "no description of error (yet)");
     names.put(904399, "WEB_BASE_POST_FAILED_CONNECT");
     descriptions.put(904399, "no description of error (yet)");
     names.put(903375, "WEB_BASE_POST_FAILED_NOT_200");

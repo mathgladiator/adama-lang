@@ -7,21 +7,20 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.mysql.data;
+package org.adamalang.extern.aws;
 
-import java.sql.Date;
+public class SQS {
 
-/** a domain mapped to a space */
-public class Domain {
-  public final int owner;
-  public final String space;
-  public final String certificate;
-  public final Date updated;
+  // TODO
+  // https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_SendMessage.html
 
-  public Domain(int owner, String space, String certificate, Date updated) {
-    this.owner = owner;
-    this.space = space;
-    this.certificate = certificate;
-    this.updated = updated;
+  public void requestCapacityAddition() {
+  }
+
+  public void informAutomaticCertificateRenewel(String domain) {
+  }
+
+  private void queue(String json) {
+
   }
 }

@@ -52,7 +52,7 @@ public class Domains {
     System.out.println();
     System.out.println(Util.prefix("DOMAINSSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("map", Util.ANSI.Green) + "               Map a domain to a space");
-    System.out.println("    " + Util.prefix("unmap", Util.ANSI.Green) + "               Unmap a domain from a space");
+    System.out.println("    " + Util.prefix("unmap", Util.ANSI.Green) + "             Unmap a domain from a space");
   }
 
   public static void map(Config config, String[] args) throws Exception {

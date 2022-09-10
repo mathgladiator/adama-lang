@@ -224,6 +224,7 @@ public class Installer {
         .append("  `space` VARCHAR(128) NOT NULL,") //
         .append("  `domain` VARCHAR(254) NOT NULL,") //
         .append("  `certificate` LONGTEXT NOT NULL,") //
+        .append("  `automatic` BOOLEAN DEFAULT FALSE,") //
         .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
         .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
         .append("  PRIMARY KEY (`id`),") //

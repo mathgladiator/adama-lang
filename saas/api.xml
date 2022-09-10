@@ -249,7 +249,7 @@
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="certificate" type="string" missing-error="428028">
+    <parameter-definition name="certificate" type="string" optional="true">
         <documentation>
             A TLS/SSL Certificate encoded as json.
         </documentation>

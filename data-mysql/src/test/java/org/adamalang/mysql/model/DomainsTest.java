@@ -16,6 +16,8 @@ import org.adamalang.mysql.data.Domain;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 public class DomainsTest {
   @Test
   public void flow() throws Exception {
@@ -49,6 +51,15 @@ public class DomainsTest {
         Assert.assertTrue(Domains.map(dataBase, 42, "www.domain2.com", "space", "certificate-ok"));
         Assert.assertTrue(Domains.map(dataBase, 42, "www.domain3.com", "space", "certificate-ok"));
         Assert.assertEquals(3, Domains.deleteSpace(dataBase, "space"));
+
+        Assert.assertTrue(Domains.map(dataBase, 500, "www.my-domain.com", "space", null));
+        Assert.assertTrue(Domains.map(dataBase, 500, "www.my-domain.com", "space2", null));
+        ArrayList<Domain> superList = Domains.superListAutoDomains(dataBase);
+        Assert.assertEquals("space2", superList.get(0).space);
+        Assert.assertEquals("{}", superList.get(0).certificate);
+        Assert.assertTrue(Domains.superSetAutoCert(dataBase, "www.my-domain.com", "new-cert"));
+        superList = Domains.superListAutoDomains(dataBase);
+        Assert.assertEquals("new-cert", superList.get(0).certificate);
       } finally {
         installer.uninstall();
       }

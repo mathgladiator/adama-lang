@@ -46,7 +46,7 @@ public class DomainMapRequest {
       final String space = request.getString("space", true, 461828);
       ValidateSpace.validate(space);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
-      final String certificate = request.getString("certificate", true, 428028);
+      final String certificate = request.getString("certificate", false, 0);
       _latch.with(() -> new DomainMapRequest(identity, who.get(), domain, space, policy.get(), certificate));
       nexus.identityService.execute(session, identity, who);
       nexus.spaceService.execute(session, space, policy);

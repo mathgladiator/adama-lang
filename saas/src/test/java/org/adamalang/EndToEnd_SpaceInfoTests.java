@@ -123,6 +123,10 @@ public class EndToEnd_SpaceInfoTests {
       Iterator<String> c21  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/delete\",\"space\":\"myspace\"}");
       Assert.assertEquals("FINISH:{}", c21.next());
+      Iterator<String> c22 = fe.execute("{\"id\":1,\"identity\":\"" + alice+ "\",\"method\":\"space/create\",\"space\":\"ide\"}");
+      Assert.assertEquals("ERROR:947404", c22.next());
+      Iterator<String> c23 = fe.execute("{\"id\":1,\"identity\":\"" + alice+ "\",\"method\":\"space/create\",\"space\":\"wildcard\"}");
+      Assert.assertEquals("ERROR:947404", c23.next());
     }
   }
 }

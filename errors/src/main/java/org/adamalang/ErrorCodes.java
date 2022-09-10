@@ -353,6 +353,7 @@ public class ErrorCodes {
   public static final int API_DELETE_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 901144;
 
   public static final int API_CREATE_DOCUMENT_SPACE_RESERVED = 995505;
+  public static final int API_CREATE_SPACE_RESERVED = 947404;
 
   public static final int API_DOMAIN_GET_NOT_FOUND = 984080;
   public static final int API_DOMAIN_GET_NOT_AUTHORIZED = 916520;
@@ -437,7 +438,6 @@ public class ErrorCodes {
   public static final int WEB_BASE_EXECUTE_FAILED_CONNECT = 921794;
   public static final int WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT = 950469;
 
-  public static final int WEB_BASE_POST_FAILED_EXECUTE = 947404;
   public static final int WEB_BASE_POST_FAILED_CONNECT = 904399;
   public static final int WEB_BASE_POST_FAILED_NOT_200 = 903375;
 

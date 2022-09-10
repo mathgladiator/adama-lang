@@ -614,7 +614,7 @@ Map a domain to a space.
 | identity | yes | String | Identity is a token to authenticate a user. |
 | domain | yes | String | A domain name. |
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are case insensitive using the regex a-z[a-z0-9\.]* to validation. |
-| certificate | yes | String | A TLS/SSL Certificate encoded as json. |
+| certificate | no | String | A TLS/SSL Certificate encoded as json. |
 
 
 ### Template

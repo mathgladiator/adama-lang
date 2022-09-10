@@ -367,6 +367,10 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SpaceCreateRequest request, SimpleResponder responder) {
     try {
+      if ("ide".equals(request.space) || "wildcard".equals(request.space)) {
+        responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_SPACE_RESERVED));
+        return;
+      }
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         int spaceId = Spaces.createSpace(nexus.database, request.who.id, request.space);
         SpaceTemplates.SpaceTemplate template = SpaceTemplates.REGISTRY.of(request.template);
@@ -540,7 +544,7 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder) {
-    if ("ide".equals(request.space)) {
+    if ("ide".equals(request.space) || "wildcard".equals(request.space)) {
       responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_DOCUMENT_SPACE_RESERVED));
       return;
     }

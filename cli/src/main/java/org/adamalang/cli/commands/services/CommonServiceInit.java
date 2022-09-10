@@ -197,23 +197,32 @@ public class CommonServiceInit {
 
     return new CertificateFinder() {
       @Override
-      public void fetch(String domain, Callback<SslContext> callback) {
+      public void fetch(String rawDomain, Callback<SslContext> callback) {
+        String _domainToLookup = rawDomain;
         { // hyper fast optimistic path
-          if (domain == null) { // no SNI provided -> use default
+          if (_domainToLookup == null) { // no SNI provided -> use default
             callback.success(null);
             return;
           }
-          if (domain.endsWith("." + webConfig.regionalDomain)) { // the regional domain -> use default
+          if (_domainToLookup.endsWith("." + webConfig.regionalDomain)) { // the regional domain -> use default
             callback.success(null);
             return;
+          }
+          for (String globalDomain : webConfig.globalDomains) {
+            if (_domainToLookup.endsWith("." + globalDomain)) {
+              _domainToLookup = "wildcard." + globalDomain;
+              break;
+            }
           }
           // TODO: sort out a plan for global domains
-          SslContext cached = cache.get(domain); // check cache
+          SslContext cached = cache.get(_domainToLookup); // check cache
           if (cached != null) {
             callback.success(cached);
             return;
           }
         }
+
+        final String domain = _domainToLookup;
 
         executor.execute(() -> {
           // check cache within the executor
