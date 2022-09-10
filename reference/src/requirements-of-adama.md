@@ -1,12 +1,12 @@
 # Requirements driving Adama (the birth of Board Game Infrastructure)
 
-Since answering "What is Adama" is hard, let's start with the requirements that drove Adama in the first place as that provides essential clues to why.
+Since answering "What is Adama" is hard, let's start with the requirements that drove Adama in the first place as that provides essential clues to why exists.
 
-This all started after seeing TVs placed tables to play games
+This all started after seeing TVs placed within tables to play games
 (like [here](https://www.youtube.com/watch?v=o2INkNR3ap8)
 , [here](https://www.reddit.com/r/DungeonsAndDragons/comments/oshm4b/new_game_tvtable_our_dm_made_200_lg_42_inch_tv/)
 , [or here](https://makezine.com/article/home/fun-games/how-to-build-a-high-end-gaming-table-for-as-little-as-150/)).
-These table are pretty neat, so I thought I would build one myself. Low and behold, I decided to focus on the software aspect to build a version of [battlestar galatica (BSG).](https://boardgamegeek.com/boardgame/37111/battlestar-galactica-board-game)
+These table are pretty neat, so I thought I would build one myself. Low and behold, I decided to focus on the software aspect to build a digital version of [battlestar galatica (BSG).](https://boardgamegeek.com/boardgame/37111/battlestar-galactica-board-game)
 
 The core thesis of having the TV be the board is that this enables
 easier setup and teardown,
@@ -27,7 +27,7 @@ Power outages can be handled with a battery. We must allow players to be able to
 
 **Requirement #2:** Games should be hostable locally.
 
-Sadly, home networking is a bit of a mess and outaged are relatively a rare event.
+Sadly, home networking is a bit of a mess and outage are relatively a rare event.
 For easier game play start, the cloud is a fantastic option for 99% of the time.
 
 **Requirement #3:** Games should be hostable on the cloud.
@@ -61,17 +61,17 @@ The mental model however can become much simpler if we see the controllers and T
 When you have a thin/dumb client, the server is responsible for everything.
 Here, the server picks up the role of dungeon master and then asks players questions directly.
 
-**Requirement #9:** Stream vastly reduce the client complexity.
+**Requirement #9:** Streams vastly reduce the client complexity.
 
 Unfortunately, the modern cloud doesn't play well with streams for a variety of reasons.
 See [woe of websocket](https://www.adama-platform.com/2021/12/22/woe.html) for more details.
-Specifically, the cloud works really well with request/response and database.
-The cloud process may terminate for a variety of reasons: deployment, kernel upgrade, machine migration, capacity management, host failure, etc.
+Specifically, the cloud works really well with request/response and databases.
+A process within the cloud may terminate for a variety of reasons: deployment, kernel upgrade, machine migration, capacity management, host failure, etc.
 
 **Requirement #10:** The stream must be reliable over failures.  
 
 Host failures can be accounted for in a variety of ways (VMs that float around), but the developer situation is important too.
-As a developer is play testing a game and pushing the boundary on all the rules, it is desirable to be able to upgrade/hot-reload the code.
+As a developer play tests a game and pushes the boundary on all the rules, it is desirable to be able to upgrade/hot-reload the code.
 This ability to hot-reload requires the need to rewind state to avoid the quadratic state build-up.
 
 **Requirement #11:** The stream must be reliable over code changes.

@@ -44,73 +44,10 @@ hljs.registerLanguage("adama", (() => {
         className: 'keyword',
         begin: '#' + IDENT_RE
     };
-    const KEYWORD_MAYBE = {
+
+    const KEYWORD_AT_PREFIX = {
         className: 'keyword',
-        begin: '@maybe'
-    };
-    const KEYWORD_CONVERT = {
-        className: 'keyword',
-        begin: '@convert'
-    };
-    const KEYWORD_STATIC = {
-        className: 'keyword',
-        begin: '@static'
-    };
-    const KEYWORD_WEB = {
-        className: 'keyword',
-        begin: '@web'
-    };
-    const KEYWORD_WHO = {
-        className: 'keyword',
-        begin: '@who'
-    };
-    const KEYWORD_CONTEXT = {
-        className: 'keyword',
-        begin: '@context'
-    };
-    const KEYWORD_VIEWER = {
-        className: 'keyword',
-        begin: '@viewer'
-    };
-    const KEYWORD_PARAMETERS = {
-        className: 'keyword',
-        begin: '@parameters'
-    };
-    const KEYWORD_HEADERS = {
-        className: 'keyword',
-        begin: '@headers'
-    };
-    const KEYWORD_CONSTRUCT = {
-        className: 'keyword',
-        begin: '@construct'
-    };
-    const KEYWORD_CONNECTED = {
-        className: 'keyword',
-        begin: '@connected'
-    };
-    const KEYWORD_DISCONNECTED = {
-        className: 'keyword',
-        begin: '@disconnected'
-    };
-    const KEYWORD_ATTACHED = {
-        className: 'keyword',
-        begin: '@attached'
-    };
-    const KEYWORD_CAN_ATTACH = {
-        className: 'keyword',
-        begin: '@can_attach'
-    };
-    const KEYWORD_DEFAULT = {
-        className: 'keyword',
-        begin: '@default'
-    };
-    const KEYWORD_STEP = {
-        className: 'keyword',
-        begin: '@step'
-    };
-    const KEYWORD_PUMP = {
-        className: 'keyword',
-        begin: '@pump'
+        begin: '@' + IDENT_RE
     };
 
     const LITERALS = [
@@ -158,23 +95,7 @@ hljs.registerLanguage("adama", (() => {
             LITERAL_STABLE,
             LITERAL_BLOCKED,
             LITERAL_STATE_MACHINE_LABEL,
-            KEYWORD_MAYBE,
-            KEYWORD_CONVERT,
-            KEYWORD_STATIC,
-            KEYWORD_WEB,
-            KEYWORD_WHO,
-            KEYWORD_CONTEXT,
-            KEYWORD_VIEWER,
-            KEYWORD_PARAMETERS,
-            KEYWORD_HEADERS,
-            KEYWORD_CONSTRUCT,
-            KEYWORD_CONNECTED,
-            KEYWORD_DISCONNECTED,
-            KEYWORD_ATTACHED,
-            KEYWORD_CAN_ATTACH,
-            KEYWORD_DEFAULT,
-            KEYWORD_STEP,
-            KEYWORD_PUMP,
+            KEYWORD_AT_PREFIX,
             e.C_LINE_COMMENT_MODE,
             e.C_BLOCK_COMMENT_MODE,
             e.C_NUMBER_MODE,

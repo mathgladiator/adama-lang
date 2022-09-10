@@ -2,7 +2,7 @@
 
 Too many times, a value could not be found nor make sense to compute with the data at hand. The lack of a value is something to contend with, and [failing to contend with it well has proven to be a billion dollar mistake](https://www.youtube.com/watch?v=ybrQvs4x0Ps). Adama uses [the maybe (or optional) pattern](https://en.wikipedia.org/wiki/Monad_(functional_programming)#An_example:\_Maybe). For example, the following defines an age which may or may not be available:
 
-```
+```adama
 public maybe<int> age;
 
 // how to write

@@ -1,4 +1,4 @@
-# The glorious state machine
+# The state machine
 
 Each document acts like a [state machine](https://en.wikipedia.org/wiki/Finite-state_machine) where there is a single state label indicating the major state of the document. The rest of the document is considered supporting or related state included within the state machine. The game this induces on the code is very simple. First, you associate code to a state machine label:
 

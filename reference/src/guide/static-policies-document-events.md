@@ -3,7 +3,8 @@
 A document will contain state, and it is vital to protect that state from unauthorized access or malicous actors. In this section, we will go through the details of access control and answer these questions:
 * Who can create documents?
 * Who can invent documents? And what does document invention mean?
-* Who can connect to documents?
+* Who can connect to a document?
+* Who can delete a document?
 * Who can attach resources (i.e. files) to documents?
 * What resource got attached? And when do assets get deleted?
 

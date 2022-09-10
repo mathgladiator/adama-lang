@@ -1,4 +1,4 @@
-# Functions, procedures, and methods oh my
+# Functions, procedures, and methods
 Adama has two forms of colloquial functions.
 
 Functions in Adama are pure in that they have no side effects and also are context-free.
