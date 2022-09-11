@@ -17,7 +17,9 @@ public class LibAdamaTests {
   public void flow_problems() {
     Assert.assertEquals("null", LibAdama.reflect("{").json);
     Assert.assertEquals("[{\"error\":true}]", LibAdama.validate("{").json);
+    Assert.assertEquals("[]", LibAdama.validate("").json);
     Assert.assertEquals("null", LibAdama.reflect("int x = \"x\"").json);
     Assert.assertEquals("[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":3,\"byte\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'r<int>' is unable to store type 'string'. (TypeCheckReferences)\"}]", LibAdama.validate("int x = \"x\";").json);
+    Assert.assertEquals("{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}", LibAdama.reflect("").json);
   }
 }
