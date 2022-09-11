@@ -40,7 +40,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
   public final String name;
   public final DeploymentPlan plan;
   private final HashMap<String, LivingDocumentFactory> factories;
-  private final Deliverer deliverer;
+  public final long memoryUsed;
 
   /**
    * @param spacePrefix - used for debugging by generating a relevant class name
@@ -51,8 +51,8 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
    */
   public DeploymentFactory(String name, String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan, Deliverer deliverer) throws ErrorCodeException {
     this.name = name;
-    this.deliverer = deliverer;
     this.factories = new HashMap<>();
+    long _memoryUsed = 0L;
     for (Map.Entry<String, DeployedVersion> entry : plan.versions.entrySet()) {
       LivingDocumentFactory factory = null;
       if (prior != null) {
@@ -65,9 +65,11 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
       if (factory == null) {
         factory = compile(name, spacePrefix + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes, deliverer);
       }
+      _memoryUsed += factory.memoryUsage;
       factories.put(entry.getKey(), factory);
     }
     this.plan = plan;
+    this.memoryUsed = _memoryUsed;
   }
 
   public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer) throws ErrorCodeException {    try {

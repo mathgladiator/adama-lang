@@ -235,13 +235,15 @@ public class CommonServiceInit {
           try {
             Domain lookup = Domains.get(database, domain);
             if (lookup != null) {
-              ObjectNode certificate = Json.parseJsonObject(MasterKey.decrypt(masterKey, lookup.certificate));
-              ByteArrayInputStream keyInput = new ByteArrayInputStream(certificate.get("key").textValue().getBytes(StandardCharsets.UTF_8));
-              ByteArrayInputStream certInput = new ByteArrayInputStream(certificate.get("cert").textValue().getBytes(StandardCharsets.UTF_8));
-              SslContext contextToUse = SslContextBuilder.forServer(certInput, keyInput).build();
-              callback.success(contextToUse);
-              cache.put(domain, contextToUse);
-              return;
+              if (lookup.certificate != null) {
+                ObjectNode certificate = Json.parseJsonObject(MasterKey.decrypt(masterKey, lookup.certificate));
+                ByteArrayInputStream keyInput = new ByteArrayInputStream(certificate.get("key").textValue().getBytes(StandardCharsets.UTF_8));
+                ByteArrayInputStream certInput = new ByteArrayInputStream(certificate.get("cert").textValue().getBytes(StandardCharsets.UTF_8));
+                SslContext contextToUse = SslContextBuilder.forServer(certInput, keyInput).build();
+                callback.success(contextToUse);
+                cache.put(domain, contextToUse);
+                return;
+              }
             }
             callback.success(null);
           } catch (Exception ex) {

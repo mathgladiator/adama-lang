@@ -42,6 +42,7 @@ public class LivingDocumentFactory {
   public final boolean delete_on_close;
   public final ServiceRegistry registry;
   public final Deliverer deliverer;
+  public final long memoryUsage;
 
   public LivingDocumentFactory(final String spaceName, final String className, final String javaSource, String reflection, Deliverer deliverer) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
@@ -59,6 +60,11 @@ public class LivingDocumentFactory {
       this.deliverer = deliverer;
       final var classBytes = fileManager.getClasses();
       fileManager.close();
+      long _memory = 0;
+      for (byte[] bytes : classBytes.values()) {
+        _memory += bytes.length;
+      }
+      this.memoryUsage = _memory + 65536;
       final var loader = new ByteArrayClassLoader(classBytes);
       final Class<?> clazz = Class.forName(className, true, loader);
       constructor = clazz.getConstructor(DocumentMonitor.class);

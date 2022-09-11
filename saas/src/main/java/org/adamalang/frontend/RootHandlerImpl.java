@@ -306,7 +306,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, DomainMapRequest request, SimpleResponder responder) {
     try {
       if (request.policy.canUserManageDomain(request.who)) {
-        String cert = MasterKey.encrypt(nexus.masterKey, request.certificate);
+        String cert = request.certificate != null ? MasterKey.encrypt(nexus.masterKey, request.certificate) : null;
         if (Domains.map(nexus.database, request.who.id, request.domain, request.space, cert)) { // Domains.map ensures ownership on UPDATE to prevent conflicts
           responder.complete();
         } else {

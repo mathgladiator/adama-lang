@@ -23,7 +23,7 @@ public class Domains {
         statement.setInt(1, owner);
         statement.setString(2, space);
         statement.setString(3, domain);
-        statement.setString(4, certificate != null ? certificate : "{}");
+        statement.setString(4, certificate != null ? certificate : "");
         statement.setBoolean(5, certificate == null);
         statement.execute();
         return true;
@@ -32,7 +32,7 @@ public class Domains {
           String sqlUpdate = "UPDATE `" + dataBase.databaseName + "`.`domains` SET `space`=?, `certificate`=?, `automatic`=FALSE WHERE `owner`=? AND `domain`=?";
           try (PreparedStatement statement = connection.prepareStatement(sqlUpdate)) {
             statement.setString(1, space);
-            statement.setString(2, certificate != null ? certificate : "{}");
+            statement.setString(2, certificate != null ? certificate : "");
             statement.setInt(3, owner);
             statement.setString(4, domain);
             return statement.executeUpdate() == 1;
@@ -70,6 +70,13 @@ public class Domains {
       }
     }
   }
+  private static Domain domainOf(ResultSet rs) throws Exception {
+    String cert = rs.getString(3);
+    if (cert.equals("")) {
+      cert = null;
+    }
+    return new Domain(rs.getInt(1), rs.getString(2), cert, rs.getDate(4));
+  }
 
   public static Domain get(DataBase dataBase, String domain) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
@@ -78,7 +85,7 @@ public class Domains {
         statement.setString(1, domain);
         try (ResultSet rs = statement.executeQuery()) {
           while (rs.next()) {
-            return new Domain(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDate(4));
+            return domainOf(rs);
           }
         }
       }
@@ -104,7 +111,7 @@ public class Domains {
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<Domain> domains = new ArrayList<>();
           while (rs.next()) {
-            domains.add(new Domain(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDate(4)));
+            domains.add(domainOf(rs));
           }
           return domains;
         }
