@@ -914,6 +914,33 @@
 
     <!--
 
+    <method name="super/check-in" responder="simple">
+        <parameter name="identity"/>
+        <documentation>
+            The super agent checks in since the super is running in a super isolated environment.
+        </documentation>
+    </method>
+
+    <method name="super/set-domain-cert" responder="simple">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <parameter name="certificate"/>
+        <documentation>
+            The super agent is providing a new domain certificate
+        </documentation>
+    </method>
+
+    <method name="super/list-renewal-domains" responder="simple">
+        <parameter name="identity"/>
+        <documentation>
+            The super agent lists domains weekly to update domains that need a new cert
+        </documentation>
+    </method>
+
+    -->
+
+    <!--
+
 405532
 447516
 444445
