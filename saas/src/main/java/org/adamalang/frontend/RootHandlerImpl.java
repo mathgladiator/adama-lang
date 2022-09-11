@@ -374,6 +374,7 @@ public class RootHandlerImpl implements RootHandler {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         int spaceId = Spaces.createSpace(nexus.database, request.who.id, request.space);
         SpaceTemplates.SpaceTemplate template = SpaceTemplates.REGISTRY.of(request.template);
+        Spaces.setRxHtml(nexus.database, spaceId, template.rxhtml); // TODO: put into createSpace? Or, rely on the document
         nexus.adama.create(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, "ide", request.space, null, template.idearg(request.space), new Callback<Void>() {
           @Override
           public void success(Void value) {
@@ -388,6 +389,7 @@ public class RootHandlerImpl implements RootHandler {
               Spaces.delete(nexus.database, spaceId, request.who.id);
             } catch (Exception failure) {
               responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION, ex, RootHandlerImpl.LOGGER));
+              return;
             }
             responder.error(ex);
           }
