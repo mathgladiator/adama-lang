@@ -25,10 +25,14 @@ public class SpaceTemplates {
       this.rxhtml = rxhtml;
     }
 
+    public String initialRxHTML(String spaceName) {
+      return rxhtml.replaceAll(Pattern.quote("$TEMPLATE_SPACE"), spaceName);
+    }
+
     public String idearg(String spaceName) {
       ObjectNode node = Json.newJsonObject();
       node.put("adama", adama);
-      node.put("rxhtml", rxhtml.replaceAll(Pattern.quote("$TEMPLATE_SPACE"), spaceName));
+      node.put("rxhtml", initialRxHTML(spaceName));
       return node.toString();
     }
 
