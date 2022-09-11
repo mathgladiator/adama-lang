@@ -11,6 +11,7 @@ package org.adamalang.common;
 
 import java.io.CharArrayWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /** URL Encoding support */
 public class URL {
@@ -52,5 +53,24 @@ public class URL {
       }
     }
     return out.toString();
+  }
+
+  /** encode a simple parameter map into a string */
+  public static String parameters(Map<String, String> parameters) {
+    if (parameters != null) {
+      StringBuilder sb = new StringBuilder();
+      boolean first = true;
+      for (Map.Entry<String, String> param : parameters.entrySet()) {
+        if (first) {
+          sb.append("?");
+          first = false;
+        } else {
+          sb.append("&");
+        }
+        sb.append(param.getKey()).append("=").append(URL.encode(param.getValue(), false));
+      }
+      return sb.toString();
+    }
+    return "";
   }
 }

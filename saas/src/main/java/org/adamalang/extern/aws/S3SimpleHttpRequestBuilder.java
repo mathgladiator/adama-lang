@@ -18,7 +18,6 @@ import org.adamalang.web.client.SimpleHttpRequestBody;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
 
 public class S3SimpleHttpRequestBuilder {
   private final AWSConfig config;
@@ -55,40 +54,22 @@ public class S3SimpleHttpRequestBuilder {
     return v4;
   }
 
-  private String params() {
-    if (parameters != null) {
-      StringBuilder sb = new StringBuilder();
-      boolean first = true;
-      for (Map.Entry<String, String> param : parameters.entrySet()) {
-        if (first) {
-          sb.append("?");
-          first = false;
-        } else {
-          sb.append("&");
-        }
-        sb.append(param.getKey()).append("=").append(URL.encode(param.getValue(), false));
-      }
-      return sb.toString();
-    }
-    return "";
-  }
-
   private String url() {
-    return "https://" + host + "/" + config.bucket + "/" + URL.encode(s3key, true) + params();
+    return "https://" + host + "/" + config.bucket + "/" + URL.encode(s3key, true) + URL.parameters(parameters);
   }
 
   public SimpleHttpRequest buildWithEmptyBody() {
-    startSigning().withEmptyBody().signInto(headers);
+    startSigning().withEmptyBody().signIntoHeaders(headers);
     return new SimpleHttpRequest(method, url(), headers, SimpleHttpRequestBody.EMPTY);
   }
 
   public SimpleHttpRequest buildWithFileAsBody(FileReaderHttpRequestBody body) {
-    startSigning().withContentHashSha256(body.sha256).withHeader("Content-Length", body.size + "").signInto(headers);
+    startSigning().withContentHashSha256(body.sha256).withHeader("Content-Length", body.size + "").signIntoHeaders(headers);
     return new SimpleHttpRequest(method, url(), headers, body);
   }
 
   public SimpleHttpRequest buildWithBytesAsBody(byte[] body) {
-    startSigning().withContentHashSha256(Hex.of(Hashing.sha256().digest(body))).withHeader("Content-Length", body.length + "").signInto(headers);
+    startSigning().withContentHashSha256(Hex.of(Hashing.sha256().digest(body))).withHeader("Content-Length", body.length + "").signIntoHeaders(headers);
     return new SimpleHttpRequest(method, url(), headers, SimpleHttpRequestBody.WRAP(body));
   }
 }

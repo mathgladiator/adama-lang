@@ -19,6 +19,7 @@ public class AWSConfig {
   public final String region;
   public final String bucket;
   public final String archivePath;
+  public final String queue;
 
   public AWSConfig(ConfigObject config) throws Exception {
     this.accessKeyId = config.strOfButCrash("access_key", "AWS Access Key not found");
@@ -28,5 +29,6 @@ public class AWSConfig {
     this.replyToEmailAddressForInit = config.strOfButCrash("init_reply_email", "No reply email address set for init");
     this.bucket = config.strOfButCrash("bucket", "No bucket for assets");
     this.archivePath = config.strOfButCrash("archive", "No archive path for backups/restore");
+    this.queue = config.strOfButCrash("queue", "No queue for control hand-off");
   }
 }

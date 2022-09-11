@@ -63,7 +63,7 @@ public class SES implements Email {
             .withHeader("Content-Type", "application/json") //
             .withHeader("Content-Length", postBody.length + "") //
             .withContentHashSha256(sha256) //
-            .signInto(headers);
+            .signIntoHeaders(headers);
 
         base.execute(new SimpleHttpRequest("POST", url, headers, SimpleHttpRequestBody.WRAP(postBody)), new SimpleHttpResponder() {
           boolean responded = false;

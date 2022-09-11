@@ -12,6 +12,10 @@ package org.adamalang.common;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.TreeMap;
+
 public class URLTests {
   @Test
   public void spaces_20() throws Exception {
@@ -55,5 +59,17 @@ public class URLTests {
     Assert.assertTrue(URL.plain('~', false));
     Assert.assertTrue(URL.plain('.', false));
     Assert.assertFalse(URL.plain('@', false));
+  }
+
+  @Test
+  public void params() {
+    Assert.assertEquals("", URL.parameters(null));
+    Assert.assertEquals("", URL.parameters(new HashMap<>()));
+    Assert.assertEquals("?xyz=abc", URL.parameters(Collections.singletonMap("xyz", "abc")));
+    TreeMap<String, String> multi = new TreeMap<>();
+    multi.put("a", "b");
+    multi.put("c", "d");
+    multi.put("e", "f");
+    Assert.assertEquals("?a=b&c=d&e=f", URL.parameters(multi));
   }
 }

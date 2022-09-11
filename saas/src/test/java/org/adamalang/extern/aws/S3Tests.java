@@ -369,7 +369,6 @@ public class S3Tests {
         Thread.sleep(100);
       }
       Assert.assertFalse(log.exists());
-
     });
   }
 }

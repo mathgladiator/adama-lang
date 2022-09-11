@@ -20,13 +20,13 @@ public class AWSMetrics {
   public final RequestResponseMonitor list_assets;
   public final RequestResponseMonitor well_known_get;
   public final RequestResponseMonitor well_known_put;
-
   public final RequestResponseMonitor upload_file;
   public final RequestResponseMonitor download_file;
   public final RequestResponseMonitor send_email;
   public final Inflight alarm_send_failures;
   public final RequestResponseMonitor upload_log_document;
   public final RequestResponseMonitor delete_asset;
+  public final RequestResponseMonitor enqueue;
 
   public AWSMetrics(MetricsFactory factory) {
     restore_document = factory.makeRequestResponseMonitor("aws_restore_document");
@@ -35,13 +35,12 @@ public class AWSMetrics {
     well_known_get = factory.makeRequestResponseMonitor("aws_well_known_get");
     well_known_put = factory.makeRequestResponseMonitor("aws_well_known_put");
     list_assets = factory.makeRequestResponseMonitor("aws_list_assets");
-
     upload_file = factory.makeRequestResponseMonitor("aws_upload_file");
     download_file = factory.makeRequestResponseMonitor("aws_download_file");
     delete_asset = factory.makeRequestResponseMonitor("aws_delete_asset");
     send_email = factory.makeRequestResponseMonitor("aws_send_email");
     alarm_send_failures = factory.inflight("alarm_send_failures");
-
     upload_log_document = factory.makeRequestResponseMonitor("aws_upload_log_document");
+    enqueue = factory.makeRequestResponseMonitor("aws_enqueue");
   }
 }

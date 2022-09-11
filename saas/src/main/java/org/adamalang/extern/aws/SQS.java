@@ -9,18 +9,49 @@
  */
 package org.adamalang.extern.aws;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.web.client.SimpleHttpRequest;
+import org.adamalang.web.client.SimpleHttpRequestBody;
+import org.adamalang.web.client.StringCallbackHttpResponder;
+import org.adamalang.web.client.WebClientBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.TreeMap;
+
 public class SQS {
+  private final Logger LOGGER = LoggerFactory.getLogger(SQS.class);
+  private final WebClientBase base;
+  private final AWSConfig config;
+  private final AWSMetrics metrics;
+  private final String queue;
 
-  // TODO
-  // https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_SendMessage.html
-
-  public void requestCapacityAddition() {
+  public SQS(WebClientBase base, AWSConfig config, AWSMetrics metrics) {
+    this.base = base;
+    this.config = config;
+    this.metrics = metrics;
+    this.queue = config.queue;
   }
 
-  public void informAutomaticCertificateRenewel(String domain) {
-  }
+  public void queue(String message, Callback<Void> callback) {
+    // https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_SendMessage.html
+    SignatureV4 v4 = new SignatureV4(config, "sqs", "GET", "sqs." + config.region + ".amazonaws.com", "/" + config.queue);
+    v4.withParameter("Action", "SendMessage");
+    v4.withParameter("MessageBody", message);
+    v4.withParameter("Version", "2012-11-05");
+    String url = "https://sqs." + config.region + ".amazonaws.com/" + config.queue + v4.signedQuery();
+    SimpleHttpRequest request = new SimpleHttpRequest("GET", url, new TreeMap<>(), SimpleHttpRequestBody.EMPTY);
+    base.execute(request, new StringCallbackHttpResponder(LOGGER, metrics.enqueue.start(), new Callback<String>() {
+      @Override
+      public void success(String value) {
+        callback.success(null);
+      }
 
-  private void queue(String json) {
-
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    }));
   }
 }

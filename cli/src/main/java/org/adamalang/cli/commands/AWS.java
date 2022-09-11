@@ -49,6 +49,9 @@ public class AWS {
       case "test-asset-listing":
         awsTestAssetListing(next, config);
         return;
+      case "test-enqueue":
+        awsEnqueue(next, config);
+        return;
       case "download-archive":
         awsDownloadArchive(next, config);
         return;
@@ -151,6 +154,31 @@ public class AWS {
         }
       });
       latch.await(60000, TimeUnit.MILLISECONDS);
+    } finally {
+      base.shutdown();
+    }
+  }
+
+  public static void awsEnqueue(String[] args, Config config) throws Exception {
+    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
+    WebClientBase base = new WebClientBase(new WebConfig(new ConfigObject(config.get_or_create_child("web"))));
+    try {
+      SQS sqs = new SQS(base, awsConfig, new AWSMetrics(new NoOpMetricsFactory()));
+      CountDownLatch latch = new CountDownLatch(1);
+      sqs.queue("{\"message\":\"Hello World\"}", new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          System.err.println("Queue success!");
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          System.err.println("Queue failure:" + ex.code);
+          latch.countDown();
+        }
+      });
+      latch.await(5000, TimeUnit.MILLISECONDS);
     } finally {
       base.shutdown();
     }
