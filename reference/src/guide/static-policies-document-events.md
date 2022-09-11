@@ -3,6 +3,7 @@
 A document will contain state, and it is vital to protect that state from unauthorized access or malicous actors. In this section, we will go through the details of access control and answer these questions:
 * Who can create documents?
 * Who can invent documents? And what does document invention mean?
+* How do I tell when a document is loaded? How to upgrade document state?
 * Who can connect to a document?
 * Who can delete a document?
 * Who can attach resources (i.e. files) to documents?
@@ -128,6 +129,21 @@ From a security perspective, it is exceptionally important to capture the creato
 
 The ```@construct``` event will fire exactly once when the document is constructed.
 As documents can only be constructed once, this enables documents to have an authoritative owner which can be used within [privacy policies](privacy-and-bubbles.md) and [access control](#connected-and-disconnected).
+
+### Load: how to run code when a document is loaded?
+Since documents may need to experience radical change, the ```@load``` events provides an opportunity to upgrade data when loaded.
+
+```adama
+@load {
+  if (version < 2) {
+    // transfer data to new world
+  }
+  if (version < 3) {
+    // transfer data to super new world
+  }
+  version = 3;
+}
+```
 
 ### Connected and Disconnected
 

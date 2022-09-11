@@ -1,6 +1,10 @@
 # Constants
 
-You want numbers? We got numbers. You want strings? We got strings. You want complex numbers, we got complex numbers! Constants are a fast way to place data into a document. For instance, the following code outlines some basic constants:
+You want numbers? We got numbers.
+You want strings? We got strings.
+You want complex numbers, we got complex numbers!
+Constants are a fast way to place data into a document.
+For instance, the following code outlines some basic constants:
 
 ```adama
 #we_got_constants {
@@ -14,7 +18,6 @@ You want numbers? We got numbers. You want strings? We got strings. You want com
 ```
 
 ## Details
-
 There are a variety of ways to conjure up constants. The following table illustrates examples:
 
 | type | syntax | examples |
@@ -30,9 +33,22 @@ There are a variety of ways to conjure up constants. The following table illustr
 | maybe(?) | @maybe(Expr) | @maybe(123) |
 | complex | @i | 1 + @i |
 
-
-## who is executing
+## @who is executing
 The ```@who``` constant refers to the principal that is executing the current code.
+
+## @context of the caller
+Within [static policies](./static-policies-document-events.md), [document constructors and events](./static-policies-document-events.md), and [message handlers](./async.md) there is constant ```@context``` which is useful for getting access to the origin and ip or the caller.
+
+## @web's @parameters and @headers
+The [web handler](./web.md) has access to the parsed query string and HTTP headers respectively via the ```@parameters``` and ```@headers``` constants.
+```@parameters``` is a dynamic with the query string converted to JSON.
+```@headers``` is a map&lt;string,string&gt;.
+
+## Bubble's @viewer
+[A privacy bubble](./privacy-and-bubbles.md) can access viewer state via the ```@viewer``` which behaves like a message.
+
+## Dynamic @null
+The default [dynamic](./rich-types.md#dynamic) type has a value of "null" which is represented via ```@null```.
 
 ## String escaping
 
