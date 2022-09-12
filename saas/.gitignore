@@ -2,3 +2,4 @@ target
 *.iml
 test.mysql.json
 aws.config.json
+stripe.config.json

@@ -40,6 +40,10 @@ public class EndToEnd_PasswordTests {
         Iterator<String> c4 = fe.execute("{\"id\":4,\"method\":\"account/login\",\"email\":\"x@x.com\",\"password\":\"asdf\"}");
         Assert.assertEquals("ERROR:985216", c4.next());
       }
+      {
+        Iterator<String> c3 = fe.execute("{\"id\":3,\"method\":\"account/get-payment-plan\",\"identity\":\"" + devIdentity + "\"}");
+        Assert.assertEquals("FINISH:{\"paymentPlan\":\"none\"}", c3.next());
+      }
     }
   }
 }
