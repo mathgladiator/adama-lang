@@ -9,15 +9,19 @@
  */
 package org.adamalang.extern.stripe;
 
-import org.adamalang.common.ConfigObject;
-import org.adamalang.common.Json;
+import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.service.WebConfig;
+import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Test;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class StripeTests {
   @FunctionalInterface
@@ -40,5 +44,41 @@ public class StripeTests {
     } finally {
       base.shutdown();
     }
+  }
+
+  @Test
+  public void happy() throws Exception {
+    flow((stripe) -> {
+      AtomicReference<String> customerId = new AtomicReference<>();
+      CountDownLatch latchCreateCustomer = new CountDownLatch(1);
+      stripe.createCustomer(40, ProtectedUUID.generate() + "@adama-platform.com", new Callback<String>() {
+        @Override
+        public void success(String value) {
+          customerId.set(value);
+          latchCreateCustomer.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+        }
+      });
+      Assert.assertTrue(latchCreateCustomer.await(5000, TimeUnit.MILLISECONDS));
+      System.err.println("Test customer id:" + customerId.get());
+      // TODO: subscribe the user to a price id and subscription plan, or something...
+      CountDownLatch latchDeleteCustomer = new CountDownLatch(1);
+      stripe.deleteCustomer(customerId.get(), new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          latchDeleteCustomer.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+      Assert.assertTrue(latchDeleteCustomer.await(5000, TimeUnit.MILLISECONDS));
+    });
   }
 }

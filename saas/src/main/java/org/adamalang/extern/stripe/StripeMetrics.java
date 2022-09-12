@@ -9,14 +9,16 @@
  */
 package org.adamalang.extern.stripe;
 
-import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.common.metrics.RequestResponseMonitor;
 
 /** stripe metrics */
 public class StripeMetrics {
-  public final CallbackMonitor stripe_create_customer;
+  public final RequestResponseMonitor stripe_create_customer;
+  public final RequestResponseMonitor stripe_delete_customer;
 
   public StripeMetrics(MetricsFactory factory) {
-    this.stripe_create_customer = factory.makeCallbackMonitor("stripe_create_customer");
+    this.stripe_create_customer = factory.makeRequestResponseMonitor("stripe_create_customer");
+    this.stripe_delete_customer = factory.makeRequestResponseMonitor("stripe_delete_customer");
   }
 }
