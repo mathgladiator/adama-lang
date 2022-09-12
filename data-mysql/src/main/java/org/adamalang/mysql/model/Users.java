@@ -37,12 +37,40 @@ public class Users {
       }
 
       {
-        String sql = "INSERT INTO `" + dataBase.databaseName + "`.`emails` (`email`, `balance`, `password`, `validations`) VALUES (?, 500, '', 0)";
+        String sql = "INSERT INTO `" + dataBase.databaseName + "`.`emails` (`email`, `balance`, `password`, `validations`, `payment_info_json`) VALUES (?, 500, '', 0, '{}')";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
           statement.setString(1, email);
           statement.execute();
           return DataBase.getInsertId(statement);
         }
+      }
+    }
+  }
+
+  public static String getPaymentInfo(DataBase dataBase, int userId) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = "SELECT `payment_info_json` FROM `" + dataBase.databaseName + "`.`emails` WHERE `id`=" + userId;
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (ResultSet rs = statement.executeQuery()) {
+          if (rs.next()) {
+            String result = rs.getString(1);
+            if (null == result || "".equals(result)) {
+              return "{}";
+            }
+            return result;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  public static boolean setPaymentInfo(DataBase dataBase, int userId, String paymentInfo) throws Exception{
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = "UPDATE `" + dataBase.databaseName + "`.`emails` SET `payment_info_json`=? WHERE `id`=" + userId;
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, paymentInfo);
+        return statement.executeUpdate() == 1;
       }
     }
   }
@@ -253,4 +281,5 @@ public class Users {
       DataBase.execute(connection, sql);
     }
   }
+
 }

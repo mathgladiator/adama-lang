@@ -27,6 +27,11 @@ public class UserTests {
         Assert.assertEquals(0, Users.countUsers(dataBase));
         Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
         Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
+        Assert.assertEquals("{}", Users.getPaymentInfo(dataBase, 1));
+        Assert.assertTrue(Users.setPaymentInfo(dataBase, 1, ""));
+        Assert.assertEquals("{}", Users.getPaymentInfo(dataBase, 1));
+        Assert.assertTrue(Users.setPaymentInfo(dataBase, 1, "XYZ"));
+        Assert.assertEquals("XYZ", Users.getPaymentInfo(dataBase, 1));
         Assert.assertEquals(1, Users.countUsers(dataBase));
         Assert.assertEquals("{}", Users.getProfile(dataBase, 1));
         try {
