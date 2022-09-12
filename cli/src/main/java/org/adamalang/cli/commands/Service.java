@@ -15,6 +15,7 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.commands.services.FrontendHttpHandler;
 import org.adamalang.extern.AssetSystemImpl;
+import org.adamalang.extern.stripe.StripeMetrics;
 import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.ops.CapacityAgent;
@@ -330,6 +331,8 @@ public class Service {
     new NetMetrics(metricsFactory);
     metricsFactory.page("aws", "AWS");
     new AWSMetrics(metricsFactory);
+    metricsFactory.page("stripe", "Stripe");
+    new StripeMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));
   }
 }
