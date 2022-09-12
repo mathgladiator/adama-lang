@@ -47,14 +47,15 @@ public class GeneratedResponderErrorProxyTest {
     new KeyListingResponder(responder).error(new ErrorCodeException(8));
     new KeyPairResponder(responder).error(new ErrorCodeException(9));
     new KeystoreResponder(responder).error(new ErrorCodeException(10));
-    new PlanResponder(responder).error(new ErrorCodeException(11));
-    new ProgressResponder(responder).error(new ErrorCodeException(12));
-    new ReflectionResponder(responder).error(new ErrorCodeException(13));
-    new RxhtmlResponder(responder).error(new ErrorCodeException(14));
-    new SeqResponder(responder).error(new ErrorCodeException(15));
-    new SimpleResponder(responder).error(new ErrorCodeException(16));
-    new SpaceListingResponder(responder).error(new ErrorCodeException(17));
-    new YesResponder(responder).error(new ErrorCodeException(18));
-    Assert.assertEquals(171, errorCount.get());
+    new PaymentResponder(responder).error(new ErrorCodeException(11));
+    new PlanResponder(responder).error(new ErrorCodeException(12));
+    new ProgressResponder(responder).error(new ErrorCodeException(13));
+    new ReflectionResponder(responder).error(new ErrorCodeException(14));
+    new RxhtmlResponder(responder).error(new ErrorCodeException(15));
+    new SeqResponder(responder).error(new ErrorCodeException(16));
+    new SimpleResponder(responder).error(new ErrorCodeException(17));
+    new SpaceListingResponder(responder).error(new ErrorCodeException(18));
+    new YesResponder(responder).error(new ErrorCodeException(19));
+    Assert.assertEquals(190, errorCount.get());
   }
 }

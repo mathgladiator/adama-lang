@@ -583,6 +583,32 @@
         </documentation>
     </method>
 
+    <field-definition name="payment-plan" type="string">
+        <documentation>
+            Payment plan name. The current default is "none" which can be upgraded to "public".
+        </documentation>
+    </field-definition>
+
+    <responder name="payment">
+        <field name="payment-plan"/>
+    </responder>
+
+    <method name="account/get-payment-plan" responder="payment">
+        <parameter name="identity"/>
+        <documentation>
+            Get the payment plan information for the developer.
+        </documentation>
+    </method>
+
+    <!--
+    <method name="account/update-payment-plan" responder="simple">
+        <parameter name="identity"/>
+        <documentation>
+
+        </documentation>
+    </method>
+    -->
+
     <method name="account/login" responder="initiation">
         <parameter name="email"/>
         <parameter name="password"/>
@@ -597,7 +623,6 @@
             This is useful to validate an identity without executing anything.
         </documentation>
     </method>
-
 
     <method name="authority/create" responder="claim-result">
         <parameter name="identity"/>

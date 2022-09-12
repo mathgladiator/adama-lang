@@ -339,6 +339,10 @@ public class ErrorTable {
     descriptions.put(978099, "no description of error (yet)");
     names.put(904383, "API_CONVERT_TOKEN_VALIDATE_EXCEPTION");
     descriptions.put(904383, "no description of error (yet)");
+    names.put(904399, "API_GET_PAYMENT_INFO_UNKNOWN");
+    descriptions.put(904399, "no description of error (yet)");
+    names.put(903375, "API_GET_PAYMENT_INFO_ONLY_ADAMA_DEV_EXCEPTION");
+    descriptions.put(903375, "no description of error (yet)");
     names.put(965636, "API_INIT_SETUP_UNKNOWN_EXCEPTION");
     descriptions.put(965636, "no description of error (yet)");
     names.put(946179, "API_INIT_COMPLETE_UNKNOWN_EXCEPTION");
@@ -506,10 +510,6 @@ public class ErrorTable {
     descriptions.put(921794, "no description of error (yet)");
     names.put(950469, "WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT");
     descriptions.put(950469, "no description of error (yet)");
-    names.put(904399, "WEB_BASE_POST_FAILED_CONNECT");
-    descriptions.put(904399, "no description of error (yet)");
-    names.put(903375, "WEB_BASE_POST_FAILED_NOT_200");
-    descriptions.put(903375, "no description of error (yet)");
     names.put(998434, "NET_LCSM_UPDATE_TIMEOUT");
     descriptions.put(998434, "no description of error (yet)");
     names.put(930848, "NET_LCSM_UPDATE_REJECTED");

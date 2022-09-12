@@ -297,6 +297,15 @@ class WebSocketAdamaConnection {
       request: {"method":"account/set-password", "id":parId, "identity": identity, "password": password}
     });
   }
+  AccountGetPaymentPlan(identity, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"account/get-payment-plan", "id":parId, "identity": identity}
+    });
+  }
   AccountLogin(email, password, responder) {
     var self = this;
     var parId = self.__id();

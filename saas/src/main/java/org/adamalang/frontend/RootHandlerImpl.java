@@ -87,6 +87,22 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
+  public void handle(Session session, AccountGetPaymentPlanRequest request, PaymentResponder responder) {
+    try {
+      if (request.who.source == AuthenticatedUser.Source.Adama) {
+        // Do the DB lookup now
+        String paymentInfo = Users.getPaymentInfo(nexus.database, request.who.id);
+        // TODO: parse out information that is useful for stripe to update credit card, etc...
+        responder.complete("none");
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_GET_PAYMENT_INFO_ONLY_ADAMA_DEV_EXCEPTION));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_GET_PAYMENT_INFO_UNKNOWN, ex, LOGGER));
+    }
+  }
+
+  @Override
   public void handle(Session session, InitConvertGoogleUserRequest request, InitiationResponder responder) {
     try {
       HashMap<String, String> headers = new HashMap<>();

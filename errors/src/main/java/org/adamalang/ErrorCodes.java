@@ -315,6 +315,9 @@ public class ErrorCodes {
   public static final int API_CONVERT_TOKEN_UNKNOWN_EXCEPTION = 978099;
   public static final int API_CONVERT_TOKEN_VALIDATE_EXCEPTION = 904383;
 
+  public static final int API_GET_PAYMENT_INFO_UNKNOWN = 904399;
+  public static final int API_GET_PAYMENT_INFO_ONLY_ADAMA_DEV_EXCEPTION = 903375;
+
   public static final int API_INIT_SETUP_UNKNOWN_EXCEPTION = 965636;
   public static final int API_INIT_COMPLETE_UNKNOWN_EXCEPTION = 946179;
   public static final int API_INIT_COMPLETE_CODE_MISMATCH = 916486;
@@ -437,9 +440,6 @@ public class ErrorCodes {
 
   public static final int WEB_BASE_EXECUTE_FAILED_CONNECT = 921794;
   public static final int WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT = 950469;
-
-  public static final int WEB_BASE_POST_FAILED_CONNECT = 904399;
-  public static final int WEB_BASE_POST_FAILED_NOT_200 = 903375;
 
   public static final int NET_LCSM_UPDATE_TIMEOUT = 998434;
   public static final int NET_LCSM_UPDATE_REJECTED = 930848;

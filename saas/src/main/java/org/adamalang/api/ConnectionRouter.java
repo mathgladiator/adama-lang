@@ -136,6 +136,24 @@ public class ConnectionRouter {
                 }
               });
             } return;
+            case "account/get-payment-plan": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AccountGetPaymentPlan.start();
+              AccountGetPaymentPlanRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(AccountGetPaymentPlanRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new PaymentResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "account/login": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AccountLogin.start();
               AccountLoginRequest.resolve(session, nexus, request, new Callback<>() {

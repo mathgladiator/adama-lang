@@ -20,6 +20,8 @@ public interface RootHandler {
 
   public void handle(Session session, AccountSetPasswordRequest request, SimpleResponder responder);
 
+  public void handle(Session session, AccountGetPaymentPlanRequest request, PaymentResponder responder);
+
   public void handle(Session session, AccountLoginRequest request, InitiationResponder responder);
 
   public void handle(Session session, ProbeRequest request, SimpleResponder responder);
