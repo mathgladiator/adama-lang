@@ -15,6 +15,7 @@ import org.adamalang.common.metrics.RequestResponseMonitor;
 
 public class DataBaseMetrics {
   public final RequestResponseMonitor transaction;
+  public final RequestResponseMonitor transaction_simple;
   public final Runnable valid_exception;
   public final CallbackMonitor finder_find;
   public final CallbackMonitor finder_bind;
@@ -26,6 +27,7 @@ public class DataBaseMetrics {
 
   public DataBaseMetrics(MetricsFactory factory) {
     transaction = factory.makeRequestResponseMonitor("database_transaction");
+    transaction_simple = factory.makeRequestResponseMonitor("database_transaction_simple");
     valid_exception = factory.counter("database_valid_exception");
     finder_find = factory.makeCallbackMonitor("database_finder_find");
     finder_bind = factory.makeCallbackMonitor("database_finder_bind");

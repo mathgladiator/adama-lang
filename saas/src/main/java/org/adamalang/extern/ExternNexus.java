@@ -11,6 +11,7 @@ package org.adamalang.extern;
 
 import org.adamalang.api.ApiMetrics;
 import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.extern.stripe.StripeConfig;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
@@ -37,8 +38,9 @@ public class ExternNexus {
   public final int publicKeyId;
   public final AssetSystem assets;
   public final FrontendMetrics frontendMetrics;
+  public final StripeConfig stripe;
 
-  public ExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId) {
+  public ExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, StripeConfig stripe) {
     this.config = config;
     this.email = email;
     this.database = database;
@@ -53,6 +55,7 @@ public class ExternNexus {
     this.region = region;
     this.webHostKey = webHostKey;
     this.publicKeyId = publicKeyId;
+    this.stripe = stripe;
     attachmentRoot.mkdir();
   }
 

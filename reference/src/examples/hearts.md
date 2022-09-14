@@ -226,7 +226,7 @@ enum PassingMode { Across:0, ToLeft:1, ToRight:2, None:3 }
 public PassingMode passing_mode;
 
 #shuffle_and_distribute {
-  // it may be useful to allow methods on a record, fuck
+  // it may be useful to allow methods on a record
   (iterate deck).ordering = Random.genInt();
   (iterate deck).owner = @no_one;
   (iterate deck).place = Place::Hand;
@@ -260,9 +260,6 @@ principal current;
     transition #start_play;
   }
 
-  // this is wanky as fuck, and I don't like it. We have this fundamental problem of what if there are not enough players, then how does this fail...
-  // we should consider a @fatal keyword to signal that a game is just fucked
-
   Player[] op = (iterate players where playing order by play_order).toArray();
   if (op[0] as player) {
     player1 = player.link;
@@ -276,7 +273,7 @@ principal current;
   if (op[3] as player) {
     player4 = player.link;
   }
-  // what does an await on no_one mean, it means the whole thing is fucked
+  // what does an await on no_one mean, it means the whole thing is botched
 
   // we really need a future array since this has some awkward stuff
   future<maybe<CardDecision[]>> pass1 = pass_channel.choose(player1, @convert<CardDecision>(iterate deck where owner==player1), 3);

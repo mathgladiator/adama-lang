@@ -23,7 +23,7 @@ import java.util.TreeSet;
 
 public class Deployments {
   public static void undeploy(DataBase dataBase, String space, String target) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    dataBase.transactSimple((connection) -> {
       { // delete prior versions
         String sql = "DELETE FROM `" + dataBase.databaseName + "`.`deployed` WHERE `space`=? AND `target`=?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -32,35 +32,34 @@ public class Deployments {
           statement.execute();
         }
       }
-    }
+      return null;
+    });
   }
 
   public static void undeployAll(DataBase dataBase, String space) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
-      { // delete prior versions
-        String sql = "DELETE FROM `" + dataBase.databaseName + "`.`deployed` WHERE `space`=?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-          statement.setString(1, space);
-          statement.execute();
-        }
+    dataBase.transactSimple((connection) -> {
+      String sql = "DELETE FROM `" + dataBase.databaseName + "`.`deployed` WHERE `space`=?";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, space);
+        statement.execute();
       }
-    }
+      return null;
+    });
   }
 
   public static void undeployTarget(DataBase dataBase, String target) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
-      { // delete prior versions
-        String sql = "DELETE FROM `" + dataBase.databaseName + "`.`deployed` WHERE `target`=?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-          statement.setString(1, target);
-          statement.execute();
-        }
+    dataBase.transactSimple((connection) -> {
+      String sql = "DELETE FROM `" + dataBase.databaseName + "`.`deployed` WHERE `target`=?";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, target);
+        statement.execute();
       }
-    }
+      return null;
+    });
   }
 
   public static TreeSet<String> listAllTargets(DataBase dataBase) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT DISTINCT `target` FROM `" + dataBase.databaseName + "`.`deployed`";
 
       TreeSet<String> targets = new TreeSet<>();
@@ -68,11 +67,11 @@ public class Deployments {
         targets.add(rs.getString(1));
       }, sql);
       return targets;
-    }
+    });
   }
 
   public static ArrayList<Deployment> listSpacesOnTarget(DataBase dataBase, String target) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `space`, `hash`, `plan` FROM `" + dataBase.databaseName + "`.`deployed` WHERE `target`=? ORDER BY `space` ASC";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, target);
@@ -84,13 +83,12 @@ public class Deployments {
           return results;
         }
       }
-    }
+    });
   }
 
   public static ArrayList<Deployment> listTargetsOnSpace(DataBase dataBase, String space) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `hash`, `plan`, `target` FROM `" + dataBase.databaseName + "`.`deployed` WHERE `space`=? ORDER BY `target` ASC";
-
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
         try (ResultSet rs = statement.executeQuery()) {
@@ -101,11 +99,11 @@ public class Deployments {
           return results;
         }
       }
-    }
+    });
   }
 
   public static Deployment get(DataBase dataBase, String target, String space) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `hash`, `plan` FROM `" + dataBase.databaseName + "`.`deployed` WHERE `target`=? AND `space`=? LIMIT 1";
 
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -118,11 +116,11 @@ public class Deployments {
           throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_NOT_FOUND);
         }
       }
-    }
+    });
   }
 
   public static void deploy(DataBase dataBase, String space, String target, String hash, String plan) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    dataBase.transactSimple((connection) -> {
       { // delete prior versions
         String sql = "DELETE FROM `" + dataBase.databaseName + "`.`deployed` WHERE `space`=? AND `target`=?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -141,7 +139,8 @@ public class Deployments {
           statement.execute();
         }
       }
-    }
+      return null;
+    });
   }
 
 }

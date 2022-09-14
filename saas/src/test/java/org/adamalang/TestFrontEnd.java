@@ -24,6 +24,7 @@ import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.extern.MockPostDocumentDelete;
+import org.adamalang.extern.stripe.StripeConfig;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;
@@ -263,7 +264,9 @@ public class TestFrontEnd implements AutoCloseable, Email {
       }
     };
 
-    this.nexus = new ExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId);
+    StripeConfig stripe = new StripeConfig(new ConfigObject(Json.parseJsonObject("{\"public_key\":\"pub\",\"secret_key\":\"secret\"}")));
+
+    this.nexus = new ExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, stripe);
 
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);

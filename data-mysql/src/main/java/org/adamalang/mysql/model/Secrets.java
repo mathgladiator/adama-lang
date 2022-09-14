@@ -21,7 +21,7 @@ import java.sql.Statement;
 public class Secrets {
   /** insert a secret key */
   public static int insertSecretKey(DataBase dataBase, String space, String privateKeyEncrypted) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "INSERT INTO `" + dataBase.databaseName + "`.`secrets` (`space`, `encrypted_private_key`) VALUES (?,?)";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, space);
@@ -29,12 +29,12 @@ public class Secrets {
         statement.execute();
         return DataBase.getInsertId(statement);
       }
-    }
+    });
   }
 
   /** get the private key by an id */
   public static String getPrivateKey(DataBase dataBase, String space, int keyId) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `encrypted_private_key` FROM `" + dataBase.databaseName + "`.`secrets` WHERE `id`=? AND `space`=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setInt(1, keyId);
@@ -45,7 +45,7 @@ public class Secrets {
           }
         }
       }
-    }
-    throw new ErrorCodeException(ErrorCodes.MYSQL_FAILED_FINDING_SECRET_KEY);
+      throw new ErrorCodeException(ErrorCodes.MYSQL_FAILED_FINDING_SECRET_KEY);
+    });
   }
 }

@@ -42,7 +42,7 @@ public class MeteringSampleTests {
         HashMap<String, Long> inventory = new HashMap<>();
         inventory.put("space", 1024L);
         inventory.put("space2", 2048L);
-        HashMap<String, UnbilledResources> unbilled = Spaces.collectUnbilledStorage(dataBase);
+        HashMap<String, UnbilledResources> unbilled = Spaces.collectUnbilledResources(dataBase);
         unbilled.put("space2", new UnbilledResources(1000000000L - 2000, 0, 0, 0));
         Billing.mergeStorageIntoSummaries(summary1, inventory, unbilled);
         ResourcesPerPenny rates = new ResourcesPerPenny(1000000, 2000, 50, 1024, 500, 1000000000, 1000, 100, 500);
@@ -64,7 +64,7 @@ public class MeteringSampleTests {
         Billing.transcribeSummariesAndUpdateBalances(dataBase, 52, summary1, rates);
         Assert.assertEquals(-29146, Users.getBalance(dataBase, userId));
         Assert.assertEquals(52, (int) Spaces.getLatestBillingHourCode(dataBase));
-        HashMap<String, UnbilledResources> unbilledAfter = Spaces.collectUnbilledStorage(dataBase);
+        HashMap<String, UnbilledResources> unbilledAfter = Spaces.collectUnbilledResources(dataBase);
         Assert.assertEquals(1024, unbilledAfter.get("space").storage);
         Billing.mergeStorageIntoSummaries(summary1, inventory, unbilled);
 
@@ -105,7 +105,7 @@ public class MeteringSampleTests {
         HashMap<String, Long> inventory = new HashMap<>();
         inventory.put("space", 1024L);
         inventory.put("space2", 2048L);
-        HashMap<String, UnbilledResources> unbilled = Spaces.collectUnbilledStorage(dataBase);
+        HashMap<String, UnbilledResources> unbilled = Spaces.collectUnbilledResources(dataBase);
         unbilled.put("space2", new UnbilledResources(1000000000L - 2000, 0, 0, 0));
         Billing.mergeStorageIntoSummaries(summary1, inventory, unbilled);
         ResourcesPerPenny rates = new ResourcesPerPenny(1000000, 2000, 50, 1024, 500, 1000000000, 1000, 100, 500);
@@ -127,7 +127,7 @@ public class MeteringSampleTests {
         Billing.transcribeSummariesAndUpdateBalances(dataBase, 52, summary1, rates);
         Assert.assertEquals(-29126, Users.getBalance(dataBase, userId));
         Assert.assertEquals(52, (int) Spaces.getLatestBillingHourCode(dataBase));
-        HashMap<String, UnbilledResources> unbilledAfter = Spaces.collectUnbilledStorage(dataBase);
+        HashMap<String, UnbilledResources> unbilledAfter = Spaces.collectUnbilledResources(dataBase);
         Assert.assertEquals(1024, unbilledAfter.get("space").storage);
         Billing.mergeStorageIntoSummaries(summary1, inventory, unbilled);
 

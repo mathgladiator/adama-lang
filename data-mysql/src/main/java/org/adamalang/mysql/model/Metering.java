@@ -27,7 +27,7 @@ import java.util.Map;
 public class Metering {
 
   public static Long getEarliestRecordTimeOfCreation(DataBase dataBase) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       {
         String sql = "SELECT `created` FROM `" + dataBase.databaseName + "`.`metering` ORDER BY `created` ASC LIMIT 1";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -39,14 +39,13 @@ public class Metering {
           }
         }
       }
-    }
+    });
   }
 
   public static void recordBatch(DataBase dataBase, String target, String batch, long time) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    dataBase.transactSimple((connection) -> {
       {
         String sql = "INSERT INTO `" + dataBase.databaseName + "`.`metering` (`target`, `batch`, `created`) VALUES (?,?,?)";
-
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
           statement.setString(1, target);
           statement.setString(2, batch);
@@ -54,11 +53,12 @@ public class Metering {
           statement.execute();
         }
       }
-    }
+      return null;
+    });
   }
 
   public static HashMap<String, MeteringSpaceSummary> summarizeWindow(DataBase dataBase, MeteringMetrics metrics, long fromTime, long toTime) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       {
         String sql = "SELECT `target`, `batch` FROM `" + dataBase.databaseName + "`.`metering` WHERE ? <= `created` AND `created` < ?";
         HashMap<String, MeteringSpaceSummary> summary = new HashMap<>();
@@ -94,7 +94,7 @@ public class Metering {
         }
         return summary;
       }
-    }
+    });
   }
 
 }

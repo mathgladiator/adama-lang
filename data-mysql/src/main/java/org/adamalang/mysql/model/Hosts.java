@@ -22,7 +22,7 @@ import java.util.List;
 public class Hosts {
   /** initialize the public key for a web host; this host has a private key that it will use to sign keys */
   public static int initializeHost(DataBase dataBase, String region, String machine, String role, String publicKey) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sqlDelete = "DELETE FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `machine`=? AND `role`=?";
       try (PreparedStatement statement = connection.prepareStatement(sqlDelete)) {
         statement.setString(1, region);
@@ -39,11 +39,11 @@ public class Hosts {
         statement.execute();
         return DataBase.getInsertId(statement);
       }
-    }
+    });
   }
 
   public static List<String> listHosts(DataBase dataBase, String region, String role) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `machine` FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `role`=? ORDER BY `machine`";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, region);
@@ -56,12 +56,12 @@ public class Hosts {
           return hosts;
         }
       }
-    }
+    });
   }
 
   /** get the public key for a machine within a region */
   public static String getHostPublicKey(DataBase dataBase, int keyId) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `public_key` FROM `" + dataBase.databaseName + "`.`hosts` WHERE `id`=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setInt(1, keyId);
@@ -71,7 +71,7 @@ public class Hosts {
           }
         }
       }
-    }
-    return null;
+      return null;
+    });
   }
 }

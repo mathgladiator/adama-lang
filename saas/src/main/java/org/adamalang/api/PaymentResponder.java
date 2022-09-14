@@ -22,9 +22,10 @@ public class PaymentResponder {
     this.responder = responder;
   }
 
-  public void complete(String paymentPlan) {
+  public void complete(String paymentPlan, String publishableKey) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
     _obj.put("paymentPlan", paymentPlan);
+    _obj.put("publishableKey", publishableKey);
     responder.finish(_obj.toString());
   }
 

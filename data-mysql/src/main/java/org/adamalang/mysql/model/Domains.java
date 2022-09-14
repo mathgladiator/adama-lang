@@ -94,18 +94,18 @@ public class Domains {
   }
 
   public static boolean superSetAutoCert(DataBase dataBase, String domain, String certificate) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sqlUpdate = "UPDATE `" + dataBase.databaseName + "`.`domains` SET `certificate`=?, `automatic`=TRUE WHERE `domain`=? AND `automatic`";
       try (PreparedStatement statement = connection.prepareStatement(sqlUpdate)) {
         statement.setString(1, certificate);
         statement.setString(2, domain);
         return statement.executeUpdate() == 1;
       }
-    }
+    });
   }
 
   public static ArrayList<Domain> superListAutoDomains(DataBase dataBase) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `owner`, `space`, `certificate`,`updated` FROM `" + dataBase.databaseName + "`.`domains` WHERE `automatic`";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         try (ResultSet rs = statement.executeQuery()) {
@@ -116,6 +116,6 @@ public class Domains {
           return domains;
         }
       }
-    }
+    });
   }
 }

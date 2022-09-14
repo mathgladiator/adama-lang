@@ -44,7 +44,7 @@ public class Billing {
   }
 
   public static ArrayList<BillingUsage> usageReport(DataBase dataBase, int spaceId, int limit) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `hour`,`summary` FROM `" + dataBase.databaseName + "`.`bills` WHERE `space`=" + spaceId + " ORDER BY `hour` DESC LIMIT " + limit;
       ArrayList<BillingUsage> usage = new ArrayList<>();
       DataBase.walk(connection, (rs) -> {
@@ -62,7 +62,7 @@ public class Billing {
         usage.add(new BillingUsage(hour, cpu, memory, connections, documents, messages, storageBytes, bandwidth, firstPartyServiceCalls, thirdPartyServiceCalls));
       }, sql);
       return usage;
-    }
+    });
   }
 
   public static long usageValueOfZeroIfNotPresentOrNull(ObjectNode node, String field) {
@@ -74,8 +74,8 @@ public class Billing {
   }
 
   public static long transcribeSummariesAndUpdateBalances(DataBase dataBase, int hour, HashMap<String, MeteringSpaceSummary> summaries, ResourcesPerPenny rates) throws Exception {
-    long pennies_billed = 0;
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
+      long pennies_billed = 0;
       for (Map.Entry<String, MeteringSpaceSummary> entry : summaries.entrySet()) {
         String sql = "SELECT `id`,`latest_billing_hour`,`owner` FROM `" + dataBase.databaseName + "`.`spaces` WHERE name=?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -116,7 +116,7 @@ public class Billing {
           }
         }
       }
-    }
-    return pennies_billed;
+      return pennies_billed;
+    });
   }
 }

@@ -18,19 +18,19 @@ import java.sql.*;
 import java.util.*;
 
 public class Spaces {
-  public static HashMap<String, UnbilledResources> collectUnbilledStorage(DataBase dataBase) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+  public static HashMap<String, UnbilledResources> collectUnbilledResources(DataBase dataBase) throws Exception {
+    return dataBase.transactSimple((connection) -> {
       HashMap<String, UnbilledResources> byteHours = new HashMap<>();
       String sql = "SELECT `name`, `unbilled_storage_bytes_hours`, `unbilled_bandwidth_hours`, `unbilled_first_party_service_calls`, `unbilled_third_party_service_calls`  FROM `" + dataBase.databaseName + "`.`spaces`";
       DataBase.walk(connection, (rs) -> {
         byteHours.put(rs.getString(1), new UnbilledResources(rs.getLong(2), rs.getLong(3), rs.getLong(4), rs.getLong(5)));
       }, sql);
       return byteHours;
-    }
+    });
   }
 
   public static Integer getLatestBillingHourCode(DataBase dataBase) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sqlTestWater = "SELECT `latest_billing_hour` FROM `" + dataBase.databaseName + "`.`spaces` ORDER BY `latest_billing_hour` DESC LIMIT 1";
       try (PreparedStatement statement = connection.prepareStatement(sqlTestWater)) {
         ResultSet rs = statement.executeQuery();
@@ -40,36 +40,38 @@ public class Spaces {
           return null;
         }
       }
-    }
+    });
   }
 
   public static int createSpace(DataBase dataBase, int userId, String space) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
-      String sqlTestWater = "SELECT `owner`, `id` FROM `" + dataBase.databaseName + "`.`spaces` WHERE `name`=?";
-      try (PreparedStatement statement = connection.prepareStatement(sqlTestWater)) {
-        statement.setString(1, space);
-        ResultSet rs = statement.executeQuery();
-        if (rs.next()) {
-          if (rs.getInt(1) == userId) {
-            return rs.getInt(2);
+    return dataBase.transactSimple((connection) -> {
+      try {
+        String sqlTestWater = "SELECT `owner`, `id` FROM `" + dataBase.databaseName + "`.`spaces` WHERE `name`=?";
+        try (PreparedStatement statement = connection.prepareStatement(sqlTestWater)) {
+          statement.setString(1, space);
+          ResultSet rs = statement.executeQuery();
+          if (rs.next()) {
+            if (rs.getInt(1) == userId) {
+              return rs.getInt(2);
+            }
+            throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_ALREADY_EXISTS);
           }
-          throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_ALREADY_EXISTS);
         }
+        String sql = "INSERT INTO `" + dataBase.databaseName + "`.`spaces` (`owner`, `name`, `plan`, `hash`) VALUES (?,?,'{}', '')";
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+          statement.setInt(1, userId);
+          statement.setString(2, space);
+          statement.execute();
+          return DataBase.getInsertId(statement);
+        }
+      } catch (SQLIntegrityConstraintViolationException notUnique) {
+        throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_ALREADY_EXISTS);
       }
-      String sql = "INSERT INTO `" + dataBase.databaseName + "`.`spaces` (`owner`, `name`, `plan`, `hash`) VALUES (?,?,'{}', '')";
-      try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-        statement.setInt(1, userId);
-        statement.setString(2, space);
-        statement.execute();
-        return DataBase.getInsertId(statement);
-      }
-    } catch (SQLIntegrityConstraintViolationException notUnique) {
-      throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_ALREADY_EXISTS);
-    }
+    });
   }
 
   public static SpaceInfo getSpaceInfo(DataBase dataBase, String space) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `id`,`owner`,`enabled`,`storage_bytes` FROM `" + dataBase.databaseName + "`.`spaces` WHERE name=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
@@ -89,22 +91,23 @@ public class Spaces {
           throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_DOESNT_EXIST);
         }
       }
-    }
+    });
   }
 
   public static void setPlan(DataBase dataBase, int spaceId, String plan, String hash) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    dataBase.transactSimple((connection) -> {
       String sql = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `plan`=?, `hash`=? WHERE `id`=" + spaceId + " LIMIT 1";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, plan);
         statement.setString(2, hash);
         statement.execute();
       }
-    }
+      return null;
+    });
   }
 
   public static String getPlan(DataBase dataBase, int spaceId) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `plan` FROM `" + dataBase.databaseName + "`.`spaces` WHERE id=" + spaceId;
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         try (ResultSet rs = statement.executeQuery()) {
@@ -114,21 +117,22 @@ public class Spaces {
           throw new ErrorCodeException(ErrorCodes.FRONTEND_PLAN_DOESNT_EXIST);
         }
       }
-    }
+    });
   }
 
   public static void setRxHtml(DataBase dataBase, int spaceId, String rxhtml) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    dataBase.transactSimple((connection) -> {
       String sql = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `rxhtml`=? WHERE `id`=" + spaceId + " LIMIT 1";
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, rxhtml);
         statement.execute();
       }
-    }
+      return null;
+    });
   }
 
   public static String getRxHtml(DataBase dataBase, int spaceId) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `rxhtml` FROM `" + dataBase.databaseName + "`.`spaces` WHERE id=" + spaceId;
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         try (ResultSet rs = statement.executeQuery()) {
@@ -141,11 +145,11 @@ public class Spaces {
           throw new ErrorCodeException(ErrorCodes.FRONTEND_RXHTML_DOESNT_EXIST);
         }
       }
-    }
+    });
   }
 
   public static InternalDeploymentPlan getPlanByNameForInternalDeployment(DataBase dataBase, String spaceName) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `plan`, `hash` FROM `" + dataBase.databaseName + "`.`spaces` WHERE `name`=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, spaceName);
@@ -156,11 +160,11 @@ public class Spaces {
           throw new ErrorCodeException(ErrorCodes.FRONTEND_INTERNAL_PLAN_DOESNT_EXIST);
         }
       }
-    }
+    });
   }
 
   public static List<SpaceListingItem> list(DataBase dataBase, int userId, String marker, int limit) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       // select * from a LEFT OUTER JOIN b on a.a = b.b;
       String sql = "SELECT `s`.`name`,`s`.`owner`,`s`.`created`,`s`.`enabled`,`s`.`storage_bytes` FROM `" + dataBase.databaseName + //
           "`.`spaces` as `s` LEFT OUTER JOIN `" + dataBase.databaseName + "`.`grants` as `g` ON `s`.`id` = `g`.`space`" + //
@@ -176,11 +180,11 @@ public class Spaces {
           return names;
         }
       }
-    }
+    });
   }
 
   public static ArrayList<String> listAllSpaceNames(DataBase dataBase) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `name` FROM `" + dataBase.databaseName + //
           "`.`spaces` ORDER BY `id` ASC";
       ArrayList<String> results = new ArrayList<>();
@@ -188,43 +192,44 @@ public class Spaces {
         results.add(rs.getString(1));
       }, sql);
       return results;
-    }
+    });
   }
 
   public static ArrayList<DeletedSpace> listDeletedSpaces(DataBase dataBase) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `id`,`name` FROM `" + dataBase.databaseName + "`.`spaces` WHERE `owner`=0";
       ArrayList<DeletedSpace> results = new ArrayList<>();
       DataBase.walk(connection, (rs) -> {
         results.add(new DeletedSpace(rs.getInt(1), rs.getString(2)));
       }, sql);
       return results;
-    }
+    });
   }
 
   public static boolean changePrimaryOwner(DataBase dataBase, int spaceId, int oldOwner, int newOwner) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `owner`=" + newOwner + " WHERE `id`=" + spaceId + " AND `owner`=" + oldOwner + " LIMIT 1";
       return DataBase.executeUpdate(connection, sql) > 0;
-    }
+    });
   }
 
   public static boolean delete(DataBase dataBase, int spaceId, int owner) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "DELETE FROM `" + dataBase.databaseName + "`.`spaces` WHERE `id`=" + spaceId + " AND `owner`=" + owner;
       return DataBase.executeUpdate(connection, sql) > 0;
-    }
+    });
   }
 
   public static void setRole(DataBase dataBase, int spaceId, int userId, Role role) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    dataBase.transactSimple((connection) -> {
       {
         DataBase.execute(connection, "DELETE FROM `" + dataBase.databaseName + "`.`grants` WHERE `space`=" + spaceId + " AND `user`=" + userId);
       }
       if (role != Role.None) {
         DataBase.execute(connection, "INSERT INTO `" + dataBase.databaseName + "`.`grants` (`space`, `user`, `role`) VALUES (" + spaceId + "," + userId + "," + role.role + ")");
       }
-    }
+      return null;
+    });
   }
 
 }

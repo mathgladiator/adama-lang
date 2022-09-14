@@ -128,4 +128,49 @@ public class DataBase implements AutoCloseable {
       }
     }
   }
+
+  public <R> R transactSimple(SQLTransact<R> transaction) throws Exception {
+    int backoff = (int) (25 + Math.random() * 25);
+    while(true) {
+      RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.transaction_simple.start();
+      try {
+        Connection connection = pool.getConnection();
+        boolean commit = false;
+        try {
+          connection.setAutoCommit(false);
+          R result = transaction.execute(connection);
+          commit = true;
+          connection.commit();
+          instance.success();
+          return result;
+        } finally {
+          if (!commit) {
+            connection.rollback();
+          }
+          connection.close();
+        }
+      } catch (Throwable ex) {
+        if (ex instanceof ErrorCodeException) {
+          instance.failure(((ErrorCodeException) ex).code);
+          throw ex;
+        }
+        boolean validException = ex instanceof java.sql.SQLIntegrityConstraintViolationException;
+        if (!validException) {
+          LOG.error("database-exception", ex);
+        } else {
+          metrics.valid_exception.run();
+          instance.success();
+        }
+        if (backoff < 500 && !validException) {
+          try {
+            Thread.sleep(backoff);
+            backoff += (int) (Math.random() * backoff);
+          } catch (InterruptedException ie) {
+          }
+        } else {
+          throw ex;
+        }
+      }
+    }
+  }
 }

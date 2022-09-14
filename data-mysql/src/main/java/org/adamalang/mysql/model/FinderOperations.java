@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class FinderOperations {
 
   public static HashMap<String, Long> inventoryStorage(DataBase dataBase) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       HashMap<String, Long> bytes = new HashMap<>();
       String sql = "SELECT `space`, SUM(delta_bytes), SUM(asset_bytes) FROM `" + dataBase.databaseName + //
           "`.`directory` GROUP BY `space`";
@@ -33,11 +33,11 @@ public class FinderOperations {
         bytes.put(rs.getString(1), rs.getLong(2) + rs.getLong(3));
       }, sql);
       return bytes;
-    }
+    });
   }
 
   public static ArrayList<DocumentIndex> list(DataBase dataBase, String space, String marker, int limit) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `key`, `created`, `updated`, `head_seq` FROM `" + dataBase.databaseName + //
           "`.`directory` WHERE `space`=? AND `key`>? LIMIT " + Math.max(Math.min(limit, 1000), 1);
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -51,11 +51,11 @@ public class FinderOperations {
           return keys;
         }
       }
-    }
+    });
   }
 
   public static ArrayList<GCTask> produceGCTasks(DataBase dataBase) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `id`, `space`, `key`, `head_seq` FROM `" + dataBase.databaseName + //
           "`.`directory` WHERE `need_gc`=TRUE AND `type`=" + FinderService.Location.Archive.type +
           " LIMIT 10";
@@ -68,6 +68,6 @@ public class FinderOperations {
           return tasks;
         }
       }
-    }
+    });
   }
 }

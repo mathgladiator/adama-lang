@@ -120,6 +120,7 @@ Get the payment plan information for the developer.
 connection.AccountGetPaymentPlan(identity, {
   success: function(response) {
     // response.paymentPlan
+    // response.publishableKey
   },
   failure: function(reason) {
   }
@@ -131,6 +132,7 @@ connection.AccountGetPaymentPlan(identity, {
 | name | type | documentation |
 | --- | --- | --- |
 | payment-plan | String | Payment plan name. The current default is "none" which can be upgraded to "public". |
+| publishable-key | String | The public key from the merchant provider. |
 
 ## Method: AccountLogin
 Sign an Adama developer in with an email and password pair.

@@ -589,8 +589,16 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="publishable-key" type="string">
+        <documentation>
+            The public key from the merchant provider.
+        </documentation>
+    </field-definition>
+
+
     <responder name="payment">
         <field name="payment-plan"/>
+        <field name="publishable-key"/>
     </responder>
 
     <method name="account/get-payment-plan" responder="payment">

@@ -115,7 +115,7 @@ public class HourlyAccountant {
       ResourcesPerPenny rates = new ResourcesPerPenny(1000 * 1000, 1000, 50, 1000 * 1000, 200, 386547056640L, 1000 * 1000 * 1000L, 1000, 5000);
       // add storage to the summary
       HashMap<String, Long> inventory = FinderOperations.inventoryStorage(dataBase);
-      HashMap<String, UnbilledResources> unbilled = Spaces.collectUnbilledStorage(dataBase);
+      HashMap<String, UnbilledResources> unbilled = Spaces.collectUnbilledResources(dataBase);
       Billing.mergeStorageIntoSummaries(summaries, inventory, unbilled);
       long pennies = Billing.transcribeSummariesAndUpdateBalances(dataBase, forHour, summaries, rates);
       accountantTable.row("transcribe-summary", "pennies:" + pennies, "at:" + forHour);

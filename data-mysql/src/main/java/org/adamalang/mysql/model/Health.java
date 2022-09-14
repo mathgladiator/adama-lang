@@ -16,10 +16,10 @@ import java.sql.Statement;
 
 public class Health {
   public static boolean pingDataBase(DataBase dataBase) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
+    return dataBase.transactSimple((connection) -> {
       try (Statement statement = connection.createStatement()) {
         return statement.execute("SELECT 1");
       }
-    }
+    });
   }
 }
