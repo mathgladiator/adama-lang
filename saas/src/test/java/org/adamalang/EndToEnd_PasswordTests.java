@@ -42,7 +42,7 @@ public class EndToEnd_PasswordTests {
       }
       {
         Iterator<String> c3 = fe.execute("{\"id\":3,\"method\":\"account/get-payment-plan\",\"identity\":\"" + devIdentity + "\"}");
-        Assert.assertEquals("FINISH:{\"paymentPlan\":\"none\"}", c3.next());
+        Assert.assertTrue(c3.next().startsWith("FINISH:{\"paymentPlan\":\"none\""));
       }
     }
   }
