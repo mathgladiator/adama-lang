@@ -52,6 +52,8 @@ public class ErrorTable {
     names.put(138255, "DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW");
     descriptions.put(138255, "no description of error (yet)");
     retry.add(138255);
+    names.put(180978, "LIVING_DOCUMENT_TRANSACTION_UNKNOWN_EXCEPTION");
+    descriptions.put(180978, "no description of error (yet)");
     names.put(194575, "LIVING_DOCUMENT_TRANSACTION_NO_COMMAND_FOUND");
     descriptions.put(194575, "no description of error (yet)");
     names.put(184335, "LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT");

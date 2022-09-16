@@ -4513,6 +4513,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n            while (__reader.notEndOfArray()) {");
     gold.append("\n              __array_foo2.add(new RTxX(__reader));");
     gold.append("\n            }");
+    gold.append("\n          } else {");
+    gold.append("\n            __array_foo2.add(new RTxX(__reader));");
     gold.append("\n          }");
     gold.append("\n          return __array_foo2.toArray(new RTxX[__array_foo2.size()]);");
     gold.append("\n        }");
@@ -4528,6 +4530,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n            while (__reader.notEndOfArray()) {");
     gold.append("\n              __array_gooarr1.add(new RTxX(__reader));");
     gold.append("\n            }");
+    gold.append("\n          } else {");
+    gold.append("\n            __array_gooarr1.add(new RTxX(__reader));");
     gold.append("\n          }");
     gold.append("\n          return __array_gooarr1.toArray(new RTxX[__array_gooarr1.size()]);");
     gold.append("\n        }");
@@ -4539,6 +4543,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n            while (__reader.notEndOfArray()) {");
     gold.append("\n              __array_gooarr2.add(new RTxX(__reader));");
     gold.append("\n            }");
+    gold.append("\n          } else {");
+    gold.append("\n            __array_gooarr2.add(new RTxX(__reader));");
     gold.append("\n          }");
     gold.append("\n          return __array_gooarr2.toArray(new RTxX[__array_gooarr2.size()]);");
     gold.append("\n        }");

@@ -5354,6 +5354,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n            while (__reader.notEndOfArray()) {");
     gold.append("\n              __array_pass_channel.add(new RTxCardDecision(__reader));");
     gold.append("\n            }");
+    gold.append("\n          } else {");
+    gold.append("\n            __array_pass_channel.add(new RTxCardDecision(__reader));");
     gold.append("\n          }");
     gold.append("\n          return __array_pass_channel.toArray(new RTxCardDecision[__array_pass_channel.size()]);");
     gold.append("\n        }");
@@ -5365,6 +5367,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n            while (__reader.notEndOfArray()) {");
     gold.append("\n              __array_single_play.add(new RTxCardDecision(__reader));");
     gold.append("\n            }");
+    gold.append("\n          } else {");
+    gold.append("\n            __array_single_play.add(new RTxCardDecision(__reader));");
     gold.append("\n          }");
     gold.append("\n          return __array_single_play.toArray(new RTxCardDecision[__array_single_play.size()]);");
     gold.append("\n        }");

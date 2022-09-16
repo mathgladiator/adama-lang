@@ -2023,6 +2023,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n            while (__reader.notEndOfArray()) {");
     gold.append("\n              __array_duo.add(new RTxX(__reader));");
     gold.append("\n            }");
+    gold.append("\n          } else {");
+    gold.append("\n            __array_duo.add(new RTxX(__reader));");
     gold.append("\n          }");
     gold.append("\n          return __array_duo.toArray(new RTxX[__array_duo.size()]);");
     gold.append("\n        }");

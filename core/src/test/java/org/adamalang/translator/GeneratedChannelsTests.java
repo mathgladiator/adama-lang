@@ -547,6 +547,8 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n            while (__reader.notEndOfArray()) {");
     gold.append("\n              __array_bigchan.add(new RTxX(__reader));");
     gold.append("\n            }");
+    gold.append("\n          } else {");
+    gold.append("\n            __array_bigchan.add(new RTxX(__reader));");
     gold.append("\n          }");
     gold.append("\n          return __array_bigchan.toArray(new RTxX[__array_bigchan.size()]);");
     gold.append("\n        }");
