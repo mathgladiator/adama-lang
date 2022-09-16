@@ -176,7 +176,7 @@ public class JsonRequestTests {
   }
 
   @Test
-  public void getNode() throws Exception {
+  public void getObject() throws Exception {
     JsonRequest request = new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":{}}"), CONTEXT);
     try {
       request.getObject("x", true, 123);
@@ -192,5 +192,26 @@ public class JsonRequestTests {
     Assert.assertNull(request.getObject("y", false, 123));
     Assert.assertNotNull(request.getObject("z", true, 2));
     Assert.assertNotNull(request.getObject("z", false, 2));
+  }
+
+  @Test
+  public void getNode() throws Exception {
+    JsonRequest request = new JsonRequest(of("{\"x\":true,\"y\":null,\"z1\":{},\"z2\":[]}"), CONTEXT);
+    try {
+      request.getJsonNode("x", true, 123);
+    } catch (ErrorCodeException exc) {
+      Assert.assertEquals(123, exc.code);
+    }
+    Assert.assertNull(request.getObject("x", false, 123));
+    try {
+      request.getJsonNode("y", true, 123);
+    } catch (ErrorCodeException exc) {
+      Assert.assertEquals(123, exc.code);
+    }
+    Assert.assertNull(request.getJsonNode("y", false, 123));
+    Assert.assertNotNull(request.getJsonNode("z1", true, 2));
+    Assert.assertNotNull(request.getJsonNode("z1", false, 2));
+    Assert.assertNotNull(request.getJsonNode("z2", true, 2));
+    Assert.assertNotNull(request.getJsonNode("z2", false, 2));
   }
 }

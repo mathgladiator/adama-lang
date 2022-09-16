@@ -52,6 +52,7 @@ public class ParameterDefinition {
     }
     switch (type) {
       case JsonObject:
+      case JsonObjectOrArray:
         return "Json.newJsonObject()";
       case Boolean:
         return "false";

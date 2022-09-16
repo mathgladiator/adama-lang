@@ -9,6 +9,7 @@
  */
 package org.adamalang.web.io;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
@@ -109,5 +110,17 @@ public class JsonRequest {
       }
     }
     return (ObjectNode) fieldNode;
+  }
+
+  public JsonNode getJsonNode(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {
+    final var fieldNode = node.get(field);
+    if (fieldNode == null || fieldNode.isNull() || !(fieldNode.isObject() || fieldNode.isArray())) {
+      if (mustExist) {
+        throw new ErrorCodeException(errorIfDoesnt);
+      } else {
+        return null;
+      }
+    }
+    return fieldNode;
   }
 }

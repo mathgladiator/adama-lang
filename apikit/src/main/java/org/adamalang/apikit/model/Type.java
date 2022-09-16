@@ -10,7 +10,7 @@
 package org.adamalang.apikit.model;
 
 public enum Type {
-  String, Boolean, Long, Integer, JsonObject;
+  String, Boolean, Long, Integer, JsonObject, JsonObjectOrArray;
 
   public static Type of(String parameterType) throws Exception {
     switch (parameterType) {
@@ -27,6 +27,8 @@ public enum Type {
         return Long;
       case "json-object":
         return JsonObject;
+      case "json-object-or-array":
+        return JsonObjectOrArray;
       default:
         throw new Exception("unknown parameter type:" + parameterType);
     }
@@ -44,6 +46,8 @@ public enum Type {
         return "Integer";
       case JsonObject:
         return "ObjectNode";
+      case JsonObjectOrArray:
+        return "JsonNode";
     }
     throw new RuntimeException("bug");
   }

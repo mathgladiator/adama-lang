@@ -130,6 +130,9 @@ public class Method {
       if (parameter.type == Type.JsonObject) {
         set.add("com.fasterxml.jackson.databind.node.ObjectNode");
       }
+      if (parameter.type == Type.JsonObjectOrArray) {
+        set.add("com.fasterxml.jackson.databind.JsonNode");
+      }
     }
     return set;
   }

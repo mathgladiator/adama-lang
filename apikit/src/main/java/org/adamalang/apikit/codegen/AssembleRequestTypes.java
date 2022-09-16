@@ -94,6 +94,9 @@ public class AssembleRequestTypes {
             case JsonObject:
               java.append("request.getObject(\"");
               break;
+            case JsonObjectOrArray:
+              java.append("request.getJsonNode(\"");
+              break;
             case Boolean:
               java.append("request.getBoolean(\"");
               break;

@@ -831,7 +831,7 @@ Send a message to the document on the given channel.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | channel | yes | String | Each document has multiple channels available to send messages too. |
-| message | yes | ObjectNode | The object sent to a document which will be the parameter for a channel handler. |
+| message | yes | JsonNode | The object sent to a document which will be the parameter for a channel handler. |
 
 
 ### Template
@@ -859,7 +859,7 @@ Send a message to the document on the given channel with a dedupe key such that 
 | --- | --- | --- | --- |
 | channel | yes | String | Each document has multiple channels available to send messages too. |
 | dedupe | no | String | A key used to dedupe request such that at-most once processing is used. |
-| message | yes | ObjectNode | The object sent to a document which will be the parameter for a channel handler. |
+| message | yes | JsonNode | The object sent to a document which will be the parameter for a channel handler. |
 
 
 ### Template

@@ -9,6 +9,7 @@
  */
 package org.adamalang.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
@@ -22,9 +23,9 @@ public class ConnectionSendOnceRequest {
   public final Long connection;
   public final String channel;
   public final String dedupe;
-  public final ObjectNode message;
+  public final JsonNode message;
 
-  public ConnectionSendOnceRequest(final Long connection, final String channel, final String dedupe, final ObjectNode message) {
+  public ConnectionSendOnceRequest(final Long connection, final String channel, final String dedupe, final JsonNode message) {
     this.connection = connection;
     this.channel = channel;
     this.dedupe = dedupe;
@@ -37,7 +38,7 @@ public class ConnectionSendOnceRequest {
       final String channel = request.getString("channel", true, 454659);
       ValidateChannel.validate(channel);
       final String dedupe = request.getString("dedupe", false, 0);
-      final ObjectNode message = request.getObject("message", true, 425987);
+      final JsonNode message = request.getJsonNode("message", true, 425987);
       nexus.executor.execute(new NamedRunnable("connectionsendonce-success") {
         @Override
         public void execute() throws Exception {

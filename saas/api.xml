@@ -74,7 +74,7 @@
         <validate service="org.adamalang.validators.ValidateChannel"/>
     </parameter-definition>
 
-    <parameter-definition name="message" type="json-object" missing-error="425987">
+    <parameter-definition name="message" type="json-object-or-array" missing-error="425987">
         <documentation>
             The object sent to a document which will be the parameter for a channel handler.
         </documentation>

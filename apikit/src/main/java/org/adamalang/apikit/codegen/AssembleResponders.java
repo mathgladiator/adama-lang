@@ -49,7 +49,7 @@ public class AssembleResponders {
         java.append("    ObjectNode _obj = new JsonMapper().createObjectNode();\n");
         for (FieldDefinition fd : responder.fields) {
           String ext = "";
-          if (fd.type == Type.JsonObject) {
+          if (fd.type == Type.JsonObject || fd.type == Type.JsonObjectOrArray) {
             java.append(ext + "    _obj.set(\"").append(fd.camelName).append("\", ").append(fd.camelName).append(");\n");
           } else {
             java.append(ext + "    _obj.put(\"").append(fd.camelName).append("\", ").append(fd.camelName).append(");\n");

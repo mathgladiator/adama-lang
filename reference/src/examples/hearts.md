@@ -196,6 +196,7 @@ channel<LeaderActionMessage> leader;
     playing = true;
     if ( (iterate players where playing).size() == 4) {
       transition #setup;
+      return;
     }
   }
   transition #lobby;
