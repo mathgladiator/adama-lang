@@ -442,6 +442,8 @@ public class DurableLivingDocument implements Queryable {
           } else {
             request.callback.failure(new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CHANGE));
           }
+        } catch (PerformDocumentDeleteException | PerformDocumentRewindException valid) {
+          throw valid;
         } catch (ErrorCodeException ex) {
           request.callback.failure(ex);
         } catch (Exception badThingHappened) {
