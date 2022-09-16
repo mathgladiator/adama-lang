@@ -31,6 +31,8 @@ import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -43,7 +45,8 @@ import java.util.function.Consumer;
 /** A LivingDocument tied to a document id and DataService */
 public class DurableLivingDocument implements Queryable {
   public static final int MAGIC_MAXIMUM_DOCUMENT_QUEUE = 256;
-  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(DurableLivingDocument.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DurableLivingDocument.class);
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOG);
   private static final Callback<LivingDocumentChange> DONT_CARE_CHANGE = new Callback<>() {
     @Override
     public void success(LivingDocumentChange value) {
@@ -441,6 +444,10 @@ public class DurableLivingDocument implements Queryable {
           }
         } catch (ErrorCodeException ex) {
           request.callback.failure(ex);
+        } catch (Exception badThingHappened) {
+          catastrophicFailureWhileInExecutor(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNKNOWN_EXCEPTION);
+          request.callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNKNOWN_EXCEPTION, badThingHappened, EXLOGGER));
+          LOG.error("catastrophic-message:" + request.request);
         }
       }
       if (last == null) {

@@ -50,6 +50,8 @@ public class CodeGenMessageHandling {
           parser2.append("while (__reader.notEndOfArray()) {").tabUp().writeNewline();
           parser2.append("__array_").append(handler.channel).append(".add(new RTx").append(handler.typeName).append("(__reader));").tabDown().writeNewline();
           parser2.append("}").tabDown().writeNewline();
+          parser2.append("} else {").tabUp().writeNewline();
+          parser2.append("__array_").append(handler.channel).append(".add(new RTx").append(handler.typeName).append("(__reader));").tabDown().writeNewline();
           parser2.append("}").writeNewline();
           parser2.append("return __array_").append(handler.channel).append(".toArray(new RTx").append(handler.typeName).append("[__array_").append(handler.channel).append(".size()]);").tabDown().writeNewline();
           parser2.append("}").writeNewline();
