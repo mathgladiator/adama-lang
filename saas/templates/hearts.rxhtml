@@ -1,0 +1,144 @@
+<forest>
+  <shell inline>
+    <meta charset="UTF-8">
+  </shell>
+  <template name="card">
+        <font size="18" rx:switch="suit">
+            <span rx:case="1">
+                <span rx:switch="rank">
+                    <span rx:case="2">🃒</span>
+                    <span rx:case="3">🃓</span>
+                    <span rx:case="4">🃔</span>
+                    <span rx:case="5">🃕</span>
+                    <span rx:case="6">🃖</span>
+                    <span rx:case="7">🃗</span>
+                    <span rx:case="8">🃘</span>
+                    <span rx:case="9">🃙</span>
+                    <span rx:case="10">🃚</span>
+                    <span rx:case="11">🃛</span>
+                    <span rx:case="12">🃝</span>
+                    <span rx:case="13">🃞</span>
+                    <span rx:case="14">🃑</span>
+                </span>
+            </span>
+            <span rx:case="2">
+                <span rx:switch="rank">
+                    <span rx:case="2">🂲</span>
+                    <span rx:case="3">🂳</span>
+                    <span rx:case="4">🂴</span>
+                    <span rx:case="5">🂵</span>
+                    <span rx:case="6">🂶</span>
+                    <span rx:case="7">🂷</span>
+                    <span rx:case="8">🂸</span>
+                    <span rx:case="9">🂹</span>
+                    <span rx:case="10">🂺</span>
+                    <span rx:case="11">🂻</span>
+                    <span rx:case="12">🂽</span>
+                    <span rx:case="13">🂾</span>
+                    <span rx:case="14">🂱</span>
+                </span>
+            </span>
+            <span rx:case="3">
+                <span rx:switch="rank">
+                    <span rx:case="2">🂢</span>
+                    <span rx:case="3">🂣</span>
+                    <span rx:case="4">🂤</span>
+                    <span rx:case="5">🂥</span>
+                    <span rx:case="6">🂦</span>
+                    <span rx:case="7">🂧</span>
+                    <span rx:case="8">🂨</span>
+                    <span rx:case="9">🂩</span>
+                    <span rx:case="10">🂪</span>
+                    <span rx:case="11">🂫</span>
+                    <span rx:case="12">🂭</span>
+                    <span rx:case="13">🂮</span>
+                    <span rx:case="14">🂡</span>
+                </span>
+            </span>
+            <span rx:case="4">
+                <span rx:switch="rank">
+                    <span rx:case="2">🃂</span>
+                    <span rx:case="3">🃃</span>
+                    <span rx:case="4">🃄</span>
+                    <span rx:case="5">🃅</span>
+                    <span rx:case="6">🃆</span>
+                    <span rx:case="7">🃇</span>
+                    <span rx:case="8">🃈</span>
+                    <span rx:case="9">🃉</span>
+                    <span rx:case="10">🃊</span>
+                    <span rx:case="11">🃋</span>
+                    <span rx:case="12">🃍</span>
+                    <span rx:case="13">🃎</span>
+                    <span rx:case="14">🃁</span>
+                </span>
+            </span>
+        </font>
+    </template>
+    <template name="hearts_player">
+        <h1>Player: <fragment /></h1>
+        <table>
+            <tbody>
+                <tr rx:iterate="in_play">
+                    <td rx:template="card"></td>
+                </tr>
+                <tr rx:iterate="hand">
+                    <td>
+                        <lookup path="/passing_mode" />
+                        <div rx:template="card"></div>
+                        <div rx:if="choose:pass_channel">
+                            <button rx:click="choose:pass_channel">
+                                Pass <span rx:switch="/passing_mode">
+                                    <span rx:case="0">Across</span>
+                                    <span rx:case="1">Left</span>
+                                    <span rx:case="2">Right</span>
+                                    <span rx:case="3">None</span>
+                                </span>
+                            </button>
+                        </div>
+                        <div rx:if="decide:single_play">
+                            <button rx:click="decide:single_play">
+                                Play
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr rx:if="finalize:pass_channel">
+                    <td>
+                        <button rx:click="finalize:pass_channel">
+                            Finalize Choice
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+    <page uri="/">
+        <div>
+            <connection name="alice_hearts" space="$TEMPLATE_SPACE" key="demo-{view:session_id}" identity="direct:anonymous:alice">
+                <div rx:template="hearts_player">Alice</div>
+                <div rx:disconnected>
+                    Connecting...
+                </div>
+            </connection>
+
+            <connection name="bob_hearts" space="$TEMPLATE_SPACE" key="demo-{view:session_id}" identity="direct:anonymous:bob">
+                <div rx:template="hearts_player">Bob</div>
+                <div rx:disconnected>
+                    Connecting...
+                </div>
+            </connection>
+            <connection name="carol_hearts" space="$TEMPLATE_SPACE" key="demo-{view:session_id}" identity="direct:anonymous:carol">
+                <div rx:template="hearts_player">Carol</div>
+                <div rx:disconnected>
+                    Connecting...
+                </div>
+            </connection>
+            <connection name="dan_hearts" space="$TEMPLATE_SPACE" key="demo-{view:session_id}" identity="direct:anonymous:dan">
+                <div rx:template="hearts_player">Dan</div>
+                <div rx:disconnected>
+                    Connecting...
+                </div>
+            </connection>
+        </div>
+    </page>
+</forest>
