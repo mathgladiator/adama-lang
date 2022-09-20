@@ -1,0 +1,13 @@
+<forest>
+<page uri="/">
+        <connection space="space" key="key">
+            <div rx:if="choose:channel">
+                <button rx:click="choose:channel">Add Choice</button>
+            </div>
+            <div rx:if="finalize:channel">
+                <button rx:click="finalize:channel">Send choices</button>
+                Time to decide!
+            </div>
+        </connection>
+    </page>
+</forest>

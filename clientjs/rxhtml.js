@@ -57,10 +57,12 @@ var RxHTML = (function () {
         tree: new AdamaTree(),
         outstanding: {},
         decisions: {},
+        choice_subs: {},
         resets: {},
         connection_events: {},
         id: 0,
         connection_state: false,
+        choices: {},
       };
       obj.set_connected = function(cs) {
         if (this.connection_state == cs) {
@@ -106,6 +108,26 @@ var RxHTML = (function () {
           delete this.resets[dr];
         }.bind(this);
       }.bind(obj);
+      obj.subscribe_choice = function (channel, callback) {
+        var s = channel + "|" + this.id++;
+        this.choice_subs[s] = callback;
+        return function () {
+          delete this.choice_subs[s];
+        }.bind(this);
+      }.bind(obj);
+      obj.onchoices = function(channel, choice) {
+        var axe = [];
+        for (var sub in obj.choice_subs) {
+          if (sub.startsWith(channel + "|")) {
+            if (!obj.choice_subs[sub](choice)) {
+              axe.push(sub);
+            }
+          }
+        }
+        for (var k = 0; k < axe.length; k++) {
+          delete obj.choice_subs[axe[k]];
+        }
+      };
       obj.ondecide = function (outstanding) {
         var axeReset = [];
         for (var dr in obj.resets) {
@@ -613,6 +635,101 @@ var RxHTML = (function () {
         customs[customCommandName](obj, state, signal, self);
       }
     };
+  };
+
+  var make_choice_array = function(state, channel) {
+    var choices = state.data.connection.choices;
+    if (!(channel in choices)) {
+      choices[channel] = {};
+    }
+    var choice = choices[channel];
+    var arr = [];
+    for (var id in choice) {
+      arr.push(choice[id]);
+    }
+    return arr;
+  }
+
+  self.exFIN = function (dom, type, state, channel) {
+    dom.addEventListener(type, function () {
+      var arr = make_choice_array(state, channel);
+      var clear = function() {
+        delete state.data.connection.choices[channel];
+        state.data.connection.onchoices(channel, {});
+      };
+      state.data.connection.ptr.send(channel, arr, {
+        failure: function (reason) {
+          clear();
+          console.log("failed:" + reason);
+        },
+        success: function (payload) {
+          clear();
+          console.log("Success|" + payload.seq);
+        }
+      });
+    });
+  };
+
+  self.FIN = function (parent, priorState, channel, shouldBe, _expand, makerTrue, makerFalse) {
+    var finalize = {
+      owner: parent,
+      shown: false
+    };
+    add_unsub(finalize);
+
+    var change = function (show) {
+      fire_unsub(finalize);
+      nuke(parent);
+      var state = fork(priorState);
+      if (show === shouldBe) {
+        makerTrue(parent, state);
+      } else {
+        makerFalse(parent, state);
+      }
+      subscribe_state(state, finalize);
+    };
+
+    finalize.update = function () {
+      var out = priorState.data.connection.outstanding[channel];
+      if (!(out)) return;
+      var arr = make_choice_array(priorState, channel);
+      var eval = ('min' in out && 'max' in out) ? (out.min <= arr.length && arr.length <= out.max) : true;
+      if (finalize.eval != eval) {
+        finalize.eval = eval;
+        change(finalize.eval);
+      }
+    };
+
+    priorState.data.connection.subscribe_choice(channel, function () {
+      finalize.update();
+      // TODO: return whether or not this needs to be axed
+      return true;
+    });
+  };
+
+  // choose
+  self.exCH = function (dom, type, state, name, channel, key) {
+    var decide = {value: null};
+    dom.addEventListener(type, function () {
+      var result = find(state, channel, key, decide.value);
+      if (result != null) {
+        var choices = state.data.connection.choices;
+        if (!(channel in choices)) {
+          choices[channel] = {};
+        }
+        var choice = choices[channel];
+        var valKey = result[key];
+        if (valKey in choice) {
+          delete choice[valKey];
+        } else {
+          choice[valKey] = result;
+        }
+        state.data.connection.onchoices(channel, choice);
+      }
+    });
+    subscribe(state, name, function (value) {
+      decide.value = value;
+    });
   };
 
   self.exD = function (dom, type, state, name, channel, key) {

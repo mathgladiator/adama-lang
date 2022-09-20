@@ -38,58 +38,42 @@ public class Attributes {
 
   public void commonBetweenIfAndIfNot(String version) {
     String value = env.element.attr(version);
-    if (value.startsWith("decide:")) {
+    String childStateVar = env.pool.ask();
+    String parentVar = env.pool.ask();
+    if (value.startsWith("decide:") || value.startsWith("choose:")) {
       String channel = value.substring(7);
       String key = env.element.hasAttr("key") ? env.element.attr("key") : "id";
       StatePath pathName = StatePath.resolve(env.element.hasAttr("name") ? env.element.attr(version) : "id", env.stateVar);
-      String childStateVar = env.pool.ask();
-      String parentVar = env.pool.ask();
       env.writer.tab().append("$.DE(").append(eVar).append(",").append(env.stateVar).append(",").append(pathName.command);
       env.writer.append(",'").append(channel).append("','").append(key).append("'");
       env.writer.append(",'").append(pathName.name).append("',").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-      Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-        if (node instanceof Element) {
-          return !node.hasAttr("rx:else");
-        } else {
-          return true;
-        }
-      });
-      env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-      Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-        if (node instanceof Element) {
-          return node.hasAttr("rx:else");
-        } else {
-          return false;
-        }
-      });
-      env.writer.tabDown().tab().append("});").newline();
-      env.pool.give(childStateVar);
-      env.pool.give(parentVar);
+    } else if (value.startsWith("finalize:")) {
+      String channel = value.substring(9);
+      env.writer.tab().append("$.FIN(").append(eVar).append(",").append(env.stateVar).append(",'").append(channel).append("',");
+      env.writer.append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
     } else {
       StatePath path = StatePath.resolve(env.element.attr(version), env.stateVar);
-      String childStateVar = env.pool.ask();
-      String parentVar = env.pool.ask();
       env.writer.tab().append("$.IF(").append(eVar).append(",").append(path.command);
       env.writer.append(",'").append(path.name).append("',").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-      Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-        if (node instanceof Element) {
-          return !node.hasAttr("rx:else");
-        } else {
-          return true;
-        }
-      });
-      env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-      Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-        if (node instanceof Element) {
-          return node.hasAttr("rx:else");
-        } else {
-          return false;
-        }
-      });
-      env.writer.tabDown().tab().append("});").newline();
-      env.pool.give(childStateVar);
-      env.pool.give(parentVar);
     }
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
+      if (node instanceof Element) {
+        return !node.hasAttr("rx:else");
+      } else {
+        return true;
+      }
+    });
+    env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
+      if (node instanceof Element) {
+        return node.hasAttr("rx:else");
+      } else {
+        return false;
+      }
+    });
+    env.writer.tabDown().tab().append("});").newline();
+    env.pool.give(childStateVar);
+    env.pool.give(parentVar);
   }
 
   public void _ifnot() {

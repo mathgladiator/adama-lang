@@ -12,16 +12,21 @@ package org.adamalang.rxhtml.acl.commands;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.StatePath;
 
-/** execute custom code */
-public class Custom implements Command {
-  public final String command;
+/** choose a value out of a set */
+public class Choose implements Command {
+  public final String channel;
+  public final String key;
+  public final String path;
 
-  public Custom(String command) {
-    this.command = command;
+  public Choose(String channel, String key, String path) {
+    this.channel = channel;
+    this.key = key;
+    this.path = path;
   }
 
   @Override
   public void write(Environment env, String type, String eVar) {
-    env.writer.tab().append("$.exCC(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(",'").append(command).append("');").newline();
+    StatePath path = StatePath.resolve(this.path, env.stateVar);
+    env.writer.tab().append("$.exCH(").append(eVar).append(",'").append(type).append("',").append(path.command).append(",'").append(path.name).append("','").append(channel).append("','").append(key).append("');").newline();
   }
 }

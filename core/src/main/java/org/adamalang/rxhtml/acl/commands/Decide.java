@@ -12,7 +12,7 @@ package org.adamalang.rxhtml.acl.commands;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.StatePath;
 
-/** set the string value of the path to the given value */
+/** decide a single value from a set */
 public class Decide implements Command {
   public final String channel;
   public final String key;

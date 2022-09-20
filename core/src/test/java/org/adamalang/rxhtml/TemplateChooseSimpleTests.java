@@ -9,7 +9,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateDecideSimpleTests extends BaseRxHtmlTest {
+public class TemplateChooseSimpleTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
@@ -33,11 +33,21 @@ public class TemplateDecideSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    $.P(b,a,d,function(b,e) {");
     gold.append("\n      var f = $.E('div');");
     gold.append("\n      $.DE(f,e,e,'channel','id','id',true,false,function(h,g) {");
+    gold.append("\n        var i = $.E('button');");
+    gold.append("\n        $.exCH(i,'click',g,'id','channel','id');");
+    gold.append("\n        i.append($.T('Add Choice'));");
+    gold.append("\n        h.append(i);");
+    gold.append("\n      },function(h,g) {");
+    gold.append("\n      });");
+    gold.append("\n      b.append(f);");
+    gold.append("\n      var f = $.E('div');");
+    gold.append("\n      $.FIN(f,e,'channel',true,false,function(h,g) {");
+    gold.append("\n        var i = $.E('button');");
+    gold.append("\n        $.exFIN(i,'click',g,'channel');");
+    gold.append("\n        i.append($.T('Send choices'));");
+    gold.append("\n        h.append(i);");
     gold.append("\n        h.append($.T(' Time to decide! '));");
     gold.append("\n      },function(h,g) {");
-    gold.append("\n        var i = $.E('span');");
-    gold.append("\n        i.append($.T(' Can\\'t decide... yet '));");
-    gold.append("\n        h.append(i);");
     gold.append("\n      });");
     gold.append("\n      b.append(f);");
     gold.append("\n    },function(b,e) {");
@@ -57,11 +67,12 @@ public class TemplateDecideSimpleTests extends BaseRxHtmlTest {
     source.append("<forest>");
     source.append("\n<page uri=\"/\">");
     source.append("\n        <connection space=\"space\" key=\"key\">");
-    source.append("\n            <div rx:if=\"decide:channel\">");
+    source.append("\n            <div rx:if=\"choose:channel\">");
+    source.append("\n                <button rx:click=\"choose:channel\">Add Choice</button>");
+    source.append("\n            </div>");
+    source.append("\n            <div rx:if=\"finalize:channel\">");
+    source.append("\n                <button rx:click=\"finalize:channel\">Send choices</button>");
     source.append("\n                Time to decide!");
-    source.append("\n                <span rx:else>");
-    source.append("\n                    Can't decide... yet");
-    source.append("\n                </span>");
     source.append("\n            </div>");
     source.append("\n        </connection>");
     source.append("\n    </page>");

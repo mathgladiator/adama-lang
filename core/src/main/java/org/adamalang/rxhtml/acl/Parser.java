@@ -54,6 +54,15 @@ public class Parser {
             commands.add(new Decide(parts[0], parts.length > 1 ? parts[1] : "id", parts.length > 2 ? parts[2] : "id"));
             break;
           }
+          case "choose": {
+            String[] parts = body.split(Pattern.quote("|"));
+            commands.add(new Choose(parts[0], parts.length > 1 ? parts[1] : "id", parts.length > 2 ? parts[2] : "id"));
+            break;
+          }
+          case "finalize": {
+            commands.add(new Finalize(body));
+            break;
+          }
           case "set": {
             int kEq = body.indexOf('=');
             if (kEq > 0) {
