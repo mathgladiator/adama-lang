@@ -6,6 +6,7 @@ Many of the bugs have been fixed, this is from an old version.
 @static {
   // anyone can create
   create { return true; }
+  invent { return true; }
 }
 
 // we define the suit of a card
@@ -66,6 +67,12 @@ record Card {
     return false;
   }
 
+  method reset() {
+    ordering = Random.genInt();
+    owner = @no_one;
+    place = Place::Hand;
+  }
+
   require p;
 }
 
@@ -73,7 +80,7 @@ record Card {
 table<Card> deck;
 
 // show the player hand (and let the privacy policy filter out by person)
-public auto hand = iterate deck where place == Place::Hand;
+bubble hand = iterate deck where place == Place::Hand where owner == @who order by suit asc, rank asc;
 
 // show all cards in the pot (this would be a different way of defining hand)
 bubble my_take = iterate deck where place == Place::Taken && owner == @who;
@@ -86,121 +93,38 @@ principal owner;
 record Player {
   public int id;
   public principal link;
-  private bool playing;
   public int points;
-  viewer_is<link> bool leader;
   viewer_is<link> int play_order;
-  // sort out why this doesn't work
-  // viewer_is<link> auto hand = iterate deck where owner == link;
 }
 
 table<Player> players;
 
 @connected {
-  // the first connection assumes a leadership position as the owner of the table/game
-  if (owner == @no_one) {
-    owner = @who;
-    players <- {
-      link:@who,
-      playing:true,
-      leader:true,
-      play_order:0,
-      points:0
-    };
-    transition #lobby;
-  }
-
-  // the owner is always allowed
-  if (owner == @who) {
+  if ((iterate players where link==@who).size() > 0) {
     return true;
   }
-
-  // add the player if they are not already in the game
-  if ( (iterate players where link==@who).size() == 0) {
+  if (players.size() < 4) {
     players <- {
       link:@who,
-      playing:false,
-      leader:false,
       play_order: players.size(),
       points:0
     };
+    if (players.size() == 4) {
+      transition #setup;
+    }
+    return true;
   }
-
-  return true;
+  return false;
 }
-
-@disconnected {
-  // remove the player if they are not playing
-  (iterate players where link==@who && !playing).delete();
-}
-
-// how many people are connected
-public auto players_connected = (iterate players where playing).size();
-
-// how many observers
-public auto observers_connected = (iterate players where !playing).size();
 
 // everyone in the game
 public auto people = iterate players order by play_order;
 
 // the players by their ordering
-public auto players_ordered = iterate players where playing order by play_order;
-
-// TODO: the client logic for who is what is going to be... interesting
-
-// whether or not the game is ready to begin
-public auto ready = players_connected == 4;
+public auto players_ordered = iterate players order by play_order;
 
 // are we actually playing the game?
 public bool playing = false;
-
-// we are waiting for an owner to arrive which will transition us into the lobby
-// the lobby allows the leader to send messages of the following form
-
-enum LeaderAction {
-  PromoteObserver:1,
-  DemotePlayer:2,
-  ShufflePlayers:3,
-
-  // BumpOrderUp:4, BumpOrderDown:5
-  Begin:10
-}
-
-// the purpose of this action is to convert observers into players, and to arrange the players.
-
-
-// the action is wrapped in a message
-message LeaderActionMessage {
- LeaderAction action;
- int id;
-}
-
-
-// and the message is used as a channel which yields futures
-channel<LeaderActionMessage> leader;
-
-// the lobby is where leader will marshall the people
-#lobby {
-  // ask the leader to do something
-  LeaderActionMessage decision = leader.fetch(owner).await();
-  if (decision.action == LeaderAction::PromoteObserver && !ready) {
-     // leader promoted an observer to
-    (iterate players where id==decision.id).playing = true;
-  } else if (decision.action == LeaderAction::DemotePlayer) {
-    // leader demotes a player to an observer
-    (iterate players where id==decision.id).playing = false;
-  } else if (decision.action == LeaderAction::ShufflePlayers) {
-    (iterate players where playing).play_order = Random.genInt();
-  } else if (decision.action == LeaderAction::Begin) {
-    // leader has selected people, and will now begin the game
-    playing = true;
-    if ( (iterate players where playing).size() == 4) {
-      transition #setup;
-      return;
-    }
-  }
-  transition #lobby;
-}
 
 // how setup the game state
 #setup {
@@ -211,12 +135,9 @@ channel<LeaderActionMessage> leader;
     }
   }
 
-  // normalize observers to no play order
-  (iterate players where !playing).play_order = 100;
-
   // normalize the players from 0 to 3
   int normativeOrder = 0;
-  (iterate players where playing order by play_order asc).play_order = normativeOrder++;
+  (iterate players order by play_order asc).play_order = normativeOrder++;
 
   // shuffle and distribute the cards
   transition #shuffle_and_distribute;
@@ -227,13 +148,11 @@ enum PassingMode { Across:0, ToLeft:1, ToRight:2, None:3 }
 public PassingMode passing_mode;
 
 #shuffle_and_distribute {
-  // it may be useful to allow methods on a record
-  (iterate deck).ordering = Random.genInt();
-  (iterate deck).owner = @no_one;
-  (iterate deck).place = Place::Hand;
+  // it may be useful to allow methods on a record, fuck
+  (iterate deck).reset();
 
   // distribute cards to players
-  Player[] op = (iterate players where playing order by play_order).toArray();
+  Player[] op = (iterate players order by play_order).toArray();
   for (int k = 0; k < 4; k++) {
     if (op[k] as player) {
       (iterate deck where owner == @no_one order by ordering limit 13).owner = player.link;
@@ -261,7 +180,10 @@ principal current;
     transition #start_play;
   }
 
-  Player[] op = (iterate players where playing order by play_order).toArray();
+  // this is wanky as fuck, and I don't like it. We have this fundamental problem of what if there are not enough players, then how does this fail...
+  // we should consider a @fatal keyword to signal that a game is just fucked
+
+  Player[] op = (iterate players order by play_order).toArray();
   if (op[0] as player) {
     player1 = player.link;
   }
@@ -274,7 +196,7 @@ principal current;
   if (op[3] as player) {
     player4 = player.link;
   }
-  // what does an await on no_one mean, it means the whole thing is botched
+  // what does an await on no_one mean, it means the whole thing is fucked
 
   // we really need a future array since this has some awkward stuff
   future<maybe<CardDecision[]>> pass1 = pass_channel.choose(player1, @convert<CardDecision>(iterate deck where owner==player1), 3);
@@ -337,10 +259,14 @@ principal current;
 }
 
 public int played = 0;
+public Suit suit_in_play;
+public bool points_played = false;
+public auto in_play = iterate deck where place == Place::InPlay order by rank desc;
 
 #start_play {
   // no cards hae been played
   played = 0;
+  points_played = false;
 
   // assign a player to current
   current = player1;
@@ -351,38 +277,31 @@ public int played = 0;
   transition #play;
 }
 
-channel<CardDecision[]> single_play;
+channel<CardDecision> single_play;
 
-public Suit suit_in_play;
-public bool points_played = false;
-public auto in_play = iterate deck where place == Place::InPlay order by rank desc;
 // how to attribute this to a person
 
 public principal last_winner;
 
 #play {
-  list<Card> choices = iterate deck where
-    owner==current &&
-    place == Place::Hand &&
-    (
-       played == 0 && (points_played || points == 0) ||
-       played > 0 && suit_in_play == suit
-    );
+  list<Card> choices = iterate deck where owner == current && place == Place::Hand && rank == Rank::Two && suit == Suit::Clubs;
   if (choices.size() == 0) {
+    choices = iterate deck where owner==current && place == Place::Hand && (
+      played == 0 && (points_played || points == 0) ||
+      played > 0 && suit_in_play == suit
+    );
+  }
+  if (choices.size() == 0) { // anything in hand
     choices = iterate deck where owner==current && place == Place::Hand;
   }
-  future<maybe<CardDecision[]>> playX = single_play.choose(current, @convert<CardDecision>(choices), 1);
-  if (playX.await() as thePlay) {
-  // TODO: don't think hearts can be played, there are some rules here
-  foreach (dec in thePlay) {
-
-    (iterate deck where id == dec.id).place = Place::InPlay;
-    if ( (iterate deck where id == dec.id)[0] as cardPlayed) {
-// TODO
-//   cardPlayed.place = Place::InPlay;
-// this doesn't work
-
-      // points are open
+  if (choices.size() == 0) {
+    transition #score;
+    return;
+  }
+  future<maybe<CardDecision>> playX = single_play.decide(current, @convert<CardDecision>(choices));
+  if (playX.await() as dec) {
+    if ((iterate deck where id == dec.id)[0] as cardPlayed) {
+      cardPlayed.place = Place::InPlay;
       if (cardPlayed.points > 0) {
         points_played = true;
       }
@@ -391,7 +310,7 @@ public principal last_winner;
       }
     }
   }
-  }
+
 
   // if the number of cards played is less than 4, then next player; otherwise, decide winner of pot and award points
 
@@ -407,34 +326,34 @@ public principal last_winner;
   }
 
   if (played == 3) {
-    // TODO: figure this out (why can't I limit and then)
-    if ( (iterate deck where place == Place::InPlay && suit == suit_in_play order by rank desc)[0] as winner) {
+    if ( (iterate deck where place == Place::InPlay && suit == suit_in_play order by rank desc limit 1)[0] as winner) {
       (iterate deck where place == Place::InPlay).owner = winner.owner;
       last_winner = winner.owner;
     }
     (iterate deck where place == Place::InPlay).place = Place::Taken;
     played = 0;
     current = last_winner;
-
     if( (iterate deck where owner == current && place == Place::Hand).size() == 0) {
       transition #score;
+      return;
     }
   } else {
     played++;
   }
   transition #play;
 }
+
 public int points_awarded = 0;
 
 #score {
   // award points
-  foreach(p in iterate players where playing) {
+  foreach(p in iterate players) {
     int local_points = 0;
     foreach(c in iterate deck where owner == p.link && place == Place::Taken) {
       local_points += c.points;
     }
     if (local_points == 26) {
-      foreach(p2 in iterate players where playing && link != p.link) {
+      foreach(p2 in iterate players where link != p.link) {
         p2.points += 26;
         points_awarded += 26;
       }
@@ -444,17 +363,7 @@ public int points_awarded = 0;
     }
   }
 
-  // this may not respect rules, but... hey
-  if (passing_mode == PassingMode::Across) {
-    passing_mode = PassingMode::ToRight;
-  } else if (passing_mode == PassingMode::ToRight) {
-    passing_mode = PassingMode::ToLeft;
-  } else if (passing_mode == PassingMode::ToLeft) {
-    passing_mode = PassingMode::None;
-  } else if (passing_mode == PassingMode::None) {
-    passing_mode = PassingMode::Across;
-  }
-
+  passing_mode = passing_mode.next();
   transition #shuffle_and_distribute;
 }
 
