@@ -80,7 +80,7 @@ record Card {
 table<Card> deck;
 
 // show the player hand (and let the privacy policy filter out by person)
-bubble hand = iterate deck where place == Place::Hand where owner == @who order by suit asc, rank asc;
+bubble hand = iterate deck where place == Place::Hand where owner == @who order by id asc;
 
 // show all cards in the pot (this would be a different way of defining hand)
 bubble my_take = iterate deck where place == Place::Taken && owner == @who;
@@ -178,6 +178,7 @@ principal current;
 #pass {
   if (passing_mode == PassingMode::None) {
     transition #start_play;
+    return;
   }
 
   // this is wanky as fuck, and I don't like it. We have this fundamental problem of what if there are not enough players, then how does this fail...
@@ -366,5 +367,7 @@ public int points_awarded = 0;
   passing_mode = passing_mode.next();
   transition #shuffle_and_distribute;
 }
+
+
 
 ```
