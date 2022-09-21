@@ -40,6 +40,11 @@ public class EmptyNtList<T> implements NtList<T> {
   }
 
   @Override
+  public NtMaybe<T> lookup(NtMaybe<Integer> k) {
+    return new NtMaybe<>();
+  }
+
+  @Override
   public void map(final Consumer<T> t) {
   }
 

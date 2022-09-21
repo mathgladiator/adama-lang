@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMap;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMaybe;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.TyNativeLong;
 import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
@@ -87,7 +88,7 @@ public class IndexLookup extends Expression {
         lookupStyle = ((DetailIndexLookup) typeExpr).getLookupStyle(environment);
       }
       final var typeArg = arg.typing(environment.scopeWithComputeContext(ComputeContext.Computation), new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null));
-      environment.rules.IsInteger(typeArg, false);
+      RuleSetMaybe.IsMaybeIntegerOrJustInteger(environment, typeArg, false);
       if (typeExpr != null && typeExpr instanceof DetailContainsAnEmbeddedType) {
         final var elementType = ((DetailContainsAnEmbeddedType) typeExpr).getEmbeddedType(environment);
         if (elementType != null) {

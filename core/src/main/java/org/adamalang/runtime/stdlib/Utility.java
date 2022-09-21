@@ -70,6 +70,13 @@ public class Utility {
     return maybe;
   }
 
+  public static <T> NtMaybe<T> lookup(final T[] arr, final NtMaybe<Integer> k) {
+    if (k.has()) {
+      return lookup(arr, k.get());
+    }
+    return new NtMaybe<>();
+  }
+
   public static <T> T[] readArray(JsonStreamReader reader, Function<JsonStreamReader, T> transform, Function<Integer, T[]> makeArray) {
     ArrayList<T> items = new ArrayList<T>();
     if (reader.startArray()) {

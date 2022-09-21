@@ -51,6 +51,14 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
   }
 
   @Override
+  public NtMaybe<Ty> lookup(NtMaybe<Integer> k) {
+    if (k.has()) {
+      return lookup(k.get());
+    }
+    return new NtMaybe<Ty>();
+  }
+
+  @Override
   public void map(final Consumer<Ty> t) {
     for (final Ty item : list) {
       t.accept(item);

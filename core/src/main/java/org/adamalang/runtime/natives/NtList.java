@@ -24,6 +24,8 @@ public interface NtList<Ty> extends Iterable<Ty> {
 
   NtMaybe<Ty> lookup(int k);
 
+  NtMaybe<Ty> lookup(NtMaybe<Integer> k);
+
   void map(Consumer<Ty> t);
 
   NtList<Ty> orderBy(boolean done, Comparator<Ty> cmp);

@@ -124,6 +124,14 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
   }
 
   @Override
+  public NtMaybe<Ty> lookup(NtMaybe<Integer> k) {
+    if (k.has()) {
+      return lookup(k.get());
+    }
+    return new NtMaybe<>();
+  }
+
+  @Override
   public void map(final Consumer<Ty> t) {
     ensureFinalized();
     for (final Ty item : finalized) {

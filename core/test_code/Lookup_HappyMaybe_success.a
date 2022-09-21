@@ -1,0 +1,20 @@
+message M {
+  int x;
+}
+
+record R {
+  int y;
+}
+
+table<R> t;
+
+@construct {
+  M[] m = [{x:1}];
+  int k = 4;
+  if (m[k % 2] as mm) {
+    mm.x = 2 + k;
+  }
+  if ((iterate t)[k % 2] as r) {
+    r.y = 1 + k;
+  }
+}
