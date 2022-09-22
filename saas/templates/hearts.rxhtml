@@ -87,11 +87,16 @@
                         <div rx:template="card"></div>
                         <div rx:if="choose:pass_channel">
                             <button rx:click="choose:pass_channel">
-                                Pass <span rx:switch="/passing_mode">
-                                    <span rx:case="0">Across</span>
-                                    <span rx:case="1">Left</span>
-                                    <span rx:case="2">Right</span>
-                                    <span rx:case="3">None</span>
+                                <span rx:ifnot="chosen:pass_channel">
+                                    Pass <span rx:switch="/passing_mode">
+                                        <span rx:case="0">Across</span>
+                                        <span rx:case="1">Left</span>
+                                        <span rx:case="2">Right</span>
+                                        <span rx:case="3">None</span>
+                                    </span>
+                                    <span rx:else>
+                                        Don't pass
+                                    </span>
                                 </span>
                             </button>
                         </div>

@@ -281,7 +281,7 @@ function AdamaTree() {
             for (aKey in delay) {
               delay[aKey](aKey);
             }
-            for (var k = 0; k < delayOrder; k++) {
+            for (var k = 0; k < delayOrder.length; k++) {
               delayOrder[k]();
             }
             fire(eSub, tree[key], events); // tell everyone about the new value

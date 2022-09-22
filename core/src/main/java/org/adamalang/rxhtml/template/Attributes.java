@@ -40,11 +40,12 @@ public class Attributes {
     String value = env.element.attr(version);
     String childStateVar = env.pool.ask();
     String parentVar = env.pool.ask();
-    if (value.startsWith("decide:") || value.startsWith("choose:")) {
+    if (value.startsWith("decide:") || value.startsWith("choose:") || value.startsWith("chosen:")) {
       String channel = value.substring(7);
       String key = env.element.hasAttr("key") ? env.element.attr("key") : "id";
       StatePath pathName = StatePath.resolve(env.element.hasAttr("name") ? env.element.attr(version) : "id", env.stateVar);
-      env.writer.tab().append("$.DE(").append(eVar).append(",").append(env.stateVar).append(",").append(pathName.command);
+      boolean de = !(value.startsWith("chosen:"));
+      env.writer.tab().append(de ? "$.DE(" : "$.CSEN(").append(eVar).append(",").append(env.stateVar).append(",").append(pathName.command);
       env.writer.append(",'").append(channel).append("','").append(key).append("'");
       env.writer.append(",'").append(pathName.name).append("',").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
     } else if (value.startsWith("finalize:")) {

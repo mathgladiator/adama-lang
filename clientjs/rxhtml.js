@@ -806,6 +806,52 @@ var RxHTML = (function () {
       }
     });
   };
+  self.CSEN = function (parent, priorState, evalState, channel, key, name, shouldBe, _expand, makerTrue, makerFalse) {
+    var chosen = {
+      value: "",
+      owner: parent,
+      shown: false,
+      eval: null
+    };
+    add_unsub(chosen);
+    var change = function (show) {
+      fire_unsub(chosen);
+      nuke(parent);
+      var state = fork(priorState);
+      if (show === shouldBe) {
+        makerTrue(parent, state);
+      } else {
+        makerFalse(parent, state);
+      }
+      subscribe_state(state, chosen);
+    };
+
+    chosen.update = function () {
+      var out = priorState.data.connection.outstanding[channel];
+      if (!(out)) return;
+
+      var choices = priorState.data.connection.choices;
+      if (!(channel in choices)) {
+        choices[channel] = {};
+      }
+      var choice = choices[channel];
+      var eval = chosen.value in choice;
+      if (chosen.eval != eval) {
+        chosen.eval = eval;
+        change(chosen.eval);
+      }
+    };
+
+    priorState.data.connection.subscribe_choice(channel, function () {
+      chosen.update();
+      return true;
+    });
+
+    subscribe(evalState, name, function (value) {
+      chosen.value = value;
+      chosen.update();
+    });
+  };
 
   self.DE = function (parent, priorState, evalState, channel, key, name, shouldBe, _expand, makerTrue, makerFalse) {
     var decide = {
