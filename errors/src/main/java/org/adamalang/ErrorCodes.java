@@ -572,7 +572,10 @@ public class ErrorCodes {
 
   public static final int CARAVAN_COMPUTE_METHOD_NOT_FOUND = 785491;
   public static final int CARAVAN_COMPUTE_REWIND_SEQ_NOT_FOUND = 791602;
+
+  @RetryInternally
   public static final int CARAVAN_COMPUTE_HEADPATCH_SEQ_NOT_FOUND = 787507;
+
   public static final int CARAVAN_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY = 734263;
   public static final int CARAVAN_OUT_OF_SPACE_SNAPSHOT = 785490;
   public static final int CARAVAN_OUT_OF_SPACE_PATCH = 788560;

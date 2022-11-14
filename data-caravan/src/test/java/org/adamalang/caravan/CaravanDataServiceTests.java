@@ -66,7 +66,7 @@ public class CaravanDataServiceTests {
         }
       };
       this.cloud = new MockCloud();
-      this.service = new CaravanDataService(cloud, keyToIdService, store, executor);
+      this.service = new CaravanDataService(new CaravanMetrics(new NoOpMetricsFactory()), cloud, keyToIdService, store, executor);
       this.flusher = new Thread(new Runnable() {
         @Override
         public void run() {

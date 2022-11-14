@@ -670,6 +670,7 @@ public class ErrorTable {
     descriptions.put(791602, "no description of error (yet)");
     names.put(787507, "CARAVAN_COMPUTE_HEADPATCH_SEQ_NOT_FOUND");
     descriptions.put(787507, "no description of error (yet)");
+    retry.add(787507);
     names.put(734263, "CARAVAN_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY");
     descriptions.put(734263, "no description of error (yet)");
     names.put(785490, "CARAVAN_OUT_OF_SPACE_SNAPSHOT");

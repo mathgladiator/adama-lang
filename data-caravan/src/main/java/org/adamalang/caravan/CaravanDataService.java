@@ -33,13 +33,15 @@ import java.util.function.BiConsumer;
 
 public class CaravanDataService implements ArchivingDataService {
   private final Logger LOGGER = LoggerFactory.getLogger(CaravanDataService.class);
+  private final CaravanMetrics metrics;
   private final Cloud cloud;
   private final KeyToIdService keyToIdService;
   private final DurableListStore store;
   private final SimpleExecutor executor;
   private final HashMap<Long, LocalCache> cache;
 
-  public CaravanDataService(Cloud cloud, KeyToIdService keyToIdService, DurableListStore store, SimpleExecutor executor) {
+  public CaravanDataService(CaravanMetrics metrics, Cloud cloud, KeyToIdService keyToIdService, DurableListStore store, SimpleExecutor executor) {
+    this.metrics = metrics;
     this.cloud = cloud;
     this.keyToIdService = keyToIdService;
     this.store = store;
@@ -91,7 +93,7 @@ public class CaravanDataService implements ArchivingDataService {
         // jump into the exector for the cache
         execute("restore", key, false, callback, (id, cached) -> {
           if (cached == null) {
-            // the cache does not exist, so let's attempt to create it create it
+            // the cache does not exist, so let's attempt to create
             LocalCache newBuilderToCache = new LocalCache() {
               @Override
               public void finished() { // Note: runs in the thread calling execute since store.read is sync
@@ -100,7 +102,7 @@ public class CaravanDataService implements ArchivingDataService {
                 mergeRestore(id, builder, writes, new Callback<Void>() {
                   @Override
                   public void success(Void value) { // note; this callback runs in the executor
-                    cache.put(id, builder);
+                    addToCacheIfDoesntExistReturnCorrect(id, builder);
                     callback.success(null);
                   }
 
@@ -183,6 +185,16 @@ public class CaravanDataService implements ArchivingDataService {
     });
   }
 
+  private LocalCache addToCacheIfDoesntExistReturnCorrect(Long id, LocalCache created) {
+    LocalCache prior = cache.putIfAbsent(id, created);
+    if (prior != null) {
+      metrics.caravan_waste.run();
+      return prior;
+    } else {
+      return created;
+    }
+  }
+
   /** execute with the translation service and jump into the executor */
   private <T> void execute(String name, Key key, boolean load, Callback<T> callback, BiConsumer<Long, LocalCache> action) {
     keyToIdService.translate(key, new Callback<Long>() {
@@ -199,8 +211,7 @@ public class CaravanDataService implements ArchivingDataService {
                   executor.execute(new NamedRunnable(name, "load") {
                     @Override
                     public void execute() throws Exception {
-                      cache.put(id, cached);
-                      action.accept(id, cached);
+                      action.accept(id, addToCacheIfDoesntExistReturnCorrect(id, cached));
                     }
                   });
                 }
@@ -287,8 +298,7 @@ public class CaravanDataService implements ArchivingDataService {
       load(id, new Callback<LocalCache>() {
         @Override
         public void success(LocalCache builder) {
-          cache.put(id, builder);
-          callback.success(builder.build());
+          callback.success(addToCacheIfDoesntExistReturnCorrect(id, builder).build());
         }
 
         @Override
@@ -322,7 +332,7 @@ public class CaravanDataService implements ArchivingDataService {
         executor.execute(new NamedRunnable("commit-cache") {
           @Override
           public void execute() throws Exception {
-            cache.put(id, builder);
+            addToCacheIfDoesntExistReturnCorrect(id, builder);
             callback.success(null);
           }
         });
@@ -352,6 +362,7 @@ public class CaravanDataService implements ArchivingDataService {
     }
     execute("patch", key, true, callback, (id, cached) -> {
       if (!cached.check(patches[0].seqBegin)) {
+        metrics.caravan_seq_off.run();
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
         return;
       }

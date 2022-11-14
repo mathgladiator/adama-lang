@@ -110,10 +110,8 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
 
   public String computeHeadPatch(int seqGoal) {
     AutoMorphicAccumulator<String> merger = JsonAlgebra.mergeAccumulator(true);
-    int last = -1;
     for (SeqString ss : redos) {
       if (ss.seq > seqGoal) {
-        last = ss.seq;
         merger.next(ss.data);
       }
     }

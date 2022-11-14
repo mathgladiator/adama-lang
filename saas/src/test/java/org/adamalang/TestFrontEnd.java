@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.adamalang.caravan.CaravanDataService;
+import org.adamalang.caravan.CaravanMetrics;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DiskMetrics;
@@ -162,7 +163,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
       public void delete(Key key, String archiveKey, Callback<Void> callback) {
       }
     };
-    CaravanDataService caravanDataService = new CaravanDataService(cloud, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
+    CaravanDataService caravanDataService = new CaravanDataService(new CaravanMetrics(new NoOpMetricsFactory()), cloud, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
     delete = new MockPostDocumentDelete();
     Base managedBase = new Base(finder, caravanDataService, delete, "test-region", identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
     ManagedDataService dataService = new ManagedDataService(managedBase);

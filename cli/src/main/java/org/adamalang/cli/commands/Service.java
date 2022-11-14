@@ -10,6 +10,7 @@
 package org.adamalang.cli.commands;
 
 import org.adamalang.api.ApiMetrics;
+import org.adamalang.caravan.CaravanMetrics;
 import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
@@ -325,6 +326,8 @@ public class Service {
     new CapacityMetrics(metricsFactory);
     metricsFactory.page("database", "Database");
     new DataBaseMetrics(metricsFactory);
+    metricsFactory.page("caravan", "Caravan");
+    new CaravanMetrics(metricsFactory);
     metricsFactory.page("disk", "Disk");
     new DiskMetrics(metricsFactory);
     metricsFactory.page("overlord", "Overlord");
@@ -333,8 +336,6 @@ public class Service {
     new NetMetrics(metricsFactory);
     metricsFactory.page("aws", "AWS");
     new AWSMetrics(metricsFactory);
-    metricsFactory.page("stripe", "Stripe");
-    new StripeMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));
   }
 }
