@@ -566,6 +566,10 @@ public class ErrorTable {
     descriptions.put(920777, "no description of error (yet)");
     names.put(979145, "SUPER_NOT_AUTHORIZED_SET_AUTOMATIC");
     descriptions.put(979145, "no description of error (yet)");
+    names.put(904394, "SUPER_UNEXPECTED_EXCEPTION_LIST");
+    descriptions.put(904394, "no description of error (yet)");
+    names.put(979145, "SUPER_UNEXPECTED_EXCEPTION_SET_AUTOMATIC");
+    descriptions.put(979145, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");

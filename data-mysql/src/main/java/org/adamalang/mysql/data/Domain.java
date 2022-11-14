@@ -13,15 +13,19 @@ import java.sql.Date;
 
 /** a domain mapped to a space */
 public class Domain {
+  public final String domain;
   public final int owner;
   public final String space;
   public final String certificate;
   public final Date updated;
+  public final long timestamp;
 
-  public Domain(int owner, String space, String certificate, Date updated) {
+  public Domain(String domain, int owner, String space, String certificate, Date updated, long timestamp) {
+    this.domain = domain;
     this.owner = owner;
     this.space = space;
     this.certificate = certificate;
     this.updated = updated;
+    this.timestamp = timestamp;
   }
 }

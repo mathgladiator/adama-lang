@@ -53,12 +53,16 @@ public class DomainsTest {
         Assert.assertEquals(3, Domains.deleteSpace(dataBase, "space"));
         Assert.assertTrue(Domains.map(dataBase, 500, "www.my-domain.com", "space", null));
         Assert.assertTrue(Domains.map(dataBase, 500, "www.my-domain.com", "space2", null));
-        ArrayList<Domain> superList = Domains.superListAutoDomains(dataBase);
+        ArrayList<Domain> superList = Domains.superListAutoDomains(dataBase, 100);
         Assert.assertEquals("space2", superList.get(0).space);
         Assert.assertNull(superList.get(0).certificate);
-        Assert.assertTrue(Domains.superSetAutoCert(dataBase, "www.my-domain.com", "new-cert"));
-        superList = Domains.superListAutoDomains(dataBase);
+        Assert.assertTrue(Domains.superSetAutoCert(dataBase, "www.my-domain.com", "new-cert", 50));
+        superList = Domains.superListAutoDomains(dataBase, 100);
         Assert.assertEquals("new-cert", superList.get(0).certificate);
+        Assert.assertEquals(50, superList.get(0).timestamp);
+        Assert.assertTrue(Domains.superSetAutoCert(dataBase, "www.my-domain.com", "new-cert", 150));
+        superList = Domains.superListAutoDomains(dataBase, 100);
+        Assert.assertEquals(0, superList.size());
       } finally {
         installer.uninstall();
       }

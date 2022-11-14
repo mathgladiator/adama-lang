@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class Domains {
   public static boolean map(DataBase dataBase, int owner, String domain, String space, String certificate) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = "INSERT INTO `" + dataBase.databaseName + "`.`domains` (`owner`, `space`, `domain`, `certificate`,`automatic`) VALUES (?,?,?,?,?)";
+      String sql = "INSERT INTO `" + dataBase.databaseName + "`.`domains` (`owner`, `space`, `domain`, `certificate`,`automatic`, `automatic_timestamp`) VALUES (?,?,?,?,?,0)";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setInt(1, owner);
         statement.setString(2, space);
@@ -29,7 +29,7 @@ public class Domains {
         return true;
       } catch (SQLIntegrityConstraintViolationException sicve) {
         if (certificate != null) {
-          String sqlUpdate = "UPDATE `" + dataBase.databaseName + "`.`domains` SET `space`=?, `certificate`=?, `automatic`=FALSE WHERE `owner`=? AND `domain`=?";
+          String sqlUpdate = "UPDATE `" + dataBase.databaseName + "`.`domains` SET `space`=?, `certificate`=?, `automatic`=FALSE, `automatic_timestamp`=0 WHERE `owner`=? AND `domain`=?";
           try (PreparedStatement statement = connection.prepareStatement(sqlUpdate)) {
             statement.setString(1, space);
             statement.setString(2, certificate != null ? certificate : "");
@@ -70,17 +70,18 @@ public class Domains {
       }
     }
   }
+
   private static Domain domainOf(ResultSet rs) throws Exception {
-    String cert = rs.getString(3);
+    String cert = rs.getString(4);
     if (cert.equals("")) {
       cert = null;
     }
-    return new Domain(rs.getInt(1), rs.getString(2), cert, rs.getDate(4));
+    return new Domain(rs.getString(1), rs.getInt(2), rs.getString(3), cert, rs.getDate(5), rs.getLong(6));
   }
 
   public static Domain get(DataBase dataBase, String domain) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = "SELECT `owner`, `space`, `certificate`,`updated` FROM `" + dataBase.databaseName + "`.`domains` WHERE `domain`=?";
+      String sql = "SELECT `domain`, `owner`, `space`, `certificate`,`updated`, `automatic_timestamp`  FROM `" + dataBase.databaseName + "`.`domains` WHERE `domain`=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, domain);
         try (ResultSet rs = statement.executeQuery()) {
@@ -93,21 +94,23 @@ public class Domains {
     return null;
   }
 
-  public static boolean superSetAutoCert(DataBase dataBase, String domain, String certificate) throws Exception {
+  public static boolean superSetAutoCert(DataBase dataBase, String domain, String certificate, long timestampNext) throws Exception {
     return dataBase.transactSimple((connection) -> {
-      String sqlUpdate = "UPDATE `" + dataBase.databaseName + "`.`domains` SET `certificate`=?, `automatic`=TRUE WHERE `domain`=? AND `automatic`";
+      String sqlUpdate = "UPDATE `" + dataBase.databaseName + "`.`domains` SET `certificate`=?, `automatic`=TRUE, `automatic_timestamp`=? WHERE `domain`=? AND `automatic`";
       try (PreparedStatement statement = connection.prepareStatement(sqlUpdate)) {
         statement.setString(1, certificate);
-        statement.setString(2, domain);
+        statement.setLong(2, timestampNext);
+        statement.setString(3, domain);
         return statement.executeUpdate() == 1;
       }
     });
   }
 
-  public static ArrayList<Domain> superListAutoDomains(DataBase dataBase) throws Exception {
+  public static ArrayList<Domain> superListAutoDomains(DataBase dataBase, long timestamp) throws Exception {
     return dataBase.transactSimple((connection) -> {
-      String sql = "SELECT `owner`, `space`, `certificate`,`updated` FROM `" + dataBase.databaseName + "`.`domains` WHERE `automatic`";
+      String sql = "SELECT `domain`, `owner`, `space`, `certificate`,`updated`, `automatic_timestamp` FROM `" + dataBase.databaseName + "`.`domains` WHERE `automatic` AND `automatic_timestamp`<?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setLong(1, timestamp);
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<Domain> domains = new ArrayList<>();
           while (rs.next()) {

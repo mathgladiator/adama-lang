@@ -869,18 +869,27 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SuperListAutomaticDomainsRequest request, AutomaticDomainListingResponder responder) {
     if (request.who.source == AuthenticatedUser.Source.Super) {
-
-
+      try {
+        for (Domain domain : Domains.superListAutoDomains(nexus.database, request.timestamp)) {
+          responder.next(domain.domain, domain.timestamp);
+        }
+        responder.finish();
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.SUPER_UNEXPECTED_EXCEPTION_LIST, ex, LOGGER));
+      }
     } else {
       responder.error(new ErrorCodeException(ErrorCodes.SUPER_NOT_AUTHORIZED_LIST));
     }
   }
 
-
   @Override
   public void handle(Session session, SuperSetDomainCertificateRequest request, SimpleResponder responder) {
     if (request.who.source == AuthenticatedUser.Source.Super) {
-
+      try {
+        Domains.superSetAutoCert(nexus.database, request.domain, request.certificate, request.timestamp);
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.SUPER_UNEXPECTED_EXCEPTION_SET_AUTOMATIC, ex, LOGGER));
+      }
     } else {
       responder.error(new ErrorCodeException(ErrorCodes.SUPER_NOT_AUTHORIZED_SET_AUTOMATIC));
     }
