@@ -25,6 +25,7 @@ import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.extern.MockPostDocumentDelete;
+import org.adamalang.extern.SignalControl;
 import org.adamalang.extern.stripe.StripeConfig;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.web.assets.AssetStream;
@@ -267,7 +268,13 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
     StripeConfig stripe = new StripeConfig(new ConfigObject(Json.parseJsonObject("{\"public_key\":\"pub\",\"secret_key\":\"secret\"}")));
 
-    this.nexus = new ExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, stripe, new String[] {});
+    SignalControl signalControl = new SignalControl() {
+      @Override
+      public void raiseAutomaticDomain(String domain) {
+        System.err.println("domain needs certificate:" + domain);
+      }
+    };
+    this.nexus = new ExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, stripe, new String[] {}, signalControl);
 
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);

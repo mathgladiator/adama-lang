@@ -16,6 +16,7 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.commands.services.FrontendHttpHandler;
 import org.adamalang.extern.AssetSystemImpl;
+import org.adamalang.extern.aws.SQS;
 import org.adamalang.extern.stripe.StripeConfig;
 import org.adamalang.extern.stripe.StripeMetrics;
 import org.adamalang.frontend.FrontendMetrics;
@@ -262,9 +263,10 @@ public class Service {
     AssetSystemImpl assets = new AssetSystemImpl(init.database, adama, init.s3);
     StripeConfig stripe = new StripeConfig(new ConfigObject(config.get_or_create_child("stripe")));
     ArrayList<String> superKeys = config.get_str_list("super_public_keys");
+
     ExternNexus nexus = new ExternNexus(frontendConfig, email, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
-    }, init.masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId, stripe, superKeys.toArray(new String[superKeys.size()]));
+    }, init.masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId, stripe, superKeys.toArray(new String[superKeys.size()]), init.sqs);
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus, http);
     // TODO: have some sense of health checking in the web package

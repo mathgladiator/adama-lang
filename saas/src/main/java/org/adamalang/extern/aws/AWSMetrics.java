@@ -9,6 +9,7 @@
  */
 package org.adamalang.extern.aws;
 
+import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
@@ -27,6 +28,7 @@ public class AWSMetrics {
   public final RequestResponseMonitor upload_log_document;
   public final RequestResponseMonitor delete_asset;
   public final RequestResponseMonitor enqueue;
+  public final CallbackMonitor signal_control_domain;
 
   public AWSMetrics(MetricsFactory factory) {
     restore_document = factory.makeRequestResponseMonitor("aws_restore_document");
@@ -42,5 +44,6 @@ public class AWSMetrics {
     alarm_send_failures = factory.inflight("alarm_send_failures");
     upload_log_document = factory.makeRequestResponseMonitor("aws_upload_log_document");
     enqueue = factory.makeRequestResponseMonitor("aws_enqueue");
+    signal_control_domain = factory.makeCallbackMonitor("aws_signal_control_domain");
   }
 }

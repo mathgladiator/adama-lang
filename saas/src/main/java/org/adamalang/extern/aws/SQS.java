@@ -9,8 +9,11 @@
  */
 package org.adamalang.extern.aws;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
+import org.adamalang.extern.SignalControl;
 import org.adamalang.web.client.SimpleHttpRequest;
 import org.adamalang.web.client.SimpleHttpRequestBody;
 import org.adamalang.web.client.StringCallbackHttpResponder;
@@ -20,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.TreeMap;
 
-public class SQS {
+public class SQS implements SignalControl {
   private final Logger LOGGER = LoggerFactory.getLogger(SQS.class);
   private final WebClientBase base;
   private final AWSConfig config;
@@ -53,5 +56,13 @@ public class SQS {
         callback.failure(ex);
       }
     }));
+  }
+
+  @Override
+  public void raiseAutomaticDomain(String domain) {
+    ObjectNode message = Json.newJsonObject();
+    message.put("command", "domain");
+    message.put("domain", domain);
+    queue(message.toString(), metrics.signal_control_domain.wrap(Callback.DONT_CARE_VOID));
   }
 }

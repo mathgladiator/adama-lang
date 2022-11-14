@@ -22,6 +22,7 @@ import org.adamalang.common.net.NetMetrics;
 import org.adamalang.extern.aws.AWSConfig;
 import org.adamalang.extern.aws.AWSMetrics;
 import org.adamalang.extern.aws.S3;
+import org.adamalang.extern.aws.SQS;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
@@ -77,6 +78,7 @@ public class CommonServiceInit {
   public final WebConfig webConfig;
   public final WebClientBase webBase;
   public final String masterKey;
+  public final SQS sqs;
 
   public CommonServiceInit(Config config, Role role) throws Exception {
     MachineHeat.install();
@@ -111,6 +113,7 @@ public class CommonServiceInit {
     this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, PerSessionAuthenticator.encodePublicKey(keyPair));
     this.webBase = new WebClientBase(this.webConfig);
 
+
     system.schedule(new NamedRunnable("database-ping") {
       @Override
       public void execute() throws Exception {
@@ -128,6 +131,7 @@ public class CommonServiceInit {
     this.awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
     this.awsMetrics = new AWSMetrics(metricsFactory);
     this.s3 = new S3(webBase, awsConfig, awsMetrics);
+    this.sqs = new SQS(webBase, awsConfig, awsMetrics);
     String prefix = "logs/" + role.name + "/" + identity.ip + "/" + monitoringPort;
     system.schedule(new NamedRunnable("archive-s3") {
       @Override

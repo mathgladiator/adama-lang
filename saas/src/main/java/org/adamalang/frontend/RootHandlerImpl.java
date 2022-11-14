@@ -321,6 +321,9 @@ public class RootHandlerImpl implements RootHandler {
       if (request.policy.canUserManageDomain(request.who)) {
         String cert = request.certificate != null ? MasterKey.encrypt(nexus.masterKey, request.certificate) : null;
         if (Domains.map(nexus.database, request.who.id, request.domain, request.space, cert)) { // Domains.map ensures ownership on UPDATE to prevent conflicts
+          if (cert == null) {
+            nexus.signalControl.raiseAutomaticDomain(request.domain);
+          }
           responder.complete();
         } else {
           responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_MAP_FAILED));

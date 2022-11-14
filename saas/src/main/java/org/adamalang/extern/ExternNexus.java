@@ -40,8 +40,9 @@ public class ExternNexus {
   public final FrontendMetrics frontendMetrics;
   public final StripeConfig stripe;
   public final String[] superPublicKeys;
+  public final SignalControl signalControl;
 
-  public ExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, StripeConfig stripe, String[] superPublicKeys) {
+  public ExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, StripeConfig stripe, String[] superPublicKeys, SignalControl signalControl) {
     this.config = config;
     this.email = email;
     this.database = database;
@@ -58,6 +59,7 @@ public class ExternNexus {
     this.publicKeyId = publicKeyId;
     this.stripe = stripe;
     this.superPublicKeys = superPublicKeys;
+    this.signalControl = signalControl;
     attachmentRoot.mkdir();
   }
   public void close() throws Exception {

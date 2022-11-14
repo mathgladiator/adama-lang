@@ -568,6 +568,8 @@ public class ErrorTable {
     descriptions.put(920777, "no description of error (yet)");
     names.put(979145, "SUPER_NOT_AUTHORIZED_SET_AUTOMATIC");
     descriptions.put(979145, "no description of error (yet)");
+    names.put(921823, "SUPER_INVALID_CERT_SET_AUTOMATIC");
+    descriptions.put(921823, "no description of error (yet)");
     names.put(904394, "SUPER_UNEXPECTED_EXCEPTION_LIST");
     descriptions.put(904394, "no description of error (yet)");
     names.put(999619, "SUPER_UNEXPECTED_EXCEPTION_SET_AUTOMATIC");
