@@ -19,10 +19,8 @@ import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
-import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.*;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.mysql.model.*;
@@ -47,10 +45,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Pattern;
 
 public class RootHandlerImpl implements RootHandler {
   private static final Logger LOG = LoggerFactory.getLogger(RootHandlerImpl.class);
@@ -334,6 +330,22 @@ public class RootHandlerImpl implements RootHandler {
       }
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DOMAIN_MAP_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
+  public void handle(Session session, DomainListRequest request, DomainListingResponder responder) {
+    try {
+      if (request.who.source == AuthenticatedUser.Source.Adama) {
+        for (Domain domain : Domains.list(nexus.database, request.who.id)) {
+          responder.next(domain.domain, domain.space);
+        }
+        responder.finish();
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_LIST_NOT_AUTHORIZED));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DOMAIN_LIST_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 

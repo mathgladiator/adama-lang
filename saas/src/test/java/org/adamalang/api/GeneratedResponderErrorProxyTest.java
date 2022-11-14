@@ -43,20 +43,21 @@ public class GeneratedResponderErrorProxyTest {
     new BillingUsageResponder(responder).error(new ErrorCodeException(4));
     new ClaimResultResponder(responder).error(new ErrorCodeException(5));
     new DataResponder(responder).error(new ErrorCodeException(6));
-    new DomainPolicyResponder(responder).error(new ErrorCodeException(7));
-    new InitiationResponder(responder).error(new ErrorCodeException(8));
-    new KeyListingResponder(responder).error(new ErrorCodeException(9));
-    new KeyPairResponder(responder).error(new ErrorCodeException(10));
-    new KeystoreResponder(responder).error(new ErrorCodeException(11));
-    new PaymentResponder(responder).error(new ErrorCodeException(12));
-    new PlanResponder(responder).error(new ErrorCodeException(13));
-    new ProgressResponder(responder).error(new ErrorCodeException(14));
-    new ReflectionResponder(responder).error(new ErrorCodeException(15));
-    new RxhtmlResponder(responder).error(new ErrorCodeException(16));
-    new SeqResponder(responder).error(new ErrorCodeException(17));
-    new SimpleResponder(responder).error(new ErrorCodeException(18));
-    new SpaceListingResponder(responder).error(new ErrorCodeException(19));
-    new YesResponder(responder).error(new ErrorCodeException(20));
-    Assert.assertEquals(210, errorCount.get());
+    new DomainListingResponder(responder).error(new ErrorCodeException(7));
+    new DomainPolicyResponder(responder).error(new ErrorCodeException(8));
+    new InitiationResponder(responder).error(new ErrorCodeException(9));
+    new KeyListingResponder(responder).error(new ErrorCodeException(10));
+    new KeyPairResponder(responder).error(new ErrorCodeException(11));
+    new KeystoreResponder(responder).error(new ErrorCodeException(12));
+    new PaymentResponder(responder).error(new ErrorCodeException(13));
+    new PlanResponder(responder).error(new ErrorCodeException(14));
+    new ProgressResponder(responder).error(new ErrorCodeException(15));
+    new ReflectionResponder(responder).error(new ErrorCodeException(16));
+    new RxhtmlResponder(responder).error(new ErrorCodeException(17));
+    new SeqResponder(responder).error(new ErrorCodeException(18));
+    new SimpleResponder(responder).error(new ErrorCodeException(19));
+    new SpaceListingResponder(responder).error(new ErrorCodeException(20));
+    new YesResponder(responder).error(new ErrorCodeException(21));
+    Assert.assertEquals(231, errorCount.get());
   }
 }

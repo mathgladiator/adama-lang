@@ -35,6 +35,9 @@ public class Domains {
       case "map":
         map(config, next);
         return;
+      case "list":
+        list(config, next);
+        return;
       case "unmap":
         unmap(config, next);
         return;
@@ -52,6 +55,7 @@ public class Domains {
     System.out.println();
     System.out.println(Util.prefix("DOMAINSSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("map", Util.ANSI.Green) + "               Map a domain to a space");
+    System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List domains");
     System.out.println("    " + Util.prefix("unmap", Util.ANSI.Green) + "             Unmap a domain from a space");
   }
 
@@ -80,6 +84,20 @@ public class Domains {
         }
         ObjectNode response = connection.execute(request);
         System.err.println(response.toPrettyString());
+      }
+    }
+  }
+
+  public static void list(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "domain/list");
+        request.put("identity", identity);
+        connection.stream(request, (_k, item) -> {
+          System.err.println(item.toPrettyString());
+        });
       }
     }
   }

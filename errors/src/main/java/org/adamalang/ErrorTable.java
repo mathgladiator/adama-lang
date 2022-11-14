@@ -413,6 +413,10 @@ public class ErrorTable {
     descriptions.put(998539, "no description of error (yet)");
     names.put(984111, "API_DOMAIN_MAP_UNKNOWN_EXCEPTION");
     descriptions.put(984111, "no description of error (yet)");
+    names.put(928991, "API_DOMAIN_LIST_NOT_AUTHORIZED");
+    descriptions.put(928991, "no description of error (yet)");
+    names.put(901251, "API_DOMAIN_LIST_UNKNOWN_EXCEPTION");
+    descriptions.put(901251, "no description of error (yet)");
     names.put(901163, "API_DOMAIN_UNMAP_FAILED");
     descriptions.put(901163, "no description of error (yet)");
     names.put(916527, "API_DOMAIN_UNMAP_NOT_AUTHORIZED");
@@ -455,8 +459,6 @@ public class ErrorTable {
     descriptions.put(952372, "no description of error (yet)");
     names.put(919601, "API_ASSET_FAILED_BIND");
     descriptions.put(919601, "no description of error (yet)");
-    names.put(901251, "API_ASSET_DOWNLOAD_FAILED");
-    descriptions.put(901251, "no description of error (yet)");
     names.put(904348, "API_CLOUD_RESTORE_FAILED");
     descriptions.put(904348, "no description of error (yet)");
     names.put(999472, "API_ASSET_CHUNK_BAD_DIGEST");
@@ -570,6 +572,10 @@ public class ErrorTable {
     descriptions.put(904394, "no description of error (yet)");
     names.put(999619, "SUPER_UNEXPECTED_EXCEPTION_SET_AUTOMATIC");
     descriptions.put(999619, "no description of error (yet)");
+    names.put(973020, "FRONTEND_NO_DOMAIN_MAPPING");
+    descriptions.put(973020, "no description of error (yet)");
+    names.put(909532, "FRONTEND_UNKNOWN_EXCEPTION_DOMAIN_LOOKUP");
+    descriptions.put(909532, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");

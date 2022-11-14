@@ -477,6 +477,15 @@ class WebSocketAdamaConnection {
       request: {"method":"domain/map", "id":parId, "identity": identity, "domain": domain, "space": space, "certificate": certificate}
     });
   }
+  DomainList(identity, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_stream({
+      id: parId,
+      responder: responder,
+      request: {"method":"domain/list", "id":parId, "identity": identity}
+    });
+  }
   DomainUnmap(identity, domain, responder) {
     var self = this;
     var parId = self.__id();

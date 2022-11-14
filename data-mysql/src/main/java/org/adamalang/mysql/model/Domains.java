@@ -94,6 +94,22 @@ public class Domains {
     return null;
   }
 
+  public static ArrayList<Domain> list(DataBase dataBase, int owner) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT `domain`, `owner`, `space`, `certificate`,`updated`, `automatic_timestamp` FROM `" + dataBase.databaseName + "`.`domains` WHERE `owner` =?";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setInt(1, owner);
+        try (ResultSet rs = statement.executeQuery()) {
+          ArrayList<Domain> domains = new ArrayList<>();
+          while (rs.next()) {
+            domains.add(domainOf(rs));
+          }
+          return domains;
+        }
+      }
+    });
+  }
+
   public static boolean superSetAutoCert(DataBase dataBase, String domain, String certificate, long timestampNext) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sqlUpdate = "UPDATE `" + dataBase.databaseName + "`.`domains` SET `certificate`=?, `automatic`=TRUE, `automatic_timestamp`=? WHERE `domain`=? AND `automatic`";

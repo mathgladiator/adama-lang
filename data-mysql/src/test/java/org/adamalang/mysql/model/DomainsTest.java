@@ -53,6 +53,9 @@ public class DomainsTest {
         Assert.assertEquals(3, Domains.deleteSpace(dataBase, "space"));
         Assert.assertTrue(Domains.map(dataBase, 500, "www.my-domain.com", "space", null));
         Assert.assertTrue(Domains.map(dataBase, 500, "www.my-domain.com", "space2", null));
+        ArrayList<Domain> simpleList = Domains.list(dataBase, 500);
+        Assert.assertEquals("space2", simpleList.get(0).space);
+        Assert.assertEquals(0, Domains.list(dataBase, -1).size());
         ArrayList<Domain> superList = Domains.superListAutoDomains(dataBase, 100);
         Assert.assertEquals("space2", superList.get(0).space);
         Assert.assertNull(superList.get(0).certificate);

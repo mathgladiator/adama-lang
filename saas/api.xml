@@ -789,6 +789,18 @@
         </documentation>
     </method>
 
+    <responder name="domain-listing" stream="true">
+        <field name="domain" />
+        <field name="space" />
+    </responder>
+
+    <method name="domain/list" responder="domain-listing">
+        <parameter name="identity"/>
+        <documentation>
+            List the domains for the given developer
+        </documentation>
+    </method>
+
     <method name="domain/unmap" responder="simple">
         <parameter name="identity"/>
         <parameter name="domain"/>
