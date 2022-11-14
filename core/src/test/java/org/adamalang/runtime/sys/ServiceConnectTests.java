@@ -362,7 +362,7 @@ public class ServiceConnectTests {
       Assert.assertEquals("STATUS:Connected", streamback1.get(0));
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback1.get(1));
       Assert.assertEquals("STATUS:Connected", streamback2.get(0));
-      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback2.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":5}", streamback2.get(1));
     } finally {
       service.shutdown();
     }

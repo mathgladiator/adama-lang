@@ -27,8 +27,7 @@ public class DocumentThreadBase {
   public final CoreMetrics metrics;
   public final SimpleExecutor executor;
   public final HashMap<Key, DurableLivingDocument> map;
-  public final HashMap<Key, ArrayList<Callback<DurableLivingDocument>>> mapInsertsInflight;
-  public final HashMap<Key, ArrayList<Runnable>> mapCreationsInflightRetryBuffer;
+  public final HashMap<Key, ArrayList<Runnable>> pending;
   public final TimeSource time;
   private final HashMap<String, PredictiveInventory> inventoryBySpace;
   private final Random rng;
@@ -45,8 +44,7 @@ public class DocumentThreadBase {
     this.executor = executor;
     this.time = time;
     this.map = new HashMap<>();
-    this.mapInsertsInflight = new HashMap<>();
-    this.mapCreationsInflightRetryBuffer = new HashMap<>();
+    this.pending = new HashMap<>();
     this.inventoryBySpace = new HashMap<>();
     this.millisecondsForCleanupCheck = 2500;
     this.millisecondsAfterLoadForReconciliation = 2500;

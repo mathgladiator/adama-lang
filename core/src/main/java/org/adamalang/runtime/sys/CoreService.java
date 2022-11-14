@@ -26,6 +26,7 @@ import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
+import org.adamalang.translator.tree.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,7 +150,10 @@ public class CoreService implements Deliverer, Queryable {
   }
 
   private void load(Key key, Callback<DurableLivingDocument> callbackReal) {
-    Callback<DurableLivingDocument> callbackToQueue = metrics.serviceLoad.wrap(callbackReal);
+    loadInternal(key, metrics.serviceLoad.wrap(callbackReal));
+  }
+
+  private void loadInternal(Key key, Callback<DurableLivingDocument> callback) {
 
     // bind to the thread
     int threadId = key.hashCode() % bases.length;
@@ -163,74 +167,68 @@ public class CoreService implements Deliverer, Queryable {
         // is document already loaded?
         DurableLivingDocument documentFetch = base.map.get(key);
         if (documentFetch != null) {
-          callbackToQueue.success(documentFetch);
+          callback.success(documentFetch);
           return;
         }
 
-        ArrayList<Callback<DurableLivingDocument>> callbacks = base.mapInsertsInflight.get(key);
-        if (callbacks == null) {
-          callbacks = new ArrayList<>();
-          callbacks.add(callbackToQueue);
-          base.mapInsertsInflight.put(key, callbacks);
-
-          Consumer<ErrorCodeException> failure = (ex) -> {
-            base.executor.execute(new NamedRunnable("document-load-failure") {
-              @Override
-              public void execute() throws Exception {
-                for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
-                  callbackToSignal.failure(ex);
-                }
-              }
-            });
-          };
-
-          // let's load the factory and pull from source
-          livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchLoad.wrap(new Callback<>() {
-            @Override
-            public void success(LivingDocumentFactory factory) {
-              // pull from data source
-              DurableLivingDocument.load(key, factory, null, base, metrics.documentLoad.wrap(new Callback<>() {
-                @Override
-                public void success(DurableLivingDocument documentToAttemptPut) {
-                  // it was found, let's try to put it into memory
-                  base.executor.execute(new NamedRunnable("document-made") {
-                    @Override
-                    public void execute() throws Exception {
-                      DurableLivingDocument priorDocumentFound = base.map.putIfAbsent(key, documentToAttemptPut);
-                      if (priorDocumentFound != null) {
-                        metrics.document_collision.run();
-                        CoreService.LOGGER.error("found-prior-value, using it: {}", key.key);
-                      }
-                      DurableLivingDocument document = priorDocumentFound == null ? documentToAttemptPut : priorDocumentFound;
-                      metrics.inflight_documents.up();
-                      for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
-                        callbackToSignal.success(document);
-                      }
-                      base.executor.schedule(new NamedRunnable("post-load-reconcile") {
-                        @Override
-                        public void execute() throws Exception {
-                          document.afterLoad();
-                        }
-                      }, base.getMillisecondsAfterLoadForReconciliation());
-                    }
-                  });
-                }
-
-                @Override
-                public void failure(ErrorCodeException ex) {
-                  failure.accept(ex);
-                }
-              }));
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              failure.accept(ex);
-            }
-          }));
-        } else {
-          callbacks.add(metrics.documentPiggyBack.wrap(callbackToQueue));
+        if (enqueueForLaterWhileInExecutorReturnAbort(base, key, () -> load(key, callback))) {
+          return;
         }
+
+        Consumer<ErrorCodeException> failure = (ex) -> {
+          base.executor.execute(new NamedRunnable("document-load-failure") {
+            @Override
+            public void execute() throws Exception {
+              callback.failure(ex);
+              drain(base, key);
+            }
+          });
+        };
+
+        // let's load the factory and pull from source
+        livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchLoad.wrap(new Callback<>() {
+          @Override
+          public void success(LivingDocumentFactory factory) {
+            // pull from data source
+            DurableLivingDocument.load(key, factory, null, base, metrics.documentLoad.wrap(new Callback<>() {
+              @Override
+              public void success(DurableLivingDocument documentToAttemptPut) {
+                // it was found, let's try to put it into memory
+                base.executor.execute(new NamedRunnable("document-made") {
+                  @Override
+                  public void execute() throws Exception {
+                    DurableLivingDocument priorDocumentFound = base.map.putIfAbsent(key, documentToAttemptPut);
+                    if (priorDocumentFound != null) {
+                      metrics.document_collision.run();
+                      CoreService.LOGGER.error("found-prior-value, using it: {}", key.key);
+                    }
+                    DurableLivingDocument document = priorDocumentFound == null ? documentToAttemptPut : priorDocumentFound;
+                    metrics.inflight_documents.up();
+                    callback.success(document);
+                    base.executor.schedule(new NamedRunnable("post-load-reconcile") {
+                      @Override
+                      public void execute() throws Exception {
+                        document.afterLoad();
+                      }
+                    }, base.getMillisecondsAfterLoadForReconciliation());
+                    drain(base, key);
+                  }
+                });
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                failure.accept(ex);
+              }
+            }));
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            failure.accept(ex);
+          }
+        }));
+
       }
     });
   }
@@ -278,6 +276,28 @@ public class CoreService implements Deliverer, Queryable {
     });
   }
 
+  private boolean enqueueForLaterWhileInExecutorReturnAbort(DocumentThreadBase base, Key key, Runnable task) {
+    ArrayList<Runnable> pending = base.pending.get(key);
+    if (pending != null) {
+      pending.add(task);
+      return true;
+    }
+    base.pending.put(key, new ArrayList<>(0));
+    return false;
+  }
+
+  private void drain(DocumentThreadBase base, Key key) {
+    base.executor.execute(new NamedRunnable("retry-connect") {
+      @Override
+      public void execute() throws Exception {
+        ArrayList<Runnable> tasks = base.pending.remove(key);
+        for (Runnable other : tasks) {
+          other.run();
+        }
+      }
+    });
+  }
+
   /** internal: actually create with the given callback */
   private void createInternal(CoreRequestContext context, Key key, String arg, String entropy, Callback<Void> callback) {
     // jump into thread caching which thread
@@ -291,24 +311,11 @@ public class CoreService implements Deliverer, Queryable {
           callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED));
           return;
         }
-
-        // since create will typically fail, we want to only retry the requests if there are concurrent calls
-        ArrayList<Runnable> concurrentCreateCalls = base.mapCreationsInflightRetryBuffer.get(key);
-        if (concurrentCreateCalls != null) {
-          concurrentCreateCalls.add(() -> create(context, key, arg, entropy, callback));
+        // let's make sure we block any additional creation/load attempts
+        if (enqueueForLaterWhileInExecutorReturnAbort(base, key, () -> createInternal(context, key, arg, entropy,  callback))) {
           return;
         }
-        base.mapCreationsInflightRetryBuffer.put(key, new ArrayList<>());
-        Runnable executeConcurrent = () -> {
-          base.executor.execute(new NamedRunnable("retry-connect") {
-            @Override
-            public void execute() throws Exception {
-              for (Runnable other : base.mapCreationsInflightRetryBuffer.remove(key)) {
-                other.run();
-              }
-            }
-          });
-        };
+        Runnable afterExecuted = () -> drain(base, key);
 
         // estimate the impact
         base.getOrCreateInventory(key.space).grow();
@@ -319,12 +326,12 @@ public class CoreService implements Deliverer, Queryable {
             try {
               if (!factory.canCreate(context)) {
                 callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_REJECTED_CREATION));
-                executeConcurrent.run();
+                afterExecuted.run();
                 return;
               }
             } catch (ErrorCodeException exNew) {
               callback.failure(exNew);
-              executeConcurrent.run();
+              afterExecuted.run();
               return;
             }
             // bring the document into existence
@@ -336,7 +343,7 @@ public class CoreService implements Deliverer, Queryable {
                   @Override
                   public void execute() throws Exception {
                     callback.success(null);
-                    executeConcurrent.run();
+                    afterExecuted.run();
                   }
                 });
               }
@@ -344,7 +351,7 @@ public class CoreService implements Deliverer, Queryable {
               @Override
               public void failure(ErrorCodeException ex) {
                 callback.failure(ex);
-                executeConcurrent.run();
+                afterExecuted.run();
               }
             }));
           }
@@ -352,7 +359,7 @@ public class CoreService implements Deliverer, Queryable {
           @Override
           public void failure(ErrorCodeException ex) {
             callback.failure(ex);
-            executeConcurrent.run();
+            afterExecuted.run();
           }
         }));
       }
