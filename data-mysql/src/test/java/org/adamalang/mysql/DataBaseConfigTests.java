@@ -106,7 +106,7 @@ public class DataBaseConfigTests {
   @Test
   public void localIntegration() throws Exception {
     DataBaseConfig dataBaseConfig = getLocalIntegrationConfig();
-    dataBaseConfig.createComboPooledDataSource().close();
+    dataBaseConfig.createHikariDataSource().close();
   }
 
   public static DataBaseConfig getLocalIntegrationConfig() throws Exception {

@@ -9,7 +9,7 @@
  */
 package org.adamalang.mysql;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
@@ -26,12 +26,13 @@ import java.text.SimpleDateFormat;
 public class DataBase implements AutoCloseable {
   private static Logger LOG = LoggerFactory.getLogger(DataBase.class);
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LOG);
-  public final ComboPooledDataSource pool;
   public final String databaseName;
+  public final HikariDataSource pool;
   public final DataBaseMetrics metrics;
 
+
   public DataBase(DataBaseConfig config, DataBaseMetrics metrics) throws Exception {
-    this.pool = config.createComboPooledDataSource();
+    this.pool = config.createHikariDataSource();
     this.databaseName = config.databaseName;
     this.metrics = metrics;
   }

@@ -225,6 +225,7 @@ public class Installer {
         .append("  `domain` VARCHAR(254) NOT NULL,") //
         .append("  `certificate` LONGTEXT NOT NULL,") //
         .append("  `automatic` BOOLEAN DEFAULT FALSE,") //
+        .append("  `automatic_timestamp` BIGINT UNSIGNED DEFAULT 0,") //
         .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
         .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
         .append("  PRIMARY KEY (`id`),") //
@@ -273,6 +274,7 @@ public class Installer {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`capacity`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`hosts`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`secrets`;").toString());
+      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`domains`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP DATABASE IF EXISTS `").append(dataBase.databaseName).append("`;").toString());
     } finally {
       connection.close();
