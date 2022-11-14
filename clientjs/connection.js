@@ -613,6 +613,24 @@ class WebSocketAdamaConnection {
       }
     });
   }
+  SuperListAutomaticDomains(identity, timestamp, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_stream({
+      id: parId,
+      responder: responder,
+      request: {"method":"super/list-automatic-domains", "id":parId, "identity": identity, "timestamp": timestamp}
+    });
+  }
+  SuperSetDomainCertificate(identity, domain, certificate, timestamp, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"super/set-domain-certificate", "id":parId, "identity": identity, "domain": domain, "certificate": certificate, "timestamp": timestamp}
+    });
+  }
 
   /**[END-INVOKE]**/
 }

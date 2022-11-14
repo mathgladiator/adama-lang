@@ -595,7 +595,6 @@
         </documentation>
     </field-definition>
 
-
     <responder name="payment">
         <field name="payment-plan"/>
         <field name="publishable-key"/>
@@ -945,32 +944,40 @@
         </documentation>
     </method>
 
-    <!--
-
-    <method name="super/check-in" responder="simple">
-        <parameter name="identity"/>
+    <parameter-definition name="timestamp" type="long" missing-error="439292" logged="true">
         <documentation>
-            The super agent checks in since the super is running in a super isolated environment.
+            A system timestamp used for filtering items by time
+        </documentation>
+    </parameter-definition>
+
+    <field-definition name="timestamp" type="long">
+        <documentation>
+            A system timestamp for actions
+        </documentation>
+    </field-definition>
+
+    <responder name="automatic-domain-listing" stream="true">
+        <field name="domain" />
+        <field name="timestamp" />
+    </responder>
+
+    <method name="super/list-automatic-domains" responder="automatic-domain-listing">
+        <parameter name="identity"/>
+        <parameter name="timestamp"/>
+        <documentation>
+            The super agent downloads all domains that are ready to be renewed.
         </documentation>
     </method>
 
-    <method name="super/set-domain-cert" responder="simple">
+    <method name="super/set-domain-certificate" responder="simple">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="certificate"/>
+        <parameter name="timestamp"/>
         <documentation>
-            The super agent is providing a new domain certificate
+            The super agent will set a domain
         </documentation>
     </method>
-
-    <method name="super/list-renewal-domains" responder="simple">
-        <parameter name="identity"/>
-        <documentation>
-            The super agent lists domains weekly to update domains that need a new cert
-        </documentation>
-    </method>
-
-    -->
 
     <!--
 
@@ -1425,7 +1432,6 @@
 445438
 451582
 439295
-439292
 -->
 
 </api>

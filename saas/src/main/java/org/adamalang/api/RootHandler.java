@@ -76,6 +76,10 @@ public interface RootHandler {
 
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder responder);
 
+  public void handle(Session session, SuperListAutomaticDomainsRequest request, AutomaticDomainListingResponder responder);
+
+  public void handle(Session session, SuperSetDomainCertificateRequest request, SimpleResponder responder);
+
   public void disconnect();
 
 }

@@ -450,6 +450,29 @@ public class GeneratedMissingParameterTest {
       Iterator<String> c90 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:409609", c90.next());
       node.put("upload", 100L);
+      //SuperListAutomaticDomains
+      node = Json.newJsonObject();
+      node.put("id", 90);
+      node.put("method", "super/list-automatic-domains");
+      Iterator<String> c91 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:458759", c91.next());
+      node.put("identity", _identity);
+      Iterator<String> c92 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:439292", c92.next());
+      node.put("timestamp", 100L);
+      //SuperSetDomainCertificate
+      node = Json.newJsonObject();
+      node.put("id", 92);
+      node.put("method", "super/set-domain-certificate");
+      Iterator<String> c93 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:458759", c93.next());
+      node.put("identity", _identity);
+      Iterator<String> c94 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:488444", c94.next());
+      node.put("domain", "xzya");
+      Iterator<String> c95 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:439292", c95.next());
+      node.put("timestamp", 100L);
     }
   }
 }

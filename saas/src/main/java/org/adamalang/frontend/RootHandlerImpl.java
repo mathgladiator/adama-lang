@@ -865,6 +865,27 @@ public class RootHandlerImpl implements RootHandler {
     };
   }
 
+
+  @Override
+  public void handle(Session session, SuperListAutomaticDomainsRequest request, AutomaticDomainListingResponder responder) {
+    if (request.who.source == AuthenticatedUser.Source.Super) {
+
+
+    } else {
+      responder.error(new ErrorCodeException(ErrorCodes.SUPER_NOT_AUTHORIZED_LIST));
+    }
+  }
+
+
+  @Override
+  public void handle(Session session, SuperSetDomainCertificateRequest request, SimpleResponder responder) {
+    if (request.who.source == AuthenticatedUser.Source.Super) {
+
+    } else {
+      responder.error(new ErrorCodeException(ErrorCodes.SUPER_NOT_AUTHORIZED_SET_AUTOMATIC));
+    }
+  }
+
   @Override
   public void disconnect() {
   }

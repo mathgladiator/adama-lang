@@ -307,6 +307,8 @@ public class ErrorTable {
     descriptions.put(634899, "no description of error (yet)");
     names.put(966671, "AUTH_FAILED_FINDING_DEVELOPER_KEY");
     descriptions.put(966671, "no description of error (yet)");
+    names.put(950322, "AUTH_FAILED_SUPER_AUTHENTICATE");
+    descriptions.put(950322, "no description of error (yet)");
     names.put(916531, "AUTH_FAILED_VALIDATING_AGAINST_KEYSTORE");
     descriptions.put(916531, "no description of error (yet)");
     names.put(973839, "AUTH_UNKNOWN_EXCEPTION");
@@ -451,8 +453,6 @@ public class ErrorTable {
     descriptions.put(907319, "no description of error (yet)");
     names.put(952372, "API_KEYSTORE_KEY_INTERNAL_ERROR");
     descriptions.put(952372, "no description of error (yet)");
-    names.put(950322, "API_ASSET_UPLOAD_FAILED");
-    descriptions.put(950322, "no description of error (yet)");
     names.put(919601, "API_ASSET_FAILED_BIND");
     descriptions.put(919601, "no description of error (yet)");
     names.put(901251, "API_ASSET_DOWNLOAD_FAILED");
@@ -562,6 +562,10 @@ public class ErrorTable {
     descriptions.put(967879, "no description of error (yet)");
     names.put(929990, "LIST_ASSETS_PARSE_FAILURE");
     descriptions.put(929990, "no description of error (yet)");
+    names.put(920777, "SUPER_NOT_AUTHORIZED_LIST");
+    descriptions.put(920777, "no description of error (yet)");
+    names.put(979145, "SUPER_NOT_AUTHORIZED_SET_AUTOMATIC");
+    descriptions.put(979145, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");

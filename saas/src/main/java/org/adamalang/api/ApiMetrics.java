@@ -53,6 +53,8 @@ public class ApiMetrics {
   public final StreamMonitor monitor_AttachmentStart;
   public final RequestResponseMonitor monitor_AttachmentAppend;
   public final RequestResponseMonitor monitor_AttachmentFinish;
+  public final RequestResponseMonitor monitor_SuperListAutomaticDomains;
+  public final RequestResponseMonitor monitor_SuperSetDomainCertificate;
 
   public ApiMetrics(MetricsFactory factory) {
     this.monitor_InitSetupAccount = factory.makeRequestResponseMonitor("init/setup-account");
@@ -95,5 +97,7 @@ public class ApiMetrics {
     this.monitor_AttachmentStart = factory.makeStreamMonitor("attachment/start");
     this.monitor_AttachmentAppend = factory.makeRequestResponseMonitor("attachment/append");
     this.monitor_AttachmentFinish = factory.makeRequestResponseMonitor("attachment/finish");
+    this.monitor_SuperListAutomaticDomains = factory.makeRequestResponseMonitor("super/list-automatic-domains");
+    this.monitor_SuperSetDomainCertificate = factory.makeRequestResponseMonitor("super/set-domain-certificate");
   }
 }
