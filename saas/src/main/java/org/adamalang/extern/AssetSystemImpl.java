@@ -48,7 +48,7 @@ public class AssetSystemImpl implements AssetSystem {
 
   @Override
   public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback) {
-    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(database, context);
+    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(database, context, new String[] {});
     authenticator.execute(new Session(authenticator), identity, new Callback<AuthenticatedUser>() {
       @Override
       public void success(AuthenticatedUser who) {

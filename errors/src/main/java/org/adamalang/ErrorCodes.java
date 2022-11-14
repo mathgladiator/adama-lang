@@ -296,6 +296,7 @@ public class ErrorCodes {
    * 698352 641010 635893 605172 691188
    */
   public static final int AUTH_FAILED_FINDING_DEVELOPER_KEY = 966671;
+  public static final int AUTH_FAILED_SUPER_AUTHENTICATE = 950322;
   public static final int AUTH_FAILED_VALIDATING_AGAINST_KEYSTORE = 916531;
   public static final int AUTH_UNKNOWN_EXCEPTION = 973839;
   public static final int AUTH_INVALID_TOKEN_LAYOUT = 995342;
@@ -394,7 +395,6 @@ public class ErrorCodes {
   public static final int API_KEYSTORE_KEY_LACKS_VALID_ALGO = 907319;
   public static final int API_KEYSTORE_KEY_INTERNAL_ERROR = 952372;
 
-  public static final int API_ASSET_UPLOAD_FAILED = 950322;
   public static final int API_ASSET_FAILED_BIND = 919601;
   public static final int API_ASSET_DOWNLOAD_FAILED = 901251;
 

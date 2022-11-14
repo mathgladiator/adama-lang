@@ -42,10 +42,11 @@ public class AuthenticatedUser {
   }
 
   public enum Source {
-    Social,
-    Adama,
-    Anonymous,
-    Authority,
+    Social, //
+    Adama, //
+    Anonymous, //
+    Authority, //
+    Super //
   }
 
   /** convert the user to a token for cross-host transmission over the public interwebs */

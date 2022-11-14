@@ -267,7 +267,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
     StripeConfig stripe = new StripeConfig(new ConfigObject(Json.parseJsonObject("{\"public_key\":\"pub\",\"secret_key\":\"secret\"}")));
 
-    this.nexus = new ExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, stripe);
+    this.nexus = new ExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, stripe, new String[] {});
 
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);

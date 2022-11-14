@@ -20,7 +20,6 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.connection.Session;
-import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Authorities;
 import org.adamalang.mysql.model.Hosts;
@@ -42,10 +41,12 @@ public class PerSessionAuthenticator {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(PerSessionAuthenticator.class);
   private final DataBase database;
   private ConnectionContext defaultContext;
+  private final String[] superKeys;
 
-  public PerSessionAuthenticator(DataBase database, ConnectionContext defaultContext) {
+  public PerSessionAuthenticator(DataBase database, ConnectionContext defaultContext, String[] superKeys) {
     this.database = database;
     this.defaultContext = defaultContext;
+    this.superKeys = superKeys;
   }
 
   /** update the default asset key within the default context */
@@ -113,13 +114,34 @@ public class PerSessionAuthenticator {
         PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(database, parsedToken.key_id));
         Jwts.parserBuilder()
             .setSigningKey(publicKey)
-            .requireIssuer("adama")
+            .requireIssuer("host")
             .build()
             .parseClaimsJws(identity);
         ConnectionContext context = new ConnectionContext(parsedToken.proxy_origin, parsedToken.proxy_ip, parsedToken.proxy_useragent, parsedToken.proxy_asset_key);
         AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_source, parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context, true);
         session.identityCache.put(identity, user);
         callback.success(user);
+        return;
+      }
+      if ("super".equals(parsedToken.iss)) {
+        for (String publicKey64 : superKeys) {
+          PublicKey publicKey = decodePublicKey(publicKey64);
+          try {
+            Jwts.parserBuilder()
+                .setSigningKey(publicKey)
+                .requireIssuer("super")
+                .build()
+                .parseClaimsJws(identity);
+            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Super, 0, new NtPrincipal("super", "super"), defaultContext, false);
+            session.identityCache.put(identity, user);
+            callback.success(user);
+            return;
+          } catch (Exception ex) {
+            ex.printStackTrace();
+            // move on
+          }
+        }
+        callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_SUPER_AUTHENTICATE));
         return;
       }
       if ("adama".equals(parsedToken.iss)) {
@@ -141,14 +163,16 @@ public class PerSessionAuthenticator {
           }
         }
         callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_FINDING_DEVELOPER_KEY));
-      } else {
-        String keystoreJson = Authorities.getKeystoreInternal(database, parsedToken.iss);
-        Keystore keystore = Keystore.parse(keystoreJson);
-        NtPrincipal who = keystore.validate(parsedToken.iss, identity);
-        AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who, defaultContext, false);
-        session.identityCache.put(identity, user);
-        callback.success(user);
+        return;
       }
+
+      // otherwise, try a keystore by the authority presented
+      String keystoreJson = Authorities.getKeystoreInternal(database, parsedToken.iss);
+      Keystore keystore = Keystore.parse(keystoreJson);
+      NtPrincipal who = keystore.validate(parsedToken.iss, identity);
+      AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who, defaultContext, false);
+      session.identityCache.put(identity, user);
+      callback.success(user);
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.AUTH_UNKNOWN_EXCEPTION, ex, LOGGER));
     }

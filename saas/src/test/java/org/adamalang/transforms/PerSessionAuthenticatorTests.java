@@ -9,8 +9,13 @@
  */
 package org.adamalang.transforms;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
@@ -18,6 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.security.KeyPair;
+import java.util.Base64;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +52,7 @@ public class PerSessionAuthenticatorTests {
 
   @Test
   public void anonymous() throws Exception {
-    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(null, new ConnectionContext("a", "b", "c", "D"));
+    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(null, new ConnectionContext("a", "b", "c", "D"), new String[] {});
     Assert.assertEquals("D", authenticator.assetKey());
     authenticator.updateAssetKey("E");
     Assert.assertEquals("E", authenticator.assetKey());
@@ -66,5 +72,29 @@ public class PerSessionAuthenticatorTests {
       }
     });
     Assert.assertTrue(success.await(1000, TimeUnit.MILLISECONDS));
+  }
+
+  @Test
+  public void superUser() throws Exception {
+    KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+    String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+    String token = Jwts.builder().setSubject("super").setIssuer("super").signWith(pair.getPrivate()).compact();
+    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(null, new ConnectionContext("a", "b", "c", "D"), new String[] { publicKey });
+    CountDownLatch latch = new CountDownLatch(1);
+    authenticator.execute(new Session(authenticator), token, new Callback<AuthenticatedUser>() {
+      @Override
+      public void success(AuthenticatedUser value) {
+        Assert.assertEquals(AuthenticatedUser.Source.Super, value.source);
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        ex.printStackTrace();
+        latch.countDown();
+        Assert.fail();
+      }
+    });
+    Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
   }
 }
