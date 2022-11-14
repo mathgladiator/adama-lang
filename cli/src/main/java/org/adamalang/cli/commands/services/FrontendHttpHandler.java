@@ -13,7 +13,9 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.mysql.data.Domain;
 import org.adamalang.mysql.data.SpaceInfo;
+import org.adamalang.mysql.model.Domains;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.Client;
 import org.adamalang.runtime.natives.NtDynamic;
@@ -140,22 +142,32 @@ public class FrontendHttpHandler implements HttpHandler {
   @Override
   public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     String host = headers.get("host");
-    if (host.endsWith("." + init.webConfig.regionalDomain)) {
-      get(SpaceKeyRequest.parse(uri), headers, parametersJson, callback);
-      return;
-    }
-
-    for (String suffix : init.webConfig.globalDomains) {
-      if (host.endsWith("." + suffix)) {
-        String space = host.substring(0, host.length() - suffix.length() - 1);
-        getSpace(space, uri, headers, parametersJson, callback);
+    if (host != null) {
+      if (host.endsWith("." + init.webConfig.regionalDomain)) {
+        get(SpaceKeyRequest.parse(uri), headers, parametersJson, callback);
         return;
       }
+
+      for (String suffix : init.webConfig.globalDomains) {
+        if (host.endsWith("." + suffix)) {
+          String space = host.substring(0, host.length() - suffix.length() - 1);
+          getSpace(space, uri, headers, parametersJson, callback);
+          return;
+        }
+      }
+
+      try {
+        Domain domain = Domains.get(init.database, host); // TODO: cache this?
+        if (domain != null) {
+          getSpace(domain.space, uri, headers, parametersJson, callback);
+        } else {
+          callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_NO_DOMAIN_MAPPING));
+        }
+        return;
+      } catch (Exception ex) {
+        callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_UNKNOWN_EXCEPTION_DOMAIN_LOOKUP, ex, EXLOGGER));
+      }
     }
-
-    // Domain domin = Domains.get(init.database, host);
-
-    // TODO: look up the domain to pull the space, cache it, then call getSpace
     callback.success(null);
   }
 

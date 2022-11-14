@@ -59,8 +59,15 @@ public class Domains {
     String identity = config.get_string("identity", null);
     String domain = Util.extractOrCrash("--domain", "-d", args);
     String space = Util.extractOrCrash("--space", "-s", args);
-    String certFile = Util.extractOrCrash("--cert", "-c", args);
-    String cert = Files.readString(new File(certFile).toPath());
+    String autoStr = Util.extractWithDefault("--auto", "-a", "true", args).toLowerCase();
+    boolean automatic = "true".equals(autoStr) || "yes".equals(autoStr);
+    final String cert;
+    if (!automatic) {
+      String certFile = Util.extractOrCrash("--cert", "-c", args);
+      cert = Files.readString(new File(certFile).toPath());
+    } else {
+      cert = null;
+    }
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();
@@ -68,7 +75,9 @@ public class Domains {
         request.put("identity", identity);
         request.put("domain", domain);
         request.put("space", space);
-        request.put("certificate", cert);
+        if (cert != null) {
+          request.put("certificate", cert);
+        }
         ObjectNode response = connection.execute(request);
         System.err.println(response.toPrettyString());
       }
