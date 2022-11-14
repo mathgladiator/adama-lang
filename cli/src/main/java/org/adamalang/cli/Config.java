@@ -32,7 +32,7 @@ public class Config {
     for (int k = 0; k < args.length; k++) {
       if ("--config".equals(args[k]) && k + 1 < args.length) {
         _configPath = args[k + 1];
-        break;
+        k++;
       } else if ("--help".equals(args[k]) || "-h".equals(args[k])) {
         _requestingHelp = true;
         break;

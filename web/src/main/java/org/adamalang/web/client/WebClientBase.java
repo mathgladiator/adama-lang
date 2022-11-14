@@ -34,6 +34,7 @@ import org.adamalang.web.service.WebConfig;
 import java.net.URI;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class WebClientBase {
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(WebClientBase.class);
@@ -48,7 +49,7 @@ public class WebClientBase {
   }
 
   public void shutdown() {
-    group.shutdownGracefully();
+    group.shutdownGracefully(50, 500, TimeUnit.MILLISECONDS);
   }
 
   /** start of a new simpler execute http request */
@@ -242,7 +243,7 @@ public class WebClientBase {
               WebJsonStream streamback = done ? streams.remove(id) : streams.get(id);
               if (streamback != null) {
                 ObjectNode response = (ObjectNode) node.get("response");
-                if (!response.isEmpty()) {
+                if (response != null && !response.isEmpty()) {
                   streamback.data(id, response);
                 }
                 if (done) {
