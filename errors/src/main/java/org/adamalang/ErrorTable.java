@@ -1,12 +1,3 @@
-/*
- * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
- *
- * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
- *
- * See https://www.adama-platform.com/ for more information.
- *
- * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
- */
 package org.adamalang;
 
 import java.util.HashMap;
@@ -568,8 +559,8 @@ public class ErrorTable {
     descriptions.put(979145, "no description of error (yet)");
     names.put(904394, "SUPER_UNEXPECTED_EXCEPTION_LIST");
     descriptions.put(904394, "no description of error (yet)");
-    names.put(979145, "SUPER_UNEXPECTED_EXCEPTION_SET_AUTOMATIC");
-    descriptions.put(979145, "no description of error (yet)");
+    names.put(999619, "SUPER_UNEXPECTED_EXCEPTION_SET_AUTOMATIC");
+    descriptions.put(999619, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");
