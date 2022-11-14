@@ -500,6 +500,7 @@ public class RootHandlerImpl implements RootHandler {
           return;
         }
         Spaces.changePrimaryOwner(nexus.database, request.policy.id, request.policy.owner, 0);
+        Domains.deleteSpace(nexus.database, request.space);
         // remove all machines handling this
         Deployments.undeployAll(nexus.database, request.space);
         responder.complete();
