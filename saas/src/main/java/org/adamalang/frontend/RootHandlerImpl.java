@@ -877,7 +877,6 @@ public class RootHandlerImpl implements RootHandler {
     };
   }
 
-
   @Override
   public void handle(Session session, SuperListAutomaticDomainsRequest request, AutomaticDomainListingResponder responder) {
     if (request.who.source == AuthenticatedUser.Source.Super) {
@@ -898,7 +897,13 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, SuperSetDomainCertificateRequest request, SimpleResponder responder) {
     if (request.who.source == AuthenticatedUser.Source.Super) {
       try {
-        Domains.superSetAutoCert(nexus.database, request.domain, request.certificate, request.timestamp);
+        if (request.certificate != null) {
+          Domains.superSetAutoCert(nexus.database, request.domain, MasterKey.encrypt(nexus.masterKey, request.certificate), request.timestamp);
+          responder.complete();
+        } else {
+          responder.error(new ErrorCodeException(ErrorCodes.SUPER_INVALID_CERT_SET_AUTOMATIC));
+          return;
+        }
       } catch (Exception ex) {
         responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.SUPER_UNEXPECTED_EXCEPTION_SET_AUTOMATIC, ex, LOGGER));
       }
