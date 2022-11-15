@@ -13,9 +13,11 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.Domain;
 import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.mysql.model.Domains;
+import org.adamalang.mysql.model.Health;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.Client;
 import org.adamalang.runtime.natives.NtDynamic;
@@ -32,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 
 /** the http handler for the service */
 public class FrontendHttpHandler implements HttpHandler {
@@ -179,6 +182,28 @@ public class FrontendHttpHandler implements HttpHandler {
       client.webPut(skr.space, skr.key, put, route(skr, callback));
     } else {
       callback.success(null);
+    }
+  }
+
+  @Override
+  public void handleDeepHealth(Callback<String> callback) {
+    LOGGER.error("deep-health-inspection");
+    try {
+      final StringBuilder health = new StringBuilder();
+      health.append("<!DOCTYPE html>\n<html><head><title>Adama Deep Health</title></head><body>\n");
+      health.append("<h1>Adama Deep Health Check (for Humans!)</h1>\n");
+      health.append("<table border=1>\n");
+      health.append("<tr><td>Database Ping</td><td>" + Health.pingDataBase(init.database) + "</td>");
+      init.engine.summarizeHtml((html) -> {
+        health.append("<tr><td>Gossip</td><td>" + html + "</td>");
+        // TODO: simplify for privacy of the service
+        // TODO: check overlord is present
+        // TODO: check if web and adama hosts is greated then a threshold; maybe, record a max and ensure we are at 80%+
+        health.append("</table></body></html>\n");
+        callback.success(health.toString());
+      });
+    } catch (Exception ex) {
+      callback.failure(ErrorCodeException.detectOrWrap(0, ex, EXLOGGER));
     }
   }
 }

@@ -23,8 +23,8 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
   private final RequestResponseMonitor.RequestResponseMonitorInstance monitor;
   private final Callback<String> callback;
   private ByteArrayOutputStream memory;
-  private boolean invokeSuccess = false;
-  private boolean emissionPossible = false;
+  private boolean invokeSuccess;
+  private boolean emissionPossible;
 
   public StringCallbackHttpResponder(Logger logger, RequestResponseMonitor.RequestResponseMonitorInstance monitor, Callback<String> callback) {
     this.logger = logger;

@@ -53,4 +53,9 @@ public class ConcurrentCachedHttpHandler implements HttpHandler {
   public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
     callback.success(null);
   }
+
+  @Override
+  public void handleDeepHealth(Callback<String> callback) {
+    callback.success("OVERLORD");
+  }
 }

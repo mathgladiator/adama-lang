@@ -37,6 +37,11 @@ public interface HttpHandler {
     public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
       callback.success(null);
     }
+
+    @Override
+    public void handleDeepHealth(Callback<String> callback) {
+      callback.success("NULL");
+    }
   };
 
   void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback);
@@ -46,6 +51,8 @@ public interface HttpHandler {
   void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback);
 
   void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback);
+
+  void handleDeepHealth(Callback<String> callback);
 
   /** The concrete result of handling a request; */
   class HttpResult {

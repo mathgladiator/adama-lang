@@ -238,8 +238,18 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       sendImmediate(metrics.webhandler_healthcheck, req, ctx, HttpResponseStatus.OK, ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8), "text/text; charset=UTF-8", true);
       return true;
     } else if (webConfig.deepHealthCheckPath.equals(req.uri())) { // deep health check
-      // TODO: work my way up, talk to real stuff (check for overlord, check for database, etc...)
-      sendImmediate(metrics.webhandler_deephealthcheck, req, ctx, HttpResponseStatus.OK, ("Yes? Deeper status required... need a thing:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8), "text/html", true);
+      httpHandler.handleDeepHealth(new Callback<String>() {
+        @Override
+        public void success(String report) {
+          sendImmediate(metrics.webhandler_deephealthcheck, req, ctx, HttpResponseStatus.OK, report.getBytes(StandardCharsets.UTF_8), "text/html", false);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          sendImmediate(metrics.webhandler_deephealthcheck, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ("Deep health failed!").getBytes(StandardCharsets.UTF_8), "text/html", false);
+        }
+      });
+      return true;
     } else if (req.uri().startsWith("/~upload") && req.method() == HttpMethod.POST) {
       handleAssetUpload(ctx, req);
       return true;

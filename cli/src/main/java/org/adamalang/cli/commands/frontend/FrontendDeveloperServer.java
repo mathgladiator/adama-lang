@@ -133,6 +133,11 @@ public class FrontendDeveloperServer {
         public HttpHandler http() {
           return new HttpHandler() {
             @Override
+            public void handleDeepHealth(Callback<String> callback) {
+              callback.success("DEVSERVER");
+            }
+
+            @Override
             public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
               callback.failure(new ErrorCodeException(0));
             }
