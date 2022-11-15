@@ -10,6 +10,7 @@
 package org.adamalang.overlord;
 
 import org.adamalang.common.metrics.CallbackMonitor;
+import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.mysql.model.metrics.MeteringMetrics;
 
@@ -59,6 +60,7 @@ public class OverlordMetrics {
   public final CallbackMonitor delete_bot_delete_document;
   public final CallbackMonitor delete_bot_delete_ide;
   public final Runnable delete_bot_delete_space;
+  public final Inflight sentinel_behind;
 
   public OverlordMetrics(MetricsFactory factory) {
     targets_watcher_fired = factory.counter("overlord_targets_watcher_fired");
@@ -104,5 +106,6 @@ public class OverlordMetrics {
     delete_bot_delete_document = factory.makeCallbackMonitor("delete_bot_delete_document");
     delete_bot_delete_ide = factory.makeCallbackMonitor("delete_bot_delete_ide");
     delete_bot_delete_space = factory.counter("delete_bot_delete_space");
+    sentinel_behind = factory.inflight("alarm_sentinel_behind");
   }
 }

@@ -37,8 +37,10 @@ public class Overlord {
     /*
     DeploymentReconciliation.kickOff(metrics, engine, dataBase, handler);
     */
-
     SpaceDeleteBot.kickOff(metrics, dataBase, client, alive);
+
+    // detect dead things
+    DeadDetector.kickOff(metrics, dataBase, alive);
 
     // kick off capacity management will will add/remove capacity per space
     CapacityManager.kickOffReturnHotTargetEvent(metrics, client, dataBase, handler, heatTable);

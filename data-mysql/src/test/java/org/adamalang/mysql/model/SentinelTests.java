@@ -28,11 +28,14 @@ public class SentinelTests {
         } catch (Exception ex) {
           Assert.assertTrue(ex instanceof ErrorCodeException);
         }
+        Assert.assertEquals(0, Sentinel.countBehind(dataBase, 10000));
         Sentinel.ping(dataBase, "super1", 42);
         Assert.assertEquals(42, Sentinel.get(dataBase, "super1"));
         Sentinel.ping(dataBase, "super1", 123);
         Sentinel.ping(dataBase, "super1", 5242);
         Assert.assertEquals(5242, Sentinel.get(dataBase, "super1"));
+        Assert.assertEquals(0, Sentinel.countBehind(dataBase, 100));
+        Assert.assertEquals(1, Sentinel.countBehind(dataBase, 10000));
       } finally {
         installer.uninstall();
       }

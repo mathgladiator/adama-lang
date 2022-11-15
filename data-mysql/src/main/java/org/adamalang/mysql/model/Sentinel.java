@@ -53,4 +53,19 @@ public class Sentinel {
       throw new ErrorCodeException(ErrorCodes.MYSQL_FAILED_FINDING_SENTINEL_ASPECT);
     });
   }
+
+  public static int countBehind(DataBase dataBase, long limit) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT COUNT(`timestamp`) FROM `" + dataBase.databaseName + "`.`sentinel` WHERE `timestamp`<?";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setLong(1, limit);
+        try (ResultSet rs = statement.executeQuery()) {
+          while (rs.next()) {
+            return rs.getInt(1);
+          }
+        }
+      }
+      throw new ErrorCodeException(ErrorCodes.MYSQL_FAILED_FINDING_SENTINEL_COUNT);
+    });
+  }
 }

@@ -606,6 +606,8 @@ public class ErrorTable {
     descriptions.put(786436, "no description of error (yet)");
     names.put(790704, "MYSQL_FAILED_FINDING_SENTINEL_ASPECT");
     descriptions.put(790704, "no description of error (yet)");
+    names.put(775372, "MYSQL_FAILED_FINDING_SENTINEL_COUNT");
+    descriptions.put(775372, "no description of error (yet)");
     names.put(716806, "NET_HANDLER_SCAN_EXCEPTION");
     descriptions.put(716806, "no description of error (yet)");
     names.put(753699, "NET_FAILED_INITIATION");
