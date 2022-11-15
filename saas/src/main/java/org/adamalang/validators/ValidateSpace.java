@@ -52,8 +52,8 @@ public class ValidateSpace {
     if (!Validators.simple(space, 127)) {
       throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_NOT_SIMPLE);
     }
-    if (space.contains(".")) {
-      throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_HAS_DOT);
+    if (space.contains(".") || space.contains("_") || space.contains("--")) {
+      throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_HAS_INVALID_CHARACTER);
     }
   }
 }

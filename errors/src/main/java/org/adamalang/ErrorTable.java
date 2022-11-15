@@ -443,7 +443,7 @@ public class ErrorTable {
     descriptions.put(904364, "no description of error (yet)");
     names.put(998515, "API_INVALID_SPACE_NOT_SIMPLE");
     descriptions.put(998515, "no description of error (yet)");
-    names.put(950465, "API_INVALID_SPACE_HAS_DOT");
+    names.put(950465, "API_INVALID_SPACE_HAS_INVALID_CHARACTER");
     descriptions.put(950465, "no description of error (yet)");
     names.put(998459, "API_KEYSTORE_NOT_JSON");
     descriptions.put(998459, "no description of error (yet)");

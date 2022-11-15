@@ -17,10 +17,10 @@ Note, this example is derived from the [chat example available from github.](htt
       <td colspan="2" id="setup">
         <fieldset>
           <legend>Inputs: Space, Key, and Identities</legend>
-          <label for="space">Space</label>
+          <label for="space">Space (valid characters are a-z, 0-9, - and _)</label>
           <input type="text" id="space" name="space" value="chat000" size="100"/>
           <br />
-          <label for="key">Key</label>
+          <label for="key">Key (valid characters are a-z, 0-9, -, ., and _)</label>
           <input type="text" id="key" name="key" value="room-as-key" size="100"/>
           <br />
           <label for="identity-user-1">User 1</label>

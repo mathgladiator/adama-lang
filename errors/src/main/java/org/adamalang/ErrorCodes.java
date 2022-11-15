@@ -387,7 +387,7 @@ public class ErrorCodes {
   public static final int API_INVALID_SPACE_EMPTY = 937076;
   public static final int API_INVALID_SPACE_INAPPROPRIATE_NAME = 904364;
   public static final int API_INVALID_SPACE_NOT_SIMPLE = 998515;
-  public static final int API_INVALID_SPACE_HAS_DOT = 950465;
+  public static final int API_INVALID_SPACE_HAS_INVALID_CHARACTER = 950465;
 
   public static final int API_KEYSTORE_NOT_JSON = 998459;
   public static final int API_KEYSTORE_ROOT_ITEM_NOT_OBJECT = 949307;

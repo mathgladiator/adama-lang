@@ -317,7 +317,7 @@ Create a space.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | template | no | String | When creating a space, the template is a known special identifier for how to bootstrap the defaults. Examples: none (default when template parameter not present). |
 
 
@@ -346,7 +346,7 @@ The developer then generates a public/private key, encrypts the token with the p
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
 
 ### Template
@@ -375,7 +375,7 @@ Get the most recent space usage in terms of billable hours.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | limit | no | Integer | Maximum number of items to return during a streaming list. |
 
 
@@ -423,7 +423,7 @@ Get the deployment plan for a space.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
 
 ### Template
@@ -450,7 +450,7 @@ Set the deployment plan for a space.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | plan | yes | ObjectNode | This 'plan' parameter contains multiple Adama scripts all gated on various rules.              These rules allow for a migration to happen slowly on your schedule.              Note: this value will validated such that the scripts are valid, compile, and will not have any major regressions             during role out. |
 
 
@@ -473,7 +473,7 @@ Set the RxHTML forest for the space when viewed via a domain name.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | rxhtml | yes | String | A RxHTML forest which provides simplified web hosting. |
 
 
@@ -496,7 +496,7 @@ Get the RxHTML forest for the space when viewed via a domain name.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
 
 ### Template
@@ -526,7 +526,7 @@ A space may be reserved for 90 minutes until the system is absolutely sure no do
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
 
 ### Template
@@ -550,7 +550,7 @@ Spaces can be shared among Adama developers.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | email | yes | String | The email of an Adama developer. |
 | role | yes | String | The role of a user may determine their capabilities to perform actions. |
 
@@ -574,7 +574,7 @@ Get a schema for the space.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
 
 
@@ -641,7 +641,7 @@ Map a domain to a space.
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
 | domain | yes | String | A domain name. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | certificate | no | String | A TLS/SSL Certificate encoded as json. |
 
 
@@ -745,7 +745,7 @@ The entropy allows the randomization of the document to be fixed at construction
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
 | entropy | no | String | Each document has a random number generator. When 'entropy' is present, it will seed the random number             generate such that the randomness is now deterministic at the start. |
 | arg | yes | ObjectNode | The parameter for a document's @construct event. |
@@ -770,7 +770,7 @@ Delete a document (invokes the @delete document policy).
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
 
 
@@ -793,7 +793,7 @@ List documents within a space which are after the given marker.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | marker | no | String | A key to skip ahead a listing.             When iterating, values will be returned that are after marker.             To paginate an entire list, pick the last key or name returned and use it as the next marker. |
 | limit | no | Integer | Maximum number of items to return during a streaming list. |
 
@@ -830,7 +830,7 @@ Create a connection to a document.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
 | viewer-state | no | ObjectNode | A connection to a document has a side-channel for passing information about the client's view into the evaluation of bubbles.             This allows for developers to implement real-time queries and pagination. |
 
@@ -1043,7 +1043,7 @@ Start an upload for the given document with the given filename and content type.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
 | filename | yes | String | A filename is a nice description of the asset being uploaded. |
 | content-type | yes | String | The MIME type like text/json or video/mp4. |

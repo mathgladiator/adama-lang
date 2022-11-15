@@ -58,6 +58,21 @@ public class ValidateSpaceInfoTests {
   }
 
   @Test
+  public void doubleHyphen() {
+    try {
+      ValidateSpace.validate("abc-x-def");
+    } catch (ErrorCodeException ece) {
+      Assert.fail();
+    }
+    try {
+      ValidateSpace.validate("abc--def");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(950465, ece.code);
+    }
+  }
+
+  @Test
   public void good() throws Exception {
     ValidateSpace.validate("simple");
   }
@@ -76,17 +91,31 @@ public class ValidateSpaceInfoTests {
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(904364, ece.code);
     }
-    try {
-      ValidateSpace.validate(".git");
-      Assert.fail();
-    } catch (ErrorCodeException ece) {
-      Assert.assertEquals(950465, ece.code);
-    }
+  }
+
+  @Test
+  public void tooShort2() {
     try {
       ValidateSpace.validate("..");
       Assert.fail();
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(904364, ece.code);
+    }
+    try {
+      ValidateSpace.validate("d");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(904364, ece.code);
+    }
+  }
+
+  @Test
+  public void invalidCharacters() {
+    try {
+      ValidateSpace.validate("my-domain.com");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(950465, ece.code);
     }
     try {
       ValidateSpace.validate(".aws");
@@ -95,16 +124,16 @@ public class ValidateSpaceInfoTests {
       Assert.assertEquals(950465, ece.code);
     }
     try {
-      ValidateSpace.validate("my-domain.com");
+      ValidateSpace.validate("_aws");
       Assert.fail();
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(950465, ece.code);
     }
     try {
-      ValidateSpace.validate("d");
+      ValidateSpace.validate(".git");
       Assert.fail();
     } catch (ErrorCodeException ece) {
-      Assert.assertEquals(904364, ece.code);
+      Assert.assertEquals(950465, ece.code);
     }
   }
 }
