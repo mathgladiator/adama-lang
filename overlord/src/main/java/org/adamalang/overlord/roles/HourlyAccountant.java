@@ -97,7 +97,7 @@ public class HourlyAccountant {
         handler.put("/accountant", accountantTable.toHtml("Accountant Work"));
         Sentinel.ping(dataBase, "accountant", System.currentTimeMillis());
       } finally {
-        executor.schedule(this, 1000 * 60 * 10);
+        executor.schedule(this, 1000 * 60 * 5);
       }
     }
 
