@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DeadDetector {
   public static void kickOff(OverlordMetrics metrics, DataBase dataBase, AtomicBoolean alive) {
     SimpleExecutor executor = SimpleExecutor.create("dead-detector");
-    executor.schedule(new NamedRunnable("space-delete-bot") {
+    executor.schedule(new NamedRunnable("dead-detector") {
       @Override
       public void execute() throws Exception {
         if (alive.get()) {
