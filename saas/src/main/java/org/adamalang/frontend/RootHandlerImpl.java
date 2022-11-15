@@ -47,6 +47,7 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Pattern;
 
 public class RootHandlerImpl implements RootHandler {
   private static final Logger LOG = LoggerFactory.getLogger(RootHandlerImpl.class);
@@ -297,11 +298,16 @@ public class RootHandlerImpl implements RootHandler {
     }
   }
 
+  /** HACK: change *.blah.com to wildcard.blah.com */
+  private String fixDomain(String domain) {
+    return domain.replaceAll(Pattern.quote("*"), "wildcard");
+  }
+
   @Override
   public void handle(Session session, DomainGetRequest request, DomainPolicyResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
-        Domain domain = Domains.get(nexus.database, request.domain);
+        Domain domain = Domains.get(nexus.database, fixDomain(request.domain));
         if (domain != null) {
           responder.complete(domain.space);
         } else {
@@ -320,7 +326,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.policy.canUserManageDomain(request.who)) {
         String cert = request.certificate != null ? MasterKey.encrypt(nexus.masterKey, request.certificate) : null;
-        if (Domains.map(nexus.database, request.who.id, request.domain, request.space, cert)) { // Domains.map ensures ownership on UPDATE to prevent conflicts
+        if (Domains.map(nexus.database, request.who.id, fixDomain(request.domain), request.space, cert)) { // Domains.map ensures ownership on UPDATE to prevent conflicts
           if (cert == null) {
             nexus.signalControl.raiseAutomaticDomain(request.domain);
           }
@@ -356,7 +362,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, DomainUnmapRequest request, SimpleResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
-        if (Domains.unmap(nexus.database, request.who.id, request.domain)) {
+        if (Domains.unmap(nexus.database, request.who.id, fixDomain(request.domain))) {
           responder.complete();
         } else {
           responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_UNMAP_FAILED));

@@ -38,7 +38,7 @@ public class Domains {
             return statement.executeUpdate() == 1;
           }
         } else {
-          String sqlUpdate = "UPDATE `" + dataBase.databaseName + "`.`domains` SET `space`=? WHERE `owner`=? AND `domain`=?";
+          String sqlUpdate = "UPDATE `" + dataBase.databaseName + "`.`domains` SET `space`=?, `automatic`=TRUE WHERE `owner`=? AND `domain`=?";
           try (PreparedStatement statement = connection.prepareStatement(sqlUpdate)) {
             statement.setString(1, space);
             statement.setInt(2, owner);
