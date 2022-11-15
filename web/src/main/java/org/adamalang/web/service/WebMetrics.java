@@ -33,6 +33,7 @@ public class WebMetrics {
   public final Runnable webhandler_wta_crash;
   public final Runnable webhandler_options_failure;
   public final Runnable webhandler_healthcheck;
+  public final Runnable webhandler_deephealthcheck;
   public final Runnable webhandler_client_download;
   public final Runnable webhandler_set_asset_key;
   public final Runnable webhandler_assets_no_cookie;
@@ -72,6 +73,7 @@ public class WebMetrics {
     this.webhandler_notfound = factory.counter("webhandler_notfound");
     this.webhandler_upload_asset_failure = factory.counter("webhandler_upload_asset_failure");
     this.webhandler_healthcheck = factory.counter("webhandler_healthcheck");
+    this.webhandler_deephealthcheck = factory.counter("webhandler_deephealthcheck");
     this.webhandler_firewall = factory.counter("webhandler_firewall");
     this.webhandler_asset_failed = factory.counter("webhandler_asset_failed");
     this.webhandler_wta_crash = factory.counter("webhandler_wta_crash");

@@ -973,6 +973,16 @@
         <field name="timestamp" />
     </responder>
 
+    <method name="super/check-in" responder="simple">
+        <parameter name="identity"/>
+        <documentation>
+            The super agent periodically checks in.
+
+            This is to bring the external highly secure location into the monitoring system via a sentinel.
+        </documentation>
+    </method>
+
+
     <method name="super/list-automatic-domains" responder="automatic-domain-listing">
         <parameter name="identity"/>
         <parameter name="timestamp"/>

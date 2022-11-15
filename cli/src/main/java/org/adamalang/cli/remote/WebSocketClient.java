@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /** a very simple websocket client for usage within only the CLI (due to blocking nature) */
 public class WebSocketClient implements AutoCloseable {
-  private final WebClientBase base;
+  public final WebClientBase base;
   private final String endpoint;
 
   public WebSocketClient(Config config) {

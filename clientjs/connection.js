@@ -622,6 +622,15 @@ class WebSocketAdamaConnection {
       }
     });
   }
+  SuperCheckIn(identity, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"super/check-in", "id":parId, "identity": identity}
+    });
+  }
   SuperListAutomaticDomains(identity, timestamp, responder) {
     var self = this;
     var parId = self.__id();

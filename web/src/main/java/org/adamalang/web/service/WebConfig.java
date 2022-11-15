@@ -13,6 +13,7 @@ import org.adamalang.common.ConfigObject;
 
 public class WebConfig {
   public final String healthCheckPath;
+  public final String deepHealthCheckPath;
   public final int maxContentLengthSize;
   public final int maxWebSocketFrameSize;
   public final int port;
@@ -35,6 +36,7 @@ public class WebConfig {
     this.redirectPort = config.intOf("http_redirect_port", 8085);
     this.maxContentLengthSize = config.intOf("http_max_content_length_size", 4194304);
     this.healthCheckPath = config.strOf("http_health_check_path", "/~health_check_lb");
+    this.deepHealthCheckPath = config.strOf("http_deep_health_check_path", "/~deep_health_check_status_page");
     // WebSocket properties
     this.timeoutWebsocketHandshake = config.intOf("websocket_handshake_timeout_ms", 2500);
     this.readTimeoutSeconds = config.intOf("websocket_read_timeout_sec", 10);

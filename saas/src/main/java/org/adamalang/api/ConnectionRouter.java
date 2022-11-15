@@ -886,6 +886,24 @@ public class ConnectionRouter {
                 }
               });
             } return;
+            case "super/check-in": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SuperCheckIn.start();
+              SuperCheckInRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(SuperCheckInRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "super/list-automatic-domains": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SuperListAutomaticDomains.start();
               SuperListAutomaticDomainsRequest.resolve(session, nexus, request, new Callback<>() {

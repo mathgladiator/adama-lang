@@ -457,28 +457,35 @@ public class GeneratedMissingParameterTest {
       Iterator<String> c91 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:409609", c91.next());
       node.put("upload", 100L);
-      //SuperListAutomaticDomains
+      //SuperCheckIn
       node = Json.newJsonObject();
       node.put("id", 91);
-      node.put("method", "super/list-automatic-domains");
+      node.put("method", "super/check-in");
       Iterator<String> c92 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:458759", c92.next());
       node.put("identity", _identity);
+      //SuperListAutomaticDomains
+      node = Json.newJsonObject();
+      node.put("id", 92);
+      node.put("method", "super/list-automatic-domains");
       Iterator<String> c93 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:439292", c93.next());
+      Assert.assertEquals("ERROR:458759", c93.next());
+      node.put("identity", _identity);
+      Iterator<String> c94 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:439292", c94.next());
       node.put("timestamp", 100L);
       //SuperSetDomainCertificate
       node = Json.newJsonObject();
-      node.put("id", 93);
+      node.put("id", 94);
       node.put("method", "super/set-domain-certificate");
-      Iterator<String> c94 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:458759", c94.next());
-      node.put("identity", _identity);
       Iterator<String> c95 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:488444", c95.next());
-      node.put("domain", "xzya");
+      Assert.assertEquals("ERROR:458759", c95.next());
+      node.put("identity", _identity);
       Iterator<String> c96 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:439292", c96.next());
+      Assert.assertEquals("ERROR:488444", c96.next());
+      node.put("domain", "xzya");
+      Iterator<String> c97 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:439292", c97.next());
       node.put("timestamp", 100L);
     }
   }
