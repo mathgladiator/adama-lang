@@ -86,7 +86,7 @@ public class ValidateSpaceInfoTests {
       ValidateSpace.validate("..");
       Assert.fail();
     } catch (ErrorCodeException ece) {
-      Assert.assertEquals(950465, ece.code);
+      Assert.assertEquals(904364, ece.code);
     }
     try {
       ValidateSpace.validate(".aws");
