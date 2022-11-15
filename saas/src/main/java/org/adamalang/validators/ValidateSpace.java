@@ -46,11 +46,14 @@ public class ValidateSpace {
     if (space.length() == 0) {
       throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_EMPTY);
     }
-    if (INAPPROPRIATE_SPACE_NAMES.contains(space) || space.startsWith(".") || space.contains("..") || space.length() < 3) {
+    if (INAPPROPRIATE_SPACE_NAMES.contains(space) || space.length() < 3) {
       throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_INAPPROPRIATE_NAME);
     }
     if (!Validators.simple(space, 127)) {
       throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_NOT_SIMPLE);
+    }
+    if (space.contains(".")) {
+      throw new ErrorCodeException(ErrorCodes.API_INVALID_SPACE_HAS_DOT);
     }
   }
 }

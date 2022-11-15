@@ -443,6 +443,8 @@ public class ErrorTable {
     descriptions.put(904364, "no description of error (yet)");
     names.put(998515, "API_INVALID_SPACE_NOT_SIMPLE");
     descriptions.put(998515, "no description of error (yet)");
+    names.put(950465, "API_INVALID_SPACE_HAS_DOT");
+    descriptions.put(950465, "no description of error (yet)");
     names.put(998459, "API_KEYSTORE_NOT_JSON");
     descriptions.put(998459, "no description of error (yet)");
     names.put(949307, "API_KEYSTORE_ROOT_ITEM_NOT_OBJECT");
@@ -566,6 +568,8 @@ public class ErrorTable {
     descriptions.put(929990, "no description of error (yet)");
     names.put(920777, "SUPER_NOT_AUTHORIZED_LIST");
     descriptions.put(920777, "no description of error (yet)");
+    names.put(919774, "SUPER_NOT_AUTHORIZED_CHECKIN");
+    descriptions.put(919774, "no description of error (yet)");
     names.put(979145, "SUPER_NOT_AUTHORIZED_SET_AUTOMATIC");
     descriptions.put(979145, "no description of error (yet)");
     names.put(921823, "SUPER_INVALID_CERT_SET_AUTOMATIC");

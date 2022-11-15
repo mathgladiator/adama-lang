@@ -15,7 +15,7 @@
             A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
             denote the name of that collection.
 
-            Spaces are case insensitive using the regex a-z[a-z0-9\.]* to validation.
+            Spaces are lower case ASCII using the regex a-z[a-z0-9_\-]* to validation with a minimum length of three characters.
         </documentation>
         <transform service="org.adamalang.transforms.SpacePolicyLocator"
                    output-name="policy"
@@ -36,7 +36,7 @@
             Within a space, documents are organized within a map and the 'key' parameter will uniquely identify
             documents.
 
-            Keys are case insensitive using the regex [a-z0-9\.-_]* for validation
+            Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation
         </documentation>
         <validate service="org.adamalang.validators.ValidateKey"/>
     </parameter-definition>

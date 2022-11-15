@@ -80,19 +80,25 @@ public class ValidateSpaceInfoTests {
       ValidateSpace.validate(".git");
       Assert.fail();
     } catch (ErrorCodeException ece) {
-      Assert.assertEquals(904364, ece.code);
+      Assert.assertEquals(950465, ece.code);
     }
     try {
       ValidateSpace.validate("..");
       Assert.fail();
     } catch (ErrorCodeException ece) {
-      Assert.assertEquals(904364, ece.code);
+      Assert.assertEquals(950465, ece.code);
     }
     try {
       ValidateSpace.validate(".aws");
       Assert.fail();
     } catch (ErrorCodeException ece) {
-      Assert.assertEquals(904364, ece.code);
+      Assert.assertEquals(950465, ece.code);
+    }
+    try {
+      ValidateSpace.validate("my-domain.com");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(950465, ece.code);
     }
     try {
       ValidateSpace.validate("d");

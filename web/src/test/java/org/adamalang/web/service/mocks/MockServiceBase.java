@@ -89,6 +89,11 @@ public class MockServiceBase implements ServiceBase {
     return new HttpHandler() {
 
       @Override
+      public void handleDeepHealth(Callback<String> callback) {
+        callback.success("MOCK");
+      }
+
+      @Override
       public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         callback.success(new HttpResult("", new byte[0], uri.equalsIgnoreCase("/ok-cors")));
       }
