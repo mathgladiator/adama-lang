@@ -13,10 +13,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.UnbilledResources;
-import org.adamalang.mysql.model.FinderOperations;
-import org.adamalang.mysql.model.Billing;
-import org.adamalang.mysql.model.Metering;
-import org.adamalang.mysql.model.Spaces;
+import org.adamalang.mysql.model.*;
 import org.adamalang.mysql.data.MeteringSpaceSummary;
 import org.adamalang.mysql.data.ResourcesPerPenny;
 import org.adamalang.overlord.OverlordMetrics;
@@ -98,6 +95,7 @@ public class HourlyAccountant {
         }
         accountantTable.row("accountant-ran", "hour:" + current, "scan:" + System.currentTimeMillis());
         handler.put("/accountant", accountantTable.toHtml("Accountant Work"));
+        Sentinel.ping(dataBase, "accountant", System.currentTimeMillis());
       } finally {
         executor.schedule(this, 1000 * 60 * 10);
       }

@@ -570,6 +570,8 @@ public class ErrorTable {
     descriptions.put(920777, "no description of error (yet)");
     names.put(919774, "SUPER_NOT_AUTHORIZED_CHECKIN");
     descriptions.put(919774, "no description of error (yet)");
+    names.put(914626, "SUPER_UNEXPECTED_EXCEPTION_CHECKIN");
+    descriptions.put(914626, "no description of error (yet)");
     names.put(979145, "SUPER_NOT_AUTHORIZED_SET_AUTOMATIC");
     descriptions.put(979145, "no description of error (yet)");
     names.put(921823, "SUPER_INVALID_CERT_SET_AUTOMATIC");
@@ -602,6 +604,8 @@ public class ErrorTable {
     descriptions.put(782348, "no description of error (yet)");
     names.put(786436, "MYSQL_FAILED_FINDING_SECRET_KEY");
     descriptions.put(786436, "no description of error (yet)");
+    names.put(790704, "MYSQL_FAILED_FINDING_SENTINEL_ASPECT");
+    descriptions.put(790704, "no description of error (yet)");
     names.put(716806, "NET_HANDLER_SCAN_EXCEPTION");
     descriptions.put(716806, "no description of error (yet)");
     names.put(753699, "NET_FAILED_INITIATION");

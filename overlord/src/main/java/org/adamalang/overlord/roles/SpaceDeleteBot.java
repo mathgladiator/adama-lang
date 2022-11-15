@@ -19,6 +19,7 @@ import org.adamalang.mysql.data.DeletedSpace;
 import org.adamalang.mysql.data.DocumentIndex;
 import org.adamalang.mysql.model.Domains;
 import org.adamalang.mysql.model.FinderOperations;
+import org.adamalang.mysql.model.Sentinel;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.Client;
 import org.adamalang.overlord.OverlordMetrics;
@@ -100,6 +101,7 @@ public class SpaceDeleteBot {
         if (alive.get()) {
           try {
             bot.round();
+            Sentinel.ping(dataBase, "space-delete-bot", System.currentTimeMillis());
           } finally {
             executor.schedule(this, (int) (30000 + Math.random() * 30000));
           }

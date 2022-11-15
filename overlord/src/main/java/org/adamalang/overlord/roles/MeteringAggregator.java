@@ -13,6 +13,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Metering;
+import org.adamalang.mysql.model.Sentinel;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.overlord.OverlordMetrics;
@@ -20,7 +21,7 @@ import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
 
 public class MeteringAggregator {
-  public static void kickOff(OverlordMetrics metrics, Client client, DataBase dataBaseFront, ConcurrentCachedHttpHandler handler) {
+  public static void kickOff(OverlordMetrics metrics, Client client, DataBase dataBase, ConcurrentCachedHttpHandler handler) {
     SimpleExecutor executor = SimpleExecutor.create("metering-aggregator");
     FixedHtmlStringLoggerTable table = new FixedHtmlStringLoggerTable(32, "target", "batch", "time");
     executor.schedule(new NamedRunnable("metering-fetch") {
@@ -38,7 +39,7 @@ public class MeteringAggregator {
               public void execute() throws Exception {
                 long now = System.currentTimeMillis();
                 if (!batch.contains("\"spaces\":{}")) {
-                  Metering.recordBatch(dataBaseFront, target, batch, now);
+                  Metering.recordBatch(dataBase, target, batch, now);
                   table.row(target, batch, Long.toString(now));
                   metrics.metering_fetch_saved.run();
                 } else {
@@ -61,6 +62,7 @@ public class MeteringAggregator {
             executor.execute(new NamedRunnable("got-finished") {
               @Override
               public void execute() throws Exception {
+                Sentinel.ping(dataBase, "metering", System.currentTimeMillis());
                 if (!gotFinished) {
                   gotFinished = true;
                   metrics.metering_fetch_finished.run();

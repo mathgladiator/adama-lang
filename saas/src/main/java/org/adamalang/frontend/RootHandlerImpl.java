@@ -884,8 +884,12 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SuperCheckInRequest request, SimpleResponder responder) {
     if (request.who.source == AuthenticatedUser.Source.Super) {
-      // TODO: tell the database about the health of the super agent
-      responder.complete();
+      try {
+        Sentinel.ping(nexus.database, "super", System.currentTimeMillis());
+        responder.complete();
+      } catch (Exception ex) {
+        responder.error(new ErrorCodeException(ErrorCodes.SUPER_UNEXPECTED_EXCEPTION_CHECKIN));
+      }
     } else {
       responder.error(new ErrorCodeException(ErrorCodes.SUPER_NOT_AUTHORIZED_CHECKIN));
     }
