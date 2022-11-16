@@ -160,6 +160,10 @@ public class CaravanDataService implements ArchivingDataService {
         output.flush();
         output.close();
         Files.move(tempOutput.toPath(), finalOutput.toPath(), StandardCopyOption.ATOMIC_MOVE);
+        if (assetByteAccountant.hasThereBeenDataloss()) {
+          LOGGER.error("detected data loss during a backup:" + key.space + "/" + key.key + "->" + archiveKey);
+          metrics.caravan_datalog_loss.run();
+        }
       } catch (Exception ioex) {
         LOGGER.error("failed-backup", ioex);
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_BACKUP_EXCEPTION, ioex));
@@ -430,7 +434,8 @@ public class CaravanDataService implements ArchivingDataService {
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_OUT_OF_SPACE_SNAPSHOT));
       } else {
         cached.handle(snap);
-        store.trim(id, snapshot.history, () -> {
+        int toPreserve = Math.max(snapshot.history, cached.getMinimumHistoryToPreserve());
+        store.trim(id, toPreserve, () -> {
           callback.success(0);// huh, this is interesting
         });
       }

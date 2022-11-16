@@ -14,9 +14,11 @@ import org.adamalang.common.metrics.MetricsFactory;
 public class CaravanMetrics {
   public Runnable caravan_waste;
   public Runnable caravan_seq_off;
+  public Runnable caravan_datalog_loss;
 
   public CaravanMetrics(MetricsFactory factory) {
     this.caravan_waste = factory.counter("caravan_waste");
     this.caravan_seq_off = factory.counter("caravan_seq_off");
+    this.caravan_datalog_loss = factory.counter("caravan_datalog_loss");
   }
 }

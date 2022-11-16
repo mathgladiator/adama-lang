@@ -57,6 +57,10 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
     }
   }
 
+  public int getMinimumHistoryToPreserve() {
+    return 1 + redos.size();
+  }
+
   @Override
   public void handle(Events.Batch payload) {
     for (Events.Change change : payload.changes) {
