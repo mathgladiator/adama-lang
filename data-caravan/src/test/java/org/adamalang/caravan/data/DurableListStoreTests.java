@@ -63,7 +63,7 @@ public class DurableListStoreTests {
       Assert.assertEquals(65176, store.available());
       store.delete(1, event);
       store.flush(false);
-      Assert.assertEquals(104, count.get()); // 1 PUT, 100 PUT, 1 DELETE, 1 TRIM, 1 DELETE
+      Assert.assertEquals(105, count.get()); // 1 PUT, 100 PUT, 1 DELETE, 1 TRIM, 1 DELETE
       for (int k = 0; k < 1000; k++) {
         store.append(k, ("K:" + k).getBytes(StandardCharsets.UTF_8), k, 1024, event);
       }
@@ -72,20 +72,20 @@ public class DurableListStoreTests {
       }
       store.flush(true);
       Assert.assertFalse(store.delete(102312412L, event));
-      Assert.assertEquals(2104, count.get()); // + 1000 PUT, 1000 DELETE
+      Assert.assertEquals(2105, count.get()); // + 1000 PUT, 1000 DELETE
       Assert.assertEquals(65536, store.available());
       int fill = 0;
       while (store.append(1, ("01234567890123456789012345678901234567890123456789Junk@" + fill).getBytes(StandardCharsets.UTF_8), 0, 0, event) != null) {
         fill++;
       }
       Assert.assertFalse(store.append(100, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".getBytes(StandardCharsets.UTF_8), 0, 1024, event) != null);
-      Assert.assertEquals(3233, count.get());
+      Assert.assertEquals(3234, count.get());
       store.delete(1, event);
       store.flush(false);
-      Assert.assertEquals(3234, count.get());
+      Assert.assertEquals(3235, count.get());
       Assert.assertTrue(store.append(100, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".getBytes(StandardCharsets.UTF_8), 1, 128, event) != null);
       store.flush(false);
-      Assert.assertEquals(3235, count.get());
+      Assert.assertEquals(3236, count.get());
       store.shutdown();
     } finally {
       for (File file : testRoot.listFiles()) {

@@ -334,6 +334,7 @@ public class DurableListStore {
         return true;
       }
     }
+    notification.run();
     return false;
   }
 

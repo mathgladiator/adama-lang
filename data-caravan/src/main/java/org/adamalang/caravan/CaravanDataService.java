@@ -425,13 +425,13 @@ public class CaravanDataService implements ArchivingDataService {
 
     execute("snapshot", key, true, callback, (id, cached) -> {
       Integer size = store.append(id, bytes, snapshot.seq, snapshot.assetBytes, () -> {
-        callback.success(0);// huh, this is interesting
       });
       if (size == null) {
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_OUT_OF_SPACE_SNAPSHOT));
       } else {
         cached.handle(snap);
         store.trim(id, snapshot.history, () -> {
+          callback.success(0);// huh, this is interesting
         });
       }
     });
