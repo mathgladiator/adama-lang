@@ -169,6 +169,7 @@ public class FinderTests {
         tasks = FinderOperations.produceGCTasks(dataBase);
         Assert.assertEquals(1, tasks.size());
         Assert.assertEquals(1, tasks.get(0).id);
+        Assert.assertEquals("new-achive-key-old", tasks.get(0).archiveKey);
         Assert.assertEquals("space-1", tasks.get(0).space);
         Assert.assertEquals("key-1", tasks.get(0).key);
         Assert.assertTrue(FinderOperations.validateTask(dataBase, tasks.get(0)));

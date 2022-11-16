@@ -32,13 +32,13 @@ public class CaravanDataServiceTests {
           1, 1, NtPrincipal.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0, 100, UpdateType.AddUserData);
   private static final RemoteDocumentUpdate UPDATE_2 =
       new RemoteDocumentUpdate(
-          2, 2, null, "REQUEST", "{\"x\":2}", "{\"x\":1,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
+          2, 2, null, "REQUEST", "{\"x\":2}", "{\"x\":1,\"z\":42}", true, 0, 200, UpdateType.AddUserData);
   private static final RemoteDocumentUpdate UPDATE_3 =
       new RemoteDocumentUpdate(
-          3, 3, null, "REQUEST", "{\"x\":3}", "{\"x\":2,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
+          3, 3, null, "REQUEST", "{\"x\":3}", "{\"x\":2,\"z\":42}", true, 0, 0, UpdateType.AddUserData);
   private static final RemoteDocumentUpdate UPDATE_4 =
       new RemoteDocumentUpdate(
-          4, 4, null, "REQUEST", "{\"x\":4}", "{\"x\":3,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
+          4, 4, null, "REQUEST", "{\"x\":4}", "{\"x\":3,\"z\":42}", true, 0, 300, UpdateType.AddUserData);
 
   private static class Setup {
     private final KeyToIdService keyToIdService;

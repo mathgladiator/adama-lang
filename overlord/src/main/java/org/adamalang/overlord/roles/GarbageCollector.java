@@ -9,6 +9,7 @@
  */
 package org.adamalang.overlord.roles;
 
+import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
@@ -23,6 +24,7 @@ import org.adamalang.runtime.data.ColdAssetSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -32,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class GarbageCollector {
   private static final Logger LOGGER = LoggerFactory.getLogger(GarbageCollector.class);
 
-  public static void kickOff(OverlordMetrics metrics, DataBase dataBase, ColdAssetSystem lister, AtomicBoolean alive) {
+  public static void kickOff(OverlordMetrics metrics, DataBase dataBase, ColdAssetSystem lister, Cloud cloud, AtomicBoolean alive) {
     SimpleExecutor executor = SimpleExecutor.create("garbage-man");
     executor.schedule(new NamedRunnable("garbage-man") {
       @Override
@@ -44,7 +46,8 @@ public class GarbageCollector {
             for (GCTask task : tasks) {
               metrics.garbage_collector_found_task.run();
               LOGGER.error("to-collect-for:" + task.seq + "," + task.key);
-              lister.listAssetsOf(new Key(task.space, task.key), new Callback<List<String>>() {
+              final Key key = new Key(task.space, task.key);
+              lister.listAssetsOf(key, new Callback<List<String>>() {
                 @Override
                 public void success(List<String> assets) {
                   try {
@@ -58,7 +61,18 @@ public class GarbageCollector {
                       // TODO: if kill list > 0, then validate, delete, lower ELSE lower
                       ArrayList<String> kill = new ArrayList<>();
                       if (kill.size() == 0) {
-                        // FinderOperations.lowerTask(dataBase, task);
+                        cloud.restore(key, task.archiveKey, new Callback<File>() {
+                            @Override
+                            public void success(File value) {
+
+                            }
+
+                            @Override
+                            public void failure(ErrorCodeException ex) {
+
+                            }
+                          });
+                            // FinderOperations.lowerTask(dataBase, task);
                       } else {
                         if (FinderOperations.validateTask(dataBase, task)) {
                           // TODO: delete assets

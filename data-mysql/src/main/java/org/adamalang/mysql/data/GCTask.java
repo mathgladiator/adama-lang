@@ -15,12 +15,14 @@ public class GCTask {
   public final String space;
   public final String key;
   public final int seq;
+  public final String archiveKey;
 
-  public GCTask(int id, String space, String key, int seq) {
+  public GCTask(int id, String space, String key, int seq, String archiveKey) {
     this.id = id;
     this.space = space;
     this.key = key;
     this.seq = seq;
+    this.archiveKey = archiveKey;
   }
 
   @Override

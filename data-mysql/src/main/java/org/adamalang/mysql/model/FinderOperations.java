@@ -55,14 +55,14 @@ public class FinderOperations {
   /** walk the database producing a list of documents that need to be GC'd */
   public static ArrayList<GCTask> produceGCTasks(DataBase dataBase) throws Exception {
     return dataBase.transactSimple((connection) -> {
-      String sql = "SELECT `id`, `space`, `key`, `head_seq` FROM `" + dataBase.databaseName + //
+      String sql = "SELECT `id`, `space`, `key`, `head_seq`, `archive` FROM `" + dataBase.databaseName + //
           "`.`directory` WHERE `need_gc`=TRUE AND `type`=" + FinderService.Location.Archive.type +
           " LIMIT 100";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<GCTask> tasks = new ArrayList<>();
           while (rs.next()) {
-            tasks.add(new GCTask(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+            tasks.add(new GCTask(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5)));
           }
           return tasks;
         }

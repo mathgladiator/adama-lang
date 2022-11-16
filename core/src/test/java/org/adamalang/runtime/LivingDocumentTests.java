@@ -1463,6 +1463,7 @@ public class LivingDocumentTests {
     Assert.assertTrue(deNO_ONE.datum.get(1).startsWith("{\"data\":{\"x\":2,\"f\":{\""));
     Assert.assertTrue(deNO_ONE.datum.get(1).endsWith("\",\"size\":\"1024\",\"type\":\"image/png\",\"md5\":\"some hash\",\"sha384\":\"a better hash\"}},\"seq\":5}"));
     setup.assertCompare();
+    Assert.assertEquals(1024, setup.dumbDataService.assetsSeen);
   }
 
   @Test

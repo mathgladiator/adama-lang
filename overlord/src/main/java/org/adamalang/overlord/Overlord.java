@@ -9,6 +9,7 @@
  */
 package org.adamalang.overlord;
 
+import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.mysql.DataBase;
@@ -27,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Overlord {
   private static final Logger LOGGER = LoggerFactory.getLogger(Overlord.class);
 
-  public static HttpHandler execute(ConcurrentCachedHttpHandler handler, HeatTable heatTable, Client client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath, ColdAssetSystem lister, AtomicBoolean alive) throws Exception {
+  public static HttpHandler execute(ConcurrentCachedHttpHandler handler, HeatTable heatTable, Client client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath, ColdAssetSystem lister, Cloud cloud, AtomicBoolean alive) throws Exception {
     // the overlord has metrics
     OverlordMetrics metrics = new OverlordMetrics(metricsFactory);
 
@@ -44,7 +45,7 @@ public class Overlord {
     DeadDetector.kickOff(metrics, dataBase, alive);
 
     // kick off the garbage collector to clean up documents
-    GarbageCollector.kickOff(metrics, dataBase, lister, alive);
+    GarbageCollector.kickOff(metrics, dataBase, lister, cloud, alive);
 
     // kick off capacity management will will add/remove capacity per space
     CapacityManager.kickOffReturnHotTargetEvent(metrics, client, dataBase, handler, heatTable);

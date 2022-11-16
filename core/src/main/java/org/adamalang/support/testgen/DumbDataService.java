@@ -55,6 +55,7 @@ public class DumbDataService implements DataService {
   private Object tree;
   private String data;
   private final Consumer<RemoteDocumentUpdate> updates;
+  public long assetsSeen = 0L;
 
   public DumbDataService(Consumer<RemoteDocumentUpdate> updates) {
     this.tree = new HashMap<String, Object>();
@@ -83,6 +84,9 @@ public class DumbDataService implements DataService {
 
   @Override
   public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
+    for (RemoteDocumentUpdate update : patches) {
+      assetsSeen += update.assetBytes;
+    }
     if (dropPatches) {
       return;
     }

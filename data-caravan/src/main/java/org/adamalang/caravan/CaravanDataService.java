@@ -328,7 +328,7 @@ public class CaravanDataService implements ArchivingDataService {
         }
       };
       builder.handle(change);
-      if (store.append(id, ByteArrayHelper.convert(buf), patch.seqEnd, 0L, () -> {
+      if (store.append(id, ByteArrayHelper.convert(buf), patch.seqEnd, patch.assetBytes, () -> {
         executor.execute(new NamedRunnable("commit-cache") {
           @Override
           public void execute() throws Exception {

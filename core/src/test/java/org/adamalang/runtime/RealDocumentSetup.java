@@ -39,6 +39,7 @@ public class RealDocumentSetup implements Deliverer {
   private DurableLivingDocument mirror;
   public final String code;
   private Deliverer deliver = Deliverer.FAILURE;
+  public final DumbDataService dumbDataService;
 
   public RealDocumentSetup(final String code) throws Exception {
     this(code, null);
@@ -73,6 +74,7 @@ public class RealDocumentSetup implements Deliverer {
                 mirror.document().__insert(new JsonStreamReader(update.redo));
               }
             });
+    this.dumbDataService = dds;
     DocumentThreadBase base = new DocumentThreadBase(new ServiceShield(), dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
     dds.setData(json);
     factory = LivingDocumentTests.compile(code, deliver);

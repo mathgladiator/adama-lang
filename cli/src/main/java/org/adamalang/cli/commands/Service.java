@@ -230,7 +230,7 @@ public class Service {
     ConcurrentCachedHttpHandler overlordHandler = new ConcurrentCachedHttpHandler();
     HeatTable heatTable = new HeatTable(overlordHandler);
     Client client = init.makeClient(heatTable::onSample);
-    HttpHandler handler = Overlord.execute(overlordHandler, heatTable, client, init.engine, init.metricsFactory, targetsPath, init.database, scanPath, init.s3, init.alive);
+    HttpHandler handler = Overlord.execute(overlordHandler, heatTable, client, init.engine, init.metricsFactory, targetsPath, init.database, scanPath, init.s3, init.s3, init.alive);
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
     final var runnable = new ServiceRunnable(init.webConfig, new WebMetrics(init.metricsFactory), serviceBase, init.makeCertificateFinder(), () -> {});
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
