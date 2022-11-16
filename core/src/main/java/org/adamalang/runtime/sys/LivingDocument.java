@@ -217,7 +217,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     return new LivingDocumentChange(update, broadcasts, null);
   }
 
-  private LivingDocumentChange __simple_commit(NtPrincipal who, final String request, Object response) {
+  private LivingDocumentChange __simple_commit(NtPrincipal who, final String request, Object response, long assetBytes) {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     forward.beginObject();
@@ -227,7 +227,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), (int) (__next_time.get() - __time.get()), 0L, UpdateType.AddUserData);
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), (int) (__next_time.get() - __time.get()), assetBytes, UpdateType.AddUserData);
     return new LivingDocumentChange(update, broadcasts, response);
   }
 
@@ -1029,7 +1029,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       __randomizeOutOfBand();
       WebResponse response = __put_internal(put);
       exception = false;
-      return __simple_commit(put.context.who, request, response);
+      return __simple_commit(put.context.who, request, response, 0L);
     } finally {
       if (exception) {
         __revert();
@@ -1051,7 +1051,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       __randomizeOutOfBand();
       WebResponse response = __delete_internal(del);
       exception = false;
-      return __simple_commit(del.context.who, request, response);
+      return __simple_commit(del.context.who, request, response, 0L);
     } finally {
       if (exception) {
         __revert();
@@ -1088,7 +1088,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       __seq.bumpUpPre();
 
       exception = false;
-      return __simple_commit(context.who, request, null);
+      return __simple_commit(context.who, request, null, asset.size);
     } finally {
       if (exception) {
         __revert();
@@ -1257,7 +1257,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private LivingDocumentChange __transaction_apply_patch(final String request, final NtPrincipal who, String patch) {
     __patch(new JsonStreamReader(patch));
     __seq.bumpUpPre();
-    return __simple_commit(who, request, null);
+    return __simple_commit(who, request, null, 0L);
   }
 
   /** transaction: an invalidation is happening on the document (no monitor) */
