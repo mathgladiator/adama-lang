@@ -89,14 +89,7 @@ public class FinderOperations {
     return dataBase.transactSimple((connection) -> {
       String sql = "UPDATE `" + dataBase.databaseName + //
           "`.`directory` SET `need_gc`=FALSE WHERE `id`="+task.id+" AND `head_seq`=" + task.seq + " AND `need_gc`=TRUE AND `type`=" + FinderService.Location.Archive.type;
-      try (PreparedStatement statement = connection.prepareStatement(sql)) {
-        try (ResultSet rs = statement.executeQuery()) {
-          while (rs.next()) {
-            return true;
-          }
-          return false;
-        }
-      }
+      return DataBase.executeUpdate(connection, sql) == 1;
     });
   }
 }

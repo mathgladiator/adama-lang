@@ -171,7 +171,10 @@ public class FinderTests {
         Assert.assertEquals(1, tasks.get(0).id);
         Assert.assertEquals("space-1", tasks.get(0).space);
         Assert.assertEquals("key-1", tasks.get(0).key);
-
+        Assert.assertTrue(FinderOperations.validateTask(dataBase, tasks.get(0)));
+        FinderOperations.lowerTask(dataBase, tasks.get(0));
+        tasks = FinderOperations.produceGCTasks(dataBase);
+        Assert.assertEquals(0, tasks.size());
         HashMap<String, Long> inventory = FinderOperations.inventoryStorage(dataBase);
         Assert.assertEquals(1, inventory.size());
         Assert.assertEquals(9, (long) inventory.get(KEY1.space));
