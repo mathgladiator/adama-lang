@@ -14,8 +14,11 @@ import org.adamalang.common.Callback;
 import java.util.List;
 
 /** list assets for an object that are stored; this is for garbage collection of assets */
-public interface LiveAssetLister {
+public interface ColdAssetSystem {
 
   /** list all the asset ids for a given key */
-  public void list(Key key, Callback<List<String>> callback);
+  public void listAssetsOf(Key key, Callback<List<String>> callback);
+
+  /** delete the asset for a given document */
+  public void deleteAsset(Key key, String assetId, Callback<Void> callback);
 }

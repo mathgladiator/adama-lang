@@ -22,4 +22,9 @@ public class GCTask {
     this.key = key;
     this.seq = seq;
   }
+
+  @Override
+  public String toString() {
+    return "GCTask{" + "id=" + id + ", space='" + space + '\'' + ", key='" + key + '\'' + ", seq=" + seq + '}';
+  }
 }

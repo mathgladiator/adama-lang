@@ -25,5 +25,6 @@ public interface Cloud {
   /** backup the given file and send to the cloud */
   void backup(Key key, File archiveFile, Callback<Void> callback);
 
+  /** delete the related archive key */
   void delete(Key key, String archiveKey, Callback<Void> callback);
 }

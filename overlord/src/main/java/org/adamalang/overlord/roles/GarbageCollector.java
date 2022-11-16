@@ -19,13 +19,11 @@ import org.adamalang.mysql.model.FinderOperations;
 import org.adamalang.mysql.model.Sentinel;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.data.LiveAssetLister;
+import org.adamalang.runtime.data.ColdAssetSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class GarbageCollector {
   private static final Logger LOGGER = LoggerFactory.getLogger(GarbageCollector.class);
 
-  public static void kickOff(OverlordMetrics metrics, DataBase dataBase, LiveAssetLister lister, AtomicBoolean alive) {
+  public static void kickOff(OverlordMetrics metrics, DataBase dataBase, ColdAssetSystem lister, AtomicBoolean alive) {
     SimpleExecutor executor = SimpleExecutor.create("garbage-man");
     executor.schedule(new NamedRunnable("garbage-man") {
       @Override
@@ -46,21 +44,32 @@ public class GarbageCollector {
             for (GCTask task : tasks) {
               metrics.garbage_collector_found_task.run();
               LOGGER.error("to-collect-for:" + task.seq + "," + task.key);
-              lister.list(new Key(task.space, task.key), new Callback<List<String>>() {
+              lister.listAssetsOf(new Key(task.space, task.key), new Callback<List<String>>() {
                 @Override
                 public void success(List<String> assets) {
                   try {
                     if (assets.size() == 0) {
+                      LOGGER.error("empty-task-detected:" + task);
                       FinderOperations.lowerTask(dataBase, task);
                     } else {
+                      LOGGER.error("task-with-assets-detected:" + task + "-asset count:" + assets.size());
                       // TODO: download assets from storage
-                      if (FinderOperations.validateTask(dataBase, task)) {
-                        // TODO: confirm the document is still ready for GC (hasn't been picked up)
-                        FinderOperations.lowerTask(dataBase, task);
+                      // TODO: produce kill list
+                      // TODO: if kill list > 0, then validate, delete, lower ELSE lower
+                      ArrayList<String> kill = new ArrayList<>();
+                      if (kill.size() == 0) {
+                        // FinderOperations.lowerTask(dataBase, task);
+                      } else {
+                        if (FinderOperations.validateTask(dataBase, task)) {
+                          // TODO: delete assets
+
+
+                          // FinderOperations.lowerTask(dataBase, task);
+                        }
                       }
                     }
                   } catch (Exception ex) {
-                    LOGGER.error("garbage-man-task-crashed:[" + task.space + "-" + task.key + "]", ex);
+                    LOGGER.error("garbage-man-task-crashed:[" + task + "]", ex);
                   } finally {
                     allTasksDone.countDown();
                   }

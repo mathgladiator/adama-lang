@@ -15,7 +15,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.metrics.RequestResponseMonitor;
-import org.adamalang.runtime.data.LiveAssetLister;
+import org.adamalang.runtime.data.ColdAssetSystem;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.PostDocumentDelete;
 import org.adamalang.runtime.natives.NtAsset;
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, LiveAssetLister {
+public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAssetSystem {
   private static final Logger LOGGER = LoggerFactory.getLogger(S3.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private static final Pattern COMPLETE_LOG = Pattern.compile("[a-z]*\\.[0-9]*-[0-9]*-[0-9]*\\.[0-9]*\\.log");
@@ -124,12 +124,6 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, LiveAsse
         }
       }
     });
-  }
-
-  public void deleteAsset(Key key, String assetId, Callback<Void> callback) {
-    String s3key = "assets/" + key.space + "/" + key.key + "/" + assetId;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "DELETE", s3key, null).buildWithEmptyBody();
-    base.execute(request, new VoidCallbackHttpResponder(LOGGER, metrics.delete_asset.start(), callback));
   }
 
   @Override
@@ -224,7 +218,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, LiveAsse
   }
 
   @Override
-  public void list(Key key, Callback<List<String>> callback) {
+  public void listAssetsOf(Key key, Callback<List<String>> callback) {
     final ArrayList<String> ids = new ArrayList<>();
     final TreeMap<String, String> parameters = new TreeMap<>();
     String prefix = "assets/" + key.space + "/" + key.key + "/";
@@ -256,8 +250,15 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, LiveAsse
   }
 
   @Override
+  public void deleteAsset(Key key, String assetId, Callback<Void> callback) {
+    String s3key = "assets/" + key.space + "/" + key.key + "/" + assetId;
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "DELETE", s3key, null).buildWithEmptyBody();
+    base.execute(request, new VoidCallbackHttpResponder(LOGGER, metrics.delete_asset.start(), callback));
+  }
+
+  @Override
   public void deleteAllAssets(Key key, Callback<Void> callback) {
-    list(key, new Callback<>() {
+    listAssetsOf(key, new Callback<>() {
       @Override
       public void success(List<String> ids) {
         for (String id : ids) {

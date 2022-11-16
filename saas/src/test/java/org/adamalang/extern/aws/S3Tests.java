@@ -137,7 +137,7 @@ public class S3Tests {
       Assert.assertEquals("This is a small file", new String(getResults.toByteArray(), StandardCharsets.UTF_8));
       ArrayList<String> ids = new ArrayList<>();
       CountDownLatch latch = new CountDownLatch(1);
-      s3.listAssets(new Key("space", key), new Callback<List<String>>() {
+      s3.listAssetsOf(new Key("space", key), new Callback<List<String>>() {
         @Override
         public void success(List<String> value) {
           System.err.println("Success:" + value.size());
