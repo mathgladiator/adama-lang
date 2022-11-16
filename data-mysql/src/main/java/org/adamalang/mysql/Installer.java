@@ -65,7 +65,8 @@ public class Installer {
         .append("  `delta_bytes` BIGINT UNSIGNED NOT NULL,") //
         .append("  `asset_bytes` BIGINT UNSIGNED NOT NULL,") //
         .append("  PRIMARY KEY (`id`),") //
-        .append("  UNIQUE  `u` (`space`, `key`))") //
+        .append("  UNIQUE `u` (`space`, `key`),") //
+        .append("  INDEX `gc` (`need_gc`))") //
         .append(" ENGINE = InnoDB") //
         .append(" DEFAULT CHARACTER SET = utf8mb4;") //
         .toString();

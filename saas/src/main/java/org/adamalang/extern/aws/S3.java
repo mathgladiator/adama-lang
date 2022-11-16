@@ -15,6 +15,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.metrics.RequestResponseMonitor;
+import org.adamalang.runtime.data.LiveAssetLister;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.PostDocumentDelete;
 import org.adamalang.runtime.natives.NtAsset;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete {
+public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, LiveAssetLister {
   private static final Logger LOGGER = LoggerFactory.getLogger(S3.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private static final Pattern COMPLETE_LOG = Pattern.compile("[a-z]*\\.[0-9]*-[0-9]*-[0-9]*\\.[0-9]*\\.log");
@@ -222,7 +223,8 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete {
     base.execute(request, new StringCallbackHttpResponder(LOGGER, metrics.well_known_get.start(), callback));
   }
 
-  public void listAssets(Key key, Callback<List<String>> callback) {
+  @Override
+  public void list(Key key, Callback<List<String>> callback) {
     final ArrayList<String> ids = new ArrayList<>();
     final TreeMap<String, String> parameters = new TreeMap<>();
     String prefix = "assets/" + key.space + "/" + key.key + "/";
@@ -255,7 +257,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete {
 
   @Override
   public void deleteAllAssets(Key key, Callback<Void> callback) {
-    listAssets(key, new Callback<List<String>>() {
+    list(key, new Callback<>() {
       @Override
       public void success(List<String> ids) {
         for (String id : ids) {

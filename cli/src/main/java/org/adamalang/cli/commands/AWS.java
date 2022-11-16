@@ -192,7 +192,7 @@ public class AWS {
     try {
       S3 s3 = new S3(base, awsConfig, new AWSMetrics(new NoOpMetricsFactory()));
       CountDownLatch latch = new CountDownLatch(1);
-      s3.listAssets(new Key(space, key), new Callback<List<String>>() {
+      s3.list(new Key(space, key), new Callback<List<String>>() {
         @Override
         public void success(List<String> value) {
           for (String id : value) {

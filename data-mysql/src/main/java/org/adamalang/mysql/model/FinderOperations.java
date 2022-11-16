@@ -13,9 +13,7 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.DocumentIndex;
 import org.adamalang.mysql.data.GCTask;
 import org.adamalang.runtime.data.FinderService;
-import org.adamalang.runtime.data.Key;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -54,11 +52,12 @@ public class FinderOperations {
     });
   }
 
+  /** walk the database producing a list of documents that need to be GC'd */
   public static ArrayList<GCTask> produceGCTasks(DataBase dataBase) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `id`, `space`, `key`, `head_seq` FROM `" + dataBase.databaseName + //
           "`.`directory` WHERE `need_gc`=TRUE AND `type`=" + FinderService.Location.Archive.type +
-          " LIMIT 10";
+          " LIMIT 100";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<GCTask> tasks = new ArrayList<>();
@@ -66,6 +65,36 @@ public class FinderOperations {
             tasks.add(new GCTask(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
           }
           return tasks;
+        }
+      }
+    });
+  }
+
+  public static boolean validateTask(DataBase dataBase, GCTask task) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT `id`, `space`, `key`, `head_seq` FROM `" + dataBase.databaseName + //
+          "`.`directory` WHERE `id`="+task.id+" AND `head_seq`=" + task.seq + " AND `need_gc`=TRUE AND `type`=" + FinderService.Location.Archive.type;
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (ResultSet rs = statement.executeQuery()) {
+          while (rs.next()) {
+            return true;
+          }
+          return false;
+        }
+      }
+    });
+  }
+
+  public static boolean lowerTask(DataBase dataBase, GCTask task) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "UPDATE `" + dataBase.databaseName + //
+          "`.`directory` SET `need_gc`=FALSE WHERE `id`="+task.id+" AND `head_seq`=" + task.seq + " AND `need_gc`=TRUE AND `type`=" + FinderService.Location.Archive.type;
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (ResultSet rs = statement.executeQuery()) {
+          while (rs.next()) {
+            return true;
+          }
+          return false;
         }
       }
     });

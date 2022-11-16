@@ -116,7 +116,7 @@ public class Finder implements FinderService {
       String backupSQL = //
           "UPDATE `" + dataBase.databaseName + "`.`directory` " + //
               "SET `archive`=?" + ", `head_seq`=" + result.seq + //
-              ", `need_gc` = TRUE" + //
+              ", `need_gc` = (`need_gc` OR `asset_bytes` != " + result.assetBytes + ")" + //
               ", `delta_bytes`=" + result.deltaBytes + //
               ", `asset_bytes`=" + result.assetBytes + " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + Location.Machine.type;
       try (PreparedStatement statementUpdate = connection.prepareStatement(backupSQL)) {

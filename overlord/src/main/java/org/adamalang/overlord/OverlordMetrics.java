@@ -62,6 +62,9 @@ public class OverlordMetrics {
   public final Runnable delete_bot_delete_space;
   public final Inflight sentinel_behind;
 
+  public final Inflight garbage_collector_behind;
+  public final Runnable garbage_collector_found_task;
+
   public OverlordMetrics(MetricsFactory factory) {
     targets_watcher_fired = factory.counter("overlord_targets_watcher_fired");
     targets_made = factory.counter("overlord_targets_made");
@@ -107,5 +110,7 @@ public class OverlordMetrics {
     delete_bot_delete_ide = factory.makeCallbackMonitor("delete_bot_delete_ide");
     delete_bot_delete_space = factory.counter("delete_bot_delete_space");
     sentinel_behind = factory.inflight("alarm_sentinel_behind");
+    garbage_collector_behind = factory.inflight("garbage_collector_behind");
+    garbage_collector_found_task = factory.counter("garbage_collector_found_task");
   }
 }

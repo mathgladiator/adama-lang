@@ -103,7 +103,7 @@ public class FinderTests {
           callback.assertSuccess();
         }
         BackupResult result1 = new BackupResult("new-achive-key", 0, 1, 4);
-        BackupResult result2 = new BackupResult("new-achive-key-old", 0, 1, 4);
+        BackupResult result2 = new BackupResult("new-achive-key-old", 0, 1, 8);
         {
           SimpleMockCallback callback = new SimpleMockCallback();
           machine.backup(KEY1, result1, "machineA:124", callback);
@@ -174,7 +174,7 @@ public class FinderTests {
 
         HashMap<String, Long> inventory = FinderOperations.inventoryStorage(dataBase);
         Assert.assertEquals(1, inventory.size());
-        Assert.assertEquals(5, (long) inventory.get(KEY1.space));
+        Assert.assertEquals(9, (long) inventory.get(KEY1.space));
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
