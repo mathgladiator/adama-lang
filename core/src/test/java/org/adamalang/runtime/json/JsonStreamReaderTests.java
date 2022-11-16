@@ -423,4 +423,28 @@ public class JsonStreamReaderTests {
 
     }
   }
+
+  @Test
+  public void gcScan() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.beginArray();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("x");
+    writer.writeNtAsset(new NtAsset("id-xyz", "name", "type", 42, "md5", "sha"));
+    writer.writeObjectFieldIntro("y");
+    writer.writeNtAsset(new NtAsset("id-abc", "name", "type", 42, "md5", "sha"));
+    writer.writeObjectFieldIntro("dup-y");
+    writer.writeNtAsset(new NtAsset("id-abc", "name", "type", 42, "md5", "sha"));
+    writer.writeObjectFieldIntro("dup-x");
+    writer.writeNtAsset(new NtAsset("id-xyz", "name", "type", 42, "md5", "sha"));
+    writer.endObject();
+    writer.writeString("nope");
+    writer.endArray();
+    JsonStreamReader reader = new JsonStreamReader(writer.toString());
+    HashSet<String> ids = new HashSet<>();
+    reader.populateGarbageCollectedIds(ids);
+    Assert.assertEquals(2, ids.size());
+    Assert.assertTrue(ids.contains("id-xyz"));
+    Assert.assertTrue(ids.contains("id-abc"));
+  }
 }

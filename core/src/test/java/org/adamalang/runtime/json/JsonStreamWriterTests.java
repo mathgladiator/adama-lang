@@ -57,6 +57,17 @@ public class JsonStreamWriterTests {
   }
 
   @Test
+  public void asset_tracking() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.enableAssetTracking();
+    writer.writeNtAsset(new NtAsset("123", "name", "png", 42, "hash", "sheesh"));
+    Assert.assertEquals(
+        "{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\",\"@gc\":\"@yes\"}",
+        writer.toString());
+    Assert.assertEquals(42, writer.getAssetBytes());
+  }
+
+  @Test
   public void complex() {
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.writeNtComplex(new NtComplex(1.2, 2.4));

@@ -12,8 +12,11 @@ package org.adamalang.caravan;
 import org.adamalang.caravan.contracts.KeyToIdService;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DiskMetrics;
+import org.adamalang.caravan.events.RestoreDebuggerStdErr;
+import org.adamalang.caravan.events.RestoreLoader;
 import org.adamalang.caravan.mocks.*;
 import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.data.*;
@@ -22,7 +25,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CaravanDataServiceTests {
   public static final Key KEY1 = new Key("space", "123");
@@ -245,6 +251,7 @@ public class CaravanDataServiceTests {
         Assert.assertEquals("{\"x\":10,\"y\":10}", cb_GetCompactedResults.value);
         Assert.assertEquals(5, cb_GetCompactedResults.reads);
       }
+
       {
         SimpleIntCallback cbCompactFailsNegHistory = new SimpleIntCallback();
         setup.service.snapshot(KEY1, new DocumentSnapshot(1, "{}", -1, 1234L), cbCompactFailsNegHistory);
@@ -394,6 +401,50 @@ public class CaravanDataServiceTests {
         Assert.assertEquals("{\"x\":10,\"y\":10}", cb_GetCompactedResults.value);
         Assert.assertEquals(2, cb_GetCompactedResults.reads);
       }
+    });
+  }
+
+  private RemoteDocumentUpdate wrap(int seq, int redo, int undo) {
+    return new RemoteDocumentUpdate(
+        seq, seq, NtPrincipal.NO_ONE, "REQUEST", "{\"x\":"+redo + "}", "{\"x\":"+undo + "}", false, 0, 100, UpdateType.AddUserData);
+
+  }
+
+  @Test
+  public void bigsnapshot() throws Exception {
+    flow((setup) -> {
+      SimpleMockCallback cb_InitSuccess = new SimpleMockCallback();
+      setup.service.initialize(KEY1, wrap(1, 1, 0), cb_InitSuccess);
+      cb_InitSuccess.assertSuccess();
+      for (int k = 0; k < 5000; k++) {
+        SimpleMockCallback cb_PatchSuccess = new SimpleMockCallback();
+        setup.service.patch(KEY1, new RemoteDocumentUpdate[] { wrap(k + 2, k + 2, k + 1) }, cb_PatchSuccess);
+        cb_PatchSuccess.assertSuccess();
+      }
+      SimpleIntCallback cb_SnapshotSuccess = new SimpleIntCallback();
+      setup.service.snapshot(KEY1, new DocumentSnapshot(10000, "{\"x\":500000}", 5, 0), cb_SnapshotSuccess);
+      cb_SnapshotSuccess.assertSuccess(0);
+      AtomicReference<BackupResult> backup = new AtomicReference<>(null);
+      CountDownLatch latch = new CountDownLatch(1);
+      setup.service.backup(KEY1, new Callback<BackupResult>() {
+        @Override
+        public void success(BackupResult value) {
+          backup.set(value);
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+        }
+      });
+      Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
+      System.err.println(backup.get().archiveKey);
+      File archiveFile = new File(new File(setup.cloud.path(), KEY1.space), backup.get().archiveKey);
+
+
+      ArrayList<byte[]> writes = RestoreLoader.load(archiveFile);
+      RestoreDebuggerStdErr.print(writes);
     });
   }
 }

@@ -76,15 +76,9 @@ public class CaravanDataService implements ArchivingDataService {
       @Override
       public void success(File archiveFile) {
         // load the writes from the backup
-        ArrayList<byte[]> writes = new ArrayList<>();
+        final ArrayList<byte[]> writes;
         try {
-          try (DataInputStream input = new DataInputStream(new FileInputStream(archiveFile))) {
-            while (input.readBoolean()) {
-              byte[] bytes = new byte[input.readInt()];
-              input.readFully(bytes);
-              writes.add(bytes);
-            }
-          }
+          writes = RestoreLoader.load(archiveFile);
         } catch (Exception ex) {
           callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_RESTORE_EXCEPTION, ex));
           return;
@@ -139,7 +133,7 @@ public class CaravanDataService implements ArchivingDataService {
     execute("backup", key, true, callback, (id, cached) -> {
       int seq = cached.seq();
       AtomicLong deltaBytesSum = new AtomicLong(0);
-      AtomicLong assetBytesSum = new AtomicLong(0);
+      AssetByteAccountant assetByteAccountant = new AssetByteAccountant();
       File root = new File(cloud.path(), key.space);
       if (!root.exists()) {
         root.mkdir();
@@ -152,7 +146,7 @@ public class CaravanDataService implements ArchivingDataService {
           @Override
           public void next(int appendIndex, byte[] value, int seq, long assetBytes) throws Exception {
             deltaBytesSum.addAndGet(value.length);
-            assetBytesSum.addAndGet(assetBytes);
+            assetByteAccountant.account(value, assetBytes);
             output.writeBoolean(true);
             output.writeInt(value.length);
             output.write(value);
@@ -174,7 +168,7 @@ public class CaravanDataService implements ArchivingDataService {
       cloud.backup(key, finalOutput, new Callback<Void>() {
         @Override
         public void success(Void value) {
-          callback.success(new BackupResult(archiveKey, seq, deltaBytesSum.get(), assetBytesSum.get()));
+          callback.success(new BackupResult(archiveKey, seq, deltaBytesSum.get(), assetByteAccountant.getBytes()));
         }
 
         @Override

@@ -10,6 +10,8 @@
 package org.adamalang.overlord.roles;
 
 import org.adamalang.caravan.contracts.Cloud;
+import org.adamalang.caravan.events.AssetWalker;
+import org.adamalang.caravan.events.RestoreLoader;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
@@ -26,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -56,31 +59,43 @@ public class GarbageCollector {
                       FinderOperations.lowerTask(dataBase, task);
                     } else {
                       LOGGER.error("task-with-assets-detected:" + task + "-asset count:" + assets.size());
-                      // TODO: download assets from storage
-                      // TODO: produce kill list
-                      // TODO: if kill list > 0, then validate, delete, lower ELSE lower
-                      ArrayList<String> kill = new ArrayList<>();
-                      if (kill.size() == 0) {
-                        cloud.restore(key, task.archiveKey, new Callback<File>() {
-                            @Override
-                            public void success(File value) {
-
+                      cloud.restore(key, task.archiveKey, new Callback<File>() {
+                        @Override
+                        public void success(File archivedFile) {
+                          try {
+                            ArrayList<byte[]> writes = RestoreLoader.load(archivedFile);
+                            HashSet<String> liveIds = AssetWalker.idsOf(writes);
+                            ArrayList<String> kill = new ArrayList<>();
+                            for (String testId : assets) {
+                              if (!liveIds.contains(testId)) {
+                                LOGGER.error("task-with-dead-asset:" + testId);
+                                kill.add(testId);
+                              } else {
+                                LOGGER.error("task-with-living-asset:" + testId);
+                              }
                             }
-
-                            @Override
-                            public void failure(ErrorCodeException ex) {
-
+                            if (kill.size() == 0) {
+                              // FinderOperations.lowerTask(dataBase, task);
+                            } else {
+                              if (FinderOperations.validateTask(dataBase, task)) {
+                                for (String toKill : kill) {
+                                  // lister.deleteAsset(key, toKill, Callback.DONT_CARE_VOID);
+                                }
+                              }
+                              // FinderOperations.lowerTask(dataBase, task);
                             }
-                          });
-                            // FinderOperations.lowerTask(dataBase, task);
-                      } else {
-                        if (FinderOperations.validateTask(dataBase, task)) {
-                          // TODO: delete assets
-
-
-                          // FinderOperations.lowerTask(dataBase, task);
+                          } catch (Exception ex) {
+                            LOGGER.error("garbage-man-task-crashed-with-archive:[" + task + "]", ex);
+                          } finally {
+                            archivedFile.delete();
+                          }
                         }
-                      }
+
+                        @Override
+                        public void failure(ErrorCodeException ex) {
+                          LOGGER.error("cloud-failed-the-garbage-man", ex);
+                        }
+                      });
                     }
                   } catch (Exception ex) {
                     LOGGER.error("garbage-man-task-crashed:[" + task + "]", ex);

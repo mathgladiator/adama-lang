@@ -409,6 +409,42 @@ public class JsonStreamReader {
     }
   }
 
+  /** scan the JSON tree and find unique asset ids */
+  public void populateGarbageCollectedIds(HashSet<String> ids) {
+    if (startObject()) {
+      String id = null;
+      boolean gc = false;
+      while (notEndOfObject()) {
+        switch (fieldName()) {
+          case "id": {
+            Object testId = readJavaTree();
+            if (testId instanceof String) {
+              id = (String) testId;
+            }
+            break;
+          }
+          case "@gc":
+            gc = true;
+            skipValue();
+            break;
+          default:
+            populateGarbageCollectedIds(ids);
+        }
+        if (gc && id != null) {
+          ids.add(id);
+        }
+      }
+
+    } else if (startArray()) {
+      while (notEndOfArray()) {
+        populateGarbageCollectedIds(ids);
+      }
+    } else {
+      ensureQueueHappy(1);
+      tokens.removeFirst();
+    }
+  }
+
   public String skipValueIntoJson() {
     JsonStreamWriter writer = new JsonStreamWriter();
     skipValue(writer);

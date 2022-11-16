@@ -14,20 +14,32 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 /** Very fast Json stream writer. */
 public class JsonStreamWriter {
   private final Stack<CommaStateMachine> commas;
   private final StringBuilder sb = new StringBuilder();
   private CommaStateMachine commaStateMachine;
+  private boolean trackAssets;
+  private TreeSet<String> assetIdsSeen;
+  private long assetBytesWritten;
 
   public JsonStreamWriter() {
     commas = new Stack<>();
     commaStateMachine = CommaStateMachine.None;
+    trackAssets = false;
+  }
+
+  /** when assets are written, track the unique bytes associated to the document */
+  public void enableAssetTracking() {
+    trackAssets = true;
+    assetIdsSeen = new TreeSet<>();
+  }
+
+  /** if asset tracking has been enabled, then return the number of bytes pointed to by this document */
+  public long getAssetBytes() {
+    return assetBytesWritten;
   }
 
   public void beginArray() {
@@ -143,6 +155,12 @@ public class JsonStreamWriter {
     writeObjectFieldIntro("@gc");
     writeString("@yes");
     endObject();
+    if (trackAssets) {
+      if (!assetIdsSeen.contains(a.id)) {
+        assetIdsSeen.add(a.id);
+        assetBytesWritten += a.size;
+      }
+    }
   }
 
   public void writeString(final String s) {

@@ -36,10 +36,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 /** A LivingDocument tied to a document id and DataService */
@@ -271,21 +269,11 @@ public class DurableLivingDocument implements Queryable {
         }
         inflightCompact = true;
         base.metrics.document_compacting.run();
-        HashSet<String> alreadyAccounted = new HashSet<>();
-        AtomicLong assetBytes = new AtomicLong(0); // TODO: RefLong
-        JsonStreamWriter writer = new JsonStreamWriter() {
-          @Override
-          public void writeNtAsset(NtAsset a) {
-            if (!alreadyAccounted.contains(a.id)) {
-              alreadyAccounted.add(a.id);
-              assetBytes.addAndGet(a.size);
-            }
-            super.writeNtAsset(a);
-          }
-        };
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.enableAssetTracking();
         document.__dump(writer);
         int toCompactNow = Math.max(0, size.get() - currentFactory.maximum_history);
-        base.service.snapshot(key, new DocumentSnapshot(document.__seq.get(), writer.toString(), currentFactory.maximum_history, assetBytes.get()), new Callback<>() {
+        base.service.snapshot(key, new DocumentSnapshot(document.__seq.get(), writer.toString(), currentFactory.maximum_history, writer.getAssetBytes()), new Callback<>() {
           @Override
           public void success(Integer value) {
             base.executor.execute(new NamedRunnable("compact-complete") {

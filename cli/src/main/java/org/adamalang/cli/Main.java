@@ -49,6 +49,9 @@ public class Main {
         case "database":
           Database.execute(config, next);
           return;
+        case "debug":
+          Debug.execute(config, next);
+          return;
         case "documents":
         case "document":
           Documents.execute(config, next);
@@ -111,6 +114,7 @@ public class Main {
     System.out.println("    " + Util.prefix("code", Util.ANSI.Green) + "              Local developer tools");
     System.out.println("    " + Util.prefix("contrib", Util.ANSI.Green) + "           Open source contributor tools");
     System.out.println("    " + Util.prefix("database", Util.ANSI.Green) + "          Prepare database for usage");
+    System.out.println("    " + Util.prefix("debug", Util.ANSI.Green) + "             Debug tool for production");
     System.out.println("    " + Util.prefix("document", Util.ANSI.Green) + "          Interact with documents");
     System.out.println("    " + Util.prefix("domains", Util.ANSI.Green) + "           Manage Domains");
     System.out.println("    " + Util.prefix("fleet", Util.ANSI.Green) + "             Fleet management via EC2");

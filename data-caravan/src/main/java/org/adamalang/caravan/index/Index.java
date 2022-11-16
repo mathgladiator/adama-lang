@@ -82,7 +82,7 @@ public class Index {
   /** trim the head of an object (by id) the given maximum size; returned the returned regions */
   public ArrayList<AnnotatedRegion> trim(long id, int maxSize) {
     ArrayList<AnnotatedRegion> regions = index.get(id);
-    if (regions != null) {
+    if (regions != null && regions.size() > maxSize) {
       ArrayList<AnnotatedRegion> trimmed = new ArrayList<>();
       Iterator<AnnotatedRegion> it = regions.iterator();
       int count = regions.size() - maxSize;
