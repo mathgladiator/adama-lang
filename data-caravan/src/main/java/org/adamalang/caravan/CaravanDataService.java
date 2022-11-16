@@ -162,7 +162,7 @@ public class CaravanDataService implements ArchivingDataService {
         Files.move(tempOutput.toPath(), finalOutput.toPath(), StandardCopyOption.ATOMIC_MOVE);
         if (assetByteAccountant.hasThereBeenDataloss()) {
           LOGGER.error("detected data loss during a backup:" + key.space + "/" + key.key + "->" + archiveKey);
-          metrics.caravan_datalog_loss.run();
+          metrics.caravan_datalog_loss.up();
         }
       } catch (Exception ioex) {
         LOGGER.error("failed-backup", ioex);
