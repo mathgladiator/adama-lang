@@ -80,7 +80,6 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
   public ArrayList<byte[]> filter(ArrayList<byte[]> writes) {
     ArrayList<byte[]> reduced = new ArrayList<>();
     AtomicInteger checkSeq = new AtomicInteger(seq);
-
     for (byte[] write : writes) {
       EventCodec.route(Unpooled.wrappedBuffer(write), new EventCodec.HandlerEvent() {
         @Override
