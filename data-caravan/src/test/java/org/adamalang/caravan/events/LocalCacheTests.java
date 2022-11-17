@@ -61,9 +61,6 @@ public class LocalCacheTests {
       EventCodec.write(buf, change);
       writes.add(ByteArrayHelper.convert(buf));
     }
-
-
-
     return writes;
   }
 

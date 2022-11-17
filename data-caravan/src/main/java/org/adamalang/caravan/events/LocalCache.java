@@ -18,6 +18,7 @@ import org.adamalang.runtime.json.JsonAlgebra;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerEvent {
@@ -26,6 +27,7 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
   public int currentAppendIndex;
   public SeqString document;
   private int seq;
+
   public LocalCache() {
     this.document = null;
     this.redos = new ArrayList<>();
@@ -78,11 +80,12 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
   public ArrayList<byte[]> filter(ArrayList<byte[]> writes) {
     ArrayList<byte[]> reduced = new ArrayList<>();
     AtomicInteger checkSeq = new AtomicInteger(seq);
+
     for (byte[] write : writes) {
       EventCodec.route(Unpooled.wrappedBuffer(write), new EventCodec.HandlerEvent() {
         @Override
         public void handle(Events.Snapshot payload) {
-          if (checkSeq.get() < payload.seq || checkSeq.get() == 0) {
+          if (checkSeq.get() <= payload.seq || checkSeq.get() == 0) {
             reduced.add(write);
             checkSeq.set(payload.seq);
           }

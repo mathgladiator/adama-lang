@@ -12,6 +12,7 @@ package org.adamalang.caravan;
 import org.adamalang.caravan.contracts.KeyToIdService;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DiskMetrics;
+import org.adamalang.caravan.events.LocalCache;
 import org.adamalang.caravan.events.RestoreDebuggerStdErr;
 import org.adamalang.caravan.events.RestoreLoader;
 import org.adamalang.caravan.mocks.*;
@@ -416,13 +417,13 @@ public class CaravanDataServiceTests {
       SimpleMockCallback cb_InitSuccess = new SimpleMockCallback();
       setup.service.initialize(KEY1, wrap(1, 1, 0), cb_InitSuccess);
       cb_InitSuccess.assertSuccess();
-      for (int k = 0; k < 5000; k++) {
+      for (int k = 0; k < 1000; k++) {
         SimpleMockCallback cb_PatchSuccess = new SimpleMockCallback();
         setup.service.patch(KEY1, new RemoteDocumentUpdate[] { wrap(k + 2, k + 2, k + 1) }, cb_PatchSuccess);
         cb_PatchSuccess.assertSuccess();
       }
       SimpleIntCallback cb_SnapshotSuccess = new SimpleIntCallback();
-      setup.service.snapshot(KEY1, new DocumentSnapshot(10000, "{\"x\":500000}", 5, 0), cb_SnapshotSuccess);
+      setup.service.snapshot(KEY1, new DocumentSnapshot(1001, "{\"x\":500000}", 5, 0), cb_SnapshotSuccess);
       cb_SnapshotSuccess.assertSuccess(0);
       AtomicReference<BackupResult> backup = new AtomicReference<>(null);
       CountDownLatch latch = new CountDownLatch(1);
@@ -441,10 +442,18 @@ public class CaravanDataServiceTests {
       Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
       System.err.println(backup.get().archiveKey);
       File archiveFile = new File(new File(setup.cloud.path(), KEY1.space), backup.get().archiveKey);
-
-
       ArrayList<byte[]> writes = RestoreLoader.load(archiveFile);
+      LocalCache lc = new LocalCache() {
+        @Override
+        public void finished() throws Exception {
+
+        }
+      };
+      ArrayList<byte[]> filtered = lc.filter(writes);
       RestoreDebuggerStdErr.print(writes);
+      RestoreDebuggerStdErr.print(filtered);
+      Assert.assertEquals(writes.size(), filtered.size());
+
     });
   }
 }
