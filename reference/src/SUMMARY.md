@@ -1,6 +1,7 @@
 # Summary
 
 - [Overview](./overview.md)
+- [Concepts of the Platform](./concepts.md)
 - [Requirements driving Adama](./requirements-of-adama.md)
 - [The Basics of Adama](./basics.md)
 - [Adama as a ?](./adama-as-a.md)
