@@ -166,6 +166,7 @@ var RxHTML = (function () {
       return obj;
     }
   };
+  self.getConnectionByName = get_connection_obj;
 
   self.make = function () {
     return new AdamaTree();
@@ -181,6 +182,7 @@ var RxHTML = (function () {
       s.delta["@e"] = [sub];
     }
   };
+  self.subscribe = subscribe;
 
   // HELPER | create fresh state
   var fresh = function (where) {
@@ -192,6 +194,7 @@ var RxHTML = (function () {
       where: where
     };
   };
+  self.fresh = fresh;
 
   // HELPER | create a new delta copy from the given specific state (i.e. either data or view)
   var new_delta_copy = function (ss) {
@@ -208,6 +211,7 @@ var RxHTML = (function () {
     }
     return {tree: ss.tree, parent: parent, delta: new_delta, path: ss.path};
   };
+  self.makeDeltaCopy = new_delta_copy;
 
   // HELPER | construct a path to
   var path_to = function (ss, obj) {
@@ -219,6 +223,7 @@ var RxHTML = (function () {
       return obj;
     }
   };
+  self.pathTo = path_to;
 
   // HELPER | get the root of the specific state (i.e. either the data's root or the view's root)
   var root_of = function (ss) {
@@ -228,6 +233,7 @@ var RxHTML = (function () {
     }
     return x;
   };
+  self.rootOf = root_of;
 
   // HELPER | remove all the children from the given DOM node
   var nuke = function (parent) {
@@ -306,11 +312,13 @@ var RxHTML = (function () {
   self.pV = function (state) {
     return {service: state.service, data: state.data, view: state.view, current: "view"};
   };
+  self.newStateViewOf = self.pV;
 
   // RUNTIME | Switch to the data object
   self.pD = function (state) {
     return {service: state.service, data: state.data, view: state.view, current: "data"};
   };
+  self.newStateDataOf = self.pD;
 
   // RUNTIME | Switch to the root object / (Root)
   self.pR = function (state) {
@@ -326,6 +334,7 @@ var RxHTML = (function () {
     next[state.current] = prior;
     return next;
   };
+  self.newStateRootOf = self.pR;
 
   // RUNTIME | ../ (Up)
   self.pU = function (state) {
@@ -336,6 +345,7 @@ var RxHTML = (function () {
     }
     return next;
   };
+  self.newStateParentOf = self.pU;
 
   // RUNTIME | dive one level Into path1/path2/..../pathN
   self.pI = function (state, name) {
@@ -355,8 +365,9 @@ var RxHTML = (function () {
     }
     return next;
   };
+  self.newStateDiveInto = self.pI;
 
-  // RUNTIME | extend the given state with the view having a seperate child
+  // RUNTIME | extend the given state with the view having a separate child
   self.pEV = function (state, name) {
     if (!(name in state.view.delta)) {
       state.view.delta[name] = {};
@@ -373,6 +384,7 @@ var RxHTML = (function () {
       current: state.current
     };
   };
+  self.newStateCreateViewChild = self.pEV;
 
   var fork = function (priorState) {
     var state = {
