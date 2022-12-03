@@ -1241,12 +1241,13 @@ var RxHTML = (function () {
 
     if (identityName.startsWith("direct:")) {
       // Use, as is
-      identity = identityName.substr(7);
+      identity = identityName.substring(7);
     } else if (identityName in identities) {
       identity = identities[identityName];
       cleanup = function () {
         delete identities[identityName];
         localStorage.removeItem("identity_" + identityName);
+        self.goto(null, redirectTo);
       };
     } else {
       // whatever page we are, needs to die which means we need to nuke everything!
@@ -1258,6 +1259,27 @@ var RxHTML = (function () {
     }
 
     return {abort: false, cleanup: cleanup, identity: identity};
+  };
+
+  /* For custom callbacks to redirect and invalidate ID failures */
+  self.FIDCL = function(callback, lookup) {
+    return {
+      success: function(result) {
+        callback.success(result);
+      },
+      next: function(item) {
+        callback.next(item);
+      },
+      complete: function() {
+        callback.complete();
+      },
+      failure: function(reason) {
+        callback.failure(reason);
+        if (reason == 966671) {
+          lookup.cleanup();
+        }
+      }
+    };
   };
 
   var customDataSources = {};
