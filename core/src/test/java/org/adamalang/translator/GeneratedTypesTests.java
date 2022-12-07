@@ -87,7 +87,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_BadMaybe_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":18,\"byte\":32},\"end\":{\"line\":1,\"character\":26,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'int' / 'bool' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":55},\"end\":{\"line\":2,\"character\":20,\"byte\":64}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'maybe<42>' is unable to store type 'maybe<42>'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":18,\"byte\":32},\"end\":{\"line\":1,\"character\":26,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'int' / 'bool' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":55},\"end\":{\"line\":2,\"character\":20,\"byte\":64}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'maybe<42>' is using a type that was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -11674,43 +11674,83 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_NumberBulk_22 = null;
-  private String get_NumberBulk_22() {
-    if (cached_NumberBulk_22 != null) {
-      return cached_NumberBulk_22;
+  private String cached_MessageInArrayNotFoundRegression_22 = null;
+  private String get_MessageInArrayNotFoundRegression_22() {
+    if (cached_MessageInArrayNotFoundRegression_22 != null) {
+      return cached_MessageInArrayNotFoundRegression_22;
     }
-    cached_NumberBulk_22 = generateTestOutput(true, "NumberBulk_22", "./test_code/Types_NumberBulk_success.a");
-    return cached_NumberBulk_22;
+    cached_MessageInArrayNotFoundRegression_22 = generateTestOutput(false, "MessageInArrayNotFoundRegression_22", "./test_code/Types_MessageInArrayNotFoundRegression_failure.a");
+    return cached_MessageInArrayNotFoundRegression_22;
+  }
+
+  @Test
+  public void testMessageInArrayNotFoundRegressionFailure() {
+    assertLiveFail(get_MessageInArrayNotFoundRegression_22());
+  }
+
+  @Test
+  public void testMessageInArrayNotFoundRegressionNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_MessageInArrayNotFoundRegression_22());
+  }
+
+  @Test
+  public void testMessageInArrayNotFoundRegressionExceptionFree() {
+    assertExceptionFree(get_MessageInArrayNotFoundRegression_22());
+  }
+
+  @Test
+  public void testMessageInArrayNotFoundRegressionTODOFree() {
+    assertTODOFree(get_MessageInArrayNotFoundRegression_22());
+  }
+
+  @Test
+  public void stable_MessageInArrayNotFoundRegression_22() {
+    String live = get_MessageInArrayNotFoundRegression_22();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Types_MessageInArrayNotFoundRegression_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":126},\"end\":{\"line\":8,\"character\":12,\"byte\":136}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'NotFound[]' is using a type that was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":6,\"character\":0,\"byte\":96},\"end\":{\"line\":8,\"character\":20,\"byte\":144}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'deltas' has no type (StructureTyping)\"},{\"range\":{\"start\":{\"line\":6,\"character\":0,\"byte\":96},\"end\":{\"line\":8,\"character\":20,\"byte\":144}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'deltas' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_NumberBulk_23 = null;
+  private String get_NumberBulk_23() {
+    if (cached_NumberBulk_23 != null) {
+      return cached_NumberBulk_23;
+    }
+    cached_NumberBulk_23 = generateTestOutput(true, "NumberBulk_23", "./test_code/Types_NumberBulk_success.a");
+    return cached_NumberBulk_23;
   }
 
   @Test
   public void testNumberBulkEmission() {
-    assertEmissionGood(get_NumberBulk_22());
+    assertEmissionGood(get_NumberBulk_23());
   }
 
   @Test
   public void testNumberBulkSuccess() {
-    assertLivePass(get_NumberBulk_22());
+    assertLivePass(get_NumberBulk_23());
   }
 
   @Test
   public void testNumberBulkGoodWillHappy() {
-    assertGoodWillHappy(get_NumberBulk_22());
+    assertGoodWillHappy(get_NumberBulk_23());
   }
 
   @Test
   public void testNumberBulkExceptionFree() {
-    assertExceptionFree(get_NumberBulk_22());
+    assertExceptionFree(get_NumberBulk_23());
   }
 
   @Test
   public void testNumberBulkTODOFree() {
-    assertTODOFree(get_NumberBulk_22());
+    assertTODOFree(get_NumberBulk_23());
   }
 
   @Test
-  public void stable_NumberBulk_22() {
-    String live = get_NumberBulk_22();
+  public void stable_NumberBulk_23() {
+    String live = get_NumberBulk_23();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_NumberBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -11743,7 +11783,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class NumberBulk_22 extends LivingDocument {");
+    gold.append("\npublic class NumberBulk_23 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxInt32 y;");
     gold.append("\n  private final RxDouble z;");
@@ -11757,7 +11797,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += sum.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public NumberBulk_22(DocumentMonitor __monitor) {");
+    gold.append("\n  public NumberBulk_23(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 1);");
     gold.append("\n    y = new RxInt32(this, 2);");
@@ -12004,9 +12044,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaNumberBulk_22 implements DeltaNode {");
+    gold.append("\n  private class DeltaNumberBulk_23 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaNumberBulk_22() {");
+    gold.append("\n    private DeltaNumberBulk_23() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -12014,7 +12054,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(NumberBulk_22 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(NumberBulk_23 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -12042,8 +12082,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    NumberBulk_22 __self = this;");
-    gold.append("\n    DeltaNumberBulk_22 __state = new DeltaNumberBulk_22();");
+    gold.append("\n    NumberBulk_23 __self = this;");
+    gold.append("\n    DeltaNumberBulk_23 __state = new DeltaNumberBulk_23();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -12270,38 +12310,38 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ReactiveAssignmentMismatches_23 = null;
-  private String get_ReactiveAssignmentMismatches_23() {
-    if (cached_ReactiveAssignmentMismatches_23 != null) {
-      return cached_ReactiveAssignmentMismatches_23;
+  private String cached_ReactiveAssignmentMismatches_24 = null;
+  private String get_ReactiveAssignmentMismatches_24() {
+    if (cached_ReactiveAssignmentMismatches_24 != null) {
+      return cached_ReactiveAssignmentMismatches_24;
     }
-    cached_ReactiveAssignmentMismatches_23 = generateTestOutput(false, "ReactiveAssignmentMismatches_23", "./test_code/Types_ReactiveAssignmentMismatches_failure.a");
-    return cached_ReactiveAssignmentMismatches_23;
+    cached_ReactiveAssignmentMismatches_24 = generateTestOutput(false, "ReactiveAssignmentMismatches_24", "./test_code/Types_ReactiveAssignmentMismatches_failure.a");
+    return cached_ReactiveAssignmentMismatches_24;
   }
 
   @Test
   public void testReactiveAssignmentMismatchesFailure() {
-    assertLiveFail(get_ReactiveAssignmentMismatches_23());
+    assertLiveFail(get_ReactiveAssignmentMismatches_24());
   }
 
   @Test
   public void testReactiveAssignmentMismatchesNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_ReactiveAssignmentMismatches_23());
+    assertNotTerribleLineNumbers(get_ReactiveAssignmentMismatches_24());
   }
 
   @Test
   public void testReactiveAssignmentMismatchesExceptionFree() {
-    assertExceptionFree(get_ReactiveAssignmentMismatches_23());
+    assertExceptionFree(get_ReactiveAssignmentMismatches_24());
   }
 
   @Test
   public void testReactiveAssignmentMismatchesTODOFree() {
-    assertTODOFree(get_ReactiveAssignmentMismatches_23());
+    assertTODOFree(get_ReactiveAssignmentMismatches_24());
   }
 
   @Test
-  public void stable_ReactiveAssignmentMismatches_23() {
-    String live = get_ReactiveAssignmentMismatches_23();
+  public void stable_ReactiveAssignmentMismatches_24() {
+    String live = get_ReactiveAssignmentMismatches_24();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_ReactiveAssignmentMismatches_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -12310,43 +12350,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_SpecialConstants_24 = null;
-  private String get_SpecialConstants_24() {
-    if (cached_SpecialConstants_24 != null) {
-      return cached_SpecialConstants_24;
+  private String cached_SpecialConstants_25 = null;
+  private String get_SpecialConstants_25() {
+    if (cached_SpecialConstants_25 != null) {
+      return cached_SpecialConstants_25;
     }
-    cached_SpecialConstants_24 = generateTestOutput(true, "SpecialConstants_24", "./test_code/Types_SpecialConstants_success.a");
-    return cached_SpecialConstants_24;
+    cached_SpecialConstants_25 = generateTestOutput(true, "SpecialConstants_25", "./test_code/Types_SpecialConstants_success.a");
+    return cached_SpecialConstants_25;
   }
 
   @Test
   public void testSpecialConstantsEmission() {
-    assertEmissionGood(get_SpecialConstants_24());
+    assertEmissionGood(get_SpecialConstants_25());
   }
 
   @Test
   public void testSpecialConstantsSuccess() {
-    assertLivePass(get_SpecialConstants_24());
+    assertLivePass(get_SpecialConstants_25());
   }
 
   @Test
   public void testSpecialConstantsGoodWillHappy() {
-    assertGoodWillHappy(get_SpecialConstants_24());
+    assertGoodWillHappy(get_SpecialConstants_25());
   }
 
   @Test
   public void testSpecialConstantsExceptionFree() {
-    assertExceptionFree(get_SpecialConstants_24());
+    assertExceptionFree(get_SpecialConstants_25());
   }
 
   @Test
   public void testSpecialConstantsTODOFree() {
-    assertTODOFree(get_SpecialConstants_24());
+    assertTODOFree(get_SpecialConstants_25());
   }
 
   @Test
-  public void stable_SpecialConstants_24() {
-    String live = get_SpecialConstants_24();
+  public void stable_SpecialConstants_25() {
+    String live = get_SpecialConstants_25();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_SpecialConstants_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -12379,13 +12419,13 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class SpecialConstants_24 extends LivingDocument {");
+    gold.append("\npublic class SpecialConstants_25 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public SpecialConstants_24(DocumentMonitor __monitor) {");
+    gold.append("\n  public SpecialConstants_25(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -12595,9 +12635,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaSpecialConstants_24 implements DeltaNode {");
+    gold.append("\n  private class DeltaSpecialConstants_25 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaSpecialConstants_24() {");
+    gold.append("\n    private DeltaSpecialConstants_25() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -12605,7 +12645,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(SpecialConstants_24 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(SpecialConstants_25 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -12633,8 +12673,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    SpecialConstants_24 __self = this;");
-    gold.append("\n    DeltaSpecialConstants_24 __state = new DeltaSpecialConstants_24();");
+    gold.append("\n    SpecialConstants_25 __self = this;");
+    gold.append("\n    DeltaSpecialConstants_25 __state = new DeltaSpecialConstants_25();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -12833,43 +12873,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_StringBulk_25 = null;
-  private String get_StringBulk_25() {
-    if (cached_StringBulk_25 != null) {
-      return cached_StringBulk_25;
+  private String cached_StringBulk_26 = null;
+  private String get_StringBulk_26() {
+    if (cached_StringBulk_26 != null) {
+      return cached_StringBulk_26;
     }
-    cached_StringBulk_25 = generateTestOutput(true, "StringBulk_25", "./test_code/Types_StringBulk_success.a");
-    return cached_StringBulk_25;
+    cached_StringBulk_26 = generateTestOutput(true, "StringBulk_26", "./test_code/Types_StringBulk_success.a");
+    return cached_StringBulk_26;
   }
 
   @Test
   public void testStringBulkEmission() {
-    assertEmissionGood(get_StringBulk_25());
+    assertEmissionGood(get_StringBulk_26());
   }
 
   @Test
   public void testStringBulkSuccess() {
-    assertLivePass(get_StringBulk_25());
+    assertLivePass(get_StringBulk_26());
   }
 
   @Test
   public void testStringBulkGoodWillHappy() {
-    assertGoodWillHappy(get_StringBulk_25());
+    assertGoodWillHappy(get_StringBulk_26());
   }
 
   @Test
   public void testStringBulkExceptionFree() {
-    assertExceptionFree(get_StringBulk_25());
+    assertExceptionFree(get_StringBulk_26());
   }
 
   @Test
   public void testStringBulkTODOFree() {
-    assertTODOFree(get_StringBulk_25());
+    assertTODOFree(get_StringBulk_26());
   }
 
   @Test
-  public void stable_StringBulk_25() {
-    String live = get_StringBulk_25();
+  public void stable_StringBulk_26() {
+    String live = get_StringBulk_26();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_StringBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -12902,7 +12942,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class StringBulk_25 extends LivingDocument {");
+    gold.append("\npublic class StringBulk_26 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxString y;");
     gold.append("\n  private final RxDouble z;");
@@ -12916,7 +12956,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += sum.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public StringBulk_25(DocumentMonitor __monitor) {");
+    gold.append("\n  public StringBulk_26(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 1);");
     gold.append("\n    y = new RxString(this, \"2\");");
@@ -13163,14 +13203,14 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaStringBulk_25 implements DeltaNode {");
+    gold.append("\n  private class DeltaStringBulk_26 implements DeltaNode {");
     gold.append("\n    private DInt32 __dx;");
     gold.append("\n    private DString __dy;");
     gold.append("\n    private DDouble __dz;");
     gold.append("\n    private int __gsum;");
     gold.append("\n    private DString __dsum;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaStringBulk_25() {");
+    gold.append("\n    private DeltaStringBulk_26() {");
     gold.append("\n      __dx = new DInt32();");
     gold.append("\n      __dy = new DString();");
     gold.append("\n      __dz = new DDouble();");
@@ -13187,7 +13227,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __sum += __dsum.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(StringBulk_25 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(StringBulk_26 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 4;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -13227,8 +13267,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    StringBulk_25 __self = this;");
-    gold.append("\n    DeltaStringBulk_25 __state = new DeltaStringBulk_25();");
+    gold.append("\n    StringBulk_26 __self = this;");
+    gold.append("\n    DeltaStringBulk_26 __state = new DeltaStringBulk_26();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");

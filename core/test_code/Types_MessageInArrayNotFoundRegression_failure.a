@@ -1,0 +1,10 @@
+// production issue
+message Found {
+  int child_id;
+  map<string, dynamic> properties;
+}
+
+message Batch {
+  int id;
+  NotFound[] deltas;
+}

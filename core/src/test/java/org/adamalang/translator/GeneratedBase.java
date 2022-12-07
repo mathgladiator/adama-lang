@@ -43,7 +43,9 @@ public class GeneratedBase {
   }
 
   public void assertExceptionFree(String live) {
-    Assert.assertFalse(live.contains("!!EXCEPTION!!"));
+    if (live.contains("!!EXCEPTION!!")) {
+      Assert.fail("contains an exception: " + live);
+    }
   }
 
   public void assertGoodWillHappy(String live) {

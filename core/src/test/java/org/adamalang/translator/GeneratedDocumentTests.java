@@ -1150,7 +1150,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_UnknownType_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":1,\"byte\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'X' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":4,\"byte\":4}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":1,\"byte\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'X' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":4,\"byte\":4}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'x' has no type (StructureTyping)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":4,\"byte\":4}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

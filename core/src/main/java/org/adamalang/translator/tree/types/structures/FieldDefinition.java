@@ -132,5 +132,8 @@ public class FieldDefinition extends StructureComponent {
         }
       }
     }
+    if (type == null) {
+      environment.document.createError(this, String.format("The field '%s' has no type", name), "StructureTyping");
+    }
   }
 }

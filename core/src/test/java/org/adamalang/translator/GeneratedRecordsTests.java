@@ -2566,7 +2566,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_InvalidFormula_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":21,\"byte\":33},\"end\":{\"line\":1,\"character\":22,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":27,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":21,\"byte\":33},\"end\":{\"line\":1,\"character\":22,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":27,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'x' has no type (StructureTyping)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":27,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

@@ -201,6 +201,15 @@ public class RuleSetCommon {
   public static TyType Resolve(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
+      if (tyType instanceof DetailContainsAnEmbeddedType) {
+        TyType childType = Resolve(environment, ((DetailContainsAnEmbeddedType) tyType).getEmbeddedType(environment), silent);
+        if (childType == null) {
+          if (!silent) {
+            environment.document.createError(tyTypeOriginal, String.format("The type '%s' is using a type that was not found.", tyTypeOriginal.getAdamaType()), "TypeCheckReferences");
+          }
+          return null;
+        }
+      }
       while (tyType instanceof DetailRequiresResolveCall) {
         tyType = ((DetailRequiresResolveCall) tyType).resolve(environment);
       }

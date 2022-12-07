@@ -47,7 +47,7 @@ public class GeneratedCrashReportTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:CrashReport_March21_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":8,\"byte\":83},\"end\":{\"line\":3,\"character\":14,\"byte\":89}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'String' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":77},\"end\":{\"line\":3,\"character\":14,\"byte\":89}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'maybe<String>' is using a type that was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":60},\"end\":{\"line\":3,\"character\":27,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'bound_type' has no type (StructureTyping)\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":60},\"end\":{\"line\":3,\"character\":27,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'bound_type' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
