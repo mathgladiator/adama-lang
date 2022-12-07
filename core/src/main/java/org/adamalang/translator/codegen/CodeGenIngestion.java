@@ -137,13 +137,17 @@ public class CodeGenIngestion {
         for (final Map.Entry<String, FieldDefinition> entryType : ((IsStructure) elementType).storage().fields.entrySet()) {
           final var fd = ((IsStructure) assignType).storage().fields.get(entryType.getKey());
           if (fd != null) {
-            final var leftAssignType = ((IsStructure) assignType).storage().fields.get(entryType.getKey()).type;
-            final var op = environment.rules.IngestionLeftElementRequiresRecursion(leftAssignType) ? "<-" : "=";
-            final var ass = new Assignment( //
-                new FieldLookup(new Lookup(Token.WRAP(assignVar)), null, entryType.getValue().nameToken), Token.WRAP(op), //
-                new FieldLookup(new Lookup(Token.WRAP(elementVar)), null, entryType.getValue().nameToken), null, null, null, false);
-            ass.typing(environment);
-            ass.writeJava(sb, environment);
+            if ("id".equals(fd.name)) {
+              sb.append("/* id field skipped */");
+            } else {
+              final var leftAssignType = ((IsStructure) assignType).storage().fields.get(entryType.getKey()).type;
+              final var op = environment.rules.IngestionLeftElementRequiresRecursion(leftAssignType) ? "<-" : "=";
+              final var ass = new Assignment( //
+                  new FieldLookup(new Lookup(Token.WRAP(assignVar)), null, entryType.getValue().nameToken), Token.WRAP(op), //
+                  new FieldLookup(new Lookup(Token.WRAP(elementVar)), null, entryType.getValue().nameToken), null, null, null, false);
+              ass.typing(environment);
+              ass.writeJava(sb, environment);
+            }
             if (--countDownUntilTab == 0) {
               sb.tabDown();
             }

@@ -2,10 +2,8 @@ record X {
   int id;
 }
 
-X v;
 table<X> tbl;
 
 @construct {
-  v <- {id:42};
   tbl <- {id:500};
 }

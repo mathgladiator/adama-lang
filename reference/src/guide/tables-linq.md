@@ -29,6 +29,45 @@ This table is a way of organizing information per given record type. In general,
 
 A table in and of itself requires a toolkit to handle it, and we introduce a variant of SQL in the form a language integrated query (LINQ). It is a variant in many ways, and we will introduce the mechanics.
 
+
+### Adding rows/records to table via ingestion
+The ingestion operator (<-) allows data to be inserted from a variety of sources. For instance, we can simply use ingestion to copy a message into a row.
+
+```adama
+record Rec {
+  message int x;
+  message int y;
+}
+
+message Msg {
+  int x;
+  int y;
+}
+
+table<Rec> tbl;
+
+channel foo(Msg m) {
+  tbl <- m;
+}
+
+#foo {
+  tbl <- {x:42, y:13};
+}
+```
+
+Notes about the special id field. If a record has the 'id' field, then it must be an integer. ingestion will generate an id, and we can get that via the 'as' keyword.
+
+```adama
+channel foo(Msg m) {
+  tbl <- m as m_id;
+}
+
+#foo {
+  tbl <- {x:42, y:13} as xy_id;
+}
+```
+
+
 ### Reactive lists
 Lists of records can be filtered, ordered, sequenced, and limited via language integrated query (LINQ).
 
