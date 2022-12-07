@@ -523,6 +523,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/ReadOnly_FutureResultReadOnly_failure.a,8,2,8,3,"The variable 'x' is readonly (VariableLookup)"
 ./test_code/ReadOnly_FutureResultReadOnly_failure.a,8,2,8,5,"The field 'x' is on a readonly message (FieldLookup)"
 ./test_code/ReadOnly_ProcedureArgs_failure.a,5,2,5,3,"The variable 'x' is readonly (VariableLookup)"
+./test_code/ReadOnly_RecordID_failure.a,7,2,7,6,"'id' is a special readonly field (FieldLookup)"
 ./test_code/ReadOnly_SimpleBool_failure.a,4,2,4,3,"The variable 'y' is readonly (VariableLookup)"
 ./test_code/ReadOnly_SimpleBool_failure.a,6,2,6,3,"The variable 'z' is readonly (VariableLookup)"
 ./test_code/ReadOnly_SimpleClient_failure.a,3,2,3,3,"The variable 'y' is readonly (VariableLookup)"

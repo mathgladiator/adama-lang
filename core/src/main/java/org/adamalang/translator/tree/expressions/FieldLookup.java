@@ -70,10 +70,17 @@ public class FieldLookup extends Expression {
     yielder.accept(fieldNameToken);
   }
 
+  private void enforceSpecialIDReadonly(Environment environment) {
+    if ("id".equals(fieldName) && environment.state.isContextAssignment()) {
+      environment.document.createError(this, "'id' is a special readonly field", "FieldLookup");
+    }
+  }
+
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     var eType = expression.typing(environment, null);
     eType = environment.rules.ResolvePtr(eType, false);
+
     if (eType != null) {
       // global object, find the function
       if (eType instanceof TyNativeGlobalObject) {
@@ -92,6 +99,7 @@ public class FieldLookup extends Expression {
         if (elementType != null && elementType instanceof TyReactiveRecord) {
           final var fd = ((TyReactiveRecord) elementType).storage.fields.get(fieldName);
           if (fd != null) {
+            enforceSpecialIDReadonly(environment);
             aggregateType = fd.type;
             makeReactiveList = true;
             if (aggregateType instanceof DetailComputeRequiresGet && environment.state.isContextComputation()) {
@@ -119,6 +127,9 @@ public class FieldLookup extends Expression {
       if (eType instanceof IsStructure) {
         if (!environment.state.isContextComputation() && eType.behavior == TypeBehavior.ReadOnlyNativeValue) {
           environment.document.createError(this, String.format("The field '%s' is on a readonly message", fieldName), "FieldLookup");
+        }
+        if (eType instanceof TyReactiveRecord) {
+          enforceSpecialIDReadonly(environment);
         }
         final var hrs = (IsStructure) eType;
         final var fd = hrs.storage().fields.get(fieldName);
