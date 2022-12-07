@@ -180,7 +180,7 @@ public class StructureStorage extends DocumentPosition {
     }
     order.add(env -> {
       fd.typing(env.watch(watcher(env, fd.variablesToWatch, fd.servicesToWatch)), this);
-      env.define(fd.name, fd.type, false, fd);
+      env.define(fd.name, fd.type, specialization == StorageSpecialization.Record && fd.name.equals("id"), fd);
     });
     fields.put(fd.name, fd);
     fieldsByOrder.add(fd);

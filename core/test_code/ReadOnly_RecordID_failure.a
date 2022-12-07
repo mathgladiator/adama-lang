@@ -1,0 +1,9 @@
+record R {
+  int id;
+}
+
+R r;
+
+@construct {
+  r.id = 123;
+}
