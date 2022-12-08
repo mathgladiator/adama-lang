@@ -42,7 +42,7 @@
   - [Functions, procedures, and methods](./guide/functions-procedures-methods-oh-my.md)
   - [Enumerations and dynamic dispatch](./guide/enumerations.md)
   - [Async with channels, futures, and handlers](./guide/async.md)
-  - [The sstate machine](./guide/state-machine.md)
+  - [The state machine](./guide/state-machine.md)
   - [Reactive formulas](./guide/formulas.md)
   - [Privacy and bubbles](./guide/privacy-and-bubbles.md)
   - [Web processing](./guide/web.md)
