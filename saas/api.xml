@@ -10,7 +10,7 @@
                    error-code="444420"/>
     </parameter-definition>
 
-    <parameter-definition name="space" type="string" missing-error="461828" logged="true">
+    <parameter-definition name="space" type="string" missing-error="461828" logged="true" normalize="true">
         <documentation>
             A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
             denote the name of that collection.

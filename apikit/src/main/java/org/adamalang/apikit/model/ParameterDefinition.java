@@ -23,6 +23,7 @@ public class ParameterDefinition {
   public final String camelName;
   public final Type type;
   public final boolean optional;
+  public final boolean normalize;
   public final Transform transform;
   public final Validator validator;
   public final String documentation;
@@ -30,11 +31,12 @@ public class ParameterDefinition {
   public final HashSet<String> skipTransformOnMethods;
   public final boolean logged;
 
-  public ParameterDefinition(final String name, Type type, boolean optional, Transform transform, Validator validator, String documentation, int errorCodeIfMissing, final HashSet<String> skipTransformOnMethods, boolean logged) {
+  public ParameterDefinition(final String name, Type type, boolean optional, boolean normalize, Transform transform, Validator validator, String documentation, int errorCodeIfMissing, final HashSet<String> skipTransformOnMethods, boolean logged) {
     this.name = name;
     this.camelName = Common.camelize(name, true);
     this.type = type;
     this.optional = optional;
+    this.normalize = normalize;
     this.transform = transform;
     this.validator = validator;
     this.documentation = documentation;
@@ -91,6 +93,7 @@ public class ParameterDefinition {
         throw new Exception("parameter-definition's type must be valid");
       }
       boolean optional = "true".equals(element.getAttribute("optional"));
+      boolean normalize = "true".equals(element.getAttribute("normalize"));
       boolean logged = "true".equals(element.getAttribute("logged"));
 
       String documentation = null;
@@ -156,7 +159,7 @@ public class ParameterDefinition {
       if (errorCodeIfMissing == 0 && !optional) {
         throw new Exception("non-optional parameter is missing non-zero error code:" + name);
       }
-      ParameterDefinition definition = new ParameterDefinition(name, type, optional, transform, validator, documentation, errorCodeIfMissing, skipTransforms, logged);
+      ParameterDefinition definition = new ParameterDefinition(name, type, optional, normalize, transform, validator, documentation, errorCodeIfMissing, skipTransforms, logged);
       if (parameters.containsKey(name)) {
         throw new Exception("parameter already defined: " + name);
       }

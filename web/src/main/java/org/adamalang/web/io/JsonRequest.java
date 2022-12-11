@@ -14,6 +14,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 
+import java.util.Locale;
+
 /** a thin wrapper for easy access to a JSON request */
 public class JsonRequest {
   public final ConnectionContext context;
@@ -68,6 +70,14 @@ public class JsonRequest {
       return fieldNode.numberValue().toString();
     }
     return fieldNode.textValue();
+  }
+
+  public String getStringNormalize(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {
+    String value = getString(field, mustExist, errorIfDoesnt);
+    if (value != null) {
+      return value.toLowerCase(Locale.ENGLISH).trim();
+    }
+    return value;
   }
 
   public Boolean getBoolean(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {

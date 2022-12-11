@@ -83,7 +83,11 @@ public class AssembleRequestTypes {
           java.append("      final ").append(parameter.type.javaType()).append(" ").append(parameter.camelName).append(" = ");
           switch (parameter.type) {
             case String:
-              java.append("request.getString(\"");
+              if (parameter.normalize) {
+                java.append("request.getStringNormalize(\"");
+              } else {
+                java.append("request.getString(\"");
+              }
               break;
             case Integer:
               java.append("request.getInteger(\"");

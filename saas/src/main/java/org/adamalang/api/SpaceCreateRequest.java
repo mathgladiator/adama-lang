@@ -37,7 +37,7 @@ public class SpaceCreateRequest {
       final BulkLatch<SpaceCreateRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
-      final String space = request.getString("space", true, 461828);
+      final String space = request.getStringNormalize("space", true, 461828);
       ValidateSpace.validate(space);
       final String template = request.getString("template", false, 0);
       _latch.with(() -> new SpaceCreateRequest(identity, who.get(), space, template));

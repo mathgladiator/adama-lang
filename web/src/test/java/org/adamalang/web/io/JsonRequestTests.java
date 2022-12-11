@@ -77,6 +77,11 @@ public class JsonRequestTests {
     Assert.assertNull(request.getString("t", false, 123));
   }
 
+  @Test
+  public void getStringNormalize() throws Exception {
+    JsonRequest request = new JsonRequest(of("{\"w\":\" XyzNow \"}"), CONTEXT);
+    Assert.assertEquals("xyznow", request.getStringNormalize("w", true, 1));
+  }
 
   @Test
   public void getBoolean() throws Exception {

@@ -41,7 +41,7 @@ public class SpaceDeleteRequest {
       final BulkLatch<SpaceDeleteRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
-      final String space = request.getString("space", true, 461828);
+      final String space = request.getStringNormalize("space", true, 461828);
       ValidateSpace.validate(space);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       _latch.with(() -> new SpaceDeleteRequest(identity, who.get(), space, policy.get()));

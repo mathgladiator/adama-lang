@@ -14,6 +14,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Validators;
 
 import java.util.HashSet;
+import java.util.Locale;
 
 public class ValidateSpace {
   private static HashSet<String> INAPPROPRIATE_SPACE_NAMES = buildInappropriateSpaceNames();
