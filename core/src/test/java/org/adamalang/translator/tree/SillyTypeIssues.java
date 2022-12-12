@@ -326,4 +326,14 @@ public class SillyTypeIssues {
     ity.getLookupType(env, "w");
     ity.getLookupType(env, "a");
   }
+
+  @Test
+  public void maps() {
+    TyNativeMap map = new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, null, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), null, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), null);
+  }
+
+  @Test
+  public void pairs() {
+    TyNativePair pair = new TyNativePair(TypeBehavior.ReadOnlyNativeValue, null, null, null, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), null, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), null);
+  }
 }

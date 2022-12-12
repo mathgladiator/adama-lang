@@ -9,12 +9,15 @@
  */
 package org.adamalang.runtime.reactives;
 
+import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtMap;
 import org.adamalang.runtime.natives.NtMaybe;
+import org.adamalang.runtime.natives.NtPair;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,16 +25,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /** a reactive map */
-public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements Iterable<Map.Entry<DomainTy, RangeTy>>, RxParent, RxChild, RxKillable {
+public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements Iterable<NtPair<DomainTy, RangeTy>>, RxParent, RxChild, RxKillable {
   public final Codec<DomainTy, RangeTy> codec;
   public final LinkedHashMap<DomainTy, RangeTy> deleted;
   public final HashSet<DomainTy> created;
-  private final LinkedHashMap<DomainTy, RangeTy> objects;
+  private final NtMap<DomainTy, RangeTy> objects;
 
   public RxMap(final RxParent owner, final Codec<DomainTy, RangeTy> codec) {
     super(owner);
     this.codec = codec;
-    this.objects = new LinkedHashMap<>();
+    this.objects = new NtMap<>();
     this.deleted = new LinkedHashMap<>();
     this.created = new HashSet<>();
   }
@@ -63,7 +66,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
         value.__dump(reverseDelta);
       }
 
-      for (final Map.Entry<DomainTy, RangeTy> entry : objects.entrySet()) {
+      for (final Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
         String key = codec.toStr(entry.getKey());
         final var value = entry.getValue();
         if (created.contains(entry.getKey())) {
@@ -84,7 +87,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
 
   @Override
   public void __kill() {
-    for (final Map.Entry<DomainTy, RangeTy> entry : objects.entrySet()) {
+    for (final Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
       if (entry.getValue() instanceof RxKillable) {
         ((RxKillable) entry.getValue()).__kill();
       }
@@ -94,7 +97,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   @Override
   public void __dump(final JsonStreamWriter writer) {
     writer.beginObject();
-    for (final Map.Entry<DomainTy, RangeTy> entry : objects.entrySet()) {
+    for (final Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
       writer.writeObjectFieldIntro(codec.toStr(entry.getKey()));
       entry.getValue().__dump(writer);
     }
@@ -138,9 +141,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
         objects.put(entry.getKey(), entry.getValue());
       }
       for (final DomainTy axe : created) {
-        objects.remove(axe);
+        objects.removeDirect(axe);
       }
-      for (final Map.Entry<DomainTy, RangeTy> entry : objects.entrySet()) {
+      for (final Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
         entry.getValue().__revert();
       }
       created.clear();
@@ -152,7 +155,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   @Override
   public long __memory() {
     long sum = super.__memory() + 128;
-    for (Map.Entry<DomainTy, RangeTy> entry : objects.entrySet()) {
+    for (Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
       sum += entry.getValue().__memory() + 20;
       if (entry.getKey() instanceof String) {
         sum += ((String) entry.getKey()).length() * 2;
@@ -181,7 +184,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   }
 
   public void remove(DomainTy key) {
-    RangeTy value = objects.remove(key);
+    RangeTy value = objects.removeDirect(key);
     if (value != null) {
       if (!created.contains(key)) {
         __raiseDirty();
@@ -201,12 +204,20 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   }
 
   @Override
-  public Iterator<Map.Entry<DomainTy, RangeTy>> iterator() {
-    return objects.entrySet().iterator();
+  public Iterator<NtPair<DomainTy, RangeTy>> iterator() {
+    return objects.iterator();
   }
 
   public int size() {
     return objects.size();
+  }
+
+  public NtMaybe<NtPair<DomainTy, RangeTy>> min() {
+    return objects.min();
+  }
+
+  public NtMaybe<NtPair<DomainTy, RangeTy>> max() {
+    return objects.max();
   }
 
   public interface Codec<DomainTy, RangeTy extends RxBase> {

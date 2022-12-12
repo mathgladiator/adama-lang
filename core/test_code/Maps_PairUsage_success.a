@@ -1,0 +1,26 @@
+message M {
+  maybe<pair<int, int>> p;
+}
+
+function foo() -> M {
+  map<int, int> foo;
+  return {p: foo.min()};
+}
+
+public formula x = foo();
+public int z_s;
+
+@construct {
+  int s = 0;
+  map<int, int> m;
+  m[1] = 23;
+  foreach (item in m) {
+    s += item.key + item.value;
+  }
+  z_s = s;
+}
+
+#makeit {
+  pair<int, int> p1 = @pair 2 -> 3;
+  pair<int, int> p2;
+}

@@ -18,6 +18,13 @@ import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyNativeMap;
+import org.adamalang.translator.tree.types.natives.TyNativeMessage;
+import org.adamalang.translator.tree.types.natives.TyNativePair;
+import org.adamalang.translator.tree.types.reactive.TyReactiveMap;
+import org.adamalang.translator.tree.types.structures.StructureStorage;
+import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 
 import java.util.function.Consumer;
@@ -32,6 +39,7 @@ public class ForEach extends Statement {
   public final Token openParen;
   public final String variable;
   public final Token variableToken;
+  private boolean elementIsMap;
   private TyType elementType;
 
   public ForEach(final Token foreachToken, final Token openParen, final Token variableToken, final Token inToken, final Expression iterable, final Token endParen, final Block code) {
@@ -44,6 +52,7 @@ public class ForEach extends Statement {
     this.endParen = endParen;
     this.code = code;
     elementType = null;
+    elementIsMap = false;
     ingest(foreachToken);
     ingest(iterable);
     ingest(code);
@@ -63,8 +72,10 @@ public class ForEach extends Statement {
   @Override
   public ControlFlow typing(final Environment environment) {
     final var type = iterable.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null /* we know nothing to suggest */);
-    if (type != null && environment.rules.IsIterable(type, false)) {
-      elementType = ((DetailContainsAnEmbeddedType) type).getEmbeddedType(environment);
+    if (type != null) {
+        if (environment.rules.IsIterable(type, false)) {
+          elementType = ((DetailContainsAnEmbeddedType) type).getEmbeddedType(environment);
+        }
       if (elementType != null) {
         final var next = environment.scopeWithComputeContext(ComputeContext.Computation);
         next.define(variable, elementType, false, elementType);

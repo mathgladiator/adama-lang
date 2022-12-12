@@ -14,6 +14,8 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.TokenizedItem;
+import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
+import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
 
 import java.util.function.Consumer;
 
@@ -42,6 +44,19 @@ public abstract class TyType extends DocumentPosition {
   public abstract String getJavaConcreteType(Environment environment);
 
   public abstract TyType makeCopyWithNewPositionInternal(DocumentPosition position, TypeBehavior newBehavior);
+
+  public String getJavaDefaultValue(Environment environment, DocumentPosition position) {
+    TyType self = environment.rules.Resolve(this, true);
+    if (self instanceof DetailInventDefaultValueExpression) {
+      StringBuilder sb = new StringBuilder();
+      ((DetailInventDefaultValueExpression) self).inventDefaultValueExpression(position).writeJava(sb, environment);
+      return sb.toString();
+    }
+    if (self instanceof DetailNativeDeclarationIsNotStandard) {
+      return ((DetailNativeDeclarationIsNotStandard) self).getStringWhenValueNotProvided(environment);
+    }
+    throw new UnsupportedOperationException("failed to compute the default java value for:" + self.getAdamaType());
+  }
 
   public TyType makeCopyWithNewPosition(DocumentPosition position, TypeBehavior newBehavior) {
     TyType copy = makeCopyWithNewPositionInternal(position, newBehavior);

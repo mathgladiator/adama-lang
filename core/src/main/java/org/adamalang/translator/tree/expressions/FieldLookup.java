@@ -14,10 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyInternalReadonlyClass;
-import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
-import org.adamalang.translator.tree.types.natives.TyNativeList;
-import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeAggregateFunctional;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
@@ -90,6 +87,16 @@ public class FieldLookup extends Expression {
           environment.document.createError(this, String.format("Global '%s' lacks '%s'", ((TyNativeGlobalObject) eType).globalName, fieldName), "GlobalLookup");
           return null;
         }
+      }
+      if (eType instanceof TyNativePair) {
+        TyNativePair ePair = (TyNativePair) eType;
+        if ("key".equals(fieldName)) {
+          return ePair.domainType;
+        } else if ("value".equals(fieldName)) {
+          return ePair.rangeType;
+        }
+        environment.document.createError(this, String.format("Pair '%s' does not have '%s' field, and only supports 'key' and 'value'", eType.getAdamaType(), fieldName), "FieldLookup");
+        return null;
       }
       if (eType instanceof TyInternalReadonlyClass) {
         return ((TyInternalReadonlyClass) eType).getLookupType(environment, fieldName);

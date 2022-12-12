@@ -1,0 +1,20 @@
+function foox(pair<int, int> p) -> int {
+  return p.key * p.value;
+}
+
+public int result;
+
+@construct {
+  map<int, int> foo;
+  foo[123] = 42;
+  if (foo.min() as m) {
+    result = foox(m);
+  }
+  if (foo.max() as m) {
+    result += m.key;
+  }
+}
+
+message M {
+  pair<int, int> pp;
+}

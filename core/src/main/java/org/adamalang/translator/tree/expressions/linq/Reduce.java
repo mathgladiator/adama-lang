@@ -85,7 +85,7 @@ public class Reduce extends LinqExpression {
             fieldType = environment.rules.Resolve(((DetailComputeRequiresGet) fieldType).typeAfterGet(environment), false);
           }
           if (fieldType != null && functionInstance.returnType != null) {
-            resultType = new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, fieldType, null, functionInstance.returnType, null);
+            resultType = new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, null, fieldType, null, functionInstance.returnType, null);
             resultType.typing(environment);
           }
         } else {

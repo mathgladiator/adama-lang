@@ -71,16 +71,16 @@ public class CodeGenIngestion {
       TyType inputRangeType = environment.rules.Resolve(((IsMap) exprType).getRangeType(environment), true);
       TyType outputRangeType = environment.rules.Resolve(((IsMap) refType).getRangeType(environment), true);
       final var generatedExprVariableEntry = "_AutoEntry" + autoVar;
-      sb.append("for (Map.Entry<").append(inputDomainType.getJavaBoxType(environment)).append(",").append(inputRangeType.getJavaBoxType(environment)).append("> ").append(generatedExprVariableEntry);
-      sb.append(" : (");
+      sb.append("for (NtPair<").append(inputDomainType.getJavaBoxType(environment)).append(",").append(inputRangeType.getJavaBoxType(environment)).append("> ").append(generatedExprVariableEntry);
+      sb.append(" : ");
       assignment.expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
-      sb.append(").entries()) {").tabUp().writeNewline();
+      sb.append(") {").tabUp().writeNewline();
       generateAssignType = outputRangeType.makeCopyWithNewPosition(refType, TypeBehavior.ReadWriteNative);
       final var generatedExprVariable = "_AutoExpr" + autoVar;
       generateAssignVar = "_AutoRefElement" + autoVar;
-      sb.append(inputRangeType.getJavaConcreteType(environment)).append(" ").append(generatedExprVariable).append(" = ").append(generatedExprVariableEntry).append(".getValue();").writeNewline();
+      sb.append(inputRangeType.getJavaConcreteType(environment)).append(" ").append(generatedExprVariable).append(" = ").append(generatedExprVariableEntry).append(".value;").writeNewline();
       sb.append(generateAssignType.getJavaConcreteType(environment)).append(" ").append(generateAssignVar).append(" = ");
-      sb.append(generatedRefVariable).append(".getOrCreate(").append(generatedExprVariableEntry).append(".getKey());").writeNewline();
+      sb.append(generatedRefVariable).append(".getOrCreate(").append(generatedExprVariableEntry).append(".key);").writeNewline();
       finish(environment, sb, generateAssignType, generateAssignVar, inputRangeType, generatedExprVariable);
       sb.append("}").tabDown().writeNewline();
     } else if (isArray) {

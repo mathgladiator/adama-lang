@@ -20,6 +20,8 @@ public map<long, E> my_map3;
 
 public map<long, map<int, int>> crazy;
 
+public map<int, int> simple;
+
 @construct {
   // write two values
   my_map1[42] = 24;
@@ -43,5 +45,11 @@ public map<long, map<int, int>> crazy;
   if (my_map2["hi"] as uv) {
     w = uv.u + uv.v;
   }
+
+  simple[1] = 23;
+  map<int, int> ins;
+  ins[1] = 2;
+  ins[2] = 3;
+  simple <- ins;
   sz = my_map1.size();
 }

@@ -37,7 +37,7 @@ public class HeadersConstant extends Expression {
     if (environment.state.isWeb()) {
       environment.mustBeComputeContext(this);
       TyNativeString str = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"));
-      return new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, str, null, str, null);
+      return new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, null, str, null, str, null);
     } else {
       environment.document.createError(this, "@headers is only available in web paths", "WHO");
       return null;

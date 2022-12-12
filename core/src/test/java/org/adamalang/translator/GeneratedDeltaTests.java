@@ -2002,9 +2002,9 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n          PrivateLazyDeltaWriter __map28 = __obj.planField(\"m1\").planObject();");
     gold.append("\n          DMap<Integer,DInt32> __deltaMap29 = __dm1;");
     gold.append("\n          DMap<Integer,DInt32>.Walk __deltaMapWalker30 = __deltaMap29.begin();");
-    gold.append("\n          for (Map.Entry<Integer,Integer> __mapEntry31 : __item.m1.get()) {");
-    gold.append("\n            DInt32 __deltaElement32 = __deltaMapWalker30.next(__mapEntry31.getKey(), () -> new DInt32());");
-    gold.append("\n            __deltaElement32.show(__mapEntry31.getValue(), __map28.planField(\"\" + __mapEntry31.getKey()));");
+    gold.append("\n          for (NtPair<Integer,Integer> __mapEntry31 : __item.m1.get()) {");
+    gold.append("\n            DInt32 __deltaElement32 = __deltaMapWalker30.next(__mapEntry31.key, () -> new DInt32());");
+    gold.append("\n            __deltaElement32.show(__mapEntry31.value, __map28.planField(\"\" + __mapEntry31.key));");
     gold.append("\n          }");
     gold.append("\n          __deltaMapWalker30.end(__map28);");
     gold.append("\n          __map28.end();");
@@ -2019,9 +2019,9 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n            PrivateLazyDeltaWriter __map35 = __obj.planField(\"m2\").planObject();");
     gold.append("\n            DMap<Integer,DInt32> __deltaMap36 = __maybeDeltaElement34;");
     gold.append("\n            DMap<Integer,DInt32>.Walk __deltaMapWalker37 = __deltaMap36.begin();");
-    gold.append("\n            for (Map.Entry<Integer,Integer> __mapEntry38 : __maybeElement33) {");
-    gold.append("\n              DInt32 __deltaElement39 = __deltaMapWalker37.next(__mapEntry38.getKey(), () -> new DInt32());");
-    gold.append("\n              __deltaElement39.show(__mapEntry38.getValue(), __map35.planField(\"\" + __mapEntry38.getKey()));");
+    gold.append("\n            for (NtPair<Integer,Integer> __mapEntry38 : __maybeElement33) {");
+    gold.append("\n              DInt32 __deltaElement39 = __deltaMapWalker37.next(__mapEntry38.key, () -> new DInt32());");
+    gold.append("\n              __deltaElement39.show(__mapEntry38.value, __map35.planField(\"\" + __mapEntry38.key));");
     gold.append("\n            }");
     gold.append("\n            __deltaMapWalker37.end(__map35);");
     gold.append("\n            __map35.end();");

@@ -158,6 +158,19 @@ public class RuleSetAssignment {
         return true;
       }
     }
+    final var aPair = RuleSetMap.IsNativePair(environment, typeA);
+    final var bPair = RuleSetMap.IsNativePair(environment, typeB);
+    if (aPair && bPair) {
+      final var tyA = (TyNativePair) typeA;
+      final var tyB = (TyNativePair) typeB;
+      final var ab1 = CanTypeAStoreTypeB(environment, tyA.getDomainType(environment), tyB.getDomainType(environment), tweak, true);
+      final var ab2 = CanTypeAStoreTypeB(environment, tyB.getDomainType(environment), tyA.getDomainType(environment), tweak, true);
+      final var ab3 = CanTypeAStoreTypeB(environment, tyA.getRangeType(environment), tyB.getRangeType(environment), tweak, true);
+      final var ab4 = CanTypeAStoreTypeB(environment, tyB.getRangeType(environment), tyA.getRangeType(environment), tweak, true);
+      if (ab1 && ab2 && ab3 && ab4) {
+        return true;
+      }
+    }
     final var aTable = RuleSetTable.IsNativeTable(environment, typeA);
     final var bTable = RuleSetTable.IsNativeTable(environment, typeB);
     if (aTable && bTable) {

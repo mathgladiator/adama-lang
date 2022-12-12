@@ -238,7 +238,9 @@ public class CodeGenDeltaClass {
     } else if (sourceType instanceof TyNativeMaybe) {
       writeShowDMaybe(sb, deltaObject, sourceData, ((TyNativeMaybe) sourceType).getEmbeddedType(environment), targetObjectWriter, environment, tabDown);
     } else if (sourceType instanceof TyNativeMap) {
-      writeShowDMap(sb, deltaObject, sourceData, ((TyNativeMap) sourceType).domainType, environment.rules.Resolve(((TyNativeMap) sourceType).rangeType, false), targetObjectWriter, environment, tabDown);
+      writeShowDMap(sb, deltaObject, sourceData, environment.rules.Resolve(((TyNativeMap) sourceType).domainType, false), environment.rules.Resolve(((TyNativeMap) sourceType).rangeType, false), targetObjectWriter, environment, tabDown);
+    } else if (sourceType instanceof TyNativePair) {
+      writeShowDPair(sb, deltaObject, sourceData, environment.rules.Resolve(((TyNativePair) sourceType).domainType, false), environment.rules.Resolve(((TyNativePair) sourceType).rangeType, false), targetObjectWriter, environment, tabDown);
     } else if (sourceType instanceof TyReactiveMap) {
       boolean addGet = false;
       var walkRangeType = ((TyReactiveMap) sourceType).getRangeType(environment);
@@ -310,18 +312,42 @@ public class CodeGenDeltaClass {
     final var listWriterVar = "__map" + environment.autoVariable();
     final var dMapCache = "__deltaMap" + environment.autoVariable();
     final var dMapCacheWalker = "__deltaMapWalker" + environment.autoVariable();
-    final var entryType = "Map.Entry<" + domainType.getJavaBoxType(environment) + "," + rangeType.getJavaBoxType(environment) + ">";
+    final var entryType = "NtPair<" + domainType.getJavaBoxType(environment) + "," + rangeType.getJavaBoxType(environment) + ">";
     final var mapEntry = "__mapEntry" + environment.autoVariable();
     final var childDeltaVar = "__deltaElement" + environment.autoVariable();
     sb.append("PrivateLazyDeltaWriter ").append(listWriterVar).append(" = ").append(targetObjectWriter).append(".planObject();").writeNewline();
     sb.append("DMap<").append(domainBoxType).append(",").append(rangeDeltaType).append("> ").append(dMapCache).append(" = ").append(deltaObject).append(";").writeNewline();
     sb.append("DMap<").append(domainBoxType).append(",").append(rangeDeltaType).append(">.Walk ").append(dMapCacheWalker).append(" = ").append(dMapCache).append(".begin();").writeNewline();
     sb.append("for (").append(entryType).append(" ").append(mapEntry).append(" : ").append(sourceData).append(") {").tabUp().writeNewline();
-    sb.append(rangeDeltaType).append(" ").append(childDeltaVar).append(" = ").append(dMapCacheWalker).append(".next(").append(mapEntry).append(".getKey(), () -> new ").append(rangeDeltaType).append("()").append(");").writeNewline();
-    writeShowData(sb, childDeltaVar, mapEntry + ".getValue()", rangeType, listWriterVar + ".planField(\"\" + " + mapEntry + ".getKey())", environment, true);
+    sb.append(rangeDeltaType).append(" ").append(childDeltaVar).append(" = ").append(dMapCacheWalker).append(".next(").append(mapEntry).append(".key, () -> new ").append(rangeDeltaType).append("()").append(");").writeNewline();
+    writeShowData(sb, childDeltaVar, mapEntry + ".value", rangeType, listWriterVar + ".planField(\"\" + " + mapEntry + ".key)", environment, true);
     sb.append("}").writeNewline();
     sb.append(dMapCacheWalker).append(".end(").append(listWriterVar).append(");").writeNewline();
     sb.append(listWriterVar).append(".end();").tabDown().writeNewline();
+    sb.append("}");
+    if (tabDown) {
+      sb.tabDown();
+    }
+    sb.writeNewline();
+  }
+
+  private static void writeShowDPair(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyType domainType, final TyType rangeType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
+    final var domainBoxType = domainType.getJavaBoxType(environment);
+    final var rangeBoxType = rangeType.getJavaBoxType(environment);
+    final var domainDeltaType = ((DetailHasDeltaType) domainType).getDeltaType(environment);
+    final var rangeDeltaType = ((DetailHasDeltaType) rangeType).getDeltaType(environment);
+    sb.append("{").tabUp().writeNewline();
+    final var pairWriterVar = "__pair" + environment.autoVariable();
+    final var src = "__src" + environment.autoVariable();
+    final var valKey = "__key" + environment.autoVariable();
+    final var valValue = "__val" + environment.autoVariable();
+    sb.append("PrivateLazyDeltaWriter ").append(pairWriterVar).append(" = ").append(targetObjectWriter).append(".planObject();").writeNewline();
+    sb.append("NtPair<").append(domainBoxType).append(",").append(rangeBoxType).append("> ").append(src).append(" = ").append(sourceData).append(";").writeNewline();
+    sb.append(domainDeltaType).append(" ").append(valKey).append(" = ").append(deltaObject).append(".key(() -> new ").append(rangeDeltaType).append("()").append(");").writeNewline();
+    writeShowData(sb, valKey, src + ".key", domainType, pairWriterVar + ".planField(\"key\")", environment, false);
+    sb.append(rangeDeltaType).append(" ").append(valValue).append(" = ").append(deltaObject).append(".value(() -> new ").append(rangeDeltaType).append("()").append(");").writeNewline();
+    writeShowData(sb, valValue, src + ".value", domainType, pairWriterVar + ".planField(\"value\")", environment, false);
+    sb.append(pairWriterVar).append(".end();").tabDown().writeNewline();
     sb.append("}");
     if (tabDown) {
       sb.tabDown();
@@ -336,15 +362,15 @@ public class CodeGenDeltaClass {
     final var listWriterVar = "__map" + environment.autoVariable();
     final var dMapCache = "__deltaMap" + environment.autoVariable();
     final var dMapCacheWalker = "__deltaMapWalker" + environment.autoVariable();
-    final var entryTypeWalk = "Map.Entry<" + domainType.getJavaBoxType(environment) + "," + walkRangeType.getJavaBoxType(environment) + ">";
+    final var entryTypeWalk = "NtPair<" + domainType.getJavaBoxType(environment) + "," + walkRangeType.getJavaBoxType(environment) + ">";
     final var mapEntryWalk = "__mapEntry" + environment.autoVariable();
     final var childDeltaVar = "__deltaElement" + environment.autoVariable();
     sb.append("PrivateLazyDeltaWriter ").append(listWriterVar).append(" = ").append(targetObjectWriter).append(".planObject();").writeNewline();
     sb.append("DMap<").append(domainBoxType).append(",").append(rangeDeltaTypeGet).append("> ").append(dMapCache).append(" = ").append(deltaObject).append(";").writeNewline();
     sb.append("DMap<").append(domainBoxType).append(",").append(rangeDeltaTypeGet).append(">.Walk ").append(dMapCacheWalker).append(" = ").append(dMapCache).append(".begin();").writeNewline();
     sb.append("for (").append(entryTypeWalk).append(" ").append(mapEntryWalk).append(" : ").append(sourceData).append(") {").tabUp().writeNewline();
-    sb.append(rangeDeltaTypeGet).append(" ").append(childDeltaVar).append(" = ").append(dMapCacheWalker).append(".next(").append(mapEntryWalk).append(".getKey(), () -> new ").append(rangeDeltaTypeGet).append("()").append(");").writeNewline();
-    writeShowData(sb, childDeltaVar, mapEntryWalk + ".getValue()" + (addGet ? ".get()" : ""), getRangeType, listWriterVar + ".planField(\"\" + " + mapEntryWalk + ".getKey())", environment, true);
+    sb.append(rangeDeltaTypeGet).append(" ").append(childDeltaVar).append(" = ").append(dMapCacheWalker).append(".next(").append(mapEntryWalk).append(".key, () -> new ").append(rangeDeltaTypeGet).append("()").append(");").writeNewline();
+    writeShowData(sb, childDeltaVar, mapEntryWalk + ".value" + (addGet ? ".get()" : ""), getRangeType, listWriterVar + ".planField(\"\" + " + mapEntryWalk + ".key)", environment, true);
     sb.append("}").writeNewline();
     sb.append(dMapCacheWalker).append(".end(").append(listWriterVar).append(");").writeNewline();
     sb.append(listWriterVar).append(".end();").tabDown().writeNewline();

@@ -87,7 +87,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Lookup_ByIndexNotIterable_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":12,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must be either an array or list to use index lookup[]; instead got 'int'. (RuleSetIterable)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":12,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must be either an array, list, or map to use foreach; instead got 'int'. (RuleSetIterable)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

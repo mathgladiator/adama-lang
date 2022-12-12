@@ -12,6 +12,8 @@ package org.adamalang.runtime.natives;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Iterator;
+
 public class NtMapTests {
   @Test
   public void flow() {
@@ -22,7 +24,7 @@ public class NtMapTests {
     Assert.assertEquals(1, map.size());
     final var it = map.iterator();
     Assert.assertTrue(it.hasNext());
-    Assert.assertEquals(100, (int) it.next().getValue());
+    Assert.assertEquals(100, (int) it.next().value);
     Assert.assertFalse(it.hasNext());
     final var copy = new NtMap<>(map);
     Assert.assertEquals(1, copy.size());
@@ -38,5 +40,25 @@ public class NtMapTests {
     Assert.assertEquals(1, map.size());
     Assert.assertEquals(40, (int) map.lookup(1000).get());
     map.entries();
+  }
+
+  @Test
+  public void ordering() {
+    final var map = new NtMap<Integer, Integer>();
+    Assert.assertFalse(map.min().has());
+    Assert.assertFalse(map.max().has());
+    map.put(1, 2);
+    map.put(5, 6);
+    map.put(3, 4);
+    Assert.assertEquals(2, (int) map.min().get().value);
+    Assert.assertEquals(6, (int) map.max().get().value);
+    Iterator<NtPair<Integer, Integer>> it = map.iterator();
+    var f1 = it.next();
+    var f2 = it.next();
+    var f3 = it.next();
+    Assert.assertFalse(it.hasNext());
+    Assert.assertEquals(1, (int) f1.key);
+    Assert.assertEquals(3, (int) f2.key);
+    Assert.assertEquals(5, (int) f3.key);
   }
 }

@@ -10,29 +10,35 @@
 package org.adamalang.runtime.natives;
 
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /** a simple map */
-public class NtMap<TIn, TOut> implements Iterable<Map.Entry<TIn, TOut>> {
-  public final LinkedHashMap<TIn, TOut> storage;
+public class NtMap<TIn, TOut> implements Iterable<NtPair<TIn, TOut>> {
+  public final TreeMap<TIn, TOut> storage;
 
   public NtMap() {
-    this.storage = new LinkedHashMap<>();
+    this.storage = new TreeMap<>();
   }
 
   public NtMap(final NtMap<TIn, TOut> input) {
-    this.storage = new LinkedHashMap<>(input.storage);
-  }
-
-  public NtMap<TIn, TOut> insert(final NtMap<TIn, TOut> input) {
-    this.storage.putAll(new LinkedHashMap<>(input.storage));
-    return this;
+    this.storage = new TreeMap<>(input.storage);
   }
 
   @Override
-  public Iterator<Map.Entry<TIn, TOut>> iterator() {
-    return storage.entrySet().iterator();
+  public Iterator<NtPair<TIn, TOut>> iterator() {
+    Iterator<Map.Entry<TIn, TOut>> iterator = storage.entrySet().iterator();
+    return new Iterator<>() {
+      @Override
+      public boolean hasNext() {
+        return iterator.hasNext();
+      }
+
+      @Override
+      public NtPair<TIn, TOut> next() {
+        return pairOf(iterator.next());
+      }
+    };
   }
 
   public NtMaybe<TOut> lookup(final TIn key) {
@@ -56,10 +62,47 @@ public class NtMap<TIn, TOut> implements Iterable<Map.Entry<TIn, TOut>> {
 
   public void set(final NtMap<TIn, TOut> input) {
     this.storage.clear();
-    this.storage.putAll(new LinkedHashMap<>(input.storage));
+    this.storage.putAll(new TreeMap<>(input.storage));
+  }
+
+  public TOut removeDirect(TIn key) {
+    return this.storage.remove(key);
+  }
+
+  public NtMaybe<TOut> remove(TIn key) {
+    return new NtMaybe<>(this.storage.remove(key));
+  }
+
+  public TOut get(TIn key) {
+    return this.storage.get(key);
+  }
+
+  public NtMap<TIn, TOut> insert(final NtMap<TIn, TOut> input) {
+    this.storage.putAll(new TreeMap<>(input.storage));
+    return this;
   }
 
   public int size() {
     return storage.size();
+  }
+
+  public NtMaybe<NtPair<TIn, TOut>> min() {
+    if (storage.size() > 0) {
+      return new NtMaybe<>(pairOf(storage.firstEntry()));
+    } else {
+      return new NtMaybe<>();
+    }
+  }
+
+  public NtMaybe<NtPair<TIn, TOut>> max() {
+    if (storage.size() > 0) {
+      return new NtMaybe<>(pairOf(storage.lastEntry()));
+    } else {
+      return new NtMaybe<>();
+    }
+  }
+
+  public static <TIn, TOut> NtPair<TIn, TOut> pairOf(Map.Entry<TIn, TOut> entry) {
+    return new NtPair<>(entry.getKey(), entry.getValue());
   }
 }

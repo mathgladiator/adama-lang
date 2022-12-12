@@ -51,10 +51,18 @@ public class CodeGenMessage {
       TyType domainType = environment.rules.Resolve(((TyNativeMap) type).domainType, true);
       TyType rangeType = environment.rules.Resolve(((TyNativeMap) type).rangeType, true);
       final var entryKey = "__entry" + localVar.getAndIncrement();
-      sb.append("for (Map.Entry<").append(domainType.getJavaBoxType(environment)).append(",").append(rangeType.getJavaBoxType(environment)).append("> ").append(entryKey).append(" : ").append(expression).append(") {").tabUp().writeNewline();
-      writeValueHasher(entryKey + ".getKey()", domainType, sb, environment, localVar, false);
-      writeValueHasher(entryKey + ".getValue()", rangeType, sb, environment, localVar, true);
+      sb.append("for (NtPair<").append(domainType.getJavaBoxType(environment)).append(",").append(rangeType.getJavaBoxType(environment)).append("> ").append(entryKey).append(" : ").append(expression).append(") {").tabUp().writeNewline();
+      writeValueHasher(entryKey + ".key", domainType, sb, environment, localVar, false);
+      writeValueHasher(entryKey + ".value", rangeType, sb, environment, localVar, true);
       sb.append("}");
+    } else if (type instanceof TyNativePair) {
+      TyType domainType = environment.rules.Resolve(((TyNativePair) type).domainType, true);
+      TyType rangeType = environment.rules.Resolve(((TyNativePair) type).rangeType, true);
+      final var localCpy = "__cpy" + localVar.getAndIncrement();
+      sb.append("NtPair<").append(domainType.getJavaBoxType(environment)).append(",").append(rangeType.getJavaBoxType(environment)).append("> ").append(localCpy).append(" = ").append(expression).append(";").writeNewline();
+      writeValueHasher(localCpy + ".key", domainType, sb, environment, localVar, false);
+      writeValueHasher(localCpy + ".value", rangeType, sb, environment, localVar, tabDown);
+      return;
     } else if (type instanceof TyNativeArray || type instanceof TyNativeList) {
       final var itemVar = "__item" + localVar.getAndIncrement();
       TyType itemType = environment.rules.Resolve(((DetailContainsAnEmbeddedType) type).getEmbeddedType(environment), true);
@@ -152,6 +160,30 @@ public class CodeGenMessage {
       sb.append(name).append(".put(").append(keyValueRaw).append(", ").append(localValue).append(");").tabDown().writeNewline();
       sb.append("}").tabDown().writeNewline();
       sb.append("}").writeNewline();
+    } else if (type instanceof TyNativePair) {
+      sb.append("{").tabUp().writeNewline();
+      final var domainType = ((TyNativePair) type).getDomainType(environment);
+      final var rangeType = ((TyNativePair) type).getRangeType(environment);
+      final var keyValue = "__key" + localVar.getAndIncrement();
+      final var valueValue = "__value" + localVar.getAndIncrement();
+      sb.append(domainType.getJavaBoxType(environment)).append(" ").append(keyValue).append(" = ").append(domainType.getJavaDefaultValue(environment, type)).append(";").writeNewline();
+      sb.append(rangeType.getJavaBoxType(environment)).append(" ").append(valueValue).append(" = ").append(rangeType.getJavaDefaultValue(environment, type)).append(";").writeNewline();
+      sb.append("if (__reader.startObject()) {").tabUp().writeNewline(); // UP
+      sb.append("while (__reader.notEndOfObject()) {").tabUp().writeNewline(); // UP
+      sb.append("switch (__reader.fieldName()) {").tabUp().writeNewline(); // UP
+      sb.append("case \"key\":").tabUp().writeNewline();
+      writeValueReader(keyValue, domainType, sb, environment, localVar);
+      sb.append("break;").tabDown().writeNewline();
+      sb.append("case \"value\":").tabUp().writeNewline();
+      writeValueReader(valueValue, rangeType, sb, environment, localVar);
+      sb.append("break;").tabDown().writeNewline();
+      sb.append("default:").tabUp().writeNewline();
+      sb.append("__reader.skipValue();").tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline(); // DOWN
+      sb.append("}").tabDown().writeNewline(); // DOWN
+      sb.append("}").tabDown().writeNewline(); // DOWN
+      sb.append(name).append(" = new NtPair<>(").append(keyValue).append(", ").append(valueValue).append(");").tabDown().writeNewline();
+      sb.append("}").writeNewline();
     } else if (type instanceof TyNativeArray || type instanceof TyNativeList) {
       final var elementType = ((DetailContainsAnEmbeddedType) type).getEmbeddedType(environment);
       final var localArrayBuilder = "__localArray_" + localVar.getAndIncrement();
@@ -196,10 +228,22 @@ public class CodeGenMessage {
       final var rangeType = ((TyNativeMap) type).getRangeType(environment);
       sb.append("__writer.beginObject();").writeNewline();
       final var localItem = "__localEntry_" + localVar.getAndIncrement();
-      sb.append("for (Map.Entry<").append(domainType.getJavaBoxType(environment)).append(", ").append(rangeType.getJavaBoxType(environment)).append("> ").append(localItem).append(" : ").append(name).append(") {").tabUp().writeNewline();
-      sb.append("__writer.writeObjectFieldIntro(").append(localItem).append(".getKey());").writeNewline();
-      writeValueWriter(localItem + ".getValue()", rangeType, sb, environment, localVar, true);
+      sb.append("for (NtPair<").append(domainType.getJavaBoxType(environment)).append(",").append(rangeType.getJavaBoxType(environment)).append("> ").append(localItem).append(" : ").append(name).append(") {").tabUp().writeNewline();
+      sb.append("__writer.writeObjectFieldIntro(").append(localItem).append(".key);").writeNewline();
+      writeValueWriter(localItem + ".value", rangeType, sb, environment, localVar, true);
       sb.append("}").writeNewline();
+      sb.append("__writer.endObject();");
+    } else if (type instanceof TyNativePair) {
+      final var domainType = ((TyNativePair) type).getDomainType(environment);
+      final var rangeType = ((TyNativePair) type).getRangeType(environment);
+      final var localItem = "__cpy" + localVar.getAndIncrement();
+      sb.append("NtPair<").append(domainType.getJavaBoxType(environment))
+             .append(",").append(rangeType.getJavaBoxType(environment)).append("> ").append(localItem).append(" = ").append(name).append(";").writeNewline();
+      sb.append("__writer.beginObject();").writeNewline();
+      sb.append("__writer.writeObjectFieldIntro(\"key\");").writeNewline();
+      writeValueWriter(localItem + ".key", domainType, sb, environment, localVar, false);
+      sb.append("__writer.writeObjectFieldIntro(\"value\");").writeNewline();
+      writeValueWriter(localItem + ".value", rangeType, sb, environment, localVar, false);
       sb.append("__writer.endObject();");
     } else if (type instanceof TyNativeArray || type instanceof TyNativeList) {
       sb.append("__writer.beginArray();").writeNewline();

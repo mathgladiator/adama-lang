@@ -21664,38 +21664,118 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ParenBadClose1_87 = null;
-  private String get_ParenBadClose1_87() {
-    if (cached_ParenBadClose1_87 != null) {
-      return cached_ParenBadClose1_87;
+  private String cached_PairEOS_87 = null;
+  private String get_PairEOS_87() {
+    if (cached_PairEOS_87 != null) {
+      return cached_PairEOS_87;
     }
-    cached_ParenBadClose1_87 = generateTestOutput(false, "ParenBadClose1_87", "./test_code/Parser_ParenBadClose1_failure.a");
-    return cached_ParenBadClose1_87;
+    cached_PairEOS_87 = generateTestOutput(false, "PairEOS_87", "./test_code/Parser_PairEOS_failure.a");
+    return cached_PairEOS_87;
+  }
+
+  @Test
+  public void testPairEOSFailure() {
+    assertLiveFail(get_PairEOS_87());
+  }
+
+  @Test
+  public void testPairEOSNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_PairEOS_87());
+  }
+
+  @Test
+  public void testPairEOSExceptionFree() {
+    assertExceptionFree(get_PairEOS_87());
+  }
+
+  @Test
+  public void testPairEOSTODOFree() {
+    assertTODOFree(get_PairEOS_87());
+  }
+
+  @Test
+  public void stable_PairEOS_87() {
+    String live = get_PairEOS_87();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Parser_PairEOS_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":16,\"byte\":23},\"end\":{\"line\":1,\"character\":19,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_PairEOS_failure.a' failed to parse: Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger} (ParseException)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger} (ImportIssue)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_PairNoArrow_88 = null;
+  private String get_PairNoArrow_88() {
+    if (cached_PairNoArrow_88 != null) {
+      return cached_PairNoArrow_88;
+    }
+    cached_PairNoArrow_88 = generateTestOutput(false, "PairNoArrow_88", "./test_code/Parser_PairNoArrow_failure.a");
+    return cached_PairNoArrow_88;
+  }
+
+  @Test
+  public void testPairNoArrowFailure() {
+    assertLiveFail(get_PairNoArrow_88());
+  }
+
+  @Test
+  public void testPairNoArrowNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_PairNoArrow_88());
+  }
+
+  @Test
+  public void testPairNoArrowExceptionFree() {
+    assertExceptionFree(get_PairNoArrow_88());
+  }
+
+  @Test
+  public void testPairNoArrowTODOFree() {
+    assertTODOFree(get_PairNoArrow_88());
+  }
+
+  @Test
+  public void stable_PairNoArrow_88() {
+    String live = get_PairNoArrow_88();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Parser_PairNoArrow_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":16,\"byte\":23},\"end\":{\"line\":1,\"character\":19,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_PairNoArrow_failure.a' failed to parse: Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger} (ParseException)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger} (ImportIssue)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_ParenBadClose1_89 = null;
+  private String get_ParenBadClose1_89() {
+    if (cached_ParenBadClose1_89 != null) {
+      return cached_ParenBadClose1_89;
+    }
+    cached_ParenBadClose1_89 = generateTestOutput(false, "ParenBadClose1_89", "./test_code/Parser_ParenBadClose1_failure.a");
+    return cached_ParenBadClose1_89;
   }
 
   @Test
   public void testParenBadClose1Failure() {
-    assertLiveFail(get_ParenBadClose1_87());
+    assertLiveFail(get_ParenBadClose1_89());
   }
 
   @Test
   public void testParenBadClose1NotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_ParenBadClose1_87());
+    assertNotTerribleLineNumbers(get_ParenBadClose1_89());
   }
 
   @Test
   public void testParenBadClose1ExceptionFree() {
-    assertExceptionFree(get_ParenBadClose1_87());
+    assertExceptionFree(get_ParenBadClose1_89());
   }
 
   @Test
   public void testParenBadClose1TODOFree() {
-    assertTODOFree(get_ParenBadClose1_87());
+    assertTODOFree(get_ParenBadClose1_89());
   }
 
   @Test
-  public void stable_ParenBadClose1_87() {
-    String live = get_ParenBadClose1_87();
+  public void stable_ParenBadClose1_89() {
+    String live = get_ParenBadClose1_89();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ParenBadClose1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -21704,38 +21784,38 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_ParenBadClose2_88 = null;
-  private String get_ParenBadClose2_88() {
-    if (cached_ParenBadClose2_88 != null) {
-      return cached_ParenBadClose2_88;
+  private String cached_ParenBadClose2_90 = null;
+  private String get_ParenBadClose2_90() {
+    if (cached_ParenBadClose2_90 != null) {
+      return cached_ParenBadClose2_90;
     }
-    cached_ParenBadClose2_88 = generateTestOutput(false, "ParenBadClose2_88", "./test_code/Parser_ParenBadClose2_failure.a");
-    return cached_ParenBadClose2_88;
+    cached_ParenBadClose2_90 = generateTestOutput(false, "ParenBadClose2_90", "./test_code/Parser_ParenBadClose2_failure.a");
+    return cached_ParenBadClose2_90;
   }
 
   @Test
   public void testParenBadClose2Failure() {
-    assertLiveFail(get_ParenBadClose2_88());
+    assertLiveFail(get_ParenBadClose2_90());
   }
 
   @Test
   public void testParenBadClose2NotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_ParenBadClose2_88());
+    assertNotTerribleLineNumbers(get_ParenBadClose2_90());
   }
 
   @Test
   public void testParenBadClose2ExceptionFree() {
-    assertExceptionFree(get_ParenBadClose2_88());
+    assertExceptionFree(get_ParenBadClose2_90());
   }
 
   @Test
   public void testParenBadClose2TODOFree() {
-    assertTODOFree(get_ParenBadClose2_88());
+    assertTODOFree(get_ParenBadClose2_90());
   }
 
   @Test
-  public void stable_ParenBadClose2_88() {
-    String live = get_ParenBadClose2_88();
+  public void stable_ParenBadClose2_90() {
+    String live = get_ParenBadClose2_90();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ParenBadClose2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -21744,38 +21824,38 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_ParenEOS1_89 = null;
-  private String get_ParenEOS1_89() {
-    if (cached_ParenEOS1_89 != null) {
-      return cached_ParenEOS1_89;
+  private String cached_ParenEOS1_91 = null;
+  private String get_ParenEOS1_91() {
+    if (cached_ParenEOS1_91 != null) {
+      return cached_ParenEOS1_91;
     }
-    cached_ParenEOS1_89 = generateTestOutput(false, "ParenEOS1_89", "./test_code/Parser_ParenEOS1_failure.a");
-    return cached_ParenEOS1_89;
+    cached_ParenEOS1_91 = generateTestOutput(false, "ParenEOS1_91", "./test_code/Parser_ParenEOS1_failure.a");
+    return cached_ParenEOS1_91;
   }
 
   @Test
   public void testParenEOS1Failure() {
-    assertLiveFail(get_ParenEOS1_89());
+    assertLiveFail(get_ParenEOS1_91());
   }
 
   @Test
   public void testParenEOS1NotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_ParenEOS1_89());
+    assertNotTerribleLineNumbers(get_ParenEOS1_91());
   }
 
   @Test
   public void testParenEOS1ExceptionFree() {
-    assertExceptionFree(get_ParenEOS1_89());
+    assertExceptionFree(get_ParenEOS1_91());
   }
 
   @Test
   public void testParenEOS1TODOFree() {
-    assertTODOFree(get_ParenEOS1_89());
+    assertTODOFree(get_ParenEOS1_91());
   }
 
   @Test
-  public void stable_ParenEOS1_89() {
-    String live = get_ParenEOS1_89();
+  public void stable_ParenEOS1_91() {
+    String live = get_ParenEOS1_91();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ParenEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -21784,38 +21864,38 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_ParenEOS2_90 = null;
-  private String get_ParenEOS2_90() {
-    if (cached_ParenEOS2_90 != null) {
-      return cached_ParenEOS2_90;
+  private String cached_ParenEOS2_92 = null;
+  private String get_ParenEOS2_92() {
+    if (cached_ParenEOS2_92 != null) {
+      return cached_ParenEOS2_92;
     }
-    cached_ParenEOS2_90 = generateTestOutput(false, "ParenEOS2_90", "./test_code/Parser_ParenEOS2_failure.a");
-    return cached_ParenEOS2_90;
+    cached_ParenEOS2_92 = generateTestOutput(false, "ParenEOS2_92", "./test_code/Parser_ParenEOS2_failure.a");
+    return cached_ParenEOS2_92;
   }
 
   @Test
   public void testParenEOS2Failure() {
-    assertLiveFail(get_ParenEOS2_90());
+    assertLiveFail(get_ParenEOS2_92());
   }
 
   @Test
   public void testParenEOS2NotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_ParenEOS2_90());
+    assertNotTerribleLineNumbers(get_ParenEOS2_92());
   }
 
   @Test
   public void testParenEOS2ExceptionFree() {
-    assertExceptionFree(get_ParenEOS2_90());
+    assertExceptionFree(get_ParenEOS2_92());
   }
 
   @Test
   public void testParenEOS2TODOFree() {
-    assertTODOFree(get_ParenEOS2_90());
+    assertTODOFree(get_ParenEOS2_92());
   }
 
   @Test
-  public void stable_ParenEOS2_90() {
-    String live = get_ParenEOS2_90();
+  public void stable_ParenEOS2_92() {
+    String live = get_ParenEOS2_92();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ParenEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -21824,38 +21904,38 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_ParenEOS3_91 = null;
-  private String get_ParenEOS3_91() {
-    if (cached_ParenEOS3_91 != null) {
-      return cached_ParenEOS3_91;
+  private String cached_ParenEOS3_93 = null;
+  private String get_ParenEOS3_93() {
+    if (cached_ParenEOS3_93 != null) {
+      return cached_ParenEOS3_93;
     }
-    cached_ParenEOS3_91 = generateTestOutput(false, "ParenEOS3_91", "./test_code/Parser_ParenEOS3_failure.a");
-    return cached_ParenEOS3_91;
+    cached_ParenEOS3_93 = generateTestOutput(false, "ParenEOS3_93", "./test_code/Parser_ParenEOS3_failure.a");
+    return cached_ParenEOS3_93;
   }
 
   @Test
   public void testParenEOS3Failure() {
-    assertLiveFail(get_ParenEOS3_91());
+    assertLiveFail(get_ParenEOS3_93());
   }
 
   @Test
   public void testParenEOS3NotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_ParenEOS3_91());
+    assertNotTerribleLineNumbers(get_ParenEOS3_93());
   }
 
   @Test
   public void testParenEOS3ExceptionFree() {
-    assertExceptionFree(get_ParenEOS3_91());
+    assertExceptionFree(get_ParenEOS3_93());
   }
 
   @Test
   public void testParenEOS3TODOFree() {
-    assertTODOFree(get_ParenEOS3_91());
+    assertTODOFree(get_ParenEOS3_93());
   }
 
   @Test
-  public void stable_ParenEOS3_91() {
-    String live = get_ParenEOS3_91();
+  public void stable_ParenEOS3_93() {
+    String live = get_ParenEOS3_93();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ParenEOS3_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -21864,43 +21944,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_Preempt_92 = null;
-  private String get_Preempt_92() {
-    if (cached_Preempt_92 != null) {
-      return cached_Preempt_92;
+  private String cached_Preempt_94 = null;
+  private String get_Preempt_94() {
+    if (cached_Preempt_94 != null) {
+      return cached_Preempt_94;
     }
-    cached_Preempt_92 = generateTestOutput(true, "Preempt_92", "./test_code/Parser_Preempt_success.a");
-    return cached_Preempt_92;
+    cached_Preempt_94 = generateTestOutput(true, "Preempt_94", "./test_code/Parser_Preempt_success.a");
+    return cached_Preempt_94;
   }
 
   @Test
   public void testPreemptEmission() {
-    assertEmissionGood(get_Preempt_92());
+    assertEmissionGood(get_Preempt_94());
   }
 
   @Test
   public void testPreemptSuccess() {
-    assertLivePass(get_Preempt_92());
+    assertLivePass(get_Preempt_94());
   }
 
   @Test
   public void testPreemptGoodWillHappy() {
-    assertGoodWillHappy(get_Preempt_92());
+    assertGoodWillHappy(get_Preempt_94());
   }
 
   @Test
   public void testPreemptExceptionFree() {
-    assertExceptionFree(get_Preempt_92());
+    assertExceptionFree(get_Preempt_94());
   }
 
   @Test
   public void testPreemptTODOFree() {
-    assertTODOFree(get_Preempt_92());
+    assertTODOFree(get_Preempt_94());
   }
 
   @Test
-  public void stable_Preempt_92() {
-    String live = get_Preempt_92();
+  public void stable_Preempt_94() {
+    String live = get_Preempt_94();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_Preempt_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -21933,7 +22013,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Preempt_92 extends LivingDocument {");
+    gold.append("\npublic class Preempt_94 extends LivingDocument {");
     gold.append("\n  private final RxInt32 v;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -21941,7 +22021,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __sum += v.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Preempt_92(DocumentMonitor __monitor) {");
+    gold.append("\n  public Preempt_94(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    v = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -22162,10 +22242,10 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    v.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaPreempt_92 implements DeltaNode {");
+    gold.append("\n  private class DeltaPreempt_94 implements DeltaNode {");
     gold.append("\n    private DInt32 __dv;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaPreempt_92() {");
+    gold.append("\n    private DeltaPreempt_94() {");
     gold.append("\n      __dv = new DInt32();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
@@ -22175,7 +22255,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      __sum += __dv.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Preempt_92 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Preempt_94 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -22206,8 +22286,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Preempt_92 __self = this;");
-    gold.append("\n    DeltaPreempt_92 __state = new DeltaPreempt_92();");
+    gold.append("\n    Preempt_94 __self = this;");
+    gold.append("\n    DeltaPreempt_94 __state = new DeltaPreempt_94();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -22448,83 +22528,83 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_PureFunctionMustReturn_93 = null;
-  private String get_PureFunctionMustReturn_93() {
-    if (cached_PureFunctionMustReturn_93 != null) {
-      return cached_PureFunctionMustReturn_93;
+  private String cached_PureFunctionMustReturn_95 = null;
+  private String get_PureFunctionMustReturn_95() {
+    if (cached_PureFunctionMustReturn_95 != null) {
+      return cached_PureFunctionMustReturn_95;
     }
-    cached_PureFunctionMustReturn_93 = generateTestOutput(false, "PureFunctionMustReturn_93", "./test_code/Parser_PureFunctionMustReturn_failure.a");
-    return cached_PureFunctionMustReturn_93;
+    cached_PureFunctionMustReturn_95 = generateTestOutput(false, "PureFunctionMustReturn_95", "./test_code/Parser_PureFunctionMustReturn_failure.a");
+    return cached_PureFunctionMustReturn_95;
   }
 
   @Test
   public void testPureFunctionMustReturnFailure() {
-    assertLiveFail(get_PureFunctionMustReturn_93());
+    assertLiveFail(get_PureFunctionMustReturn_95());
   }
 
   @Test
   public void testPureFunctionMustReturnNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_PureFunctionMustReturn_93());
+    assertNotTerribleLineNumbers(get_PureFunctionMustReturn_95());
   }
 
   @Test
   public void testPureFunctionMustReturnExceptionFree() {
-    assertExceptionFree(get_PureFunctionMustReturn_93());
+    assertExceptionFree(get_PureFunctionMustReturn_95());
   }
 
   @Test
   public void testPureFunctionMustReturnTODOFree() {
-    assertTODOFree(get_PureFunctionMustReturn_93());
+    assertTODOFree(get_PureFunctionMustReturn_95());
   }
 
   @Test
-  public void stable_PureFunctionMustReturn_93() {
-    String live = get_PureFunctionMustReturn_93();
+  public void stable_PureFunctionMustReturn_95() {
+    String live = get_PureFunctionMustReturn_95();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_PureFunctionMustReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":16,\"byte\":16},\"end\":{\"line\":0,\"character\":17,\"byte\":17}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_PureFunctionMustReturn_failure.a' failed to parse: Parser was expecting -> for the pure function, and pure functions must have return types. {Token: `)` @ (0,16) -> (0,17): Symbol} (ParseException)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting -> for the pure function, and pure functions must have return types. {Token: `)` @ (0,16) -> (0,17): Symbol} (ImportIssue)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":16,\"byte\":16},\"end\":{\"line\":0,\"character\":17,\"byte\":17}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_PureFunctionMustReturn_failure.a' failed to parse: Parser was an expecting an '->'; pure functions must have return types. {Token: `)` @ (0,16) -> (0,17): Symbol} (ParseException)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was an expecting an '->'; pure functions must have return types. {Token: `)` @ (0,16) -> (0,17): Symbol} (ImportIssue)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_RPC_94 = null;
-  private String get_RPC_94() {
-    if (cached_RPC_94 != null) {
-      return cached_RPC_94;
+  private String cached_RPC_96 = null;
+  private String get_RPC_96() {
+    if (cached_RPC_96 != null) {
+      return cached_RPC_96;
     }
-    cached_RPC_94 = generateTestOutput(true, "RPC_94", "./test_code/Parser_RPC_success.a");
-    return cached_RPC_94;
+    cached_RPC_96 = generateTestOutput(true, "RPC_96", "./test_code/Parser_RPC_success.a");
+    return cached_RPC_96;
   }
 
   @Test
   public void testRPCEmission() {
-    assertEmissionGood(get_RPC_94());
+    assertEmissionGood(get_RPC_96());
   }
 
   @Test
   public void testRPCSuccess() {
-    assertLivePass(get_RPC_94());
+    assertLivePass(get_RPC_96());
   }
 
   @Test
   public void testRPCGoodWillHappy() {
-    assertGoodWillHappy(get_RPC_94());
+    assertGoodWillHappy(get_RPC_96());
   }
 
   @Test
   public void testRPCExceptionFree() {
-    assertExceptionFree(get_RPC_94());
+    assertExceptionFree(get_RPC_96());
   }
 
   @Test
   public void testRPCTODOFree() {
-    assertTODOFree(get_RPC_94());
+    assertTODOFree(get_RPC_96());
   }
 
   @Test
-  public void stable_RPC_94() {
-    String live = get_RPC_94();
+  public void stable_RPC_96() {
+    String live = get_RPC_96();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_RPC_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -22557,13 +22637,13 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class RPC_94 extends LivingDocument {");
+    gold.append("\npublic class RPC_96 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public RPC_94(DocumentMonitor __monitor) {");
+    gold.append("\n  public RPC_96(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -22773,9 +22853,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaRPC_94 implements DeltaNode {");
+    gold.append("\n  private class DeltaRPC_96 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaRPC_94() {");
+    gold.append("\n    private DeltaRPC_96() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -22783,7 +22863,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RPC_94 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(RPC_96 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -22811,8 +22891,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    RPC_94 __self = this;");
-    gold.append("\n    DeltaRPC_94 __state = new DeltaRPC_94();");
+    gold.append("\n    RPC_96 __self = this;");
+    gold.append("\n    DeltaRPC_96 __state = new DeltaRPC_96();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -23142,43 +23222,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ReactiveRef_95 = null;
-  private String get_ReactiveRef_95() {
-    if (cached_ReactiveRef_95 != null) {
-      return cached_ReactiveRef_95;
+  private String cached_ReactiveRef_97 = null;
+  private String get_ReactiveRef_97() {
+    if (cached_ReactiveRef_97 != null) {
+      return cached_ReactiveRef_97;
     }
-    cached_ReactiveRef_95 = generateTestOutput(true, "ReactiveRef_95", "./test_code/Parser_ReactiveRef_success.a");
-    return cached_ReactiveRef_95;
+    cached_ReactiveRef_97 = generateTestOutput(true, "ReactiveRef_97", "./test_code/Parser_ReactiveRef_success.a");
+    return cached_ReactiveRef_97;
   }
 
   @Test
   public void testReactiveRefEmission() {
-    assertEmissionGood(get_ReactiveRef_95());
+    assertEmissionGood(get_ReactiveRef_97());
   }
 
   @Test
   public void testReactiveRefSuccess() {
-    assertLivePass(get_ReactiveRef_95());
+    assertLivePass(get_ReactiveRef_97());
   }
 
   @Test
   public void testReactiveRefGoodWillHappy() {
-    assertGoodWillHappy(get_ReactiveRef_95());
+    assertGoodWillHappy(get_ReactiveRef_97());
   }
 
   @Test
   public void testReactiveRefExceptionFree() {
-    assertExceptionFree(get_ReactiveRef_95());
+    assertExceptionFree(get_ReactiveRef_97());
   }
 
   @Test
   public void testReactiveRefTODOFree() {
-    assertTODOFree(get_ReactiveRef_95());
+    assertTODOFree(get_ReactiveRef_97());
   }
 
   @Test
-  public void stable_ReactiveRef_95() {
-    String live = get_ReactiveRef_95();
+  public void stable_ReactiveRef_97() {
+    String live = get_ReactiveRef_97();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ReactiveRef_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -23211,7 +23291,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class ReactiveRef_95 extends LivingDocument {");
+    gold.append("\npublic class ReactiveRef_97 extends LivingDocument {");
     gold.append("\n  private final RTxX x;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -23219,7 +23299,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __sum += x.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public ReactiveRef_95(DocumentMonitor __monitor) {");
+    gold.append("\n  public ReactiveRef_97(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RTxX(this);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -23440,9 +23520,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaReactiveRef_95 implements DeltaNode {");
+    gold.append("\n  private class DeltaReactiveRef_97 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaReactiveRef_95() {");
+    gold.append("\n    private DeltaReactiveRef_97() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -23450,7 +23530,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(ReactiveRef_95 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(ReactiveRef_97 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -23478,8 +23558,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    ReactiveRef_95 __self = this;");
-    gold.append("\n    DeltaReactiveRef_95 __state = new DeltaReactiveRef_95();");
+    gold.append("\n    ReactiveRef_97 __self = this;");
+    gold.append("\n    DeltaReactiveRef_97 __state = new DeltaReactiveRef_97();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -23842,43 +23922,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_RecordMethod_96 = null;
-  private String get_RecordMethod_96() {
-    if (cached_RecordMethod_96 != null) {
-      return cached_RecordMethod_96;
+  private String cached_RecordMethod_98 = null;
+  private String get_RecordMethod_98() {
+    if (cached_RecordMethod_98 != null) {
+      return cached_RecordMethod_98;
     }
-    cached_RecordMethod_96 = generateTestOutput(true, "RecordMethod_96", "./test_code/Parser_RecordMethod_success.a");
-    return cached_RecordMethod_96;
+    cached_RecordMethod_98 = generateTestOutput(true, "RecordMethod_98", "./test_code/Parser_RecordMethod_success.a");
+    return cached_RecordMethod_98;
   }
 
   @Test
   public void testRecordMethodEmission() {
-    assertEmissionGood(get_RecordMethod_96());
+    assertEmissionGood(get_RecordMethod_98());
   }
 
   @Test
   public void testRecordMethodSuccess() {
-    assertLivePass(get_RecordMethod_96());
+    assertLivePass(get_RecordMethod_98());
   }
 
   @Test
   public void testRecordMethodGoodWillHappy() {
-    assertGoodWillHappy(get_RecordMethod_96());
+    assertGoodWillHappy(get_RecordMethod_98());
   }
 
   @Test
   public void testRecordMethodExceptionFree() {
-    assertExceptionFree(get_RecordMethod_96());
+    assertExceptionFree(get_RecordMethod_98());
   }
 
   @Test
   public void testRecordMethodTODOFree() {
-    assertTODOFree(get_RecordMethod_96());
+    assertTODOFree(get_RecordMethod_98());
   }
 
   @Test
-  public void stable_RecordMethod_96() {
-    String live = get_RecordMethod_96();
+  public void stable_RecordMethod_98() {
+    String live = get_RecordMethod_98();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_RecordMethod_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -23911,7 +23991,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class RecordMethod_96 extends LivingDocument {");
+    gold.append("\npublic class RecordMethod_98 extends LivingDocument {");
     gold.append("\n  private final RTxX x;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -23919,7 +23999,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __sum += x.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public RecordMethod_96(DocumentMonitor __monitor) {");
+    gold.append("\n  public RecordMethod_98(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RTxX(this);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -24140,9 +24220,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaRecordMethod_96 implements DeltaNode {");
+    gold.append("\n  private class DeltaRecordMethod_98 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaRecordMethod_96() {");
+    gold.append("\n    private DeltaRecordMethod_98() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -24150,7 +24230,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RecordMethod_96 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(RecordMethod_98 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -24178,8 +24258,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    RecordMethod_96 __self = this;");
-    gold.append("\n    DeltaRecordMethod_96 __state = new DeltaRecordMethod_96();");
+    gold.append("\n    RecordMethod_98 __self = this;");
+    gold.append("\n    DeltaRecordMethod_98 __state = new DeltaRecordMethod_98();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -24531,43 +24611,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_RecordPolicies_97 = null;
-  private String get_RecordPolicies_97() {
-    if (cached_RecordPolicies_97 != null) {
-      return cached_RecordPolicies_97;
+  private String cached_RecordPolicies_99 = null;
+  private String get_RecordPolicies_99() {
+    if (cached_RecordPolicies_99 != null) {
+      return cached_RecordPolicies_99;
     }
-    cached_RecordPolicies_97 = generateTestOutput(true, "RecordPolicies_97", "./test_code/Parser_RecordPolicies_success.a");
-    return cached_RecordPolicies_97;
+    cached_RecordPolicies_99 = generateTestOutput(true, "RecordPolicies_99", "./test_code/Parser_RecordPolicies_success.a");
+    return cached_RecordPolicies_99;
   }
 
   @Test
   public void testRecordPoliciesEmission() {
-    assertEmissionGood(get_RecordPolicies_97());
+    assertEmissionGood(get_RecordPolicies_99());
   }
 
   @Test
   public void testRecordPoliciesSuccess() {
-    assertLivePass(get_RecordPolicies_97());
+    assertLivePass(get_RecordPolicies_99());
   }
 
   @Test
   public void testRecordPoliciesGoodWillHappy() {
-    assertGoodWillHappy(get_RecordPolicies_97());
+    assertGoodWillHappy(get_RecordPolicies_99());
   }
 
   @Test
   public void testRecordPoliciesExceptionFree() {
-    assertExceptionFree(get_RecordPolicies_97());
+    assertExceptionFree(get_RecordPolicies_99());
   }
 
   @Test
   public void testRecordPoliciesTODOFree() {
-    assertTODOFree(get_RecordPolicies_97());
+    assertTODOFree(get_RecordPolicies_99());
   }
 
   @Test
-  public void stable_RecordPolicies_97() {
-    String live = get_RecordPolicies_97();
+  public void stable_RecordPolicies_99() {
+    String live = get_RecordPolicies_99();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_RecordPolicies_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -24600,13 +24680,13 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class RecordPolicies_97 extends LivingDocument {");
+    gold.append("\npublic class RecordPolicies_99 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public RecordPolicies_97(DocumentMonitor __monitor) {");
+    gold.append("\n  public RecordPolicies_99(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -24816,9 +24896,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaRecordPolicies_97 implements DeltaNode {");
+    gold.append("\n  private class DeltaRecordPolicies_99 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaRecordPolicies_97() {");
+    gold.append("\n    private DeltaRecordPolicies_99() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -24826,7 +24906,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RecordPolicies_97 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(RecordPolicies_99 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -24854,8 +24934,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    RecordPolicies_97 __self = this;");
-    gold.append("\n    DeltaRecordPolicies_97 __state = new DeltaRecordPolicies_97();");
+    gold.append("\n    RecordPolicies_99 __self = this;");
+    gold.append("\n    DeltaRecordPolicies_99 __state = new DeltaRecordPolicies_99();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -25320,43 +25400,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ReturnEmpty_98 = null;
-  private String get_ReturnEmpty_98() {
-    if (cached_ReturnEmpty_98 != null) {
-      return cached_ReturnEmpty_98;
+  private String cached_ReturnEmpty_100 = null;
+  private String get_ReturnEmpty_100() {
+    if (cached_ReturnEmpty_100 != null) {
+      return cached_ReturnEmpty_100;
     }
-    cached_ReturnEmpty_98 = generateTestOutput(true, "ReturnEmpty_98", "./test_code/Parser_ReturnEmpty_success.a");
-    return cached_ReturnEmpty_98;
+    cached_ReturnEmpty_100 = generateTestOutput(true, "ReturnEmpty_100", "./test_code/Parser_ReturnEmpty_success.a");
+    return cached_ReturnEmpty_100;
   }
 
   @Test
   public void testReturnEmptyEmission() {
-    assertEmissionGood(get_ReturnEmpty_98());
+    assertEmissionGood(get_ReturnEmpty_100());
   }
 
   @Test
   public void testReturnEmptySuccess() {
-    assertLivePass(get_ReturnEmpty_98());
+    assertLivePass(get_ReturnEmpty_100());
   }
 
   @Test
   public void testReturnEmptyGoodWillHappy() {
-    assertGoodWillHappy(get_ReturnEmpty_98());
+    assertGoodWillHappy(get_ReturnEmpty_100());
   }
 
   @Test
   public void testReturnEmptyExceptionFree() {
-    assertExceptionFree(get_ReturnEmpty_98());
+    assertExceptionFree(get_ReturnEmpty_100());
   }
 
   @Test
   public void testReturnEmptyTODOFree() {
-    assertTODOFree(get_ReturnEmpty_98());
+    assertTODOFree(get_ReturnEmpty_100());
   }
 
   @Test
-  public void stable_ReturnEmpty_98() {
-    String live = get_ReturnEmpty_98();
+  public void stable_ReturnEmpty_100() {
+    String live = get_ReturnEmpty_100();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ReturnEmpty_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -25389,13 +25469,13 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class ReturnEmpty_98 extends LivingDocument {");
+    gold.append("\npublic class ReturnEmpty_100 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public ReturnEmpty_98(DocumentMonitor __monitor) {");
+    gold.append("\n  public ReturnEmpty_100(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -25605,9 +25685,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaReturnEmpty_98 implements DeltaNode {");
+    gold.append("\n  private class DeltaReturnEmpty_100 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaReturnEmpty_98() {");
+    gold.append("\n    private DeltaReturnEmpty_100() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -25615,7 +25695,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(ReturnEmpty_98 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(ReturnEmpty_100 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -25643,8 +25723,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    ReturnEmpty_98 __self = this;");
-    gold.append("\n    DeltaReturnEmpty_98 __state = new DeltaReturnEmpty_98();");
+    gold.append("\n    ReturnEmpty_100 __self = this;");
+    gold.append("\n    DeltaReturnEmpty_100 __state = new DeltaReturnEmpty_100();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -25855,43 +25935,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_StateMachine_99 = null;
-  private String get_StateMachine_99() {
-    if (cached_StateMachine_99 != null) {
-      return cached_StateMachine_99;
+  private String cached_StateMachine_101 = null;
+  private String get_StateMachine_101() {
+    if (cached_StateMachine_101 != null) {
+      return cached_StateMachine_101;
     }
-    cached_StateMachine_99 = generateTestOutput(true, "StateMachine_99", "./test_code/Parser_StateMachine_success.a");
-    return cached_StateMachine_99;
+    cached_StateMachine_101 = generateTestOutput(true, "StateMachine_101", "./test_code/Parser_StateMachine_success.a");
+    return cached_StateMachine_101;
   }
 
   @Test
   public void testStateMachineEmission() {
-    assertEmissionGood(get_StateMachine_99());
+    assertEmissionGood(get_StateMachine_101());
   }
 
   @Test
   public void testStateMachineSuccess() {
-    assertLivePass(get_StateMachine_99());
+    assertLivePass(get_StateMachine_101());
   }
 
   @Test
   public void testStateMachineGoodWillHappy() {
-    assertGoodWillHappy(get_StateMachine_99());
+    assertGoodWillHappy(get_StateMachine_101());
   }
 
   @Test
   public void testStateMachineExceptionFree() {
-    assertExceptionFree(get_StateMachine_99());
+    assertExceptionFree(get_StateMachine_101());
   }
 
   @Test
   public void testStateMachineTODOFree() {
-    assertTODOFree(get_StateMachine_99());
+    assertTODOFree(get_StateMachine_101());
   }
 
   @Test
-  public void stable_StateMachine_99() {
-    String live = get_StateMachine_99();
+  public void stable_StateMachine_101() {
+    String live = get_StateMachine_101();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_StateMachine_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -25924,7 +26004,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class StateMachine_99 extends LivingDocument {");
+    gold.append("\npublic class StateMachine_101 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxFastString ptr;");
     gold.append("\n  @Override");
@@ -25934,7 +26014,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __sum += ptr.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public StateMachine_99(DocumentMonitor __monitor) {");
+    gold.append("\n  public StateMachine_101(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 0);");
     gold.append("\n    ptr = new RxFastString(this, \"\");");
@@ -26166,9 +26246,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    ptr.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaStateMachine_99 implements DeltaNode {");
+    gold.append("\n  private class DeltaStateMachine_101 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaStateMachine_99() {");
+    gold.append("\n    private DeltaStateMachine_101() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -26176,7 +26256,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(StateMachine_99 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(StateMachine_101 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -26204,8 +26284,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    StateMachine_99 __self = this;");
-    gold.append("\n    DeltaStateMachine_99 __state = new DeltaStateMachine_99();");
+    gold.append("\n    StateMachine_101 __self = this;");
+    gold.append("\n    DeltaStateMachine_101 __state = new DeltaStateMachine_101();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -26436,38 +26516,38 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_StaticIncomplete_100 = null;
-  private String get_StaticIncomplete_100() {
-    if (cached_StaticIncomplete_100 != null) {
-      return cached_StaticIncomplete_100;
+  private String cached_StaticIncomplete_102 = null;
+  private String get_StaticIncomplete_102() {
+    if (cached_StaticIncomplete_102 != null) {
+      return cached_StaticIncomplete_102;
     }
-    cached_StaticIncomplete_100 = generateTestOutput(false, "StaticIncomplete_100", "./test_code/Parser_StaticIncomplete_failure.a");
-    return cached_StaticIncomplete_100;
+    cached_StaticIncomplete_102 = generateTestOutput(false, "StaticIncomplete_102", "./test_code/Parser_StaticIncomplete_failure.a");
+    return cached_StaticIncomplete_102;
   }
 
   @Test
   public void testStaticIncompleteFailure() {
-    assertLiveFail(get_StaticIncomplete_100());
+    assertLiveFail(get_StaticIncomplete_102());
   }
 
   @Test
   public void testStaticIncompleteNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_StaticIncomplete_100());
+    assertNotTerribleLineNumbers(get_StaticIncomplete_102());
   }
 
   @Test
   public void testStaticIncompleteExceptionFree() {
-    assertExceptionFree(get_StaticIncomplete_100());
+    assertExceptionFree(get_StaticIncomplete_102());
   }
 
   @Test
   public void testStaticIncompleteTODOFree() {
-    assertTODOFree(get_StaticIncomplete_100());
+    assertTODOFree(get_StaticIncomplete_102());
   }
 
   @Test
-  public void stable_StaticIncomplete_100() {
-    String live = get_StaticIncomplete_100();
+  public void stable_StaticIncomplete_102() {
+    String live = get_StaticIncomplete_102();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_StaticIncomplete_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -26476,38 +26556,38 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_StaticUknown_101 = null;
-  private String get_StaticUknown_101() {
-    if (cached_StaticUknown_101 != null) {
-      return cached_StaticUknown_101;
+  private String cached_StaticUknown_103 = null;
+  private String get_StaticUknown_103() {
+    if (cached_StaticUknown_103 != null) {
+      return cached_StaticUknown_103;
     }
-    cached_StaticUknown_101 = generateTestOutput(false, "StaticUknown_101", "./test_code/Parser_StaticUknown_failure.a");
-    return cached_StaticUknown_101;
+    cached_StaticUknown_103 = generateTestOutput(false, "StaticUknown_103", "./test_code/Parser_StaticUknown_failure.a");
+    return cached_StaticUknown_103;
   }
 
   @Test
   public void testStaticUknownFailure() {
-    assertLiveFail(get_StaticUknown_101());
+    assertLiveFail(get_StaticUknown_103());
   }
 
   @Test
   public void testStaticUknownNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_StaticUknown_101());
+    assertNotTerribleLineNumbers(get_StaticUknown_103());
   }
 
   @Test
   public void testStaticUknownExceptionFree() {
-    assertExceptionFree(get_StaticUknown_101());
+    assertExceptionFree(get_StaticUknown_103());
   }
 
   @Test
   public void testStaticUknownTODOFree() {
-    assertTODOFree(get_StaticUknown_101());
+    assertTODOFree(get_StaticUknown_103());
   }
 
   @Test
-  public void stable_StaticUknown_101() {
-    String live = get_StaticUknown_101();
+  public void stable_StaticUknown_103() {
+    String live = get_StaticUknown_103();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_StaticUknown_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -26516,38 +26596,38 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_StringEscapingBadUnicodeHex_102 = null;
-  private String get_StringEscapingBadUnicodeHex_102() {
-    if (cached_StringEscapingBadUnicodeHex_102 != null) {
-      return cached_StringEscapingBadUnicodeHex_102;
+  private String cached_StringEscapingBadUnicodeHex_104 = null;
+  private String get_StringEscapingBadUnicodeHex_104() {
+    if (cached_StringEscapingBadUnicodeHex_104 != null) {
+      return cached_StringEscapingBadUnicodeHex_104;
     }
-    cached_StringEscapingBadUnicodeHex_102 = generateTestOutput(false, "StringEscapingBadUnicodeHex_102", "./test_code/Parser_StringEscapingBadUnicodeHex_failure.a");
-    return cached_StringEscapingBadUnicodeHex_102;
+    cached_StringEscapingBadUnicodeHex_104 = generateTestOutput(false, "StringEscapingBadUnicodeHex_104", "./test_code/Parser_StringEscapingBadUnicodeHex_failure.a");
+    return cached_StringEscapingBadUnicodeHex_104;
   }
 
   @Test
   public void testStringEscapingBadUnicodeHexFailure() {
-    assertLiveFail(get_StringEscapingBadUnicodeHex_102());
+    assertLiveFail(get_StringEscapingBadUnicodeHex_104());
   }
 
   @Test
   public void testStringEscapingBadUnicodeHexNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_StringEscapingBadUnicodeHex_102());
+    assertNotTerribleLineNumbers(get_StringEscapingBadUnicodeHex_104());
   }
 
   @Test
   public void testStringEscapingBadUnicodeHexExceptionFree() {
-    assertExceptionFree(get_StringEscapingBadUnicodeHex_102());
+    assertExceptionFree(get_StringEscapingBadUnicodeHex_104());
   }
 
   @Test
   public void testStringEscapingBadUnicodeHexTODOFree() {
-    assertTODOFree(get_StringEscapingBadUnicodeHex_102());
+    assertTODOFree(get_StringEscapingBadUnicodeHex_104());
   }
 
   @Test
-  public void stable_StringEscapingBadUnicodeHex_102() {
-    String live = get_StringEscapingBadUnicodeHex_102();
+  public void stable_StringEscapingBadUnicodeHex_104() {
+    String live = get_StringEscapingBadUnicodeHex_104();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_StringEscapingBadUnicodeHex_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -26556,38 +26636,38 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_StringEscapingBad_103 = null;
-  private String get_StringEscapingBad_103() {
-    if (cached_StringEscapingBad_103 != null) {
-      return cached_StringEscapingBad_103;
+  private String cached_StringEscapingBad_105 = null;
+  private String get_StringEscapingBad_105() {
+    if (cached_StringEscapingBad_105 != null) {
+      return cached_StringEscapingBad_105;
     }
-    cached_StringEscapingBad_103 = generateTestOutput(false, "StringEscapingBad_103", "./test_code/Parser_StringEscapingBad_failure.a");
-    return cached_StringEscapingBad_103;
+    cached_StringEscapingBad_105 = generateTestOutput(false, "StringEscapingBad_105", "./test_code/Parser_StringEscapingBad_failure.a");
+    return cached_StringEscapingBad_105;
   }
 
   @Test
   public void testStringEscapingBadFailure() {
-    assertLiveFail(get_StringEscapingBad_103());
+    assertLiveFail(get_StringEscapingBad_105());
   }
 
   @Test
   public void testStringEscapingBadNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_StringEscapingBad_103());
+    assertNotTerribleLineNumbers(get_StringEscapingBad_105());
   }
 
   @Test
   public void testStringEscapingBadExceptionFree() {
-    assertExceptionFree(get_StringEscapingBad_103());
+    assertExceptionFree(get_StringEscapingBad_105());
   }
 
   @Test
   public void testStringEscapingBadTODOFree() {
-    assertTODOFree(get_StringEscapingBad_103());
+    assertTODOFree(get_StringEscapingBad_105());
   }
 
   @Test
-  public void stable_StringEscapingBad_103() {
-    String live = get_StringEscapingBad_103();
+  public void stable_StringEscapingBad_105() {
+    String live = get_StringEscapingBad_105();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_StringEscapingBad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -26596,43 +26676,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_StringEscaping_104 = null;
-  private String get_StringEscaping_104() {
-    if (cached_StringEscaping_104 != null) {
-      return cached_StringEscaping_104;
+  private String cached_StringEscaping_106 = null;
+  private String get_StringEscaping_106() {
+    if (cached_StringEscaping_106 != null) {
+      return cached_StringEscaping_106;
     }
-    cached_StringEscaping_104 = generateTestOutput(true, "StringEscaping_104", "./test_code/Parser_StringEscaping_success.a");
-    return cached_StringEscaping_104;
+    cached_StringEscaping_106 = generateTestOutput(true, "StringEscaping_106", "./test_code/Parser_StringEscaping_success.a");
+    return cached_StringEscaping_106;
   }
 
   @Test
   public void testStringEscapingEmission() {
-    assertEmissionGood(get_StringEscaping_104());
+    assertEmissionGood(get_StringEscaping_106());
   }
 
   @Test
   public void testStringEscapingSuccess() {
-    assertLivePass(get_StringEscaping_104());
+    assertLivePass(get_StringEscaping_106());
   }
 
   @Test
   public void testStringEscapingGoodWillHappy() {
-    assertGoodWillHappy(get_StringEscaping_104());
+    assertGoodWillHappy(get_StringEscaping_106());
   }
 
   @Test
   public void testStringEscapingExceptionFree() {
-    assertExceptionFree(get_StringEscaping_104());
+    assertExceptionFree(get_StringEscaping_106());
   }
 
   @Test
   public void testStringEscapingTODOFree() {
-    assertTODOFree(get_StringEscaping_104());
+    assertTODOFree(get_StringEscaping_106());
   }
 
   @Test
-  public void stable_StringEscaping_104() {
-    String live = get_StringEscaping_104();
+  public void stable_StringEscaping_106() {
+    String live = get_StringEscaping_106();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_StringEscaping_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -26665,13 +26745,13 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class StringEscaping_104 extends LivingDocument {");
+    gold.append("\npublic class StringEscaping_106 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public StringEscaping_104(DocumentMonitor __monitor) {");
+    gold.append("\n  public StringEscaping_106(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -26881,9 +26961,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaStringEscaping_104 implements DeltaNode {");
+    gold.append("\n  private class DeltaStringEscaping_106 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaStringEscaping_104() {");
+    gold.append("\n    private DeltaStringEscaping_106() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -26891,7 +26971,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(StringEscaping_104 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(StringEscaping_106 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -26919,8 +26999,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    StringEscaping_104 __self = this;");
-    gold.append("\n    DeltaStringEscaping_104 __state = new DeltaStringEscaping_104();");
+    gold.append("\n    StringEscaping_106 __self = this;");
+    gold.append("\n    DeltaStringEscaping_106 __state = new DeltaStringEscaping_106();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -27132,43 +27212,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_SymbolClustering_105 = null;
-  private String get_SymbolClustering_105() {
-    if (cached_SymbolClustering_105 != null) {
-      return cached_SymbolClustering_105;
+  private String cached_SymbolClustering_107 = null;
+  private String get_SymbolClustering_107() {
+    if (cached_SymbolClustering_107 != null) {
+      return cached_SymbolClustering_107;
     }
-    cached_SymbolClustering_105 = generateTestOutput(true, "SymbolClustering_105", "./test_code/Parser_SymbolClustering_success.a");
-    return cached_SymbolClustering_105;
+    cached_SymbolClustering_107 = generateTestOutput(true, "SymbolClustering_107", "./test_code/Parser_SymbolClustering_success.a");
+    return cached_SymbolClustering_107;
   }
 
   @Test
   public void testSymbolClusteringEmission() {
-    assertEmissionGood(get_SymbolClustering_105());
+    assertEmissionGood(get_SymbolClustering_107());
   }
 
   @Test
   public void testSymbolClusteringSuccess() {
-    assertLivePass(get_SymbolClustering_105());
+    assertLivePass(get_SymbolClustering_107());
   }
 
   @Test
   public void testSymbolClusteringGoodWillHappy() {
-    assertGoodWillHappy(get_SymbolClustering_105());
+    assertGoodWillHappy(get_SymbolClustering_107());
   }
 
   @Test
   public void testSymbolClusteringExceptionFree() {
-    assertExceptionFree(get_SymbolClustering_105());
+    assertExceptionFree(get_SymbolClustering_107());
   }
 
   @Test
   public void testSymbolClusteringTODOFree() {
-    assertTODOFree(get_SymbolClustering_105());
+    assertTODOFree(get_SymbolClustering_107());
   }
 
   @Test
-  public void stable_SymbolClustering_105() {
-    String live = get_SymbolClustering_105();
+  public void stable_SymbolClustering_107() {
+    String live = get_SymbolClustering_107();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_SymbolClustering_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -27201,7 +27281,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class SymbolClustering_105 extends LivingDocument {");
+    gold.append("\npublic class SymbolClustering_107 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -27209,7 +27289,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __sum += x.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public SymbolClustering_105(DocumentMonitor __monitor) {");
+    gold.append("\n  public SymbolClustering_107(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -27430,9 +27510,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaSymbolClustering_105 implements DeltaNode {");
+    gold.append("\n  private class DeltaSymbolClustering_107 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaSymbolClustering_105() {");
+    gold.append("\n    private DeltaSymbolClustering_107() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -27440,7 +27520,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(SymbolClustering_105 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(SymbolClustering_107 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -27468,8 +27548,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    SymbolClustering_105 __self = this;");
-    gold.append("\n    DeltaSymbolClustering_105 __state = new DeltaSymbolClustering_105();");
+    gold.append("\n    SymbolClustering_107 __self = this;");
+    gold.append("\n    DeltaSymbolClustering_107 __state = new DeltaSymbolClustering_107();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -27675,43 +27755,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_Testing_106 = null;
-  private String get_Testing_106() {
-    if (cached_Testing_106 != null) {
-      return cached_Testing_106;
+  private String cached_Testing_108 = null;
+  private String get_Testing_108() {
+    if (cached_Testing_108 != null) {
+      return cached_Testing_108;
     }
-    cached_Testing_106 = generateTestOutput(true, "Testing_106", "./test_code/Parser_Testing_success.a");
-    return cached_Testing_106;
+    cached_Testing_108 = generateTestOutput(true, "Testing_108", "./test_code/Parser_Testing_success.a");
+    return cached_Testing_108;
   }
 
   @Test
   public void testTestingEmission() {
-    assertEmissionGood(get_Testing_106());
+    assertEmissionGood(get_Testing_108());
   }
 
   @Test
   public void testTestingSuccess() {
-    assertLivePass(get_Testing_106());
+    assertLivePass(get_Testing_108());
   }
 
   @Test
   public void testTestingGoodWillHappy() {
-    assertGoodWillHappy(get_Testing_106());
+    assertGoodWillHappy(get_Testing_108());
   }
 
   @Test
   public void testTestingExceptionFree() {
-    assertExceptionFree(get_Testing_106());
+    assertExceptionFree(get_Testing_108());
   }
 
   @Test
   public void testTestingTODOFree() {
-    assertTODOFree(get_Testing_106());
+    assertTODOFree(get_Testing_108());
   }
 
   @Test
-  public void stable_Testing_106() {
-    String live = get_Testing_106();
+  public void stable_Testing_108() {
+    String live = get_Testing_108();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_Testing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -27744,7 +27824,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Testing_106 extends LivingDocument {");
+    gold.append("\npublic class Testing_108 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -27752,7 +27832,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __sum += x.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Testing_106(DocumentMonitor __monitor) {");
+    gold.append("\n  public Testing_108(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 1);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -27973,9 +28053,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaTesting_106 implements DeltaNode {");
+    gold.append("\n  private class DeltaTesting_108 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaTesting_106() {");
+    gold.append("\n    private DeltaTesting_108() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -27983,7 +28063,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Testing_106 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Testing_108 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -28011,8 +28091,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Testing_106 __self = this;");
-    gold.append("\n    DeltaTesting_106 __state = new DeltaTesting_106();");
+    gold.append("\n    Testing_108 __self = this;");
+    gold.append("\n    DeltaTesting_108 __state = new DeltaTesting_108();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -28293,43 +28373,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_TheNoState_107 = null;
-  private String get_TheNoState_107() {
-    if (cached_TheNoState_107 != null) {
-      return cached_TheNoState_107;
+  private String cached_TheNoState_109 = null;
+  private String get_TheNoState_109() {
+    if (cached_TheNoState_109 != null) {
+      return cached_TheNoState_109;
     }
-    cached_TheNoState_107 = generateTestOutput(true, "TheNoState_107", "./test_code/Parser_TheNoState_success.a");
-    return cached_TheNoState_107;
+    cached_TheNoState_109 = generateTestOutput(true, "TheNoState_109", "./test_code/Parser_TheNoState_success.a");
+    return cached_TheNoState_109;
   }
 
   @Test
   public void testTheNoStateEmission() {
-    assertEmissionGood(get_TheNoState_107());
+    assertEmissionGood(get_TheNoState_109());
   }
 
   @Test
   public void testTheNoStateSuccess() {
-    assertLivePass(get_TheNoState_107());
+    assertLivePass(get_TheNoState_109());
   }
 
   @Test
   public void testTheNoStateGoodWillHappy() {
-    assertGoodWillHappy(get_TheNoState_107());
+    assertGoodWillHappy(get_TheNoState_109());
   }
 
   @Test
   public void testTheNoStateExceptionFree() {
-    assertExceptionFree(get_TheNoState_107());
+    assertExceptionFree(get_TheNoState_109());
   }
 
   @Test
   public void testTheNoStateTODOFree() {
-    assertTODOFree(get_TheNoState_107());
+    assertTODOFree(get_TheNoState_109());
   }
 
   @Test
-  public void stable_TheNoState_107() {
-    String live = get_TheNoState_107();
+  public void stable_TheNoState_109() {
+    String live = get_TheNoState_109();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_TheNoState_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -28362,7 +28442,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class TheNoState_107 extends LivingDocument {");
+    gold.append("\npublic class TheNoState_109 extends LivingDocument {");
     gold.append("\n  private final RxFastString x;");
     gold.append("\n  private final RxString z;");
     gold.append("\n  @Override");
@@ -28372,7 +28452,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __sum += z.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public TheNoState_107(DocumentMonitor __monitor) {");
+    gold.append("\n  public TheNoState_109(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxFastString(this, \"\");");
     gold.append("\n    z = new RxString(this, \"\");");
@@ -28604,9 +28684,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaTheNoState_107 implements DeltaNode {");
+    gold.append("\n  private class DeltaTheNoState_109 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaTheNoState_107() {");
+    gold.append("\n    private DeltaTheNoState_109() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -28614,7 +28694,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(TheNoState_107 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(TheNoState_109 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -28642,8 +28722,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    TheNoState_107 __self = this;");
-    gold.append("\n    DeltaTheNoState_107 __state = new DeltaTheNoState_107();");
+    gold.append("\n    TheNoState_109 __self = this;");
+    gold.append("\n    DeltaTheNoState_109 __state = new DeltaTheNoState_109();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -28872,38 +28952,38 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_TupleEOS1_108 = null;
-  private String get_TupleEOS1_108() {
-    if (cached_TupleEOS1_108 != null) {
-      return cached_TupleEOS1_108;
+  private String cached_TupleEOS1_110 = null;
+  private String get_TupleEOS1_110() {
+    if (cached_TupleEOS1_110 != null) {
+      return cached_TupleEOS1_110;
     }
-    cached_TupleEOS1_108 = generateTestOutput(false, "TupleEOS1_108", "./test_code/Parser_TupleEOS1_failure.a");
-    return cached_TupleEOS1_108;
+    cached_TupleEOS1_110 = generateTestOutput(false, "TupleEOS1_110", "./test_code/Parser_TupleEOS1_failure.a");
+    return cached_TupleEOS1_110;
   }
 
   @Test
   public void testTupleEOS1Failure() {
-    assertLiveFail(get_TupleEOS1_108());
+    assertLiveFail(get_TupleEOS1_110());
   }
 
   @Test
   public void testTupleEOS1NotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_TupleEOS1_108());
+    assertNotTerribleLineNumbers(get_TupleEOS1_110());
   }
 
   @Test
   public void testTupleEOS1ExceptionFree() {
-    assertExceptionFree(get_TupleEOS1_108());
+    assertExceptionFree(get_TupleEOS1_110());
   }
 
   @Test
   public void testTupleEOS1TODOFree() {
-    assertTODOFree(get_TupleEOS1_108());
+    assertTODOFree(get_TupleEOS1_110());
   }
 
   @Test
-  public void stable_TupleEOS1_108() {
-    String live = get_TupleEOS1_108();
+  public void stable_TupleEOS1_110() {
+    String live = get_TupleEOS1_110();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_TupleEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -28912,38 +28992,38 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_TupleEOS2_109 = null;
-  private String get_TupleEOS2_109() {
-    if (cached_TupleEOS2_109 != null) {
-      return cached_TupleEOS2_109;
+  private String cached_TupleEOS2_111 = null;
+  private String get_TupleEOS2_111() {
+    if (cached_TupleEOS2_111 != null) {
+      return cached_TupleEOS2_111;
     }
-    cached_TupleEOS2_109 = generateTestOutput(false, "TupleEOS2_109", "./test_code/Parser_TupleEOS2_failure.a");
-    return cached_TupleEOS2_109;
+    cached_TupleEOS2_111 = generateTestOutput(false, "TupleEOS2_111", "./test_code/Parser_TupleEOS2_failure.a");
+    return cached_TupleEOS2_111;
   }
 
   @Test
   public void testTupleEOS2Failure() {
-    assertLiveFail(get_TupleEOS2_109());
+    assertLiveFail(get_TupleEOS2_111());
   }
 
   @Test
   public void testTupleEOS2NotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_TupleEOS2_109());
+    assertNotTerribleLineNumbers(get_TupleEOS2_111());
   }
 
   @Test
   public void testTupleEOS2ExceptionFree() {
-    assertExceptionFree(get_TupleEOS2_109());
+    assertExceptionFree(get_TupleEOS2_111());
   }
 
   @Test
   public void testTupleEOS2TODOFree() {
-    assertTODOFree(get_TupleEOS2_109());
+    assertTODOFree(get_TupleEOS2_111());
   }
 
   @Test
-  public void stable_TupleEOS2_109() {
-    String live = get_TupleEOS2_109();
+  public void stable_TupleEOS2_111() {
+    String live = get_TupleEOS2_111();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_TupleEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -28952,38 +29032,38 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_TupleEOS3_110 = null;
-  private String get_TupleEOS3_110() {
-    if (cached_TupleEOS3_110 != null) {
-      return cached_TupleEOS3_110;
+  private String cached_TupleEOS3_112 = null;
+  private String get_TupleEOS3_112() {
+    if (cached_TupleEOS3_112 != null) {
+      return cached_TupleEOS3_112;
     }
-    cached_TupleEOS3_110 = generateTestOutput(false, "TupleEOS3_110", "./test_code/Parser_TupleEOS3_failure.a");
-    return cached_TupleEOS3_110;
+    cached_TupleEOS3_112 = generateTestOutput(false, "TupleEOS3_112", "./test_code/Parser_TupleEOS3_failure.a");
+    return cached_TupleEOS3_112;
   }
 
   @Test
   public void testTupleEOS3Failure() {
-    assertLiveFail(get_TupleEOS3_110());
+    assertLiveFail(get_TupleEOS3_112());
   }
 
   @Test
   public void testTupleEOS3NotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_TupleEOS3_110());
+    assertNotTerribleLineNumbers(get_TupleEOS3_112());
   }
 
   @Test
   public void testTupleEOS3ExceptionFree() {
-    assertExceptionFree(get_TupleEOS3_110());
+    assertExceptionFree(get_TupleEOS3_112());
   }
 
   @Test
   public void testTupleEOS3TODOFree() {
-    assertTODOFree(get_TupleEOS3_110());
+    assertTODOFree(get_TupleEOS3_112());
   }
 
   @Test
-  public void stable_TupleEOS3_110() {
-    String live = get_TupleEOS3_110();
+  public void stable_TupleEOS3_112() {
+    String live = get_TupleEOS3_112();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_TupleEOS3_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -28992,43 +29072,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_TupleHappy_111 = null;
-  private String get_TupleHappy_111() {
-    if (cached_TupleHappy_111 != null) {
-      return cached_TupleHappy_111;
+  private String cached_TupleHappy_113 = null;
+  private String get_TupleHappy_113() {
+    if (cached_TupleHappy_113 != null) {
+      return cached_TupleHappy_113;
     }
-    cached_TupleHappy_111 = generateTestOutput(true, "TupleHappy_111", "./test_code/Parser_TupleHappy_success.a");
-    return cached_TupleHappy_111;
+    cached_TupleHappy_113 = generateTestOutput(true, "TupleHappy_113", "./test_code/Parser_TupleHappy_success.a");
+    return cached_TupleHappy_113;
   }
 
   @Test
   public void testTupleHappyEmission() {
-    assertEmissionGood(get_TupleHappy_111());
+    assertEmissionGood(get_TupleHappy_113());
   }
 
   @Test
   public void testTupleHappySuccess() {
-    assertLivePass(get_TupleHappy_111());
+    assertLivePass(get_TupleHappy_113());
   }
 
   @Test
   public void testTupleHappyGoodWillHappy() {
-    assertGoodWillHappy(get_TupleHappy_111());
+    assertGoodWillHappy(get_TupleHappy_113());
   }
 
   @Test
   public void testTupleHappyExceptionFree() {
-    assertExceptionFree(get_TupleHappy_111());
+    assertExceptionFree(get_TupleHappy_113());
   }
 
   @Test
   public void testTupleHappyTODOFree() {
-    assertTODOFree(get_TupleHappy_111());
+    assertTODOFree(get_TupleHappy_113());
   }
 
   @Test
-  public void stable_TupleHappy_111() {
-    String live = get_TupleHappy_111();
+  public void stable_TupleHappy_113() {
+    String live = get_TupleHappy_113();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_TupleHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -29061,13 +29141,13 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class TupleHappy_111 extends LivingDocument {");
+    gold.append("\npublic class TupleHappy_113 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public TupleHappy_111(DocumentMonitor __monitor) {");
+    gold.append("\n  public TupleHappy_113(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -29277,9 +29357,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaTupleHappy_111 implements DeltaNode {");
+    gold.append("\n  private class DeltaTupleHappy_113 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaTupleHappy_111() {");
+    gold.append("\n    private DeltaTupleHappy_113() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -29287,7 +29367,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(TupleHappy_111 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(TupleHappy_113 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -29315,8 +29395,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    TupleHappy_111 __self = this;");
-    gold.append("\n    DeltaTupleHappy_111 __state = new DeltaTupleHappy_111();");
+    gold.append("\n    TupleHappy_113 __self = this;");
+    gold.append("\n    DeltaTupleHappy_113 __state = new DeltaTupleHappy_113();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -29625,43 +29705,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_UnicodeInString_112 = null;
-  private String get_UnicodeInString_112() {
-    if (cached_UnicodeInString_112 != null) {
-      return cached_UnicodeInString_112;
+  private String cached_UnicodeInString_114 = null;
+  private String get_UnicodeInString_114() {
+    if (cached_UnicodeInString_114 != null) {
+      return cached_UnicodeInString_114;
     }
-    cached_UnicodeInString_112 = generateTestOutput(true, "UnicodeInString_112", "./test_code/Parser_UnicodeInString_success.a");
-    return cached_UnicodeInString_112;
+    cached_UnicodeInString_114 = generateTestOutput(true, "UnicodeInString_114", "./test_code/Parser_UnicodeInString_success.a");
+    return cached_UnicodeInString_114;
   }
 
   @Test
   public void testUnicodeInStringEmission() {
-    assertEmissionGood(get_UnicodeInString_112());
+    assertEmissionGood(get_UnicodeInString_114());
   }
 
   @Test
   public void testUnicodeInStringSuccess() {
-    assertLivePass(get_UnicodeInString_112());
+    assertLivePass(get_UnicodeInString_114());
   }
 
   @Test
   public void testUnicodeInStringGoodWillHappy() {
-    assertGoodWillHappy(get_UnicodeInString_112());
+    assertGoodWillHappy(get_UnicodeInString_114());
   }
 
   @Test
   public void testUnicodeInStringExceptionFree() {
-    assertExceptionFree(get_UnicodeInString_112());
+    assertExceptionFree(get_UnicodeInString_114());
   }
 
   @Test
   public void testUnicodeInStringTODOFree() {
-    assertTODOFree(get_UnicodeInString_112());
+    assertTODOFree(get_UnicodeInString_114());
   }
 
   @Test
-  public void stable_UnicodeInString_112() {
-    String live = get_UnicodeInString_112();
+  public void stable_UnicodeInString_114() {
+    String live = get_UnicodeInString_114();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_UnicodeInString_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -29694,13 +29774,13 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class UnicodeInString_112 extends LivingDocument {");
+    gold.append("\npublic class UnicodeInString_114 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public UnicodeInString_112(DocumentMonitor __monitor) {");
+    gold.append("\n  public UnicodeInString_114(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -29910,9 +29990,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaUnicodeInString_112 implements DeltaNode {");
+    gold.append("\n  private class DeltaUnicodeInString_114 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaUnicodeInString_112() {");
+    gold.append("\n    private DeltaUnicodeInString_114() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -29920,7 +30000,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(UnicodeInString_112 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(UnicodeInString_114 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -29948,8 +30028,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    UnicodeInString_112 __self = this;");
-    gold.append("\n    DeltaUnicodeInString_112 __state = new DeltaUnicodeInString_112();");
+    gold.append("\n    UnicodeInString_114 __self = this;");
+    gold.append("\n    DeltaUnicodeInString_114 __state = new DeltaUnicodeInString_114();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -30155,43 +30235,43 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ViewerCompute_113 = null;
-  private String get_ViewerCompute_113() {
-    if (cached_ViewerCompute_113 != null) {
-      return cached_ViewerCompute_113;
+  private String cached_ViewerCompute_115 = null;
+  private String get_ViewerCompute_115() {
+    if (cached_ViewerCompute_115 != null) {
+      return cached_ViewerCompute_115;
     }
-    cached_ViewerCompute_113 = generateTestOutput(true, "ViewerCompute_113", "./test_code/Parser_ViewerCompute_success.a");
-    return cached_ViewerCompute_113;
+    cached_ViewerCompute_115 = generateTestOutput(true, "ViewerCompute_115", "./test_code/Parser_ViewerCompute_success.a");
+    return cached_ViewerCompute_115;
   }
 
   @Test
   public void testViewerComputeEmission() {
-    assertEmissionGood(get_ViewerCompute_113());
+    assertEmissionGood(get_ViewerCompute_115());
   }
 
   @Test
   public void testViewerComputeSuccess() {
-    assertLivePass(get_ViewerCompute_113());
+    assertLivePass(get_ViewerCompute_115());
   }
 
   @Test
   public void testViewerComputeGoodWillHappy() {
-    assertGoodWillHappy(get_ViewerCompute_113());
+    assertGoodWillHappy(get_ViewerCompute_115());
   }
 
   @Test
   public void testViewerComputeExceptionFree() {
-    assertExceptionFree(get_ViewerCompute_113());
+    assertExceptionFree(get_ViewerCompute_115());
   }
 
   @Test
   public void testViewerComputeTODOFree() {
-    assertTODOFree(get_ViewerCompute_113());
+    assertTODOFree(get_ViewerCompute_115());
   }
 
   @Test
-  public void stable_ViewerCompute_113() {
-    String live = get_ViewerCompute_113();
+  public void stable_ViewerCompute_115() {
+    String live = get_ViewerCompute_115();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ViewerCompute_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -30224,7 +30304,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class ViewerCompute_113 extends LivingDocument {");
+    gold.append("\npublic class ViewerCompute_115 extends LivingDocument {");
     gold.append("\n  private final RxGuard ___y;");
     gold.append("\n  public int __COMPUTE_y(NtPrincipal __who, RTx__ViewerType __viewer) {");
     gold.append("\n    return 2;");
@@ -30234,7 +30314,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public ViewerCompute_113(DocumentMonitor __monitor) {");
+    gold.append("\n  public ViewerCompute_115(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    ___y =  new RxGuard();");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -30445,11 +30525,11 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaViewerCompute_113 implements DeltaNode {");
+    gold.append("\n  private class DeltaViewerCompute_115 implements DeltaNode {");
     gold.append("\n    private long __gy;");
     gold.append("\n    private DInt32 __dy;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaViewerCompute_113() {");
+    gold.append("\n    private DeltaViewerCompute_115() {");
     gold.append("\n      __gy = -1;");
     gold.append("\n      __dy = new DInt32();");
     gold.append("\n      __emitted = false;");
@@ -30460,7 +30540,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      __sum += __dy.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(ViewerCompute_113 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(ViewerCompute_115 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -30498,8 +30578,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    ViewerCompute_113 __self = this;");
-    gold.append("\n    DeltaViewerCompute_113 __state = new DeltaViewerCompute_113();");
+    gold.append("\n    ViewerCompute_115 __self = this;");
+    gold.append("\n    DeltaViewerCompute_115 __state = new DeltaViewerCompute_115();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");

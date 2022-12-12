@@ -131,6 +131,12 @@ public class Parser {
           return new DynamicNullConstant(token);
         case "@stable":
           return new EnvStatus(token, EnvLookupName.Stable);
+        case "@pair": {
+          final var keyExpr = expression();
+          final var arrow = consumeArrow("@pair was expected an arrow to bond a key to a value");
+          final var valExpr = expression();
+          return new PairCons(token, keyExpr, arrow, valExpr);
+        }
         case "@maybe":
           var openExpr = tokens.peek();
           if (openExpr == null) {
@@ -330,6 +336,14 @@ public class Parser {
     } else {
       throw new ParseException(String.format("Parser was expecting keyword:`%s`, but got `%s` instead.", keyword, token.text), token);
     }
+  }
+
+  private Token consumeArrow(String errorIfNotPresent) throws AdamaLangException {
+    Token arrow = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("->"));
+    if (arrow == null && errorIfNotPresent != null) {
+      throw new ParseException("Parser was an expecting an '->'; " + errorIfNotPresent, tokens.getLastTokenIfAvailable());
+    }
+    return arrow;
   }
 
   private Token consumeExpectedSymbol(final String... symbols) throws AdamaLangException {
@@ -683,7 +697,7 @@ public class Parser {
     final var openParen = consumeExpectedSymbol("(");
     final var args = arg_list();
     final var closeParen = consumeExpectedSymbol(")");
-    final var introReturnType = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("->"));
+    final var introReturnType = consumeArrow(null);
     TyType returnType = null;
     if (introReturnType != null) {
       returnType = native_type();
@@ -756,10 +770,7 @@ public class Parser {
     final var openParen = consumeExpectedSymbol("(");
     final var args = arg_list();
     final var closeParen = consumeExpectedSymbol(")");
-    final var introReturn = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("->"));
-    if (introReturn == null) {
-      throw new ParseException("Parser was expecting -> for the pure function, and pure functions must have return types.", closeParen);
-    }
+    final var introReturn = consumeArrow("pure functions must have return types.");
     final var returnType = native_type();
     final var code = block();
     final var df = new DefineFunction(functionToken, FunctionSpecialization.Pure, name, openParen, args, closeParen, introReturn, returnType, null, code);
@@ -850,7 +861,7 @@ public class Parser {
     final var openParen = consumeExpectedSymbol("(");
     final var args = arg_list();
     final var closeParen = consumeExpectedSymbol(")");
-    final var hasReturnType = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("->"));
+    final var hasReturnType = consumeArrow(null);
     TyType returnType = null;
     if (hasReturnType != null) {
       returnType = native_type();
@@ -1038,7 +1049,10 @@ public class Parser {
     }
     if (scan.isSymbolWithTextEq(args)) {
       final var afterScan = tokens.peek(1);
-      if (afterScan != null && afterScan.isSymbolWithTextEq("=")) {
+      if (afterScan != null && (afterScan.isSymbolWithTextEq("="))) {
+        return null;
+      }
+      if (afterScan != null && (scan.isSymbolWithTextEq("-") && afterScan.isSymbolWithTextEq(">"))) {
         return null;
       }
     }
@@ -1149,13 +1163,22 @@ public class Parser {
     return result;
   }
 
-  public TyNativeMap native_map(final TypeBehavior behavior, final Token mapToken) throws AdamaLangException {
+  public TyNativeMap native_map(final TypeBehavior behavior, final Token readonlyToken, final Token mapToken) throws AdamaLangException {
     final var openThing = consumeExpectedSymbol("<");
     final var domainType = native_type();
     final var commaToken = consumeExpectedSymbol(",");
     final var rangeType = native_type();
     final var closeThing = consumeExpectedSymbol(">");
-    return new TyNativeMap(behavior, mapToken, openThing, domainType, commaToken, rangeType, closeThing);
+    return new TyNativeMap(behavior, readonlyToken, mapToken, openThing, domainType, commaToken, rangeType, closeThing);
+  }
+
+  public TyNativePair native_pair(final TypeBehavior behavior, final Token readonlyToken, final Token pairToken) throws AdamaLangException {
+    final var openThing = consumeExpectedSymbol("<");
+    final var domainType = native_type();
+    final var commaToken = consumeExpectedSymbol(",");
+    final var rangeType = native_type();
+    final var closeThing = consumeExpectedSymbol(">");
+    return new TyNativePair(behavior, readonlyToken, pairToken, openThing, domainType, commaToken, rangeType, closeThing);
   }
 
   public TokenizedItem<TyType> native_parameter_type() throws AdamaLangException {
@@ -1251,8 +1274,10 @@ public class Parser {
         return new TyNativeString(behavior, readonlyToken, token);
       case "label":
         return new TyNativeStateMachineRef(behavior, readonlyToken, token);
+      case "pair":
+        return native_pair(behavior, readonlyToken, token);
       case "map":
-        return native_map(behavior, token);
+        return native_map(behavior, readonlyToken, token);
       case "table":
         final var typeParameter = type_parameter();
         return new TyNativeTable(behavior, readonlyToken, token, typeParameter);
@@ -1561,6 +1586,7 @@ public class Parser {
       case "maybe":
       case "future":
       case "map":
+      case "pair":
       case "tuple":
       case "table":
       case "readonly":

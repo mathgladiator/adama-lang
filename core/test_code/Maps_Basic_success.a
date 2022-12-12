@@ -6,11 +6,16 @@ function x() -> map<int, int> {
   return m;
 }
 
+function goo(readonly map<int, int> m) -> int {
+  return m.size();
+}
+
 public formula zoop = x();
 
 int z = 100;
 int count = 0;
 int count_after_delete;
+public int rv;
 @construct {
   map<int, int> foo;
   foo[123] = 42;
@@ -28,6 +33,9 @@ int count_after_delete;
   count = foo.size();
   foo[123].delete();
   count_after_delete = foo.size();
+  if (g2.remove(500) as vvv) {
+    rv = vvv;
+  }
 }
 
 #nice {

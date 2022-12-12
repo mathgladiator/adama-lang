@@ -1,0 +1,4 @@
+#not_found {
+  pair<int, int> p1;
+  var x = p1.nope;
+}

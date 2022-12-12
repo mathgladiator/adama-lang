@@ -170,6 +170,30 @@ public class RuleSetCommon {
       }
     }
 
+    final var aMap = RuleSetMap.IsNativeMap(environment, resolveA);
+    final var bMap = RuleSetMap.IsNativeMap(environment, resolveB);
+    if (aMap && bMap) {
+      final var aDomainType = ((TyNativeMap) resolveA).getDomainType(environment);
+      final var bDomainType = ((TyNativeMap) resolveB).getDomainType(environment);
+      final var aRangeType = ((TyNativeMap) resolveA).getRangeType(environment);
+      final var bRangeType = ((TyNativeMap) resolveB).getRangeType(environment);
+      final var maxDomainType = GetMaxType(environment, aDomainType, bDomainType, silent);
+      final var maxRangeType = GetMaxType(environment, aRangeType, bRangeType, silent);
+      return new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, null, maxDomainType, null, maxRangeType, null);
+    }
+
+    final var aPair = RuleSetMap.IsNativePair(environment, resolveA);
+    final var bPair = RuleSetMap.IsNativePair(environment, resolveB);
+    if (aPair && bPair) {
+      final var aDomainType = ((TyNativePair) resolveA).getDomainType(environment);
+      final var bDomainType = ((TyNativePair) resolveB).getDomainType(environment);
+      final var aRangeType = ((TyNativePair) resolveA).getRangeType(environment);
+      final var bRangeType = ((TyNativePair) resolveB).getRangeType(environment);
+      final var maxDomainType = GetMaxType(environment, aDomainType, bDomainType, silent);
+      final var maxRangeType = GetMaxType(environment, aRangeType, bRangeType, silent);
+      return new TyNativePair(TypeBehavior.ReadOnlyNativeValue, null, null, null, maxDomainType, null, maxRangeType, null);
+    }
+
     final var aArray = RuleSetArray.IsNativeArray(environment, resolveA, true);
     final var bArray = RuleSetArray.IsNativeArray(environment, resolveB, true);
     if (aArray && bArray) {

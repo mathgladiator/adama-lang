@@ -87,6 +87,6 @@ public class TyReactiveLazy extends TyType implements //
 
   @Override
   public TyType getEmbeddedType(final Environment environment) {
-    return computedType;
+    return environment.rules.Resolve(computedType, false);
   }
 }
