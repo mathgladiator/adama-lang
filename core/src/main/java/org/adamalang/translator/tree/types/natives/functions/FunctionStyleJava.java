@@ -24,4 +24,5 @@ public enum FunctionStyleJava {
   FunctionStyleJava(final boolean useOnlyExpressionInLookup) {
     this.useOnlyExpressionInLookup = useOnlyExpressionInLookup;
   }
+
 }

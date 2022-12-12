@@ -1,0 +1,18 @@
+record R {
+  int x;
+  int v;
+}
+
+table<R> t;
+
+map<int, int> result;
+
+@construct {
+  t <- {x:1, v:1};
+  t <- {x:2, v:5};
+  t <- {x:3, v:10};
+  t <- {x:2, v:10};
+  t <- {x:3, v:100};
+  t <- {x:3, v:1000};
+  result <- (iterate t) reduce x via @lambda z: z.size();
+}

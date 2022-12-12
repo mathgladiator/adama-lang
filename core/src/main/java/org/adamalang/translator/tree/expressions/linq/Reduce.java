@@ -17,11 +17,13 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeMap;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Reduce extends LinqExpression {
   public final Token fieldToken;
@@ -30,6 +32,7 @@ public class Reduce extends LinqExpression {
   public final Token reduceToken;
   public final Token viaToken;
   private FunctionOverloadInstance functionInstance;
+  private TyNativeFunctional functionalType;
   private boolean requireGet;
 
   public Reduce(final Expression sql, final Token reduceToken, final Token onToken, final Token fieldToken, final Token viaToken, final Expression functionToReduceWith) {
@@ -39,6 +42,7 @@ public class Reduce extends LinqExpression {
     this.fieldToken = fieldToken;
     this.viaToken = viaToken;
     this.functionToReduceWith = functionToReduceWith;
+    functionalType = null;
     functionInstance = null;
     requireGet = false;
     ingest(sql);
@@ -62,10 +66,18 @@ public class Reduce extends LinqExpression {
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     final var typeSql = sql.typing(environment, null);
     final var isGoodSql = environment.rules.IsNativeListOfStructure(typeSql, false);
-    final var funcType = functionToReduceWith.typing(environment, null);
+
+    final TyType funcType;
+    {
+      ArrayList<TyType> guessInputTypes = new ArrayList<>();
+      guessInputTypes.add(typeSql);
+      FunctionOverloadInstance guess = new FunctionOverloadInstance("unknown", null, guessInputTypes, true, false);
+      TyType guessType = new TyNativeFunctional("unknown", FunctionOverloadInstance.WRAP(guess), FunctionStyleJava.None);
+      funcType = functionToReduceWith.typing(environment, guessType);
+    }
     TyType resultType = null;
     if (isGoodSql && environment.rules.IsFunction(funcType, false)) {
-      final var functionalType = (TyNativeFunctional) funcType;
+      functionalType = (TyNativeFunctional) funcType;
       final var expectedArgs = new ArrayList<TyType>();
       expectedArgs.add(typeSql);
       functionInstance = functionalType.find(this, expectedArgs, environment);
@@ -104,7 +116,16 @@ public class Reduce extends LinqExpression {
       if (requireGet) {
         sb.append(".get()");
       }
-      sb.append(", (__list) -> ").append(functionInstance.javaFunction).append("(__list)");
+      sb.append(", ");
+      switch (functionalType.style) {
+        case ExpressionThenArgs:
+        case ExpressionThenNameWithArgs:
+          functionToReduceWith.writeJava(sb, environment);
+          break;
+        default:
+          sb.append("(__list) -> ").append(functionInstance.javaFunction).append("(__list)");
+          break;
+      }
       sb.append(")");
     }
   }

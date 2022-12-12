@@ -137,6 +137,12 @@ public class Parser {
           final var valExpr = expression();
           return new PairCons(token, keyExpr, arrow, valExpr);
         }
+        case "@lambda": {
+          final var varName = id();
+          final var colon = consumeExpectedSymbol(":");
+          final var resultExpr = expression();
+          return new Lambda(token, varName, colon, resultExpr);
+        }
         case "@maybe":
           var openExpr = tokens.peek();
           if (openExpr == null) {
