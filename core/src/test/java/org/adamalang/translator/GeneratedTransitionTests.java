@@ -80,7 +80,6 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class HappyInstant_1 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -625,7 +624,6 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class HappyTimeTravel_2 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -1170,7 +1168,6 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class InvokeLegacy_3 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  @Override");

@@ -120,7 +120,6 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class FunctionPassing_2 extends LivingDocument {");
     gold.append("\n  private final RxInt32 sz;");
     gold.append("\n  private final RxInt32 wz;");
@@ -967,7 +966,6 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Happy_3 extends LivingDocument {");
     gold.append("\n  private final RxInt32 sz1;");
     gold.append("\n  private final RxInt32 sz2;");
@@ -1748,7 +1746,6 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class TableCopy_5 extends LivingDocument {");
     gold.append("\n  private final RxInt32 sz;");
     gold.append("\n  @Override");

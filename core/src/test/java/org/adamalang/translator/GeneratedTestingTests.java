@@ -153,7 +153,6 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Legacy_3 extends LivingDocument {");
     gold.append("\n  private final RxString x;");
     gold.append("\n  private final RxTable<RTxX> zzz;");
@@ -1020,7 +1019,6 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class MessagingLegacy_4 extends LivingDocument {");
     gold.append("\n  private final RxInt32 out;");
     gold.append("\n  @Override");
@@ -1691,7 +1689,6 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class PumpMessages_5 extends LivingDocument {");
     gold.append("\n  private final RxString status;");
     gold.append("\n  @Override");

@@ -160,7 +160,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class BooleanBulk_3 extends LivingDocument {");
     gold.append("\n  private final RxBoolean b;");
     gold.append("\n  private final RxLazy<Boolean> ib;");
@@ -725,7 +724,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class BooleanLegacy_4 extends LivingDocument {");
     gold.append("\n  private final RxBoolean b1;");
     gold.append("\n  private final RxBoolean b2;");
@@ -1566,7 +1564,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ChannelFunky_5 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -2224,7 +2221,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ConstantsLegacy_6 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxDouble y;");
@@ -2799,7 +2795,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class DoubleBulk_7 extends LivingDocument {");
     gold.append("\n  private final RxDouble x;");
     gold.append("\n  private final RxDouble y;");
@@ -3425,7 +3420,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class IntegerBulk_8 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxInt32 y;");
@@ -4021,7 +4015,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class LabelLegacy_9 extends LivingDocument {");
     gold.append("\n  private final RxFastString ptr;");
     gold.append("\n  private final RxString output;");
@@ -4666,7 +4659,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class LegacyClient_11 extends LivingDocument {");
     gold.append("\n  private final RxPrincipal x;");
     gold.append("\n  private final RxPrincipal y;");
@@ -5257,7 +5249,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class LegacyDouble_12 extends LivingDocument {");
     gold.append("\n  private final RxDouble d1;");
     gold.append("\n  private final RxDouble d3;");
@@ -5939,7 +5930,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class LegacyEnum_13 extends LivingDocument {");
     gold.append("\n  private final RxEnumInt32 x;");
     gold.append("\n  private final RxBoolean check1;");
@@ -6611,7 +6601,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class LegacyEnvironment_14 extends LivingDocument {");
     gold.append("\n  private final RxBoolean a;");
     gold.append("\n  private final RxBoolean b;");
@@ -7169,7 +7158,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class LegacyInt_15 extends LivingDocument {");
     gold.append("\n  private final RxInt32 assign;");
     gold.append("\n  private final RxInt32 hex;");
@@ -7797,7 +7785,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class LegacyMaybe_16 extends LivingDocument {");
     gold.append("\n  private final RxMaybe<RxDouble> md;");
     gold.append("\n  private final RxMaybe<RxInt32> mi;");
@@ -8413,7 +8400,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class LegacyStrings_17 extends LivingDocument {");
     gold.append("\n  private final RxString s1;");
     gold.append("\n  private final RxString s2;");
@@ -9189,7 +9175,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Long64Bits_18 extends LivingDocument {");
     gold.append("\n  private final RxInt64 x;");
     gold.append("\n  private final RxInt64 big;");
@@ -9773,7 +9758,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class LongFun_19 extends LivingDocument {");
     gold.append("\n  private final RxInt64 x;");
     gold.append("\n  private final RxTable<RTxR> t;");
@@ -10492,7 +10476,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class MaybeDeleteFlow_20 extends LivingDocument {");
     gold.append("\n  private final RxMaybe<RxInt32> x;");
     gold.append("\n  @Override");
@@ -11037,7 +11020,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class MaybeDelete_21 extends LivingDocument {");
     gold.append("\n  private final RxMaybe<RxString> s;");
     gold.append("\n  private final RxMaybe<RxString> w00t;");
@@ -11782,7 +11764,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class NumberBulk_23 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxInt32 y;");
@@ -12418,7 +12399,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class SpecialConstants_25 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -12941,7 +12921,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class StringBulk_26 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxString y;");

@@ -80,7 +80,6 @@ public class GeneratedMathTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Complex_1 extends LivingDocument {");
     gold.append("\n  private final RxComplex c1;");
     gold.append("\n  private final RxComplex c2;");

@@ -80,7 +80,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Legacy_1 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxThing> things;");
     gold.append("\n  @Override");
@@ -1107,7 +1106,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class MegaTypeConstruction_2 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -2337,7 +2335,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class TypeConstruction_3 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");

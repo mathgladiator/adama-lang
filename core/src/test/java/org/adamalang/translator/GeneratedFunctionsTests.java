@@ -80,7 +80,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class AcceptRecord_1 extends LivingDocument {");
     gold.append("\n  private final RTxR x;");
     gold.append("\n  @Override");
@@ -859,7 +858,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class AutoConvertAnonymousOnReturn_4 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -1517,7 +1515,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Happy_6 extends LivingDocument {");
     gold.append("\n  private final RxInt32 z;");
     gold.append("\n  private final RxInt32 cc;");
@@ -2187,7 +2184,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class MethodsOnLists_9 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  private final RxInt32 value;");
@@ -3125,7 +3121,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class MultiArgs_10 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -3828,7 +3823,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class PrepWorkReducers_12 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxThing> things;");
     gold.append("\n  private final RxInt32 result;");
@@ -4754,7 +4748,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class PureInvokePure_14 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -5407,7 +5400,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ReactiveInvokePure_18 extends LivingDocument {");
     gold.append("\n  private final RxLazy<Integer> goo;");
     gold.append("\n  private final RxGuard ___you;");
@@ -5958,7 +5950,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ReadOnly_19 extends LivingDocument {");
     gold.append("\n  private final RxInt32 z;");
     gold.append("\n  @Override");
@@ -6502,7 +6493,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class TypeBuiltIn_20 extends LivingDocument {");
     gold.append("\n  private final RxString y;");
     gold.append("\n  private final RxMaybe<RxInt32> mi;");

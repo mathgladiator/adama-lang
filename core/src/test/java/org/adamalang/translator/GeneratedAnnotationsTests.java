@@ -80,7 +80,6 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Reactive_1 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x0;");
     gold.append("\n  private final RxDouble x1;");

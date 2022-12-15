@@ -80,7 +80,6 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class NumericalExtensions_1 extends LivingDocument {");
     gold.append("\n  private final RxString x1;");
     gold.append("\n  private final RxString x2;");
@@ -909,7 +908,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __track(3);");
     gold.append("\n    x4.set(LibString.charOf(new NtMaybe<Integer>()).getOrDefaultTo(\"nope\"));");
     gold.append("\n    __track(4);");
-    gold.append("\n    z1.set(Math.sin((3.14)));");
+    gold.append("\n    z1.set(LibMath.sin((3.14)));");
     gold.append("\n    __track(5);");
     gold.append("\n    z2.set(-123);");
     gold.append("\n    __track(6);");
@@ -1060,7 +1059,6 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Stats_2 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> rows;");
     gold.append("\n  private final RxDouble y1;");
@@ -2114,7 +2112,6 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Strings_3 extends LivingDocument {");
     gold.append("\n  private final RxString x1;");
     gold.append("\n  private final RxString x2;");

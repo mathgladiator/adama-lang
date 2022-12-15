@@ -120,7 +120,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class FlowBasics_2 extends LivingDocument {");
     gold.append("\n  private final RxInt32 i;");
     gold.append("\n  private final RxInt64 l;");
@@ -788,7 +787,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class FlowChildRecordWithPrivacyChange_3 extends LivingDocument {");
     gold.append("\n  private final RTxX x;");
     gold.append("\n  @Override");
@@ -1643,7 +1641,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class FlowMaybeComplex_4 extends LivingDocument {");
     gold.append("\n  private final RxLazy<NtMaybe<NtList<RTxM>>> tx1;");
     gold.append("\n  private final RxLazy<NtMaybe<NtMaybe<NtList<RTxM>>>> tx2;");
@@ -2597,7 +2594,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class FlowMessageArray_5 extends LivingDocument {");
     gold.append("\n  private final RxLazy<RTxM> m;");
     gold.append("\n  private final RxLazy<RTxM[]> mlist;");
@@ -3229,7 +3225,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class FlowMessageList_6 extends LivingDocument {");
     gold.append("\n  private final RxLazy<NtList<RTxM>> tx;");
     gold.append("\n  @Override");
@@ -3879,7 +3874,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class FlowRecordArray_7 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  private final RxLazy<RTxR[]> tx;");
@@ -4765,7 +4759,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class FlowRecordList_8 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  private final RxLazy<NtList<RTxR>> tx;");
@@ -5651,7 +5644,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class FlowSimpleArray_9 extends LivingDocument {");
     gold.append("\n  private final RxInt32 input;");
     gold.append("\n  private final RxLazy<int[]> arr_int;");
@@ -6373,7 +6365,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class FlowSimpleMaybe_10 extends LivingDocument {");
     gold.append("\n  private final RxMaybe<RxInt32> i;");
     gold.append("\n  private final RxMaybe<RxInt64> l;");
@@ -7071,7 +7062,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class FlowSimpleMessage_11 extends LivingDocument {");
     gold.append("\n  private final RxLazy<RTx_AnonObjConvert_0> m1;");
     gold.append("\n  private final RxLazy<RTxM> m2;");

@@ -144,4 +144,334 @@ public class LibMathTests {
     Assert.assertFalse(LibMath.equality(new NtMaybe<String>(), "X", (x, y) -> x.equals(y)));
     Assert.assertTrue(LibMath.equality(new NtMaybe<String>("X"), "X", (x, y) -> x.equals(y)));
   }
+
+  @Test
+  public void test_sin() {
+    Assert.assertEquals(0.8414709848078965, LibMath.sin(1.0), 0.01);
+    Assert.assertEquals(0.8414709848078965, LibMath.sin(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.sin(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_cos() {
+    Assert.assertEquals(0.5403023058681398, LibMath.cos(1.0), 0.01);
+    Assert.assertEquals(0.5403023058681398, LibMath.cos(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.cos(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_tan() {
+    Assert.assertEquals(1.5574077246549023, LibMath.tan(1.0), 0.01);
+    Assert.assertEquals(1.5574077246549023, LibMath.tan(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.tan(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_asin() {
+    Assert.assertEquals(1.5707963267948966, LibMath.asin(1.0), 0.01);
+    Assert.assertEquals(1.5707963267948966, LibMath.asin(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.asin(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_acos() {
+    Assert.assertEquals(0.0, LibMath.acos(1.0), 0.01);
+    Assert.assertEquals(0.0, LibMath.acos(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.acos(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_atan() {
+    Assert.assertEquals(0.7853981633974483, LibMath.atan(1.0), 0.01);
+    Assert.assertEquals(0.7853981633974483, LibMath.atan(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.atan(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_sinh() {
+    Assert.assertEquals(1.1752011936438014, LibMath.sinh(1.0), 0.01);
+    Assert.assertEquals(1.1752011936438014, LibMath.sinh(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.sinh(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_cosh() {
+    Assert.assertEquals(1.543080634815244, LibMath.cosh(1.0), 0.01);
+    Assert.assertEquals(1.543080634815244, LibMath.cosh(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.cosh(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_tanh() {
+    Assert.assertEquals(0.7615941559557649, LibMath.tanh(1.0), 0.01);
+    Assert.assertEquals(0.7615941559557649, LibMath.tanh(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.tanh(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_exp() {
+    Assert.assertEquals(2.718281828459045, LibMath.exp(1.0), 0.01);
+    Assert.assertEquals(2.718281828459045, LibMath.exp(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.exp(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_log() {
+    Assert.assertEquals(0.0, LibMath.log(1.0), 0.01);
+    Assert.assertEquals(0.0, LibMath.log(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.log(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_log10() {
+    Assert.assertEquals(0.0, LibMath.log10(1.0), 0.01);
+    Assert.assertEquals(0.0, LibMath.log10(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.log10(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_cbrt() {
+    Assert.assertEquals(1.0, LibMath.cbrt(1.0), 0.01);
+    Assert.assertEquals(1.0, LibMath.cbrt(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.cbrt(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_expm1() {
+    Assert.assertEquals(1.718281828459045, LibMath.expm1(1.0), 0.01);
+    Assert.assertEquals(1.718281828459045, LibMath.expm1(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.expm1(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_log1p() {
+    Assert.assertEquals(0.6931471805599453, LibMath.log1p(1.0), 0.01);
+    Assert.assertEquals(0.6931471805599453, LibMath.log1p(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.log1p(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_signum() {
+    Assert.assertEquals(1.0, LibMath.signum(1.0), 0.01);
+    Assert.assertEquals(1.0, LibMath.signum(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.signum(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_ulp() {
+    Assert.assertEquals(2.220446049250313E-16, LibMath.ulp(1.0), 0.01);
+    Assert.assertEquals(2.220446049250313E-16, LibMath.ulp(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.ulp(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_getExponent() {
+    Assert.assertEquals(0, LibMath.getExponent(1.0), 0.01);
+    Assert.assertEquals(0, LibMath.getExponent(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.getExponent(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_min() {
+    Assert.assertEquals(1.0, LibMath.min(1.0, 2.0), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.min(1.0, new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.min(new NtMaybe<>(1.0), 2.0).get(), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.min(new NtMaybe<>(1.0), new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.min(new NtMaybe<>(1.0), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.min(new NtMaybe<>(), new NtMaybe<>(2.0)).has());
+    Assert.assertFalse(LibMath.min(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.min(new NtMaybe<>(), 2.0).has());
+    Assert.assertFalse(LibMath.min(1.0, new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_max() {
+    Assert.assertEquals(2.0, LibMath.max(1.0, 2.0), 0.01);
+    Assert.assertEquals(2.0, (double) LibMath.max(1.0, new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertEquals(2.0, (double) LibMath.max(new NtMaybe<>(1.0), 2.0).get(), 0.01);
+    Assert.assertEquals(2.0, (double) LibMath.max(new NtMaybe<>(1.0), new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.max(new NtMaybe<>(1.0), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.max(new NtMaybe<>(), new NtMaybe<>(2.0)).has());
+    Assert.assertFalse(LibMath.max(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.max(new NtMaybe<>(), 2.0).has());
+    Assert.assertFalse(LibMath.max(1.0, new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_atan2() {
+    Assert.assertEquals(0.4636476090008061, LibMath.atan2(1.0, 2.0), 0.01);
+    Assert.assertEquals(0.4636476090008061, (double) LibMath.atan2(1.0, new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertEquals(0.4636476090008061, (double) LibMath.atan2(new NtMaybe<>(1.0), 2.0).get(), 0.01);
+    Assert.assertEquals(0.4636476090008061, (double) LibMath.atan2(new NtMaybe<>(1.0), new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.atan2(new NtMaybe<>(1.0), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.atan2(new NtMaybe<>(), new NtMaybe<>(2.0)).has());
+    Assert.assertFalse(LibMath.atan2(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.atan2(new NtMaybe<>(), 2.0).has());
+    Assert.assertFalse(LibMath.atan2(1.0, new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_hypot() {
+    Assert.assertEquals(2.23606797749979, LibMath.hypot(1.0, 2.0), 0.01);
+    Assert.assertEquals(2.23606797749979, (double) LibMath.hypot(1.0, new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertEquals(2.23606797749979, (double) LibMath.hypot(new NtMaybe<>(1.0), 2.0).get(), 0.01);
+    Assert.assertEquals(2.23606797749979, (double) LibMath.hypot(new NtMaybe<>(1.0), new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.hypot(new NtMaybe<>(1.0), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.hypot(new NtMaybe<>(), new NtMaybe<>(2.0)).has());
+    Assert.assertFalse(LibMath.hypot(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.hypot(new NtMaybe<>(), 2.0).has());
+    Assert.assertFalse(LibMath.hypot(1.0, new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_pow() {
+    Assert.assertEquals(1.0, LibMath.pow(1.0, 2.0), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.pow(1.0, new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.pow(new NtMaybe<>(1.0), 2.0).get(), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.pow(new NtMaybe<>(1.0), new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.pow(new NtMaybe<>(1.0), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.pow(new NtMaybe<>(), new NtMaybe<>(2.0)).has());
+    Assert.assertFalse(LibMath.pow(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.pow(new NtMaybe<>(), 2.0).has());
+    Assert.assertFalse(LibMath.pow(1.0, new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_IEEEremainder() {
+    Assert.assertEquals(1.0, LibMath.IEEEremainder(1.0, 2.0), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.IEEEremainder(1.0, new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.IEEEremainder(new NtMaybe<>(1.0), 2.0).get(), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.IEEEremainder(new NtMaybe<>(1.0), new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.IEEEremainder(new NtMaybe<>(1.0), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.IEEEremainder(new NtMaybe<>(), new NtMaybe<>(2.0)).has());
+    Assert.assertFalse(LibMath.IEEEremainder(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.IEEEremainder(new NtMaybe<>(), 2.0).has());
+    Assert.assertFalse(LibMath.IEEEremainder(1.0, new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void test_copySign() {
+    Assert.assertEquals(1.0, LibMath.copySign(1.0, 2.0), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.copySign(1.0, new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.copySign(new NtMaybe<>(1.0), 2.0).get(), 0.01);
+    Assert.assertEquals(1.0, (double) LibMath.copySign(new NtMaybe<>(1.0), new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.copySign(new NtMaybe<>(1.0), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.copySign(new NtMaybe<>(), new NtMaybe<>(2.0)).has());
+    Assert.assertFalse(LibMath.copySign(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.copySign(new NtMaybe<>(), 2.0).has());
+    Assert.assertFalse(LibMath.copySign(1.0, new NtMaybe<>()).has());
+  }
+
+  /** min */
+  @Test
+  public void test_min_i() {
+    Assert.assertEquals(1, LibMath.min(1, 2));
+    Assert.assertEquals(1, (int) LibMath.min_i(1, new NtMaybe<>(2)).get());
+    Assert.assertEquals(1, (int) LibMath.min_i(new NtMaybe<>(1), 2).get());
+    Assert.assertEquals(1, (int) LibMath.min_i(new NtMaybe<>(1), new NtMaybe<>(2)).get());
+    Assert.assertFalse(LibMath.min_i(new NtMaybe<>(1), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.min_i(new NtMaybe<>(), new NtMaybe<>(2)).has());
+    Assert.assertFalse(LibMath.min_i(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.min_i(new NtMaybe<>(), 2).has());
+    Assert.assertFalse(LibMath.min_i(1, new NtMaybe<>()).has());
+  }
+
+  /** max */
+  @Test
+  public void test_max_i() {
+    Assert.assertEquals(2, LibMath.max(1, 2));
+    Assert.assertEquals(2, (int) LibMath.max_i(1, new NtMaybe<>(2)).get());
+    Assert.assertEquals(2, (int) LibMath.max_i(new NtMaybe<>(1), 2).get());
+    Assert.assertEquals(2, (int) LibMath.max_i(new NtMaybe<>(1), new NtMaybe<>(2)).get());
+    Assert.assertFalse(LibMath.max_i(new NtMaybe<>(1), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.max_i(new NtMaybe<>(), new NtMaybe<>(2)).has());
+    Assert.assertFalse(LibMath.max_i(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.max_i(new NtMaybe<>(), 2).has());
+    Assert.assertFalse(LibMath.max_i(1, new NtMaybe<>()).has());
+  }
+
+  /** floorDiv */
+  @Test
+  public void test_floorDiv_i() {
+    Assert.assertEquals(0, LibMath.floorDiv(1, 2));
+    Assert.assertEquals(0, (int) LibMath.floorDiv_i(1, new NtMaybe<>(2)).get());
+    Assert.assertEquals(0, (int) LibMath.floorDiv_i(new NtMaybe<>(1), 2).get());
+    Assert.assertEquals(0, (int) LibMath.floorDiv_i(new NtMaybe<>(1), new NtMaybe<>(2)).get());
+    Assert.assertFalse(LibMath.floorDiv_i(new NtMaybe<>(1), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.floorDiv_i(new NtMaybe<>(), new NtMaybe<>(2)).has());
+    Assert.assertFalse(LibMath.floorDiv_i(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.floorDiv_i(new NtMaybe<>(), 2).has());
+    Assert.assertFalse(LibMath.floorDiv_i(1, new NtMaybe<>()).has());
+
+  }
+
+  /** floorMod */
+  @Test
+  public void test_floorMod_i() {
+    Assert.assertEquals(1, LibMath.floorMod(1, 2));
+    Assert.assertEquals(1, (int) LibMath.floorMod_i(1, new NtMaybe<>(2)).get());
+    Assert.assertEquals(1, (int) LibMath.floorMod_i(new NtMaybe<>(1), 2).get());
+    Assert.assertEquals(1, (int) LibMath.floorMod_i(new NtMaybe<>(1), new NtMaybe<>(2)).get());
+    Assert.assertFalse(LibMath.floorMod_i(new NtMaybe<>(1), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.floorMod_i(new NtMaybe<>(), new NtMaybe<>(2)).has());
+    Assert.assertFalse(LibMath.floorMod_i(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.floorMod_i(new NtMaybe<>(), 2).has());
+    Assert.assertFalse(LibMath.floorMod_i(1, new NtMaybe<>()).has());
+  }
+
+  /** min */
+  @Test
+  public void test_min_l() {
+    Assert.assertEquals(1L, LibMath.min(1L, 2L));
+    Assert.assertEquals(1L, (long) LibMath.min_l(1L, new NtMaybe<>(2L)).get());
+    Assert.assertEquals(1L, (long) LibMath.min_l(new NtMaybe<>(1L), 2L).get());
+    Assert.assertEquals(1L, (long) LibMath.min_l(new NtMaybe<>(1L), new NtMaybe<>(2L)).get());
+    Assert.assertFalse(LibMath.min_l(new NtMaybe<>(1L), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.min_l(new NtMaybe<>(), 2L).has());
+    Assert.assertFalse(LibMath.min_l(1L, new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.min_l(new NtMaybe<>(), new NtMaybe<>(2L)).has());
+    Assert.assertFalse(LibMath.min_l(new NtMaybe<>(), new NtMaybe<>()).has());
+  }
+
+  /** max */
+  @Test
+  public void test_max_l() {
+    Assert.assertEquals(2L, LibMath.max(1L, 2L));
+    Assert.assertEquals(2L, (long) LibMath.max_l(1L, new NtMaybe<>(2L)).get());
+    Assert.assertEquals(2L, (long) LibMath.max_l(new NtMaybe<>(1L), 2L).get());
+    Assert.assertEquals(2L, (long) LibMath.max_l(new NtMaybe<>(1L), new NtMaybe<>(2L)).get());
+    Assert.assertFalse(LibMath.max_l(new NtMaybe<>(1L), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.max_l(new NtMaybe<>(), 2L).has());
+    Assert.assertFalse(LibMath.max_l(1L, new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.max_l(new NtMaybe<>(), new NtMaybe<>(2L)).has());
+    Assert.assertFalse(LibMath.max_l(new NtMaybe<>(), new NtMaybe<>()).has());
+  }
+
+  /** floorDiv */
+  @Test
+  public void test_floorDiv_l() {
+    Assert.assertEquals(0L, LibMath.floorDiv(1L, 2L));
+    Assert.assertEquals(0L, (long) LibMath.floorDiv_l(1L, new NtMaybe<>(2L)).get());
+    Assert.assertEquals(0L, (long) LibMath.floorDiv_l(new NtMaybe<>(1L), 2L).get());
+    Assert.assertEquals(0L, (long) LibMath.floorDiv_l(new NtMaybe<>(1L), new NtMaybe<>(2L)).get());
+    Assert.assertFalse(LibMath.floorDiv_l(new NtMaybe<>(1L), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.floorDiv_l(new NtMaybe<>(), 2L).has());
+    Assert.assertFalse(LibMath.floorDiv_l(1L, new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.floorDiv_l(new NtMaybe<>(), new NtMaybe<>(2L)).has());
+    Assert.assertFalse(LibMath.floorDiv_l(new NtMaybe<>(), new NtMaybe<>()).has());
+  }
+
+  /** floorMod */
+  @Test
+  public void test_floorMod_l() {
+    Assert.assertEquals(1L, LibMath.floorMod(1L, 2L));
+    Assert.assertEquals(1L, (long) LibMath.floorMod_l(1L, new NtMaybe<>(2L)).get());
+    Assert.assertEquals(1L, (long) LibMath.floorMod_l(new NtMaybe<>(1L), 2L).get());
+    Assert.assertEquals(1L, (long) LibMath.floorMod_l(new NtMaybe<>(1L), new NtMaybe<>(2L)).get());
+    Assert.assertFalse(LibMath.floorMod_l(new NtMaybe<>(1L), new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.floorMod_l(new NtMaybe<>(), 2L).has());
+    Assert.assertFalse(LibMath.floorMod_l(1L, new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.floorMod_l(new NtMaybe<>(), new NtMaybe<>(2L)).has());
+    Assert.assertFalse(LibMath.floorMod_l(new NtMaybe<>(), new NtMaybe<>()).has());
+  }
 }

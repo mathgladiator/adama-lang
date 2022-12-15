@@ -80,7 +80,6 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class BulkMaybeAssign_1 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> x;");
     gold.append("\n  @Override");
@@ -828,7 +827,6 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class InvokeMethods_3 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> x;");
     gold.append("\n  @Override");
@@ -1517,7 +1515,6 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Legacy_4 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> zzz;");
     gold.append("\n  private final RxTable<RTxX> zzz2;");
@@ -2461,7 +2458,6 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class MethodOnList_5 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> tbl;");
     gold.append("\n  private final RxLazy<NtList<Integer>> x;");
@@ -3299,7 +3295,6 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class NegateBoolList_6 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  @Override");
@@ -3993,7 +3988,6 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class NegateIntList_7 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  @Override");

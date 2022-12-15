@@ -21,6 +21,8 @@ import java.util.function.BiFunction;
 /** a very simple math library which extends some of the already exposed Math calls */
 public class LibMath {
   public static double SQRT2 = 1.4142135623730950488016887242097;
+  public static double E = Math.E;
+  public static double PI = Math.PI;
 
   @Extension
   public static NtComplex sqrt(final double x) {
@@ -39,15 +41,726 @@ public class LibMath {
   }
 
   /* TODO:
-   * "min", "max", "ceil", "floor",
-   * "sin", "cos", "tan", "abs", "asin", "acos", "atan",
-   * "sinh", "cosh", "tanh", "atan2", "hypot",
-   * "exp", "log", "log10", "pow",
-   * "cbrt", "floorDiv", "floorMod",
-   * "IEEEremainder", "expm1", "log1p", "signum", "ulp", "fma", "copySign", "getExponent", "powerOfTwo", "E", "PI"
+   * ,
+   * "E", "PI"
    * @param x
    * @return
    */
+
+  /** min */
+  @Extension
+  public static double min(final double x, final double y) {
+    return Math.min(x, y);
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> min(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+    if (mx.has()) {
+      return new NtMaybe<>(min(mx.get(), y));
+    }
+    return mx;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> min(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (my.has()) {
+      return new NtMaybe<>(min(x, my.get()));
+    }
+    return my;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> min(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(min(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** max */
+  @Extension
+  public static double max(final double x, final double y) {
+    return Math.max(x, y);
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> max(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+    if (mx.has()) {
+      return new NtMaybe<>(max(mx.get(), y));
+    }
+    return mx;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> max(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (my.has()) {
+      return new NtMaybe<>(max(x, my.get()));
+    }
+    return my;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> max(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(max(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** atan2 */
+  @Extension
+  public static double atan2(final double x, final double y) {
+    return Math.atan2(x, y);
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> atan2(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+    if (mx.has()) {
+      return new NtMaybe<>(atan2(mx.get(), y));
+    }
+    return mx;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> atan2(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (my.has()) {
+      return new NtMaybe<>(atan2(x, my.get()));
+    }
+    return my;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> atan2(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(atan2(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** hypot */
+  @Extension
+  public static double hypot(final double x, final double y) {
+    return Math.hypot(x, y);
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> hypot(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+    if (mx.has()) {
+      return new NtMaybe<>(hypot(mx.get(), y));
+    }
+    return mx;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> hypot(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (my.has()) {
+      return new NtMaybe<>(hypot(x, my.get()));
+    }
+    return my;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> hypot(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(hypot(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** pow */
+  @Extension
+  public static double pow(final double x, final double y) {
+    return Math.pow(x, y);
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> pow(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+    if (mx.has()) {
+      return new NtMaybe<>(pow(mx.get(), y));
+    }
+    return mx;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> pow(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (my.has()) {
+      return new NtMaybe<>(pow(x, my.get()));
+    }
+    return my;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> pow(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(pow(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** IEEEremainder */
+  @Extension
+  public static double IEEEremainder(final double x, final double y) {
+    return Math.IEEEremainder(x, y);
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> IEEEremainder(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+    if (mx.has()) {
+      return new NtMaybe<>(IEEEremainder(mx.get(), y));
+    }
+    return mx;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> IEEEremainder(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (my.has()) {
+      return new NtMaybe<>(IEEEremainder(x, my.get()));
+    }
+    return my;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> IEEEremainder(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(IEEEremainder(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** copySign */
+  @Extension
+  public static double copySign(final double x, final double y) {
+    return Math.copySign(x, y);
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> copySign(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+    if (mx.has()) {
+      return new NtMaybe<>(copySign(mx.get(), y));
+    }
+    return mx;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> copySign(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (my.has()) {
+      return new NtMaybe<>(copySign(x, my.get()));
+    }
+    return my;
+  }
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> copySign(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(copySign(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+
+  /** sin */
+  @Extension
+  public static double sin(final double x) {
+    return Math.sin(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> sin(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(sin(mx.get()));
+    }
+    return mx;
+  }
+
+  /** cos */
+  @Extension
+  public static double cos(final double x) {
+    return Math.cos(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> cos(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(cos(mx.get()));
+    }
+    return mx;
+  }
+
+  /** tan */
+  @Extension
+  public static double tan(final double x) {
+    return Math.tan(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> tan(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(tan(mx.get()));
+    }
+    return mx;
+  }
+
+  /** asin */
+  @Extension
+  public static double asin(final double x) {
+    return Math.asin(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> asin(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(asin(mx.get()));
+    }
+    return mx;
+  }
+
+  /** acos */
+  @Extension
+  public static double acos(final double x) {
+    return Math.acos(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> acos(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(acos(mx.get()));
+    }
+    return mx;
+  }
+
+  /** atan */
+  @Extension
+  public static double atan(final double x) {
+    return Math.atan(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> atan(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(atan(mx.get()));
+    }
+    return mx;
+  }
+
+  /** sinh */
+  @Extension
+  public static double sinh(final double x) {
+    return Math.sinh(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> sinh(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(sinh(mx.get()));
+    }
+    return mx;
+  }
+
+  /** cosh */
+  @Extension
+  public static double cosh(final double x) {
+    return Math.cosh(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> cosh(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(cosh(mx.get()));
+    }
+    return mx;
+  }
+
+  /** tanh */
+  @Extension
+  public static double tanh(final double x) {
+    return Math.tanh(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> tanh(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(tanh(mx.get()));
+    }
+    return mx;
+  }
+
+  /** exp */
+  @Extension
+  public static double exp(final double x) {
+    return Math.exp(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> exp(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(exp(mx.get()));
+    }
+    return mx;
+  }
+
+  /** log */
+  @Extension
+  public static double log(final double x) {
+    return Math.log(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> log(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(log(mx.get()));
+    }
+    return mx;
+  }
+
+  /** log10 */
+  @Extension
+  public static double log10(final double x) {
+    return Math.log10(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> log10(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(log10(mx.get()));
+    }
+    return mx;
+  }
+
+  /** cbrt */
+  @Extension
+  public static double cbrt(final double x) {
+    return Math.cbrt(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> cbrt(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(cbrt(mx.get()));
+    }
+    return mx;
+  }
+
+  /** expm1 */
+  @Extension
+  public static double expm1(final double x) {
+    return Math.expm1(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> expm1(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(expm1(mx.get()));
+    }
+    return mx;
+  }
+
+  /** log1p */
+  @Extension
+  public static double log1p(final double x) {
+    return Math.log1p(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> log1p(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(log1p(mx.get()));
+    }
+    return mx;
+  }
+
+  /** signum */
+  @Extension
+  public static double signum(final double x) {
+    return Math.signum(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> signum(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(signum(mx.get()));
+    }
+    return mx;
+  }
+
+  /** ulp */
+  @Extension
+  public static double ulp(final double x) {
+    return Math.ulp(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> ulp(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(ulp(mx.get()));
+    }
+    return mx;
+  }
+
+  /** getExponent */
+  @Extension
+  public static double getExponent(final double x) {
+    return Math.getExponent(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> getExponent(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(getExponent(mx.get()));
+    }
+    return mx;
+  }
+
+  /** min */
+  @Extension
+  public static int min(final int x, final int y) {
+    return Math.min(x, y);
+  }
+  @UseName(name="min")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> min_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, int y) {
+    if (mx.has()) {
+      return new NtMaybe<>(min(mx.get(), y));
+    }
+    return mx;
+  }
+  @UseName(name="min")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> min_i(int x, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+    if (my.has()) {
+      return new NtMaybe<>(min(x, my.get()));
+    }
+    return my;
+  }
+  @UseName(name="min")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> min_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(min(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** max */
+  @Extension
+  public static int max(final int x, final int y) {
+    return Math.max(x, y);
+  }
+  @UseName(name="max")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> max_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, int y) {
+    if (mx.has()) {
+      return new NtMaybe<>(max(mx.get(), y));
+    }
+    return mx;
+  }
+  @UseName(name="max")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> max_i(int x, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+    if (my.has()) {
+      return new NtMaybe<>(max(x, my.get()));
+    }
+    return my;
+  }
+  @UseName(name="max")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> max_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(max(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** floorDiv */
+  @Extension
+  public static int floorDiv(final int x, final int y) {
+    return Math.floorDiv(x, y);
+  }
+  @UseName(name="floorDiv")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorDiv_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, int y) {
+    if (mx.has()) {
+      return new NtMaybe<>(floorDiv(mx.get(), y));
+    }
+    return mx;
+  }
+  @UseName(name="floorDiv")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorDiv_i(int x, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+    if (my.has()) {
+      return new NtMaybe<>(floorDiv(x, my.get()));
+    }
+    return my;
+  }
+  @UseName(name="floorDiv")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorDiv_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(floorDiv(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** floorMod */
+  @Extension
+  public static int floorMod(final int x, final int y) {
+    return Math.floorMod(x, y);
+  }
+  @UseName(name="floorMod")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorMod_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, int y) {
+    if (mx.has()) {
+      return new NtMaybe<>(floorMod(mx.get(), y));
+    }
+    return mx;
+  }
+  @UseName(name="floorMod")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorMod_i(int x, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+    if (my.has()) {
+      return new NtMaybe<>(floorMod(x, my.get()));
+    }
+    return my;
+  }
+  @UseName(name="floorMod")
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorMod_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(floorMod(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+
+  /** min */
+  @Extension
+  public static long min(final long x, final long y) {
+    return Math.min(x, y);
+  }
+  @UseName(name="min")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> min_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, long y) {
+    if (mx.has()) {
+      return new NtMaybe<>(min(mx.get(), y));
+    }
+    return mx;
+  }
+  @UseName(name="min")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> min_l(long x, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+    if (my.has()) {
+      return new NtMaybe<>(min(x, my.get()));
+    }
+    return my;
+  }
+  @UseName(name="min")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> min_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(min(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** max */
+  @Extension
+  public static long max(final long x, final long y) {
+    return Math.max(x, y);
+  }
+  @UseName(name="max")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> max_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, long y) {
+    if (mx.has()) {
+      return new NtMaybe<>(max(mx.get(), y));
+    }
+    return mx;
+  }
+  @UseName(name="max")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> max_l(long x, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+    if (my.has()) {
+      return new NtMaybe<>(max(x, my.get()));
+    }
+    return my;
+  }
+  @UseName(name="max")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> max_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(max(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** floorDiv */
+  @Extension
+  public static long floorDiv(final long x, final long y) {
+    return Math.floorDiv(x, y);
+  }
+  @UseName(name="floorDiv")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorDiv_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, long y) {
+    if (mx.has()) {
+      return new NtMaybe<>(floorDiv(mx.get(), y));
+    }
+    return mx;
+  }
+  @UseName(name="floorDiv")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorDiv_l(long x, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+    if (my.has()) {
+      return new NtMaybe<>(floorDiv(x, my.get()));
+    }
+    return my;
+  }
+  @UseName(name="floorDiv")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorDiv_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(floorDiv(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+  /** floorMod */
+  @Extension
+  public static long floorMod(final long x, final long y) {
+    return Math.floorMod(x, y);
+  }
+  @UseName(name="floorMod")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorMod_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, long y) {
+    if (mx.has()) {
+      return new NtMaybe<>(floorMod(mx.get(), y));
+    }
+    return mx;
+  }
+  @UseName(name="floorMod")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorMod_l(long x, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+    if (my.has()) {
+      return new NtMaybe<>(floorMod(x, my.get()));
+    }
+    return my;
+  }
+  @UseName(name="floorMod")
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorMod_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+    if (mx.has()) {
+      if (my.has()) {
+        return new NtMaybe<>(floorMod(mx.get(), my.get()));
+      }
+      return my;
+    }
+    return mx;
+  }
+
 
   /** radians */
   @Extension

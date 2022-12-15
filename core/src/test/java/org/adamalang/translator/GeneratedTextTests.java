@@ -80,7 +80,6 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Append_1 extends LivingDocument {");
     gold.append("\n  private final RxText document;");
     gold.append("\n  private final RxLazy<String> document_str;");
@@ -691,7 +690,6 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class CompileAdama_2 extends LivingDocument {");
     gold.append("\n  private final RxText document;");
     gold.append("\n  private final RxLazy<String> document_str;");
@@ -1298,7 +1296,6 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Flow_3 extends LivingDocument {");
     gold.append("\n  private final RxText document;");
     gold.append("\n  @Override");
@@ -1963,7 +1960,6 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Ingestion_4 extends LivingDocument {");
     gold.append("\n  private final RxText document;");
     gold.append("\n  private final RTxR r;");

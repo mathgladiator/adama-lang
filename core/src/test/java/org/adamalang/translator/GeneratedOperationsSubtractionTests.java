@@ -80,7 +80,6 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Assignment_1 extends LivingDocument {");
     gold.append("\n  private final RxInt32 r0;");
     gold.append("\n  private final RxInt64 r1;");
@@ -731,7 +730,6 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Formulas_2 extends LivingDocument {");
     gold.append("\n  private final RxLazy<Integer> f0;");
     gold.append("\n  private final RxLazy<Long> f1;");
@@ -4082,7 +4080,6 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ListAssignment_3 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> tbl;");
     gold.append("\n  @Override");

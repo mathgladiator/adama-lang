@@ -240,7 +240,6 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Legacy_5 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxZ> tbl;");
     gold.append("\n  private final RTxZ cake;");
@@ -1233,7 +1232,6 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class RecordToMessage_6 extends LivingDocument {");
     gold.append("\n  private final RTxR x;");
     gold.append("\n  private final RxTable<RTxR> t;");

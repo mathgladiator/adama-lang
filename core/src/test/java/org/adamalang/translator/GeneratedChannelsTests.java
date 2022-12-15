@@ -80,7 +80,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class AsyncLegacy_1 extends LivingDocument {");
     gold.append("\n  private final RxString status;");
     gold.append("\n  @Override");
@@ -813,7 +812,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class DuplicateHandlers_2 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -1377,7 +1375,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class EsotericMessages_3 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -2280,7 +2277,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class HandlerLegacy_4 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -2943,7 +2939,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class HasContext_5 extends LivingDocument {");
     gold.append("\n  private final RxString last_origin;");
     gold.append("\n  private final RxString last_ip;");
@@ -3579,7 +3574,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class MessageHasEnum_6 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -4303,7 +4297,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class MessageHasMethod_7 extends LivingDocument {");
     gold.append("\n  private final RxDynamic z;");
     gold.append("\n  @Override");

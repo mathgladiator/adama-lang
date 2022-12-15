@@ -120,7 +120,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ConstructClientAndMessage_2 extends LivingDocument {");
     gold.append("\n  private final RxPrincipal owner;");
     gold.append("\n  private final RxInt32 v;");
@@ -749,7 +748,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ConstructJustClient_3 extends LivingDocument {");
     gold.append("\n  private final RxPrincipal owner;");
     gold.append("\n  @Override");
@@ -1292,7 +1290,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ConstructJustMessage_4 extends LivingDocument {");
     gold.append("\n  private final RxInt32 v;");
     gold.append("\n  @Override");
@@ -1906,7 +1903,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ConstructNoArgs_5 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -2432,7 +2428,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class HasContext_6 extends LivingDocument {");
     gold.append("\n  private final RxString ip;");
     gold.append("\n  private final RxString origin;");
@@ -3001,7 +2996,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Legacy_7 extends LivingDocument {");
     gold.append("\n  private final RxPrincipal owner;");
     gold.append("\n  private final RxInt32 v;");
@@ -3640,7 +3634,6 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class UnionTypes_8 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");

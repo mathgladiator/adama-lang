@@ -80,7 +80,6 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Native_1 extends LivingDocument {");
     gold.append("\n  private final RxBoolean t;");
     gold.append("\n  private final RxBoolean t2;");
@@ -686,7 +685,6 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Reactive_3 extends LivingDocument {");
     gold.append("\n  private final RxDynamic food;");
     gold.append("\n  @Override");
@@ -1407,7 +1405,6 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class UsageEasy_4 extends LivingDocument {");
     gold.append("\n  private final RxDynamic food;");
     gold.append("\n  private final RxInt32 x;");

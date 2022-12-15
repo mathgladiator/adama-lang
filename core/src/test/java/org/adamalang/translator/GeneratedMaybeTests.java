@@ -80,7 +80,6 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class CastIntToDefault_1 extends LivingDocument {");
     gold.append("\n  private final RxDouble z;");
     gold.append("\n  @Override");
@@ -631,7 +630,6 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class InitRxMaybeWithMaybe_2 extends LivingDocument {");
     gold.append("\n  private final RxMaybe<RxDouble> xyz;");
     gold.append("\n  private final RxMaybe<RxDouble> abc;");
@@ -1205,7 +1203,6 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Unpack_3 extends LivingDocument {");
     gold.append("\n  private final RxMaybe<RTxR> r;");
     gold.append("\n  private final RxLazy<NtMaybe<Integer>> rx;");

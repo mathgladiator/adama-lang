@@ -80,7 +80,6 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class AssignmentLocalVars_1 extends LivingDocument {");
     gold.append("\n  private final RxInt32 score;");
     gold.append("\n  private final RxTable<RTxR> _records;");
@@ -852,7 +851,6 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Records_2 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");

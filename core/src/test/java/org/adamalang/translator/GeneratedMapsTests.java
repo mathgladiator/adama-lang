@@ -80,7 +80,6 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Basic_1 extends LivingDocument {");
     gold.append("\n  private final RxLazy<NtMap<Integer,Integer>> zoop;");
     gold.append("\n  private final RxInt32 z;");
@@ -907,7 +906,6 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class PairType_5 extends LivingDocument {");
     gold.append("\n  private final RxInt32 result;");
     gold.append("\n  @Override");
@@ -1584,7 +1582,6 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class PairUsage_6 extends LivingDocument {");
     gold.append("\n  private final RxLazy<RTxM> x;");
     gold.append("\n  private final RxInt32 z_s;");
@@ -2339,7 +2336,6 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Reactive_8 extends LivingDocument {");
     gold.append("\n  private final RxMap<Integer,RxInt32> my_map1;");
     gold.append("\n  private final RxMap<String,RTxX> my_map2;");
@@ -3418,7 +3414,6 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ReduceHappy_9 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  private final RxInt32 x1;");
@@ -4340,7 +4335,6 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ReduceLambda_10 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  private final RxMap<Integer,RxInt32> result;");

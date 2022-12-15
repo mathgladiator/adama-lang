@@ -200,7 +200,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Indexing_4 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxIssues> itbl;");
     gold.append("\n  @Override");
@@ -1756,7 +1755,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class LegacyShuffle_6 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> tbl;");
     gold.append("\n  private final RxLazy<NtList<RTxX>> list_1;");
@@ -2633,7 +2631,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Legacy_7 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxZ> z0;");
     gold.append("\n  private final RTxZ z1;");
@@ -4053,7 +4050,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class SortLegacy_10 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> tbl;");
     gold.append("\n  private final RxLazy<NtList<RTxX>> l1;");
@@ -5237,7 +5233,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class WhereBuildClosure_11 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  @Override");
@@ -6070,7 +6065,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class WhereDuplicateFields_12 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  @Override");
@@ -6865,7 +6859,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class WhereOtherIndexingModes_13 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  private final RxLazy<NtList<RTxX>> t_less;");
@@ -7886,7 +7879,6 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class WherePrimaryKeyExtraction_14 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  @Override");

@@ -80,7 +80,6 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class AggregateMath_1 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  @Override");
@@ -922,7 +921,6 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ComplexMath_2 extends LivingDocument {");
     gold.append("\n  private final RxLazy<NtComplex> special_one;");
     gold.append("\n  private final RxLazy<NtComplex> forty_five;");
@@ -1583,7 +1581,6 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class NumberCompare_3 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -2174,7 +2171,6 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class OperationsHappy_4 extends LivingDocument {");
     gold.append("\n  private final RxPrincipal other;");
     gold.append("\n  private final RxString s;");
@@ -2908,7 +2904,6 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class StringCompare_5 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");

@@ -80,7 +80,6 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Attachment_1 extends LivingDocument {");
     gold.append("\n  private final RxAsset latest;");
     gold.append("\n  private final RxLazy<NtAsset> my_file;");
@@ -800,7 +799,6 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Sanity_4 extends LivingDocument {");
     gold.append("\n  private final RxAsset latest;");
     gold.append("\n  private final RxBoolean te;");

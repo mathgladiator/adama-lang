@@ -80,7 +80,6 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Empty_1 extends LivingDocument {");
     gold.append("\n  private final RxInt32 count;");
     gold.append("\n  @Override");
@@ -629,7 +628,6 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class IndexLookupLegacy_2 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> tbl;");
     gold.append("\n  private final RxInt32 sum;");
@@ -1533,7 +1531,6 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class OfAllTypes_3 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  @Override");

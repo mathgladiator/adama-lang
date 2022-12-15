@@ -80,7 +80,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Array_1 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> tbl;");
     gold.append("\n  @Override");
@@ -989,7 +988,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Copy_5 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> x1;");
     gold.append("\n  private final RxTable<RTxX> x2;");
@@ -1903,7 +1901,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class IntoMaybeRecord_9 extends LivingDocument {");
     gold.append("\n  private final RxMaybe<RTxR> mr;");
     gold.append("\n  private final RxBoolean got;");
@@ -2825,7 +2822,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class RecursiveMap_12 extends LivingDocument {");
     gold.append("\n  private final RxMap<String,RTxZ> maaaap;");
     gold.append("\n  @Override");
@@ -3775,7 +3771,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class RecursiveTable_13 extends LivingDocument {");
     gold.append("\n  private final RTxX v;");
     gold.append("\n  private final RxTable<RTxX> tbl;");
@@ -4883,7 +4878,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class SimpleAs_14 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> tbl;");
     gold.append("\n  private final RxInt32 last_id1;");
@@ -5762,7 +5756,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Simple_15 extends LivingDocument {");
     gold.append("\n  private final RTxX v;");
     gold.append("\n  private final RxTable<RTxX> tbl;");
@@ -6582,7 +6575,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class SkipID_16 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> tbl;");
     gold.append("\n  @Override");

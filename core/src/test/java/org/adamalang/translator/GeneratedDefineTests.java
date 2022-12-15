@@ -160,7 +160,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class BringLazyIntoPicture_3 extends LivingDocument {");
     gold.append("\n  private final RxInt32 raw;");
     gold.append("\n  private final RxLazy<Integer> x;");
@@ -719,7 +718,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class BumpHappy_4 extends LivingDocument {");
     gold.append("\n  private final RxBoolean b;");
     gold.append("\n  private final RxTable<RTxX> t;");
@@ -1548,7 +1546,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class DeclareVariableHappy_8 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> tbl;");
     gold.append("\n  private final RTxX src;");
@@ -2297,7 +2294,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class DoubleBumpList_9 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  @Override");
@@ -3073,7 +3069,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class LegacySuper_12 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> tbl;");
     gold.append("\n  private final RTxX src;");
@@ -3822,7 +3817,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class MaybeAssignments_13 extends LivingDocument {");
     gold.append("\n  private final RxMaybe<RxInt32> x;");
     gold.append("\n  private final RxMaybe<RxInt32> z;");
@@ -4384,7 +4378,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class PostFixLegacy_14 extends LivingDocument {");
     gold.append("\n  private final RxInt32 i;");
     gold.append("\n  private final RxDouble d;");
@@ -4973,7 +4966,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class PrefixLegacy_15 extends LivingDocument {");
     gold.append("\n  private final RxInt32 i;");
     gold.append("\n  private final RxDouble d;");
@@ -5858,7 +5850,6 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class VariousAssignments_18 extends LivingDocument {");
     gold.append("\n  private final RxInt32 rx;");
     gold.append("\n  private final RxInt32 sx;");

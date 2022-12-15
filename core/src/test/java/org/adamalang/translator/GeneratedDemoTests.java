@@ -80,7 +80,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class BlogMaxSeq_1 extends LivingDocument {");
     gold.append("\n  private final RxInt32 max_db_seq;");
     gold.append("\n  @Override");
@@ -747,7 +746,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class BlogPubSub_2 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxPublish> _publishes;");
     gold.append("\n  private final RxLazy<NtList<RTxPublish>> publishes;");
@@ -1764,7 +1762,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Bomb_3 extends LivingDocument {");
     gold.append("\n  private final RxString x;");
     gold.append("\n  private final RxInt32 k;");
@@ -2380,7 +2377,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ChatOrder_4 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxLine> _chat;");
     gold.append("\n  private final RxGuard ___chat;");
@@ -3510,7 +3506,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class GameHearts_5 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxCard> deck;");
     gold.append("\n  private final RxLazy<NtList<RTxCard>> hand;");
@@ -7107,7 +7102,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class RefSilly_6 extends LivingDocument {");
     gold.append("\n  private final RxPrincipal owner;");
     gold.append("\n  private final RxString name;");
@@ -8248,7 +8242,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ReferenceIntro_7 extends LivingDocument {");
     gold.append("\n  private final RxPrincipal creator;");
     gold.append("\n  private final RxInt32 x;");
@@ -9101,7 +9094,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ServiceHandler_8 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  @Override");
@@ -9761,7 +9753,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Spreadsheet_9 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxInt32 y;");
@@ -10480,7 +10471,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class TicTacToe_10 extends LivingDocument {");
     gold.append("\n  private final RxPrincipal playerX;");
     gold.append("\n  private final RxPrincipal playerO;");
@@ -11948,7 +11938,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class chat_11 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxLine> _chat;");
     gold.append("\n  private final RxLazy<NtList<RTxLine>> chat;");
