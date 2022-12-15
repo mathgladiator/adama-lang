@@ -15,6 +15,17 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class LibMathTests {
+
+  @Test
+  public void trig() {
+    Assert.assertEquals(0.03490658503988659, LibMath.radians(2.0), 0.01);
+    Assert.assertEquals(0.03490658503988659, LibMath.radians(new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.radians(new NtMaybe<>()).has());
+    Assert.assertEquals(2.0, LibMath.degrees(0.03490658503988659), 0.01);
+    Assert.assertEquals(2.0, LibMath.degrees(new NtMaybe<>(0.03490658503988659)).get(), 0.01);
+    Assert.assertFalse(LibMath.degrees(new NtMaybe<>()).has());
+  }
+
   @Test
   public void basics() {
     Assert.assertTrue(LibMath.near(1, LibMath.floor(1.6)));
@@ -53,36 +64,51 @@ public class LibMathTests {
   @Test
   public void absolute_value() {
     Assert.assertEquals(4, LibMath.abs(-4));
+    Assert.assertEquals(4.3, LibMath.abs(-4.3), 0.001);
     Assert.assertEquals(4L, LibMath.abs(-4L));
-    Assert.assertTrue(LibMath.near(2, LibMath.abs(new NtMaybe<>(-2.0)).get()));
-    Assert.assertFalse(LibMath.abs(new NtMaybe<>()).has());
+    Assert.assertTrue(LibMath.near(2, LibMath.abs_d(new NtMaybe<>(-2.0)).get()));
+    Assert.assertFalse(LibMath.abs_d(new NtMaybe<>()).has());
+    Assert.assertEquals(2, (int) LibMath.abs_i(new NtMaybe<>(-2)).get());
+    Assert.assertFalse(LibMath.abs_i(new NtMaybe<>()).has());
+    Assert.assertEquals(2, (long) LibMath.abs_l(new NtMaybe<>(-2L)).get());
+    Assert.assertFalse(LibMath.abs_l(new NtMaybe<>()).has());
   }
 
   @Test
   public void complex() {
     NtComplex a = new NtComplex(1, 2);
-    Assert.assertTrue(LibMath.near(2.23606797749979, LibMath.length(a)));
-    Assert.assertTrue(LibMath.near(2.23606797749979, LibMath.length(new NtMaybe<>(a)).get()));
+    Assert.assertTrue(LibMath.near(2.23606797749979, LibMath.abs(a)));
+    Assert.assertTrue(LibMath.near(2.23606797749979, LibMath.abs_c(new NtMaybe<>(a)).get()));
     Assert.assertTrue(LibMath.near(new NtComplex(1, -2), LibMath.conj(a)));
     Assert.assertTrue(LibMath.near(new NtComplex(1, -2), LibMath.conj(new NtMaybe<>(a)).get()));
     Assert.assertFalse(LibMath.conj(new NtMaybe<>()).has());
     Assert.assertFalse(LibMath.length(new NtMaybe<>()).has());
-    Assert.assertFalse(LibMath.abs2(new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.abs_c(new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.abs_c(new NtMaybe<>()).has());
     NtComplex t = new NtComplex(1, 0.0);
     Assert.assertTrue(LibMath.near(t, 1.0));
     Assert.assertTrue(LibMath.near(t, 1L));
     Assert.assertTrue(LibMath.near(t, 1));
     Assert.assertTrue(LibMath.near(t, t));
-    Assert.assertTrue(LibMath.near(1.0, LibMath.abs2(new NtMaybe<>(t)).get()));
-    Assert.assertTrue(LibMath.near(5, LibMath.abs2(new NtMaybe<>(new NtComplex(3, 4))).get()));
+    Assert.assertTrue(LibMath.near(1.0, LibMath.abs_c(new NtMaybe<>(t)).get()));
+    Assert.assertTrue(LibMath.near(5, LibMath.abs_c(new NtMaybe<>(new NtComplex(3, 4))).get()));
   }
 
   @Test
   public void sqrt() {
-    NtComplex b = LibMath.sqrt(-4);
-    Assert.assertTrue(LibMath.near(b.imaginary, 2));
-    b = LibMath.sqrt(4);
-    Assert.assertTrue(LibMath.near(b.real, 2));
+    {
+      NtComplex b = LibMath.sqrt(-4);
+      Assert.assertTrue(LibMath.near(b.imaginary, 2));
+      b = LibMath.sqrt(4);
+      Assert.assertTrue(LibMath.near(b.real, 2));
+    }
+    Assert.assertFalse(LibMath.sqrt(new NtMaybe<>()).has());
+    {
+      NtComplex b = LibMath.sqrt(new NtMaybe<Double>(-4.0)).get();
+      Assert.assertTrue(LibMath.near(b.imaginary, 2));
+      b = LibMath.sqrt(new NtMaybe<Double>(4.0)).get();
+      Assert.assertTrue(LibMath.near(b.real, 2));
+    }
   }
 
   @Test
@@ -91,6 +117,26 @@ public class LibMathTests {
     Assert.assertTrue(LibMath.xor(true, false));
     Assert.assertTrue(LibMath.xor(false, true));
     Assert.assertFalse(LibMath.xor(false, false));
+  }
+
+  @Test
+  public void truth() {
+    Assert.assertTrue(LibMath.isTrue(new NtMaybe<>(true)));
+    Assert.assertFalse(LibMath.isTrue(new NtMaybe<>(false)));
+    Assert.assertFalse(LibMath.isTrue(new NtMaybe<>()));
+  }
+
+  @Test
+  public void rounding() {
+    Assert.assertEquals(1.5, LibMath.round(1.49, 0.1), 0.001);
+    Assert.assertEquals(1, LibMath.round(1.49), 0.001);
+    Assert.assertEquals(1.5, LibMath.round(new NtMaybe<>(1.49), 0.1).get(), 0.001);
+    Assert.assertEquals(1, LibMath.round(new NtMaybe<>(1.49)).get(), 0.001);
+    Assert.assertFalse(LibMath.round(new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.round(new NtMaybe<>(), 0.01).has());
+    Assert.assertEquals(1.5, LibMath.roundTo(new NtMaybe<>(1.49), 1).get(), 0.001);
+    Assert.assertEquals(1, LibMath.roundTo(new NtMaybe<>(1.49), 0).get(), 0.001);
+    Assert.assertFalse(LibMath.roundTo(new NtMaybe<>(), 1).has());
   }
 
   @Test
