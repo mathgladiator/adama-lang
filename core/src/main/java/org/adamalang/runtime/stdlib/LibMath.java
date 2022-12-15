@@ -32,6 +32,7 @@ public class LibMath {
     return new NtComplex(Math.sqrt(x), 0.0);
   }
 
+  /*
   @Extension
   public static @HiddenType(clazz=NtComplex.class) NtMaybe<NtComplex> sqrt(@HiddenType(clazz=Double.class) final NtMaybe<Double> mx) {
     if (mx.has()) {
@@ -39,13 +40,54 @@ public class LibMath {
     }
     return new NtMaybe<>();
   }
+  */
 
-  /* TODO:
-   * ,
-   * "E", "PI"
-   * @param x
-   * @return
-   */
+  /** isInfinite */
+  @Extension
+  public static boolean isInfinite(double x) {
+    return Double.isInfinite(x);
+  }
+
+  @Extension
+  public static boolean isInfinite(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return Double.isInfinite(mx.get());
+    }
+    return false;
+  }
+
+  @Extension
+  public static boolean isNaN(double x) {
+    return Double.isNaN(x);
+  }
+
+  @Extension
+  public static boolean isNaN(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return Double.isNaN(mx.get());
+    }
+    return true;
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> valid(double x) {
+    if (Double.isFinite(x) && !Double.isNaN(x)) {
+      return new NtMaybe<>(x);
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Double.class) NtMaybe<Double> valid(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      if (Double.isFinite(mx.get()) && !Double.isNaN(mx.get())) {
+        return mx;
+      }
+      return new NtMaybe<>();
+    }
+    return mx;
+  }
+
 
   /** min */
   @Extension

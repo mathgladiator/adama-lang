@@ -20,9 +20,6 @@ public class Temp_CodeGenMath {
         //Method m = Math.class.getMethod(version, double.class);
         if (m != null) {
           System.out.println("  /** " + version + " */");
-
-
-
           /*
           long sample = (long) m.invoke(null, 1L, 2L);
           System.out.println("  @Test\n  public void test_" + version + "_l() {");

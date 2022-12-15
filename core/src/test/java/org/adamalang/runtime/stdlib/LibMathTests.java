@@ -17,6 +17,22 @@ import org.junit.Test;
 public class LibMathTests {
 
   @Test
+  public void valid() {
+    Assert.assertTrue(LibMath.isInfinite(Double.POSITIVE_INFINITY));
+    Assert.assertTrue(LibMath.isInfinite(new NtMaybe<>(Double.POSITIVE_INFINITY)));
+    Assert.assertFalse(LibMath.isInfinite(new NtMaybe<>(1.2)));
+    Assert.assertTrue(LibMath.isNaN(Double.NaN));
+    Assert.assertTrue(LibMath.isNaN(new NtMaybe<>(Double.NaN)));
+    Assert.assertTrue(LibMath.isNaN(new NtMaybe<>()));
+    Assert.assertEquals(1.0, LibMath.valid(1.0).get(), 0.01);
+    Assert.assertFalse(LibMath.valid(Double.NaN).has());
+    Assert.assertFalse(LibMath.valid(Double.POSITIVE_INFINITY).has());
+    Assert.assertEquals(1.0, LibMath.valid(new NtMaybe<>(1.0)).get(), 0.01);
+    Assert.assertFalse(LibMath.valid(new NtMaybe<>(Double.NaN)).has());
+    Assert.assertFalse(LibMath.valid(new NtMaybe<>(Double.POSITIVE_INFINITY)).has());
+  }
+
+  @Test
   public void trig() {
     Assert.assertEquals(0.03490658503988659, LibMath.radians(2.0), 0.01);
     Assert.assertEquals(0.03490658503988659, LibMath.radians(new NtMaybe<>(2.0)).get(), 0.01);
@@ -102,6 +118,7 @@ public class LibMathTests {
       b = LibMath.sqrt(4);
       Assert.assertTrue(LibMath.near(b.real, 2));
     }
+    /*
     Assert.assertFalse(LibMath.sqrt(new NtMaybe<>()).has());
     {
       NtComplex b = LibMath.sqrt(new NtMaybe<Double>(-4.0)).get();
@@ -109,6 +126,7 @@ public class LibMathTests {
       b = LibMath.sqrt(new NtMaybe<Double>(4.0)).get();
       Assert.assertTrue(LibMath.near(b.real, 2));
     }
+    */
   }
 
   @Test

@@ -16,6 +16,7 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadIns
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -35,6 +36,14 @@ public class GlobalFactory {
       if (isPublic && isStatic) {
         final var nameToUse = getMethodName(method);
         methods.add(nameToUse);
+      }
+    }
+    for (final Field field : clazz.getFields()) {
+      if (field.getAnnotation(Skip.class) != null) {
+        continue;
+      }
+      if (Modifier.isStatic(field.getModifiers())) {
+        methods.add(field.getName());
       }
     }
     return methods.toArray(new String[methods.size()]);
@@ -65,7 +74,6 @@ public class GlobalFactory {
     final var index = indexMethods(clazz, methodsToGet);
     for (final Map.Entry<String, ArrayList<Method>> entry : index.entrySet()) { // for each method
       final var overloads = new ArrayList<FunctionOverloadInstance>();
-
       HashMap<String, ArrayList<FunctionOverloadInstance>> byFirstParameterType = new HashMap<>();
       for (final Method method : entry.getValue()) {
         final var fo = convertMethodToFunctionOverload(clazz, method);
