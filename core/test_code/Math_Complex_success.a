@@ -11,7 +11,7 @@ public formula c4_len = c4.length();
 
 @construct {
     c1 = @i;
-    c2 = Math.sqrt(-4);
+    c2 = Math.sqrt(-4.0);
     complex l1 = @i;
     complex l2;
     l2 = Math.sqrt(-4);

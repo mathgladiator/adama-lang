@@ -176,15 +176,17 @@ public class RuleSetAssignment {
     if (aTable && bTable) {
       return ((TyNativeTable) typeA).messageName.equals(((TyNativeTable) typeB).messageName);
     }
-    final var aMaybe = aEmbedAssign == AssignableEmbedType.Maybe && RuleSetMaybe.IsMaybe(environment, typeA, true);
-    if (aMaybe && bEmbedAssign == AssignableEmbedType.None) {
-      if (typeA instanceof TyReactiveMaybe && (typeB instanceof TyReactiveRecord || typeB instanceof TyNativeReactiveRecordPtr)) {
-        environment.document.createError(originalTypeA, String.format("Type check failure: the type '%s' is unable to store type '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()), "TypeCheckReferencesX");
-        return false;
-      }
-      final var childA = RuleSetCommon.ExtractEmbeddedType(environment, typeA, silent);
-      if (CanTypeAStoreTypeB(environment, childA, typeB, tweak, silent)) {
-        return true;
+    if (tweak == StorageTweak.None) {
+      final var aMaybe = aEmbedAssign == AssignableEmbedType.Maybe && RuleSetMaybe.IsMaybe(environment, typeA, true);
+      if (aMaybe && bEmbedAssign == AssignableEmbedType.None) {
+        if (typeA instanceof TyReactiveMaybe && (typeB instanceof TyReactiveRecord || typeB instanceof TyNativeReactiveRecordPtr)) {
+          environment.document.createError(originalTypeA, String.format("Type check failure: the type '%s' is unable to store type '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()), "TypeCheckReferencesX");
+          return false;
+        }
+        final var childA = RuleSetCommon.ExtractEmbeddedType(environment, typeA, silent);
+        if (CanTypeAStoreTypeB(environment, childA, typeB, tweak, silent)) {
+          return true;
+        }
       }
     }
     final var aReactiveList = RuleSetLists.TestReactiveList(environment, typeA, true);

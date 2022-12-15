@@ -32,7 +32,6 @@ public class LibMath {
     return new NtComplex(Math.sqrt(x), 0.0);
   }
 
-  /*
   @Extension
   public static @HiddenType(clazz=NtComplex.class) NtMaybe<NtComplex> sqrt(@HiddenType(clazz=Double.class) final NtMaybe<Double> mx) {
     if (mx.has()) {
@@ -40,7 +39,6 @@ public class LibMath {
     }
     return new NtMaybe<>();
   }
-  */
 
   /** isInfinite */
   @Extension

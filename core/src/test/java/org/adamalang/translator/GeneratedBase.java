@@ -57,7 +57,9 @@ public class GeneratedBase {
   }
 
   public void assertLivePass(String live) {
-    Assert.assertTrue(live.endsWith("Success"));
+    if (!(live.endsWith("Success"))) {
+      Assert.fail("Does not end with 'Success':" + live);
+    }
   }
 
   public void assertLiveFail(String live) {

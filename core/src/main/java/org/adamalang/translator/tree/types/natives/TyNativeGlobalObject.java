@@ -77,7 +77,6 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
     if (environment.state.isStatic() && !availableForStatic) {
       return null;
     }
-    final var found = functions.get(name);
-    return found;
+    return functions.get(name);
   }
 }

@@ -118,7 +118,7 @@ public class LibMathTests {
       b = LibMath.sqrt(4);
       Assert.assertTrue(LibMath.near(b.real, 2));
     }
-    /*
+
     Assert.assertFalse(LibMath.sqrt(new NtMaybe<>()).has());
     {
       NtComplex b = LibMath.sqrt(new NtMaybe<Double>(-4.0)).get();
@@ -126,7 +126,6 @@ public class LibMathTests {
       b = LibMath.sqrt(new NtMaybe<Double>(4.0)).get();
       Assert.assertTrue(LibMath.near(b.real, 2));
     }
-    */
   }
 
   @Test

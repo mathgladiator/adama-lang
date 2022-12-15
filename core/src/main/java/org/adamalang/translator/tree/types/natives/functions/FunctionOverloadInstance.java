@@ -49,10 +49,10 @@ public class FunctionOverloadInstance extends DocumentPosition {
       score = Math.abs(args.size() - types.size()) * 2;
     }
     for (var iter = 0; iter < Math.min(args.size(), types.size()); iter++) {
-      if (!environment.rules.CanTypeAStoreTypeB(types.get(iter), args.get(iter), StorageTweak.None, true)) {
+      if (!environment.rules.CanTypeAStoreTypeB(types.get(iter), args.get(iter), StorageTweak.FunctionScore, true)) {
         score++;
       }
-      if (!environment.rules.CanTypeAStoreTypeB(args.get(iter), types.get(iter), StorageTweak.None, true)) {
+      if (!environment.rules.CanTypeAStoreTypeB(args.get(iter), types.get(iter), StorageTweak.FunctionScore, true)) {
         score++;
       }
     }

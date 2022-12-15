@@ -611,7 +611,7 @@ public class GeneratedMathTests extends GeneratedBase {
     gold.append("\n    __track(0);");
     gold.append("\n    c1.set(new NtComplex(0.0, 1.0));");
     gold.append("\n    __track(1);");
-    gold.append("\n    c2.set(LibMath.sqrt(-4));");
+    gold.append("\n    c2.set(LibMath.sqrt(-4.0));");
     gold.append("\n    __track(2);");
     gold.append("\n    NtComplex l1 = new NtComplex(0.0, 1.0);");
     gold.append("\n    __track(3);");

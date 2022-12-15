@@ -11,4 +11,5 @@ package org.adamalang.translator.tree.types.checking.properties;
 
 public enum StorageTweak {
   None, //
+  FunctionScore
 }
