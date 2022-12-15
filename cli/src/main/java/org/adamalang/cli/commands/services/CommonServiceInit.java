@@ -113,7 +113,6 @@ public class CommonServiceInit {
     this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, PerSessionAuthenticator.encodePublicKey(keyPair));
     this.webBase = new WebClientBase(this.webConfig);
 
-
     system.schedule(new NamedRunnable("database-ping") {
       @Override
       public void execute() throws Exception {
