@@ -1339,4 +1339,51 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
+  private String cached_UsageEasy_4 = null;
+  private String get_UsageEasy_4() {
+    if (cached_UsageEasy_4 != null) {
+      return cached_UsageEasy_4;
+    }
+    cached_UsageEasy_4 = generateTestOutput(true, "UsageEasy_4", "./test_code/Dynamic_UsageEasy_success.a");
+    return cached_UsageEasy_4;
+  }
+
+  @Test
+  public void testUsageEasyEmission() {
+    assertEmissionGood(get_UsageEasy_4());
+  }
+
+  @Test
+  public void testUsageEasySuccess() {
+    assertLivePass(get_UsageEasy_4());
+  }
+
+  @Test
+  public void testUsageEasyGoodWillHappy() {
+    assertGoodWillHappy(get_UsageEasy_4());
+  }
+
+  @Test
+  public void testUsageEasyExceptionFree() {
+    assertExceptionFree(get_UsageEasy_4());
+  }
+
+  @Test
+  public void testUsageEasyTODOFree() {
+    assertTODOFree(get_UsageEasy_4());
+  }
+
+  @Test
+  public void stable_UsageEasy_4() {
+    String live = get_UsageEasy_4();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Dynamic_UsageEasy_success.a");
+    gold.append("\n--EMISSION-----------------------------------------");
+    gold.append("\nEmission Success, Yay");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":14,\"character\":7,\"byte\":180},\"end\":{\"line\":23,\"character\":25,\"byte\":377}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'r<int>' += 'long' (OperatorTable)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
 }

@@ -1,0 +1,28 @@
+public dynamic food;
+message X {
+  dynamic ninja;
+}
+
+channel assoc(X x) {
+  food = x.ninja;
+}
+
+rpc assoc2(who, dynamic v) {
+  food = v;
+  dynamic z = food;
+}
+
+public int x;
+@construct {
+  dynamic d = (123).dyn();
+  food = d;
+  if (d.i() as vv) {
+    x = vv;
+  }
+  map<string, dynamic> properties;
+  properties["x"] = (42).dyn();
+  if (properties["x"].i() as vvv) {
+    x *= 1000;
+    x += vvv;
+  }
+}

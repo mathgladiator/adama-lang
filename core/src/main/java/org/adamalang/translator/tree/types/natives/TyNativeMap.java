@@ -167,7 +167,7 @@ public class TyNativeMap extends TyType implements //
     if ("max".equals(name)) {
       return new TyNativeFunctional("max", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("max", getCommonQueryResultType(environment), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
-    return null;
+    return environment.state.globals.findExtension(this, name);
   }
 
   @Override

@@ -241,7 +241,11 @@ public class JsonStreamReader {
         case NumberLiteralDouble:
           return Double.parseDouble(token.data);
         case NumberLiteralInteger:
-          return Integer.parseInt(token.data);
+          long val = Long.parseLong(token.data);
+          if (Integer.MIN_VALUE <= val && val <= Integer.MAX_VALUE) {
+            return (int) val;
+          }
+          return val;
         case StringLiteral:
           return token.data;
         default:

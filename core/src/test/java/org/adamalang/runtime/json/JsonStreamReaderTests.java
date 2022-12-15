@@ -203,10 +203,26 @@ public class JsonStreamReaderTests {
   }
 
   @Test
-  public void tree_number() {
+  public void tree_number_d() {
     JsonStreamReader reader = new JsonStreamReader("1.4");
     Object obj = reader.readJavaTree();
     Assert.assertTrue(1.4 == (Double) obj);
+    Assert.assertTrue(reader.end());
+  }
+
+  @Test
+  public void tree_number_i() {
+    JsonStreamReader reader = new JsonStreamReader("12");
+    Object obj = reader.readJavaTree();
+    Assert.assertTrue(12 == (Integer) obj);
+    Assert.assertTrue(reader.end());
+  }
+
+  @Test
+  public void tree_number_l() {
+    JsonStreamReader reader = new JsonStreamReader("4242424242");
+    Object obj = reader.readJavaTree();
+    Assert.assertTrue(4242424242L == (Long) obj);
     Assert.assertTrue(reader.end());
   }
 
