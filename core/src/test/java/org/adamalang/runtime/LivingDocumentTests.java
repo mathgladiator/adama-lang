@@ -1057,6 +1057,24 @@ public class LivingDocumentTests {
     setup.assertCompare();
   }
 
+  /** a live issue was found when trying to parse a message array which actually had a string array; caused an infinite loop */
+  @Test
+  public void coe20221215() throws Exception {
+    final var setup =
+        new RealDocumentSetup(
+            "message D {\n" + //
+                "  int id;\n" + //
+                "  map<string, dynamic> properties;\n" + //
+                "}\n" + //
+                "message B {\n" + //
+                "  int c;\n" + //
+                "  D[] d;  \n" + //
+                "}\n" +
+                "channel on_b(B batch) {}");
+    setup.document.send(
+        ContextSupport.WRAP(NtPrincipal.NO_ONE), null, "on_b", "{\"c\":1,\"d\":[\"a\"]}", new RealDocumentSetup.AssertFailure(145627));
+  }
+
   @Test
   public void blind_send_with_policy() throws Exception {
     final var setup = new RealDocumentSetup("@static { send { return true; } } @construct {} @connected { return true; } message M {} channel<M> foo;");

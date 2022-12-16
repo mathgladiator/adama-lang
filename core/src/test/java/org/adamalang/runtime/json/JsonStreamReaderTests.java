@@ -257,7 +257,40 @@ public class JsonStreamReaderTests {
       Assert.assertFalse(reader.notEndOfObject());
     }
   }
-
+  @Test
+  public void skipValueObject() {
+    try {
+      JsonStreamReader reader = new JsonStreamReader("42");
+      reader.mustSkipObject();
+      Assert.fail();
+    } catch (RuntimeException re) {
+    }
+    try {
+      JsonStreamReader reader = new JsonStreamReader("\"x\"");
+      reader.mustSkipObject();
+      Assert.fail();
+    } catch (RuntimeException re) {
+    }
+    JsonStreamReader reader = new JsonStreamReader("{}");
+    reader.mustSkipObject();
+  }
+  @Test
+  public void skipValueArray() {
+    try {
+      JsonStreamReader reader = new JsonStreamReader("42");
+      reader.mustSkipArray();
+      Assert.fail();
+    } catch (RuntimeException re) {
+    }
+    try {
+      JsonStreamReader reader = new JsonStreamReader("\"x\"");
+      reader.mustSkipArray();
+      Assert.fail();
+    } catch (RuntimeException re) {
+    }
+    JsonStreamReader reader = new JsonStreamReader("[]");
+    reader.mustSkipArray();
+  }
   @Test
   public void skipValue() {
     {
@@ -293,6 +326,24 @@ public class JsonStreamReaderTests {
   }
 
   @Test
+  public void mustStart() {
+    try {
+      JsonStreamReader reader = new JsonStreamReader("42");
+      reader.mustStartObject();
+      Assert.fail();
+    } catch (RuntimeException re) {
+
+    }
+    try {
+      JsonStreamReader reader = new JsonStreamReader("42");
+      reader.mustStartArray();
+      Assert.fail();
+    } catch (RuntimeException re) {
+
+    }
+  }
+
+  @Test
   public void readObject1() {
     JsonStreamReader reader = new JsonStreamReader("{\"x\":\"z\"}");
     Assert.assertTrue(reader.startObject());
@@ -306,7 +357,7 @@ public class JsonStreamReaderTests {
   @Test
   public void readObject2() {
     JsonStreamReader reader = new JsonStreamReader("{\"x\":\"z\",\"z\":123}");
-    Assert.assertTrue(reader.startObject());
+    reader.mustStartObject();
     Assert.assertTrue(reader.notEndOfObject());
     Assert.assertEquals("x", reader.fieldName());
     Assert.assertEquals("z", reader.readString());
@@ -369,7 +420,7 @@ public class JsonStreamReaderTests {
   @Test
   public void readArray() {
     JsonStreamReader reader = new JsonStreamReader("[\"x\",\"z\",123,\"4444444\"]");
-    Assert.assertTrue(reader.startArray());
+    reader.mustStartArray();
     Assert.assertTrue(reader.notEndOfArray());
     Assert.assertEquals("x", reader.readString());
     Assert.assertTrue(reader.notEndOfArray());

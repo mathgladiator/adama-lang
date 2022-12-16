@@ -88,12 +88,12 @@ public class CodeGenMessage {
       sb.append("@Override").writeNewline();
       sb.append("public void __ingest(JsonStreamReader __reader) {").tabUp().writeNewline(); // UP
       if (storage.fields.size() == 0) {
-        sb.append("__reader.skipValue();").tabDown().writeNewline();
+        sb.append("__reader.mustSkipObject();").tabDown().writeNewline();
       } else {
         if (isViewerType) {
           sb.append("this.__DATA_GENERATION += 2;").writeNewline();
         }
-        sb.append("if (__reader.startObject()) {").tabUp().writeNewline(); // UP
+        sb.append("__reader.mustStartObject();").writeNewline();
         sb.append("while (__reader.notEndOfObject()) {").tabUp().writeNewline(); // UP
         sb.append("String __fieldName = __reader.fieldName();").writeNewline();
         sb.append("switch (__fieldName) {").tabUp().writeNewline(); // UP
@@ -105,7 +105,6 @@ public class CodeGenMessage {
         sb.append("default:").tabUp().writeNewline(); // UP
         sb.append("__reader.skipValue();").tabDown().tabDown().writeNewline(); // DOWN
         sb.append("}").tabDown().writeNewline(); // DOWN
-        sb.append("}").tabDown().writeNewline();
         sb.append("}").tabDown().writeNewline();
       }
       sb.append("}").writeNewline();
@@ -146,7 +145,7 @@ public class CodeGenMessage {
       final var localValue = "__localValue_" + localVar.getAndIncrement();
       final var domainType = ((TyNativeMap) type).getDomainType(environment);
       final var rangeType = ((TyNativeMap) type).getRangeType(environment);
-      sb.append("if (__reader.startObject()) {").tabUp().writeNewline(); // UP
+      sb.append("__reader.mustStartObject();").writeNewline();
       sb.append("while (__reader.notEndOfObject()) {").tabUp().writeNewline(); // UP
       if (domainType instanceof TyNativeInteger) {
         sb.append("int ").append(keyValueRaw).append(" = Integer.parseInt(__reader.fieldName());").writeNewline();
@@ -158,8 +157,8 @@ public class CodeGenMessage {
       sb.append(rangeType.getJavaConcreteType(environment)).append(" ").append(localValue).append(";").writeNewline();
       writeValueReader(localValue, rangeType, sb, environment, localVar);
       sb.append(name).append(".put(").append(keyValueRaw).append(", ").append(localValue).append(");").tabDown().writeNewline();
-      sb.append("}").tabDown().writeNewline();
       sb.append("}").writeNewline();
+
     } else if (type instanceof TyNativePair) {
       sb.append("{").tabUp().writeNewline();
       final var domainType = ((TyNativePair) type).getDomainType(environment);
@@ -168,7 +167,7 @@ public class CodeGenMessage {
       final var valueValue = "__value" + localVar.getAndIncrement();
       sb.append(domainType.getJavaBoxType(environment)).append(" ").append(keyValue).append(" = ").append(domainType.getJavaDefaultValue(environment, type)).append(";").writeNewline();
       sb.append(rangeType.getJavaBoxType(environment)).append(" ").append(valueValue).append(" = ").append(rangeType.getJavaDefaultValue(environment, type)).append(";").writeNewline();
-      sb.append("if (__reader.startObject()) {").tabUp().writeNewline(); // UP
+      sb.append("__reader.mustStartObject();").writeNewline();
       sb.append("while (__reader.notEndOfObject()) {").tabUp().writeNewline(); // UP
       sb.append("switch (__reader.fieldName()) {").tabUp().writeNewline(); // UP
       sb.append("case \"key\":").tabUp().writeNewline();
@@ -181,7 +180,6 @@ public class CodeGenMessage {
       sb.append("__reader.skipValue();").tabDown().writeNewline();
       sb.append("}").tabDown().writeNewline(); // DOWN
       sb.append("}").tabDown().writeNewline(); // DOWN
-      sb.append("}").tabDown().writeNewline(); // DOWN
       sb.append(name).append(" = new NtPair<>(").append(keyValue).append(", ").append(valueValue).append(");").tabDown().writeNewline();
       sb.append("}").writeNewline();
     } else if (type instanceof TyNativeArray || type instanceof TyNativeList) {
@@ -191,7 +189,7 @@ public class CodeGenMessage {
       final var localIndex = "__localIndex_" + localVar.getAndIncrement();
       sb.append("ArrayList<").append(elementType.getJavaBoxType(environment)).append("> ").append(localArrayBuilder).append(" = new ArrayList<>();").writeNewline();
       sb.append(elementType.getJavaConcreteType(environment)).append(" ").append(localItem).append(";").writeNewline();
-      sb.append("__reader.startArray();").writeNewline();
+      sb.append("__reader.mustStartArray();").writeNewline();
       sb.append("while (__reader.notEndOfArray()) {").tabUp().writeNewline();
       writeValueReader(localItem, elementType, sb, environment, localVar);
       sb.append(localArrayBuilder).append(".add(").append(localItem).append(");").tabDown().writeNewline();

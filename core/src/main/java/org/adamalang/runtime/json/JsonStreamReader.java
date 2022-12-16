@@ -413,6 +413,27 @@ public class JsonStreamReader {
     }
   }
 
+  public void mustSkipObject() {
+    if (startObject()) {
+      while (notEndOfObject()) {
+        fieldName();
+        skipValue();
+      }
+    } else {
+      throw new RuntimeException("Required an object to skip");
+    }
+  }
+
+  public void mustSkipArray() {
+    if (startArray()) {
+      while (notEndOfArray()) {
+        skipValue();
+      }
+    } else {
+      throw new RuntimeException("Required an array to skip");
+    }
+  }
+
   /** scan the JSON tree and find unique asset ids */
   public void populateGarbageCollectedIds(HashSet<String> ids) {
     if (startObject()) {
@@ -500,6 +521,12 @@ public class JsonStreamReader {
     return false;
   }
 
+  public void mustStartArray() {
+    if (!startArray()) {
+      throw new RuntimeException("Required an array");
+    }
+  }
+
   public boolean startObject() {
     ensureQueueHappy(1);
     final var first = tokens.peekFirst();
@@ -508,6 +535,12 @@ public class JsonStreamReader {
       return true;
     }
     return false;
+  }
+
+  public void mustStartObject() {
+    if (!startObject()) {
+      throw new RuntimeException("Required an object");
+    }
   }
 
   public boolean testLackOfNull() {

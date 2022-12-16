@@ -432,7 +432,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
-    gold.append("\n      __reader.skipValue();");
+    gold.append("\n      __reader.mustSkipObject();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __writeOut(JsonStreamWriter __writer) {");
@@ -1038,7 +1038,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
-    gold.append("\n      __reader.skipValue();");
+    gold.append("\n      __reader.mustSkipObject();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __writeOut(JsonStreamWriter __writer) {");
@@ -1718,7 +1718,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
-    gold.append("\n      __reader.skipValue();");
+    gold.append("\n      __reader.mustSkipObject();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __writeOut(JsonStreamWriter __writer) {");
