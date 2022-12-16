@@ -76,7 +76,6 @@ public class RuleSetIngestion {
       final var leftField = leftStorage.fields.get(rightFieldEntry.getKey());
       final var rightField = rightFieldEntry.getValue();
       if (leftField == null) {
-        // TODO: it may be OK to annotate this as a lossy-field (it's ok to lose it)
         environment.document.createError(originalTypeB, String.format("Type check failure: The field '%s' was lost during ingestion", rightFieldEntry.getKey()), "RuleSetIngestion");
         possible = false;
       } else {
