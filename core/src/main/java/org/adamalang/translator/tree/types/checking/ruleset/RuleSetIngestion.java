@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.types.reactive.TyReactiveMap;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.IsStructure;
+import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 
 import java.util.Map;
 
@@ -75,6 +76,7 @@ public class RuleSetIngestion {
       final var leftField = leftStorage.fields.get(rightFieldEntry.getKey());
       final var rightField = rightFieldEntry.getValue();
       if (leftField == null) {
+        // TODO: it may be OK to annotate this as a lossy-field (it's ok to lose it)
         environment.document.createError(originalTypeB, String.format("Type check failure: The field '%s' was lost during ingestion", rightFieldEntry.getKey()), "RuleSetIngestion");
         possible = false;
       } else {
@@ -83,8 +85,16 @@ public class RuleSetIngestion {
             possible = false;
           }
         } else {
-          if (!RuleSetAssignment.CanTypeAStoreTypeB(environment, leftField.type, rightField.type, StorageTweak.None, silent)) {
-            possible = false;
+          if (RuleSetMaybe.IsMaybe(environment, rightField.type, true)) {
+            // type <- maybe<type>; ingestion will fold the value as an optional set
+            TyType maybeEmbed = ((DetailContainsAnEmbeddedType) rightField.type).getEmbeddedType(environment);
+            if (!RuleSetAssignment.CanTypeAStoreTypeB(environment, leftField.type, maybeEmbed, StorageTweak.None, silent)) {
+              possible = false;
+            }
+          } else {
+            if (!RuleSetAssignment.CanTypeAStoreTypeB(environment, leftField.type, rightField.type, StorageTweak.None, silent)) {
+              possible = false;
+            }
           }
         }
       }

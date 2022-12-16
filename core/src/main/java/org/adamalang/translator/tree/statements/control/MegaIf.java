@@ -165,7 +165,7 @@ public class MegaIf extends Statement {
       this.expression = expression;
       this.asToken = asToken;
       this.nameToken = nameToken;
-      if (asToken != null) {
+      if (nameToken != null) {
         name = nameToken.text;
       } else {
         name = null;

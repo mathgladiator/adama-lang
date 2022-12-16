@@ -14,9 +14,12 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.FieldLookup;
 import org.adamalang.translator.tree.expressions.Lookup;
 import org.adamalang.translator.tree.statements.Assignment;
+import org.adamalang.translator.tree.statements.Block;
+import org.adamalang.translator.tree.statements.control.MegaIf;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
@@ -141,12 +144,26 @@ public class CodeGenIngestion {
               sb.append("/* id field skipped */");
             } else {
               final var leftAssignType = ((IsStructure) assignType).storage().fields.get(entryType.getKey()).type;
+              TyType rightType = entryType.getValue().type;
+              Expression rightExpr = new FieldLookup(new Lookup(Token.WRAP(elementVar)), null, entryType.getValue().nameToken);
               final var op = environment.rules.IngestionLeftElementRequiresRecursion(leftAssignType) ? "<-" : "=";
-              final var ass = new Assignment( //
-                  new FieldLookup(new Lookup(Token.WRAP(assignVar)), null, entryType.getValue().nameToken), Token.WRAP(op), //
-                  new FieldLookup(new Lookup(Token.WRAP(elementVar)), null, entryType.getValue().nameToken), null, null, null, false);
-              ass.typing(environment);
-              ass.writeJava(sb, environment);
+              if (environment.rules.IsMaybe(rightType, true)) {
+                // the right side is a maybe, so let's unwrap it
+                Token unwrapMaybe = Token.WRAP("__unwrap_" + fd.name + "_" + environment.autoVariable());
+                Block assBlock = new Block(null);
+                assBlock.add(new Assignment( //
+                    new FieldLookup(new Lookup(Token.WRAP(assignVar)), null, entryType.getValue().nameToken), Token.WRAP(op), //
+                    new Lookup(unwrapMaybe), null, null, null, false));
+                MegaIf _if = new MegaIf(null, new MegaIf.Condition(null, rightExpr, null, unwrapMaybe, null), assBlock);
+                _if.typing(environment);
+                _if.writeJava(sb, environment);
+              } else {
+                final var ass = new Assignment( //
+                    new FieldLookup(new Lookup(Token.WRAP(assignVar)), null, entryType.getValue().nameToken), Token.WRAP(op), //
+                    rightExpr, null, null, null, false);
+                ass.typing(environment);
+                ass.writeJava(sb, environment);
+              }
             }
             if (--countDownUntilTab == 0) {
               sb.tabDown();
