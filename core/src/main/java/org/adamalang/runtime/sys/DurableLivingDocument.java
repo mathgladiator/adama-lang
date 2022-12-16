@@ -434,10 +434,10 @@ public class DurableLivingDocument implements Queryable {
           throw valid;
         } catch (ErrorCodeException ex) {
           request.callback.failure(ex);
-        } catch (Exception badThingHappened) {
-          catastrophicFailureWhileInExecutor(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNKNOWN_EXCEPTION);
-          request.callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNKNOWN_EXCEPTION, badThingHappened, EXLOGGER));
-          LOG.error("catastrophic-message:" + request.request);
+        } catch (Throwable badThingHappened) {
+          ErrorCodeException ece = ErrorCodeException.detectOrWrap(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNKNOWN_EXCEPTION, badThingHappened, EXLOGGER);
+          catastrophicFailureWhileInExecutor(ece.code);
+          request.callback.failure(ece);
         }
       }
       if (last == null) {
