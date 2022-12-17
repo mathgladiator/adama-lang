@@ -117,10 +117,8 @@ public class Main {
     System.out.println("    " + Util.prefix("debug", Util.ANSI.Green) + "             Debug tool for production");
     System.out.println("    " + Util.prefix("document", Util.ANSI.Green) + "          Interact with documents");
     System.out.println("    " + Util.prefix("domains", Util.ANSI.Green) + "           Manage Domains");
-    System.out.println("    " + Util.prefix("fleet", Util.ANSI.Green) + "             Fleet management via EC2");
     System.out.println("    " + Util.prefix("frontend", Util.ANSI.Green) + "          Frontend tools (rxhtml)");
     System.out.println("    " + Util.prefix("init", Util.ANSI.Green) + "              Initializes the config with a valid token");
-    System.out.println("    " + Util.prefix("security", Util.ANSI.Green) + "          Security tools for production usage");
     System.out.println("    " + Util.prefix("service", Util.ANSI.Green) + "           Launch a service");
     System.out.println("    " + Util.prefix("space", Util.ANSI.Green) + "             Manages spaces");
     System.out.println("    " + Util.prefix("stress", Util.ANSI.Green) + "            Stress test using the canary tool");
