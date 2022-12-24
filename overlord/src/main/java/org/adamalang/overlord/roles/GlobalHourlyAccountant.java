@@ -16,6 +16,7 @@ import org.adamalang.mysql.data.UnbilledResources;
 import org.adamalang.mysql.model.*;
 import org.adamalang.mysql.data.MeteringSpaceSummary;
 import org.adamalang.mysql.data.ResourcesPerPenny;
+import org.adamalang.net.client.Client;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
@@ -25,7 +26,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 
-public class HourlyAccountant {
+/** aggregate metering records into billing records; note: this is a global task */
+public class GlobalHourlyAccountant {
 
   public static int nextHour(int hour) {
     return toHourCode(fromHourCode(hour).plusHours(1));
@@ -47,22 +49,24 @@ public class HourlyAccountant {
     return LocalDateTime.of(year, month, day, hour, 0);
   }
 
-  public static void kickOff(OverlordMetrics metrics, DataBase dataBase, ConcurrentCachedHttpHandler handler) throws Exception {
-    new HourlyAccountantTask(metrics, dataBase, handler);
+  public static void kickOff(OverlordMetrics metrics, Client client, DataBase dataBase, ConcurrentCachedHttpHandler handler) throws Exception {
+    new HourlyAccountantTask(metrics, client, dataBase, handler);
   }
 
   public static class HourlyAccountantTask extends NamedRunnable {
     private final OverlordMetrics metrics;
     private final SimpleExecutor executor;
+    private final Client client;
     private final DataBase dataBase;
     private final FixedHtmlStringLoggerTable accountantTable;
     private final ConcurrentCachedHttpHandler handler;
     private int billingHourAt;
 
-    public HourlyAccountantTask(OverlordMetrics metrics, DataBase dataBase, ConcurrentCachedHttpHandler handler) throws Exception {
+    public HourlyAccountantTask(OverlordMetrics metrics, Client client, DataBase dataBase, ConcurrentCachedHttpHandler handler) throws Exception {
       super("hourly-accountant");
       this.metrics = metrics;
       this.executor = SimpleExecutor.create("hourly-accountant-executor");
+      this.client = client;
       this.dataBase = dataBase;
       this.accountantTable = new FixedHtmlStringLoggerTable(128, "action", "notes", "value");
       Integer pickUp = Spaces.getLatestBillingHourCode(dataBase);
@@ -107,6 +111,14 @@ public class HourlyAccountant {
       LocalDateTime to = from.plusHours(1);
       long fromMs = from.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
       long toMs = to.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+      // TODO: simplify the summaries and inventory into an object, use the client to send the message to the billing document
+      /*
+      JsonStreamWriter billingMessage = new JsonStreamWriter();
+      billingMessage.beginObject();
+      billingMessage.endObject();
+      */
+
       HashMap<String, MeteringSpaceSummary> summaries = Metering.summarizeWindow(dataBase, metrics.metering_metrics, fromMs, toMs);
       // TODO: need a more formal rate structure as this is B.S.
       // 2 penny per GB/mo is
@@ -116,6 +128,7 @@ public class HourlyAccountant {
       HashMap<String, UnbilledResources> unbilled = Spaces.collectUnbilledResources(dataBase);
       Billing.mergeStorageIntoSummaries(summaries, inventory, unbilled);
       long pennies = Billing.transcribeSummariesAndUpdateBalances(dataBase, forHour, summaries, rates);
+
       accountantTable.row("transcribe-summary", "pennies:" + pennies, "at:" + forHour);
     }
   }

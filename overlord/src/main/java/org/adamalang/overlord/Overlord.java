@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Overlord {
   private static final Logger LOGGER = LoggerFactory.getLogger(Overlord.class);
 
+  // TODO: convert Client to multi-region client
   public static HttpHandler execute(ConcurrentCachedHttpHandler handler, HeatTable heatTable, Client client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath, ColdAssetSystem lister, Cloud cloud, AtomicBoolean alive) throws Exception {
     // the overlord has metrics
     OverlordMetrics metrics = new OverlordMetrics(metricsFactory);
@@ -39,7 +40,7 @@ public class Overlord {
     /*
     DeploymentReconciliation.kickOff(metrics, engine, dataBase, handler);
     */
-    SpaceDeleteBot.kickOff(metrics, dataBase, client, alive);
+    GlobalSpaceDeleteBot.kickOff(metrics, dataBase, client, alive);
 
     // detect dead things
     DeadDetector.kickOff(metrics, dataBase, alive);
@@ -57,7 +58,7 @@ public class Overlord {
     GossipDumper.kickOff(metrics, engine, handler);
 
     // start doing the accounting work
-    HourlyAccountant.kickOff(metrics, dataBase, handler);
+    GlobalHourlyAccountant.kickOff(metrics, client, dataBase, handler);
 
     // build the index
     StringBuilder indexHtmlBuilder = new StringBuilder();

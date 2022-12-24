@@ -1,0 +1,48 @@
+// This is an internal Adama "program" which Adama's service depends on
+@static {
+  create {
+    return @who.isOverlord();
+  }
+}
+
+public principal owner;
+
+@connected {
+  return @who == owner || @who.isOverlord();
+}
+
+message NewBill {
+  int hour; // year-mo-da-hr
+  long cpu_ticks;
+  long memory_bytes_p95;
+  long storage_bytes;
+  long messages;
+  long bandwidth_bytes;
+  long first_party_service_calls;
+  long third_party_service_calls;
+  long documents_p95;
+  long connections_p95;
+}
+
+record Bill {
+  public int hour; // year-mo-da-hr
+  public long cpu_ticks;
+  public long memory_bytes_p95;
+  public long storage_bytes;
+  public long messages;
+  public long bandwidth_bytes;
+  public long first_party_service_calls;
+  public long third_party_service_calls;
+  public long documents_p95;
+  public long connections_p95;
+}
+
+table<Bill> _bills;
+
+channel record_bill(NewBill bill) {
+  if((iterate _bills where hour == bill.hour)[0] as old_bill) {
+     old_bill <- bill;
+  } else {
+    _bills <- bill;
+  }
+}

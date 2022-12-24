@@ -15,6 +15,7 @@ import org.adamalang.common.gossip.Engine;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 
+// Periodically dumps an HTML table of the state of the gossip engine
 public class GossipDumper {
   public static void kickOff(OverlordMetrics metrics, Engine engine, ConcurrentCachedHttpHandler handler) {
     SimpleExecutor executor = SimpleExecutor.create("scan-gossip");

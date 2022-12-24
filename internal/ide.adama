@@ -1,0 +1,357 @@
+// This is an internal Adama "program" which Adama's service depends on
+@static {
+  create {
+    return @who.isAdamaDeveloper();
+  }
+}
+
+public principal owner;
+
+@connected {
+  return @who == owner;
+}
+
+record Document {
+  public int id;
+  public string name;
+  public text content;
+  public int failures;
+  public formula issues = name.endsWith(".adama") ? @maybe(Adama.validate(content.get())) : @maybe<dynamic>;
+  public formula reflection = name.endsWith(".adama") ? Adama.reflect(content.get()) : @maybe<dynamic>;
+}
+
+table<Document> _documents;
+
+record DebugIdentity {
+  public int id;
+  public string identity;
+}
+
+table<DebugIdentity> _debug_identities;
+
+message DocumentAppendMessage {
+  int id;
+  int seq;
+  dynamic changes;
+}
+
+channel document_append(DocumentAppendMessage ac) {
+  if ((iterate _documents where id == ac.id limit 1)[0] as doc) {
+    if (!doc.content.append(ac.seq, ac.changes)) {
+      doc.failures++;
+    }
+  }
+}
+
+message SeedIDE {
+  string adama;
+  string rxhtml;
+}
+
+@construct (SeedIDE seed) {
+  owner = @who;
+  _documents <- {name:"main.adama", content:seed.adama};
+  _documents <- {name:"forest.rxhtml", content:seed.rxhtml};
+  _debug_identities <- {identity:"anonymous:alice"};
+  _debug_identities <- {identity:"anonymous:bob"};
+  _debug_identities <- {identity:"anonymous:dan"};
+  _debug_identities <- {identity:"anonymous:carol"};
+}
+
+view string current_document;
+bubble document_adama = (iterate _documents where name == "main.adama")[0];
+bubble document_rxhtml = (iterate _documents where name == "forest.rxhtml")[0];
+
+message JustId {
+  int id;  
+}
+
+message AddDebugIdentity {
+  string identity;
+}
+
+channel add_debug_identity(AddDebugIdentity add) {
+  _debug_identities <- add;
+}
+
+channel delete_debug_identity(JustId jid) {
+  (iterate _debug_identities where id == jid.id).delete();
+}
+
+public formula identities = iterate _debug_identities;
+
+@can_attach {
+  return @who == owner;
+}
+
+record Resource {
+  public int id;
+  public asset resource;
+  public principal creator;
+
+  public formula name = resource.name();
+  public formula type = resource.type();
+}
+
+table<Resource> _resources;
+
+public formula assets = iterate _resources;
+
+@attached (what) {
+  (iterate _resources where resource.name() == what.name()).delete();
+  _resources <- {resource:what, creator:@who};
+}
+
+channel delete_resource(JustId jid) {
+  (iterate _resources where id == jid.id).delete();
+}
+
+@web get /$p* {
+  if ( (iterate _resources where name == p)[0] as found) {
+    return {asset:found.resource};
+  }
+  return {html:"Not Found"};
+}
+
+
+message DocumentCreateMessage {
+  string name;
+  string content;
+}
+
+channel doc_create(DocumentCreateMessage c) {
+  if ((iterate _documents where name == c.name).size() == 0) {
+    _documents <- c;
+  }
+}
+
+message DocumentDeleteMessage {
+  int id;
+}
+
+channel del_document(DocumentDeleteMessage d) {
+  (iterate _documents where id == d.id).delete();
+}
+
+
+record Component {
+  public int id;
+  public int gid;
+  public bool isg;
+  public double a;
+  public double b;
+  public double c;
+  public double d;
+  public double e;
+  public double f;
+  public double hw;
+  public double hh;
+  public int ordering;
+  public map<string, dynamic> properties;
+}
+
+record Card {
+  public int id;
+  public string name;
+  public string bound_type;
+  public int w;
+  public int h;
+  // what other properties do I want here
+
+  table<Component> _components;
+  public formula components = iterate _components order by ordering asc;
+}
+
+table<Card> _cards;
+public formula cards = iterate _cards;
+
+/**************************************************************
+ * Create and delete cards
+ **************************************************************/
+message CreateCard {
+  string name;
+  int w;
+  int h;
+  string bound_type;
+}
+
+channel create_card(CreateCard event) {
+  _cards <- event;
+}
+
+message SimpleCardAction {
+  int card;
+}
+
+channel delete_card(SimpleCardAction event) {
+  (iterate _cards where id == event.card).delete();
+}
+
+/**************************************************************
+ * Handling inserts and core changes to components within a card
+ **************************************************************/
+message CardDelta {
+  maybe<string> name;
+  maybe<int> w;
+  maybe<int> h;
+  maybe<string> bound_type;
+}
+
+message ComponentDelta {
+  int id;
+  maybe<int> gid;
+  maybe<double> a;
+  maybe<double> b;
+  maybe<double> c;
+  maybe<double> d;
+  maybe<double> e;
+  maybe<double> f;
+  maybe<double> hw;
+  maybe<double> hh;
+  maybe<bool> isg;
+  map<string, dynamic> properties;
+}
+
+message CardMutation {
+  int id;
+  CardDelta change;
+  ComponentDelta[] deltas;
+  int[] deletes;
+}
+
+procedure sync_component_properties(Component component, ComponentDelta delta) {
+  if (delta.e as e) {
+    component.properties["x"] = e.dyn();
+  }
+  if (delta.f as f) {
+    component.properties["y"] = f.dyn();
+  }
+  if (delta.hw as hw) {
+    component.properties["w"] = (2 * hw).dyn();
+  }
+  if (delta.hh as hh) {
+    component.properties["h"] = (2 * hh).dyn();
+  }
+  if(delta.a as a) {
+    if (delta.b as b) {
+      component.properties["angle"] = Math.atan2(b, a).degrees().dyn();
+    }
+  }
+  if (!component.isg) {
+    if (delta.properties["x"].d() as x) {
+      component.e = x;
+    }
+    if (delta.properties["y"].d() as y) {
+      component.f = y;
+    }
+    if (delta.properties["w"].d() as w) {
+      if (w / 2 as hw) {
+        component.hw = hw;
+      }
+    }
+    if (delta.properties["h"].d() as h) {
+      if (h / 2 as hh) {
+        component.hh = hh;
+      }
+    }
+    if (delta.properties["angle"].d() as angle) {
+      var rad = angle.radians();
+      component.a = rad.cos();
+      component.b = rad.sin();
+      component.c = - component.b;
+      component.d = component.a;
+      // make a nice radian function
+    }
+    if(delta.properties["layout"].str() as layout) {
+      if (layout == "box") {
+        component.a = 1.0;
+        component.b = 0.0;
+        component.c = 0.0;
+        component.d = 1.0;
+        component.properties["angle"] = (0.0).dyn();
+      }
+    }
+  }
+}
+
+procedure delete_comp_by_id(Card card, int delete_id) {
+  foreach (comp in (iterate card._components where id == delete_id)) {
+    comp.delete();
+    if (comp.isg) {
+      foreach (other in (iterate card._components where gid == comp.id)) {
+        delete_comp_by_id(card, other.id);
+      }
+    }
+  }
+}
+
+channel card_delta(CardMutation batch) {
+  // find the card
+  if( (iterate _cards where id == batch.id)[0] as card) {
+    card <- batch.change;
+
+    // for each component with a negative id (i.e. inserts)
+    foreach (delta in batch.deltas) {
+      if (delta.id < 0) {
+        var old_id = delta.id;
+        card._components <- delta as new_id;
+        if ( (iterate card._components where id == new_id)[0] as component) {
+          sync_component_properties(component, delta);
+          component.ordering = card._components.size();
+        }
+        if (delta.isg) { // since the new component is a group, let's rewrite any group ids within the delta batch
+          foreach (other_delta in batch.deltas) {
+            if (other_delta.gid == old_id) {
+              other_delta.gid = new_id;
+            }
+          }
+        }
+      }
+    }
+
+    // handle all components with a positive id (i.e. changes)
+    foreach (delta in batch.deltas) {
+      if (delta.id > 0) {
+        if ( (iterate card._components where id == delta.id)[0] as component) {
+          component <- delta;
+          sync_component_properties(component, delta);
+        }
+      }
+    }
+
+    // execute deletes
+    foreach(delete_id in batch.deletes) {
+      delete_comp_by_id(card, delete_id);
+    }
+  }
+}
+
+/**************************************************************
+ * Ordering changes
+ **************************************************************/
+
+procedure reorder_fixed(CardShift s, int mult) {
+  if( (iterate _cards where id == s.id)[0] as card) {
+    int change = (mult) * (card._components.size() * 2 + 1);
+    foreach (comp_id in s.components) {
+      if ((iterate card._components where id == comp_id)[0] as component) {
+        component.ordering += change;
+      }
+    }
+    int reset_order = 0;
+    (iterate card._components).ordering = reset_order++;
+  }
+}
+
+message CardShift {
+  int id;
+  int[] components;
+}
+
+channel card_shift_front(CardShift s) {
+  reorder_fixed(s, -1);
+}
+
+channel card_shift_back(CardShift s) {
+  reorder_fixed(s, 1);
+}

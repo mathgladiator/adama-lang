@@ -17,6 +17,8 @@ import org.adamalang.overlord.OverlordMetrics;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+// The dead detector will periodically scan the database to find tasks which haven't self reported in 15 minutes.
+// This will raise a flag for the alarm system to pick up on
 public class DeadDetector {
   public static void kickOff(OverlordMetrics metrics, DataBase dataBase, AtomicBoolean alive) {
     SimpleExecutor executor = SimpleExecutor.create("dead-detector");

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicReference;
 
+/** convert the local gossip table into a targets table for prometheus */
 public class PrometheusTargetMaker {
   private static final Logger LOGGER = LoggerFactory.getLogger(PrometheusTargetMaker.class);
 

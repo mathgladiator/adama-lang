@@ -25,6 +25,11 @@ public class LibPrincipal {
   }
 
   @Extension
+  public static boolean isOverlord(final NtPrincipal principal) {
+    return "overlord".equals(principal.authority);
+  }
+
+  @Extension
   public static boolean fromAuthority(final NtPrincipal principal, String authority) {
     return authority.equals(principal.authority);
   }

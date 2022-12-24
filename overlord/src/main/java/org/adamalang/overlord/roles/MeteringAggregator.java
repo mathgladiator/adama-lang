@@ -20,7 +20,9 @@ import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
 
+// Collect metering records from all hosts via gossip and sync them to the metering table.
 public class MeteringAggregator {
+  // TODO: turn Client into the multi-region client
   public static void kickOff(OverlordMetrics metrics, Client client, DataBase dataBase, ConcurrentCachedHttpHandler handler) {
     SimpleExecutor executor = SimpleExecutor.create("metering-aggregator");
     FixedHtmlStringLoggerTable table = new FixedHtmlStringLoggerTable(32, "target", "batch", "time");

@@ -23,7 +23,6 @@ import org.adamalang.mysql.model.Sentinel;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.Client;
 import org.adamalang.overlord.OverlordMetrics;
-import org.adamalang.runtime.data.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,12 +31,14 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SpaceDeleteBot {
-  private static Logger LOG = LoggerFactory.getLogger(SpaceDeleteBot.class);
+/** a bot that wakes up, looks for deleted spaces, and then ensures the name is ready for usage */
+public class GlobalSpaceDeleteBot {
+  private static Logger LOG = LoggerFactory.getLogger(GlobalSpaceDeleteBot.class);
   private final OverlordMetrics metrics;
   private final DataBase dataBase;
-  private final Client client;
-  private SpaceDeleteBot(OverlordMetrics metrics, DataBase dataBase, Client client) {
+  private final Client client; // TODO: convert to multi-region client
+
+  private GlobalSpaceDeleteBot(OverlordMetrics metrics, DataBase dataBase, Client client) {
     this.metrics = metrics;
     this.dataBase = dataBase;
     this.client = client;
@@ -94,7 +95,7 @@ public class SpaceDeleteBot {
 
   public static void kickOff(OverlordMetrics metrics, DataBase dataBase, Client client, AtomicBoolean alive) {
     SimpleExecutor executor = SimpleExecutor.create("space-delete-bot");
-    SpaceDeleteBot bot = new SpaceDeleteBot(metrics, dataBase, client);
+    GlobalSpaceDeleteBot bot = new GlobalSpaceDeleteBot(metrics, dataBase, client);
     executor.schedule(new NamedRunnable("space-delete-bot") {
       @Override
       public void execute() throws Exception {
