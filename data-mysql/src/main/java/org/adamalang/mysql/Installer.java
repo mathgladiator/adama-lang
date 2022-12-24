@@ -122,13 +122,13 @@ public class Installer {
         .append("  `name` VARCHAR(128) NOT NULL,") //
         .append("  `enabled` BOOLEAN DEFAULT TRUE,") //
         .append("  `storage_bytes` INT(8) DEFAULT 0,") //
-        .append("  `unbilled_storage_bytes_hours` BIGINT DEFAULT 0,") //
-        .append("  `unbilled_bandwidth_hours` BIGINT DEFAULT 0,") //
-        .append("  `unbilled_first_party_service_calls` INT(4) DEFAULT 0,") //
-        .append("  `unbilled_third_party_service_calls` INT(4) DEFAULT 0,") //
+        .append("  `unbilled_storage_bytes_hours` BIGINT DEFAULT 0,") // TOKILL
+        .append("  `unbilled_bandwidth_hours` BIGINT DEFAULT 0,") // TOKILL
+        .append("  `unbilled_first_party_service_calls` INT(4) DEFAULT 0,") // TOKILL
+        .append("  `unbilled_third_party_service_calls` INT(4) DEFAULT 0,") // TOKILL
         .append("  `latest_billing_hour` INT(4) UNSIGNED DEFAULT 0,") //
-        .append("  `plan` TEXT NOT NULL,") //
-        .append("  `rxhtml` TEXT,") //
+        .append("  `plan` TEXT NOT NULL,") // MOVE to IDE document?
+        .append("  `rxhtml` TEXT,") // MOVE to IDE document?
         .append("  `hash` VARCHAR(256) NOT NULL,") //
         .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
         .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
@@ -179,7 +179,7 @@ public class Installer {
         .append(" DEFAULT CHARACTER SET = utf8mb4;") //
         .toString();
 
-    String createBillingTableSQL = new StringBuilder() //
+    String createBillingTableSQL = new StringBuilder() // KILL
         .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`bills` (") //
         .append("  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,") //
         .append("  `space` INT(4) UNSIGNED NOT NULL,") // (i.e. who is going to pay)
