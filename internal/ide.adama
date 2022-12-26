@@ -156,7 +156,7 @@ record Card {
   public string bound_type;
   public int w;
   public int h;
-  // what other properties do I want here
+  public map<string, dynamic> properties;
 
   table<Component> _components;
   public formula components = iterate _components order by ordering asc;
@@ -195,6 +195,7 @@ message CardDelta {
   maybe<int> w;
   maybe<int> h;
   maybe<string> bound_type;
+  map<string, dynamic> properties;
 }
 
 message ComponentDelta {
