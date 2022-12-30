@@ -192,7 +192,6 @@ public class TestFrontEnd implements AutoCloseable, Email {
             dataService, //
             TimeSource.REAL_TIME,
             1);
-    capacityAgent = new CapacityAgent(new CapacityMetrics(new NoOpMetricsFactory()), dataBase, coreService, caravanExecutor, alive, new ServiceShield());
     this.netBase = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity, 1, 2);
     this.clientExecutor = SimpleExecutor.create("disk");
     this.deploymentAgent = new DeploymentAgent(this.clientExecutor, dataBase, new DeploymentMetrics(new NoOpMetricsFactory()), "test-region", identity.ip + ":" + port, deploymentFactoryBase, coreService);
@@ -215,6 +214,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     }, "test-region");
     Client client = new Client(netBase, clientConfig, clientMetrics, router, null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
+    capacityAgent = new CapacityAgent(new CapacityMetrics(new NoOpMetricsFactory()), dataBase, coreService, deploymentFactoryBase, caravanExecutor, alive, new ServiceShield(), "test-region", identity.ip + ":" + port);
 
     // new fast path for routing table
     CountDownLatch waitForRouting = new CountDownLatch(1);

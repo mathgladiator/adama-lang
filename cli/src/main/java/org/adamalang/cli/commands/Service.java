@@ -146,7 +146,7 @@ public class Service {
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), caravan.service, TimeSource.REAL_TIME, coreThreads);
     DeploymentAgent deployAgent = new DeploymentAgent(init.picker, init.database, deploymentMetrics, init.region, init.machine, deploymentFactoryBase, service);
-    CapacityAgent capacityAgent = new CapacityAgent(new CapacityMetrics(init.metricsFactory), init.database, service, init.system, init.alive, service.shield);
+    CapacityAgent capacityAgent = new CapacityAgent(new CapacityMetrics(init.metricsFactory), init.database, service, deploymentFactoryBase, init.system, init.alive, service.shield, init.region, init.machine);
     deploymentFactoryBase.attachDeliverer(service);
     // tell the proxy how to pull code on demand
     factoryProxy.setAgent(deployAgent);
@@ -224,7 +224,7 @@ public class Service {
     ConcurrentCachedHttpHandler overlordHandler = new ConcurrentCachedHttpHandler();
     HeatTable heatTable = new HeatTable(overlordHandler);
     Client client = init.makeClient(heatTable::onSample);
-    HttpHandler handler = Overlord.execute(overlordHandler, heatTable, client, init.engine, init.metricsFactory, targetsPath, init.database, scanPath, init.s3, init.s3, init.alive);
+    HttpHandler handler = Overlord.execute(overlordHandler, client, init.engine, init.metricsFactory, targetsPath, init.database, scanPath, init.s3, init.s3, init.alive);
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
     final var runnable = new ServiceRunnable(init.webConfig, new WebMetrics(init.metricsFactory), serviceBase, init.makeCertificateFinder(), () -> {});
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

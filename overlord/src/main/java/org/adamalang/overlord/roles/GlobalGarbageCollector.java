@@ -34,8 +34,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class GarbageCollector {
-  private static final Logger LOGGER = LoggerFactory.getLogger(GarbageCollector.class);
+public class GlobalGarbageCollector {
+  private static final Logger LOGGER = LoggerFactory.getLogger(GlobalGarbageCollector.class);
 
   public static void kickOff(OverlordMetrics metrics, DataBase dataBase, ColdAssetSystem lister, Cloud cloud, AtomicBoolean alive) {
     SimpleExecutor executor = SimpleExecutor.create("garbage-man");
@@ -75,14 +75,14 @@ public class GarbageCollector {
                               }
                             }
                             if (kill.size() == 0) {
-                              // FinderOperations.lowerTask(dataBase, task);
+                              FinderOperations.lowerTask(dataBase, task);
                             } else {
                               if (FinderOperations.validateTask(dataBase, task)) {
                                 for (String toKill : kill) {
-                                  // lister.deleteAsset(key, toKill, Callback.DONT_CARE_VOID);
+                                  lister.deleteAsset(key, toKill, Callback.DONT_CARE_VOID);
                                 }
                               }
-                              // FinderOperations.lowerTask(dataBase, task);
+                              FinderOperations.lowerTask(dataBase, task);
                             }
                           } catch (Exception ex) {
                             LOGGER.error("garbage-man-task-crashed-with-archive:[" + task + "]", ex);
