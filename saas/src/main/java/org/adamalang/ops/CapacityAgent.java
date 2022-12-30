@@ -23,6 +23,7 @@ import org.adamalang.net.client.Client;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.runtime.sys.ServiceShield;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.slf4j.Logger;
@@ -40,6 +41,7 @@ public class CapacityAgent implements HeatMonitor  {
   private final DataBase database;
   private final CoreService service;
   private final DeploymentFactoryBase deploymentFactoryBase;
+  private final ServiceHeatEstimator estimator;
   private final SimpleExecutor executor;
   private final LoadMonitor resources;
   private final String region;
@@ -51,11 +53,12 @@ public class CapacityAgent implements HeatMonitor  {
   public final BinaryEventOrGate rejectExisting;
   public final BinaryEventOrGate rejectMessages;
 
-  public CapacityAgent(CapacityMetrics metrics, DataBase database, CoreService service, DeploymentFactoryBase deploymentFactoryBase, SimpleExecutor executor, AtomicBoolean alive, ServiceShield shield, String region, String machine) {
+  public CapacityAgent(CapacityMetrics metrics, DataBase database, CoreService service, DeploymentFactoryBase deploymentFactoryBase, ServiceHeatEstimator estimator, SimpleExecutor executor, AtomicBoolean alive, ServiceShield shield, String region, String machine) {
     this.metrics = metrics;
     this.database = database;
     this.service = service;
     this.deploymentFactoryBase = deploymentFactoryBase;
+    this.estimator = estimator;
     this.executor = executor;
     this.resources = new LoadMonitor(executor, alive);
     this.region = region;
@@ -63,7 +66,10 @@ public class CapacityAgent implements HeatMonitor  {
     executor.schedule(new NamedRunnable("capacity-offload") {
       @Override
       public void execute() throws Exception {
-        offloadLowSpacesWhileInExecutor();
+        if (alive.get()) {
+          offloadLowSpacesWhileInExecutor();
+          executor.schedule(this, (int) (90000 + 90000 * Math.random()));
+        }
       }
     }, 120000); // every two minutes
     this.add_capacity = new BinaryEventOrGate(new RepeatingSignal(executor, alive, 120000, (b) -> {
@@ -120,18 +126,17 @@ public class CapacityAgent implements HeatMonitor  {
         if (instance.override) {
           continue;
         }
-        // TODO: measure the capacity on this host
-        boolean noCapacity = false; // TODO: if zero capacity, then we axe
-        if (noCapacity) {
+        ServiceHeatEstimator.Heat heat = estimator.of(instance.space);
+        if (heat.empty) {
           deploymentFactoryBase.undeploy(instance.space);
           Capacity.remove(database, instance.space, region, machine);
+          return;
         }
-
-        boolean lowUtilitilization = false; // TODO: if capacity is low, then shed documents
-        if (lowUtilitilization) {
+        if (heat.low) {
           // Don't remove capacity from the prime host
           String stableHost = Hosts.pickStableHostFromRegion(database, region, "adama", instance.space);
           if (!machine.equals(stableHost)) {
+            LOG.error("shed-traffic:" + instance.space);
             service.shed((key) -> key.space.equals(instance.space));
           }
         }
@@ -144,9 +149,8 @@ public class CapacityAgent implements HeatMonitor  {
   private void addCapacityWhileInExecutor() {
     try {
       for (CapacityInstance instance : Capacity.listAllOnMachine(database, region, machine)) {
-        // TODO measure the heat of the space on this host
-        boolean tooHot = false; // TODO: measure heat
-        if (tooHot) {
+        ServiceHeatEstimator.Heat heat = estimator.of(instance.space);
+        if (heat.hot) {
           String newHost = null; // TODO: find a new candidate host
           if (newHost != null) {
             Capacity.add(database, instance.space, region, newHost);
@@ -162,15 +166,16 @@ public class CapacityAgent implements HeatMonitor  {
   private void rebalanceWhileInExecutor() {
     try {
       for (CapacityInstance instance : Capacity.listAllOnMachine(database, region, machine)) {
-        // TODO measure the heat of the space on this host
-        boolean tooHot = false; // TODO: measure heat
-        if (tooHot) {
+        ServiceHeatEstimator.Heat heat = estimator.of(instance.space);
+        if (heat.hot) {
           List<CapacityInstance> other = Capacity.listRegion(database, instance.space, instance.region);
+          /*
           service.shed((key) -> {
             // TODO: rendevous hash the key to the other, and shed ones that don't fit
             // if the key doesn't win a rendevouz hash, then return true
             return false;
           });
+          */
         }
       }
     } catch (Exception ex) {

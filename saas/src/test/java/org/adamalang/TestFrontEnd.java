@@ -31,6 +31,7 @@ import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.model.*;
 import org.adamalang.net.client.routing.finder.MachinePicker;
 import org.adamalang.ops.*;
+import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.AssetUploadBody;
@@ -214,7 +215,12 @@ public class TestFrontEnd implements AutoCloseable, Email {
     }, "test-region");
     Client client = new Client(netBase, clientConfig, clientMetrics, router, null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
-    capacityAgent = new CapacityAgent(new CapacityMetrics(new NoOpMetricsFactory()), dataBase, coreService, deploymentFactoryBase, caravanExecutor, alive, new ServiceShield(), "test-region", identity.ip + ":" + port);
+
+
+    ServiceHeatEstimator.HeatVector low = new ServiceHeatEstimator.HeatVector(10000, 100, 1000*1000, 100);
+    ServiceHeatEstimator.HeatVector hot = new ServiceHeatEstimator.HeatVector(1000L * 1000L * 1000L, 100000, 1000*1000*500L, 250L);
+    ServiceHeatEstimator estimator = new ServiceHeatEstimator(low, hot);
+    capacityAgent = new CapacityAgent(new CapacityMetrics(new NoOpMetricsFactory()), dataBase, coreService, deploymentFactoryBase, estimator, caravanExecutor, alive, new ServiceShield(), "test-region", identity.ip + ":" + port);
 
     // new fast path for routing table
     CountDownLatch waitForRouting = new CountDownLatch(1);

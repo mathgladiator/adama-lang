@@ -49,6 +49,7 @@ import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
@@ -146,7 +147,14 @@ public class Service {
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), caravan.service, TimeSource.REAL_TIME, coreThreads);
     DeploymentAgent deployAgent = new DeploymentAgent(init.picker, init.database, deploymentMetrics, init.region, init.machine, deploymentFactoryBase, service);
-    CapacityAgent capacityAgent = new CapacityAgent(new CapacityMetrics(init.metricsFactory), init.database, service, deploymentFactoryBase, init.system, init.alive, service.shield, init.region, init.machine);
+
+    // TODO: get from config (and think about how to make dynamic)
+    ServiceHeatEstimator.HeatVector low = new ServiceHeatEstimator.HeatVector(10000, 100, 1000*1000, 100);
+    ServiceHeatEstimator.HeatVector hot = new ServiceHeatEstimator.HeatVector(1000L * 1000L * 1000L, 100000, 1000*1000*500L, 250L);
+    ServiceHeatEstimator estimator = new ServiceHeatEstimator(low, hot);
+    meteringPubSub.subscribe(estimator);
+
+    CapacityAgent capacityAgent = new CapacityAgent(new CapacityMetrics(init.metricsFactory), init.database, service, deploymentFactoryBase, estimator, init.system, init.alive, service.shield, init.region, init.machine);
     deploymentFactoryBase.attachDeliverer(service);
     // tell the proxy how to pull code on demand
     factoryProxy.setAgent(deployAgent);

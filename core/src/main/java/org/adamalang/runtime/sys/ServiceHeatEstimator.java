@@ -65,7 +65,11 @@ public class ServiceHeatEstimator implements Function<ArrayList<MeterReading>, B
   }
 
   public Heat of(String space) {
-    return heat.get(space);
+    Heat val = heat.get(space);
+    if (val == null) {
+      return new Heat(true, true, false);
+    }
+    return val;
   }
 
   @Override
