@@ -9,21 +9,15 @@
  */
 package org.adamalang.net.client.routing;
 
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.net.client.ClientMetrics;
-import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.routing.finder.FinderServiceRouter;
 import org.adamalang.net.client.routing.finder.MachinePicker;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
+import org.adamalang.net.client.routing.finder.ReactiveCacheMachinePicker;
 import org.adamalang.runtime.data.FinderService;
-import org.adamalang.runtime.data.Key;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 public class ClientRouter {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ClientRouter.class);
   private final SimpleExecutor executor;
   public final AggregatedCacheRouter engine;
   public final Router routerForDocuments;
@@ -44,37 +38,10 @@ public class ClientRouter {
     return new ClientRouter(executor, engine, engine);
   }
 
-  public static ClientRouter FINDER(ClientMetrics metrics, FinderService finder, String region) {
+  public static ClientRouter FINDER(ClientMetrics metrics, FinderService finder, MachinePicker pickerFallback, String region) {
     SimpleExecutor executor = SimpleExecutor.create("routing-executor");
     AggregatedCacheRouter engine = new AggregatedCacheRouter(executor);
-    MachinePicker picker = new MachinePicker() {
-      @Override
-      public void pickHost(Key key, Callback<String> callback) {
-        engine.get(key, new RoutingSubscriber() {
-          @Override
-          public void onRegion(String region) {
-            // impossible for now
-            callback.failure(new ErrorCodeException(ErrorCodes.NET_FINDER_ROUTER_REGION_NOT_EXPECTED));
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-
-          @Override
-          public void onMachine(String machine) {
-            if (machine == null) {
-              LOGGER.error("failed-find-find-host: {}/{}", key.space, key.key);
-              metrics.client_failed_pick_host.run();
-              callback.failure(new ErrorCodeException(ErrorCodes.NET_FINDER_ROUTER_NULL_MACHINE));
-            } else {
-              callback.success(machine);
-            }
-          }
-        });
-      }
-    };
+    MachinePicker picker = new ReactiveCacheMachinePicker(metrics, engine, pickerFallback);
     FinderServiceRouter routerForDocuments = new FinderServiceRouter(executor, finder, picker, region);
     return new ClientRouter(executor, engine, routerForDocuments);
   }

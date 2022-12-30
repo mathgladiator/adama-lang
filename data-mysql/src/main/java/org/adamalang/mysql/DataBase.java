@@ -30,7 +30,6 @@ public class DataBase implements AutoCloseable {
   public final HikariDataSource pool;
   public final DataBaseMetrics metrics;
 
-
   public DataBase(DataBaseConfig config, DataBaseMetrics metrics) throws Exception {
     this.pool = config.createHikariDataSource();
     this.databaseName = config.databaseName;

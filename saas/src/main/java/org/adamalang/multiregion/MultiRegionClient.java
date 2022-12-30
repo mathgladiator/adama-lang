@@ -13,7 +13,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.model.Deployments;
+import org.adamalang.mysql.model.Capacity;
 import org.adamalang.mysql.model.Finder;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.contracts.SimpleEvents;
@@ -49,11 +49,9 @@ public class MultiRegionClient {
     local.shutdown();
   }
 
-  public void deploy(String space, String hash, String planJson) {
+  public void deploy(String space) {
     local.getDeploymentTargets(space, (target) -> {
       try {
-        // persist the deployment binding
-        Deployments.deploy(dataBase, space, target, hash, planJson);
         // notify the client of an update
         local.notifyDeployment(target, space);
       } catch (Exception ex) {

@@ -13,7 +13,6 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.gossip.Engine;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.model.Deployments;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
@@ -25,6 +24,7 @@ import java.util.TreeSet;
 
 // TODO: kill
 public class DeploymentReconciliation {
+  /*
   private static final Logger LOGGER = LoggerFactory.getLogger(DeploymentReconciliation.class);
 
   public static void kickOff(OverlordMetrics metrics, Engine engine, DataBase deploymentsDatabase, ConcurrentCachedHttpHandler handler) {
@@ -146,4 +146,5 @@ public class DeploymentReconciliation {
       offload.shutdown();
     }
   }
+  */
 }

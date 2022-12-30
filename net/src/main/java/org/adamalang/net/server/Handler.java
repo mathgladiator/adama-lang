@@ -507,11 +507,20 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void handle(ClientMessage.ScanDeployment payload) {
     try {
       nexus.metrics.server_scan_deployment.run();
-      nexus.scanForDeployments.accept(payload.space);
-      ByteBuf buf = upstream.create(4);
-      ServerCodec.write(buf, new ServerMessage.ScanDeploymentResponse());
-      upstream.next(buf);
-      upstream.completed();
+      nexus.capacityRequestor.requestCodeDeployment(payload.space, new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          ByteBuf buf = upstream.create(4);
+          ServerCodec.write(buf, new ServerMessage.ScanDeploymentResponse());
+          upstream.next(buf);
+          upstream.completed();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          upstream.error(ex.code);
+        }
+      });
     } catch (Exception ex) {
       upstream.error(ErrorCodes.NET_HANDLER_SCAN_EXCEPTION);
     }

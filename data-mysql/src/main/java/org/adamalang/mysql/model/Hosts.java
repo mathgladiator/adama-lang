@@ -74,4 +74,20 @@ public class Hosts {
       return null;
     });
   }
+
+  public static String pickStableHostFromRegion(DataBase dataBase, String region, String role, String keyToHashWithMachine) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT `machine`, md5(concat(`machine`,?)) as rdz FROM `" + dataBase.databaseName + "`.`hosts` where `region`=? AND `role`='" + role + "' ORDER BY rdz ASC LIMIT 1;";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, keyToHashWithMachine);
+        statement.setString(2, region);
+        try (ResultSet rs = statement.executeQuery()) {
+          if (rs.next()) {
+            return rs.getString(1);
+          }
+          return null;
+        }
+      }
+    });
+  }
 }

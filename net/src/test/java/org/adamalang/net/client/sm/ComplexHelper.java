@@ -12,7 +12,7 @@ package org.adamalang.net.client.sm;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.net.TestBed;
-import org.adamalang.net.client.contracts.RoutingSubscriber;
+import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -60,7 +60,7 @@ public class ComplexHelper {
       if (timeout < 0) {
         throw new RuntimeException("timed out");
       }
-      engine.get(new Key(space, key), new RoutingSubscriber() {
+      engine.get(new Key(space, key), new RoutingCallback() {
         @Override
         public void onRegion(String region) {
         }

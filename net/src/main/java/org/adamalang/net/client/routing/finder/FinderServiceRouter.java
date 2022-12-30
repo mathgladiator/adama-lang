@@ -14,13 +14,12 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.net.client.contracts.RoutingSubscriber;
+import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.routing.Router;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 public class FinderServiceRouter implements Router {
 
@@ -48,7 +47,7 @@ public class FinderServiceRouter implements Router {
     return prior;
   }
 
-  private void retryFailure(ErrorCodeException ex, Key key, RoutingSubscriber callback) {
+  private void retryFailure(ErrorCodeException ex, Key key, RoutingCallback callback) {
     if (ex.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED) {
       pickHost(key, callback, true);
       return;
@@ -66,7 +65,7 @@ public class FinderServiceRouter implements Router {
     }, backoff);
   }
 
-  private void pickHost(Key key, RoutingSubscriber callback, boolean retry) {
+  private void pickHost(Key key, RoutingCallback callback, boolean retry) {
     picker.pickHost(key, new Callback<>() {
       @Override
       public void success(String newMachine) {
@@ -90,7 +89,7 @@ public class FinderServiceRouter implements Router {
   }
 
   @Override
-  public void get(Key key, RoutingSubscriber callback) {
+  public void get(Key key, RoutingCallback callback) {
     // find the key once, or assign capacity to it
     finder.find(key, new Callback<>() {
       @Override

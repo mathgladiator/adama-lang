@@ -9,11 +9,13 @@
  */
 package org.adamalang.ops;
 
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.*;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.data.Deployment;
-import org.adamalang.mysql.model.Deployments;
+import org.adamalang.mysql.data.CapacityInstance;
+import org.adamalang.mysql.data.SpaceInfo;
+import org.adamalang.mysql.model.Capacity;
+import org.adamalang.mysql.model.Spaces;
+import org.adamalang.net.server.LocalCapacityRequestor;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
@@ -21,35 +23,62 @@ import org.adamalang.runtime.sys.CoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-
 /** agent of deployments */
-public class DeploymentAgent implements Consumer<String>, DeploymentMonitor, ExceptionLogger {
+public class DeploymentAgent implements LocalCapacityRequestor, DeploymentMonitor, ExceptionLogger {
   private static final Logger LOGGER = LoggerFactory.getLogger(DeploymentAgent.class);
+  private final SimpleExecutor executor;
   public final DataBase database;
   public final DeploymentMetrics metrics;
+  public final String region;
   public final String machine;
   public final DeploymentFactoryBase deploymentFactoryBase;
   public final CoreService service;
 
-  public DeploymentAgent(DataBase database, DeploymentMetrics metrics, String machine, DeploymentFactoryBase deploymentFactoryBase, CoreService service) {
+  public DeploymentAgent(SimpleExecutor executor, DataBase database, DeploymentMetrics metrics, String region, String machine, DeploymentFactoryBase deploymentFactoryBase, CoreService service) {
+    this.executor = executor;
     this.database = database;
     this.metrics = metrics;
+    this.region = region;
     this.machine = machine;
     this.deploymentFactoryBase = deploymentFactoryBase;
     this.service = service;
   }
 
-  public void deploy(Deployment deployment) {
-    if ("".equals(deployment.plan)) {
-      metrics.deploy_empty.run();
-      return;
+  public void optimisticScanAll() throws Exception {
+    metrics.deploy_sweep.run();
+    for (CapacityInstance instance : Capacity.listAllOnMachine(database, region, machine)) {
+      requestCodeDeployment(instance.space, Callback.DONT_CARE_VOID);
     }
+  }
+
+  public void bind(String space) {
+    executor.execute(new NamedRunnable("bind-space") {
+      @Override
+      public void execute() throws Exception {
+        try {
+          metrics.deploy_bind.run();
+          Capacity.add(database, space, region, machine);
+        } catch (Exception ex) {
+          LOGGER.error("failed-bind-space", ex);
+        }
+      }
+    });
+  }
+
+  @Override
+  public void requestCodeDeployment(String space, Callback<Void> callback) {
     try {
+      SpaceInfo info = Spaces.getSpaceInfo(database, space);
+      String plan = Spaces.getPlan(database, info.id);
+      if ("".equals(plan)) {
+        metrics.deploy_empty.run();
+        callback.failure(new ErrorCodeException(-1));
+        return;
+      }
       metrics.deploy_started.run();
-      deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, this));
+      deploymentFactoryBase.deploy(space, new DeploymentPlan(plan, this));
       service.deploy(this);
+      callback.success(null);
     } catch (Exception ex) {
       if (ex instanceof ErrorCodeException) {
         ErrorCodeException ece = (ErrorCodeException) ex;
@@ -57,27 +86,10 @@ public class DeploymentAgent implements Consumer<String>, DeploymentMonitor, Exc
           metrics.deploy_bad_plan.run();
           return;
         }
-      }
-      LOGGER.error("failed-scan-" + deployment.space, ex);
-    }
-  }
-
-  @Override
-  public void accept(String space) {
-    try {
-      if ("*".equals(space)) {
-        metrics.deploy_sweep.run();
-        ArrayList<Deployment> deployments = Deployments.listSpacesOnTarget(database, machine);
-        for (Deployment deployment : deployments) {
-          deploy(deployment);
-        }
       } else {
-        Deployment deployment = Deployments.get(database, machine, space);
-        deploy(deployment);
+        LOGGER.error("failed-scan-" + space, ex);
       }
-    } catch (Exception ex) {
-      metrics.deploy_hardfail.run();
-      LOGGER.error("failed-deployment-" + space, ex);
+      callback.failure(ErrorCodeException.detectOrWrap(-1, ex, this));
     }
   }
 

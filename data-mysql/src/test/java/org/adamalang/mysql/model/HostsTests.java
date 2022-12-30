@@ -31,6 +31,8 @@ public class HostsTests {
         int web2 = Hosts.initializeHost(dataBase, "region", "machine2", "web", "pubKey42");
         int web3 = Hosts.initializeHost(dataBase, "region", "machine1", "adama", "pubKeyX");
         int web4 = Hosts.initializeHost(dataBase, "region", "machine2", "adama", "pubKeyY");
+        Assert.assertEquals("machine1", Hosts.pickStableHostFromRegion(dataBase, "region", "adama", "xyz"));
+        Assert.assertEquals("machine2", Hosts.pickStableHostFromRegion(dataBase, "region", "adama", "35d35"));
         List<String> results = Hosts.listHosts(dataBase, "region", "web");
         Assert.assertEquals("machine1", results.get(0));
         Assert.assertEquals("machine2", results.get(1));

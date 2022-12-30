@@ -11,7 +11,7 @@ package org.adamalang.net.client.routing.cache;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.net.client.contracts.RoutingSubscriber;
+import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.client.routing.Router;
 import org.adamalang.runtime.data.Key;
@@ -48,7 +48,7 @@ public class AggregatedCacheRouter implements RoutingTarget, Router {
   }
 
   @Override
-  public void get(Key key, RoutingSubscriber callback) {
+  public void get(Key key, RoutingCallback callback) {
     executor.execute(new NamedRunnable("get", key.space, key.key) {
       @Override
       public void execute() throws Exception {

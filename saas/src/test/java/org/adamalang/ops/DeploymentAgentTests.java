@@ -10,8 +10,8 @@
 package org.adamalang.ops;
 
 import org.adamalang.TestFrontEnd;
+import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.mysql.data.Deployment;
 import org.junit.Test;
 
 public class DeploymentAgentTests {
@@ -22,12 +22,12 @@ public class DeploymentAgentTests {
       fe.deploymentAgent.bumpDocument(true);
       fe.deploymentAgent.bumpDocument(false);
       fe.deploymentAgent.finished(1000);
-      fe.deploymentAgent.accept("*");
-      fe.deploymentAgent.accept("space-that-doesn't exist");
-      fe.deploymentAgent.deploy(new Deployment("", "", "", ""));
+      fe.deploymentAgent.optimisticScanAll();
+      fe.deploymentAgent.requestCodeDeployment("space-that-doesn't exist", Callback.DONT_CARE_VOID);
+      fe.deploymentAgent.requestCodeDeployment("", Callback.DONT_CARE_VOID);
       fe.deploymentAgent.convertedToErrorCode(null, 1);
-      fe.deploymentAgent.deploy(new Deployment("space", "hash", "{\"plan\":[],\"default\":\"x\",\"versions\":{\"x\":\"public\"}}", ""));
-      fe.deploymentAgent.deploy(new Deployment(null, null, null, null));
+      // fe.deploymentAgent.deploy("space", "{\"plan\":[],\"default\":\"x\",\"versions\":{\"x\":\"public\"}}");
+      // fe.deploymentAgent.deploy(null, (String) null);
     }
   }
 }

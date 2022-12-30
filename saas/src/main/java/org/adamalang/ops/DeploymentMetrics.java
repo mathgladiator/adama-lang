@@ -22,6 +22,7 @@ public class DeploymentMetrics {
   public final Runnable deploy_hardfail;
   public final Runnable deploy_bad_plan;
   public final Runnable deploy_finished;
+  public final Runnable deploy_bind;
 
   public DeploymentMetrics(MetricsFactory factory) {
     this.deploy_empty = factory.counter("deploy_empty");
@@ -33,5 +34,6 @@ public class DeploymentMetrics {
     this.deploy_hardfail = factory.counter("deploy_hardfail");
     this.deploy_bad_plan = factory.counter("deploy_bad_plan");
     this.deploy_finished = factory.counter("deploy_finished");
+    this.deploy_bind = factory.counter("deploy_bind");
   }
 }

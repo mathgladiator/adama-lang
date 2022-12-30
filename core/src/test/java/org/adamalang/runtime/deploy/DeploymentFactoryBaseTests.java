@@ -20,7 +20,7 @@ import org.junit.Test;
 
 public class DeploymentFactoryBaseTests {
   @Test
-  public void notFound() {
+  public void coverage_dumb() {
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     base.fetch(
         new Key("space", "key"),
@@ -39,5 +39,6 @@ public class DeploymentFactoryBaseTests {
     Assert.assertNull(base.hashOf("space"));
     base.attachDeliverer(Deliverer.FAILURE);
     base.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), 400, null, true, Callback.DONT_CARE_INTEGER);
+    base.undeploy("space");
   }
 }

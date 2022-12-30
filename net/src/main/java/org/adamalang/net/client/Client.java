@@ -19,7 +19,6 @@ import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.net.client.sm.ConnectionBase;
 import org.adamalang.net.client.sm.Connection;
-import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
@@ -146,7 +145,7 @@ public class Client {
   }
 
   public void reflect(String space, String key, Callback<String> callback) {
-    router.engine.get(new Key(space, key), new RoutingSubscriber() {
+    router.engine.get(new Key(space, key), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
         // TODO: proxy to another region
@@ -186,7 +185,7 @@ public class Client {
 
   public void webGet(String space, String key, WebGet request, Callback<WebResponse> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_webget_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new RoutingSubscriber() {
+    router.routerForDocuments.get(new Key(space, key), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
         mInstance.failure(ErrorCodes.ADAMA_NET_WEBGET_FOUND_REGION_RATHER_THAN_MACHINE);
@@ -218,7 +217,7 @@ public class Client {
 
   public void webOptions(String space, String key, WebGet request, Callback<WebResponse> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_weboptions_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new RoutingSubscriber() {
+    router.routerForDocuments.get(new Key(space, key), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
         mInstance.failure(ErrorCodes.ADAMA_NET_WEBOPTIONS_FOUND_REGION_RATHER_THAN_MACHINE);
@@ -250,7 +249,7 @@ public class Client {
 
   public void webPut(String space, String key, WebPut request, Callback<WebResponse> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_webput_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new RoutingSubscriber() {
+    router.routerForDocuments.get(new Key(space, key), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
         mInstance.failure(ErrorCodes.ADAMA_NET_WEBPUT_FOUND_REGION_RATHER_THAN_MACHINE);
@@ -282,7 +281,7 @@ public class Client {
 
   public void webDelete(String space, String key, WebDelete request, Callback<WebResponse> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_webdelete_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new RoutingSubscriber() {
+    router.routerForDocuments.get(new Key(space, key), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
         mInstance.failure(ErrorCodes.ADAMA_NET_WEBDELETE_FOUND_REGION_RATHER_THAN_MACHINE);
@@ -314,7 +313,7 @@ public class Client {
 
   public void create(String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_create_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new RoutingSubscriber() {
+    router.routerForDocuments.get(new Key(space, key), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
         mInstance.failure(ErrorCodes.ADAMA_NET_CREATE_FOUND_REGION_RATHER_THAN_MACHINE);
@@ -346,7 +345,7 @@ public class Client {
 
   public void delete(String ip, String origin, String agent, String authority, String space, String key, Callback<Void> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_delete_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new RoutingSubscriber() {
+    router.routerForDocuments.get(new Key(space, key), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
         mInstance.failure(ErrorCodes.ADAMA_NET_DELETE_FOUND_REGION_RATHER_THAN_MACHINE);

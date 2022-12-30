@@ -28,16 +28,14 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.data.Domain;
-import org.adamalang.mysql.model.Domains;
-import org.adamalang.mysql.model.Finder;
-import org.adamalang.mysql.model.Health;
-import org.adamalang.mysql.model.Hosts;
+import org.adamalang.mysql.model.*;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.TargetsQuorum;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.routing.ClientRouter;
+import org.adamalang.net.client.routing.finder.MachinePicker;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.contracts.CertificateFinder;
@@ -69,6 +67,7 @@ public class CommonServiceInit {
   public final NetBase netBase;
   public final Finder finder;
   public final SimpleExecutor system;
+  public final SimpleExecutor picker;
   public final S3 s3;
   public final AWSConfig awsConfig;
   public final AWSMetrics awsMetrics;
@@ -109,6 +108,7 @@ public class CommonServiceInit {
     this.netBase = new NetBase(new NetMetrics(metricsFactory), identity, 1, 2);
     this.finder = new Finder(database, region);
     this.system = SimpleExecutor.create("system");
+    this.picker = SimpleExecutor.create("picker");
     this.machine = this.identity.ip + ":" + servicePort;
     this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, PerSessionAuthenticator.encodePublicKey(keyPair));
     this.webBase = new WebClientBase(this.webConfig);
@@ -142,8 +142,6 @@ public class CommonServiceInit {
         } finally {
           if (alive.get()) {
             system.schedule(this, 60000);
-          } else {
-            system.shutdown();
           }
         }
       }
@@ -167,6 +165,10 @@ public class CommonServiceInit {
       } catch (Exception ex) {
       }
       try {
+        picker.shutdown();
+      } catch (Exception ex) {
+      }
+      try {
         netBase.shutdown();
       } catch (Exception ex) {
       }
@@ -180,7 +182,18 @@ public class CommonServiceInit {
   public Client makeClient(HeatMonitor heat) {
     ClientConfig clientConfig = new ClientConfig();
     ClientMetrics metrics = new ClientMetrics(metricsFactory);
-    ClientRouter router = ClientRouter.FINDER(metrics, finder, region);
+    MachinePicker fallback = (key, callback) -> {
+      try {
+        String machine = Hosts.pickStableHostFromRegion(database, region, "adama", key.space);
+        if (machine == null) {
+          throw new NullPointerException("no capacity available");
+        }
+        callback.success(machine);
+      } catch (Exception ex) {
+        callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.NET_FINDER_ROUTER_NULL_MACHINE, ex, EXLOGGER));
+      }
+    };
+    ClientRouter router = ClientRouter.FINDER(metrics, finder, fallback, region);
     Client client = new Client(netBase, clientConfig, metrics, router, heat);
 
     TargetsQuorum targetsQuorum = new TargetsQuorum(metrics, client.getTargetPublisher());
@@ -217,7 +230,6 @@ public class CommonServiceInit {
               break;
             }
           }
-          // TODO: sort out a plan for global domains
           SslContext cached = cache.get(_domainToLookup); // check cache
           if (cached != null) {
             callback.success(cached);
@@ -256,6 +268,4 @@ public class CommonServiceInit {
       }
     };
   }
-
-
 }

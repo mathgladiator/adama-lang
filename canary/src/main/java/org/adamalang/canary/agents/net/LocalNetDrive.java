@@ -20,6 +20,7 @@ import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.server.Handler;
+import org.adamalang.net.server.LocalCapacityRequestor;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
 import org.adamalang.runtime.data.DataService;
@@ -71,7 +72,11 @@ public class LocalNetDrive {
         CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), dataService, TimeSource.REAL_TIME, config.coreThreads);
 
         DiskMeteringBatchMaker batchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, executor, billingRoot, 1800000L);
-        ServerNexus nexus = new ServerNexus(netBase, identity, service, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, (space) -> {
+        ServerNexus nexus = new ServerNexus(netBase, identity, service, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, new LocalCapacityRequestor() {
+          @Override
+          public void requestCodeDeployment(String space, Callback<Void> callback) {
+
+          }
         }, meteringPubSub, batchMaker, config.port, 2);
         ServerHandle handle = netBase.serve(config.port, (upstream -> new Handler(nexus, upstream)));
         if (config.role.equals("server")) {

@@ -20,7 +20,7 @@ import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.contracts.Events;
 import org.adamalang.net.client.contracts.Remote;
-import org.adamalang.net.client.contracts.RoutingSubscriber;
+import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.Key;
@@ -156,7 +156,7 @@ public class Connection implements AdamaStream {
   }
 
   public void open() {
-    base.router.get(key, new RoutingSubscriber() {
+    base.router.get(key, new RoutingCallback() {
       @Override
       public void onRegion(String region) {
         handleError(ErrorCodes.NET_LCSM_WRONG_REGION);

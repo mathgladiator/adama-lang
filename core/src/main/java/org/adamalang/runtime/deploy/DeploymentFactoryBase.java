@@ -56,6 +56,10 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deli
     spaces.put(space, new DeploymentFactory(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan, this));
   }
 
+  public void undeploy(String space) {
+    spaces.remove(space);
+  }
+
   /** issue #108; expose this internal bit for others to use to keep sanity in check */
   public static String getSpaceClassNamePrefix(String space) {
     StringBuilder spacePrefix = new StringBuilder().append("Space_");

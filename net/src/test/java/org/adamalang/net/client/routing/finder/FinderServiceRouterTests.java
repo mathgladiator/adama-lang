@@ -11,7 +11,7 @@ package org.adamalang.net.client.routing.finder;
 
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.net.client.contracts.RoutingSubscriber;
+import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class FinderServiceRouterTests {
       FinderServiceRouter router = new FinderServiceRouter(executor, finder, picker, "test-region");
       finder.bindLocal(new Key("space", "retry-key"));
       CountDownLatch latch = new CountDownLatch(1);
-      router.get(new Key("space", "retry-key"), new RoutingSubscriber() {
+      router.get(new Key("space", "retry-key"), new RoutingCallback() {
         @Override
         public void onRegion(String region) {
         }
@@ -57,7 +57,7 @@ public class FinderServiceRouterTests {
       FinderServiceRouter router = new FinderServiceRouter(executor, finder, picker, "test-region");
       finder.bindOtherRegion(new Key("space", "retry-key"));
       CountDownLatch latch = new CountDownLatch(1);
-      router.get(new Key("space", "retry-key"), new RoutingSubscriber() {
+      router.get(new Key("space", "retry-key"), new RoutingCallback() {
         @Override
         public void onRegion(String region) {
           latch.countDown();

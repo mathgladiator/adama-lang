@@ -12,7 +12,7 @@ package org.adamalang.net.client.contracts;
 import org.adamalang.common.ErrorCodeException;
 
 /** what happens when you subscribe to a key */
-public interface RoutingSubscriber {
+public interface RoutingCallback {
 
   /** routing found the document in another region */
   public void onRegion(String region);

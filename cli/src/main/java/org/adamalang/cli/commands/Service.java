@@ -21,7 +21,7 @@ import org.adamalang.extern.stripe.StripeConfig;
 import org.adamalang.extern.stripe.StripeMetrics;
 import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
-import org.adamalang.ops.CapacityAgent;
+import org.adamalang.ops.*;
 import org.adamalang.cli.commands.services.CaravanInit;
 import org.adamalang.cli.commands.services.CommonServiceInit;
 import org.adamalang.cli.commands.services.Role;
@@ -41,9 +41,6 @@ import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
-import org.adamalang.ops.CapacityMetrics;
-import org.adamalang.ops.DeploymentAgent;
-import org.adamalang.ops.DeploymentMetrics;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.heat.HeatTable;
@@ -134,28 +131,29 @@ public class Service {
   }
 
   public static void serviceBackend(Config config) throws Exception {
+    // create the common/shared service issues
     CommonServiceInit init = new CommonServiceInit(config, Role.Adama);
+    // create metrics
+    CoreMetrics coreMetrics = new CoreMetrics(init.metricsFactory);
+    DeploymentMetrics deploymentMetrics = new DeploymentMetrics(init.metricsFactory);
+    // pull config
     int coreThreads = config.get_int("service_thread_count", 8);
     String billingRootPath = config.get_string("billing_path", "billing");
-
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
+    ProxyDeploymentFactory factoryProxy = new ProxyDeploymentFactory(deploymentFactoryBase);
     FirstPartyServices.install(init.database);
-
     CaravanInit caravan = new CaravanInit(init, config);
-    final DataService data = caravan.service;
-
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
-    CoreMetrics coreMetrics = new CoreMetrics(init.metricsFactory);
-    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), data, TimeSource.REAL_TIME, coreThreads);
-    deploymentFactoryBase.attachDeliverer(service);
-
+    CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), caravan.service, TimeSource.REAL_TIME, coreThreads);
+    DeploymentAgent deployAgent = new DeploymentAgent(init.picker, init.database, deploymentMetrics, init.region, init.machine, deploymentFactoryBase, service);
     CapacityAgent capacityAgent = new CapacityAgent(new CapacityMetrics(init.metricsFactory), init.database, service, init.system, init.alive, service.shield);
+    deploymentFactoryBase.attachDeliverer(service);
+    // tell the proxy how to pull code on demand
+    factoryProxy.setAgent(deployAgent);
     init.makeClient(capacityAgent);
-
     init.engine.subscribe("adama", (hosts) -> {
       capacityAgent.deliverAdamaHosts(hosts);
     });
-
     init.engine.createLocalApplicationHeartbeat("adama", init.servicePort, init.monitoringPort, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
         capacityAgent.deliverMeteringRecords(bills);
@@ -163,10 +161,6 @@ public class Service {
         return true;
       });
     });
-
-    DeploymentMetrics deploymentMetrics = new DeploymentMetrics(init.metricsFactory);
-    DeploymentAgent deployAgent = new DeploymentAgent(init.database, deploymentMetrics, init.machine, deploymentFactoryBase, service);
-
     File billingRoot = new File(billingRootPath);
     billingRoot.mkdir();
     DiskMeteringBatchMaker billingBatchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot, 10 * 60000L);
@@ -178,7 +172,7 @@ public class Service {
     });
 
     // prime the host with spaces
-    deployAgent.accept("*");
+    deployAgent.optimisticScanAll();
 
     // list all the documents on this machine, and spin them up
     init.finder.list(init.machine, new Callback<List<Key>>() {

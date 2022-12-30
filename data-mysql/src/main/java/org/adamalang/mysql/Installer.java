@@ -22,18 +22,6 @@ public class Installer {
   public void install() throws Exception {
     String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + dataBase.databaseName + "`";
 
-    String createDeployedTableSQL = new StringBuilder() //
-        .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`deployed` (") //
-        .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
-        .append("  `space` VARCHAR(128) NOT NULL,") //
-        .append("  `target` VARCHAR(256) NOT NULL,") //
-        .append("  `hash` VARCHAR(256) NOT NULL,") //
-        .append("  `plan` LONGTEXT NOT NULL,") //
-        .append("  PRIMARY KEY (`id`))") //
-        .append(" ENGINE = InnoDB") //
-        .append(" DEFAULT CHARACTER SET = utf8mb4;") //
-        .toString();
-
     String createCapacityTableSQL = new StringBuilder() //
         .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`capacity` (") //
         .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
@@ -249,7 +237,6 @@ public class Installer {
     Connection connection = dataBase.pool.getConnection();
     try {
       DataBase.execute(connection, createDatabaseSQL);
-      DataBase.execute(connection, createDeployedTableSQL);
       DataBase.execute(connection, createCapacityTableSQL);
       DataBase.execute(connection, createDirectoryTableSQL);
       DataBase.execute(connection, createInitiationsTableSQL);
@@ -281,7 +268,6 @@ public class Installer {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`metering`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`bills`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`directory`;").toString());
-      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`deployed`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`capacity`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`hosts`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`secrets`;").toString());

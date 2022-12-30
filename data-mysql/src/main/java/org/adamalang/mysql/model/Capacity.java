@@ -11,7 +11,6 @@ package org.adamalang.mysql.model;
 
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.CapacityInstance;
-import org.adamalang.runtime.data.FinderService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -38,6 +37,17 @@ public class Capacity {
     });
   }
 
+  public static void removeAll(DataBase dataBase, String space) throws Exception {
+    dataBase.transactSimple((connection) -> {
+      String sql = "DELETE FROM `" + dataBase.databaseName + "`.`capacity` WHERE `space`=?";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, space);
+        statement.execute();
+      }
+      return null;
+    });
+  }
+
   public static void setOverride(DataBase dataBase, int id, boolean value) throws Exception {
     dataBase.transactSimple((connection) -> {
       DataBase.execute(connection, "UPDATE `" + dataBase.databaseName + "`.`capacity` SET `override`=" + (value ? "TRUE" : "FALSE") + " WHERE `id`=" + id);
@@ -49,13 +59,31 @@ public class Capacity {
   public static List<CapacityInstance> listAll(DataBase dataBase, String space) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `id`, `region`, `machine`, `override` FROM `" + dataBase.databaseName + "`.`capacity` WHERE `space`=? ORDER BY `region`, `machine`";
-      System.err.println(sql);
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<CapacityInstance> listing = new ArrayList<>();
           while (rs.next()) {
-            listing.add(new CapacityInstance(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4)));
+            listing.add(new CapacityInstance(rs.getInt(1), space, rs.getString(2), rs.getString(3), rs.getBoolean(4)));
+          }
+          return listing;
+        }
+      }
+    });
+  }
+
+  // list all the capacity for the given space
+  public static List<CapacityInstance> listAllOnMachine(DataBase dataBase, String region, String machine) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT `id`, `space`, `override` FROM `" + dataBase.databaseName + "`.`capacity` WHERE `region`=? AND `machine`=? ORDER BY `region`, `machine`";
+      System.err.println(sql);
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, region);
+        statement.setString(2, machine);
+        try (ResultSet rs = statement.executeQuery()) {
+          ArrayList<CapacityInstance> listing = new ArrayList<>();
+          while (rs.next()) {
+            listing.add(new CapacityInstance(rs.getInt(1), rs.getString(2), region, machine, rs.getBoolean(3)));
           }
           return listing;
         }
@@ -66,14 +94,14 @@ public class Capacity {
   // list all the capacity for the given space within the given region
   public static List<CapacityInstance> listRegion(DataBase dataBase, String space, String region) throws Exception {
     return dataBase.transactSimple((connection) -> {
-      String sql = "SELECT `id`,`region`, `machine`, `override` FROM `" + dataBase.databaseName + "`.`capacity` WHERE `space`=? AND `region`=? ORDER BY `region`, `machine`";
+      String sql = "SELECT `id`, `machine`, `override` FROM `" + dataBase.databaseName + "`.`capacity` WHERE `space`=? AND `region`=? ORDER BY `region`, `machine`";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
         statement.setString(2, region);
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<CapacityInstance> listing = new ArrayList<>();
           while (rs.next()) {
-            listing.add(new CapacityInstance(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4)));
+            listing.add(new CapacityInstance(rs.getInt(1), space, region, rs.getString(2), rs.getBoolean(3)));
           }
           return listing;
         }

@@ -12,8 +12,6 @@ package org.adamalang.overlord.roles;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.model.Deployments;
-import org.adamalang.mysql.data.Deployment;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.mysql.data.InternalDeploymentPlan;
 import org.adamalang.net.client.Client;
@@ -27,8 +25,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class CapacityManager {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CapacityManager.class);
+public class DeadCapacityManager {
+  /*
+  private static final Logger LOGGER = LoggerFactory.getLogger(DeadCapacityManager.class);
 
   public static void kickOffReturnHotTargetEvent(OverlordMetrics metrics, Client client, DataBase dataBase, ConcurrentCachedHttpHandler handler, HeatTable heatTable) {
     SimpleExecutor executor = SimpleExecutor.create("capacity-management");
@@ -145,4 +144,5 @@ public class CapacityManager {
       }
     }
   }
+  */
 }

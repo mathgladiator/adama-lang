@@ -9,9 +9,7 @@
  */
 package org.adamalang.net;
 
-import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
@@ -25,6 +23,7 @@ import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.mocks.NaughyHandler;
 import org.adamalang.net.mocks.StdErrLogger;
 import org.adamalang.net.server.Handler;
+import org.adamalang.net.server.LocalCapacityRequestor;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
 import org.adamalang.runtime.data.InMemoryDataService;
@@ -102,9 +101,14 @@ public class TestBed implements AutoCloseable {
     billingRoot.mkdir();
 
     this.batchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, billingRoot,  1800000L);
-    this.nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, (space) -> {
-      if (deploymentScans.incrementAndGet() == 3) {
-        throw new NullPointerException();
+    this.nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, new LocalCapacityRequestor() {
+      @Override
+      public void requestCodeDeployment(String space, Callback<Void> callback) {
+        if (deploymentScans.incrementAndGet() == 3) {
+          callback.failure(new ErrorCodeException(-13));
+          return;
+        }
+        callback.success(null);
       }
     }, meteringPubSub, batchMaker, port, 2);
     this.handle = null;

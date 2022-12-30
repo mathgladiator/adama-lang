@@ -28,6 +28,9 @@ import org.adamalang.extern.MockPostDocumentDelete;
 import org.adamalang.extern.SignalControl;
 import org.adamalang.extern.stripe.StripeConfig;
 import org.adamalang.multiregion.MultiRegionClient;
+import org.adamalang.mysql.model.*;
+import org.adamalang.net.client.routing.finder.MachinePicker;
+import org.adamalang.ops.*;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.AssetUploadBody;
@@ -40,22 +43,14 @@ import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.Installer;
-import org.adamalang.mysql.model.Deployments;
-import org.adamalang.mysql.model.Finder;
-import org.adamalang.mysql.model.Hosts;
-import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
-import org.adamalang.net.client.contracts.RoutingSubscriber;
+import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
-import org.adamalang.ops.CapacityAgent;
-import org.adamalang.ops.CapacityMetrics;
-import org.adamalang.ops.DeploymentAgent;
-import org.adamalang.ops.DeploymentMetrics;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.ManagedDataService;
 import org.adamalang.runtime.data.managed.Base;
@@ -119,16 +114,17 @@ public class TestFrontEnd implements AutoCloseable, Email {
     DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(Json.parseJsonObject(config))), new DataBaseMetrics(new NoOpMetricsFactory()));
     this.installer = new Installer(dataBase);
     this.installer.install();
+
     this.alive = new AtomicBoolean(true);
     MachineIdentity identity = MachineIdentity.fromFile("localhost.identity");
-    Spaces.createSpace(dataBase, 0, "ide");
+    int spaceId = Spaces.createSpace(dataBase, 0, "ide");
     {
       ObjectNode plan = Json.newJsonObject();
       plan.putObject("versions").put("file", "@static { create { return true; } }");
       plan.put("default", "file");
       plan.putArray("plan");
       String planJson = plan.toString();
-      Deployments.deploy(dataBase, "ide", identity.ip + ":" + port, "hash", planJson);
+      Spaces.setPlan(dataBase, spaceId, planJson, "hash");
     }
     this.caravanPath = File.createTempFile("ADAMATEST_", "caravan");
     caravanPath.delete();
@@ -186,11 +182,12 @@ public class TestFrontEnd implements AutoCloseable, Email {
     flusher.start();
 
     deploymentFactoryBase = new DeploymentFactoryBase();
+    ProxyDeploymentFactory proxyDeploymentFactory = new ProxyDeploymentFactory(deploymentFactoryBase);
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     coreService =
         new CoreService(
             new CoreMetrics(new NoOpMetricsFactory()),
-            deploymentFactoryBase, //
+            proxyDeploymentFactory, //
             meteringPubSub.publisher(), //
             dataService, //
             TimeSource.REAL_TIME,
@@ -198,20 +195,49 @@ public class TestFrontEnd implements AutoCloseable, Email {
     capacityAgent = new CapacityAgent(new CapacityMetrics(new NoOpMetricsFactory()), dataBase, coreService, caravanExecutor, alive, new ServiceShield());
     this.netBase = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity, 1, 2);
     this.clientExecutor = SimpleExecutor.create("disk");
-    this.deploymentAgent = new DeploymentAgent(dataBase, new DeploymentMetrics(new NoOpMetricsFactory()), identity.ip + ":" + port, deploymentFactoryBase, coreService);
+    this.deploymentAgent = new DeploymentAgent(this.clientExecutor, dataBase, new DeploymentMetrics(new NoOpMetricsFactory()), "test-region", identity.ip + ":" + port, deploymentFactoryBase, coreService);
+    proxyDeploymentFactory.setAgent(deploymentAgent);
     ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, deploymentAgent, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(),  1800000L), port, 2);
-    backendNexus.scanForDeployments.accept("ide");
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
     ClientConfig clientConfig = new ClientConfig();
     ClientMetrics clientMetrics =  new ClientMetrics(new NoOpMetricsFactory());
-    ClientRouter router = ClientRouter.FINDER(clientMetrics, finder, "test-region");
+    ClientRouter router = ClientRouter.FINDER(clientMetrics, finder, new MachinePicker() {
+      @Override
+      public void pickHost(Key key, Callback<String> callback) {
+        System.err.println("picking a host via fallback");
+        try {
+          Capacity.add(dataBase, key.space, "test-region", identity.ip + ":" + port);
+        } catch (Exception exx) {
+          exx.printStackTrace();
+        }
+        callback.success(identity.ip + ":" + port);
+      }
+    }, "test-region");
     Client client = new Client(netBase, clientConfig, clientMetrics, router, null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
 
+    // new fast path for routing table
     CountDownLatch waitForRouting = new CountDownLatch(1);
+    router.routerForDocuments.get(new Key("ide", "default"), new RoutingCallback() {
+      @Override
+      public void onRegion(String region) {
+      }
+
+      @Override
+      public void onMachine(String machine) {
+        waitForRouting.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        System.err.println("RouterForDocumentsFailed!");
+        ex.printStackTrace();
+      }
+    });
+    backendNexus.capacityRequestor.requestCodeDeployment("ide", Callback.DONT_CARE_VOID);
     do {
       System.err.println("Waiting for routing table to be built...");
-      router.engine.get(new Key("ide", "default"), new RoutingSubscriber() {
+      router.engine.get(new Key("ide", "default"), new RoutingCallback() {
         @Override
         public void onRegion(String region) {
         }

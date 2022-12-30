@@ -50,7 +50,8 @@ public class ClientMetrics {
   public final RequestResponseMonitor client_webput_found_machine;
   public final RequestResponseMonitor client_webdelete_found_machine;
 
-  public final Runnable client_failed_pick_host;
+  public final Runnable client_rxcache_fallback;
+  public final Runnable client_rxcache_found;
 
   public final ItemActionMonitor lcsm_connection_update;
   public final ItemActionMonitor lcsm_connection_send;
@@ -97,7 +98,8 @@ public class ClientMetrics {
     client_weboptions_found_machine = factory.makeRequestResponseMonitor("client_weboptions_found_machine");
     client_webput_found_machine = factory.makeRequestResponseMonitor("client_webput_found_machine");
     client_webdelete_found_machine = factory.makeRequestResponseMonitor("client_webdelete_found_machine");
-    client_failed_pick_host = factory.counter("client_failed_pick_host");
+    client_rxcache_fallback = factory.counter("client_rxcache_fallback");
+    client_rxcache_found = factory.counter("client_rxcache_found");
 
     lcsm_connection_update = factory.makeItemActionMonitor("lcsm_connection_update");
     lcsm_connection_send = factory.makeItemActionMonitor("lcsm_connection_send");

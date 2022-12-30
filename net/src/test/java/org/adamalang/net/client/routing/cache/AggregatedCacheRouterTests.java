@@ -11,7 +11,7 @@ package org.adamalang.net.client.routing.cache;
 
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.net.client.contracts.RoutingSubscriber;
+import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class AggregatedCacheRouterTests {
     });
     router.integrate("t2", Collections.singleton("space"));
     router.integrate("t3", Collections.singleton("space"));
-    router.get(new Key("space", "key1"), new RoutingSubscriber() {
+    router.get(new Key("space", "key1"), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
 
@@ -58,7 +58,7 @@ public class AggregatedCacheRouterTests {
 
       }
     });
-    router.get(new Key("space", "key2"), new RoutingSubscriber() {
+    router.get(new Key("space", "key2"), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
 
@@ -76,7 +76,7 @@ public class AggregatedCacheRouterTests {
 
       }
     });
-    router.get(new Key("space", "key5"), new RoutingSubscriber() {
+    router.get(new Key("space", "key5"), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
 
@@ -95,7 +95,7 @@ public class AggregatedCacheRouterTests {
       }
     });
     router.remove("t2");
-    router.get(new Key("space", "key1"), new RoutingSubscriber() {
+    router.get(new Key("space", "key1"), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
 

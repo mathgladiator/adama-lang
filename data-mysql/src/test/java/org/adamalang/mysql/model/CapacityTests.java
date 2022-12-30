@@ -57,6 +57,12 @@ public class CapacityTests {
         Assert.assertEquals("machine1", capacities.get(0).machine);
         Assert.assertEquals("machine2", capacities.get(1).machine);
 
+        capacities = Capacity.listAllOnMachine(dataBase, "region1", "machine1");
+        Assert.assertEquals(1, capacities.size());
+        Assert.assertEquals("space", capacities.get(0).space);
+        Assert.assertEquals("region1", capacities.get(0).region);
+        Assert.assertEquals("machine1", capacities.get(0).machine);
+
         Assert.assertEquals(x, capacities.get(0).id);
         Assert.assertTrue(capacities.get(0).override);
 
@@ -66,6 +72,12 @@ public class CapacityTests {
         Assert.assertEquals(1, capacities.size());
         Assert.assertEquals("region1", capacities.get(0).region);
         Assert.assertEquals("machine1", capacities.get(0).machine);
+
+        Capacity.removeAll(dataBase, "space");
+
+        capacities = Capacity.listRegion(dataBase, "space", "region1");
+        Assert.assertEquals(0, capacities.size());
+
 
       } finally {
         installer.uninstall();

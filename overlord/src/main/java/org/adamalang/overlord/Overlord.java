@@ -49,7 +49,7 @@ public class Overlord {
     GarbageCollector.kickOff(metrics, dataBase, lister, cloud, alive);
 
     // kick off capacity management will will add/remove capacity per space
-    CapacityManager.kickOffReturnHotTargetEvent(metrics, client, dataBase, handler, heatTable);
+    // DeadCapacityManager.kickOffReturnHotTargetEvent(metrics, client, dataBase, handler, heatTable);
 
     // start aggregating bills from hosts and write them to database
     MeteringAggregator.kickOff(metrics, client, dataBase, handler);

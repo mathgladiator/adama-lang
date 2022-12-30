@@ -7,11 +7,12 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.net.client.routing;
+package org.adamalang.net.server;
 
-import org.adamalang.net.client.contracts.RoutingCallback;
-import org.adamalang.runtime.data.Key;
+import org.adamalang.common.Callback;
 
-public interface Router {
-  public void get(Key key, RoutingCallback callback);
+/** indicate an async request to deploy a space locally */
+public interface LocalCapacityRequestor {
+
+  public void requestCodeDeployment(String space, Callback<Void> callback);
 }

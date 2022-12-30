@@ -481,7 +481,7 @@ public class RootHandlerImpl implements RootHandler {
         // Change the master plan
         Spaces.setPlan(nexus.database, request.policy.id, planJson, hash);
         // iterate the targets with this space loaded
-        nexus.adama.deploy(request.space, hash, planJson);
+        nexus.adama.deploy(request.space);
         nexus.adama.waitForCapacity(request.space, 30000, (found) -> {
           if (found) {
             responder.complete();
@@ -507,8 +507,7 @@ public class RootHandlerImpl implements RootHandler {
         }
         Spaces.changePrimaryOwner(nexus.database, request.policy.id, request.policy.owner, 0);
         Domains.deleteSpace(nexus.database, request.space);
-        // remove all machines handling this
-        Deployments.undeployAll(nexus.database, request.space);
+        Capacity.removeAll(nexus.database, request.space);
         responder.complete();
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NO_PERMISSION));
