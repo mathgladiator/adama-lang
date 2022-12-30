@@ -11,6 +11,7 @@ package org.adamalang.overlord.roles;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.UnbilledResources;
 import org.adamalang.mysql.model.*;
@@ -49,20 +50,20 @@ public class GlobalHourlyAccountant {
     return LocalDateTime.of(year, month, day, hour, 0);
   }
 
-  public static void kickOff(OverlordMetrics metrics, Client client, DataBase dataBase, ConcurrentCachedHttpHandler handler) throws Exception {
+  public static void kickOff(OverlordMetrics metrics, MultiRegionClient client, DataBase dataBase, ConcurrentCachedHttpHandler handler) throws Exception {
     new HourlyAccountantTask(metrics, client, dataBase, handler);
   }
 
   public static class HourlyAccountantTask extends NamedRunnable {
     private final OverlordMetrics metrics;
     private final SimpleExecutor executor;
-    private final Client client;
+    private final MultiRegionClient client;
     private final DataBase dataBase;
     private final FixedHtmlStringLoggerTable accountantTable;
     private final ConcurrentCachedHttpHandler handler;
     private int billingHourAt;
 
-    public HourlyAccountantTask(OverlordMetrics metrics, Client client, DataBase dataBase, ConcurrentCachedHttpHandler handler) throws Exception {
+    public HourlyAccountantTask(OverlordMetrics metrics, MultiRegionClient client, DataBase dataBase, ConcurrentCachedHttpHandler handler) throws Exception {
       super("hourly-accountant");
       this.metrics = metrics;
       this.executor = SimpleExecutor.create("hourly-accountant-executor");

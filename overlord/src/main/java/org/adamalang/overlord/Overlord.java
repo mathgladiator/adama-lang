@@ -12,6 +12,7 @@ package org.adamalang.overlord;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.net.client.Client;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
@@ -23,30 +24,34 @@ import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Overlord {
-  // TODO: convert Client to multi-region client
-  public static HttpHandler execute(ConcurrentCachedHttpHandler handler, Client client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath, ColdAssetSystem lister, Cloud cloud, AtomicBoolean alive) throws Exception {
+  public static HttpHandler execute(ConcurrentCachedHttpHandler handler, boolean isGlobalOverlord, Client localClient, MultiRegionClient client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath, ColdAssetSystem lister, Cloud cloud, AtomicBoolean alive) throws Exception {
     // the overlord has metrics
     OverlordMetrics metrics = new OverlordMetrics(metricsFactory);
 
     // start producing the prometheus targets.json from the gossip engine
     PrometheusTargetMaker.kickOff(metrics, engine, targetsDestination, handler);
 
-    GlobalSpaceDeleteBot.kickOff(metrics, dataBase, client, alive);
+    if (isGlobalOverlord) {
+      // delete things
+      GlobalSpaceDeleteBot.kickOff(metrics, dataBase, client, alive);
+
+      // kick off the garbage collector to clean up documents
+      GlobalGarbageCollector.kickOff(metrics, dataBase, lister, cloud, alive);
+
+      // start doing the accounting work
+      GlobalHourlyAccountant.kickOff(metrics, client, dataBase, handler);
+    }
 
     // detect dead things
     DeadDetector.kickOff(metrics, dataBase, alive);
 
-    // kick off the garbage collector to clean up documents
-    GlobalGarbageCollector.kickOff(metrics, dataBase, lister, cloud, alive);
 
     // start aggregating bills from hosts and write them to database
-    MeteringAggregator.kickOff(metrics, client, dataBase, handler);
+    MeteringAggregator.kickOff(metrics, localClient, dataBase, handler);
 
     // make a table of a dump of all gossip
     GossipDumper.kickOff(metrics, engine, handler);
 
-    // start doing the accounting work
-    GlobalHourlyAccountant.kickOff(metrics, client, dataBase, handler);
 
     // build the index
     StringBuilder indexHtmlBuilder = new StringBuilder();

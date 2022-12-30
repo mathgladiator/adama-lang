@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
+import org.adamalang.runtime.sys.ServiceHeatEstimator;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -83,6 +84,22 @@ public class Config {
       return defaultValue;
     }
     return node.intValue();
+  }
+
+  public boolean get_bool(String field, boolean defaultValue) {
+    JsonNode node = read().get(field);
+    if (node == null || node.isNull() || !node.isBoolean()) {
+      return defaultValue;
+    }
+    return node.booleanValue();
+  }
+
+  public ServiceHeatEstimator.HeatVector get_heat(String suffix, int cpu_m, int messages, int mem_mb, int connections) {
+    return new ServiceHeatEstimator.HeatVector(
+        get_int(suffix + "_cpu_m", cpu_m) * 1000L * 1000L,
+        get_int(suffix + "_messages", messages),
+        get_int(suffix + "_mem_mb", mem_mb) * 1024L * 1024,
+        get_int(suffix + "_connections", connections));
   }
 
   public ObjectNode get_or_create_child(String field) {

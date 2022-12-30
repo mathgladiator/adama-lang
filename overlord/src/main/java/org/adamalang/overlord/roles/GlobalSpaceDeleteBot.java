@@ -14,6 +14,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.DeletedSpace;
 import org.adamalang.mysql.data.DocumentIndex;
@@ -21,7 +22,6 @@ import org.adamalang.mysql.model.Domains;
 import org.adamalang.mysql.model.FinderOperations;
 import org.adamalang.mysql.model.Sentinel;
 import org.adamalang.mysql.model.Spaces;
-import org.adamalang.net.client.Client;
 import org.adamalang.overlord.OverlordMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +36,9 @@ public class GlobalSpaceDeleteBot {
   private static Logger LOG = LoggerFactory.getLogger(GlobalSpaceDeleteBot.class);
   private final OverlordMetrics metrics;
   private final DataBase dataBase;
-  private final Client client; // TODO: convert to multi-region client
+  private final MultiRegionClient client; // TODO: convert to multi-region client
 
-  private GlobalSpaceDeleteBot(OverlordMetrics metrics, DataBase dataBase, Client client) {
+  private GlobalSpaceDeleteBot(OverlordMetrics metrics, DataBase dataBase, MultiRegionClient client) {
     this.metrics = metrics;
     this.dataBase = dataBase;
     this.client = client;
@@ -93,7 +93,7 @@ public class GlobalSpaceDeleteBot {
     }
   }
 
-  public static void kickOff(OverlordMetrics metrics, DataBase dataBase, Client client, AtomicBoolean alive) {
+  public static void kickOff(OverlordMetrics metrics, DataBase dataBase, MultiRegionClient client, AtomicBoolean alive) {
     SimpleExecutor executor = SimpleExecutor.create("space-delete-bot");
     GlobalSpaceDeleteBot bot = new GlobalSpaceDeleteBot(metrics, dataBase, client);
     executor.schedule(new NamedRunnable("space-delete-bot") {

@@ -24,6 +24,7 @@ import org.adamalang.extern.aws.AWSMetrics;
 import org.adamalang.extern.aws.S3;
 import org.adamalang.extern.aws.SQS;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
+import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
@@ -177,6 +178,10 @@ public class CommonServiceInit {
       } catch (Exception ex) {
       }
     })));
+  }
+
+  public MultiRegionClient makeGlobalClient(Client client) {
+    return new MultiRegionClient(database, client, region, finder);
   }
 
   public Client makeClient(HeatMonitor heat) {

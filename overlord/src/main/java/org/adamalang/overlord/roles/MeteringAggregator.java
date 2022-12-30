@@ -11,6 +11,7 @@ package org.adamalang.overlord.roles;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Metering;
 import org.adamalang.mysql.model.Sentinel;

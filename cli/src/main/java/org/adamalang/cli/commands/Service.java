@@ -148,9 +148,8 @@ public class Service {
     CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), caravan.service, TimeSource.REAL_TIME, coreThreads);
     DeploymentAgent deployAgent = new DeploymentAgent(init.picker, init.database, deploymentMetrics, init.region, init.machine, deploymentFactoryBase, service);
 
-    // TODO: get from config (and think about how to make dynamic)
-    ServiceHeatEstimator.HeatVector low = new ServiceHeatEstimator.HeatVector(10000, 100, 1000*1000, 100);
-    ServiceHeatEstimator.HeatVector hot = new ServiceHeatEstimator.HeatVector(1000L * 1000L * 1000L, 100000, 1000*1000*500L, 250L);
+    ServiceHeatEstimator.HeatVector low = config.get_heat("heat_low", 1, 100, 1, 100);
+    ServiceHeatEstimator.HeatVector hot = config.get_heat("heat_low", 1000, 100000, 250, 2000);
     ServiceHeatEstimator estimator = new ServiceHeatEstimator(low, hot);
     meteringPubSub.subscribe(estimator);
 
@@ -232,7 +231,12 @@ public class Service {
     ConcurrentCachedHttpHandler overlordHandler = new ConcurrentCachedHttpHandler();
     HeatTable heatTable = new HeatTable(overlordHandler);
     Client client = init.makeClient(heatTable::onSample);
-    HttpHandler handler = Overlord.execute(overlordHandler, client, init.engine, init.metricsFactory, targetsPath, init.database, scanPath, init.s3, init.s3, init.alive);
+    boolean isGlobalOverlord = config.get_string("overlord-region-global", null).equals(init.region);
+    if (isGlobalOverlord) {
+      System.err.println("[Global Overlord Established]");
+    }
+    MultiRegionClient adama = init.makeGlobalClient(client);
+    HttpHandler handler = Overlord.execute(overlordHandler, isGlobalOverlord, client, adama, init.engine, init.metricsFactory, targetsPath, init.database, scanPath, init.s3, init.s3, init.alive);
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
     final var runnable = new ServiceRunnable(init.webConfig, new WebMetrics(init.metricsFactory), serviceBase, init.makeCertificateFinder(), () -> {});
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
@@ -261,7 +265,7 @@ public class Service {
     Email email = new SES(init.webBase, init.awsConfig, init.awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
-    MultiRegionClient adama = new MultiRegionClient(init.database, client, init.region, init.finder);
+    MultiRegionClient adama = init.makeGlobalClient(client);
     AssetSystemImpl assets = new AssetSystemImpl(init.database, adama, init.s3);
     StripeConfig stripe = new StripeConfig(new ConfigObject(config.get_or_create_child("stripe")));
     ArrayList<String> superKeys = config.get_str_list("super_public_keys");
