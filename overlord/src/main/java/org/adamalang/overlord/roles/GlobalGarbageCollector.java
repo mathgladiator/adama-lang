@@ -43,6 +43,7 @@ public class GlobalGarbageCollector {
       @Override
       public void execute() throws Exception {
         if (alive.get()) {
+          LOGGER.error("garbage-man-start");
           try {
             ArrayList<GCTask> tasks = FinderOperations.produceGCTasks(dataBase);
             CountDownLatch allTasksDone = new CountDownLatch(tasks.size());
@@ -75,13 +76,16 @@ public class GlobalGarbageCollector {
                               }
                             }
                             if (kill.size() == 0) {
+                              LOGGER.error("task-with-no-assets");
                               FinderOperations.lowerTask(dataBase, task);
                             } else {
                               if (FinderOperations.validateTask(dataBase, task)) {
                                 for (String toKill : kill) {
+                                  LOGGER.error("delete-" + key.space + "/" + key.key + "/" + toKill);
                                   lister.deleteAsset(key, toKill, Callback.DONT_CARE_VOID);
                                 }
                               }
+                              LOGGER.error("task-with-assets");
                               FinderOperations.lowerTask(dataBase, task);
                             }
                           } catch (Exception ex) {
