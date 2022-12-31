@@ -72,6 +72,10 @@ public interface RootHandler {
 
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder);
 
+  public void handle(Session session, MessageDirectSendRequest request, SeqResponder responder);
+
+  public void handle(Session session, MessageDirectSendOnceRequest request, SeqResponder responder);
+
   public DocumentStreamHandler handle(Session session, ConnectionCreateRequest request, DataResponder responder);
 
   public void handle(Session session, ConfigureMakeOrGetAssetKeyRequest request, AssetKeyResponder responder);

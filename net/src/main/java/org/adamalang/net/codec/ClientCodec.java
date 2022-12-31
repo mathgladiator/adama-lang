@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ClientMessage.DirectSend;
 import org.adamalang.net.codec.ClientMessage.ExecuteQuery;
 import org.adamalang.net.codec.ClientMessage.WebDelete;
 import org.adamalang.net.codec.ClientMessage.WebOptions;
@@ -46,6 +47,8 @@ import org.adamalang.net.codec.ClientMessage.PingRequest;
 public class ClientCodec {
 
   public static abstract class StreamServer implements ByteStream {
+    public abstract void handle(DirectSend payload);
+
     public abstract void handle(ExecuteQuery payload);
 
     public abstract void handle(WebDelete payload);
@@ -112,6 +115,9 @@ public class ClientCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
+        case 17345:
+          handle(readBody_17345(buf, new DirectSend()));
+          return;
         case 1999:
           handle(readBody_1999(buf, new ExecuteQuery()));
           return;
@@ -198,6 +204,7 @@ public class ClientCodec {
   }
 
   public static interface HandlerServer {
+    public void handle(DirectSend payload);
     public void handle(ExecuteQuery payload);
     public void handle(WebDelete payload);
     public void handle(WebOptions payload);
@@ -229,6 +236,9 @@ public class ClientCodec {
 
   public static void route(ByteBuf buf, HandlerServer handler) {
     switch (buf.readIntLE()) {
+      case 17345:
+        handler.handle(readBody_17345(buf, new DirectSend()));
+        return;
       case 1999:
         handler.handle(readBody_1999(buf, new ExecuteQuery()));
         return;
@@ -383,6 +393,28 @@ public class ClientCodec {
     }
   }
 
+
+  public static DirectSend read_DirectSend(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 17345:
+        return readBody_17345(buf, new DirectSend());
+    }
+    return null;
+  }
+
+
+  private static DirectSend readBody_17345(ByteBuf buf, DirectSend o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    o.agent = Helper.readString(buf);
+    o.authority = Helper.readString(buf);
+    o.origin = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
+    o.marker = Helper.readString(buf);
+    o.channel = Helper.readString(buf);
+    o.message = Helper.readString(buf);
+    return o;
+  }
 
   public static ExecuteQuery read_ExecuteQuery(ByteBuf buf) {
     switch (buf.readIntLE()) {
@@ -870,6 +902,23 @@ public class ClientCodec {
 
   private static PingRequest readBody_24321(ByteBuf buf, PingRequest o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, DirectSend o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(17345);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
+    Helper.writeString(buf, o.agent);;
+    Helper.writeString(buf, o.authority);;
+    Helper.writeString(buf, o.origin);;
+    Helper.writeString(buf, o.ip);;
+    Helper.writeString(buf, o.marker);;
+    Helper.writeString(buf, o.channel);;
+    Helper.writeString(buf, o.message);;
   }
 
   public static void write(ByteBuf buf, ExecuteQuery o) {

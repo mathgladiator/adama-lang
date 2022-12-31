@@ -153,6 +153,10 @@ public class WebClient implements WebLifecycle {
     }
   };
 
+  public void directSend(String identity, String space, String key, String marker, String channel, String message, Callback<Integer> callback) {
+
+  }
+
   public AdamaStream connect(String identity, String space, String key, String viewerState, SimpleEvents events) {
     WebStream webStream = new WebStream();
     executor.execute(new NamedRunnable("web-client-connect") {

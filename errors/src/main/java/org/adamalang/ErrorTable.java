@@ -638,6 +638,10 @@ public class ErrorTable {
     descriptions.put(717952, "no description of error (yet)");
     names.put(789668, "ADAMA_NET_DELETE_FOUND_REGION_RATHER_THAN_MACHINE");
     descriptions.put(789668, "no description of error (yet)");
+    names.put(750799, "ADAMA_NET_DIRECTSEND_FOUND_REGION_RATHER_THAN_MACHINE");
+    descriptions.put(750799, "no description of error (yet)");
+    names.put(752841, "ADAMA_NET_REFLECT_FOUND_REGION_RATHER_THAN_MACHINE");
+    descriptions.put(752841, "no description of error (yet)");
     names.put(797824, "ADAMA_NET_WEBGET_FOUND_REGION_RATHER_THAN_MACHINE");
     descriptions.put(797824, "no description of error (yet)");
     names.put(773309, "ADAMA_NET_WEBOPTIONS_FOUND_REGION_RATHER_THAN_MACHINE");
@@ -648,6 +652,10 @@ public class ErrorTable {
     descriptions.put(787645, "no description of error (yet)");
     names.put(737336, "ADAMA_NET_CREATE_REJECTED");
     descriptions.put(737336, "no description of error (yet)");
+    names.put(787656, "ADAMA_NET_DIRECTSEND_TIMEOUT");
+    descriptions.put(787656, "no description of error (yet)");
+    names.put(729294, "ADAMA_NET_DIRECTSEND_REJECTED");
+    descriptions.put(729294, "no description of error (yet)");
     names.put(716947, "ADAMA_NET_DELETE_TIMEOUT");
     descriptions.put(716947, "no description of error (yet)");
     names.put(798890, "ADAMA_NET_DELETE_REJECTED");

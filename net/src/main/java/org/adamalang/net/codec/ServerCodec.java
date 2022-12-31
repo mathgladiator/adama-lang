@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ServerMessage.DirectSendResponse;
 import org.adamalang.net.codec.ServerMessage.QueryResult;
 import org.adamalang.net.codec.ServerMessage.WebResponseNet;
 import org.adamalang.net.codec.ServerMessage.ProxyLocalDataChange;
@@ -325,6 +326,41 @@ public class ServerCodec {
   }
 
 
+  public static abstract class StreamDirect implements ByteStream {
+    public abstract void handle(DirectSendResponse payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 1783:
+          handle(readBody_1783(buf, new DirectSendResponse()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerDirect {
+    public void handle(DirectSendResponse payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerDirect handler) {
+    switch (buf.readIntLE()) {
+      case 1783:
+        handler.handle(readBody_1783(buf, new DirectSendResponse()));
+        return;
+    }
+  }
+
+
   public static abstract class StreamProxyIntResponse implements ByteStream {
     public abstract void handle(ProxyIntResponse payload);
 
@@ -543,6 +579,20 @@ public class ServerCodec {
     }
   }
 
+
+  public static DirectSendResponse read_DirectSendResponse(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 1783:
+        return readBody_1783(buf, new DirectSendResponse());
+    }
+    return null;
+  }
+
+
+  private static DirectSendResponse readBody_1783(ByteBuf buf, DirectSendResponse o) {
+    o.seq = buf.readIntLE();
+    return o;
+  }
 
   public static QueryResult read_QueryResult(ByteBuf buf) {
     switch (buf.readIntLE()) {
@@ -818,6 +868,15 @@ public class ServerCodec {
 
   private static PingResponse readBody_24322(ByteBuf buf, PingResponse o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, DirectSendResponse o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(1783);
+    buf.writeIntLE(o.seq);
   }
 
   public static void write(ByteBuf buf, QueryResult o) {

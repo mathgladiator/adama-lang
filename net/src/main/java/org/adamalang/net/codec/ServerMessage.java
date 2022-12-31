@@ -182,4 +182,11 @@ public class ServerMessage {
     @FieldOrder(1)
     public String result;
   }
+
+  @TypeId(1783)
+  @Flow("Direct")
+  public static class DirectSendResponse {
+    @FieldOrder(1)
+    public int seq;
+  }
 }

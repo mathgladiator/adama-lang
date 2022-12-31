@@ -15,6 +15,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.contracts.Remote;
+import org.adamalang.net.client.mocks.SimpleIntCallback;
 import org.adamalang.net.mocks.*;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.junit.Assert;
@@ -71,7 +72,7 @@ public class InstanceClientTests {
             "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 1000; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble zpx = @viewer.z + x;")) {
       bed.startServer();
       MockEvents events = new MockEvents();
-      Runnable happy = events.latchAt(5);
+      Runnable happy = events.latchAt(6);
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
@@ -79,6 +80,9 @@ public class InstanceClientTests {
         client.connect("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", null, events);
         Remote remote = events.getRemote();
         remote.update("{\"z\":100}");
+        SimpleIntCallback sic = new SimpleIntCallback();
+        client.directSend("127.0.0.1", "origin", "overlord", "overlord", "space", "1", null, "foo", "{\"z\":1000}", sic);
+        sic.assertSuccess(6);
         remote.send("foo", "marker", "{\"z\":\"100\"}", new Callback<Integer>() {
           @Override
           public void success(Integer value) {
@@ -94,8 +98,9 @@ public class InstanceClientTests {
         events.assertWrite(0, "CONNECTED");
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":1000,\"zpx\":1000},\"seq\":4}");
         events.assertWrite(2, "DELTA:{\"data\":{\"zpx\":1100},\"seq\":5}");
-        events.assertWrite(3, "DELTA:{\"data\":{\"x\":1100,\"zpx\":1200},\"seq\":6}");
-        events.assertWrite(4, "DISCONNECTED");
+        events.assertWrite(3, "DELTA:{\"data\":{\"x\":2000,\"zpx\":2100},\"seq\":6}");
+        events.assertWrite(4, "DELTA:{\"data\":{\"x\":2100,\"zpx\":2200},\"seq\":7}");
+        events.assertWrite(5, "DISCONNECTED");
       }
     }
   }

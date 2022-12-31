@@ -849,6 +849,30 @@
         </documentation>
     </method>
 
+    <method name="message/direct-send" responder="seq">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <parameter name="viewer-state"/>
+        <parameter name="channel"/>
+        <parameter name="message"/>
+        <documentation>
+            Send a message to a document without a connection
+        </documentation>
+    </method>
+
+    <method name="message/direct-send-once" responder="seq">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <parameter name="dedupe"/>
+        <parameter name="channel"/>
+        <parameter name="message"/>
+        <documentation>
+            Send a message to a document without a connection
+        </documentation>
+    </method>
+
     <method name="connection/create" responder="data" create="document-stream">
         <parameter name="identity"/>
         <parameter name="space"/>

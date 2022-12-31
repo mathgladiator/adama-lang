@@ -179,6 +179,11 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
+  public void handle(ClientMessage.DirectSend payload) {
+    real.failure(new ErrorCodeException(-40100));
+  }
+
+  @Override
   public void handle(ClientMessage.ProxyInitialize payload) {
     real.failure(new ErrorCodeException(-1000));
   }

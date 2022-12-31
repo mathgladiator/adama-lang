@@ -31,6 +31,7 @@ import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
 import org.adamalang.runtime.remote.*;
+import org.adamalang.runtime.stdlib.LibPrincipal;
 import org.adamalang.runtime.sys.web.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
@@ -1481,7 +1482,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       __monitor.push("TransactionSend");
     }
     try {
-      // they must be connected
+      // they must be connected OR document allows blind/direct sends OR be overlord
       if (!__clients.containsKey(context.who) && !factory.canSendWhileDisconnected(context)) {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
       }

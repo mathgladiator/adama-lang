@@ -56,8 +56,8 @@ public class InstanceClient implements AutoCloseable {
   private final AtomicBoolean alive;
   private final ItemQueue<ChannelClient> client;
   private final ClientConfig config;
-  private int backoff;
   private final ProxyDataService proxy;
+  private int backoff;
 
   public InstanceClient(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor, ExceptionLogger logger) throws Exception {
     this.base = base;
@@ -214,19 +214,6 @@ public class InstanceClient implements AutoCloseable {
     return success.get();
   }
 
-  private void commonWebReturn(ServerMessage.WebResponseNet payload, Callback<WebResponse> callback) {
-    WebResponse response = new WebResponse();
-    response.body = payload.body;
-    response.contentType = payload.contentType;
-    if (payload.assetId != null) {
-      response.asset = new NtAsset(payload.assetId, payload.assetName, payload.contentType, payload.assetSize, payload.assetMD5, payload.assetSHA384);
-    }
-    response.cors = payload.cors;
-    response.cache_ttl_seconds = payload.cache_ttl_seconds;
-    response.asset_transform = payload.asset_transform;
-    callback.success(response);
-  }
-
   public void webGet(String space, String key, WebGet request, Callback<WebResponse> callback) {
     executor.execute(new NamedRunnable("execute-web-get") {
       @Override
@@ -241,7 +228,8 @@ public class InstanceClient implements AutoCloseable {
               }
 
               @Override
-              public void completed() {}
+              public void completed() {
+              }
 
               @Override
               public void error(int errorCode) {
@@ -283,6 +271,19 @@ public class InstanceClient implements AutoCloseable {
     });
   }
 
+  private void commonWebReturn(ServerMessage.WebResponseNet payload, Callback<WebResponse> callback) {
+    WebResponse response = new WebResponse();
+    response.body = payload.body;
+    response.contentType = payload.contentType;
+    if (payload.assetId != null) {
+      response.asset = new NtAsset(payload.assetId, payload.assetName, payload.contentType, payload.assetSize, payload.assetMD5, payload.assetSHA384);
+    }
+    response.cors = payload.cors;
+    response.cache_ttl_seconds = payload.cache_ttl_seconds;
+    response.asset_transform = payload.asset_transform;
+    callback.success(response);
+  }
+
   public void webOptions(String space, String key, WebGet request, Callback<WebResponse> callback) {
     executor.execute(new NamedRunnable("execute-web-get") {
       @Override
@@ -297,7 +298,8 @@ public class InstanceClient implements AutoCloseable {
               }
 
               @Override
-              public void completed() {}
+              public void completed() {
+              }
 
               @Override
               public void error(int errorCode) {
@@ -353,7 +355,8 @@ public class InstanceClient implements AutoCloseable {
               }
 
               @Override
-              public void completed() {}
+              public void completed() {
+              }
 
               @Override
               public void error(int errorCode) {
@@ -411,7 +414,8 @@ public class InstanceClient implements AutoCloseable {
               }
 
               @Override
-              public void completed() {}
+              public void completed() {
+              }
 
               @Override
               public void error(int errorCode) {
@@ -453,6 +457,57 @@ public class InstanceClient implements AutoCloseable {
     });
   }
 
+  public void directSend(String ip, String origin, String agent, String authority, String space, String key, String marker, String channel, String message, Callback<Integer> callbackRaw) {
+    Callback<Integer> callback = metrics.client_directsend_cb.wrap(callbackRaw);
+    executor.execute(new NamedRunnable("execute-direct-send") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_DIRECTSEND_TIMEOUT, ErrorCodes.ADAMA_NET_DIRECTSEND_REJECTED, metrics.client_directsend.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamDirect() {
+              @Override
+              public void handle(ServerMessage.DirectSendResponse payload) {
+                callback.success(payload.seq);
+              }
+
+              @Override
+              public void completed() {
+
+              }
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new CallbackByteStreamWriter<>(callback) {
+              @Override
+              public void write(ByteStream stream) {
+                ByteBuf toWrite = stream.create(agent.length() + authority.length() + space.length() + key.length() + (marker != null ? marker.length() : 0) + message.length() + channel.length() + origin.length() + 40);
+                ClientMessage.DirectSend create = new ClientMessage.DirectSend();
+                create.origin = origin;
+                create.agent = agent;
+                create.authority = authority;
+                create.space = space;
+                create.key = key;
+                create.marker = marker;
+                create.channel = channel;
+                create.message = message;
+                create.ip = ip;
+                ClientCodec.write(toWrite, create);
+                stream.next(toWrite);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
 
   /** create a document */
   public void create(String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callbackRaw) {
@@ -672,7 +727,7 @@ public class InstanceClient implements AutoCloseable {
     connectMessage.space = space;
     connectMessage.key = key;
     connectMessage.viewerState = viewerState;
-    connectMessage.assetKey = assetKey;;
+    connectMessage.assetKey = assetKey;
     executor.execute(new NamedRunnable("document-exchange") {
       @Override
       public void execute() throws Exception {

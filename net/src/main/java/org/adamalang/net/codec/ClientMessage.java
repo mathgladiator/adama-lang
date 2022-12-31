@@ -421,4 +421,27 @@ public class ClientMessage {
     @FieldOrder(1)
     public Header[] headers;
   }
+
+  @TypeId(17345)
+  @Flow("Server")
+  public static class DirectSend {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+    @FieldOrder(3)
+    public String agent;
+    @FieldOrder(4)
+    public String authority;
+    @FieldOrder(5)
+    public String origin;
+    @FieldOrder(6)
+    public String ip;
+    @FieldOrder(7)
+    public String marker;
+    @FieldOrder(8)
+    public String channel;
+    @FieldOrder(9)
+    public String message;
+  }
 }

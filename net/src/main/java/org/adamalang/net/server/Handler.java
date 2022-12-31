@@ -566,6 +566,27 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   }
 
   @Override
+  public void handle(ClientMessage.DirectSend payload) {
+    CoreRequestContext context = new CoreRequestContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
+    nexus.service.directSend(context, new Key(payload.space, payload.key), payload.marker, payload.channel, payload.message, new Callback<>() {
+      @Override
+      public void success(Integer seq) {
+        ByteBuf buf = upstream.create(24);
+        ServerMessage.DirectSendResponse response = new ServerMessage.DirectSendResponse();
+        response.seq = seq;
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
+  }
+
+  @Override
   public void handle(ClientMessage.DeleteRequest payload) {
     CoreRequestContext context = new CoreRequestContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
     nexus.service.delete(context, new Key(payload.space, payload.key),  nexus.metrics.server_delete.wrap(new Callback<Void>() {

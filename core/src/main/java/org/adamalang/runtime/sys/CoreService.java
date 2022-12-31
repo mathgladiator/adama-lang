@@ -154,7 +154,6 @@ public class CoreService implements Deliverer, Queryable {
   }
 
   private void loadInternal(Key key, Callback<DurableLivingDocument> callback) {
-
     // bind to the thread
     int threadId = key.hashCode() % bases.length;
     DocumentThreadBase base = bases[threadId];
@@ -650,6 +649,20 @@ public class CoreService implements Deliverer, Queryable {
       @Override
       public void failure(ErrorCodeException ex) {
         callback.failure(ex);
+      }
+    });
+  }
+
+  public void directSend(CoreRequestContext context, Key key, String marker, String channel, String message, Callback<Integer> result) {
+    load(key, new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        document.send(context, marker, channel, message, result);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        result.failure(ex);
       }
     });
   }

@@ -634,6 +634,36 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
+  public void handle(Session session, MessageDirectSendRequest request, SeqResponder responder) {
+    nexus.adama.directSend(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, null, request.channel, request.message.toString(), new Callback<Integer>() {
+      @Override
+      public void success(Integer seq) {
+        responder.complete(seq);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
+  @Override
+  public void handle(Session session, MessageDirectSendOnceRequest request, SeqResponder responder) {
+    nexus.adama.directSend(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.dedupe, request.channel, request.message.toString(), new Callback<Integer>() {
+      @Override
+      public void success(Integer seq) {
+        responder.complete(seq);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
+  @Override
   public DocumentStreamHandler handle(Session session, ConnectionCreateRequest connect, DataResponder responder) {
     return new DocumentStreamHandler() {
       private AdamaStream connection;

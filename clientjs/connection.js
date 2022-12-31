@@ -531,6 +531,24 @@ class WebSocketAdamaConnection {
       request: {"method":"document/list", "id":parId, "identity": identity, "space": space, "marker": marker, "limit": limit}
     });
   }
+  MessageDirectSend(identity, space, key, viewerState, channel, message, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"message/direct-send", "id":parId, "identity": identity, "space": space, "key": key, "viewer-state": viewerState, "channel": channel, "message": message}
+    });
+  }
+  MessageDirectSendOnce(identity, space, key, dedupe, channel, message, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"message/direct-send-once", "id":parId, "identity": identity, "space": space, "key": key, "dedupe": dedupe, "channel": channel, "message": message}
+    });
+  }
   ConnectionCreate(identity, space, key, viewerState, responder) {
     var self = this;
     var parId = self.__id();

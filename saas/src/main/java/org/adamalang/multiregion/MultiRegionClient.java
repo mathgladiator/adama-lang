@@ -65,15 +65,77 @@ public class MultiRegionClient {
   }
 
   public void reflect(String space, String key, Callback<String> callback) {
-    local.reflect(space, key, callback);
+    finder.find(new Key(space, key), new Callback<>() {
+      @Override
+      public void success(FinderService.Result value) {
+        if (value.location == FinderService.Location.Machine) {
+          if (region.equals(value.region)) {
+            local.reflect(space, key, callback);
+          } else {
+            // TODO: route to remote remote
+            callback.failure(new ErrorCodeException(-123));
+          }
+        } else {
+          local.reflect(space, key, callback);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   public void create(String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
     local.create(ip, origin, agent, authority, space, key, entropy, arg, callback);
   }
 
+  public void directSend(String ip, String origin, String agent, String authority, String space, String key, String marker, String channel, String message, Callback<Integer> callback) {
+    finder.find(new Key(space, key), new Callback<>() {
+      @Override
+      public void success(FinderService.Result value) {
+        if (value.location == FinderService.Location.Machine) {
+          if (region.equals(value.region)) {
+            local.directSend(ip, origin, agent, authority, space, key, marker, channel, message, callback);
+          } else {
+            // TODO: route to remote remote
+            callback.failure(new ErrorCodeException(-123));
+          }
+        } else {
+          local.directSend(ip, origin, agent, authority, space, key, marker, channel, message, callback);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
   public void delete(String ip, String origin, String agent, String authority, String space, String key, Callback<Void> callback) {
-    local.delete(ip, origin, agent, authority, space, key, callback);
+    finder.find(new Key(space, key), new Callback<>() {
+      @Override
+      public void success(FinderService.Result value) {
+        if (value.location == FinderService.Location.Machine) {
+          if (region.equals(value.region)) {
+            local.delete(ip, origin, agent, authority, space, key, callback);
+          } else {
+            // TODO: route to remote remote
+            callback.failure(new ErrorCodeException(-123));
+          }
+        } else {
+          local.delete(ip, origin, agent, authority, space, key, callback);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+
   }
 
   public AdamaStream connect(AuthenticatedUser user, String space, String key, String viewerState, SimpleEvents events) {

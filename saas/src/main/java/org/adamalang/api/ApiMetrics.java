@@ -43,6 +43,8 @@ public class ApiMetrics {
   public final RequestResponseMonitor monitor_DocumentCreate;
   public final RequestResponseMonitor monitor_DocumentDelete;
   public final RequestResponseMonitor monitor_DocumentList;
+  public final RequestResponseMonitor monitor_MessageDirectSend;
+  public final RequestResponseMonitor monitor_MessageDirectSendOnce;
   public final StreamMonitor monitor_ConnectionCreate;
   public final RequestResponseMonitor monitor_ConnectionSend;
   public final RequestResponseMonitor monitor_ConnectionSendOnce;
@@ -89,6 +91,8 @@ public class ApiMetrics {
     this.monitor_DocumentCreate = factory.makeRequestResponseMonitor("document/create");
     this.monitor_DocumentDelete = factory.makeRequestResponseMonitor("document/delete");
     this.monitor_DocumentList = factory.makeRequestResponseMonitor("document/list");
+    this.monitor_MessageDirectSend = factory.makeRequestResponseMonitor("message/direct-send");
+    this.monitor_MessageDirectSendOnce = factory.makeRequestResponseMonitor("message/direct-send-once");
     this.monitor_ConnectionCreate = factory.makeStreamMonitor("connection/create");
     this.monitor_ConnectionSend = factory.makeRequestResponseMonitor("connection/send");
     this.monitor_ConnectionSendOnce = factory.makeRequestResponseMonitor("connection/send-once");
