@@ -9,6 +9,7 @@
  */
 package org.adamalang.mysql;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.Json;
 import org.junit.Assert;
@@ -111,5 +112,11 @@ public class DataBaseConfigTests {
 
   public static DataBaseConfig getLocalIntegrationConfig() throws Exception {
     return new DataBaseConfig(new ConfigObject(Json.parseJsonObject(Files.readString(new File("test.mysql.json").toPath()))));
+  }
+
+  public static DataBaseConfig getLocalIntegrationConfigWithDifferentName(String newName) throws Exception {
+    ObjectNode config = Json.parseJsonObject(Files.readString(new File("test.mysql.json").toPath()));
+    ((ObjectNode) config.get("any")).put("database_name", newName);
+    return new DataBaseConfig(new ConfigObject(config));
   }
 }

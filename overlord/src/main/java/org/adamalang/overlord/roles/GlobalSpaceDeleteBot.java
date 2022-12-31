@@ -23,6 +23,9 @@ import org.adamalang.mysql.model.FinderOperations;
 import org.adamalang.mysql.model.Sentinel;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.overlord.OverlordMetrics;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.web.io.ConnectionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +36,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a bot that wakes up, looks for deleted spaces, and then ensures the name is ready for usage */
 public class GlobalSpaceDeleteBot {
+  public static AuthenticatedUser OVERLORD = new AuthenticatedUser(
+      AuthenticatedUser.Source.Super,
+      -1,
+      new NtPrincipal("overlord", "overlord"),
+      new ConnectionContext("overlord", "0.0.0.0", "overlord", ""),
+      true);
   private static Logger LOG = LoggerFactory.getLogger(GlobalSpaceDeleteBot.class);
   private final OverlordMetrics metrics;
   private final DataBase dataBase;
@@ -51,7 +60,7 @@ public class GlobalSpaceDeleteBot {
     LOG.error("cleaning-up:" + ds.name + ";size=" + found.size());
     if (found.size() == 0) {
       CountDownLatch latch = new CountDownLatch(1);
-      client.delete("overlord", "overlord", "overlord", "overlord", "ide", ds.name, metrics.delete_bot_delete_ide.wrap(new Callback<Void>() {
+      client.delete(OVERLORD, "ide", ds.name, metrics.delete_bot_delete_ide.wrap(new Callback<Void>() {
         @Override
         public void success(Void value) {
           LOG.error("cleaned:" + ds.name);
@@ -77,7 +86,7 @@ public class GlobalSpaceDeleteBot {
       latch.await(10000, TimeUnit.MILLISECONDS);
     } else {
       for (DocumentIndex doc : found) {
-        client.delete("overlord", "overlord", "overlord", "overlord", ds.name, doc.key, metrics.delete_bot_delete_document.wrap(Callback.DONT_CARE_VOID));
+        client.delete(OVERLORD, ds.name, doc.key, metrics.delete_bot_delete_document.wrap(Callback.DONT_CARE_VOID));
       }
     }
   }
