@@ -76,7 +76,6 @@ public class Capacity {
   public static List<CapacityInstance> listAllOnMachine(DataBase dataBase, String region, String machine) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `id`, `space`, `override` FROM `" + dataBase.databaseName + "`.`capacity` WHERE `region`=? AND `machine`=? ORDER BY `region`, `machine`";
-      System.err.println(sql);
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, region);
         statement.setString(2, machine);

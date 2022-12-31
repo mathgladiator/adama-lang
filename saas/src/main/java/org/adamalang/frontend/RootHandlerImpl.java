@@ -91,7 +91,7 @@ public class RootHandlerImpl implements RootHandler {
         String paymentInfo = Users.getPaymentInfo(nexus.database, request.who.id);
         // TODO: if no customerId, then bind one here and put it back into storage (need to handle conflicts better, or just use a better schema)
         // TODO: parse out information that is useful for stripe to update credit card, etc...
-        responder.complete("none", nexus.stripe.publicKey);
+        responder.complete("none", "disabled");
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_GET_PAYMENT_INFO_ONLY_ADAMA_DEV_EXCEPTION));
       }
