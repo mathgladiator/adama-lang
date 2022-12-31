@@ -181,7 +181,7 @@ public class CommonServiceInit {
   }
 
   public MultiRegionClient makeGlobalClient(Client client) {
-    return new MultiRegionClient(database, client, region, finder);
+    return new MultiRegionClient(database, client, region, hostKey, publicKeyId, finder);
   }
 
   public Client makeClient(HeatMonitor heat) {

@@ -359,6 +359,10 @@ public class ErrorTable {
     descriptions.put(904318, "no description of error (yet)");
     names.put(965747, "API_SPACE_SET_PLAN_DEPLOYMENT_FAILED_FINDING_CAPACITY");
     descriptions.put(965747, "no description of error (yet)");
+    names.put(962752, "API_SPACE_KICK_NO_PERMISSION_TO_EXECUTE");
+    descriptions.put(962752, "no description of error (yet)");
+    names.put(998593, "API_SPACE_KICK_UNKNOWN_EXCEPTION");
+    descriptions.put(998593, "no description of error (yet)");
     names.put(965635, "API_SPACE_GET_PLAN_NO_PERMISSION_TO_EXECUTE");
     descriptions.put(965635, "no description of error (yet)");
     names.put(913408, "API_SPACE_GET_PLAN_UNKNOWN_EXCEPTION");

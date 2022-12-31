@@ -108,7 +108,6 @@ public class PerSessionAuthenticator {
         callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Anonymous, -1, new NtPrincipal(agent, "anonymous"), defaultContext, false));
         return;
       }
-      // TODO: check for Google Prefix
       ParsedToken parsedToken = new ParsedToken(identity);
       if ("host".equals(parsedToken.iss)) {
         PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(database, parsedToken.key_id));

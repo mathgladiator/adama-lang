@@ -721,6 +721,14 @@
         </documentation>
     </method>
 
+    <method name="space/redeploy-kick" responder="simple">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <documentation>
+            A diagnostic call to optimistically to refresh a space's deployment
+        </documentation>
+    </method>
+
     <method name="space/set-rxhtml" responder="simple">
         <parameter name="identity"/>
         <parameter name="space"/>

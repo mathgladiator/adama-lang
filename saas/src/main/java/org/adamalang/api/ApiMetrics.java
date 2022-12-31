@@ -30,6 +30,7 @@ public class ApiMetrics {
   public final RequestResponseMonitor monitor_SpaceUsage;
   public final RequestResponseMonitor monitor_SpaceGet;
   public final RequestResponseMonitor monitor_SpaceSet;
+  public final RequestResponseMonitor monitor_SpaceRedeployKick;
   public final RequestResponseMonitor monitor_SpaceSetRxhtml;
   public final RequestResponseMonitor monitor_SpaceGetRxhtml;
   public final RequestResponseMonitor monitor_SpaceDelete;
@@ -78,6 +79,7 @@ public class ApiMetrics {
     this.monitor_SpaceUsage = factory.makeRequestResponseMonitor("space/usage");
     this.monitor_SpaceGet = factory.makeRequestResponseMonitor("space/get");
     this.monitor_SpaceSet = factory.makeRequestResponseMonitor("space/set");
+    this.monitor_SpaceRedeployKick = factory.makeRequestResponseMonitor("space/redeploy-kick");
     this.monitor_SpaceSetRxhtml = factory.makeRequestResponseMonitor("space/set-rxhtml");
     this.monitor_SpaceGetRxhtml = factory.makeRequestResponseMonitor("space/get-rxhtml");
     this.monitor_SpaceDelete = factory.makeRequestResponseMonitor("space/delete");

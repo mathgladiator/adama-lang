@@ -413,7 +413,7 @@ public class RootHandlerImpl implements RootHandler {
         int spaceId = Spaces.createSpace(nexus.database, request.who.id, request.space);
         SpaceTemplates.SpaceTemplate template = SpaceTemplates.REGISTRY.of(request.template);
         Spaces.setRxHtml(nexus.database, spaceId, template.initialRxHTML(request.space)); // TODO: put into createSpace? Or, rely on the document
-        nexus.adama.create(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, "ide", request.space, null, template.idearg(request.space), new Callback<Void>() {
+        nexus.adama.create(request.who, "ide", request.space, null, template.idearg(request.space), new Callback<Void>() {
           @Override
           public void success(Void value) {
             SpacePolicy policy = new SpacePolicy(new SpaceInfo(spaceId, request.who.id, Collections.singleton(request.who.id), true, 0));
@@ -481,7 +481,8 @@ public class RootHandlerImpl implements RootHandler {
         // Change the master plan
         Spaces.setPlan(nexus.database, request.policy.id, planJson, hash);
         // iterate the targets with this space loaded
-        nexus.adama.deploy(request.space);
+        nexus.adama.deployLocal(request.space);
+        nexus.adama.deployCrossRegion(request.who, request.space);
         nexus.adama.waitForCapacity(request.space, 30000, (found) -> {
           if (found) {
             responder.complete();
@@ -494,6 +495,19 @@ public class RootHandlerImpl implements RootHandler {
       }
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_PLAN_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
+  public void handle(Session session, SpaceRedeployKickRequest request, SimpleResponder responder) {
+    try {
+      if (request.policy.canUserSetPlan(request.who)) {
+        nexus.adama.deployLocal(request.space);
+      } else {
+        throw new ErrorCodeException(ErrorCodes.API_SPACE_KICK_NO_PERMISSION_TO_EXECUTE);
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_KICK_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -535,7 +549,7 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SpaceReflectRequest request, ReflectionResponder responder) {
     if (request.policy.canUserSeeReflection(request.who)) {
-      nexus.adama.reflect(request.space, request.key, new Callback<String>() {
+      nexus.adama.reflect(request.who, request.space, request.key, new Callback<String>() {
         @Override
         public void success(String value) {
           responder.complete(Json.parseJsonObject(value));
@@ -569,7 +583,7 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(Session session, DocumentDeleteRequest request, SimpleResponder responder) {
-    nexus.adama.delete(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, new Callback<>() {
+    nexus.adama.delete(request.who, request.space, request.key, new Callback<>() {
       @Override
       public void success(Void value) {
         responder.complete();
@@ -588,7 +602,7 @@ public class RootHandlerImpl implements RootHandler {
       responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_DOCUMENT_SPACE_RESERVED));
       return;
     }
-    nexus.adama.create(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
+    nexus.adama.create(request.who, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
       @Override
       public void success(Void value) {
         responder.complete();
@@ -635,7 +649,7 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(Session session, MessageDirectSendRequest request, SeqResponder responder) {
-    nexus.adama.directSend(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, null, request.channel, request.message.toString(), new Callback<Integer>() {
+    nexus.adama.directSend(request.who, request.space, request.key, null, request.channel, request.message.toString(), new Callback<Integer>() {
       @Override
       public void success(Integer seq) {
         responder.complete(seq);
@@ -650,7 +664,7 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(Session session, MessageDirectSendOnceRequest request, SeqResponder responder) {
-    nexus.adama.directSend(request.who.context.remoteIp, request.who.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.dedupe, request.channel, request.message.toString(), new Callback<Integer>() {
+    nexus.adama.directSend(request.who, request.space, request.key, request.dedupe, request.channel, request.message.toString(), new Callback<Integer>() {
       @Override
       public void success(Integer seq) {
         responder.complete(seq);

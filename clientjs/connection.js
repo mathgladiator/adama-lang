@@ -414,6 +414,15 @@ class WebSocketAdamaConnection {
       request: {"method":"space/set", "id":parId, "identity": identity, "space": space, "plan": plan}
     });
   }
+  SpaceRedeployKick(identity, space, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"space/redeploy-kick", "id":parId, "identity": identity, "space": space}
+    });
+  }
   SpaceSetRxhtml(identity, space, rxhtml, responder) {
     var self = this;
     var parId = self.__id();

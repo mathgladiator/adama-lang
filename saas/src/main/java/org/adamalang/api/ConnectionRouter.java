@@ -370,6 +370,24 @@ public class ConnectionRouter {
                 }
               });
             } return;
+            case "space/redeploy-kick": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceRedeployKick.start();
+              SpaceRedeployKickRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(SpaceRedeployKickRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "space/set-rxhtml": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceSetRxhtml.start();
               SpaceSetRxhtmlRequest.resolve(session, nexus, request, new Callback<>() {

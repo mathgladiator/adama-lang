@@ -46,6 +46,8 @@ public interface RootHandler {
 
   public void handle(Session session, SpaceSetRequest request, SimpleResponder responder);
 
+  public void handle(Session session, SpaceRedeployKickRequest request, SimpleResponder responder);
+
   public void handle(Session session, SpaceSetRxhtmlRequest request, SimpleResponder responder);
 
   public void handle(Session session, SpaceGetRxhtmlRequest request, RxhtmlResponder responder);
