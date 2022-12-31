@@ -73,28 +73,8 @@ public class MultiRegionClient {
     local.waitForCapacity(space, timeout, finished);
   }
 
-  public void reflect(AuthenticatedUser user, String space, String key, Callback<String> callback) {
-    finder.find(new Key(space, key), new Callback<>() {
-      @Override
-      public void success(FinderService.Result value) {
-        if (value.location == FinderService.Location.Machine) {
-          if (region.equals(value.region)) {
-            local.reflect(space, key, callback);
-          } else {
-            String identity = user.asIdentity(keyId, privateKey);
-            // TODO: implement
-            callback.failure(new ErrorCodeException(-123));
-          }
-        } else {
-          local.reflect(space, key, callback);
-        }
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    });
+  public void reflect(String space, String key, Callback<String> callback) {
+    local.reflect(space, key, callback);
   }
 
   public void create(AuthenticatedUser user, String space, String key, String entropy, String arg, Callback<Void> callback) {

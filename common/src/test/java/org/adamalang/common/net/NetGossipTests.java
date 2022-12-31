@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -48,7 +49,7 @@ public class NetGossipTests {
           aHBlatch.countDown();
         }
       });
-      Assert.assertTrue(aHBlatch.await(1000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(aHBlatch.await(10000, TimeUnit.MILLISECONDS));
     }
     aHB.get().run();
 
@@ -79,23 +80,31 @@ public class NetGossipTests {
         }
       };
     });
+    AtomicBoolean needConnect = new AtomicBoolean(true);
+    int attempts = 5;
+    while (needConnect.get() && attempts-- > 0) {
+      CountDownLatch connectStatus = new CountDownLatch(1);
+      B.connect("127.0.0.1:" + portA, new Lifecycle() {
+        @Override
+        public void connected(ChannelClient channel) {
+          needConnect.set(false);
+          connectStatus.countDown();
+          System.err.println("CONNECTED CLIENT");
+        }
 
-    B.connect("127.0.0.1:" + portA, new Lifecycle() {
-      @Override
-      public void connected(ChannelClient channel) {
-        System.err.println("CONNECTED CLIENT");
-      }
+        @Override
+        public void failed(ErrorCodeException ex) {
+          connectStatus.countDown();
+          System.err.println("FAILED:" + ex.code);
+        }
 
-      @Override
-      public void failed(ErrorCodeException ex) {
-        System.err.println("FAILED:" + ex.code);
-      }
-
-      @Override
-      public void disconnected() {
-        System.err.println("DISCONNECTED");
-      }
-    });
+        @Override
+        public void disconnected() {
+          System.err.println("DISCONNECTED");
+        }
+      });
+      Assert.assertTrue(connectStatus.await(5000, TimeUnit.MILLISECONDS));
+    }
 
     second.run();
     Assert.assertEquals("127.0.0.1:5000", target.logAt(1));

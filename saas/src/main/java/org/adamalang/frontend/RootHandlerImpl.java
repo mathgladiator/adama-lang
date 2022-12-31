@@ -549,7 +549,7 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SpaceReflectRequest request, ReflectionResponder responder) {
     if (request.policy.canUserSeeReflection(request.who)) {
-      nexus.adama.reflect(request.who, request.space, request.key, new Callback<String>() {
+      nexus.adama.reflect(request.space, request.key, new Callback<String>() {
         @Override
         public void success(String value) {
           responder.complete(Json.parseJsonObject(value));
