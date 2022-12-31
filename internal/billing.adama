@@ -7,6 +7,10 @@
 
 public principal owner;
 
+@construct {
+  owner = @who;
+}
+
 @connected {
   return @who == owner || @who.isOverlord();
 }

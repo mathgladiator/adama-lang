@@ -405,7 +405,7 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, SpaceCreateRequest request, SimpleResponder responder) {
     try {
-      if ("ide".equals(request.space) || "wildcard".equals(request.space)) {
+      if ("ide".equals(request.space) || "wildcard".equals(request.space) || "billing".equals(request.space)) {
         responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_SPACE_RESERVED));
         return;
       }
@@ -598,7 +598,7 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder) {
-    if ("ide".equals(request.space) || "wildcard".equals(request.space)) {
+    if ("ide".equals(request.space) || "wildcard".equals(request.space) || "billing".equals(request.space)) {
       responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_DOCUMENT_SPACE_RESERVED));
       return;
     }
