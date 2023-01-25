@@ -84,6 +84,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
   /** handle an asset request */
   private void handleAsset(FullHttpRequest req, final ChannelHandlerContext ctx, AssetRequest assetRequest, boolean cors) {
+
     assets.request(assetRequest, new AssetStream() {
       private boolean started = false;
       private String contentType = null;
@@ -112,7 +113,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
           }
           ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
           if (last) {
-            ctx.writeAndFlush(new DefaultLastHttpContent());
+            final var future = ctx.writeAndFlush(new DefaultLastHttpContent());
+            if (!HttpUtil.isKeepAlive(req)) {
+              future.addListener(ChannelFutureListener.CLOSE);
+            }
           }
         }
       }

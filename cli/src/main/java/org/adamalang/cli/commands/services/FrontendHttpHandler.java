@@ -123,6 +123,7 @@ public class FrontendHttpHandler implements HttpHandler {
         SpaceInfo spaceInfo = Spaces.getSpaceInfo(init.database, space);
         spaceId = spaceInfo.id;
         spaceIds.put(space, spaceInfo.id);
+        // TODO: expire this after X minutes
       }
       String rxhtml = Spaces.getRxHtml(init.database, spaceId);
       if (rxhtml != null) {
