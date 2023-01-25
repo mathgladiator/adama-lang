@@ -94,6 +94,12 @@ public class TyNativeAsset extends TySimpleNative implements DetailHasDeltaType,
     if ("size".equals(name)) {
       return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
+    if ("md5".equals(name)) {
+      return new TyNativeFunctional("md5", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("md5", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
+    if ("sha384".equals(name)) {
+      return new TyNativeFunctional("sha384", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("sha384", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
     if ("id".equals(name)) {
       return new TyNativeFunctional("id", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("id", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
     }

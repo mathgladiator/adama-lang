@@ -15,7 +15,9 @@ import org.adamalang.common.Json;
 import org.adamalang.web.client.WebClientConnection;
 import org.adamalang.web.contracts.WebJsonStream;
 
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
@@ -52,6 +54,45 @@ public class Connection implements AutoCloseable {
     if (failure.get() != null) {
       throw failure.get();
     }
+  }
+
+  /** An object that is either an ObjectNode or an Exception */
+  public static class IdObject {
+    public final int id;
+    public final Object value;
+
+    public IdObject(int id, Object value) {
+      this.id = id;
+      this.value = value;
+    }
+
+    public ObjectNode node() throws Exception {
+      if (value instanceof ObjectNode) {
+        return (ObjectNode) value;
+      }
+      throw (Exception) value;
+    }
+  }
+
+  /** use a blocking queue to interact with a stream */
+  public BlockingDeque<IdObject> stream_queue(ObjectNode request) {
+    BlockingDeque<IdObject> queue = new LinkedBlockingDeque<>();
+    connection.execute(request, new WebJsonStream() {
+      @Override
+      public void data(int cId, ObjectNode node) {
+        queue.offer(new IdObject(cId, node));
+      }
+
+      @Override
+      public void complete() {
+      }
+
+      @Override
+      public void failure(int code) {
+        queue.offer(new IdObject(-1, new ErrorCodeException(code)));
+      }
+    });
+    return queue;
   }
 
   @Override

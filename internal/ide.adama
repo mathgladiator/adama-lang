@@ -91,6 +91,9 @@ record Resource {
 
   public formula name = resource.name();
   public formula type = resource.type();
+  public formula md5 = resource.md5();
+  public formula size = resource.size();
+  public formula sha384 = resource.sha384();
 }
 
 table<Resource> _resources;
@@ -107,7 +110,11 @@ channel delete_resource(JustId jid) {
 }
 
 @web get /$p* {
-  if ( (iterate _resources where name == p)[0] as found) {
+  var path = p == "" ? "index.html" : p;
+  if ( (iterate _resources where name == path)[0] as found) {
+    return {asset:found.resource};
+  }
+  if ( (iterate _resources where name == path + "/index.html")[0] as found) {
     return {asset:found.resource};
   }
   return {html:"Not Found"};

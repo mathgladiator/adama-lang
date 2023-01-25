@@ -50,6 +50,14 @@ public class NtAsset implements Comparable<NtAsset> {
     return size;
   }
 
+  public String md5() {
+    return md5;
+  }
+
+  public String sha384() {
+    return sha384;
+  }
+
   @Override
   public int compareTo(NtAsset o) {
     return id.compareTo(o.id);
