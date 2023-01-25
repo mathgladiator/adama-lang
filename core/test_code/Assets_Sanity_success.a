@@ -1,4 +1,9 @@
 public asset latest;
+public formula latest_size = latest.size();
+public formula latest_md5 = latest.md5();
+public formula latest_sha384 = latest.sha384();
+public formula latest_type = latest.type();
+public formula latest_name = latest.name();
 
 public bool te;
 @construct {
