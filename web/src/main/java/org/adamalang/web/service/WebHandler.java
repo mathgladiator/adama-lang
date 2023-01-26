@@ -62,7 +62,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   }
 
   /** internal: copy the origin to access control when allowed */
-  private void transferCors(final FullHttpResponse res, final FullHttpRequest req, boolean allow) {
+  private void transferCors(final HttpResponse res, final FullHttpRequest req, boolean allow) {
     String origin = req.headers().get(HttpHeaderNames.ORIGIN);
     if (origin != null && allow) { // CORS support directly
       res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
@@ -88,10 +88,18 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     assets.request(assetRequest, new AssetStream() {
       private boolean started = false;
       private String contentType = null;
+      private long contentLength;
 
       @Override
-      public void headers(long length, String contentType) {
+      public void headers(long contentLength, String contentType) {
+        this.contentLength = contentLength;
         this.contentType = contentType;
+      }
+
+      private void setResponseHeaders(HttpResponse response) {
+        response.headers().set(HttpHeaderNames.CONTENT_LENGTH, contentLength);
+        response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
+        transferCors(response, req, cors);
       }
 
       @Override
@@ -99,20 +107,21 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         if (!started && last) {
           byte[] content = Arrays.copyOfRange(chunk, offset, length);
           final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(content));
-          HttpUtil.setContentLength(res, content.length);
-          res.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
-          transferCors(res, req, cors);
+          setResponseHeaders(res);
           sendWithKeepAlive(webConfig, ctx, req, res);
         } else {
           if (!started) {
-            DefaultHttpResponse response = new DefaultHttpResponse(req.protocolVersion(), HttpResponseStatus.OK);
-            response.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
-            response.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
-            HttpUtil.setKeepAlive(response, keepalive);
-            ctx.write(response);
+            DefaultHttpResponse res = new DefaultHttpResponse(req.protocolVersion(), HttpResponseStatus.OK);
+            setResponseHeaders(res);
+            HttpUtil.setKeepAlive(res, keepalive);
+            ctx.write(res);
             started = true;
           }
-          ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
+          if (chunk.length == length && offset == 0) {
+            ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(chunk)));
+          } else {
+            ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
+          }
           if (last) {
             final var future = ctx.writeAndFlush(new DefaultLastHttpContent());
             if (!keepalive) {
