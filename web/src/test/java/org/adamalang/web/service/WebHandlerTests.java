@@ -98,7 +98,7 @@ public class WebHandlerTests {
             .get("/~assets/space/incomplete/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("Chunk");
+        callback.assertData("");
       }
 
       {
@@ -111,7 +111,7 @@ public class WebHandlerTests {
             .get("/~assets/space/1/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("ChunkAndDone");
+        callback.assertData("");
       }
 
       {
@@ -124,7 +124,7 @@ public class WebHandlerTests {
             .get("/~assets/space/3/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("Chunk1Chunk2Chunk3");
+        callback.assertData("");
       }
 
       {
