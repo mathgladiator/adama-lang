@@ -84,7 +84,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
   /** handle an asset request */
   private void handleAsset(FullHttpRequest req, final ChannelHandlerContext ctx, AssetRequest assetRequest, boolean cors) {
-
+    final boolean keepalive = HttpUtil.isKeepAlive(req);
     assets.request(assetRequest, new AssetStream() {
       private boolean started = false;
       private String contentType = null;
@@ -105,16 +105,17 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
           sendWithKeepAlive(webConfig, ctx, req, res);
         } else {
           if (!started) {
-            DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+            DefaultHttpResponse response = new DefaultHttpResponse(req.protocolVersion(), HttpResponseStatus.OK);
             response.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
             response.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
+            HttpUtil.setKeepAlive(response, keepalive);
             ctx.write(response);
             started = true;
           }
           ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
           if (last) {
             final var future = ctx.writeAndFlush(new DefaultLastHttpContent());
-            if (!HttpUtil.isKeepAlive(req)) {
+            if (!keepalive) {
               future.addListener(ChannelFutureListener.CLOSE);
             }
           }
