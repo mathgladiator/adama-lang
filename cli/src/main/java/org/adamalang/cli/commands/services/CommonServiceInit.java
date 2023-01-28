@@ -15,6 +15,9 @@ import io.netty.handler.ssl.SslContextBuilder;
 import org.adamalang.ErrorCodes;
 import org.adamalang.cli.Config;
 import org.adamalang.common.*;
+import org.adamalang.common.cache.AsyncSharedLRUCache;
+import org.adamalang.common.cache.Measurable;
+import org.adamalang.common.cache.SyncCacheLRU;
 import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.net.NetBase;
@@ -44,6 +47,7 @@ import org.adamalang.web.service.WebConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.SSLContext;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -79,6 +83,9 @@ public class CommonServiceInit {
   public final WebClientBase webBase;
   public final String masterKey;
   public final SQS sqs;
+  public final int minDomainsToHoldTo;
+  public final int maxDomainsToHoldTo;
+  public final int maxDomainAge;
 
   public CommonServiceInit(Config config, Role role) throws Exception {
     MachineHeat.install();
@@ -87,6 +94,9 @@ public class CommonServiceInit {
       configObjectForWeb.intOf("http_port", 8081);
     }
     this.masterKey = config.get_string("master-key", null);
+    this.minDomainsToHoldTo = config.get_int("domains-minimum-hold", 64);
+    this.maxDomainsToHoldTo = config.get_int("domains-maximum-hold", 2048);
+    this.maxDomainAge = config.get_int("domains-max-age-ms", 60 * 60 * 1000);
     this.webConfig = new WebConfig(configObjectForWeb);
     WebConfig webConfig = new WebConfig(configObjectForWeb);
     String identityFileName = config.get_string("identity_filename", "me.identity");
@@ -212,65 +222,74 @@ public class CommonServiceInit {
     return client;
   }
 
+  public class MeasuredSslContext implements Measurable {
+    public final SslContext context;
+
+    public MeasuredSslContext(SslContext context) {
+      this.context = context;
+    }
+
+    @Override
+    public long measure() {
+      return 1;
+    }
+  }
+
   public CertificateFinder makeCertificateFinder() {
-    ConcurrentHashMap<String, SslContext> cache = new ConcurrentHashMap<>();
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
-    return new CertificateFinder() {
-      @Override
-      public void fetch(String rawDomain, Callback<SslContext> callback) {
-        String _domainToLookup = rawDomain;
-        { // hyper fast optimistic path
-          if (_domainToLookup == null) { // no SNI provided -> use default
-            callback.success(null);
-            return;
-          }
-          if (_domainToLookup.endsWith("." + webConfig.regionalDomain)) { // the regional domain -> use default
-            callback.success(null);
-            return;
-          }
-          for (String globalDomain : webConfig.globalDomains) {
-            if (_domainToLookup.endsWith("." + globalDomain)) {
-              _domainToLookup = "wildcard." + globalDomain;
-              break;
-            }
-          }
-          SslContext cached = cache.get(_domainToLookup); // check cache
-          if (cached != null) {
-            callback.success(cached);
-            return;
-          }
-        }
-
-        final String domain = _domainToLookup;
-
-        executor.execute(() -> {
-          // check cache within the executor
-          SslContext cached = cache.get(domain);
-          if (cached != null) {
-            callback.success(cached);
-            return;
-          }
-
+    SyncCacheLRU<String, MeasuredSslContext> realCache = new SyncCacheLRU<>(TimeSource.REAL_TIME, minDomainsToHoldTo, maxDomainsToHoldTo, maxDomainsToHoldTo * 2, maxDomainAge, (domain) -> {});
+    SimpleExecutor executor = SimpleExecutor.create("domain-cache");
+    SimpleExecutor executor_db = SimpleExecutor.create("domain-db");
+    AsyncSharedLRUCache<String, MeasuredSslContext> cache = new AsyncSharedLRUCache<>(executor, realCache, (domain, callback) -> {
+      executor_db.execute(new NamedRunnable("domain-lookup") {
+        @Override
+        public void execute() throws Exception {
           try {
             Domain lookup = Domains.get(database, domain);
-            if (lookup != null) {
-              if (lookup.certificate != null) {
-                ObjectNode certificate = Json.parseJsonObject(MasterKey.decrypt(masterKey, lookup.certificate));
-                ByteArrayInputStream keyInput = new ByteArrayInputStream(certificate.get("key").textValue().getBytes(StandardCharsets.UTF_8));
-                ByteArrayInputStream certInput = new ByteArrayInputStream(certificate.get("cert").textValue().getBytes(StandardCharsets.UTF_8));
-                SslContext contextToUse = SslContextBuilder.forServer(certInput, keyInput).build();
-                callback.success(contextToUse);
-                cache.put(domain, contextToUse);
-                return;
-              }
+            if (lookup != null && lookup.certificate != null) {
+              ObjectNode certificate = Json.parseJsonObject(MasterKey.decrypt(masterKey, lookup.certificate));
+              ByteArrayInputStream keyInput = new ByteArrayInputStream(certificate.get("key").textValue().getBytes(StandardCharsets.UTF_8));
+              ByteArrayInputStream certInput = new ByteArrayInputStream(certificate.get("cert").textValue().getBytes(StandardCharsets.UTF_8));
+              SslContext contextToUse = SslContextBuilder.forServer(certInput, keyInput).build();
+              callback.success(new MeasuredSslContext(contextToUse));
+              return;
             }
-            callback.success(null);
+            callback.failure(new ErrorCodeException(ErrorCodes.DOMAIN_TRANSLATE_FAILURE));
           } catch (Exception ex) {
             callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DOMAIN_LOOKUP_FAILURE, ex, EXLOGGER));
           }
-        });
+        }
+      });
+    });
+    return (rawDomain, callback) -> {
+      String _domainToLookup = rawDomain;
+      { // hyper fast optimistic path
+        if (_domainToLookup == null) { // no SNI provided -> use default
+          callback.success(null);
+          return;
+        }
+        if (_domainToLookup.endsWith("." + webConfig.regionalDomain)) { // the regional domain -> use default
+          callback.success(null);
+          return;
+        }
+        for (String globalDomain : webConfig.globalDomains) {
+          if (_domainToLookup.endsWith("." + globalDomain)) {
+            _domainToLookup = "wildcard." + globalDomain;
+            break;
+          }
+        }
       }
+
+      cache.get(_domainToLookup, new Callback<MeasuredSslContext>() {
+        @Override
+        public void success(MeasuredSslContext value) {
+          callback.success(value.context);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
     };
   }
 }
