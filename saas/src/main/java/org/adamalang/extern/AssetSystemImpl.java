@@ -47,6 +47,12 @@ public class AssetSystemImpl implements AssetSystem {
   }
 
   @Override
+  public void request(Key key, NtAsset asset, AssetStream stream) {
+    AssetRequest request = new AssetRequest(key.space, key.key, asset.id);
+    s3.request(request, stream);
+  }
+
+  @Override
   public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback) {
     PerSessionAuthenticator authenticator = new PerSessionAuthenticator(database, context, new String[] {});
     authenticator.execute(new Session(authenticator), identity, new Callback<AuthenticatedUser>() {

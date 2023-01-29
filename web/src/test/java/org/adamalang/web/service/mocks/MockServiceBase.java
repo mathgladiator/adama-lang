@@ -172,6 +172,38 @@ public class MockServiceBase implements ServiceBase {
       }
 
       @Override
+      public void request(Key key, NtAsset asset, AssetStream stream) {
+        if (key.key.equals("1")) {
+          byte[] chunk = "ChunkAndDone".getBytes(StandardCharsets.UTF_8);
+          stream.headers(chunk.length, "text/plain");
+          stream.body(chunk, 0, chunk.length, true);
+          return;
+        }
+        if (key.key.equals("fail")) {
+          stream.headers(-1, "text/plain");
+          stream.failure(1234);
+          return;
+        }
+        if (key.key.equals("incomplete")) {
+          byte[] chunk = "Chunk".getBytes(StandardCharsets.UTF_8);
+          stream.headers(chunk.length, "text/plain");
+          stream.body(chunk, 0, chunk.length, false);
+          stream.failure(1234);
+          return;
+        }
+        if (key.key.equals("3")) {
+          stream.headers(-1, "text/plain");
+          byte[] chunk1 = "Chunk1".getBytes(StandardCharsets.UTF_8);
+          byte[] chunk2 = "Chunk2".getBytes(StandardCharsets.UTF_8);
+          byte[] chunk3 = "Chunk3".getBytes(StandardCharsets.UTF_8);
+          stream.body(chunk1, 0, chunk1.length, false);
+          stream.body(chunk2, 0, chunk2.length, false);
+          stream.body(chunk3, 0, chunk3.length, true);
+          return;
+        }
+      }
+
+      @Override
       public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback) {
         callback.failure(new ErrorCodeException(-123));
       }

@@ -19,6 +19,9 @@ public interface AssetSystem {
   /** stream an asset from underlying medium */
   void request(AssetRequest request, AssetStream stream);
 
+  /** stream out an asset */
+  void request(Key key, NtAsset asset, AssetStream stream);
+
   /** attach the asset to the given document under the given principal */
   void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback);
 

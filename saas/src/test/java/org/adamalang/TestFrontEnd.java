@@ -277,6 +277,11 @@ public class TestFrontEnd implements AutoCloseable, Email {
       }
 
       @Override
+      public void request(Key key, NtAsset asset, AssetStream stream) {
+        stream.failure(-15);
+      }
+
+      @Override
       public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback) {
         callback.failure(new ErrorCodeException(-13));
       }

@@ -82,10 +82,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
 
-  /** handle an asset request */
-  private void handleAsset(FullHttpRequest req, final ChannelHandlerContext ctx, AssetRequest assetRequest, boolean cors) {
+  private AssetStream streamOf(FullHttpRequest req, final ChannelHandlerContext ctx, boolean cors) {
     final boolean keepalive = HttpUtil.isKeepAlive(req);
-    assets.request(assetRequest, new AssetStream() {
+
+    return new AssetStream() {
       private boolean started = false;
       private String contentType = null;
       private long contentLength;
@@ -97,7 +97,13 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       }
 
       private void setResponseHeaders(HttpResponse response) {
-        response.headers().set(HttpHeaderNames.CONTENT_LENGTH, contentLength);
+        if (this.contentLength < 0 && req.protocolVersion() == HttpVersion.HTTP_1_1) {
+          response.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
+        } else {
+          if (this.contentLength >= 0) {
+            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, contentLength);
+          }
+        }
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
         transferCors(response, req, cors);
       }
@@ -139,7 +145,18 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
           sendImmediate(metrics.webhandler_asset_failed, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ("Download asset failure:" + code).getBytes(StandardCharsets.UTF_8), "text/plain", false);
         }
       }
-    });
+    };
+  }
+
+  /** handle a native asset */
+  private void handleNtAsset(FullHttpRequest req, final ChannelHandlerContext ctx, Key key, NtAsset asset, boolean cors) {
+    assets.request(key, asset, streamOf(req, ctx, cors));
+  }
+
+  /** handle an asset request */
+  @Deprecated
+  private void handleAsset(FullHttpRequest req, final ChannelHandlerContext ctx, AssetRequest assetRequest, boolean cors) {
+    assets.request(assetRequest, streamOf(req, ctx, cors));
   }
 
   /** handle secret and encrypted assets */
@@ -295,6 +312,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     return false;
   }
 
+
+
   private void handleHttpResult(HttpHandler.HttpResult httpResultIncoming, final ChannelHandlerContext ctx, final FullHttpRequest req) {
     HttpHandler.HttpResult httpResult = httpResultIncoming;
     if (httpResult == null) { // no response found
@@ -302,9 +321,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       return;
     }
 
-    AssetRequest isAsset = AssetRequest.from(httpResult);
-    if (isAsset != null) { // the result is an asset
-      handleAsset(req, ctx, isAsset, httpResult.cors); // TODO: have caching instruction, and transform instruction
+    if (httpResult.asset != null && httpResult.space != null && httpResult.key != null) {
+      handleNtAsset(req, ctx, new Key(httpResult.space, httpResult.key), httpResult.asset, httpResult.cors);
       return;
     }
 

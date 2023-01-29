@@ -291,6 +291,8 @@ public class ErrorTable {
     descriptions.put(130242, "The query did make sense");
     names.put(177395, "DOMAIN_LOOKUP_FAILURE");
     descriptions.put(177395, "no description of error (yet)");
+    names.put(148477, "DOMAIN_TRANSLATE_FAILURE");
+    descriptions.put(148477, "no description of error (yet)");
     names.put(120048, "FRONTEND_FAILED_RXHTML_LOOKUP");
     descriptions.put(120048, "no description of error (yet)");
     names.put(684039, "USER_NOT_FOUND_GET_PASSWORD");
