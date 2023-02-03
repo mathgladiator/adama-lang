@@ -27,6 +27,12 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
+import org.adamalang.common.pool.AsyncPool;
+import org.adamalang.common.pool.PoolItem;
+import org.adamalang.web.client.pool.EventLoopGroundSimpleExecutor;
+import org.adamalang.web.client.pool.WebClientSharedConnection;
+import org.adamalang.web.client.pool.WebClientSharedConnectionActions;
+import org.adamalang.web.client.pool.WebEndpoint;
 import org.adamalang.web.contracts.WebJsonStream;
 import org.adamalang.web.contracts.WebLifecycle;
 import org.adamalang.web.service.WebConfig;
@@ -35,6 +41,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class WebClientBase {
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(WebClientBase.class);
@@ -42,14 +49,69 @@ public class WebClientBase {
 
   private final WebConfig config;
   private final EventLoopGroup group;
+  private final AsyncPool<WebEndpoint, WebClientSharedConnection> pool;
 
   public WebClientBase(WebConfig config) {
-    group = new NioEventLoopGroup();
     this.config = config;
+    group = new NioEventLoopGroup();
+    EventLoopGroundSimpleExecutor executor = new EventLoopGroundSimpleExecutor(group);
+    this.pool = new AsyncPool<>(executor, TimeSource.REAL_TIME, //
+        config.sharedConnectionPoolMaxLifetimeMilliseconds, //
+        config.sharedConnectionPoolMaxUsageCount, //
+        config.sharedConnectionPoolMaxPoolSize, //
+        ErrorCodes.WEB_BASE_EXECUTE_SHARED_TOO_MANY_INFLIGHT, new WebClientSharedConnectionActions(group));
+    pool.scheduleSweeping(new AtomicBoolean(true));
   }
 
   public void shutdown() {
     group.shutdownGracefully(50, 500, TimeUnit.MILLISECONDS);
+  }
+
+  public void executeShared(SimpleHttpRequest request, SimpleHttpResponder responder) {
+    pool.get(new WebEndpoint(URI.create(request.url)), new Callback<>() {
+      @Override
+      public void success(PoolItem<WebClientSharedConnection> connection) {
+        connection.item().writeRequest(request, new SimpleHttpResponder() {
+          @Override
+          public void start(SimpleHttpResponseHeader header) {
+            responder.start(header);
+          }
+
+          @Override
+          public void bodyStart(long size) {
+            responder.bodyStart(size);
+          }
+
+          @Override
+          public void bodyFragment(byte[] chunk, int offset, int len) {
+            responder.bodyFragment(chunk, offset, len);
+          }
+
+          @Override
+          public void bodyEnd() {
+            try {
+              responder.bodyEnd();
+            } finally {
+              connection.returnToPool();
+            }
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            try {
+              responder.failure(ex);
+            } finally {
+              connection.signalFailure();
+            }
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.failure(ex);
+      }
+    });
   }
 
   /** start of a new simpler execute http request */

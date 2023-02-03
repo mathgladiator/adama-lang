@@ -29,6 +29,9 @@ public class WebConfig {
   public final int workerThreads;
   public final String regionalDomain;
   public final String[] globalDomains;
+  public final int sharedConnectionPoolMaxLifetimeMilliseconds;
+  public final int sharedConnectionPoolMaxUsageCount;
+  public final int sharedConnectionPoolMaxPoolSize;
 
   public WebConfig(ConfigObject config) {
     // HTTP properties
@@ -50,5 +53,8 @@ public class WebConfig {
     this.workerThreads = config.intOf("http_worker_threads", 16);
     this.regionalDomain = config.strOf("regional_domain", "adama-platform.com");
     this.globalDomains = config.stringsOf("global_domains", new String[] { "adama.games" });
+    this.sharedConnectionPoolMaxLifetimeMilliseconds = config.intOf("shared-connection-max-lifetime-ms", 10000);
+    this.sharedConnectionPoolMaxUsageCount = config.intOf("shared-connection-max-usage-count", 50);
+    this.sharedConnectionPoolMaxPoolSize = config.intOf("shared-connection-max-pool-size", 25);
   }
 }

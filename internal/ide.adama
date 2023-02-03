@@ -120,6 +120,13 @@ channel delete_resource(JustId jid) {
   return {html:"Not Found"};
 }
 
+@web get / {
+  if ( (iterate _resources where name == "index.html")[0] as found) {
+    return {asset:found.resource};
+  }
+  return {html:"Not Found"};
+}
+
 
 message DocumentCreateMessage {
   string name;

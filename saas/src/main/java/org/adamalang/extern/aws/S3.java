@@ -80,7 +80,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.download_file.start();
     String s3key = "assets/" + asset.space + "/" + asset.key + "/" + asset.id;
     SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key, null).buildWithEmptyBody();
-    base.execute(request, new SimpleHttpResponder() {
+    base.executeShared(request, new SimpleHttpResponder() {
       private String contentType;
       private long written;
       private long size;
