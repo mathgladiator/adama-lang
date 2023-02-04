@@ -192,31 +192,33 @@ public class S3Tests {
         }
       });
       Assert.assertTrue(latchPut.await(30000, TimeUnit.MILLISECONDS));
-      CountDownLatch latchGet = new CountDownLatch(2);
-      ByteArrayOutputStream getResults = new ByteArrayOutputStream();
-      s3.request(new AssetRequest("space", "key", asset.id), new AssetStream() {
-        @Override
-        public void headers(long length, String contentType) {
-          Assert.assertEquals(asset.size, length);
-          Assert.assertEquals(asset.contentType, contentType);
-          latchGet.countDown();
-        }
-
-        @Override
-        public void body(byte[] chunk, int offset, int length, boolean last) {
-          getResults.write(chunk, offset, length);
-          if (last) {
+      for (int k = 0; k < 5; k++) {
+        CountDownLatch latchGet = new CountDownLatch(2);
+        ByteArrayOutputStream getResults = new ByteArrayOutputStream();
+        s3.request(new AssetRequest("space", "key", asset.id), new AssetStream() {
+          @Override
+          public void headers(long length, String contentType) {
+            Assert.assertEquals(asset.size, length);
+            Assert.assertEquals(asset.contentType, contentType);
             latchGet.countDown();
           }
-        }
 
-        @Override
-        public void failure(int code) {
-          System.err.println("Failed to get asset:" + code);
-        }
-      });
-      Assert.assertTrue(latchGet.await(60000, TimeUnit.MILLISECONDS));
-      Assert.assertEquals(expected.toString(), new String(getResults.toByteArray(), StandardCharsets.UTF_8));
+          @Override
+          public void body(byte[] chunk, int offset, int length, boolean last) {
+            getResults.write(chunk, offset, length);
+            if (last) {
+              latchGet.countDown();
+            }
+          }
+
+          @Override
+          public void failure(int code) {
+            System.err.println("Failed to get asset:" + code);
+          }
+        });
+        Assert.assertTrue(latchGet.await(60000, TimeUnit.MILLISECONDS));
+        Assert.assertEquals(expected.toString(), new String(getResults.toByteArray(), StandardCharsets.UTF_8));
+      }
       CountDownLatch latchDelete = new CountDownLatch(1);
       s3.deleteAsset(new Key("space", "key"), asset.id, new Callback<Void>() {
         @Override

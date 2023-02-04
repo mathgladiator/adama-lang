@@ -166,7 +166,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key, null).buildWithEmptyBody();
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.restore_document.start();
     try {
-      base.execute(request, new FileWriterHttpResponder(temp, new Callback<Void>() {
+      base.executeShared(request, new FileWriterHttpResponder(temp, new Callback<Void>() {
         @Override
         public void success(Void value) {
           File dest = new File(root, archiveKey);
