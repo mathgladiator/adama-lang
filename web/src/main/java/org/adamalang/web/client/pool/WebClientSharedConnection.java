@@ -144,7 +144,7 @@ public class WebClientSharedConnection {
                 }
                 left -= sz;
                 if (left == 0) {
-                  channel.writeAndFlush(new DefaultHttpContent(content));
+                  channel.writeAndFlush(new DefaultLastHttpContent(content));
                 } else {
                   channel.writeAndFlush(new DefaultHttpContent(content));
                 }

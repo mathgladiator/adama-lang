@@ -21,7 +21,7 @@ public class AWSConfigTests {
     ObjectNode aws = Json.newJsonObject();
     aws.put("access-key", "key");
     aws.put("secret-key", "secret");
-    aws.put("init-from_email", "x@x.com");
+    aws.put("init-from-email", "x@x.com");
     aws.put("init-reply-email", "x@x.com");
     aws.put("bucket", "bucket");
     aws.put("region", "region");

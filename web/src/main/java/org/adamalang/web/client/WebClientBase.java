@@ -50,16 +50,18 @@ public class WebClientBase {
   private final WebConfig config;
   private final EventLoopGroup group;
   private final AsyncPool<WebEndpoint, WebClientSharedConnection> pool;
+  private final WebClientSharedConnectionActions actions;
 
   public WebClientBase(WebConfig config) {
     this.config = config;
     group = new NioEventLoopGroup();
     EventLoopGroundSimpleExecutor executor = new EventLoopGroundSimpleExecutor(group);
+    this.actions = new WebClientSharedConnectionActions(group);
     this.pool = new AsyncPool<>(executor, TimeSource.REAL_TIME, //
         config.sharedConnectionPoolMaxLifetimeMilliseconds, //
         config.sharedConnectionPoolMaxUsageCount, //
         config.sharedConnectionPoolMaxPoolSize, //
-        ErrorCodes.WEB_BASE_EXECUTE_SHARED_TOO_MANY_INFLIGHT, new WebClientSharedConnectionActions(group));
+        ErrorCodes.WEB_BASE_EXECUTE_SHARED_TOO_MANY_INFLIGHT, actions);
     pool.scheduleSweeping(new AtomicBoolean(true));
   }
 
