@@ -11,6 +11,8 @@ package org.adamalang.web.service;
 
 import org.adamalang.common.ConfigObject;
 
+import java.io.File;
+
 public class WebConfig {
   public final String healthCheckPath;
   public final String deepHealthCheckPath;
@@ -32,8 +34,9 @@ public class WebConfig {
   public final int sharedConnectionPoolMaxLifetimeMilliseconds;
   public final int sharedConnectionPoolMaxUsageCount;
   public final int sharedConnectionPoolMaxPoolSize;
+  public final File cacheRoot;
 
-  public WebConfig(ConfigObject config) {
+  public WebConfig(ConfigObject config) throws Exception {
     // HTTP properties
     this.port = config.intOf("http_port", 8080);
     this.redirectPort = config.intOf("http_redirect_port", 8085);
@@ -56,5 +59,12 @@ public class WebConfig {
     this.sharedConnectionPoolMaxLifetimeMilliseconds = config.intOf("shared-connection-max-lifetime-ms", 10000);
     this.sharedConnectionPoolMaxUsageCount = config.intOf("shared-connection-max-usage-count", 50);
     this.sharedConnectionPoolMaxPoolSize = config.intOf("shared-connection-max-pool-size", 25);
+    this.cacheRoot = new File(config.strOf("cache-root", "cache"));
+    if (!cacheRoot.exists()) {
+      cacheRoot.mkdir();
+    }
+    if (cacheRoot.exists() && !cacheRoot.isDirectory()) {
+      throw new Exception("Cache root not directory");
+    }
   }
 }

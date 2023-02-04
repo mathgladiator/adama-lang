@@ -25,7 +25,7 @@ public class WebSocketClient implements AutoCloseable {
   public final WebClientBase base;
   private final String endpoint;
 
-  public WebSocketClient(Config config) {
+  public WebSocketClient(Config config) throws Exception {
     this.base = new WebClientBase(new WebConfig(new ConfigObject(config.read())));
     this.endpoint = config.get_string("endpoint", "wss://aws-us-east-2.adama-platform.com/~s");
   }

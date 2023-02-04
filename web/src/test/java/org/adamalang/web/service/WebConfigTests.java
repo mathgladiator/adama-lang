@@ -24,7 +24,7 @@ public class WebConfigTests {
   }
 
   @Test
-  public void defaults() {
+  public void defaults() throws Exception {
     WebConfig webConfig = new WebConfig(new ConfigObject(Json.newJsonObject()));
     Assert.assertEquals("/~health_check_lb", webConfig.healthCheckPath);
     Assert.assertEquals(1048576, webConfig.maxWebSocketFrameSize);
@@ -35,7 +35,7 @@ public class WebConfigTests {
   }
 
   @Test
-  public void override() {
+  public void override() throws Exception {
     ObjectNode node = Json.newJsonObject();
     node.put("http_port", 9000);
     node.put("http_max_content_length_size", 5000);

@@ -17,6 +17,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.util.concurrent.ScheduledFuture;
+import org.adamalang.common.TimeSource;
+import org.adamalang.web.assets.cache.WebHandlerAssetCache;
 import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
 import org.slf4j.Logger;
@@ -36,6 +38,7 @@ public class ServiceRunnable implements Runnable {
   private final CountDownLatch ready;
   private final AtomicBoolean started;
   private final Runnable heartbeat;
+  private final WebHandlerAssetCache cache;
   private Channel channel;
   private boolean stopped;
 
@@ -49,6 +52,7 @@ public class ServiceRunnable implements Runnable {
     stopped = false;
     ready = new CountDownLatch(1);
     this.heartbeat = heartbeat;
+    this.cache = new WebHandlerAssetCache(TimeSource.REAL_TIME, webConfig.cacheRoot);
   }
 
   public synchronized boolean isAccepting() {
@@ -77,7 +81,7 @@ public class ServiceRunnable implements Runnable {
           final EventLoopGroup workerGroup = new NioEventLoopGroup(webConfig.workerThreads);
           try {
             final var b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new Initializer(webConfig, metrics, base, certificateFinder, context));
+            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new Initializer(webConfig, metrics, base, certificateFinder, context, cache));
             final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
             LOGGER.info("channel-registered");

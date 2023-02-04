@@ -236,7 +236,7 @@ public class CommonServiceInit {
   }
 
   public CertificateFinder makeCertificateFinder() {
-    SyncCacheLRU<String, MeasuredSslContext> realCache = new SyncCacheLRU<>(TimeSource.REAL_TIME, minDomainsToHoldTo, maxDomainsToHoldTo, maxDomainsToHoldTo * 2, maxDomainAge, (domain) -> {});
+    SyncCacheLRU<String, MeasuredSslContext> realCache = new SyncCacheLRU<>(TimeSource.REAL_TIME, minDomainsToHoldTo, maxDomainsToHoldTo, maxDomainsToHoldTo * 2, maxDomainAge, (domain, context) -> {});
     SimpleExecutor executor = SimpleExecutor.create("domain-cache");
     SimpleExecutor executor_db = SimpleExecutor.create("domain-db");
     AsyncSharedLRUCache<String, MeasuredSslContext> cache = new AsyncSharedLRUCache<>(executor, realCache, (domain, callback) -> {

@@ -27,6 +27,8 @@ import org.adamalang.common.ProtectedUUID;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.assets.*;
+import org.adamalang.web.assets.cache.CachedAsset;
+import org.adamalang.web.assets.cache.WebHandlerAssetCache;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.firewall.WebRequestShield;
 import org.adamalang.web.io.ConnectionContext;
@@ -53,12 +55,14 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final WebMetrics metrics;
   private final HttpHandler httpHandler;
   private final AssetSystem assets;
+  private final WebHandlerAssetCache cache;
 
-  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetSystem assets) {
+  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetSystem assets, WebHandlerAssetCache cache) {
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.httpHandler = httpHandler;
     this.assets = assets;
+    this.cache = cache;
   }
 
   /** internal: copy the origin to access control when allowed */
@@ -150,7 +154,28 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
   /** handle a native asset */
   private void handleNtAsset(FullHttpRequest req, final ChannelHandlerContext ctx, Key key, NtAsset asset, boolean cors) {
-    assets.request(key, asset, streamOf(req, ctx, cors));
+    AssetStream response = streamOf(req, ctx, cors);
+
+    if (!WebHandlerAssetCache.canCache(asset)) {
+      assets.request(key, asset, response);
+      return;
+    }
+
+    cache.get(asset, new Callback<>() {
+      @Override
+      public void success(CachedAsset cachedAsset) {
+        AssetStream feed = cachedAsset.attachWhileInExecutor(response);
+        if (feed != null) {
+          assets.request(key, asset, feed);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        cache.failure(asset);
+        response.failure(ex.code);
+      }
+    });
   }
 
   /** handle an asset request */

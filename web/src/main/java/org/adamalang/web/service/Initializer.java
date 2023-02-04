@@ -22,6 +22,8 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.TimeSource;
+import org.adamalang.web.assets.cache.WebHandlerAssetCache;
 import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
 import org.slf4j.Logger;
@@ -36,14 +38,16 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
   private final ServiceBase base;
   private final CertificateFinder certificateFinder;
   private final SslContext context;
+  private final  WebHandlerAssetCache cache;
 
-  public Initializer(final WebConfig webConfig, final WebMetrics metrics, final ServiceBase base, final CertificateFinder certificateFinder, SslContext context) {
+  public Initializer(final WebConfig webConfig, final WebMetrics metrics, final ServiceBase base, final CertificateFinder certificateFinder, SslContext context, WebHandlerAssetCache cache) {
     this.logger = LoggerFactory.getLogger("Initializer");
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.base = base;
     this.certificateFinder = certificateFinder;
     this.context = context;
+    this.cache = cache;
   }
 
   @Override
@@ -77,7 +81,7 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
     pipeline.addLast(new HttpObjectAggregator(webConfig.maxContentLengthSize));
     pipeline.addLast(new WebSocketServerCompressionHandler());
     pipeline.addLast(new WebSocketServerProtocolHandler("/~s", null, true, webConfig.maxWebSocketFrameSize, false, true, webConfig.timeoutWebsocketHandshake));
-    pipeline.addLast(new WebHandler(webConfig, metrics, base.http(), base.assets()));
+    pipeline.addLast(new WebHandler(webConfig, metrics, base.http(), base.assets(), cache));
     pipeline.addLast(new WebSocketHandler(webConfig, metrics, base));
   }
 }

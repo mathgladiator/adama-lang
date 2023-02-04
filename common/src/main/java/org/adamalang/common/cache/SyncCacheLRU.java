@@ -14,6 +14,7 @@ import org.adamalang.common.TimeSource;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /** This is traditional Least Recently Used cache where items in the cached are measured (i.e. memory size or storage bytes) and expire based on time. This class is not thread safe. */
@@ -21,7 +22,7 @@ public class SyncCacheLRU<D, R extends Measurable> {
   private final TimeSource time;
   private final LinkedHashMap<D, CacheEntry<R>> cache;
   private final long ageMillisecondLimit;
-  private final Consumer<D> evict;
+  private final BiConsumer<D, R> evict;
   private long measure;
 
   /**
@@ -33,7 +34,7 @@ public class SyncCacheLRU<D, R extends Measurable> {
    * @param ageMillisecondLimit the maximum age of an item within the cache
    * @param evict an event when a key is evicted
    */
-  public SyncCacheLRU(TimeSource time, int minSize, int maxSize, long measureLimit, long ageMillisecondLimit, Consumer<D> evict) {
+  public SyncCacheLRU(TimeSource time, int minSize, int maxSize, long measureLimit, long ageMillisecondLimit, BiConsumer<D, R> evict) {
     this.time = time;
     this.ageMillisecondLimit = ageMillisecondLimit;
     this.evict = evict;
@@ -99,6 +100,6 @@ public class SyncCacheLRU<D, R extends Measurable> {
   /** internal: an item was removed for some reason */
   private void removed(Map.Entry<D, CacheEntry<R>> entry) {
     this.measure -= entry.getValue().item.measure();
-    evict.accept(entry.getKey());
+    evict.accept(entry.getKey(), entry.getValue().item);
   }
 }

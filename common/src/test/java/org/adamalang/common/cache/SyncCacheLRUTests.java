@@ -20,7 +20,7 @@ public class SyncCacheLRUTests {
   public void evict_size() {
     MockTime time = new MockTime();
     ArrayList<String> evictions = new ArrayList<>();
-    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 1, 10, 1024, 1000, evictions::add);
+    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 1, 10, 1024, 1000, (key, val) -> evictions.add(key));
 
     for (int k = 0; k < 15; k++) {
       cache.add("xyz-" + k, new MeasuredString("XYZ-" + k));
@@ -39,7 +39,7 @@ public class SyncCacheLRUTests {
   public void lru() {
     MockTime time = new MockTime();
     ArrayList<String> evictions = new ArrayList<>();
-    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 1, 10, 1024, 1000, evictions::add);
+    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 1, 10, 1024, 1000, (key, val) -> evictions.add(key));
 
     for (int k = 0; k < 10; k++) {
       cache.add("xyz-" + k, new MeasuredString("XYZ-" + k));
@@ -64,7 +64,7 @@ public class SyncCacheLRUTests {
   public void no_min_size_too_big() {
     MockTime time = new MockTime();
     ArrayList<String> evictions = new ArrayList<>();
-    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 0, 10, 2, 1000, evictions::add);
+    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 0, 10, 2, 1000, (key, val) -> evictions.add(key));
     for (int k = 0; k < 10;  k++) {
       cache.add("k-" + k, new MeasuredString("0123456789"));
     }
@@ -76,7 +76,7 @@ public class SyncCacheLRUTests {
   public void min_size_big_items() {
     MockTime time = new MockTime();
     ArrayList<String> evictions = new ArrayList<>();
-    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 5, 10, 2, 1000, evictions::add);
+    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 5, 10, 2, 1000, (key, val) -> evictions.add(key));
     for (int k = 0; k < 10;  k++) {
       cache.add("k-" + k, new MeasuredString("0123456789"));
     }
@@ -93,7 +93,7 @@ public class SyncCacheLRUTests {
   public void expiry_on_insert() {
     MockTime time = new MockTime();
     ArrayList<String> evictions = new ArrayList<>();
-    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 0, 100, 1024, 500, evictions::add);
+    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 0, 100, 1024, 500, (key, val) -> evictions.add(key));
     for (int k = 0; k < 10;  k++) {
       cache.add("k-" + k, new MeasuredString("0123456789"));
       time.currentTime += 1000;
@@ -107,7 +107,7 @@ public class SyncCacheLRUTests {
   public void expiry_sweep() {
     MockTime time = new MockTime();
     ArrayList<String> evictions = new ArrayList<>();
-    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 0, 100, 1024, 500, evictions::add);
+    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 0, 100, 1024, 500, (key, val) -> evictions.add(key));
     for (int k = 0; k < 10;  k++) {
       cache.add("k-" + k, new MeasuredString("0123456789"));
     }
