@@ -10,8 +10,6 @@
 package org.adamalang.web.client;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.contracts.WebJsonStream;
@@ -25,8 +23,6 @@ import org.adamalang.web.service.mocks.NullCertificateFinder;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.sql.Time;
-import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
