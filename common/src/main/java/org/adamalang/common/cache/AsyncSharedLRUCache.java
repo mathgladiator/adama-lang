@@ -77,4 +77,13 @@ public class AsyncSharedLRUCache<D, R extends Measurable> {
       }
     });
   }
+
+  public void forceEvictionFromCacheNoDownstreamEviction(D key) {
+    executor.execute(new NamedRunnable("evict") {
+      @Override
+      public void execute() throws Exception {
+        cache.forceEvictionFromCacheNoDownstreamEviction(key);
+      }
+    });
+  }
 }

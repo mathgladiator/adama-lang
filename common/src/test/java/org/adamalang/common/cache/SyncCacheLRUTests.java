@@ -123,4 +123,17 @@ public class SyncCacheLRUTests {
     Assert.assertNull(cache.get("x"));
   }
 
+  @Test
+  public void evict() {
+    MockTime time = new MockTime();
+    ArrayList<String> evictions = new ArrayList<>();
+    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 0, 100, 1024, 500, (key, val) -> evictions.add(key));
+    cache.add("input", new MeasuredString("0123456789"));
+    Assert.assertEquals(10, cache.measure());
+    Assert.assertEquals(1, cache.size());
+    cache.forceEvictionFromCacheNoDownstreamEviction("input");
+    Assert.assertEquals(0, cache.measure());
+    Assert.assertEquals(0, cache.size());
+  }
+
 }

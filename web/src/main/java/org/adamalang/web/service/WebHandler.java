@@ -157,22 +157,44 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     AssetStream response = streamOf(req, ctx, cors);
 
     if (!WebHandlerAssetCache.canCache(asset)) {
+      // we can't cache? sad face -> stream direct
       assets.request(key, asset, response);
       return;
     }
 
+    // if the response fails, for any reason, force the stream out of the cache to try again
+    AssetStream wrapResponseToEvict = new AssetStream() {
+      @Override
+      public void headers(long length, String contentType) {
+        response.headers(length, contentType);
+      }
+
+      @Override
+      public void body(byte[] chunk, int offset, int length, boolean last) {
+        response.body(chunk, offset, length, last);
+      }
+
+      @Override
+      public void failure(int code) {
+        response.failure(code);
+        cache.failure(asset);
+      }
+    };
+
+    // ask the cache for the cached asset
     cache.get(asset, new Callback<>() {
       @Override
       public void success(CachedAsset cachedAsset) {
-        AssetStream feed = cachedAsset.attachWhileInExecutor(response);
+        // attach the wrapped response to the asset
+        AssetStream feed = cachedAsset.attachWhileInExecutor(wrapResponseToEvict);
         if (feed != null) {
+          // pump the stream since this is the first requestor
           assets.request(key, asset, feed);
         }
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-        cache.failure(asset);
         response.failure(ex.code);
       }
     });

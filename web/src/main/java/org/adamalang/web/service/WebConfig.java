@@ -38,24 +38,24 @@ public class WebConfig {
 
   public WebConfig(ConfigObject config) throws Exception {
     // HTTP properties
-    this.port = config.intOf("http_port", 8080);
-    this.redirectPort = config.intOf("http_redirect_port", 8085);
-    this.maxContentLengthSize = config.intOf("http_max_content_length_size", 4194304);
-    this.healthCheckPath = config.strOf("http_health_check_path", "/~health_check_lb");
-    this.deepHealthCheckPath = config.strOf("http_deep_health_check_path", "/~deep_health_check_status_page");
+    this.port = config.intOf("http-port", 8080);
+    this.redirectPort = config.intOf("http-redirect-port", 8085);
+    this.maxContentLengthSize = config.intOf("http-max-content-length-size", 4194304);
+    this.healthCheckPath = config.strOf("http-health-check-path", "/~health_check_lb");
+    this.deepHealthCheckPath = config.strOf("http-deep-health-check-path", "/~deep_health_check_status_page");
     // WebSocket properties
-    this.timeoutWebsocketHandshake = config.intOf("websocket_handshake_timeout_ms", 2500);
-    this.readTimeoutSeconds = config.intOf("websocket_read_timeout_sec", 10);
-    this.writeTimeoutSeconds = config.intOf("websocket_write_timeout_sec", 5);
-    this.idleReadSeconds = config.intOf("websocket_read_idle_sec", 0);
-    this.idleWriteSeconds = config.intOf("websocket_write_idle_sec", 0);
-    this.idleAllSeconds = config.intOf("websocket_all_idle_sec", 15);
-    this.maxWebSocketFrameSize = config.intOf("websocket_max_frame_size", 1048576);
-    this.heartbeatTimeMilliseconds = config.intOf("websocket_heart_beat_ms", 1000);
-    this.bossThreads = config.intOf("http_boss_threads", 2);
-    this.workerThreads = config.intOf("http_worker_threads", 16);
-    this.regionalDomain = config.strOf("regional_domain", "adama-platform.com");
-    this.globalDomains = config.stringsOf("global_domains", new String[] { "adama.games" });
+    this.timeoutWebsocketHandshake = config.intOf("websocket-handshake-timeout-ms", 2500);
+    this.readTimeoutSeconds = config.intOf("websocket-read-timeout-sec", 10);
+    this.writeTimeoutSeconds = config.intOf("websocket-write-timeout-sec", 5);
+    this.idleReadSeconds = config.intOf("websocket-read-idle-sec", 0);
+    this.idleWriteSeconds = config.intOf("websocket-write-idle-sec", 0);
+    this.idleAllSeconds = config.intOf("websocket-all-idle-sec", 15);
+    this.maxWebSocketFrameSize = config.intOf("websocket-max-frame-size", 1048576);
+    this.heartbeatTimeMilliseconds = config.intOf("websocket-heart-beat-ms", 1000);
+    this.bossThreads = config.intOf("http-boss-threads", 2);
+    this.workerThreads = config.intOf("http-worker-threads", 16);
+    this.regionalDomain = config.strOf("regional-domain", "adama-platform.com");
+    this.globalDomains = config.stringsOf("global-domains", new String[] { "adama.games" });
     this.sharedConnectionPoolMaxLifetimeMilliseconds = config.intOf("shared-connection-max-lifetime-ms", 10000);
     this.sharedConnectionPoolMaxUsageCount = config.intOf("shared-connection-max-usage-count", 50);
     this.sharedConnectionPoolMaxPoolSize = config.intOf("shared-connection-max-pool-size", 25);

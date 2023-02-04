@@ -29,10 +29,10 @@ public class DataBaseConfig {
 
   public DataBaseConfig(ConfigObject config) {
     ConfigObject roleConfig = config.childSearchMustExist("role was not found", "db", "any");
-    this.jdbcUrl = roleConfig.strOfButCrash("jdbc_url", "jdbc_url was not present in config");
+    this.jdbcUrl = roleConfig.strOfButCrash("jdbc-url", "jdbc_url was not present in config");
     this.user = roleConfig.strOfButCrash("user", "user was not present in config");
     this.password = roleConfig.strOfButCrash("password", "password was not present in config");
-    this.databaseName = roleConfig.strOfButCrash("database_name", "database_name was not present in config");
+    this.databaseName = roleConfig.strOfButCrash("database-name", "database_name was not present in config");
 
     /*
     this.maxStatements = roleConfig.intOf("max_statements", 0);

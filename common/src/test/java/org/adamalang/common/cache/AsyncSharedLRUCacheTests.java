@@ -57,6 +57,7 @@ public class AsyncSharedLRUCacheTests {
       }
       Assert.assertTrue(latchFinish.await(10000, TimeUnit.MILLISECONDS));
       cbRef.get().success(new MeasuredString("XYZ"));
+      async.forceEvictionFromCacheNoDownstreamEviction("Y"); // dumb
       Assert.assertTrue(allIn.await(50000, TimeUnit.MILLISECONDS));
       Assert.assertEquals(1, calls.get());
       for(int k = 0; k < 10; k++) {

@@ -1,3 +1,12 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See https://www.adama-platform.com/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
+ */
 package org.adamalang.web.assets.cache;
 
 import org.adamalang.common.NamedRunnable;
@@ -16,6 +25,7 @@ public class MemoryCacheAsset implements CachedAsset {
   private ByteArrayOutputStream memory;
   private boolean done;
   private ArrayList<AssetStream> streams;
+  private Integer failed;
 
   public MemoryCacheAsset(NtAsset asset, SimpleExecutor executor) {
     this.asset = asset;
@@ -23,6 +33,7 @@ public class MemoryCacheAsset implements CachedAsset {
     this.memory = new ByteArrayOutputStream();
     this.done = false;
     this.streams = new ArrayList<>();
+    this.failed = null;
   }
 
   @Override
@@ -37,6 +48,10 @@ public class MemoryCacheAsset implements CachedAsset {
 
   @Override
   public AssetStream attachWhileInExecutor(AssetStream attach) {
+    if (failed != null) {
+      attach.failure(failed);
+      return null;
+    }
     attach.headers(asset.size, asset.contentType);
     if (done) { // the cache item has been fed, so simply replay what was captured
       byte[] body = memory.toByteArray();
@@ -81,6 +96,7 @@ public class MemoryCacheAsset implements CachedAsset {
           executor.execute(new NamedRunnable("mc-failure") {
             @Override
             public void execute() throws Exception {
+              failed = code;
               for (AssetStream existing : streams) {
                 existing.failure(code);
               }

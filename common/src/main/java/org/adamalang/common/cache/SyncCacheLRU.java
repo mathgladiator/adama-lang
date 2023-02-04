@@ -102,4 +102,11 @@ public class SyncCacheLRU<D, R extends Measurable> {
     this.measure -= entry.getValue().item.measure();
     evict.accept(entry.getKey(), entry.getValue().item);
   }
+
+  public void forceEvictionFromCacheNoDownstreamEviction(D key) {
+    CacheEntry<R> value = cache.remove(key);
+    if (value != null) {
+      this.measure -= value.item.measure();
+    }
+  }
 }

@@ -522,6 +522,10 @@ public class ErrorTable {
     descriptions.put(921794, "no description of error (yet)");
     names.put(950469, "WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT");
     descriptions.put(950469, "no description of error (yet)");
+    names.put(934083, "WEB_BASE_SHARED_EXECUTE_FAILED_READ");
+    descriptions.put(934083, "no description of error (yet)");
+    names.put(977091, "WEB_BASE_EXECUTE_SHARED_TOO_MANY_INFLIGHT");
+    descriptions.put(977091, "no description of error (yet)");
     names.put(998434, "NET_LCSM_UPDATE_TIMEOUT");
     descriptions.put(998434, "no description of error (yet)");
     names.put(930848, "NET_LCSM_UPDATE_REJECTED");
@@ -590,6 +594,12 @@ public class ErrorTable {
     descriptions.put(973020, "no description of error (yet)");
     names.put(909532, "FRONTEND_UNKNOWN_EXCEPTION_DOMAIN_LOOKUP");
     descriptions.put(909532, "no description of error (yet)");
+    names.put(929987, "CACHE_ASSET_FILE_FAILED_WRITE");
+    descriptions.put(929987, "no description of error (yet)");
+    names.put(920811, "CACHE_ASSET_FILE_CLOSED_PRIOR_ATTACH");
+    descriptions.put(920811, "no description of error (yet)");
+    names.put(995563, "CACHE_ASSET_FILE_FAILED_CREATE");
+    descriptions.put(995563, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");

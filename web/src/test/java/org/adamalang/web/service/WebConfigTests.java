@@ -18,8 +18,8 @@ import org.junit.Test;
 public class WebConfigTests {
   public static WebConfig mockConfig(Scenario scenario) throws Exception {
     ObjectNode configNode = Json.newJsonObject();
-    configNode.put("http_port", scenario.port);
-    configNode.put("websocket_heart_beat_ms", 250);
+    configNode.put("http-port", scenario.port);
+    configNode.put("websocket-heart-beat-ms", 250);
     return new WebConfig(new ConfigObject(configNode));
   }
 
@@ -37,12 +37,12 @@ public class WebConfigTests {
   @Test
   public void override() throws Exception {
     ObjectNode node = Json.newJsonObject();
-    node.put("http_port", 9000);
-    node.put("http_max_content_length_size", 5000);
-    node.put("websocket_max_frame_size", 7000);
-    node.put("websocket_handshake_timeout_ms", 123);
-    node.put("http_health_check_path", "HEALTH");
-    node.put("websocket_heart_beat_ms", 666);
+    node.put("http-port", 9000);
+    node.put("http-max-content-length-size", 5000);
+    node.put("websocket-max-frame-size", 7000);
+    node.put("websocket-handshake-timeout-ms", 123);
+    node.put("http-health-check-path", "HEALTH");
+    node.put("websocket-heart-beat-ms", 666);
     WebConfig webConfig = new WebConfig(new ConfigObject(node));
     Assert.assertEquals(666, webConfig.heartbeatTimeMilliseconds);
     Assert.assertEquals("HEALTH", webConfig.healthCheckPath);
