@@ -24,7 +24,7 @@ import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Overlord {
-  public static HttpHandler execute(ConcurrentCachedHttpHandler handler, boolean isGlobalOverlord, Client localClient, MultiRegionClient client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, String scanPath, ColdAssetSystem lister, Cloud cloud, AtomicBoolean alive) throws Exception {
+  public static HttpHandler execute(ConcurrentCachedHttpHandler handler, boolean isGlobalOverlord, Client localClient, MultiRegionClient client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, ColdAssetSystem lister, Cloud cloud, AtomicBoolean alive) throws Exception {
     // the overlord has metrics
     OverlordMetrics metrics = new OverlordMetrics(metricsFactory);
 

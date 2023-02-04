@@ -40,8 +40,8 @@ public class Backend {
     CoreMetrics coreMetrics = new CoreMetrics(init.metricsFactory);
     DeploymentMetrics deploymentMetrics = new DeploymentMetrics(init.metricsFactory);
     // pull config
-    int coreThreads = config.get_int("service_thread_count", 8);
-    String billingRootPath = config.get_string("billing_path", "billing");
+    int coreThreads = config.get_int("service-thread-count", 8);
+    String billingRootPath = config.get_string("billing-path", "billing");
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     ProxyDeploymentFactory factoryProxy = new ProxyDeploymentFactory(deploymentFactoryBase);
     FirstPartyServices.install(init.database);
@@ -50,8 +50,8 @@ public class Backend {
     CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), caravan.service, TimeSource.REAL_TIME, coreThreads);
     DeploymentAgent deployAgent = new DeploymentAgent(init.picker, init.database, deploymentMetrics, init.region, init.machine, deploymentFactoryBase, service);
 
-    ServiceHeatEstimator.HeatVector low = config.get_heat("heat_low", 1, 100, 1, 100);
-    ServiceHeatEstimator.HeatVector hot = config.get_heat("heat_low", 1000, 100000, 250, 2000);
+    ServiceHeatEstimator.HeatVector low = config.get_heat("heat-low", 1, 100, 1, 100);
+    ServiceHeatEstimator.HeatVector hot = config.get_heat("heat-hot", 1000, 100000, 250, 2000);
     ServiceHeatEstimator estimator = new ServiceHeatEstimator(low, hot);
     meteringPubSub.subscribe(estimator);
 

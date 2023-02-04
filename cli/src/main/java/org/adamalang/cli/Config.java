@@ -96,10 +96,10 @@ public class Config {
 
   public ServiceHeatEstimator.HeatVector get_heat(String suffix, int cpu_m, int messages, int mem_mb, int connections) {
     return new ServiceHeatEstimator.HeatVector(
-        get_int(suffix + "_cpu_m", cpu_m) * 1000L * 1000L,
-        get_int(suffix + "_messages", messages),
-        get_int(suffix + "_mem_mb", mem_mb) * 1024L * 1024,
-        get_int(suffix + "_connections", connections));
+        get_int(suffix + "-cpu-m", cpu_m) * 1000L * 1000L,
+        get_int(suffix + "-messages", messages),
+        get_int(suffix + "-mem-mb", mem_mb) * 1024L * 1024,
+        get_int(suffix + "-connections", connections));
   }
 
   public ObjectNode get_or_create_child(String field) {

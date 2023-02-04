@@ -89,9 +89,9 @@ public class CommonServiceInit {
 
   public CommonServiceInit(Config config, Role role) throws Exception {
     MachineHeat.install();
-    ConfigObject configObjectForWeb = new ConfigObject(config.get_or_create_child(role == Role.Overlord ? "overlord_web" : "web"));
+    ConfigObject configObjectForWeb = new ConfigObject(config.get_or_create_child(role == Role.Overlord ? "overlord-web" : "web"));
     if (role == Role.Overlord) {
-      configObjectForWeb.intOf("http_port", 8081);
+      configObjectForWeb.intOf("http-port", 8081);
     }
     this.masterKey = config.get_string("master-key", null);
     this.minDomainsToHoldTo = config.get_int("domains-minimum-hold", 64);
@@ -99,19 +99,19 @@ public class CommonServiceInit {
     this.maxDomainAge = config.get_int("domains-max-age-ms", 60 * 60 * 1000);
     this.webConfig = new WebConfig(configObjectForWeb);
     WebConfig webConfig = new WebConfig(configObjectForWeb);
-    String identityFileName = config.get_string("identity_filename", "me.identity");
+    String identityFileName = config.get_string("identity-filename", "me.identity");
     KeyPair keyPair = PerSessionAuthenticator.inventHostKey();
     this.alive = new AtomicBoolean(true);
     this.region = config.get_string("region", null);
     this.role = role.name;
     switch (role) {
       case Adama:
-        this.servicePort = config.get_int("adama_port", 8001);
+        this.servicePort = config.get_int("adama-port", 8001);
         break;
       default:
         this.servicePort = webConfig.port;
     }
-    this.monitoringPort = config.get_int("monitoring_" + role.name + "_port", role.monitoringPort);
+    this.monitoringPort = config.get_int("monitoring-" + role.name + "-port", role.monitoringPort);
     this.identity = MachineIdentity.fromFile(identityFileName);
     this.hostKey = keyPair.getPrivate();
     this.metricsFactory = new PrometheusMetricsFactory(monitoringPort);

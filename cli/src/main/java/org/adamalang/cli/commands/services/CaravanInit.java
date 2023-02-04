@@ -28,7 +28,7 @@ public class CaravanInit {
   public final ManagedDataService service;
   private final Thread flusher;
   public CaravanInit(CommonServiceInit init, Config config) throws Exception {
-    String caravanRoot = config.get_string("caravan_root", "caravan");
+    String caravanRoot = config.get_string("caravan-root", "caravan");
     this.caravanExecutor = SimpleExecutor.create("caravan");
     this.managedExecutor = SimpleExecutor.create("managed-base");
     File caravanPath = new File(caravanRoot);
