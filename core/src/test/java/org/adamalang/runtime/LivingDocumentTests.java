@@ -155,20 +155,9 @@ public class LivingDocumentTests {
       Assert.assertEquals(6, obs1.writes.size());
       Assert.assertEquals(6, obs2.writes.size());
       Assert.assertEquals(1, obs3.writes.size());
-      System.err.println("OBSERVER 1");
-      for (String str : obs1.writes) {
-        System.err.println(str);
-      }
-      System.err.println("OBSERVER 2");
-      for (String str : obs2.writes) {
-        System.err.println(str);
-      }
-      System.err.println("OBSERVER 3");
-      for (String str : obs3.writes) {
-        System.err.println(str);
-      }
-
-
+      obs1.dump("Observer 1");
+      obs2.dump("Observer 2");
+      obs3.dump("Observer 3");
     } catch (RuntimeException re) {
       re.printStackTrace();
     }

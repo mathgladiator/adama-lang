@@ -31,4 +31,13 @@ public class MockDataObserver implements DataObserver {
   public synchronized void failure(ErrorCodeException exception) {
     writes.add("FAILURE:" + exception.code);
   }
+
+  public void dump(String intro) {
+    System.err.println("MockDataObserver:" + intro);
+    int at = 0;
+    for (String write : writes) {
+      System.err.println(at + "|" + write);
+      at++;
+    }
+  }
 }

@@ -12,6 +12,7 @@ package org.adamalang.runtime.sys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.*;
+import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
@@ -361,6 +362,21 @@ public class CoreService implements Deliverer, Queryable {
             afterExecuted.run();
           }
         }));
+      }
+    });
+  }
+
+  /** watch a key for data changes */
+  public void watch(Key key, DataObserver observer) {
+    load(key, new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        document.watch(observer);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        observer.failure(ex);
       }
     });
   }
