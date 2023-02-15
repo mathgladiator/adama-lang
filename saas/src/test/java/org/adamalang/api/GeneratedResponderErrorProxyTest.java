@@ -53,11 +53,12 @@ public class GeneratedResponderErrorProxyTest {
     new PlanResponder(responder).error(new ErrorCodeException(14));
     new ProgressResponder(responder).error(new ErrorCodeException(15));
     new ReflectionResponder(responder).error(new ErrorCodeException(16));
-    new RxhtmlResponder(responder).error(new ErrorCodeException(17));
-    new SeqResponder(responder).error(new ErrorCodeException(18));
-    new SimpleResponder(responder).error(new ErrorCodeException(19));
-    new SpaceListingResponder(responder).error(new ErrorCodeException(20));
-    new YesResponder(responder).error(new ErrorCodeException(21));
-    Assert.assertEquals(231, errorCount.get());
+    new ReplicaResponder(responder).error(new ErrorCodeException(17));
+    new RxhtmlResponder(responder).error(new ErrorCodeException(18));
+    new SeqResponder(responder).error(new ErrorCodeException(19));
+    new SimpleResponder(responder).error(new ErrorCodeException(20));
+    new SpaceListingResponder(responder).error(new ErrorCodeException(21));
+    new YesResponder(responder).error(new ErrorCodeException(22));
+    Assert.assertEquals(253, errorCount.get());
   }
 }

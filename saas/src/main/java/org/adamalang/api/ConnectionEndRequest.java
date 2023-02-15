@@ -16,7 +16,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
-/** Disconnect from the document document. */
+/** Disconnect from the document. */
 public class ConnectionEndRequest {
   public final Long connection;
 

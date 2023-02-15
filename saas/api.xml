@@ -274,6 +274,18 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="reset" type="bool">
+        <documentation>
+            Signal that the associated delta should reset the entire state of the replication.
+        </documentation>
+    </field-definition>
+
+    <field-definition name="change" type="json-object">
+        <documentation>
+            A json change behind a replica.
+        </documentation>
+    </field-definition>
+
     <field-definition name="delta" type="json-object">
         <documentation>
             A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information.
@@ -535,6 +547,11 @@
 
     <responder name="data" stream="true">
         <field name="delta"/>
+    </responder>
+
+    <responder name="replica" stream="true">
+        <field name="reset"/>
+        <field name="change"/>
     </responder>
 
     <responder name="initiation">
@@ -947,9 +964,54 @@
             error-find-by="474128" destroy="true">
         <parameter name="connection"/>
         <documentation>
-            Disconnect from the document document.
+            Disconnect from the document.
         </documentation>
     </method>
+
+    <!-- cross region replication
+    <method name="replication/create" responder="replica" create="replication-stream">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <documentation>
+            Replicate low level data
+        </documentation>
+    </method>
+
+    <method name="replication/end" responder="simple" handler="replication-stream" find-by="connection" error-find-by="445438" destroy="true">
+        <parameter name="connection"/>
+        <documentation>
+            Stop replicating data
+        </documentation>
+    </method>
+    -->
+
+    <!-- massive scale reading
+    <method name="observation/create" responder="data" create="observe-stream">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <documentation>
+            Create a mostly read-only connection to a document.
+        </documentation>
+    </method>
+
+    <method name="connection/funnel" responder="seq" handler="observe-stream" find-by="connection" error-find-by="451582">
+        <parameter name="connection"/>
+        <parameter name="channel"/>
+        <parameter name="message"/>
+        <documentation>
+            Send a message to a reducer
+        </documentation>
+    </method>
+
+    <method name="observation/end" responder="simple" handler="observe-stream" find-by="connection" error-find-by="439295" destroy="true">
+        <parameter name="connection"/>
+        <documentation>
+            Disconnect from the observation.
+        </documentation>
+    </method>
+    -->
 
     <method name="configure/make-or-get-asset-key" responder="asset-key">
         <documentation>
@@ -1483,9 +1545,6 @@
 466931
 462832
 458737
-445438
-451582
-439295
 -->
 
 </api>

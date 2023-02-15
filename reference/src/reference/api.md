@@ -1076,7 +1076,7 @@ stream.Update(viewer-state, {
 This method simply returns void.
 
 ## Method: ConnectionEnd
-Disconnect from the document document.
+Disconnect from the document.
 
 ### Parameters
 | name | required | type | documentation |
