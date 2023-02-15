@@ -17,8 +17,8 @@ import org.adamalang.cli.commands.services.distributed.Frontend;
 public class Solo {
   public static void run(Config config) throws Exception {
     // run the core service
-    CommonServiceInit init = Backend.run(config);
+    Backend backend = Backend.run(config);
     // spin up the frontend
-    new Frontend(config, init);
+    new Frontend(config, backend.init, backend.client);
   }
 }

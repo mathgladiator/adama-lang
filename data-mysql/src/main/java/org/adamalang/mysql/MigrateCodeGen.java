@@ -138,7 +138,7 @@ public class MigrateCodeGen {
       java.append("public class Migrate {\n");
       java.append("  public static void copy(DataBase from, DataBase to, MigrationStatus status) throws Exception {\n");
       java.append("    try (Connection _from = from.pool.getConnection()) {\n");
-      java.append("      try (Connection _to = from.pool.getConnection()) {\n");
+      java.append("      try (Connection _to = to.pool.getConnection()) {\n");
       makeCopy(dataBase, "directory", java, false, lookups());
       makeCopy(dataBase, "emails", java, true, lookups());
       makeCopy(dataBase, "initiations", java, false, lookups("user", "emails"));

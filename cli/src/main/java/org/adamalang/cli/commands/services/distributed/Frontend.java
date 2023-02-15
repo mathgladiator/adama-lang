@@ -39,8 +39,7 @@ public class Frontend {
 
   public final MultiRegionClient adama;
 
-  public Frontend(Config config, CommonServiceInit init) throws Exception {
-    Client client = init.makeClient(null);
+  public Frontend(Config config, CommonServiceInit init, Client client) throws Exception {
     FrontendHttpHandler http = new FrontendHttpHandler(init, client);
     Email email = new SES(init.webBase, init.awsConfig, init.awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
@@ -94,6 +93,7 @@ public class Frontend {
 
   public static void run(Config config) throws Exception {
     CommonServiceInit init = new CommonServiceInit(config, Role.Web);
-    new Frontend(config, init);
+    Client client = init.makeClient(null);
+    new Frontend(config, init, client);
   }
 }

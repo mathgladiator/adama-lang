@@ -13,11 +13,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.ConfigObject;
+import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.DataBaseConfig;
-import org.adamalang.mysql.DataBaseMetrics;
-import org.adamalang.mysql.Installer;
+import org.adamalang.mysql.*;
+import org.adamalang.mysql.contracts.MigrationStatus;
 
 public class Database {
   public static void execute(Config config, String[] args) throws Exception {
@@ -34,6 +33,19 @@ public class Database {
       }
       case "install": {
         new Installer(new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(new NoOpMetricsFactory()))).install();
+        return;
+      }
+      case "migrate": {
+        DataBase priorDB = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(new NoOpMetricsFactory()));
+        ObjectNode newConfig = Json.newJsonObject();
+        newConfig.set("db", config.read().get("nextdb"));
+        DataBase nextDB = new DataBase(new DataBaseConfig(new ConfigObject(newConfig)), new DataBaseMetrics(new NoOpMetricsFactory()));
+        Migrate.copy(priorDB, nextDB, new MigrationStatus() {
+          @Override
+          public void table(String name) {
+            System.out.println("At:" + name);
+          }
+        });
         return;
       }
       case "help":
@@ -54,6 +66,7 @@ public class Database {
     System.out.println(Util.prefix("DATABASESUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("configure", Util.ANSI.Green) + "         Update the configuration " + Util.prefix("(interactive)", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("install", Util.ANSI.Green) + "           Install the tables on a monolithic database");
+    System.out.println("    " + Util.prefix("migrate", Util.ANSI.Green) + "           Migrate data from 'db' to 'nextdb'");
   }
 
   public static void databaseConfigure(Config config) throws Exception {

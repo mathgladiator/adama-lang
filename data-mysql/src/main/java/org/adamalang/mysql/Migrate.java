@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class Migrate {
   public static void copy(DataBase from, DataBase to, MigrationStatus status) throws Exception {
     try (Connection _from = from.pool.getConnection()) {
-      try (Connection _to = from.pool.getConnection()) {
+      try (Connection _to = to.pool.getConnection()) {
       {
         status.table("directory");
         String _walk = "SELECT `id`, `space`, `key`, `created`, `updated`, `head_seq`, `need_gc`, `type`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes` FROM `" + from.databaseName + "`.`directory` ORDER BY `id`";

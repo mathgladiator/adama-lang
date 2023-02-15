@@ -15,6 +15,7 @@ import org.adamalang.cli.commands.services.CommonServiceInit;
 import org.adamalang.cli.commands.services.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.net.ServerHandle;
+import org.adamalang.net.client.Client;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
@@ -33,7 +34,14 @@ import java.io.File;
 import java.util.List;
 
 public class Backend {
-  public static CommonServiceInit run(Config config) throws Exception {
+  public final CommonServiceInit init;
+  public final Client client;
+
+  public Backend(CommonServiceInit init, Client client) {
+    this.init = init;
+    this.client = client;
+  }
+  public static Backend run(Config config) throws Exception {
     // create the common/shared service issues
     CommonServiceInit init = new CommonServiceInit(config, Role.Adama);
     // create metrics
@@ -59,7 +67,7 @@ public class Backend {
     deploymentFactoryBase.attachDeliverer(service);
     // tell the proxy how to pull code on demand
     factoryProxy.setAgent(deployAgent);
-    init.makeClient(capacityAgent);
+    Client client = init.makeClient(capacityAgent);
     init.engine.subscribe("adama", (hosts) -> {
       capacityAgent.deliverAdamaHosts(hosts);
     });
@@ -113,6 +121,6 @@ public class Backend {
       }
     })));
     System.err.println("backend running");
-    return init;
+    return new Backend(init, client);
   }
 }
