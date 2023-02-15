@@ -89,7 +89,6 @@ public class FileCacheAsset implements CachedAsset {
 
   @Override
   public AssetStream attachWhileInExecutor(AssetStream attach) {
-    System.err.println("ATTACH->" + failed + "/" + done);
     if (failed != null) {
       attach.failure(failed);
       return null;
