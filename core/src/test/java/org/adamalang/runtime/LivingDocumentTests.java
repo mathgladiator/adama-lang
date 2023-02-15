@@ -23,6 +23,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.sys.mocks.MockDataObserver;
 import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
@@ -112,6 +113,62 @@ public class LivingDocumentTests {
       Assert.assertEquals("{\"data\":{\"x\":false,\"r\":null},\"seq\":7}", list.get(3));
       Assert.assertEquals("{\"data\":{\"x\":true,\"r\":{\"z\":1000}},\"seq\":8}", list.get(4));
       Assert.assertEquals("{\"data\":{\"x\":false,\"r\":null},\"seq\":9}", list.get(5));
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+    }
+  }
+
+  @Test
+  public void observe() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup(
+          "@connected { return true; } public bool x; record R { public int z; } public R r; @construct { r.z = 1000; x = true; } message N {} channel foo(N n) { r.z++; x = !x; }",
+          null);
+      RealDocumentSetup.GotView gv = new RealDocumentSetup.GotView();
+      ArrayList<String> list = new ArrayList<>();
+      Perspective linked =
+          new Perspective() {
+            @Override
+            public void data(String data) {
+              list.add(data);
+            }
+
+            @Override
+            public void disconnect() {}
+          };
+      setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+
+      MockDataObserver obs1 = new MockDataObserver();
+      Runnable can1 = setup.document.watch(obs1);
+      for (int k = 0; k < 5; k++) {
+        setup.document.send(ContextSupport.WRAP(A), null, "foo", "{}", new RealDocumentSetup.AssertInt(5 + k));
+      }
+      MockDataObserver obs2 = new MockDataObserver();
+      setup.document.watch(obs2);
+      can1.run();
+      for (int k = 0; k < 5; k++) {
+        setup.document.send(ContextSupport.WRAP(A), null, "foo", "{}", new RealDocumentSetup.AssertInt(10 + k));
+      }
+      MockDataObserver obs3 = new MockDataObserver();
+      setup.document.watch(obs3);
+      Assert.assertEquals(6, obs1.writes.size());
+      Assert.assertEquals(6, obs2.writes.size());
+      Assert.assertEquals(1, obs3.writes.size());
+      System.err.println("OBSERVER 1");
+      for (String str : obs1.writes) {
+        System.err.println(str);
+      }
+      System.err.println("OBSERVER 2");
+      for (String str : obs2.writes) {
+        System.err.println(str);
+      }
+      System.err.println("OBSERVER 3");
+      for (String str : obs3.writes) {
+        System.err.println(str);
+      }
+
+
     } catch (RuntimeException re) {
       re.printStackTrace();
     }

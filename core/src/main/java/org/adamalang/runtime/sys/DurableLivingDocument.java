@@ -69,6 +69,7 @@ public class DurableLivingDocument implements Queryable {
   private boolean inflightCompact;
   private int trackingSeq;
   private long lastActivityMS;
+  private ArrayList<DataObserver> observers;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
@@ -85,6 +86,7 @@ public class DurableLivingDocument implements Queryable {
     this.size = new AtomicInteger(0);
     this.trackingSeq = document.__seq.get();
     this.lastActivityMS = base.time.nowMilliseconds();
+    this.observers = new ArrayList<>();
   }
 
   public static void fresh(final Key key, final LivingDocumentFactory factory, final CoreRequestContext context, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
@@ -359,9 +361,14 @@ public class DurableLivingDocument implements Queryable {
 
   private void issueCloseWhileInExecutor(int errorCode) {
     document.__nukeViews();
+    ErrorCodeException ex = new ErrorCodeException(errorCode);
     while (pending.size() > 0) {
-      pending.removeFirst().callback.failure(new ErrorCodeException(errorCode));
+      pending.removeFirst().callback.failure(ex);
     }
+    for (DataObserver observer : observers) {
+      observer.failure(ex);
+    }
+    observers.clear();
     cleanupWhileInExecutor();
   }
 
@@ -374,6 +381,32 @@ public class DurableLivingDocument implements Queryable {
         base.service.close(key, Callback.DONT_CARE_VOID);
       }
     }
+  }
+
+  /** watch the underlying data stream */
+  public Runnable watch(DataObserver observer) {
+    base.executor.execute(new NamedRunnable("attachobserver") {
+      @Override
+      public void execute() throws Exception {
+        if (catastrophicFailureOccurred) {
+          observer.failure(new ErrorCodeException(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION));
+          return;
+        }
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.enableAssetTracking();
+        document.__dump(writer);
+        observer.start(writer.toString());
+        observers.add(observer);
+      }
+    });
+    return () -> {
+      base.executor.execute(new NamedRunnable("detachobserver") {
+        @Override
+        public void execute() throws Exception {
+          observers.remove(observer);
+        }
+      });
+    };
   }
 
   public LivingDocumentFactory getCurrentFactory() {
@@ -484,6 +517,11 @@ public class DurableLivingDocument implements Queryable {
             @Override
             public void execute() throws Exception {
               try {
+                for (RemoteDocumentUpdate update : compactPatches) {
+                  for (DataObserver observer : observers) {
+                    observer.change(update.redo);
+                  }
+                }
                 for (final IngestRequest request : requests) {
                   if (request.change != null) {
                     request.callback.success(request.change);
@@ -522,6 +560,9 @@ public class DurableLivingDocument implements Queryable {
                     base.executor.execute(new NamedRunnable("catch-up-computed") {
                       @Override
                       public void execute() throws Exception {
+                        for (DataObserver observer : observers) {
+                          observer.change(value.patch);
+                        }
                         document.__insert(new JsonStreamReader(value.patch));
                         IngestRequest[] requestsAfterCatchUp = new IngestRequest[requests.length + 1];
                         requestsAfterCatchUp[0] = new IngestRequest(NtPrincipal.NO_ONE, forgeInvalidate(), DONT_CARE_CHANGE, false);
@@ -757,7 +798,7 @@ public class DurableLivingDocument implements Queryable {
   }
 
   public boolean canAttach(CoreRequestContext context) {
-    // TODO: check policy first
+    // TODO: check static policy first
     return document.__onCanAssetAttached(context);
   }
 
