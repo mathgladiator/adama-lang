@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ServerMessage.ReplicaData;
 import org.adamalang.net.codec.ServerMessage.DirectSendResponse;
 import org.adamalang.net.codec.ServerMessage.QueryResult;
 import org.adamalang.net.codec.ServerMessage.WebResponseNet;
@@ -286,6 +287,41 @@ public class ServerCodec {
         return;
       case 12546:
         handler.handle(readBody_12546(buf, new StreamStatus()));
+        return;
+    }
+  }
+
+
+  public static abstract class StreamReplica implements ByteStream {
+    public abstract void handle(ReplicaData payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 10548:
+          handle(readBody_10548(buf, new ReplicaData()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerReplica {
+    public void handle(ReplicaData payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerReplica handler) {
+    switch (buf.readIntLE()) {
+      case 10548:
+        handler.handle(readBody_10548(buf, new ReplicaData()));
         return;
     }
   }
@@ -580,6 +616,21 @@ public class ServerCodec {
   }
 
 
+  public static ReplicaData read_ReplicaData(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 10548:
+        return readBody_10548(buf, new ReplicaData());
+    }
+    return null;
+  }
+
+
+  private static ReplicaData readBody_10548(ByteBuf buf, ReplicaData o) {
+    o.reset = buf.readBoolean();
+    o.change = Helper.readString(buf);
+    return o;
+  }
+
   public static DirectSendResponse read_DirectSendResponse(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 1783:
@@ -868,6 +919,16 @@ public class ServerCodec {
 
   private static PingResponse readBody_24322(ByteBuf buf, PingResponse o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, ReplicaData o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(10548);
+    buf.writeBoolean(o.reset);
+    Helper.writeString(buf, o.change);;
   }
 
   public static void write(ByteBuf buf, DirectSendResponse o) {

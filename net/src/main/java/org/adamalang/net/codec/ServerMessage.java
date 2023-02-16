@@ -189,4 +189,13 @@ public class ServerMessage {
     @FieldOrder(1)
     public int seq;
   }
+
+  @TypeId(10548)
+  @Flow("Replica")
+  public static class ReplicaData {
+    @FieldOrder(1)
+    public boolean reset;
+    @FieldOrder(2)
+    public String change;
+  }
 }

@@ -47,6 +47,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   private CoreStream stream;
   private ScheduledFuture<?> futureHeat;
   private StreamMonitor.StreamMonitorInstance monitorStreamback;
+  private Runnable cancelWatch;
 
   public Handler(ServerNexus nexus, ByteStream upstream) {
     this.nexus = nexus;
@@ -55,6 +56,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     this.alive = new AtomicBoolean(true);
     nexus.metrics.server_handlers_active.up();
     this.monitorStreamback = null;
+    this.cancelWatch = null;
   }
 
   @Override
@@ -83,6 +85,10 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     if (stream != null) {
       stream.close();
       stream = null;
+    }
+    if (cancelWatch != null) {
+      cancelWatch.run();
+      cancelWatch = null;
     }
     if (upstream != null) {
       upstream.completed();
@@ -466,6 +472,49 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
       nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, assetIdEncoder, this);
     } catch (ErrorCodeException ex) {
       failure(ex);
+    }
+  }
+
+  @Override
+  public void handle(ClientMessage.ReplicaConnect payload) {
+    DataObserver observer = new DataObserver() {
+      @Override
+      public void start(String snapshot) {
+        ByteBuf toWrite = upstream.create(16 + snapshot.length());
+        ServerMessage.ReplicaData data = new ServerMessage.ReplicaData();
+        data.reset = true;
+        data.change = snapshot;
+        ServerCodec.write(toWrite, data);
+        upstream.next(toWrite);
+      }
+
+      @Override
+      public void change(String delta) {
+        ByteBuf toWrite = upstream.create(16 + delta.length());
+        ServerMessage.ReplicaData data = new ServerMessage.ReplicaData();
+        data.reset = false;
+        data.change = delta;
+        ServerCodec.write(toWrite, data);
+        upstream.next(toWrite);
+      }
+
+      @Override
+      public void failure(ErrorCodeException exception) {
+        upstream.error(exception.code);
+      }
+    };
+    Key key = new Key(payload.space, payload.key);
+    nexus.service.watch(key, observer);
+    cancelWatch = () -> {
+      nexus.service.unwatch(key, observer);
+    };
+  }
+
+  @Override
+  public void handle(ClientMessage.ReplicaDisconnect payload) {
+    if (cancelWatch != null) {
+      cancelWatch.run();
+      cancelWatch = null;
     }
   }
 

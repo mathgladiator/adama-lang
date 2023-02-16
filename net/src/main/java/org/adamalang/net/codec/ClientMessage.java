@@ -444,4 +444,18 @@ public class ClientMessage {
     @FieldOrder(9)
     public String message;
   }
+
+  @TypeId(12347)
+  @Flow("Server")
+  public static class ReplicaConnect {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+  }
+
+  @TypeId(13337)
+  @Flow("Server")
+  public static class ReplicaDisconnect {
+  }
 }

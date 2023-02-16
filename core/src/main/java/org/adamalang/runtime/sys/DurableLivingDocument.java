@@ -384,7 +384,7 @@ public class DurableLivingDocument implements Queryable {
   }
 
   /** watch the underlying data stream */
-  public Runnable watch(DataObserver observer) {
+  public void watch(DataObserver observer) {
     base.executor.execute(new NamedRunnable("attachobserver") {
       @Override
       public void execute() throws Exception {
@@ -399,14 +399,15 @@ public class DurableLivingDocument implements Queryable {
         observers.add(observer);
       }
     });
-    return () -> {
-      base.executor.execute(new NamedRunnable("detachobserver") {
-        @Override
-        public void execute() throws Exception {
-          observers.remove(observer);
-        }
-      });
-    };
+  }
+
+  public void unwatch(DataObserver observer) {
+    base.executor.execute(new NamedRunnable("detachobserver") {
+      @Override
+      public void execute() throws Exception {
+        observers.remove(observer);
+      }
+    });
   }
 
   public LivingDocumentFactory getCurrentFactory() {

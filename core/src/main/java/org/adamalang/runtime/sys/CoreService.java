@@ -368,10 +368,24 @@ public class CoreService implements Deliverer, Queryable {
 
   /** watch a key for data changes */
   public void watch(Key key, DataObserver observer) {
-    load(key, new Callback<DurableLivingDocument>() {
+    load(key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
         document.watch(observer);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        observer.failure(ex);
+      }
+    });
+  }
+
+  public void unwatch(Key key, DataObserver observer) {
+    load(key, new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        document.unwatch(observer);
       }
 
       @Override

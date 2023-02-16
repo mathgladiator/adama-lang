@@ -140,13 +140,13 @@ public class LivingDocumentTests {
       setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
 
       MockDataObserver obs1 = new MockDataObserver();
-      Runnable can1 = setup.document.watch(obs1);
+      setup.document.watch(obs1);
       for (int k = 0; k < 5; k++) {
         setup.document.send(ContextSupport.WRAP(A), null, "foo", "{}", new RealDocumentSetup.AssertInt(5 + k));
       }
       MockDataObserver obs2 = new MockDataObserver();
       setup.document.watch(obs2);
-      can1.run();
+      setup.document.unwatch(obs1);
       for (int k = 0; k < 5; k++) {
         setup.document.send(ContextSupport.WRAP(A), null, "foo", "{}", new RealDocumentSetup.AssertInt(10 + k));
       }

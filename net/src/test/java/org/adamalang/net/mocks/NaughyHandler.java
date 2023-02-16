@@ -159,6 +159,16 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
+  public void handle(ClientMessage.ReplicaDisconnect payload) {
+    real.failure(new ErrorCodeException(-12347));
+  }
+
+  @Override
+  public void handle(ClientMessage.ReplicaConnect payload) {
+    real.failure(new ErrorCodeException(-12349));
+  }
+
+  @Override
   public void handle(ClientMessage.ProxySnapshot payload) {
     real.failure(new ErrorCodeException(-1000));
   }

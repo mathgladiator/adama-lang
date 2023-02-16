@@ -13,6 +13,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ClientMessage.ReplicaDisconnect;
+import org.adamalang.net.codec.ClientMessage.ReplicaConnect;
 import org.adamalang.net.codec.ClientMessage.DirectSend;
 import org.adamalang.net.codec.ClientMessage.ExecuteQuery;
 import org.adamalang.net.codec.ClientMessage.WebDelete;
@@ -47,6 +49,10 @@ import org.adamalang.net.codec.ClientMessage.PingRequest;
 public class ClientCodec {
 
   public static abstract class StreamServer implements ByteStream {
+    public abstract void handle(ReplicaDisconnect payload);
+
+    public abstract void handle(ReplicaConnect payload);
+
     public abstract void handle(DirectSend payload);
 
     public abstract void handle(ExecuteQuery payload);
@@ -115,6 +121,12 @@ public class ClientCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
+        case 13337:
+          handle(readBody_13337(buf, new ReplicaDisconnect()));
+          return;
+        case 12347:
+          handle(readBody_12347(buf, new ReplicaConnect()));
+          return;
         case 17345:
           handle(readBody_17345(buf, new DirectSend()));
           return;
@@ -204,6 +216,8 @@ public class ClientCodec {
   }
 
   public static interface HandlerServer {
+    public void handle(ReplicaDisconnect payload);
+    public void handle(ReplicaConnect payload);
     public void handle(DirectSend payload);
     public void handle(ExecuteQuery payload);
     public void handle(WebDelete payload);
@@ -236,6 +250,12 @@ public class ClientCodec {
 
   public static void route(ByteBuf buf, HandlerServer handler) {
     switch (buf.readIntLE()) {
+      case 13337:
+        handler.handle(readBody_13337(buf, new ReplicaDisconnect()));
+        return;
+      case 12347:
+        handler.handle(readBody_12347(buf, new ReplicaConnect()));
+        return;
       case 17345:
         handler.handle(readBody_17345(buf, new DirectSend()));
         return;
@@ -393,6 +413,34 @@ public class ClientCodec {
     }
   }
 
+
+  public static ReplicaDisconnect read_ReplicaDisconnect(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 13337:
+        return readBody_13337(buf, new ReplicaDisconnect());
+    }
+    return null;
+  }
+
+
+  private static ReplicaDisconnect readBody_13337(ByteBuf buf, ReplicaDisconnect o) {
+    return o;
+  }
+
+  public static ReplicaConnect read_ReplicaConnect(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 12347:
+        return readBody_12347(buf, new ReplicaConnect());
+    }
+    return null;
+  }
+
+
+  private static ReplicaConnect readBody_12347(ByteBuf buf, ReplicaConnect o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    return o;
+  }
 
   public static DirectSend read_DirectSend(ByteBuf buf) {
     switch (buf.readIntLE()) {
@@ -902,6 +950,24 @@ public class ClientCodec {
 
   private static PingRequest readBody_24321(ByteBuf buf, PingRequest o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, ReplicaDisconnect o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(13337);
+  }
+
+  public static void write(ByteBuf buf, ReplicaConnect o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(12347);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
   }
 
   public static void write(ByteBuf buf, DirectSend o) {
