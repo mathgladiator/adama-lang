@@ -12,7 +12,6 @@ parser.add_argument('--fast', '-f', default=False, action="store_true", help="If
 parser.add_argument('--client', '-cli', default=False, action="store_true", help="Build javascript client")
 parser.add_argument('--all', '-a', default=False, action="store_true", help="Alias to --client and --jar")
 parser.add_argument('--generate', '-g', default=False, action="store_true", help="Generate contrib")
-parser.add_argument('--production', '-p', default=False, action="store_true", help="*Future Use*")
 parser.add_argument('--java-path', default="java", help="Defaults to `java`")
 parser.add_argument('--mvn-path', default="mvn", help="Defaults to `mvn`")
 args = parser.parse_args()
