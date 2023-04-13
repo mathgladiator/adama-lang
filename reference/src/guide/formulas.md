@@ -1,20 +1,24 @@
 # Reactive formulas
 
-Adama is inspired by spreadsheets. Beyond capturing data in tables, spreadsheets have formulas to enable various useful forms of computation. This idea is a key part behind the reactive programming model in Adama. It's easy to define a formula, and here is an example:
+Adama draws inspiration from spreadsheets and their ability to do more than just organize data into tables.
+By utilizing formulas, spreadsheets can perform useful computations, a concept that forms the basis of Adama's reactive programming model.
+
+One of Adama's defining features is its simplicity in defining formulas, as demonstrated in the following example:
 
 ```adama
-
 public int x;
 public int y;
 
 public formula len = Math.sqrt(x * x + y * y);
 ```
 
-## Diving Into Details
+The ```formula``` identifier in Adama serves as a type that allows expressions to be combined into mathematical expressions using any previously defined state or other formulas.
+However, there are two key rules to keep in mind.
 
-The ```formula``` identifier is used like a type but enables the right-hand side of the '=' to be an expression combining any previously defined state (or other formulas) in a glorious mathematical expression. There are two key rules important to address:
+Firstly, the right-hand side of the formula must be "pure," meaning it cannot mutate the document in any way.
+This restriction limits the use of only math and functions, while procedures are strictly prohibited.
+Secondly, the right-hand side must only refer to a state defined before the introduction of the formula, which effectively prevents circular logic.
 
-* The right-hand side must be "pure" in a side effect free kind of way. That is, it is unable to mutate the document. Practically, this means that only math and functions can be used. Procedures are strictly forbidden.
-* The right-hand side must only refer to a state defined before the introduction of the formula. This prevents circular logic.
-
-With regards to performance and semantics, formulas are 100% lazy. No computation is done until the data is asked for, and the result of the computation is cached until underlying data is invalidated. When data changes happen, the result will be thrown away until the next time the data is called upon.
+In terms of performance and semantics, formulas in Adama are 100% lazy. 
+No computation is executed until the data is requested, and the result is cached until the underlying data is invalidated.
+If changes occur in the data, the result is discarded until the next time the data is accessed.

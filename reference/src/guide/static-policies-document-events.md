@@ -1,6 +1,8 @@
 # Static policies and document events
 
-A document will contain state, and it is vital to protect that state from unauthorized access or malicous actors. In this section, we will go through the details of access control and answer these questions:
+In Adama, protecting the state of a document from unauthorized access or malicious actors is a crucial aspect of designing a secure and reliable application. In this section, we will delve into the details of access control and explore the key questions that arise in this context.
+Specifically, we will answer these questions:
+
 * Who can create documents?
 * Who can invent documents? And what does document invention mean?
 * How do I tell when a document is loaded? How to upgrade document state?
@@ -9,12 +11,18 @@ A document will contain state, and it is vital to protect that state from unauth
 * Who can attach resources (i.e. files) to documents?
 * What resource got attached? And when do assets get deleted?
 
-Unlike other document stores, access control is done within the platform at the lowest level.
-This is the first step in building anything with Adama because access control and privacy are important.
+One of the key features that sets Adama apart from other document stores is its approach to access control. In Adama, access control is built directly into the platform at the lowest level, rather than being implemented as yet another configuration on top of the system. This design choice ensures that security and privacy are core features of Adama, rather than afterthoughts or add-ons.
+
+As a result, access control is an essential first step in building anything with Adama. By carefully designing your access control policies and privacy rules, you can ensure that your users' data is protected from unauthorized access or misuse, while still providing them with the functionality and features they need to get the most out of your application.
 
 ## Static policies
 
-Static policies are evaluated without any state precisely because that state is not available. For instance, the ability to create a document requires a policy, so we introduce the ```@static {}``` construct which denotes a block of policies. Within the ```@static``` block are policies like ```create``` and ```invent```.
+Adama uses static policies to enforce access control rules that are evaluated without any state information, precisely because that state is not available at the time the policy is evaluated.
+For example, the ability to create a new document in Adama requires a policy to be in place.
+To define static policies, Adama provides the ```@static {}``` construct, which denotes a block of policies that are evaluated at the time the policy is enforced.
+
+Within the @static block, developers can define a variety of policies, such as ```create``` and ```invent```, that restrict or allow users' access to create documents.
+These policies are evaluated based on the user's identity and other relevant metadata, such as their IP address or location, to determine whether they have permission to perform a particular action.
 
 ### Answer: Who can create documents within your space?
 

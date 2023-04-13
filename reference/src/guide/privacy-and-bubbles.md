@@ -1,6 +1,19 @@
 # Privacy and bubbles
 
-The document and records contain fields and formulas that are privacy checked before they can be viewed by users. This section outlines how data is exposed to users. At the core, each field is prefixed with a privacy modifier.
+Adama's focus on data privacy is a critical aspect of the language and is enforced through privacy checks on document fields and records.
+In this section, we will explore how Adama exposes data to users and the role of privacy modifiers in protecting sensitive information.
+1At the heart of Adama's privacy system is the use of privacy modifiers, which are prefixes added to each field to control how they are accessed and by whom.
+These privacy modifiers allow you to control the visibility of each field and ensure that sensitive information is only accessible to authorized users.
+
+By carefully managing the privacy of your fields and records, you can create a secure and reliable system for managing data in your Adama applications.
+This is particularly important in web and mobile applications, where sensitive information such as user credentials and financial data must be protected at all times.
+Adama's privacy system offers a unique and innovative approach to data protection, and by understanding how it works, you can build applications that are both efficient and secure.
+With Adama's support for privacy modifiers and other privacy features, you can create applications that meet the highest standards of data protection and ensure that your users' information is always safe and secure.
+
+## Shared-value modifiers
+
+These modifiers are prefixes added to each field to control how they are exposed to users, and they allow you to specify who can see the data contained within.
+The following modifiers are commonly used in Adama to control field visibility:
 
 | Modifier | Effect |
 | --- | --- |
@@ -8,8 +21,6 @@ The document and records contain fields and formulas that are privacy checked be
 |  private | No one can see it |
 | viewer_is&lt;field&gt; | Only the viewer indicated by the given field is able to see it |
 | use_policy&lt;policy&gt; | Validate the viewer can witness the value via code; policies are defined within documents and records via the ```policy``` keyword. |
-
-These modifiers are great for revealing simple data common between all viewers of the document. Viewer-dependent data is achievable via a privacy bubble using the ```bubble``` keyword.
 
 ```adama
 record Row {
@@ -38,6 +49,18 @@ record Row {
 
 table<Row> tbl;
 
+// reveal mine via a formula where me represents the client viewing the document
+bubble mine = iterate tbl where who == @who;
+```
+
+## Viewer dependent modifiers
+
+The ```bubble``` keyword is a powerful tool for controlling access to viewer-dependent data within a document.
+Instead of using a policy to dictate who can see a shared value within a document, the ```bubble``` modifier allows you to create a custom computation for each viewer, ensuring that each user sees only the data that they are authorized to view.
+
+One important caveat of using the ```bubble``` keyword to create privacy bubbles is that the resulting field is ephemeral and can only be seen by the connected viewer. This means that you cannot use a bubble field within the document itself, as it would not be visible to other logic.
+
+```adama
 // reveal mine via a formula where me represents the client viewing the document
 bubble mine = iterate tbl where who == @who;
 ```
@@ -74,10 +97,10 @@ record Card {
   use_policy<is_in_play> value; // 0 to 51 for a standard playing deck
 
   // who can see the card
-  policy is_in_play(who) {
+  policy is_in_play {
   	// if it has been played, then everyone knows
   	// otherwise, only the owner can see it
-  	return played || owner == who;
+  	return played || owner == @who;
   }
 }
 ```
