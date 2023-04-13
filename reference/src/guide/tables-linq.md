@@ -43,8 +43,8 @@ The ingestion operator (<-) allows data to be inserted from a variety of sources
 
 ```adama
 record Rec {
-  message int x;
-  message int y;
+  public int x;
+  public int y;
 }
 
 message Msg {
