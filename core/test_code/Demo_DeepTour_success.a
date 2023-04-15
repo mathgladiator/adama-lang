@@ -1,0 +1,141 @@
+/** comments are for friends */
+procedure code() -> int {
+  int x = 42;
+  for (int k = 0; k < 10; k++) { x++; }
+  while (x > 0) { x--; }
+  int y = (x + 1) * x;
+  if (x == y) { y++; } else { y--; }
+  return y;
+}
+
+procedure portion(int x, int y) -> double {
+  maybe<double> m_norm = x / (x + y);
+  if (m_norm as norm) {
+    return norm;
+  } else {
+    return 0.0;
+  }
+}
+
+function len(double x, double y) -> double {
+  complex sqr = Math.sqrt(x * x + y * y);
+  return sqr.re();
+}
+
+public string name;
+public int x;
+public int y;
+private int bank_balance;
+
+record Pv { int x; int y; }
+public Pv pvalue1;
+public Pv pvalue2;
+
+record Card {
+  public int id;
+  public int value;
+  public principal owner;
+  public int ordering;
+}
+
+table<Card> deck;
+
+procedure shuffle() {
+  int new_order = 0;
+  (iterate deck shuffle).ordering = new_order++;
+}
+
+procedure deal(principal player, int count) {
+  (iterate deck
+   where owner == @no_one
+   order by ordering asc
+   limit count).owner = player;
+}
+
+@construct {
+  for (int k = 0; k < 52; k++) {
+    deck <- {value:k, owner: @no_one};
+  }
+  shuffle();
+}
+
+message DrawCard {
+  int count;
+}
+
+channel draw_card(DrawCard dc) {
+  (iterate deck
+   where owner == @no_one
+   order by ordering asc
+   limit dc.count).owner = @who;
+}
+
+public formula cards_left =
+  (iterate deck
+   where owner == @no_one).size();
+
+public formula cards_available = cards_left > 0;
+
+record R {
+  public int id;
+  private principal owner;
+
+  // guard the field
+  use_policy<see> int super_secret_data;
+
+  // guard the existence of the entire record
+  require see;
+
+  policy see {
+    return @who == owner;
+  }
+}
+
+table<R> recs;
+public formula all = iterate recs;
+
+bubble yours = iterate recs where owner == @who;
+
+bubble hand = iterate deck where owner == @who;
+
+int countdown;
+@construct {
+  countdown = 10;
+  transition #bump;
+}
+#bump {
+  countdown--;
+  if (countdown > 0) {
+    transition #bump in 60;
+  }
+}
+
+procedure next_player() {
+}
+
+message Move { int piece; int x; int y; }
+channel<Move> ask_move;
+public principal current_player;
+
+#play {
+  let move = ask_move.fetch(current_player).await();
+  // apply the move to the state...
+  next_player();
+  transition #play;
+}
+
+private principal owner;
+public int active;
+@construct {
+  owner = @who;
+}
+@connected {
+  if (@who == owner || @who.isAnonymous()) {
+    active++;
+    return true;
+  }
+  return false;
+}
+@disconnected {
+  active--;
+}

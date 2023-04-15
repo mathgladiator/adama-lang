@@ -73,3 +73,4 @@
   - [Privacy respecting storage](./what/privacy.md)  
   - [Single file infrastructure](./what/single-file-infrastructure.md)
 - [Cheatsheet](./cheatsheet.md)
+- [Deeper Tour](./deep-tour.md)
