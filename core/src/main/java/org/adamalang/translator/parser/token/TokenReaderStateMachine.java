@@ -118,11 +118,13 @@ class TokenReaderStateMachine {
           break;
         case ScanSymbol:
           if (codepoint == '/' && lastCodePoint == '/') { //
+            cutPriorSymbols();
             currentMajorTokenType = MajorTokenType.Comment;
             currentMinorTokenType = MinorTokenType.CommentEndOfLine;
             scanState = ScannerState.ScanUntilEndOfLine;
             break;
           } else if (codepoint == '*' && lastCodePoint == '/') { // /*
+            cutPriorSymbols();
             currentMajorTokenType = MajorTokenType.Comment;
             currentMinorTokenType = MinorTokenType.CommentBlock;
             scanState = ScannerState.ScanUntilEndOfComment;
@@ -205,6 +207,20 @@ class TokenReaderStateMachine {
       cut();
       scanState = ScannerState.Unknown;
     }
+  }
+
+  /** Issue #138; comments would assume the entire bundle of symbols taking them out of the stream. Here, we pre-flush the symbols as we transition to comments */
+  private void cutPriorSymbols() {
+    var text = currentTokenBuffer.toString();
+    for (var k = 0; k < text.length() - 1; k++) {
+      final var symbol = dedupe(text.substring(k, k + 1), currentMajorTokenType);
+      output.accept(new Token(sourceName, symbol, currentMajorTokenType, currentMinorTokenType, startLineNo, startCharNo + k, startLineNo, startCharNo + k + symbol.length(), startByte + k, startByte + k + symbol.length()));
+    }
+    startLineNo = currentLineNo;
+    startCharNo = currentCharNo - 1;
+    startByte = currentByte - 1;
+    currentTokenBuffer.setLength(0);
+    currentTokenBuffer.append(text.charAt(text.length() - 1));
   }
 
   private void cut() {

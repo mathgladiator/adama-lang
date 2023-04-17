@@ -19,7 +19,7 @@ procedure portion(int x, int y) -> double {
 
 function len(double x, double y) -> double {
   complex sqr = Math.sqrt(x * x + y * y);
-  return sqr.re();
+  return sqr.re();// yay
 }
 
 public string name;

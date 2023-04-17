@@ -9,4 +9,19 @@
  */
 package org.adamalang.translator.parser;
 
-public class ParserSanityTests {}
+import org.adamalang.translator.parser.token.TokenEngine;
+import org.junit.Test;
+
+public class ParserSanityTests {
+  @Test
+  public void testGithub138_a() throws Exception {
+    Parser p = new Parser(new TokenEngine("source", "procedure foo(complex x) -> double { return x.re();//\n}".codePoints().iterator()));
+    p.document();
+  }
+
+  @Test
+  public void testGithub138_b() throws Exception {
+    Parser p = new Parser(new TokenEngine("source", "procedure foo(complex x) -> double { return x.re();/* yay */\n}".codePoints().iterator()));
+    p.document();
+  }
+}
