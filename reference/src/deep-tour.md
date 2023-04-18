@@ -103,9 +103,37 @@ Once you have structured your data, you can populate a document at the time of c
 }
 ```
 
+### Loading
+
+Change is the only invariant in life, so once a document is constructed; changes may require us to upgrade the data. 
+
+There is a load event that allows us to gate off of state to upgrade or mutate the document based on new code.
+
+```adama
+@load {
+  if (deck.size() == 52) {
+    // upgrade the game by adding another deck
+    for (int k = 0; k < 52; k++) {
+      deck <- {value:k, owner: @no_one};
+    }
+  }
+}
+```
 ## Message Handling
 
 Once constructed, message handling is one mechanism for documentation mutation.
+
+```adama
+message Payload {
+  int value;
+}
+
+public int value;
+
+channel set_value(Payload p) {
+  value = p.value;
+}
+```
 
 Here, we provide a way for people to ask the document for some cards to be vended to them.
 
@@ -225,12 +253,18 @@ public principal current_player;
 
 ## Access control and presence
 
+As we build up the document and make it do something useful, we will want to lock down who can read the document.
+
+This is available via the connected event which must return true for the given user to establish a connection.
+
 ```adama
 private principal owner;
 public int active;
+
 @construct {
   owner = @who;
 }
+
 @connected {
   if (@who == owner || @who.isAnonymous()) {
     active++;
@@ -238,7 +272,115 @@ public int active;
   }
   return false;
 }
+
 @disconnected {
   active--;
 }
+```
+
+## Static policies
+
+We can further lock down who can create a document via static policies within the Adama specification.
+
+This document and language are the perfect place to stash configuration and access control policies for everything that isn't document related.
+The below create policy really locks down who can explicitly create a document.
+
+Document invention is the process of creating a document on demand with zero arguments for a constructor.
+Combine document with a flag to delete the document when everyone closes is a great way create ephemeral experiences.
+
+Philosophically, most behaviors and configuration belong in the adama specification to further simplify operations.
+```adama
+@static {
+  create {
+    return @context.ip == "127.0.0.1" && 
+           @context.origin == "https://localhost" ||
+           @who.isAdamaDeveloper();
+  }
+
+  invent {
+    return @who.isAnonymous();
+  }
+
+  maximum_history = 100;
+  delete_on_close = true;
+}
+```
+
+## Deletion
+
+A document can, at any time delete itself.
+
+```adama
+#done {
+  Document.destroy();
+}
+```
+
+An external API is available to delete, but this requires yet another policy
+
+```adama
+public bool finished;
+@delete {
+  return finished && @who == owner;
+}
+```
+
+## Web? Web!
+
+We can leverage the language as well to open more ways of talking to a document.
+Here, we allow read only queries via HTTP GET and a mutable HTTP put.
+
+This allows Adama to speak via Ajax, but it also allows web hooks to communicate to a document.
+
+```adama
+public string name;
+
+@web get / {
+  return {html:"Hello " + name};
+}
+
+message M { string name; }
+
+@web put / (M m) {
+  name = m.name;
+  return {html: "OK"};
+}
+```
+
+## Attachments
+
+```adama
+asset latest_profile_picture;
+
+@can_attach {
+  return @who == owner;
+}
+
+@attached (a) {
+  latest_profile_picture = a;
+}
+
+@web get /assets/$path* {
+  if ( (iterate _resources where resource.name() == path)[0] as found) {
+    return {asset:found.resource};
+  }
+  return {html:"Not Found"};
+}
+
+```
+
+## RxHTML
+
+```html
+<div>
+    <tbody rx:iterate="rows">
+        <tr>
+            <td><lookup field="name"</td>
+            <td>
+                <div rx:if="active">Active</div>
+                <div rx:ifnot="active">Inactive</div>
+            </td>
+        </tr>
+    </tbody>
+</div>
 ```

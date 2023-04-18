@@ -59,6 +59,25 @@ procedure deal(principal player, int count) {
   shuffle();
 }
 
+@load {
+  if (deck.size() == 52) {
+    // upgrade the game by adding another deck
+    for (int k = 0; k < 52; k++) {
+      deck <- {value:k, owner: @no_one};
+    }
+  }
+}
+
+message Payload {
+  int value;
+}
+
+public int value;
+
+channel set_value(Payload p) {
+  value = p.value;
+}
+
 message DrawCard {
   int count;
 }
@@ -138,4 +157,48 @@ public int active;
 }
 @disconnected {
   active--;
+}
+
+@web get / {
+  return {html:"Hello " + name};
+}
+
+message M { string name; }
+
+@web put / (M m) {
+  name = m.name;
+  return {html: "OK"};
+}
+
+public bool finished;
+@delete {
+  return finished && @who == owner;
+}
+
+#done {
+  Document.destroy();
+}
+
+asset latest_profile_picture;
+
+@can_attach {
+  return @who == owner;
+}
+
+@attached (a) {
+  latest_profile_picture = a;
+}
+
+record Resource {
+  public int id;
+  public asset resource;
+}
+
+table<Resource> _resources;
+
+@web get /assets/$path* {
+  if ( (iterate _resources where resource.name() == path)[0] as found) {
+    return {asset:found.resource};
+  }
+  return {html:"Not Found"};
 }

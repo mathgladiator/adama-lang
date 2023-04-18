@@ -26,6 +26,8 @@ These policies are evaluated based on the user's identity and other relevant met
 
 ### Answer: Who can create documents within your space?
 
+The ```create``` policy within ```@static``` block is responsible for controlling who can create a document. The associated code block must return true to allow the document creation, and false to block creation.
+
 ```adama
 @static {
   create {
@@ -34,7 +36,8 @@ These policies are evaluated based on the user's identity and other relevant met
 }
 ```
 
-The above policy allows anyone to create a document within your space (#rude), so you will want to lock it down. For instance, we can lock it down to just adama developers.
+The above policy allows anyone to create a document within your space (#open #rude), so you will want to lock it down.
+For instance, we can lock it down to just adama developers.
 
 ```adama
 @static {
@@ -71,8 +74,8 @@ However, the origin header is sufficient for preventing XSS attacks and limiting
 ### Answer: What is invention and who can invent documents within your space?
 
 Document invention happens when a user attempts to connect to a document that doesn't exist.
-If the document requires no [constructor](#construction) then the ```invent``` policy is evaluated.
-If then ```invent``` policy returns true, then the document is created and the connect request is tried again.
+If the document requires no [constructor arg](#construction) then the ```invent``` policy is evaluated.
+If the ```invent``` policy returns true, then the document is created and the connect request is tried again.
 This is useful for introducing real-time scenarios to an already mature user-base as construction can happen on-demand.
 
 The ```invent``` policy works similar to ```create```.
@@ -110,7 +113,8 @@ This is useful for ephemeral experiences like typing indicators.
 
 ## Document events
 
-Document events are evaluated against a specific instance of a document. These events happen when a document is created, when a client connects or disconnects to a document, and when an attachment is added to a document.
+Document events are evaluated against a specific instance of a document.
+These events happen when a document is created, when a client connects or disconnects to a document, and when an attachment is added to a document.
 
 > Note: at this time, document events don't support @context. See [issue #118](https://github.com/mathgladiator/adama-lang/issues/118)
 
