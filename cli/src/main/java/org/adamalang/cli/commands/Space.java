@@ -55,6 +55,12 @@ public class Space {
       case "deploy":
         spaceDeploy(config, next);
         return;
+      case "set-rxhtml":
+        spaceSetRxHTML(config, next);
+        return;
+      case "get-rxhtml":
+        spaceGetRxHTML(config, next);
+        return;
       case "upload":
         spaceUpload(config, next);
         return;
@@ -107,6 +113,8 @@ public class Space {
     System.out.println("    " + Util.prefix("set-role", Util.ANSI.Green) + "          Share/unshare a space with another developer");
     System.out.println("    " + Util.prefix("generate-key", Util.ANSI.Green) + "      Generate a server-side key to use for storing secrets");
     System.out.println("    " + Util.prefix("encrypt-secret", Util.ANSI.Green) + "    Encrypt a secret to store within code");
+    System.out.println("    " + Util.prefix("set-rxhtml", Util.ANSI.Green) + "        Set the frontend RxHTML forest");
+    System.out.println("    " + Util.prefix("get-rxhtml", Util.ANSI.Green) + "        Get the frontend RxHTML forest");
     System.out.println("    " + Util.prefix("help", Util.ANSI.Green) + "              Show this helpful message");
   }
 
@@ -188,29 +196,66 @@ public class Space {
     }
   }
 
+  private static void spaceSetRxHTML(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    String singleFile = Util.extractWithDefault("--file", "-f", null, args);
+    String source = Files.readString(new File(singleFile).toPath());
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/set-rxhtml");
+        request.put("identity", identity);
+        request.put("space", space);
+        request.put("rxhtml", source);
+        ObjectNode response = connection.execute(request);
+        System.err.println(response.toPrettyString());
+      }
+    }
+  }
+
+  private static void spaceGetRxHTML(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/get-rxhtml");
+        request.put("identity", identity);
+        request.put("space", space);
+        ObjectNode response = connection.execute(request);
+        System.err.println(response.toPrettyString());
+      }
+    }
+  }
+
+  private static void addFileToLocalBundle(File file, String prefix, HashMap<String, NtAsset> found) throws Exception {
+    String name = prefix + file.getName();
+    String contentType = ContentType.of(file.getName());
+    FileInputStream input = new FileInputStream(file);
+    try {
+      byte[] buffer = new byte[8196];
+      int rd;
+      long size = 0;
+      MessageDigest md5 = Hashing.md5();
+      MessageDigest sha384 = Hashing.sha384();
+      while ((rd = input.read(buffer)) >= 0) {
+        size += rd;
+        md5.update(buffer, 0, rd);
+        sha384.update(buffer, 0, rd);
+      }
+      found.put(name, new NtAsset("?", name, contentType, size, Hashing.finishAndEncode(md5), Hashing.finishAndEncode(sha384)));
+    } finally {
+      input.close();
+    }
+  }
+
   private static void fillLocalBundle(File root, String prefix, HashMap<String, NtAsset> found) throws Exception {
     for (File file : root.listFiles()) {
       if (file.isDirectory()) {
         fillLocalBundle(file, prefix + file.getName() + "/", found);
       } else {
-        String name = prefix + file.getName();
-        String contentType = ContentType.of(file.getName());
-        FileInputStream input = new FileInputStream(file);
-        try {
-          byte[] buffer = new byte[8196];
-          int rd;
-          long size = 0;
-          MessageDigest md5 = Hashing.md5();
-          MessageDigest sha384 = Hashing.sha384();
-          while ((rd = input.read(buffer)) >= 0) {
-            size += rd;
-            md5.update(buffer, 0, rd);
-            sha384.update(buffer, 0, rd);
-          }
-          found.put(name, new NtAsset("?", name, contentType, size, Hashing.finishAndEncode(md5), Hashing.finishAndEncode(sha384)));
-        } finally {
-          input.close();
-        }
+        addFileToLocalBundle(file, prefix, found);
       }
     }
   }
@@ -241,17 +286,25 @@ public class Space {
   private static void spaceUpload(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);
     String space = Util.extractOrCrash("--space", "-s", args);
-    String root = Util.extractOrCrash("--root", "-r", args);
     String doGCRaw = Util.extractWithDefault("--gc", "-g", "no", args);
     boolean gc = "yes".equalsIgnoreCase(doGCRaw) || "true".equalsIgnoreCase(doGCRaw);
 
-    File rootPath = new File(root);
-    if (!(rootPath.exists() && rootPath.isDirectory())) {
-      throw new Exception("--root is not a directory");
-    }
-
     HashMap<String, NtAsset> bundle = new HashMap<>();
-    fillLocalBundle(rootPath, "", bundle);
+
+    String root = Util.extractWithDefault("--root", "-r", null, args);
+    String singleFilename = null;
+    if (root != null) {
+      File rootPath = new File(root);
+      if (!(rootPath.exists() && rootPath.isDirectory())) {
+        throw new Exception("--root is not a directory");
+      }
+      fillLocalBundle(rootPath, "", bundle);
+    } else {
+      singleFilename = Util.extractOrCrash("--file", "-f",  args);
+      if (singleFilename != null) {
+        addFileToLocalBundle(new File(singleFilename), "", bundle);
+      }
+    }
 
     // TODO: scan for special things (redirects...)
 
@@ -290,7 +343,7 @@ public class Space {
             request.put("filename", entry.getValue().name);
             request.put("content-type", entry.getValue().contentType);
 
-            FileInputStream fileInput = new FileInputStream(new File(new File(root), entry.getKey()));
+            FileInputStream fileInput = root != null ? new FileInputStream(new File(new File(root), entry.getKey())) : new FileInputStream(new File(entry.getKey()));
             try {
               System.out.println("upload:" + entry.getKey());
               BlockingDeque<Connection.IdObject> queue = connection.stream_queue(request);

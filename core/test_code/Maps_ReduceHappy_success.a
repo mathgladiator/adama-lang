@@ -16,6 +16,7 @@ function foo(list<R> z) -> int {
 int x1 = 0;
 int x2 = 0;
 int x3 = 0;
+int x4 = 0;
 
 @construct {
   t <- {x:1, v:1};
@@ -33,5 +34,10 @@ int x3 = 0;
   }
   if (mp[3] as v) {
     x3 = v;
+  }
+  if ((iterate t reduce on x)[3] as lv) {
+    if (lv.v.sum() as lvvs) {
+      x4 = lvvs;
+    }
   }
 }

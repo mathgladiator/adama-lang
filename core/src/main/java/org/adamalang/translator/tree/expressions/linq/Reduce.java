@@ -58,65 +58,75 @@ public class Reduce extends LinqExpression {
       yielder.accept(onToken);
     }
     yielder.accept(fieldToken);
-    yielder.accept(viaToken);
-    functionToReduceWith.emit(yielder);
+    if (viaToken != null) {
+      yielder.accept(viaToken);
+      functionToReduceWith.emit(yielder);
+    }
   }
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     final var typeSql = sql.typing(environment, null);
     final var isGoodSql = environment.rules.IsNativeListOfStructure(typeSql, false);
-
-    final TyType funcType;
-    {
+    // validate the function
+    if (isGoodSql && viaToken != null) {
       ArrayList<TyType> guessInputTypes = new ArrayList<>();
       guessInputTypes.add(typeSql);
       FunctionOverloadInstance guess = new FunctionOverloadInstance("unknown", null, guessInputTypes, true, false);
       TyType guessType = new TyNativeFunctional("unknown", FunctionOverloadInstance.WRAP(guess), FunctionStyleJava.None);
-      funcType = functionToReduceWith.typing(environment, guessType);
-    }
-    TyType resultType = null;
-    if (isGoodSql && environment.rules.IsFunction(funcType, false)) {
-      functionalType = (TyNativeFunctional) funcType;
-      final var expectedArgs = new ArrayList<TyType>();
-      expectedArgs.add(typeSql);
-      functionInstance = functionalType.find(this, expectedArgs, environment);
-      if (functionInstance != null) {
-        if (!functionInstance.pure) {
-          environment.document.createError(this, String.format("Function '%s' must be a pure function a value", funcType.getAdamaType()), "Reduce");
-        }
-        if (functionInstance.returnType == null) {
-          environment.document.createError(this, String.format("Function '%s' must return value", funcType.getAdamaType()), "Reduce");
-        }
-        final var elementType = (IsStructure) environment.rules.ExtractEmbeddedType(typeSql, false);
-        final var fd = elementType.storage().fields.get(fieldToken.text);
-        if (fd != null) {
-          var fieldType = environment.rules.Resolve(fd.type, false);
-          if (fieldType instanceof DetailComputeRequiresGet) {
-            requireGet = true;
-            fieldType = environment.rules.Resolve(((DetailComputeRequiresGet) fieldType).typeAfterGet(environment), false);
+      TyType funcType = functionToReduceWith.typing(environment, guessType);
+      if (environment.rules.IsFunction(funcType, false)) {
+        functionalType = (TyNativeFunctional) funcType;
+        final var expectedArgs = new ArrayList<TyType>();
+        expectedArgs.add(typeSql);
+        functionInstance = functionalType.find(this, expectedArgs, environment);
+        if (functionInstance != null) {
+          if (!functionInstance.pure) {
+            environment.document.createError(this, String.format("Function '%s' must be a pure function a value", funcType.getAdamaType()), "Reduce");
           }
-          if (fieldType != null && functionInstance.returnType != null) {
-            resultType = new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, null, fieldType, null, functionInstance.returnType, null);
-            resultType.typing(environment);
+          if (functionInstance.returnType == null) {
+            environment.document.createError(this, String.format("Function '%s' must return value", funcType.getAdamaType()), "Reduce");
           }
-        } else {
-          environment.document.createError(this, String.format("Field '%s' was not found for reduction", fieldToken.text), "Reduce");
         }
       }
     }
-    return resultType;
+    if (isGoodSql) {
+      final var elementType = (IsStructure) environment.rules.ExtractEmbeddedType(typeSql, false);
+      final var fd = elementType.storage().fields.get(fieldToken.text);
+      if (fd != null) {
+        var fieldType = environment.rules.Resolve(fd.type, false);
+        if (fieldType instanceof DetailComputeRequiresGet) {
+          requireGet = true;
+          fieldType = environment.rules.Resolve(((DetailComputeRequiresGet) fieldType).typeAfterGet(environment), false);
+        }
+        TyType resultType = null;
+        if (functionInstance != null) {
+          if (fieldType != null && functionInstance.returnType != null) {
+            resultType = new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, null, fieldType, null, functionInstance.returnType, null);
+          }
+        } else {
+          resultType = new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, null, fieldType, null, typeSql, null);
+        }
+        if (resultType != null) {
+          resultType.typing(environment);
+          return resultType;
+        }
+      } else {
+        environment.document.createError(this, String.format("Field '%s' was not found for reduction", fieldToken.text), "Reduce");
+      }
+    }
+    return null;
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
     sql.writeJava(sb, environment);
-    if (functionInstance != null) {
-      sb.append(".reduce((__item) -> __item.").append(fieldToken.text);
-      if (requireGet) {
-        sb.append(".get()");
-      }
-      sb.append(", ");
+    sb.append(".reduce((__item) -> __item.").append(fieldToken.text);
+    if (requireGet) {
+      sb.append(".get()");
+    }
+    sb.append(", ");
+    if (functionalType != null) {
       switch (functionalType.style) {
         case ExpressionThenArgs:
         case ExpressionThenNameWithArgs:
@@ -126,7 +136,9 @@ public class Reduce extends LinqExpression {
           sb.append("(__list) -> ").append(functionInstance.javaFunction).append("(__list)");
           break;
       }
-      sb.append(")");
+    } else {
+      sb.append("(__list) -> (__list)");
     }
+    sb.append(")");
   }
 }

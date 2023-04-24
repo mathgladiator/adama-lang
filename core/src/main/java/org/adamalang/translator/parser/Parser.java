@@ -1665,9 +1665,13 @@ public class Parser {
       case "reduce": {
         final var onToken = tokens.popIf(t -> t.isIdentifier("on"));
         final var fieldToken = id();
-        final var viaToken = consumeExpectedIdentifier("via");
-        final var function = expression();
-        return new Reduce(base, op, onToken, fieldToken, viaToken, function);
+        final var viaToken = tokens.popIf(t -> t.isIdentifier("via"));
+        if (viaToken != null) {
+          final var function = expression();
+          return new Reduce(base, op, onToken, fieldToken, viaToken, function);
+        } else {
+          return new Reduce(base, op, onToken, fieldToken, null, null);
+        }
       }
       default: // this is a code coverage hack
       case "limit": {

@@ -1,0 +1,78 @@
+record R { int x; int y; }
+map<string,R> m;
+
+record Card {
+  public int id;
+  public int value;
+  public principal owner;
+  public int ordering;
+}
+
+table<Card> deck;
+
+procedure shuffle() {
+  int ordering = 0;
+  (iterate deck shuffle).ordering = ordering++;
+}
+
+procedure deal_cards(principal who, int count) {
+  (iterate deck             // look at the deck
+    where owner == @no_one  // for each card that isn't own
+    order by ordering asc   // follow the memoized ordering
+    limit count             // deal only $count cards
+    ).owner = who;          // for each card, assign an owner to the card
+}
+
+record Rec {
+  int x;
+  method zero() {
+    x = 0;
+  }
+}
+
+table<Rec> tbl;
+
+procedure zero_records() {
+  (iterate tbl).zero();
+}
+
+procedure trash_cards_randomly(principal who, int count) {
+  (iterate deck             // look at the deck
+    where owner == who      // for each card that isn't own
+    shuffle                 // randomize the cards
+    limit count             // deal only $count cards
+    ).delete();
+}
+
+record Point {
+  int x;
+  int y;
+}
+
+table<Point> pointdb;
+
+function sum_y(list<Point> points) -> double {
+  double v = 0.0;
+  foreach(p in points) {
+     v += p.y;
+  }
+  return v;
+}
+
+public formula by_x = iterate pointdb reduce on x via sum_y;
+
+function identity_points(list<Point> cards) -> list<Point> {
+  return cards;
+}
+
+public formula points_by_x = iterate pointdb reduce on x via identity_points;
+
+public formula points_by_x2 = iterate pointdb reduce on x via (@lambda list: list);
+
+public formula by_x_2 = iterate pointdb reduce on x via (@lambda list: list.y.sum());
+
+map<string, Point> named_points;
+map<int, Point> index_points;
+// map<int, table<Point>> tbales;
+// the above doesn't work because of a redefinition of __parent in the scope of the constructor
+// see https://github.com/mathgladiator/adama-lang/issues/139

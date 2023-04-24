@@ -84,7 +84,8 @@ Lists of records can be filtered, ordered, sequenced, and limited via language i
 First, the ```iterate``` keyword will convert the table&lt;Rec&gt; into a list&lt;Rec&gt;.
 
 ```adama
-public formula all_records = iterate _records;
+public formula all_records =
+  iterate _records;
 ```
 
 Now, by itself, it will list the records in their canonical ordering (by id). It is important to note that the list is lazily constructed up until the time that it is materialized by a consumer, and this enables some query optimizations to happen on the fly.
@@ -93,7 +94,9 @@ Now, by itself, it will list the records in their canonical ordering (by id). It
 
 We can suffix a LINQ expression with **where** to filter items.
 ```adama
-public formula young_records = iterate _records where age < 18;
+public formula young_records =
+  iterate _records
+  where age < 18;
 ```
 
 ### indexing!
@@ -101,30 +104,54 @@ public formula young_records = iterate _records where age < 18;
 Yes, we can make things faster by indexing our tables. The ```index``` keyword within a record will indicate how tables should index the record.
 
 ```adama
-public formula lucky_people = iterate _records where age == 42;
+public formula lucky_people =
+  iterate _records where age == 42;
 ```
 
 This will accelerate the performance of ```where``` expressions when expressions like ```age == 42``` are detected via analysis.
 
 ### shuffle
 The canonical ordering by id is not great for card games, so we can randomize the order of the list. Now, this will materialize the list.
+
 ```adama
-public formula random_people = iterate _records shuffle;
-public formula random_young_people = iterate _records where age < 18 shuffle;
+public formula random_people =
+  iterate _records shuffle;
+
+public formula random_young_people =
+  iterate _records where age < 18 shuffle;
 ```
+
+### reduce
+Reduce allows taking the result and reducing it into a map via a function.
+
+```adama
+public formula grouped_by_x =
+  iterate _records
+  reduce on x via (@lambda list: list);
+```
+
+The reduce expression will take the list and group items into lists with a common field value, and then send the list to a function.
+
+For more details, see [Maps and reduce](./map-reduce.md)
+ 
 
 ### order
 
 Since the canonical ordering by id is the insertion/creation ordering, **order** allows you to reorder any list.
 
 ```adama
-public formula people_by_age = iterate _records order by age asc;
+public formula people_by_age =
+  iterate _records
+  order by age asc;
 ```
 
 ### limit
 
 ```adama
-public formula youngest_person = iterate _records order by age asc limit 1;
+public formula youngest_person =
+  iterate _records
+  order by age asc
+  limit 1;
 ```
 
 ### offset
@@ -132,9 +159,12 @@ public formula youngest_person = iterate _records order by age asc limit 1;
 With offset, you can skip the first entries with a query.
 
 ```adama
-public formula next_youngest_person = iterate _records order by age asc offset 1 limit 1;
+public formula next_youngest_person =
+  iterate _records
+  order by age asc
+  offset 1
+  limit 1;
 ```
-
 
 ### Bulk Assignments
 
@@ -162,12 +192,12 @@ procedure shuffle() {
 This assignment of ordering will memorize the results from shuffling. With a single statement, we can deal cards by assigning ownership.
 
 ```adama
-procedure deal_cards(int count) {
+procedure deal_cards(principal who, int count) {
   (iterate deck             // look at the deck
     where owner == @no_one  // for each card that isn't own
     order by ordering asc   // follow the memoized ordering
     limit count             // deal only $count cards
-    ).owner = @who;          // for each card, assign an owner to the card
+    ).owner = who;          // for each card, assign an owner to the card
 }
 ```
 
@@ -175,6 +205,33 @@ This ability makes it simple to update a single field, but it also applies to me
 
 ### Bulk method execution
 
+Similar to a bulk assignment, bulk method execution allow executing a method on every record within a result.
+
+```adama
+record Rec {
+  int x;
+  method zero() {
+    x = 0;
+  }
+}
+
+table<Rec> tbl;
+
+procedure zero_records() {
+  (iterate tbl).zero();
+}
+```
+
 ### Bulk Deletes
 
+Every record has an implicit delete method which will remove the record from the owned table.
 
+```adama
+procedure trash_cards_randomly(principal who, int count) {
+  (iterate deck             // look at the deck
+    where owner == who      // for each card that isn't own
+    shuffle                 // randomize the cards
+    limit count             // deal only $count cards
+    ).delete();
+}
+```

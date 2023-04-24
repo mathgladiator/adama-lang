@@ -10,7 +10,7 @@ hljs.registerLanguage("adama", (() => {
         "require", "index", "method",
         "while", "do", "for", "foreach", "if", "break", "continue", "block", "abort", "return",
         "transition", "invoke", "preempt", "assert",
-        "iterate", "where", "where_as", "order", "shuffle", "limit", "reduce", "offset", "asc", "desc",
+        "iterate", "where", "where_as", "order", "shuffle", "limit", "reduce", "offset", "asc", "desc", "via",
         "create", "send", "invent", "maximum_history", // TODO: scope within @static
         "auto", "var", "let", "formula", "readonly",
         "public", "private", "viewer_is", "use_policy"];
