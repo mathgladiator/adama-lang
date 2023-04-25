@@ -26,25 +26,14 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class TyNativeTuple extends TyType implements //
-  CanBeNativeArray, //
-  DetailRequiresResolveCall  {
-
-  public static class PrefixedType {
-    public final Token token;
-    public final TyType type;
-
-    public PrefixedType(Token token, TyType type) {
-      this.token = token;
-      this.type = type;
-    }
-  }
+    CanBeNativeArray, //
+    DetailRequiresResolveCall {
 
   private final Token readonlyToken;
   private final Token tupleToken;
   private final ArrayList<PrefixedType> types;
-  private Token endToken;
   private final StructureStorage storage;
-
+  private Token endToken;
   public TyNativeTuple(final TypeBehavior behavior, final Token readonlyToken, final Token tupleToken) {
     super(behavior);
     this.readonlyToken = readonlyToken;
@@ -54,17 +43,6 @@ public class TyNativeTuple extends TyType implements //
     this.storage = new StructureStorage(StorageSpecialization.Message, true, tupleToken);
     ingest(readonlyToken);
     ingest(tupleToken);
-  }
-
-  public void add(Token token, TyType type) {
-    ingest(token);
-    storage.add(FieldDefinition.invent(type, AnonymousTuple.nameOf(types.size())));
-    types.add(new PrefixedType(token, type));
-  }
-
-  public void finish(Token token) {
-    this.endToken = token;
-    ingest(endToken);
   }
 
   @Override
@@ -112,6 +90,17 @@ public class TyNativeTuple extends TyType implements //
     return tuple.withPosition(position);
   }
 
+  public void add(Token token, TyType type) {
+    ingest(token);
+    storage.add(FieldDefinition.invent(type, AnonymousTuple.nameOf(types.size())));
+    types.add(new PrefixedType(token, type));
+  }
+
+  public void finish(Token token) {
+    this.endToken = token;
+    ingest(endToken);
+  }
+
   @Override
   public void typing(Environment environment) {
     // handled by environment.rules.Revolve
@@ -136,5 +125,15 @@ public class TyNativeTuple extends TyType implements //
   public TyType resolve(Environment environment) {
     TyType typeEstimate = new TyNativeMessage(this.behavior, tupleToken, Token.WRAP("_TupleConvert_" + environment.autoVariable()), storage);
     return environment.rules.EnsureRegisteredAndDedupe(typeEstimate, false);
+  }
+
+  public static class PrefixedType {
+    public final Token token;
+    public final TyType type;
+
+    public PrefixedType(Token token, TyType type) {
+      this.token = token;
+      this.type = type;
+    }
   }
 }

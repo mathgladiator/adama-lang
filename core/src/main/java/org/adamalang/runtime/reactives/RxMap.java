@@ -9,7 +9,6 @@
  */
 package org.adamalang.runtime.reactives;
 
-import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
@@ -86,15 +85,6 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   }
 
   @Override
-  public void __kill() {
-    for (final Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
-      if (entry.getValue() instanceof RxKillable) {
-        ((RxKillable) entry.getValue()).__kill();
-      }
-    }
-  }
-
-  @Override
   public void __dump(final JsonStreamWriter writer) {
     writer.beginObject();
     for (final Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
@@ -158,7 +148,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     for (Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
       sum += entry.getValue().__memory() + 20;
       if (entry.getKey() instanceof String) {
-        sum += ((String) entry.getKey()).length() * 2;
+        sum += ((String) entry.getKey()).length() * 2L;
       }
     }
     return sum;
@@ -189,6 +179,15 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
       if (!created.contains(key)) {
         __raiseDirty();
         deleted.put(key, value);
+      }
+    }
+  }
+
+  @Override
+  public void __kill() {
+    for (final Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
+      if (entry.getValue() instanceof RxKillable) {
+        ((RxKillable) entry.getValue()).__kill();
       }
     }
   }

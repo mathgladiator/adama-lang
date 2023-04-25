@@ -3,6 +3,7 @@ public double y = 3.14;
 public double z = 2.0e3;
 public auto sum = x + y + z;
 
+public double tiny = 2.0e-32;
 @construct {
   x = 2.71;
 }

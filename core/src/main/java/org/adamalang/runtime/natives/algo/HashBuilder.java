@@ -11,9 +11,9 @@ package org.adamalang.runtime.natives.algo;
 
 import org.adamalang.common.Hashing;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

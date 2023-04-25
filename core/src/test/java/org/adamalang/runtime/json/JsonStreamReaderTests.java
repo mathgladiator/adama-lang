@@ -9,9 +9,8 @@
  */
 package org.adamalang.runtime.json;
 
-import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.natives.NtComplex;
+import org.adamalang.common.Json;
+import org.adamalang.runtime.natives.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -513,5 +512,67 @@ public class JsonStreamReaderTests {
     Assert.assertEquals(2, ids.size());
     Assert.assertTrue(ids.contains("id-xyz"));
     Assert.assertTrue(ids.contains("id-abc"));
+  }
+
+  @Test
+  public void readDate1() {
+    JsonStreamReader reader = new JsonStreamReader("\"1970/1/23\"");
+    NtDate date = reader.readNtDate();
+    Assert.assertEquals(1970, date.year);
+    Assert.assertEquals(1, date.month);
+    Assert.assertEquals(23, date.day);
+  }
+
+  @Test
+  public void readDate2() {
+    JsonStreamReader reader = new JsonStreamReader("\"1970/07/31\"");
+    NtDate date = reader.readNtDate();
+    Assert.assertEquals(1970, date.year);
+    Assert.assertEquals(7, date.month);
+    Assert.assertEquals(31, date.day);
+  }
+
+  @Test
+  public void readDate3() {
+    JsonStreamReader reader = new JsonStreamReader("\"1970\"");
+    NtDate date = reader.readNtDate();
+    Assert.assertEquals(1970, date.year);
+    Assert.assertEquals(1, date.month);
+    Assert.assertEquals(1, date.day);
+  }
+
+  @Test
+  public void readDate4() {
+    JsonStreamReader reader = new JsonStreamReader("\"1980/11\"");
+    NtDate date = reader.readNtDate();
+    Assert.assertEquals(1980, date.year);
+    Assert.assertEquals(11, date.month);
+    Assert.assertEquals(1, date.day);
+  }
+
+  @Test
+  public void readTime() {
+    JsonStreamReader reader = new JsonStreamReader("\"14:37\"");
+    NtTime time = reader.readNtTime();
+    Assert.assertEquals(37, time.minute);
+    Assert.assertEquals(14, time.hour);
+  }
+
+  @Test
+  public void readTimeSpan() {
+    JsonStreamReader reader = new JsonStreamReader("1235");
+    Assert.assertEquals(1235, reader.readNtTimeSpan().seconds, 0.01);
+  }
+
+  @Test
+  public void readDatetime1() {
+    JsonStreamReader reader = new JsonStreamReader("\"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\"");
+    Assert.assertEquals(2023, reader.readNtDateTime().dateTime.getYear());
+  }
+
+  @Test
+  public void readDatetime2() {
+    JsonStreamReader reader = new JsonStreamReader("\"2021-04-24T17:57:19.802528800-05:00\"");
+    Assert.assertEquals(2021, reader.readNtDateTime().dateTime.getYear());
   }
 }

@@ -20,7 +20,8 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods {
+public class TyNativeGlobalObject extends TyType implements //
+    DetailTypeHasMethods {
   public final HashMap<String, TyNativeFunctional> functions;
   public final String globalName;
   public final String importPackage;

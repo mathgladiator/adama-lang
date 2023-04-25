@@ -23,13 +23,16 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
-import org.adamalang.translator.tree.types.traits.details.*;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /** The type representing a utf-8 encoded string. This uses the native 'String' java type. */
-public class TyNativeString extends TySimpleNative implements IsNativeValue, DetailHasDeltaType, //
+public class TyNativeString extends TySimpleNative implements //
+    IsNativeValue, //
+    DetailHasDeltaType, //
     CanBeMapDomain, //
     DetailTypeHasMethods, //
     AssignmentViaNative //

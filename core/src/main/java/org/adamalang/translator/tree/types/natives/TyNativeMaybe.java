@@ -26,7 +26,8 @@ import org.adamalang.translator.tree.types.traits.details.*;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedType, //
+public class TyNativeMaybe extends TyType implements //
+    DetailContainsAnEmbeddedType, //
     DetailNativeDeclarationIsNotStandard, //
     DetailHasDeltaType, //
     DetailInventDefaultValueExpression, AssignmentViaSetter, //

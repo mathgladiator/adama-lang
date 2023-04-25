@@ -57,6 +57,11 @@ public class TyInternalReadonlyClass extends TyType {
   public void typing(Environment environment) {
   }
 
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    throw new UnsupportedOperationException("internal types can't be reflected");
+  }
+
   public TyType getLookupType(Environment environment, String field) {
     try {
       Field fType = clazz.getField(field);
@@ -72,10 +77,5 @@ public class TyInternalReadonlyClass extends TyType {
       environment.document.createError(this, "Field '" + field + "' was not found in internal type: " + clazz.getSimpleName(), "InternalTypes");
       return null;
     }
-  }
-
-  @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    throw new UnsupportedOperationException("internal types can't be reflected");
   }
 }

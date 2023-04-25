@@ -1,0 +1,14 @@
+timespan x = @timespan 14 sec;
+
+bool eq1;
+
+#sm {
+  timespan y = x;
+  timespan z = @timespan 15 hr;
+  var p1 = @timespan 1 sec;
+  var p2 = @timespan 1 min;
+  var p3 = @timespan 1 hr;
+  var p4 = @timespan 1 day;
+  var p5 = @timespan 1 week;
+  eq1 = z == x;
+}

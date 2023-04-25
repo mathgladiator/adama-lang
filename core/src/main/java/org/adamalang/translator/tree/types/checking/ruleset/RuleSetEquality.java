@@ -28,6 +28,26 @@ public class RuleSetEquality {
       if (aComplex && bComplex) {
         return CanTestEqualityResult.YesButViaNear;
       }
+      final var aDate = RuleSetCommon.IsDate(environment, typeA, true);
+      final var bDate = RuleSetCommon.IsDate(environment, typeB, true);
+      if (aDate && bDate) {
+        return CanTestEqualityResult.Yes;
+      }
+      final var aDateTime = RuleSetCommon.IsDateTime(environment, typeA, true);
+      final var bDateTime = RuleSetCommon.IsDateTime(environment, typeB, true);
+      if (aDateTime && bDateTime) {
+        return CanTestEqualityResult.Yes;
+      }
+      final var aTime = RuleSetCommon.IsTime(environment, typeA, true);
+      final var bTime = RuleSetCommon.IsTime(environment, typeB, true);
+      if (aTime && bTime) {
+        return CanTestEqualityResult.Yes;
+      }
+      final var aTimeSpan = RuleSetCommon.IsTimeSpan(environment, typeA, true);
+      final var bTimeSpan = RuleSetCommon.IsTimeSpan(environment, typeB, true);
+      if (aTimeSpan && bTimeSpan) {
+        return CanTestEqualityResult.Yes;
+      }
       final var aLong = RuleSetCommon.IsLong(environment, typeA, true);
       final var bLong = RuleSetCommon.IsLong(environment, typeB, true);
       if ((aInteger || aLong) && (bInteger || bLong)) {

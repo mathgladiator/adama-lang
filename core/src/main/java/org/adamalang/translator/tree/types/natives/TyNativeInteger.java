@@ -28,7 +28,8 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.function.Consumer;
 
 /** Represents the integral with 32 bits of storage; this uses the 'int' java type */
-public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
+public class TyNativeInteger extends TySimpleNative implements //
+    IsNativeValue, //
     CanBeMapDomain, //
     DetailHasDeltaType, //
     DetailTypeHasMethods, //

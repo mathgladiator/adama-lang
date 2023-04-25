@@ -22,7 +22,8 @@ import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
 /** Represents the integral with 32 bits of storage; this uses the 'RxInt32' reactive java type */
-public class TyReactiveInteger extends TySimpleReactive implements IsOrderable //
+public class TyReactiveInteger extends TySimpleReactive implements //
+    IsOrderable //
 {
   public TyReactiveInteger(final Token token) {
     super(token, "RxInt32");

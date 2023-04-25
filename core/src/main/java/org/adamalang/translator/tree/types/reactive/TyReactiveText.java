@@ -13,16 +13,13 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaSetter;
-import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
-import org.adamalang.translator.tree.types.traits.details.DetailRequiresResolveCall;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.ArrayList;
@@ -48,11 +45,6 @@ public class TyReactiveText extends TyType implements //
   @Override
   public String getAdamaType() {
     return "text";
-  }
-
-  @Override
-  public String getDeltaType(Environment environment) {
-    return "DText";
   }
 
   @Override
@@ -84,21 +76,20 @@ public class TyReactiveText extends TyType implements //
   }
 
   @Override
+  public String getDeltaType(Environment environment) {
+    return "DText";
+  }
+
+  @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     ArrayList<TyType> args = new ArrayList<>();
     if ("append".equals(name)) {
       args.add(new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, textToken).withPosition(this));
       args.add(new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, textToken).withPosition(this));
-      return new TyNativeFunctional("append", FunctionOverloadInstance.WRAP(
-          new FunctionOverloadInstance("append",
-              new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, textToken).withPosition(this),
-              args, true, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("append", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("append", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, textToken).withPosition(this), args, true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("get".equals(name)) {
-      return new TyNativeFunctional("append", FunctionOverloadInstance.WRAP(
-          new FunctionOverloadInstance("append",
-              new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, textToken).withPosition(this),
-              args, true, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("append", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("append", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, textToken).withPosition(this), args, true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }

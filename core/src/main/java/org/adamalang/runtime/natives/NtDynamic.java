@@ -54,6 +54,6 @@ public class NtDynamic implements Comparable<NtDynamic> {
   }
 
   public long memory() {
-    return json.length() * 2;
+    return json.length() * 2L;
   }
 }

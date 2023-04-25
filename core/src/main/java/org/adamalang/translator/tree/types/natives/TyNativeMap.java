@@ -141,10 +141,6 @@ public class TyNativeMap extends TyType implements //
     return "new " + getJavaBoxType(environment) + "()";
   }
 
-  private TyType getCommonQueryResultType(Environment environment) {
-    return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(getEmbeddedType(environment))).withPosition(this);
-  }
-
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("insert".equals(name)) {
@@ -168,6 +164,10 @@ public class TyNativeMap extends TyType implements //
       return new TyNativeFunctional("max", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("max", getCommonQueryResultType(environment), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
+  }
+
+  private TyType getCommonQueryResultType(Environment environment) {
+    return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(getEmbeddedType(environment))).withPosition(this);
   }
 
   @Override

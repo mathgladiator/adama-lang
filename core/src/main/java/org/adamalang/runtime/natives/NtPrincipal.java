@@ -51,6 +51,6 @@ public class NtPrincipal implements Comparable<NtPrincipal> {
   }
 
   public long memory() {
-    return (agent.length() + authority.length()) * 2;
+    return (agent.length() + authority.length()) * 2L;
   }
 }

@@ -10,7 +10,6 @@
 package org.adamalang.translator.tree.types.natives;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
-
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -26,14 +25,13 @@ import java.util.function.Consumer;
 public class TyNativePair extends TyType implements //
     AssignmentViaSetter, //
     DetailHasDeltaType, //
-    DetailNativeDeclarationIsNotStandard
-{
+    DetailNativeDeclarationIsNotStandard {
+  public final TyType domainType;
+  public final TyType rangeType;
   private final Token readonlyToken;
   private final Token pairToken;
   private final Token beginToken;
-  public final TyType domainType;
   private final Token commaToken;
-  public final TyType rangeType;
   private final Token endToken;
 
   public TyNativePair(final TypeBehavior behavior, final Token readonlyToken, final Token pairToken, final Token beginToken, final TyType domainType, final Token commaToken, final TyType rangeType, final Token endToken) {
@@ -63,14 +61,6 @@ public class TyNativePair extends TyType implements //
     yielder.accept(commaToken);
     rangeType.emitInternal(yielder);
     yielder.accept(endToken);
-  }
-
-  public TyType getDomainType(final Environment environment) {
-    return environment.rules.Resolve(domainType, false);
-  }
-
-  public TyType getRangeType(final Environment environment) {
-    return environment.rules.Resolve(rangeType, false);
   }
 
   @Override
@@ -112,6 +102,14 @@ public class TyNativePair extends TyType implements //
     writer.writeObjectFieldIntro("range");
     rangeType.writeTypeReflectionJson(writer);
     writer.endObject();
+  }
+
+  public TyType getDomainType(final Environment environment) {
+    return environment.rules.Resolve(domainType, false);
+  }
+
+  public TyType getRangeType(final Environment environment) {
+    return environment.rules.Resolve(rangeType, false);
   }
 
   @Override

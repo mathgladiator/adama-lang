@@ -25,7 +25,10 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeFuture extends TyType implements DetailContainsAnEmbeddedType, DetailTypeHasMethods, AssignmentViaNative {
+public class TyNativeFuture extends TyType implements //
+    DetailContainsAnEmbeddedType, //
+    DetailTypeHasMethods, //
+    AssignmentViaNative {
   public final Token futureToken;
   public final Token readonlyToken;
   public final TyType resultType;

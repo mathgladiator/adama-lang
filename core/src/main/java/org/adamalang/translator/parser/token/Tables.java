@@ -17,7 +17,7 @@ import java.util.Set;
 public class Tables {
   public static final int BOOLEAN_TABLES_SIZE = 256;
   public static final boolean[] DIGITS_SCANNER = assembleBooleanTable("0123456789");
-  public static final boolean[] DOUBLE_SCANNER = assembleBooleanTable("0123456789.eE");
+  public static final boolean[] DOUBLE_SCANNER = assembleBooleanTable("0123456789.eE-");
   public static final boolean[] HEX_SCANNER = assembleBooleanTable("0123456789xabcdefABCDEF");
   /** used to promote identifiers into keywords which are reserved */
   public static final Set<String> KEYWORD_TABLE = buildKeywordTable();

@@ -41,6 +41,7 @@ import org.adamalang.translator.tree.types.shared.EnumStorage;
 import org.adamalang.translator.tree.types.structures.*;
 import org.adamalang.translator.tree.types.traits.CanBeNativeArray;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -125,6 +126,52 @@ public class Parser {
           return new ViewerConstant(token);
         case "@i":
           return new ComplexConstant(0.0, 1.0, token);
+        case "@datetime":
+          Token literal = tokens.pop();
+          try {
+            return new DateTimeConstant(ZonedDateTime.parse(literal.text.substring(1, literal.text.length() - 1)), token, literal);
+          } catch (Exception ex) {
+            throw new ParseException("Failed to parse datetime: " + literal.text, literal);
+          }
+        case "@date":
+        {
+          Token year = tokens.pop();
+          Token slash1 = consumeExpectedSymbol("/");
+          Token month = tokens.pop();
+          Token slash2 = consumeExpectedSymbol("/");
+          Token day = tokens.pop();
+          return new DateConstant(intval(year), intval(month), intval(day), token, year, slash1, month, slash2, day);
+        }
+        case "@time":
+        {
+          Token hour = tokens.pop();
+          Token colon = consumeExpectedSymbol(":");
+          Token minute = tokens.pop();
+          return new TimeConstant(intval(hour), intval(minute), token, hour, colon, minute);
+        }
+        case "@timespan":
+          Token quantity = tokens.pop();
+          double quantityVal = Double.parseDouble(quantity.text);
+          Token unit = tokens.pop();
+          switch (unit.text) {
+            case "sec":
+            case "s":
+              return new TimeSpanConstant(quantityVal, token, quantity, unit);
+            case "min":
+            case "m":
+              return new TimeSpanConstant(quantityVal * 60.0, token, quantity, unit);
+            case "hr":
+            case "h":
+              return new TimeSpanConstant(quantityVal * 60.0 * 60.0, token, quantity, unit);
+            case "day":
+            case "d":
+              return new TimeSpanConstant(quantityVal * 60.0 * 60.0 * 24.0, token, quantity, unit);
+            case "week":
+            case "w":
+              return new TimeSpanConstant(quantityVal * 60.0 * 60.0 * 24.0 * 7, token, quantity, unit);
+            default:
+              throw new ParseException("unknown unit:" + unit.text, unit);
+          }
         case "@nothing":
           return new NothingAssetConstant(token);
         case "@null":
@@ -1272,6 +1319,14 @@ public class Parser {
         return new TyNativeDouble(behavior, readonlyToken, token);
       case "complex":
         return new TyNativeComplex(behavior, readonlyToken, token);
+      case "date":
+        return new TyNativeDate(behavior, readonlyToken, token);
+      case "datetime":
+        return new TyNativeDateTime(behavior, readonlyToken, token);
+      case "time":
+        return new TyNativeTime(behavior, readonlyToken, token);
+      case "timespan":
+        return new TyNativeTimeSpan(behavior, readonlyToken, token);
       case "int":
         return new TyNativeInteger(behavior, readonlyToken, token);
       case "long":
@@ -1434,6 +1489,14 @@ public class Parser {
         return new TyReactiveDouble(token);
       case "complex":
         return new TyReactiveComplex(token);
+      case "date":
+        return new TyReactiveDate(token);
+      case "datetime":
+        return new TyReactiveDateTime(token);
+      case "time":
+        return new TyReactiveTime(token);
+      case "timespan":
+        return new TyReactiveTimeSpan(token);
       case "int":
         return new TyReactiveInteger(token);
       case "long":
@@ -1585,6 +1648,10 @@ public class Parser {
       case "dynamic":
       case "double":
       case "complex":
+      case "date":
+      case "datetime":
+      case "time":
+      case "timespan":
       case "int":
       case "string":
       case "label":

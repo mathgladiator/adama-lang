@@ -25,7 +25,8 @@ import org.adamalang.translator.tree.types.traits.IsOrderable;
  * Represents the reactive type for a boolean value (true/false); this uses the reactive 'TBoolean'
  * java type
  */
-public class TyReactiveBoolean extends TySimpleReactive implements IsOrderable //
+public class TyReactiveBoolean extends TySimpleReactive implements //
+    IsOrderable //
 {
   public TyReactiveBoolean(final Token token) {
     super(token, "RxBoolean");

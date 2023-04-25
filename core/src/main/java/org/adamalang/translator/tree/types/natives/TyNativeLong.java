@@ -28,7 +28,8 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.function.Consumer;
 
 /** Represents the integral with 64 bits of storage; this uses the 'long' java type */
-public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
+public class TyNativeLong extends TySimpleNative implements //
+    IsNativeValue, //
     CanBeMapDomain, //
     DetailHasDeltaType, //
     DetailTypeHasMethods, //

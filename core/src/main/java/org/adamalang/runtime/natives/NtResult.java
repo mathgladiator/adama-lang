@@ -31,19 +31,6 @@ public class NtResult<T> {
     return this.value;
   }
 
-  public NtMaybe<T> as_maybe() {
-    if (this.value != null) {
-      return new NtMaybe<>(value);
-    } else {
-      return new NtMaybe<>();
-    }
-  }
-
-  /** is the result a failure */
-  public boolean finished() {
-    return value != null || failed;
-  }
-
   /** is it available */
   public boolean has() {
     return value != null;
@@ -70,5 +57,18 @@ public class NtResult<T> {
       throw new ComputeBlockedException();
     }
     return as_maybe();
+  }
+
+  /** is the result a failure */
+  public boolean finished() {
+    return value != null || failed;
+  }
+
+  public NtMaybe<T> as_maybe() {
+    if (this.value != null) {
+      return new NtMaybe<>(value);
+    } else {
+      return new NtMaybe<>();
+    }
   }
 }

@@ -63,7 +63,7 @@ public class RxString extends RxBase implements Comparable<RxString>, CanGetAndS
 
   @Override
   public long __memory() {
-    return super.__memory() + (backup.length() + value.length()) * 2 + 16;
+    return super.__memory() + (backup.length() + value.length()) * 2L + 16;
   }
 
   @Override

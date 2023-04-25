@@ -284,7 +284,7 @@ public class RuleSetCommon {
       if (tyType instanceof TyNativeComplex || tyType instanceof TyReactiveComplex) {
         return true;
       }
-      SignalTypeFailure(environment, new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+      SignalTypeFailure(environment, new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
     }
     return false;
   }
@@ -422,6 +422,50 @@ public class RuleSetCommon {
     if (!silent && given != null) {
       environment.document.createError(given, String.format("Type check failure: The types '%s' and '%s' are not compatible for type unification", expected.getAdamaType(), given.getAdamaType()), "TypeCompatabilities");
     }
+  }
+
+  static boolean IsDate(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    final var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType != null) {
+      if (tyType instanceof TyNativeDate || tyType instanceof TyReactiveDate) {
+        return true;
+      }
+      SignalTypeFailure(environment, new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+    }
+    return false;
+  }
+
+  static boolean IsTime(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    final var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType != null) {
+      if (tyType instanceof TyNativeTime || tyType instanceof TyReactiveTime) {
+        return true;
+      }
+      SignalTypeFailure(environment, new TyNativeTime(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+    }
+    return false;
+  }
+
+  static boolean IsTimeSpan(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    final var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType != null) {
+      if (tyType instanceof TyNativeTimeSpan || tyType instanceof TyReactiveTimeSpan) {
+        return true;
+      }
+      SignalTypeFailure(environment, new TyNativeTimeSpan(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+    }
+    return false;
+  }
+
+  static boolean IsDateTime(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    final var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType != null) {
+      if (tyType instanceof TyNativeDateTime || tyType instanceof TyReactiveDateTime) {
+        return true;
+      }
+      SignalTypeFailure(environment, new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+    }
+    return false;
   }
 
   static boolean TestReactive(final TyType tyType) {

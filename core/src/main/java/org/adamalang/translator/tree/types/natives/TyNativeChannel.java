@@ -25,7 +25,10 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeChannel extends TyType implements DetailTypeHasMethods, DetailContainsAnEmbeddedType, AssignmentViaNative {
+public class TyNativeChannel extends TyType implements //
+    DetailTypeHasMethods, //
+    DetailContainsAnEmbeddedType, //
+    AssignmentViaNative {
   public final Token channelToken;
   public final Token readonlyToken;
   public final TokenizedItem<TyType> tokenizedType;

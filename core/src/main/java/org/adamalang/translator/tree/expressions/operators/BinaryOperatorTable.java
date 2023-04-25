@@ -37,7 +37,10 @@ public class BinaryOperatorTable {
     TyType tySecurePrincipal = new TyNativeSecurePrincipal(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("secure"), null, null, null);
     TyType tyAsset = new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("asset"));
     TyType tyDynamic = new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("dynamic"));
-
+    TyType tyDate = new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("date"));
+    TyType tyDateTime = new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("datetime"));
+    TyType tyTime = new TyNativeTime(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("time"));
+    TyType tyTimeSpan = new TyNativeTimeSpan(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("timespan"));
     TyType tyMaybeBoolean = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyBoolean));
     TyType tyMaybeInt = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyInt));
     TyType tyMaybeLong = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyLong));
@@ -342,6 +345,14 @@ public class BinaryOperatorTable {
       insert(tyPrincipal, "!=", tySecurePrincipal, tyBoolean, "!((%s).equals(%s))", false);
       insert(tySecurePrincipal, "==", tyPrincipal, tyBoolean, "(%s).equals(%s)", false);
       insert(tySecurePrincipal, "!=", tyPrincipal, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tyDate, "==", tyDate, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyDate, "!=", tyDate, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tyDateTime, "==", tyDateTime, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyDateTime, "!=", tyDateTime, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tyTime, "==", tyTime, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyTime, "!=", tyTime, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tyTimeSpan, "==", tyTimeSpan, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyTimeSpan, "!=", tyTimeSpan, tyBoolean, "!((%s).equals(%s))", false);
     }
     // LOGIC
     {

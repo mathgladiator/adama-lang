@@ -22,7 +22,8 @@ import org.adamalang.translator.tree.types.natives.TyNativeString;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
 /** The type representing a utf-8 encoded string. This uses the reactive 'RxString' java type. */
-public class TyReactiveString extends TySimpleReactive implements IsOrderable //
+public class TyReactiveString extends TySimpleReactive implements //
+    IsOrderable //
 {
   public TyReactiveString(final Token token) {
     super(token, "RxString");

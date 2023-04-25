@@ -9,13 +9,11 @@
  */
 package org.adamalang.runtime.json;
 
-import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.natives.NtComplex;
-import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -459,5 +457,33 @@ public class JsonStreamWriterTests {
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.writeString("" + (char) (5 * 256) + "" + (char) (40 * 256 + 5));
     Assert.assertEquals("\"\\u0500\\u2805\"", writer.toString());
+  }
+
+  @Test
+  public void writeDate() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.writeNtDate(new NtDate(2021, 6, 17));
+    Assert.assertEquals("\"2021/6/17\"", writer.toString());
+  }
+
+  @Test
+  public void writeTimeSpan() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.writeNtTimeSpan(new NtTimeSpan(173));
+    Assert.assertEquals("173.0", writer.toString());
+  }
+
+  @Test
+  public void writeTime() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.writeNtTime(new NtTime(14, 37));
+    Assert.assertEquals("\"14:37\"", writer.toString());
+  }
+
+  @Test
+  public void writeDateTime() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.writeNtDateTime(new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]")));
+    Assert.assertEquals("\"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\"", writer.toString());
   }
 }

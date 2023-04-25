@@ -1,0 +1,9 @@
+time x = @time 14:23;
+
+bool eq1;
+
+#sm {
+  time y = x;
+  time z = @time 15:40;
+  eq1 = z == x;
+}

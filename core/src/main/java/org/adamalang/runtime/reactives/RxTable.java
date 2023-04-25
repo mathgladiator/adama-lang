@@ -210,7 +210,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
 
   @Override
   public long __memory() {
-    long sum = super.__memory() + 64 + className.length() * 2;
+    long sum = super.__memory() + 64 + className.length() * 2L;
     if (indices != null) {
       for (ReactiveIndex<Ty> idx : indices) {
         sum += idx.memory();
@@ -220,7 +220,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       sum += value.__memory() + 20;
     }
     if (unknowns != null) {
-      sum += unknowns.size() * 8;
+      sum += unknowns.size() * 8L;
     }
     return sum;
   }

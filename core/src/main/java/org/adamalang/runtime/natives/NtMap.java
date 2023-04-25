@@ -41,6 +41,10 @@ public class NtMap<TIn, TOut> implements Iterable<NtPair<TIn, TOut>> {
     };
   }
 
+  public static <TIn, TOut> NtPair<TIn, TOut> pairOf(Map.Entry<TIn, TOut> entry) {
+    return new NtPair<>(entry.getKey(), entry.getValue());
+  }
+
   public NtMaybe<TOut> lookup(final TIn key) {
     final var data = storage.get(key);
     return new NtMaybe<>(data).withAssignChain(update -> {
@@ -100,9 +104,5 @@ public class NtMap<TIn, TOut> implements Iterable<NtPair<TIn, TOut>> {
     } else {
       return new NtMaybe<>();
     }
-  }
-
-  public static <TIn, TOut> NtPair<TIn, TOut> pairOf(Map.Entry<TIn, TOut> entry) {
-    return new NtPair<>(entry.getKey(), entry.getValue());
   }
 }

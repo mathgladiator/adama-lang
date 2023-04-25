@@ -81,7 +81,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
       }
     }
     if (sameCount == types.size()) {
-      environment.document.createError(this, String.format("Overloaded function has many identical calls"), "FunctionOverlap");
+      environment.document.createError(this, "Overloaded function has many identical calls", "FunctionOverlap");
     }
   }
 

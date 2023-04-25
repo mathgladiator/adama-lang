@@ -20,7 +20,8 @@ import org.adamalang.translator.tree.types.traits.details.DetailSpecialReactiveR
 
 import java.util.function.Consumer;
 
-public class TyReactiveRef extends TyType implements DetailRequiresResolveCall {
+public class TyReactiveRef extends TyType implements //
+    DetailRequiresResolveCall {
   public final String ref;
   public final Token refToken;
 

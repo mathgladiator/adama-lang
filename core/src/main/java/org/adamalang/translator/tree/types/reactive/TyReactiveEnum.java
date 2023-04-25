@@ -23,7 +23,8 @@ import org.adamalang.translator.tree.types.shared.EnumStorage;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
+public class TyReactiveEnum extends TySimpleReactive implements //
+    IsOrderable, //
     IsEnum //
 {
   public final String name;

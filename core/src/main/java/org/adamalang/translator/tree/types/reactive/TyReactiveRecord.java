@@ -35,7 +35,8 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRoot
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyReactiveRecord extends TyType implements IsStructure, //
+public class TyReactiveRecord extends TyType implements //
+    IsStructure, //
     DetailHasDeltaType, //
     IsKillable, //
     DetailTypeProducesRootLevelCode, //
@@ -171,7 +172,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
     }
     final var fdId = storage.fields.get("id");
     if (fdId == null || !(fdId.type instanceof TyReactiveInteger)) {
-      environment.document.createError(this, String.format("id must be type int"), "Record");
+      environment.document.createError(this, "id must be type int", "Record");
     }
     typedAlready = true;
     storage.typing(environment.scope());

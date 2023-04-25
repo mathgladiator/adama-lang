@@ -24,8 +24,10 @@ public class RxEnumInt32 extends RxInt32 {
   }
 
   @Override
-  public void set(Integer value) {
-    super.set(fixer.apply(value));
+  public void __insert(JsonStreamReader reader) {
+    super.__insert(reader);
+    this.backup = fixer.apply(this.backup);
+    this.value = fixer.apply(this.value);
   }
 
   @Override
@@ -34,14 +36,12 @@ public class RxEnumInt32 extends RxInt32 {
   }
 
   @Override
-  public void __insert(JsonStreamReader reader) {
-    super.__insert(reader);
-    this.backup = fixer.apply(this.backup);
-    this.value = fixer.apply(this.value);
+  public void forceSet(int id) {
+    super.forceSet(fixer.apply(id));
   }
 
   @Override
-  public void forceSet(int id) {
-    super.forceSet(fixer.apply(id));
+  public void set(Integer value) {
+    super.set(fixer.apply(value));
   }
 }

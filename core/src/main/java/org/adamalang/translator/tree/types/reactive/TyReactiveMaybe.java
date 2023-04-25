@@ -24,7 +24,8 @@ import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbedd
 
 import java.util.function.Consumer;
 
-public class TyReactiveMaybe extends TyType implements DetailContainsAnEmbeddedType, //
+public class TyReactiveMaybe extends TyType implements //
+    DetailContainsAnEmbeddedType, //
     DetailComputeRequiresGet, //
     IsKillable, //
     AssignmentViaSetter //

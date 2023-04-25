@@ -25,7 +25,8 @@ import org.adamalang.translator.tree.types.traits.IsOrderable;
  * The type representing a valid reference in the state machine; this uses the reactive 'RxString'
  * java type
  */
-public class TyReactiveStateMachineRef extends TySimpleReactive implements IsOrderable //
+public class TyReactiveStateMachineRef extends TySimpleReactive implements //
+    IsOrderable //
 {
   public TyReactiveStateMachineRef(final Token token) {
     super(token, "RxFastString");

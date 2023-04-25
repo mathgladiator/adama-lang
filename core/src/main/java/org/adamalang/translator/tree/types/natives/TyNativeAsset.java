@@ -27,7 +27,8 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeAsset extends TySimpleNative implements DetailHasDeltaType, //
+public class TyNativeAsset extends TySimpleNative implements //
+    DetailHasDeltaType, //
     DetailTypeHasMethods, //
     AssignmentViaNative //
 {

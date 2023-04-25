@@ -84,6 +84,26 @@ public class RuleSetAssignment {
     if (aComplex && bComplex) {
       return true;
     }
+    final var aDate = RuleSetCommon.IsDate(environment, typeA, true);
+    final var bDate = RuleSetCommon.IsDate(environment, typeB, true);
+    if (aDate && bDate) {
+      return true;
+    }
+    final var aDateTime = RuleSetCommon.IsDateTime(environment, typeA, true);
+    final var bDateTime = RuleSetCommon.IsDateTime(environment, typeB, true);
+    if (aDateTime && bDateTime) {
+      return true;
+    }
+    final var aTime = RuleSetCommon.IsTime(environment, typeA, true);
+    final var bTime = RuleSetCommon.IsTime(environment, typeB, true);
+    if (aTime && bTime) {
+      return true;
+    }
+    final var aTimeSpan = RuleSetCommon.IsTimeSpan(environment, typeA, true);
+    final var bTimeSpan = RuleSetCommon.IsTimeSpan(environment, typeB, true);
+    if (aTimeSpan && bTimeSpan) {
+      return true;
+    }
     final var aBoolean = RuleSetCommon.IsBoolean(environment, typeA, true);
     final var bBoolean = RuleSetCommon.IsBoolean(environment, typeB, true);
     if (aBoolean && bBoolean) {

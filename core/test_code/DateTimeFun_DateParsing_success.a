@@ -1,0 +1,9 @@
+date x = @date 2021/12/2;
+
+bool eq1;
+
+#sm {
+  date y = x;
+  date z = @date 2000/7/3;
+  eq1 = z == x;
+}

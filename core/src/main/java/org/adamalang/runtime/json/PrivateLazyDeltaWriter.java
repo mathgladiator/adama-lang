@@ -10,11 +10,12 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 public class PrivateLazyDeltaWriter {
-  public static final Runnable DO_NOTHING = () -> {};
+  public static final Runnable DO_NOTHING = () -> {
+  };
   public final NtPrincipal who;
   public final Object viewerState;
   public final AssetIdEncoder assetIdEncoder;

@@ -32,10 +32,6 @@ public abstract class NtMessageBase {
     }
   };
 
-  public abstract void __ingest(JsonStreamReader reader);
-
-  public abstract void __writeOut(JsonStreamWriter writer);
-
   public abstract void __hash(HashBuilder __hash);
 
   public NtDynamic to_dynamic() {
@@ -44,7 +40,11 @@ public abstract class NtMessageBase {
     return new NtDynamic(writer.toString());
   }
 
+  public abstract void __writeOut(JsonStreamWriter writer);
+
   public void ingest_dynamic(NtDynamic value) {
     __ingest(new JsonStreamReader(value.json));
   }
+
+  public abstract void __ingest(JsonStreamReader reader);
 }

@@ -152,6 +152,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -716,6 +717,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -1556,6 +1558,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -2212,6 +2215,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -2786,6 +2790,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -2799,6 +2804,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  private final RxDouble y;");
     gold.append("\n  private final RxDouble z;");
     gold.append("\n  private final RxLazy<Double> sum;");
+    gold.append("\n  private final RxDouble tiny;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -2806,6 +2812,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += y.__memory();");
     gold.append("\n    __sum += z.__memory();");
     gold.append("\n    __sum += sum.__memory();");
+    gold.append("\n    __sum += tiny.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
     gold.append("\n  public DoubleBulk_7(DocumentMonitor __monitor) {");
@@ -2817,6 +2824,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__subscribe(sum);");
     gold.append("\n    y.__subscribe(sum);");
     gold.append("\n    z.__subscribe(sum);");
+    gold.append("\n    tiny = new RxDouble(this, 2.0E-32);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -2834,6 +2842,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n            break;");
     gold.append("\n          case \"z\":");
     gold.append("\n            z.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"tiny\":");
+    gold.append("\n            tiny.__insert(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__insert(__reader);");
@@ -2910,6 +2921,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n          case \"z\":");
     gold.append("\n            z.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"tiny\":");
+    gold.append("\n            tiny.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__patch(__reader);");
     gold.append("\n            break;");
@@ -2979,6 +2993,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    y.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"z\");");
     gold.append("\n    z.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"tiny\");");
+    gold.append("\n    tiny.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__constructed\");");
@@ -3034,6 +3050,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
     gold.append("\n    z.__commit(\"z\", __forward, __reverse);");
+    gold.append("\n    tiny.__commit(\"tiny\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3053,6 +3070,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
     gold.append("\n    z.__revert();");
+    gold.append("\n    tiny.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaDoubleBulk_7 implements DeltaNode {");
@@ -3061,6 +3079,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    private DDouble __dz;");
     gold.append("\n    private int __gsum;");
     gold.append("\n    private DDouble __dsum;");
+    gold.append("\n    private DDouble __dtiny;");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaDoubleBulk_7() {");
     gold.append("\n      __dx = new DDouble();");
@@ -3068,6 +3087,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __dz = new DDouble();");
     gold.append("\n      __gsum = -1;");
     gold.append("\n      __dsum = new DDouble();");
+    gold.append("\n      __dtiny = new DDouble();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -3077,10 +3097,11 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __sum += __dy.__memory();");
     gold.append("\n      __sum += __dz.__memory();");
     gold.append("\n      __sum += __dsum.__memory();");
+    gold.append("\n      __sum += __dtiny.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
     gold.append("\n    public void show(DoubleBulk_7 __item, PrivateLazyDeltaWriter __writer) {");
-    gold.append("\n      __code_cost += 4;");
+    gold.append("\n      __code_cost += 5;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      __dx.show(__item.x.get(), __obj.planField(\"x\"));");
@@ -3090,6 +3111,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n        __dsum.show(__item.sum.get(), __obj.planField(\"sum\"));");
     gold.append("\n        __gsum = __item.sum.getGeneration();");
     gold.append("\n      }");
+    gold.append("\n      __dtiny.show(__item.tiny.get(), __obj.planField(\"tiny\"));");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
@@ -3100,7 +3122,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __dy.clear();");
     gold.append("\n      __dz.clear();");
     gold.append("\n      __dsum.clear();");
-    gold.append("\n      __code_cost += 4;");
+    gold.append("\n      __dtiny.clear();");
+    gold.append("\n      __code_cost += 5;");
     gold.append("\n    }");
     gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      if (__emitted) {");
@@ -3281,7 +3304,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(1);");
-    gold.append("\n      __assert_truth(LibMath.near(sum.get(), 2005.85), 10, 2, 10, 24);");
+    gold.append("\n      __assert_truth(LibMath.near(sum.get(), 2005.85), 11, 2, 11, 24);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
@@ -3318,33 +3341,33 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nBegin");
     gold.append("\nEnd");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"double\"},\"privacy\":\"public\"},\"y\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"double\"},\"privacy\":\"public\"},\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"double\"},\"privacy\":\"public\"},\"sum\":{\"type\":{\"nature\":\"native_value\",\"type\":\"double\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"double\"},\"privacy\":\"public\"},\"y\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"double\"},\"privacy\":\"public\"},\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"double\"},\"privacy\":\"public\"},\"sum\":{\"type\":{\"nature\":\"native_value\",\"type\":\"double\"},\"privacy\":\"public\"},\"tiny\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"double\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"x\":2.71,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:2");
-    gold.append("\nMEMORY:592");
+    gold.append("\nMEMORY:648");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
-    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"x\":2.71,\"y\":3.14,\"z\":2000.0,\"sum\":2005.85},\"seq\":3}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"x\":2.71,\"y\":3.14,\"z\":2000.0,\"sum\":2005.85,\"tiny\":2.0E-32},\"seq\":3}");
     gold.append("\n{\"command\":\"connect\",\"timestamp\":\"75\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"key\":\"key\",\"origin\":\"phase\",\"ip\":\"ip\"}-->{\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__connection_id\":1,\"__time\":\"75\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":null} need:false in:-75");
     gold.append("\nNO_ONE|SUCCESS:4");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":6,\"__entropy\":\"488730542833106255\",\"__time\":\"100\"} need:false in:-100");
     gold.append("\nRANDO: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":6}");
-    gold.append("\n+ RANDO DELTA:{\"data\":{\"x\":2.71,\"y\":3.14,\"z\":2000.0,\"sum\":2005.85},\"seq\":6}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{\"x\":2.71,\"y\":3.14,\"z\":2000.0,\"sum\":2005.85,\"tiny\":2.0E-32},\"seq\":6}");
     gold.append("\nRANDO|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"125\"}-->{\"__messages\":null,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__time\":\"125\"} need:false in:-125");
     gold.append("\nRANDO|SUCCESS:7");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":7}");
     gold.append("\n+ RANDO DELTA:{\"seq\":7}");
-    gold.append("\nMEMORY:1030");
+    gold.append("\nMEMORY:1166");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"x\":2.71,\"y\":3.14,\"z\":2000.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
+    gold.append("\n{\"x\":2.71,\"y\":3.14,\"z\":2000.0,\"tiny\":2.0E-32,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"x\":2.71,\"y\":3.14,\"z\":2000.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
-    gold.append("\n{\"x\":2.71,\"y\":3.14,\"z\":2000.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
+    gold.append("\n{\"x\":2.71,\"y\":3.14,\"z\":2000.0,\"tiny\":2.0E-32,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
+    gold.append("\n{\"x\":2.71,\"y\":3.14,\"z\":2000.0,\"tiny\":2.0E-32,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\nTEST[PrimaryTest] = 100.0%");
     gold.append("\n");
@@ -3411,6 +3434,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -4006,6 +4030,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -4650,6 +4675,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -5240,6 +5266,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -5921,6 +5948,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -6592,6 +6620,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -7149,6 +7178,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -7776,6 +7806,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -8391,6 +8422,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -9166,6 +9198,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -9749,6 +9782,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -10467,6 +10501,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -11011,6 +11046,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -11755,6 +11791,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -12390,6 +12427,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -12912,6 +12950,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
+    gold.append("\nimport java.time.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");

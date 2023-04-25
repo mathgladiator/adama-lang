@@ -21,7 +21,8 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeDynamic;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-public class TyReactiveDynamic extends TySimpleReactive implements IsOrderable {
+public class TyReactiveDynamic extends TySimpleReactive implements //
+    IsOrderable {
   public TyReactiveDynamic(final Token token) {
     super(token, "RxDynamic");
   }

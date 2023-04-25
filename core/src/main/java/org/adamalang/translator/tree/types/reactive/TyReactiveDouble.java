@@ -25,7 +25,8 @@ import org.adamalang.translator.tree.types.traits.IsOrderable;
  * represents a double precision floating point number. For instance, 3.14 is a floating point
  * number. This uses the reactive 'RxDouble' java type.
  */
-public class TyReactiveDouble extends TySimpleReactive implements IsOrderable //
+public class TyReactiveDouble extends TySimpleReactive implements //
+    IsOrderable //
 {
   public TyReactiveDouble(final Token token) {
     super(token, "RxDouble");

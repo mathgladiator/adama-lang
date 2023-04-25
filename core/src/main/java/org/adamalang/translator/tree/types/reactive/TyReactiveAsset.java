@@ -21,7 +21,8 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeAsset;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-public class TyReactiveAsset extends TySimpleReactive implements IsOrderable {
+public class TyReactiveAsset extends TySimpleReactive implements //
+    IsOrderable {
   public TyReactiveAsset(final Token token) {
     super(token, "RxAsset");
   }

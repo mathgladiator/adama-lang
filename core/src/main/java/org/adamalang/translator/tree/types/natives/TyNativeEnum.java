@@ -28,6 +28,7 @@ import org.adamalang.translator.tree.types.shared.EnumStorage;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
+import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailSpecialReactiveRefResolve;
@@ -39,7 +40,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class TyNativeEnum extends TySimpleNative implements IsNativeValue, DetailHasDeltaType, //
+public class TyNativeEnum extends TySimpleNative implements //
+    IsNativeValue, //
+    IsOrderable, //
+    DetailHasDeltaType, //
     CanBeMapDomain, //
     DetailSpecialReactiveRefResolve, //
     DetailTypeProducesRootLevelCode, //

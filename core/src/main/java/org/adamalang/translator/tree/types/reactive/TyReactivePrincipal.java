@@ -21,7 +21,8 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-public class TyReactivePrincipal extends TySimpleReactive implements IsOrderable {
+public class TyReactivePrincipal extends TySimpleReactive implements //
+    IsOrderable {
   public TyReactivePrincipal(final Token token) {
     super(token, "RxPrincipal");
   }

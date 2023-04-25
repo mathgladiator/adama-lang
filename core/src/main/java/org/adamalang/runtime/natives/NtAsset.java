@@ -77,6 +77,6 @@ public class NtAsset implements Comparable<NtAsset> {
   }
 
   public long memory() {
-    return (id.length() + name.length() + contentType.length() + md5.length() + sha384.length()) * 2 + 48;
+    return (id.length() + name.length() + contentType.length() + md5.length() + sha384.length()) * 2L + 48;
   }
 }

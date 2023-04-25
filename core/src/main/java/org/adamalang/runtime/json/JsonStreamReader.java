@@ -11,12 +11,11 @@ package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.json.token.JsonToken;
 import org.adamalang.runtime.json.token.JsonTokenType;
-import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.natives.NtComplex;
-import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.*;
 
+import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class JsonStreamReader {
   private final String json;
@@ -145,6 +144,35 @@ public class JsonStreamReader {
     } else {
       return test;
     }
+  }
+
+  public NtDate readNtDate() {
+    String val = readString();
+    String[] parts = val.split(Pattern.quote("/"));
+    try {
+      return new NtDate(Integer.parseInt(parts[0]), parts.length > 1 ? Integer.parseInt(parts[1]) : 1, parts.length > 2 ? Integer.parseInt(parts[2]) : 1);
+    } catch (NumberFormatException nfe) {
+      return new NtDate(1, 1, 1);
+    }
+  }
+
+  public NtDateTime readNtDateTime() {
+    String val = readString();
+    return new NtDateTime(ZonedDateTime.parse(val));
+  }
+
+  public NtTime readNtTime() {
+    String val = readString();
+    String[] parts = val.split(Pattern.quote(":"));
+    try {
+      return new NtTime(Integer.parseInt(parts[0]), parts.length > 1 ? Integer.parseInt(parts[1]) : 0);
+    } catch (NumberFormatException nfe) {
+      return new NtTime(0, 0);
+    }
+  }
+
+  public NtTimeSpan readNtTimeSpan() {
+    return new NtTimeSpan(readDouble());
   }
 
   public NtComplex readNtComplex() {

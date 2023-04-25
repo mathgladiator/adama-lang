@@ -23,10 +23,8 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
-import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.structures.DefineMethod;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
-import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.CanBeNativeArray;
 import org.adamalang.translator.tree.types.traits.IsStructure;
@@ -37,7 +35,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class TyNativeMessage extends TyType implements IsStructure, //
+public class TyNativeMessage extends TyType implements //
+    IsStructure, //
     DetailTypeProducesRootLevelCode, //
     DetailHasDeltaType, //
     DetailInventDefaultValueExpression, //
@@ -218,8 +217,7 @@ public class TyNativeMessage extends TyType implements IsStructure, //
     if ("ingest_dynamic".equals(name)) {
       ArrayList<TyType> args = new ArrayList<>();
       args.add(new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, null));
-      return new TyNativeFunctional("ingest_dynamic", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("ingest_dynamic",
-          new TyNativeVoid(), args, true, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("ingest_dynamic", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("ingest_dynamic", new TyNativeVoid(), args, true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return storage.methodTypes.get(name);
   }

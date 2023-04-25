@@ -9,10 +9,7 @@
  */
 package org.adamalang.runtime.json;
 
-import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.natives.NtComplex;
-import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.*;
 
 import java.util.*;
 
@@ -129,38 +126,8 @@ public class JsonStreamWriter {
     commaStateMachine = commas.pop();
   }
 
-  public void inline(final String s) {
-    sb.append(s);
-  }
-
-  public void writeInteger(final int x) {
-    maybe_comma();
-    sb.append(x);
-  }
-
-  public void writeNtAsset(final NtAsset a) {
-    beginObject();
-    writeObjectFieldIntro("id");
-    writeString(a.id);
-    writeObjectFieldIntro("size");
-    writeLong(a.size);
-    writeObjectFieldIntro("name");
-    writeString(a.name);
-    writeObjectFieldIntro("type");
-    writeString(a.contentType);
-    writeObjectFieldIntro("md5");
-    writeString(a.md5);
-    writeObjectFieldIntro("sha384");
-    writeString(a.sha384);
-    writeObjectFieldIntro("@gc");
-    writeString("@yes");
-    endObject();
-    if (trackAssets) {
-      if (!assetIdsSeen.contains(a.id)) {
-        assetIdsSeen.add(a.id);
-        assetBytesWritten += a.size;
-      }
-    }
+  public void writeNtDate(final NtDate d) {
+    writeString(d.toString());
   }
 
   public void writeString(final String s) {
@@ -205,11 +172,6 @@ public class JsonStreamWriter {
     sb.append("\"");
   }
 
-  public void writeLong(final long x) {
-    maybe_comma();
-    sb.append("\"").append(x).append("\"");
-  }
-
   public void writeNull() {
     maybe_comma();
     sb.append("null");
@@ -226,6 +188,57 @@ public class JsonStreamWriter {
       return "0" + x;
     }
     return x;
+  }
+
+  public void writeNtDateTime(final NtDateTime d) {
+    writeString(d.dateTime.toString());
+  }
+
+  public void writeNtTime(final NtTime d) {
+    writeString(d.toString());
+  }
+
+  public void writeNtTimeSpan(final NtTimeSpan d) {
+    writeDouble(d.seconds);
+  }
+
+  public void inline(final String s) {
+    sb.append(s);
+  }
+
+  public void writeInteger(final int x) {
+    maybe_comma();
+    sb.append(x);
+  }
+
+  public void writeNtAsset(final NtAsset a) {
+    beginObject();
+    writeObjectFieldIntro("id");
+    writeString(a.id);
+    writeObjectFieldIntro("size");
+    writeLong(a.size);
+    writeObjectFieldIntro("name");
+    writeString(a.name);
+    writeObjectFieldIntro("type");
+    writeString(a.contentType);
+    writeObjectFieldIntro("md5");
+    writeString(a.md5);
+    writeObjectFieldIntro("sha384");
+    writeString(a.sha384);
+    writeObjectFieldIntro("@gc");
+    writeString("@yes");
+    endObject();
+    if (trackAssets) {
+      if (!assetIdsSeen.contains(a.id)) {
+        assetIdsSeen.add(a.id);
+        assetBytesWritten += a.size;
+      }
+    }
+  }
+
+  public void writeLong(final long x) {
+    maybe_comma();
+    sb.append("\"").append(x).append("\"");
   }
 
   public void writeNtPrincipal(final NtPrincipal c) {

@@ -24,8 +24,10 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeService extends TyType implements DetailTypeHasMethods {
+public class TyNativeService extends TyType implements //
+    DetailTypeHasMethods {
   public final DefineService service;
+
   public TyNativeService(final DefineService service) {
     super(TypeBehavior.ReadOnlyNativeValue);
     this.service = service;
@@ -91,10 +93,7 @@ public class TyNativeService extends TyType implements DetailTypeHasMethods {
       }
       outputType = outputType.withPosition(service);
       outputType = new TyNativeResult(TypeBehavior.ReadOnlyNativeValue, null, method.methodToken, new TokenizedItem<>(outputType)).withPosition(this);
-      return new TyNativeFunctional(name,
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance(name, outputType, argTypes, true, false)),
-          FunctionStyleJava.RemoteCall);
+      return new TyNativeFunctional(name, FunctionOverloadInstance.WRAP(new FunctionOverloadInstance(name, outputType, argTypes, true, false)), FunctionStyleJava.RemoteCall);
     }
     return null;
   }
