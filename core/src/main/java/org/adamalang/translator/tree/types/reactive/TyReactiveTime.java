@@ -14,6 +14,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.expressions.Expression;
+import org.adamalang.translator.tree.expressions.constants.TimeConstant;
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -50,7 +51,7 @@ public class TyReactiveTime extends TySimpleReactive implements //
 
   @Override
   public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
-    return null;
+    return new TimeConstant(0, 0, token);
   }
 
   @Override

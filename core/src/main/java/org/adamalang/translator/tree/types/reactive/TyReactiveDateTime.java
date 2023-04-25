@@ -53,7 +53,7 @@ public class TyReactiveDateTime extends TySimpleReactive implements //
 
   @Override
   public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
-    return new DateTimeConstant(ZonedDateTime.parse("1900-01-01T00:00:00-00:00"));
+    return new DateTimeConstant(ZonedDateTime.parse("1900-01-01T00:00:00-00:00"), token);
   }
 
   @Override

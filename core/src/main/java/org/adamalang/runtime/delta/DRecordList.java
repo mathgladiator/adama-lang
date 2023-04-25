@@ -34,7 +34,7 @@ public class DRecordList<dRecordTy extends DeltaNode> implements DeltaNode {
   /** memory usage */
   @Override
   public long __memory() {
-    long memory = order.size() * 32;
+    long memory = order.size() * 32L;
     for (Map.Entry<Integer, dRecordTy> entry : cache.entrySet()) {
       memory += 40 + entry.getValue().__memory();
     }

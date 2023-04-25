@@ -11,10 +11,7 @@ package org.adamalang.runtime.delta;
 
 import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
-import org.adamalang.runtime.natives.NtComplex;
-import org.adamalang.runtime.natives.NtPair;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /** a cached pair of a key and a value for map results and other pairing; a delta version of NtPair */

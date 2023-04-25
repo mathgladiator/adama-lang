@@ -24,11 +24,11 @@ public class DMaybeTests {
     final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
     final var a = db.get(DBoolean::new);
     final var b = db.get(DBoolean::new);
-    Assert.assertTrue(a == b);
+    Assert.assertSame(a, b);
     db.hide(writer);
     db.hide(writer);
     final var c = db.get(DBoolean::new);
-    Assert.assertTrue(a != c);
+    Assert.assertNotSame(a, c);
     Assert.assertEquals("null", stream.toString());
     Assert.assertEquals(80, db.__memory());
     db.clear();

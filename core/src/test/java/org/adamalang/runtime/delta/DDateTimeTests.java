@@ -12,29 +12,27 @@ package org.adamalang.runtime.delta;
 import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
+import org.adamalang.runtime.natives.NtDateTime;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class DPrincipalTests {
+import java.time.ZonedDateTime;
+
+public class DDateTimeTests {
   @Test
   public void flow() {
-    final var db = new DPrincipal();
+    final var db = new DDateTime();
     final var stream = new JsonStreamWriter();
     final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
-    final var A = new NtPrincipal("a", "local");
-    db.show(NtPrincipal.NO_ONE, writer);
-    db.show(NtPrincipal.NO_ONE, writer);
-    db.show(A, writer);
-    db.show(A, writer);
+    db.show(new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]")), writer);
+    db.show(new NtDateTime(ZonedDateTime.parse("2021-04-24T17:57:19.802528800-05:00[America/Chicago]")), writer);
     db.hide(writer);
     db.hide(writer);
-    db.show(A, writer);
-    db.show(A, writer);
-    db.show(NtPrincipal.NO_ONE, writer);
-    db.show(NtPrincipal.NO_ONE, writer);
-    Assert.assertEquals("{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"}{\"@t\":1,\"agent\":\"a\",\"authority\":\"local\"}null{\"@t\":1,\"agent\":\"a\",\"authority\":\"local\"}{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"}", stream.toString());
-    Assert.assertEquals(36, db.__memory());
+    db.show(new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]")), writer);
+    db.show(new NtDateTime(ZonedDateTime.parse("2021-04-24T17:57:19.802528800-05:00[America/Chicago]")), writer);
+    Assert.assertEquals("\"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\"\"2021-04-24T17:57:19.802528800-05:00[America/Chicago]\"null\"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\"\"2021-04-24T17:57:19.802528800-05:00[America/Chicago]\"", stream.toString());
+    Assert.assertEquals(96, db.__memory());
     db.clear();
   }
 }

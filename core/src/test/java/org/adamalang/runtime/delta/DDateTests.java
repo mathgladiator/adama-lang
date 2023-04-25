@@ -12,29 +12,25 @@ package org.adamalang.runtime.delta;
 import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
+import org.adamalang.runtime.natives.NtDate;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class DPrincipalTests {
+public class DDateTests {
   @Test
   public void flow() {
-    final var db = new DPrincipal();
+    final var db = new DDate();
     final var stream = new JsonStreamWriter();
     final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
-    final var A = new NtPrincipal("a", "local");
-    db.show(NtPrincipal.NO_ONE, writer);
-    db.show(NtPrincipal.NO_ONE, writer);
-    db.show(A, writer);
-    db.show(A, writer);
+    db.show(new NtDate(1, 2, 3), writer);
+    db.show(new NtDate(3, 4, 5), writer);
     db.hide(writer);
     db.hide(writer);
-    db.show(A, writer);
-    db.show(A, writer);
-    db.show(NtPrincipal.NO_ONE, writer);
-    db.show(NtPrincipal.NO_ONE, writer);
-    Assert.assertEquals("{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"}{\"@t\":1,\"agent\":\"a\",\"authority\":\"local\"}null{\"@t\":1,\"agent\":\"a\",\"authority\":\"local\"}{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"}", stream.toString());
-    Assert.assertEquals(36, db.__memory());
+    db.show(new NtDate(1, 2, 3), writer);
+    db.show(new NtDate(3, 4, 5), writer);
+    Assert.assertEquals("\"1/2/3\"\"3/4/5\"null\"1/2/3\"\"3/4/5\"", stream.toString());
+    Assert.assertEquals(56, db.__memory());
     db.clear();
   }
 }

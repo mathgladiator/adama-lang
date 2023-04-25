@@ -36,12 +36,12 @@ public class DFastString implements DeltaNode {
   /** memory usage */
   @Override
   public long __memory() {
-    return 40 + (prior != null ? prior.length() * 2 : 0);
+    return 40 + (prior != null ? prior.length() * 2L : 0);
   }
 
   /** the fast-string is visible, so show changes */
   public void show(final String value, final PrivateLazyDeltaWriter writer) {
-    if (prior == null || !value.equals(prior)) {
+    if (!value.equals(prior)) {
       writer.writeFastString(value);
     }
     prior = value;

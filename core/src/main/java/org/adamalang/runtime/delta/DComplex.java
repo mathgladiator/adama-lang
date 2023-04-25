@@ -41,7 +41,7 @@ public class DComplex implements DeltaNode {
 
   /** the double is visible, so show changes */
   public void show(final NtComplex value, final PrivateLazyDeltaWriter writer) {
-    if (prior == null || !value.equals(prior)) {
+    if (!value.equals(prior)) {
       writer.writeNtComplex(value);
     }
     prior = value;

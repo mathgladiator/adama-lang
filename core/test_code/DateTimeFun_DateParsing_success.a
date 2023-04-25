@@ -7,3 +7,7 @@ bool eq1;
   date z = @date 2000/7/3;
   eq1 = z == x;
 }
+
+record R {
+   public date zzz;
+}

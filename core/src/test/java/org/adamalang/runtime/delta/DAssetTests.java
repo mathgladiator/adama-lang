@@ -48,9 +48,7 @@ public class DAssetTests {
     da.show(new NtAsset("32", "name", "type", 42, "md5", "sha"), writer);
 
     da.hide(writer);
-    Assert.assertEquals(
-        "nullnull",
-        stream.toString());
+    Assert.assertEquals("nullnull", stream.toString());
     Assert.assertEquals(32, da.__memory());
   }
 }

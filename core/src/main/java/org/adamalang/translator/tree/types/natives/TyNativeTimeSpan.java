@@ -72,11 +72,11 @@ public class TyNativeTimeSpan extends TySimpleNative implements //
 
   @Override
   public String getDeltaType(Environment environment) {
-    return "DLong";
+    return "DTimeSpan";
   }
 
   @Override
   public Expression inventDefaultValueExpression(DocumentPosition forWhatExpression) {
-    return new TimeSpanConstant(0);
+    return new TimeSpanConstant(0, token);
   }
 }

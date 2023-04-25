@@ -72,11 +72,11 @@ public class TyNativeTime extends TySimpleNative implements //
 
   @Override
   public String getDeltaType(Environment environment) {
-    return "DString";
+    return "DTime";
   }
 
   @Override
   public Expression inventDefaultValueExpression(DocumentPosition forWhatExpression) {
-    return new TimeConstant(0, 0);
+    return new TimeConstant(0, 0, token);
   }
 }

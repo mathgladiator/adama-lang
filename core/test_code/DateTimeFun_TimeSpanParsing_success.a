@@ -12,3 +12,7 @@ bool eq1;
   var p5 = @timespan 1 week;
   eq1 = z == x;
 }
+
+record R {
+   public timespan zzz;
+}

@@ -10,8 +10,7 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
-import org.adamalang.runtime.natives.NtComplex;
-import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.natives.*;
 
 public class PrivateLazyDeltaWriter {
   public static final Runnable DO_NOTHING = () -> {
@@ -86,6 +85,25 @@ public class PrivateLazyDeltaWriter {
   public void writeNtComplex(final NtComplex c) {
     manifest();
     writer.writeNtComplex(c);
+  }
+
+  public void writeNtDate(final NtDate d) {
+    manifest();
+    writer.writeNtDate(d);
+  }
+
+  public void writeNtDateTime(final NtDateTime d) {
+    manifest();
+    writer.writeNtDateTime(d);
+  }
+
+  public void writeNtTime(final NtTime d) {
+    manifest();
+    writer.writeNtTime(d);
+  }
+  public void writeNtTimeSpan(final NtTimeSpan d) {
+    manifest();
+    writer.writeNtTimeSpan(d);
   }
 
   public void writeFastString(final String str) {

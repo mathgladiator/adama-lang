@@ -73,11 +73,11 @@ public class TyNativeDateTime extends TySimpleNative implements //
 
   @Override
   public String getDeltaType(Environment environment) {
-    return "DString";
+    return "DDateTime";
   }
 
   @Override
   public Expression inventDefaultValueExpression(DocumentPosition forWhatExpression) {
-    return new DateTimeConstant(ZonedDateTime.parse("1900-01-01T00:00:00-00:00"));
+    return new DateTimeConstant(ZonedDateTime.parse("1900-01-01T00:00:00-00:00"), token);
   }
 }

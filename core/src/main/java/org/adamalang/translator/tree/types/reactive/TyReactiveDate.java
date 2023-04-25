@@ -51,7 +51,7 @@ public class TyReactiveDate extends TySimpleReactive implements //
 
   @Override
   public Expression inventDefaultValueExpression(DocumentPosition forWhatExpression) {
-    return new DateConstant(1, 1, 1);
+    return new DateConstant(1, 1, 1, token);
   }
 
   @Override

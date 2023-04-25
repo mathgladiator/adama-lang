@@ -7,3 +7,7 @@ bool eq1;
   datetime z =  @datetime "2023-04-24T17:57:19.802528800-05:00[America/Chicago]";
   eq1 = z == x;
 }
+
+record R {
+   public datetime zzz;
+}

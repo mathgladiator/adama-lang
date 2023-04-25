@@ -11,17 +11,17 @@ package org.adamalang.runtime.delta;
 
 import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
-import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.natives.NtTime;
 
-/** an asset that will respect privacy and sends state to client only on changes */
-public class DAsset implements DeltaNode {
-  private NtAsset prior;
+/** a time that respects privacy */
+public class DTime implements DeltaNode {
+  private NtTime prior;
 
-  public DAsset() {
+  public DTime() {
     prior = null;
   }
 
-  /** the asset is no longer visible (was made private) */
+  /** the double is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (prior != null) {
       writer.writeNull();
@@ -40,19 +40,10 @@ public class DAsset implements DeltaNode {
     return (prior != null ? prior.memory() : 0) + 32;
   }
 
-  /** the asset is visible, so show changes */
-  public void show(final NtAsset value, final PrivateLazyDeltaWriter writer) {
-    if (writer.assetIdEncoder != null) {
-      if (!value.equals(prior)) {
-        final var obj = writer.planObject();
-        // note; we don't send the name as that may leak private information from the uploader
-        obj.planField("id").writeString(writer.assetIdEncoder.encrypt(value.id));
-        obj.planField("size").writeFastString("" + value.size);
-        obj.planField("type").writeString(value.contentType);
-        obj.planField("md5").writeString(value.md5);
-        obj.planField("sha384").writeString(value.sha384);
-        obj.end();
-      }
+  /** the double is visible, so show changes */
+  public void show(final NtTime value, final PrivateLazyDeltaWriter writer) {
+    if (!value.equals(prior)) {
+      writer.writeNtTime(value);
     }
     prior = value;
   }

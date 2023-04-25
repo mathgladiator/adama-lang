@@ -12,8 +12,8 @@ package org.adamalang.runtime.delta;
 import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtComplex;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,8 +31,7 @@ public class DComplexTests {
     db.hide(writer);
     db.show(new NtComplex(1, 2), writer);
     db.show(new NtComplex(1, 2), writer);
-    Assert.assertEquals(
-        "{\"r\":1.0,\"i\":2.0}{\"r\":3.0,\"i\":4.0}null{\"r\":1.0,\"i\":2.0}", stream.toString());
+    Assert.assertEquals("{\"r\":1.0,\"i\":2.0}{\"r\":3.0,\"i\":4.0}null{\"r\":1.0,\"i\":2.0}", stream.toString());
     Assert.assertEquals(48, db.__memory());
     db.clear();
   }

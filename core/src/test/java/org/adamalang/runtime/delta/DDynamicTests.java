@@ -12,8 +12,8 @@ package org.adamalang.runtime.delta;
 import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 

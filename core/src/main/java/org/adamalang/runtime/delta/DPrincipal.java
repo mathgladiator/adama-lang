@@ -42,7 +42,7 @@ public class DPrincipal implements DeltaNode {
 
   /** the client is visible, so show changes */
   public void show(final NtPrincipal value, final PrivateLazyDeltaWriter writer) {
-    if (prior == null || !value.equals(prior)) {
+    if (!value.equals(prior)) {
       final var obj = writer.planObject();
       obj.planField("@t").writeInt(1);
       obj.planField("agent").writeFastString(value.agent);

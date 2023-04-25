@@ -17,7 +17,7 @@ import javax.crypto.SecretKey;
 public class AssetIdEncoder {
   private final SecretKey key;
 
-  public AssetIdEncoder(String keyHeader) throws ErrorCodeException  {
+  public AssetIdEncoder(String keyHeader) throws ErrorCodeException {
     this.key = SecureAssetUtil.secretKeyOf(keyHeader);
   }
 

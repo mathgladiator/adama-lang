@@ -72,11 +72,11 @@ public class TyNativeDate extends TySimpleNative implements //
 
   @Override
   public String getDeltaType(Environment environment) {
-    return "DString";
+    return "DDate";
   }
 
   @Override
   public Expression inventDefaultValueExpression(DocumentPosition forWhatExpression) {
-    return new DateConstant(1, 1, 1);
+    return new DateConstant(1, 1, 1, token);
   }
 }
