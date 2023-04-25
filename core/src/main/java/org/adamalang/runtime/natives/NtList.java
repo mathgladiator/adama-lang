@@ -28,6 +28,8 @@ public interface NtList<Ty> extends Iterable<Ty> {
 
   void map(Consumer<Ty> t);
 
+  <R> NtList<R> mapFunction(Function<Ty, R> foo);
+
   NtList<Ty> orderBy(boolean done, Comparator<Ty> cmp);
 
   <TIn, TOut> NtMap<TIn, TOut> reduce(Function<Ty, TIn> domain, Function<NtList<Ty>, TOut> reducer);

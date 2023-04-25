@@ -140,6 +140,16 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
   }
 
   @Override
+  public <R> NtList<R> mapFunction(Function<Ty, R> foo) {
+    ensureFinalized();
+    ArrayList<R> result = new ArrayList<>();
+    for (final Ty item : finalized) {
+      result.add(foo.apply(item));
+    }
+    return new ArrayNtList<>(result);
+  }
+
+  @Override
   public NtList<Ty> orderBy(final boolean done, final Comparator<Ty> cmp) {
     ensureFinalized();
     return new ArrayNtList<>(finalized).orderBy(true, cmp);

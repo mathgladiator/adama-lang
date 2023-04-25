@@ -1,0 +1,39 @@
+record R {
+  public int x;
+  public int y;
+}
+
+table<R> tbl;
+
+public formula all = iterate tbl;
+
+procedure shared_sqr(R r) -> int {
+  return r.x * r.x + r.y * r.y;
+}
+
+public formula all_sqr_explicit = iterate tbl map shared_sqr;
+
+public formula all_sqr_anonymous = iterate tbl map (@lambda z: z.x * z.x + z.y * z.y);
+
+record Assoc {
+  public int x;
+  public int z;
+}
+
+table<Assoc> assocs;
+
+@construct {
+  tbl <- { x: 1, y : 2 };
+  tbl <- { x: 3, y : 3 };
+  assocs <- {x : 1, z: 42 };
+}
+
+procedure dj_1(R r) -> list<Assoc> {
+  return iterate assocs where x == r.x;
+}
+
+public formula dumb_join_explicit = iterate tbl map dj_1;
+
+public formula dumb_join_annoy1 = iterate tbl map (@lambda z: iterate assocs where_as it: z.x == it.x);
+
+public formula dumb_join_annoy2 = iterate tbl map (@lambda zz: iterate assocs where zz.x == x);

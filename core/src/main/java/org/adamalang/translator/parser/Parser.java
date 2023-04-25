@@ -1035,7 +1035,7 @@ public class Parser {
       base = assignment();
     }
     Token op;
-    while ((op = tokens.popIf(t -> t.isIdentifier("where", "where_as", "order", "shuffle", "reduce", "limit", "offset"))) != null) {
+    while ((op = tokens.popIf(t -> t.isIdentifier("where", "where_as", "order", "shuffle", "map", "reduce", "limit", "offset"))) != null) {
       base = wrap_linq(base, op);
     }
     return base;
@@ -1726,6 +1726,10 @@ public class Parser {
           commaToken = tokens.popIf(t -> t.isSymbolWithTextEq(","));
         }
         return new OrderBy(base, op, byToken, keysToOrderBy);
+      }
+      case "map": {
+        final var fun = expression();
+        return new Map(base, op, fun);
       }
       case "shuffle":
         return new Shuffle(op, base);

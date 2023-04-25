@@ -66,6 +66,15 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
   }
 
   @Override
+  public <R> NtList<R> mapFunction(Function<Ty, R> foo) {
+    ArrayList<R> result = new ArrayList<>();
+    for (final Ty item : list) {
+      result.add(foo.apply(item));
+    }
+    return new ArrayNtList<>(result);
+  }
+
+  @Override
   public NtList<Ty> orderBy(final boolean done, final Comparator<Ty> cmp) {
     list.sort(cmp);
     return this;

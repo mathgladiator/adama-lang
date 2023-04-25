@@ -49,6 +49,11 @@ public class EmptyNtList<T> implements NtList<T> {
   }
 
   @Override
+  public <R> NtList<R> mapFunction(Function<T, R> foo) {
+    return new EmptyNtList<>();
+  }
+
+  @Override
   public NtList<T> orderBy(final boolean done, final Comparator<T> cmp) {
     return this;
   }
