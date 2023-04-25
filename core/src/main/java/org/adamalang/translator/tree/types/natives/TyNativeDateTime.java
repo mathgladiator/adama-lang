@@ -18,12 +18,17 @@ import org.adamalang.translator.tree.expressions.constants.DateTimeConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /** Type for a native date and a time with the time zone in the typical gregorian calendar */
@@ -31,6 +36,7 @@ public class TyNativeDateTime extends TySimpleNative implements //
     IsNativeValue, //
     IsOrderable, //
     DetailHasDeltaType, //
+    DetailTypeHasMethods, //
     AssignmentViaNative {
   public final Token readonlyToken;
   public final Token token;
@@ -79,5 +85,11 @@ public class TyNativeDateTime extends TySimpleNative implements //
   @Override
   public Expression inventDefaultValueExpression(DocumentPosition forWhatExpression) {
     return new DateTimeConstant(ZonedDateTime.parse("1900-01-01T00:00:00-00:00"), token);
+  }
+
+
+  @Override
+  public TyNativeFunctional lookupMethod(String name, Environment environment) {
+    return environment.state.globals.findExtension(this, name);
   }
 }

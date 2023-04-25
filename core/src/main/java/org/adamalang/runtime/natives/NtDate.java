@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.natives;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 /** A single date in the typical gregorian calendar */
@@ -63,5 +64,9 @@ public class NtDate implements Comparable<NtDate> {
       return 1;
     }
     return 0;
+  }
+
+  public LocalDate toLocalDate() {
+    return LocalDate.of(year, month, day);
   }
 }

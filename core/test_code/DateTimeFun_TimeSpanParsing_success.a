@@ -2,6 +2,8 @@ timespan x = @timespan 14 sec;
 
 bool eq1;
 
+public formula x_sec = x.seconds();
+
 #sm {
   timespan y = x;
   timespan z = @timespan 15 hr;

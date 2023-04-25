@@ -18,11 +18,16 @@ import org.adamalang.translator.tree.expressions.constants.DateConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /** Type for a native single date in the typical gregorian calendar */
@@ -30,6 +35,7 @@ public class TyNativeDate extends TySimpleNative implements //
     IsNativeValue, //
     IsOrderable, //
     DetailHasDeltaType, //
+    DetailTypeHasMethods, //
     AssignmentViaNative {
   public final Token readonlyToken;
   public final Token token;
@@ -78,5 +84,17 @@ public class TyNativeDate extends TySimpleNative implements //
   @Override
   public Expression inventDefaultValueExpression(DocumentPosition forWhatExpression) {
     return new DateConstant(1, 1, 1, token);
+  }
+
+  @Override
+  public TyNativeFunctional lookupMethod(String name, Environment environment) {
+    if ("year".equals(name)) {
+      return new TyNativeFunctionInternalFieldReplacement("year", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("year", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.None);
+    } else if ("month".equals(name)) {
+      return new TyNativeFunctionInternalFieldReplacement("month", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("month", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.None);
+    } else if ("day".equals(name)) {
+      return new TyNativeFunctionInternalFieldReplacement("day", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("day", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.None);
+    }
+    return environment.state.globals.findExtension(this, name);
   }
 }

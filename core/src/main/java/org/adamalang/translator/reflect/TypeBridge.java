@@ -45,6 +45,14 @@ public class TypeBridge {
       return new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (NtComplex.class == x) {
       return new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, null);
+    } else if (NtDate.class == x) {
+      return new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null);
+    } else if (NtDateTime.class == x) {
+      return new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, null);
+    } else if (NtTime.class == x) {
+      return new TyNativeTime(TypeBehavior.ReadOnlyNativeValue, null, null);
+    } else if (NtTimeSpan.class == x) {
+      return new TyNativeTimeSpan(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (Void.class == x || void.class == x) {
       return null;
     } else if (NtDynamic.class == x) {

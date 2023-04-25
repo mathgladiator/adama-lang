@@ -2,6 +2,9 @@ time x = @time 14:23;
 
 bool eq1;
 
+public formula x_hr = x.hour();
+public formula x_min = x.minute();
+
 #sm {
   time y = x;
   time z = @time 15:40;

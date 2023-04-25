@@ -18,11 +18,16 @@ import org.adamalang.translator.tree.expressions.constants.TimeSpanConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /** type for a native time span measured in seconds */
@@ -30,6 +35,7 @@ public class TyNativeTimeSpan extends TySimpleNative implements //
     IsNativeValue, //
     IsOrderable, //
     DetailHasDeltaType, //
+    DetailTypeHasMethods, //
     AssignmentViaNative {
   public final Token readonlyToken;
   public final Token token;
@@ -78,5 +84,13 @@ public class TyNativeTimeSpan extends TySimpleNative implements //
   @Override
   public Expression inventDefaultValueExpression(DocumentPosition forWhatExpression) {
     return new TimeSpanConstant(0, token);
+  }
+
+  @Override
+  public TyNativeFunctional lookupMethod(String name, Environment environment) {
+    if ("seconds".equals(name)) {
+      return new TyNativeFunctionInternalFieldReplacement("seconds", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("seconds", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.None);
+    }
+    return environment.state.globals.findExtension(this, name);
   }
 }

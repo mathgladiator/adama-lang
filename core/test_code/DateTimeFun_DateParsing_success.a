@@ -2,6 +2,13 @@ date x = @date 2021/12/2;
 
 bool eq1;
 
+public formula x_yr = x.year();
+public formula x_mo = x.month();
+public formula x_day = x.day();
+
+
+public formula cal = x.calendarViewOf();
+
 #sm {
   date y = x;
   date z = @date 2000/7/3;

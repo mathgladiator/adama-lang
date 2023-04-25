@@ -18,11 +18,16 @@ import org.adamalang.translator.tree.expressions.constants.TimeConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /** Type for native time within a day at the precision of a minute */
@@ -30,6 +35,7 @@ public class TyNativeTime extends TySimpleNative implements //
     IsNativeValue, //
     IsOrderable, //
     DetailHasDeltaType, //
+    DetailTypeHasMethods, //
     AssignmentViaNative {
   public final Token readonlyToken;
   public final Token token;
@@ -78,5 +84,16 @@ public class TyNativeTime extends TySimpleNative implements //
   @Override
   public Expression inventDefaultValueExpression(DocumentPosition forWhatExpression) {
     return new TimeConstant(0, 0, token);
+  }
+
+
+  @Override
+  public TyNativeFunctional lookupMethod(String name, Environment environment) {
+    if ("hour".equals(name)) {
+      return new TyNativeFunctionInternalFieldReplacement("hour", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("hour", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.None);
+    } else if ("minute".equals(name)) {
+      return new TyNativeFunctionInternalFieldReplacement("minute", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("minute", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.None);
+    }
+    return environment.state.globals.findExtension(this, name);
   }
 }
