@@ -35,7 +35,7 @@ public class ParserTests {
     ForceAuth fa = (ForceAuth) (Parser.parse("force-auth:name=identity").get(0));
     Assert.assertEquals("name", fa.name);
     Assert.assertEquals("identity", fa.identity);
-    assertIs(fa, "$.onFORCE_AUTH('name','identity');\n");
+    assertIs(fa, "$.onFORCE_AUTH(DOM,'type','name','identity');\n");
   }
 
   @Test

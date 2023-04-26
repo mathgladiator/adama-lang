@@ -766,9 +766,16 @@ var RxHTML = (function () {
   };
 
   // RUNTIME: <tag .. rx:event="... force-auth=name,token ...">
-  self.onFORCE_AUTH = function(identityName, identity) {
-    identities[identityName] = identity;
-    localStorage.setItem("identity_" + identityName, identity);
+  self.onFORCE_AUTH = function(dom, type, identityName, identity) {
+    var runnable = function () {
+      identities[identityName] = identity;
+      localStorage.setItem("identity_" + identityName, identity);
+    };
+    if (type == "load") {
+      window.setTimeout(runnable, 1);
+    } else {
+      dom.addEventListener(type, runnable);
+    }
   };
 
   // RUNTIME: <tag .. rx:event="... set:name=value ...">

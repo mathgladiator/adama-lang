@@ -23,6 +23,6 @@ public class ForceAuth implements Command {
 
   @Override
   public void write(Environment env, String type, String eVar) {
-    env.writer.tab().append("$.onFORCE_AUTH('").append(name).append("','").append(identity).append("');").newline();
+    env.writer.tab().append("$.onFORCE_AUTH(").append(eVar).append(",'").append(type).append("','").append(name).append("','").append(identity).append("');").newline();
   }
 }

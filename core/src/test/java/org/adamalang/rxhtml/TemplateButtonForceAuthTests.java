@@ -22,7 +22,7 @@ public class TemplateButtonForceAuthTests extends BaseRxHtmlTest {
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c = $.E('button');");
-    gold.append("\n    $.onFORCE_AUTH('default','SHSFGHSFHSFHS.SFGHSFDHSD');");
+    gold.append("\n    $.onFORCE_AUTH(c,'click','default','SHSFGHSFHSFHS.SFGHSFDHSD');");
     gold.append("\n    c.append($.T('Force Auth'));");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
