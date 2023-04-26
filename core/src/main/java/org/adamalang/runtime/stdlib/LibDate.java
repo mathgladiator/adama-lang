@@ -17,7 +17,9 @@ import org.adamalang.translator.reflect.HiddenType;
 import org.adamalang.translator.reflect.UseName;
 
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class LibDate {
 
@@ -25,15 +27,10 @@ public class LibDate {
   @Extension
   public static @HiddenType(clazz = NtDate.class) NtList<NtDate> calendarViewOf(NtDate day) {
     ArrayList<NtDate> dates = new ArrayList<>();
-
     // get the first of the given month
     LocalDate first = LocalDate.of(day.year, day.month, 1);
     // Monday -> 1, Sunday -> 7; transform this to days prior to the start of the month
     int offset = (first.getDayOfWeek().getValue() + 0) % 7;
-
-    // The actual start date of the calendar.
-    LocalDate start = first.plusDays(-offset);
-
     { // add the days prior to the month
       for (int k = offset; k > 0; k--) {
         LocalDate at = first.plusDays(-k);
@@ -48,5 +45,9 @@ public class LibDate {
       }
     }
     return new ArrayNtList<>(dates);
+  }
+
+  public static String monthNameEnglish(NtDate day) {
+    return day.toLocalDate().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
   }
 }

@@ -36,10 +36,14 @@ public class Shell {
 
   public String makeShell(RxHtmlResult result, boolean inline) {
     StringBuilder sb = new StringBuilder();
-    sb.append("<!DOCTYPE html>\n<html>\n<head>");
 
     if (shell != null) {
       inline = shell.hasAttr("inline");
+      sb.append("<!DOCTYPE html>\n<html");
+      if (shell.hasAttr("html-class")) {
+        sb.append(" class=\"").append(shell.attr("html-class")).append("\"");
+      }
+      sb.append(">\n<head>");
       String defaultTitle = null;
       for (Element element : shell.getElementsByTag("title")) {
         defaultTitle = element.text();
@@ -54,6 +58,8 @@ public class Shell {
       for (Element element : shell.getElementsByTag("link")) {
         sb.append(element.toString());
       }
+    } else {
+      sb.append("<!DOCTYPE html>\n<html>\n<head>");
     }
     sb.append("<script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script>");
     if (inline) {
@@ -64,7 +70,16 @@ public class Shell {
       sb.append("<script src=\"/template.js\"></script>");
     }
     sb.append("</head>");
-    sb.append("<body></body><script>");
+    if (shell != null) {
+      sb.append("<body");
+      if (shell.hasAttr("body-class")) {
+        sb.append(" class=\"").append(shell.attr("body-class")).append("\"");
+      }
+      sb.append(">");
+    } else {
+      sb.append("<body>");
+    }
+    sb.append("</body><script>");
     sb.append("RxHTML.init();");
     sb.append("</script></html>");
     return sb.toString();
