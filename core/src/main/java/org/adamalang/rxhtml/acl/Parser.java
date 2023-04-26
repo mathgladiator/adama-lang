@@ -69,6 +69,12 @@ public class Parser {
               commands.add(new Set(body.substring(0, kEq).trim(), body.substring(kEq + 1).trim()));
             }
           }
+          case "force-auth": {
+            int kEq = body.indexOf('=');
+            if (kEq > 0) {
+              commands.add(new ForceAuth(body.substring(0, kEq).trim(), body.substring(kEq + 1).trim()));
+            }
+          }
         }
       } else {
 

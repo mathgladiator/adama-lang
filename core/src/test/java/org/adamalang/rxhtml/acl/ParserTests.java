@@ -31,6 +31,14 @@ public class ParserTests {
   }
 
   @Test
+  public void forceAuth() {
+    ForceAuth fa = (ForceAuth) (Parser.parse("force-auth:name=identity").get(0));
+    Assert.assertEquals("name", fa.name);
+    Assert.assertEquals("identity", fa.identity);
+    assertIs(fa, "$.onFORCE_AUTH('name','identity');\n");
+  }
+
+  @Test
   public void decide1() {
     Decide decide = (Decide) (Parser.parse("decide:xzzzzzzzzzz").get(0));
     Assert.assertEquals("xzzzzzzzzzz", decide.channel);
