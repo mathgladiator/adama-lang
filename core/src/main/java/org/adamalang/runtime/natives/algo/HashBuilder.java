@@ -10,10 +10,7 @@
 package org.adamalang.runtime.natives.algo;
 
 import org.adamalang.common.Hashing;
-import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtComplex;
-import org.adamalang.runtime.natives.NtDynamic;
-import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.natives.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -72,6 +69,21 @@ public class HashBuilder {
     digest.update(c.authority.getBytes(StandardCharsets.UTF_8));
   }
 
+  public void hashNtDate(NtDate d) {
+    digest.update(d.toString().getBytes(StandardCharsets.UTF_8));
+  }
+
+  public void hashNtDateTime(NtDateTime d) {
+    digest.update(d.toString().getBytes(StandardCharsets.UTF_8));
+  }
+
+  public void hashNtTime(NtTime d) {
+    digest.update(d.toString().getBytes(StandardCharsets.UTF_8));
+  }
+
+  public void hashNtTimeSpan(NtTimeSpan d) {
+    digest.update(d.toString().getBytes(StandardCharsets.UTF_8));
+  }
   public String finish() {
     return Hashing.finishAndEncode(digest);
   }

@@ -9,12 +9,11 @@
  */
 package org.adamalang.runtime.natives.algo;
 
-import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.natives.NtComplex;
-import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.*;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.time.ZonedDateTime;
 
 public class HashBuilderTests {
   @Test
@@ -31,6 +30,16 @@ public class HashBuilderTests {
     hash.hashLong(123451234342L);
     hash.hashNtPrincipal(NtPrincipal.NO_ONE);
     Assert.assertEquals("UYoxfE+b51ZODGPUCfJwIne7mNacxQ7YqHWDkO0SLbB3sUqLRzz3S5JNDtAggHf/", hash.finish());
+  }
+
+  @Test
+  public void datetime() {
+    HashBuilder hash = new HashBuilder();
+    hash.hashNtDate(new NtDate(2023, 4, 1));
+    hash.hashNtTime(new NtTime(13, 14));
+    hash.hashNtTimeSpan(new NtTimeSpan(100));
+    hash.hashNtDateTime(new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]")));
+    Assert.assertEquals("ttpYd5Gv3srhfbQvj0fvGk0A9qIRrSl81mu/uRRkVBTmCW5PXcaP0tkOM+78sQB3", hash.finish());
   }
 
   @Test

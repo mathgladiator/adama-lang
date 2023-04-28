@@ -4,6 +4,11 @@ bool eq1;
 
 public formula x_sec = x.seconds();
 
+message M {
+  timespan a;
+  maybe<timespan> b;
+}
+
 #sm {
   timespan y = x;
   timespan z = @timespan 15 hr;

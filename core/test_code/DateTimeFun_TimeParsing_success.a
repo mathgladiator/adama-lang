@@ -5,6 +5,11 @@ bool eq1;
 public formula x_hr = x.hour();
 public formula x_min = x.minute();
 
+message M {
+  time a;
+  maybe<time> b;
+}
+
 #sm {
   time y = x;
   time z = @time 15:40;

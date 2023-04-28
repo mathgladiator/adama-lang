@@ -6,6 +6,10 @@ public formula x_yr = x.year();
 public formula x_mo = x.month();
 public formula x_day = x.day();
 
+message M {
+  date a;
+  maybe<date> b;
+}
 
 public formula cal = x.calendarViewOf();
 
