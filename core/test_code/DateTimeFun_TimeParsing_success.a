@@ -1,4 +1,4 @@
-time x = @time 14:23;
+public time x = @time 14:23;
 
 bool eq1;
 

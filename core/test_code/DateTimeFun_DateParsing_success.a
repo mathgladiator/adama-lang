@@ -1,4 +1,4 @@
-date x = @date 2021/12/2;
+public date x = @date 2021/12/2;
 
 bool eq1;
 

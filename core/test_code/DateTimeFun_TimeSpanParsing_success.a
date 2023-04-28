@@ -1,4 +1,4 @@
-timespan x = @timespan 14 sec;
+public timespan x = @timespan 14 sec;
 
 bool eq1;
 
