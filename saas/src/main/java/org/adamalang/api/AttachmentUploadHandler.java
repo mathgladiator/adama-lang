@@ -17,7 +17,7 @@ public interface AttachmentUploadHandler {
 
   public void handle(AttachmentAppendRequest request, SimpleResponder responder);
 
-  public void handle(AttachmentFinishRequest request, SimpleResponder responder);
+  public void handle(AttachmentFinishRequest request, AssetIdResponder responder);
 
   public void logInto(ObjectNode node);
 

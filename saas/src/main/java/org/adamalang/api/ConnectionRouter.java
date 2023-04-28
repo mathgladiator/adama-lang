@@ -921,7 +921,7 @@ public class ConnectionRouter {
                   AttachmentUploadHandler handlerToUse = inflightAttachmentUpload.remove(resolved.upload);
                   if (handlerToUse != null) {
                     handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                    handlerToUse.handle(resolved, new AssetIdResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                   } else {
                     _accessLogItem.put("success", false);
                     _accessLogItem.put("failure-code", 478227);

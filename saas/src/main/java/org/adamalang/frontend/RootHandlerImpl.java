@@ -871,7 +871,7 @@ public class RootHandlerImpl implements RootHandler {
       }
 
       @Override
-      public void handle(AttachmentFinishRequest attachFinish, SimpleResponder finishResponder) {
+      public void handle(AttachmentFinishRequest attachFinish, AssetIdResponder finishResponder) {
         try {
           output.flush();
           output.close();
@@ -886,7 +886,7 @@ public class RootHandlerImpl implements RootHandler {
                 @Override
                 public void success(Integer value) {
                   disconnect(0L);
-                  finishResponder.complete();
+                  finishResponder.complete(id);
                 }
 
                 @Override

@@ -1185,14 +1185,19 @@ Finishing uploading the attachment upload.
 ### Template
 ```js
 stream.Finish({
-  success: function() {
+  success: function(response) {
+    // response.assetId
   },
   failure: function(reason) {
   }
 });
 ```
 
-This method simply returns void.
+
+### Request response fields
+| name | type | documentation |
+| --- | --- | --- |
+| asset-id | String | The id of an uploaded asset. |
 
 ## Method: SuperCheckIn
 The super agent periodically checks in.

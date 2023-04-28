@@ -84,7 +84,7 @@ public class EndToEnd_AttachTests {
       }
 
       Iterator<String> c8 = fe.execute("{\"id\":8,\"upload\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"attachment/finish\"}");
-      Assert.assertEquals("FINISH:{}", c8.next());
+      Assert.assertEquals("FINISH:{\"assetId\":", c8.next().substring(0, 18));
       Assert.assertEquals("FINISH:null", c6.next());
       Assert.assertEquals(1, fe.attachmentRoot.listFiles().length);
       File f = fe.attachmentRoot.listFiles()[0];
