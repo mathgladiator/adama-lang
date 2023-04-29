@@ -257,6 +257,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -307,6 +310,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1054,6 +1058,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -1098,6 +1105,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1732,6 +1740,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -1776,6 +1787,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2545,6 +2557,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -2603,6 +2618,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3596,6 +3612,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -3648,6 +3667,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -4517,6 +4537,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -4563,6 +4586,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");

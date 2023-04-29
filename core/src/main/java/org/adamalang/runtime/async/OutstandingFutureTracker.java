@@ -24,10 +24,12 @@ import java.util.HashSet;
 public class OutstandingFutureTracker {
   public final ArrayList<OutstandingFuture> created;
   private final RxInt32 source;
+  private final TimeoutTracker timeouts;
   private int maxId;
 
-  public OutstandingFutureTracker(final RxInt32 source) {
+  public OutstandingFutureTracker(final RxInt32 source, TimeoutTracker timeouts) {
     this.source = source;
+    this.timeouts = timeouts;
     created = new ArrayList<>();
     maxId = source.get();
   }

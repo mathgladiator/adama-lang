@@ -12,14 +12,21 @@ package org.adamalang.runtime.async;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.reactives.RxInt32;
+import org.adamalang.runtime.reactives.RxInt64;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class OutstandingFutureTrackerTests {
+
+  public OutstandingFutureTracker makeFutures() {
+    final var src = new RxInt32(null, 0);
+    final var futures = new OutstandingFutureTracker(src, new TimeoutTracker(new RxInt64(null, 0), new RxInt64(null, 0)));
+    return futures;
+  }
+
   @Test
   public void caching() {
-    final var src = new RxInt32(null, 0);
-    final var futures = new OutstandingFutureTracker(src);
+    final var futures = makeFutures();
     final var futureA = futures.make("chan", NtPrincipal.NO_ONE);
     futures.restore();
     final var futureB = futures.make("chan", NtPrincipal.NO_ONE);
@@ -31,8 +38,7 @@ public class OutstandingFutureTrackerTests {
 
   @Test
   public void multi_user_flow() {
-    final var src = new RxInt32(null, 0);
-    final var futures = new OutstandingFutureTracker(src);
+    final var futures = makeFutures();
     final var A = new NtPrincipal("a", "local");
     final var B = new NtPrincipal("b", "local");
     final var futureA1 = futures.make("chan", A);

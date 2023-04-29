@@ -12,11 +12,13 @@ package org.adamalang.runtime.natives;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.async.Sink;
+import org.adamalang.runtime.async.TimeoutTracker;
 import org.adamalang.runtime.exceptions.ComputeBlockedException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.algo.HashBuilder;
 import org.adamalang.runtime.reactives.RxInt32;
+import org.adamalang.runtime.reactives.RxInt64;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,10 +41,15 @@ public class NtChannelTests {
     }
   };
 
+  public OutstandingFutureTracker makeFutures() {
+    final var src = new RxInt32(null, 42);
+    final var futures = new OutstandingFutureTracker(src, new TimeoutTracker(new RxInt64(null, 0), new RxInt64(null, 0)));
+    return futures;
+  }
+
   @Test
   public void flow1() {
-    final var key = new RxInt32(null, 42);
-    final var futures = new OutstandingFutureTracker(key);
+    final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
     sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, "channel", 0, "origin", "ip","message"), "X");
     final var channel = new NtChannel<>(futures, sink);
@@ -52,8 +59,7 @@ public class NtChannelTests {
 
   @Test
   public void flow2() {
-    final var key = new RxInt32(null, 42);
-    final var futures = new OutstandingFutureTracker(key);
+    final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
     sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, "channel", 0, "origin", "ip","message"), "X");
     final var channel = new NtChannel<>(futures, sink);
@@ -63,8 +69,7 @@ public class NtChannelTests {
 
   @Test
   public void flow_choose_nope() {
-    final var key = new RxInt32(null, 42);
-    final var futures = new OutstandingFutureTracker(key);
+    final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
     final var channel = new NtChannel<>(futures, sink);
     Assert.assertFalse(channel.choose(NtPrincipal.NO_ONE, new NtMessageBase[0], 3).await().has());
@@ -72,8 +77,7 @@ public class NtChannelTests {
 
   @Test
   public void flow_choose_options_available() {
-    final var key = new RxInt32(null, 42);
-    final var futures = new OutstandingFutureTracker(key);
+    final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
     sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, "channel", 0, "origin", "ip","message"), "X");
     final var channel = new NtChannel<>(futures, sink);
@@ -83,8 +87,7 @@ public class NtChannelTests {
 
   @Test
   public void flow_choose_options_nothing_available() {
-    final var key = new RxInt32(null, 42);
-    final var futures = new OutstandingFutureTracker(key);
+    final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
     final var channel = new NtChannel<>(futures, sink);
     final var future = channel.choose(NtPrincipal.NO_ONE, new NtMessageBase[] {DEMO, DEMO}, 2);
@@ -97,8 +100,7 @@ public class NtChannelTests {
 
   @Test
   public void flow_decide_nope() {
-    final var key = new RxInt32(null, 42);
-    final var futures = new OutstandingFutureTracker(key);
+    final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
     final var channel = new NtChannel<>(futures, sink);
     Assert.assertFalse(channel.decide(NtPrincipal.NO_ONE, new NtMessageBase[0]).await().has());
@@ -106,8 +108,7 @@ public class NtChannelTests {
 
   @Test
   public void flow_decide_options_available() {
-    final var key = new RxInt32(null, 42);
-    final var futures = new OutstandingFutureTracker(key);
+    final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
     sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, "channel", 0, "origin", "ip","message"), "X");
     final var channel = new NtChannel<>(futures, sink);
@@ -117,8 +118,7 @@ public class NtChannelTests {
 
   @Test
   public void flow_decide_options_nothing_available() {
-    final var key = new RxInt32(null, 42);
-    final var futures = new OutstandingFutureTracker(key);
+    final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
     final var channel = new NtChannel<>(futures, sink);
     final var future = channel.decide(NtPrincipal.NO_ONE, new NtMessageBase[] {DEMO, DEMO});
@@ -131,8 +131,7 @@ public class NtChannelTests {
 
   @Test
   public void flow_nope() {
-    final var key = new RxInt32(null, 42);
-    final var futures = new OutstandingFutureTracker(key);
+    final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
     final var channel = new NtChannel<>(futures, sink);
     final var future = channel.fetchItem(NtPrincipal.NO_ONE);

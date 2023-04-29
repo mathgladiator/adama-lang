@@ -14,6 +14,8 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
+import org.adamalang.runtime.async.Timeout;
+import org.adamalang.runtime.async.TimeoutTracker;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.RxParent;
@@ -50,6 +52,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final RxInt32 __connection_id;
   protected final RxBoolean __constructed;
   protected final RxString __entropy;
+  protected final TimeoutTracker __timeouts;
   protected final OutstandingFutureTracker __futures;
   protected final RxInt32 __message_id;
   protected final RxInt64 __next_time;
@@ -94,7 +97,8 @@ public abstract class LivingDocument implements RxParent, Caller {
     __last_expire_time = new RxInt64(this, 0L);
     __auto_cache_id = new RxInt32(this, 0);
     __queue = new ArrayList<>();
-    __futures = new OutstandingFutureTracker(__auto_future_id);
+    __timeouts = new TimeoutTracker(__time, __next_time);
+    __futures = new OutstandingFutureTracker(__auto_future_id, __timeouts);
     __trackedViews = new HashMap<>();
     __cache = new RxCache(this, this);
     __code_cost = 0;
@@ -192,6 +196,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __cache.__commit("__cache", forward, reverse);
     __auto_cache_id.__commit("__auto_cache_id", forward, reverse);
     __auto_gen.__commit("__auto_gen", forward, reverse);
+    __timeouts.commit(forward, reverse);
   }
 
   private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request) {
@@ -201,6 +206,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.writeObjectFieldIntro("__messages");
     forward.writeNull();
     reverse.beginObject();
+    __timeouts.nuke(forward, reverse);
     __dumpMessages(reverse);
     __blocked.set(false);
     __seq.bumpUpPre();
@@ -357,6 +363,10 @@ public abstract class LivingDocument implements RxParent, Caller {
       }
       writer.endObject();
     }
+  }
+
+  protected void __dumpTimeouts(final JsonStreamWriter writer) {
+      __timeouts.dump(writer);
   }
 
   /** garbage collect the views for the given client; return the number of views for that user */
@@ -551,6 +561,10 @@ public abstract class LivingDocument implements RxParent, Caller {
     } else {
       __queue.clear();
     }
+  }
+
+  public void __hydrateTimeouts(final JsonStreamReader reader) {
+    __timeouts.hydrate(reader);
   }
 
   /** parse the message for the channel, and cache the result */
@@ -1003,6 +1017,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       final var reverse = new JsonStreamWriter();
       forward.beginObject();
       reverse.beginObject();
+      exception = false;
       __commit(null, forward, reverse);
       __internalCommit(forward, reverse);
       forward.endObject();
@@ -1125,6 +1140,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         forward.beginObject();
         reverse.beginObject();
         __commit(null, forward, reverse);
+        __timeouts.commit(forward, reverse);
         forward.writeObjectFieldIntro("__clients");
         forward.beginObject();
         forward.writeObjectFieldIntro(cId);
@@ -1421,6 +1437,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
     __randomizeOutOfBand();
     __seq.bumpUpPre();
+    __timeouts.commit(forward, reverse);
     __commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
@@ -1467,6 +1484,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __queue.add(task);
     // commit changes (i.e. the message id)
     __seq.bumpUpPre();
+    __timeouts.commit(forward, reverse);
     __commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
