@@ -20,9 +20,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
-import org.adamalang.translator.tree.types.reactive.TyReactivePrincipal;
-import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
-import org.adamalang.translator.tree.types.reactive.TyReactiveInteger;
+import org.adamalang.translator.tree.types.reactive.*;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -196,7 +194,7 @@ public class StructureStorage extends DocumentPosition {
         if (fd == null) {
           env.document.createError(indexDefn, String.format("Index could not find field '%s'", indexDefn.nameToken.text), "StructureDefine");
         } else {
-          final var canBeIndex = fd.type instanceof TyReactiveInteger || fd.type instanceof TyReactiveEnum || fd.type instanceof TyReactivePrincipal;
+          final var canBeIndex = fd.type instanceof TyReactiveInteger || fd.type instanceof TyReactiveEnum || fd.type instanceof TyReactivePrincipal || fd.type instanceof TyReactiveDate || fd.type instanceof TyReactiveTime;
           if (!canBeIndex) {
             env.document.createError(indexDefn, String.format("Index for field '%s' is not possible due to type", indexDefn.nameToken.text, fd.type.getAdamaType()), "StructureDefine");
           }

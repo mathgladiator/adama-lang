@@ -66,6 +66,10 @@ public class NtDate implements Comparable<NtDate> {
     return 0;
   }
 
+  public int toInt() {
+    return year * (366 * 32) + month * 32 + day;
+  }
+
   public LocalDate toLocalDate() {
     return LocalDate.of(year, month, day);
   }

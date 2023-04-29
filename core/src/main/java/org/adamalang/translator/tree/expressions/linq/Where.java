@@ -27,9 +27,7 @@ import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
 import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
-import org.adamalang.translator.tree.types.reactive.TyReactivePrincipal;
-import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
-import org.adamalang.translator.tree.types.reactive.TyReactiveInteger;
+import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.IsStructure;
@@ -129,7 +127,8 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         continue;
       }
       final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
-      boolean isIntegral = fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum;
+      boolean requiresToInt = fieldType instanceof TyReactiveDate || fieldType instanceof TyReactiveTime;
+      boolean isIntegral = fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum || requiresToInt;
       if (isIntegral || fieldType instanceof TyReactivePrincipal) {
         // Here is where we wrap this to search for <, <=, ==, >=, >
         // This will let us complete #20 for integers and enums
@@ -152,6 +151,9 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
           if (indexValueString != null) {
             if (fieldType instanceof TyReactivePrincipal) {
               indexValueString += ".hashCode()";
+            }
+            if (requiresToInt) {
+              indexValueString += ".toInt()";
             }
             intersectCodeByName.put(entry.getKey(), indexValueString);
             if (first) {

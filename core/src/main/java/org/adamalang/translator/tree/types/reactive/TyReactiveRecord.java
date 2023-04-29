@@ -77,6 +77,9 @@ public class TyReactiveRecord extends TyType implements //
         if (fd.type instanceof TyReactivePrincipal) {
           classConstructor.append(".hashCode()");
         }
+        if (fd.type instanceof TyReactiveDate || fd.type instanceof TyReactiveTime) {
+          classConstructor.append(".toInt()");
+        }
       }
       classConstructor.append(";").tabDown().writeNewline();
       classConstructor.append("}").tabDown().writeNewline();

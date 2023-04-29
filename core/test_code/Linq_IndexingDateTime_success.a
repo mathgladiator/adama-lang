@@ -1,0 +1,11 @@
+record Instance {
+  public date the_date;
+  public time the_time;
+  index the_date;
+  index the_time;
+}
+
+table<Instance> instances;
+
+public formula at_date = iterate instances where the_date == @date 2023/4/29;
+public formula at_time = iterate instances where the_time == @time 13:30;
