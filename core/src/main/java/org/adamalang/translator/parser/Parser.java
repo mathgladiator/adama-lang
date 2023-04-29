@@ -31,6 +31,7 @@ import org.adamalang.translator.tree.statements.loops.ForEach;
 import org.adamalang.translator.tree.statements.loops.While;
 import org.adamalang.translator.tree.statements.testing.AssertTruth;
 import org.adamalang.translator.tree.statements.testing.Force;
+import org.adamalang.translator.tree.statements.testing.Forward;
 import org.adamalang.translator.tree.statements.testing.PumpMessage;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeAnnotation;
@@ -1539,7 +1540,7 @@ public class Parser {
     if (op != null) {
       return new EmptyStatement(op);
     }
-    op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump"));
+    op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump", "@forward"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("auto", "let", "var", "transition", "invoke", "assert", "preempt"));
     }
@@ -1584,6 +1585,10 @@ public class Parser {
         }
         case "@step": {
           return new Force(op, Force.Action.Step, consumeExpectedSymbol(";"));
+        }
+        case "@forward": {
+          final var delta = expression();
+          return new Forward(op, delta, consumeExpectedSymbol(";"));
         }
         case "@pump": {
           final var toAssert = expression();

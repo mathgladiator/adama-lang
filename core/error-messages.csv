@@ -585,6 +585,8 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Service_MethodHasTypeNotFound_failure.a,1,2,1,41,"Type not found: a message named 'SendResponse' was not found. (TypeCheckReferences)"
 ./test_code/Testing_CantForceOutsideOfTest_failure.a,2,2,2,8,"Forcing a step designed exclusively for testing (Testing)"
 ./test_code/Testing_CantPumpOutsideOfTest_failure.a,8,2,8,29,"Pumping a message is designed exclusively for testing (Testing)"
+./test_code/Testing_ForwardNotDouble_failure.a,1,11,1,15,"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'string' (TypeCheckFailures)"
+./test_code/Testing_ForwardNotTesting_failure.a,1,2,1,14,"Forward is exclusively for testing (Testing)"
 ./test_code/Testing_PumpNoChannel_failure.a,6,2,6,30,"Channel 'chanx' does not exist (Testing)"
 ./test_code/Testing_PumpNoMessage_failure.a,0,0,0,16,"Type not found: a message named 'X' was not found. (TypeCheckReferences)"
 ./test_code/Testing_PumpNoMessage_failure.a,3,2,3,29,"Type not found: a message named 'X' was not found. (TypeCheckReferences)"

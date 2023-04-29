@@ -773,6 +773,11 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
+  protected void __forward(double time) {
+    __time.set(__time.get() + (long)(time * 1000));
+    __commit(null, new JsonStreamWriter(), new JsonStreamWriter());
+  }
+
   /** exposed: for code coverage */
   protected void __track(final int idx) {
     __trace.add(idx);

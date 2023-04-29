@@ -92,38 +92,118 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_Legacy_3 = null;
-  private String get_Legacy_3() {
-    if (cached_Legacy_3 != null) {
-      return cached_Legacy_3;
+  private String cached_ForwardNotDouble_3 = null;
+  private String get_ForwardNotDouble_3() {
+    if (cached_ForwardNotDouble_3 != null) {
+      return cached_ForwardNotDouble_3;
     }
-    cached_Legacy_3 = generateTestOutput(false, "Legacy_3", "./test_code/Testing_Legacy_failure.a");
-    return cached_Legacy_3;
+    cached_ForwardNotDouble_3 = generateTestOutput(false, "ForwardNotDouble_3", "./test_code/Testing_ForwardNotDouble_failure.a");
+    return cached_ForwardNotDouble_3;
+  }
+
+  @Test
+  public void testForwardNotDoubleFailure() {
+    assertLiveFail(get_ForwardNotDouble_3());
+  }
+
+  @Test
+  public void testForwardNotDoubleNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ForwardNotDouble_3());
+  }
+
+  @Test
+  public void testForwardNotDoubleExceptionFree() {
+    assertExceptionFree(get_ForwardNotDouble_3());
+  }
+
+  @Test
+  public void testForwardNotDoubleTODOFree() {
+    assertTODOFree(get_ForwardNotDouble_3());
+  }
+
+  @Test
+  public void stable_ForwardNotDouble_3() {
+    String live = get_ForwardNotDouble_3();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Testing_ForwardNotDouble_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11,\"byte\":28},\"end\":{\"line\":1,\"character\":15,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'string' (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_ForwardNotTesting_4 = null;
+  private String get_ForwardNotTesting_4() {
+    if (cached_ForwardNotTesting_4 != null) {
+      return cached_ForwardNotTesting_4;
+    }
+    cached_ForwardNotTesting_4 = generateTestOutput(false, "ForwardNotTesting_4", "./test_code/Testing_ForwardNotTesting_failure.a");
+    return cached_ForwardNotTesting_4;
+  }
+
+  @Test
+  public void testForwardNotTestingFailure() {
+    assertLiveFail(get_ForwardNotTesting_4());
+  }
+
+  @Test
+  public void testForwardNotTestingNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ForwardNotTesting_4());
+  }
+
+  @Test
+  public void testForwardNotTestingExceptionFree() {
+    assertExceptionFree(get_ForwardNotTesting_4());
+  }
+
+  @Test
+  public void testForwardNotTestingTODOFree() {
+    assertTODOFree(get_ForwardNotTesting_4());
+  }
+
+  @Test
+  public void stable_ForwardNotTesting_4() {
+    String live = get_ForwardNotTesting_4();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Testing_ForwardNotTesting_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":15},\"end\":{\"line\":1,\"character\":14,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"Forward is exclusively for testing (Testing)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_Legacy_5 = null;
+  private String get_Legacy_5() {
+    if (cached_Legacy_5 != null) {
+      return cached_Legacy_5;
+    }
+    cached_Legacy_5 = generateTestOutput(false, "Legacy_5", "./test_code/Testing_Legacy_failure.a");
+    return cached_Legacy_5;
   }
 
   @Test
   public void testLegacyFailure() {
-    assertLiveFail(get_Legacy_3());
+    assertLiveFail(get_Legacy_5());
   }
 
   @Test
   public void testLegacyNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_Legacy_3());
+    assertNotTerribleLineNumbers(get_Legacy_5());
   }
 
   @Test
   public void testLegacyExceptionFree() {
-    assertExceptionFree(get_Legacy_3());
+    assertExceptionFree(get_Legacy_5());
   }
 
   @Test
   public void testLegacyTODOFree() {
-    assertTODOFree(get_Legacy_3());
+    assertTODOFree(get_Legacy_5());
   }
 
   @Test
-  public void stable_Legacy_3() {
-    String live = get_Legacy_3();
+  public void stable_Legacy_5() {
+    String live = get_Legacy_5();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Testing_Legacy_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -154,7 +234,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Legacy_3 extends LivingDocument {");
+    gold.append("\npublic class Legacy_5 extends LivingDocument {");
     gold.append("\n  private final RxString x;");
     gold.append("\n  private final RxTable<RTxX> zzz;");
     gold.append("\n  @Override");
@@ -164,7 +244,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    __sum += zzz.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Legacy_3(DocumentMonitor __monitor) {");
+    gold.append("\n  public Legacy_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxString(this, \"\");");
     gold.append("\n    zzz = new RxTable<>(__self, this, \"zzz\", (RxParent __parent) -> new RTxX(__parent), 0);");
@@ -403,9 +483,9 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    zzz.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLegacy_3 implements DeltaNode {");
+    gold.append("\n  private class DeltaLegacy_5 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLegacy_3() {");
+    gold.append("\n    private DeltaLegacy_5() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -413,7 +493,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Legacy_3 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Legacy_5 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -441,8 +521,8 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Legacy_3 __self = this;");
-    gold.append("\n    DeltaLegacy_3 __state = new DeltaLegacy_3();");
+    gold.append("\n    Legacy_5 __self = this;");
+    gold.append("\n    DeltaLegacy_5 __state = new DeltaLegacy_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -958,43 +1038,43 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nAlmostTestsNotPassing");
     assertStable(live, gold);
   }
-  private String cached_MessagingLegacy_4 = null;
-  private String get_MessagingLegacy_4() {
-    if (cached_MessagingLegacy_4 != null) {
-      return cached_MessagingLegacy_4;
+  private String cached_MessagingLegacy_6 = null;
+  private String get_MessagingLegacy_6() {
+    if (cached_MessagingLegacy_6 != null) {
+      return cached_MessagingLegacy_6;
     }
-    cached_MessagingLegacy_4 = generateTestOutput(true, "MessagingLegacy_4", "./test_code/Testing_MessagingLegacy_success.a");
-    return cached_MessagingLegacy_4;
+    cached_MessagingLegacy_6 = generateTestOutput(true, "MessagingLegacy_6", "./test_code/Testing_MessagingLegacy_success.a");
+    return cached_MessagingLegacy_6;
   }
 
   @Test
   public void testMessagingLegacyEmission() {
-    assertEmissionGood(get_MessagingLegacy_4());
+    assertEmissionGood(get_MessagingLegacy_6());
   }
 
   @Test
   public void testMessagingLegacySuccess() {
-    assertLivePass(get_MessagingLegacy_4());
+    assertLivePass(get_MessagingLegacy_6());
   }
 
   @Test
   public void testMessagingLegacyGoodWillHappy() {
-    assertGoodWillHappy(get_MessagingLegacy_4());
+    assertGoodWillHappy(get_MessagingLegacy_6());
   }
 
   @Test
   public void testMessagingLegacyExceptionFree() {
-    assertExceptionFree(get_MessagingLegacy_4());
+    assertExceptionFree(get_MessagingLegacy_6());
   }
 
   @Test
   public void testMessagingLegacyTODOFree() {
-    assertTODOFree(get_MessagingLegacy_4());
+    assertTODOFree(get_MessagingLegacy_6());
   }
 
   @Test
-  public void stable_MessagingLegacy_4() {
-    String live = get_MessagingLegacy_4();
+  public void stable_MessagingLegacy_6() {
+    String live = get_MessagingLegacy_6();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Testing_MessagingLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1027,7 +1107,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class MessagingLegacy_4 extends LivingDocument {");
+    gold.append("\npublic class MessagingLegacy_6 extends LivingDocument {");
     gold.append("\n  private final RxInt32 out;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -1035,7 +1115,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    __sum += out.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public MessagingLegacy_4(DocumentMonitor __monitor) {");
+    gold.append("\n  public MessagingLegacy_6(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    out = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -1263,9 +1343,9 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    out.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaMessagingLegacy_4 implements DeltaNode {");
+    gold.append("\n  private class DeltaMessagingLegacy_6 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaMessagingLegacy_4() {");
+    gold.append("\n    private DeltaMessagingLegacy_6() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1273,7 +1353,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(MessagingLegacy_4 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(MessagingLegacy_6 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -1301,8 +1381,8 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    MessagingLegacy_4 __self = this;");
-    gold.append("\n    DeltaMessagingLegacy_4 __state = new DeltaMessagingLegacy_4();");
+    gold.append("\n    MessagingLegacy_6 __self = this;");
+    gold.append("\n    DeltaMessagingLegacy_6 __state = new DeltaMessagingLegacy_6();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -1635,43 +1715,43 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_PumpMessages_5 = null;
-  private String get_PumpMessages_5() {
-    if (cached_PumpMessages_5 != null) {
-      return cached_PumpMessages_5;
+  private String cached_PumpMessages_7 = null;
+  private String get_PumpMessages_7() {
+    if (cached_PumpMessages_7 != null) {
+      return cached_PumpMessages_7;
     }
-    cached_PumpMessages_5 = generateTestOutput(true, "PumpMessages_5", "./test_code/Testing_PumpMessages_success.a");
-    return cached_PumpMessages_5;
+    cached_PumpMessages_7 = generateTestOutput(true, "PumpMessages_7", "./test_code/Testing_PumpMessages_success.a");
+    return cached_PumpMessages_7;
   }
 
   @Test
   public void testPumpMessagesEmission() {
-    assertEmissionGood(get_PumpMessages_5());
+    assertEmissionGood(get_PumpMessages_7());
   }
 
   @Test
   public void testPumpMessagesSuccess() {
-    assertLivePass(get_PumpMessages_5());
+    assertLivePass(get_PumpMessages_7());
   }
 
   @Test
   public void testPumpMessagesGoodWillHappy() {
-    assertGoodWillHappy(get_PumpMessages_5());
+    assertGoodWillHappy(get_PumpMessages_7());
   }
 
   @Test
   public void testPumpMessagesExceptionFree() {
-    assertExceptionFree(get_PumpMessages_5());
+    assertExceptionFree(get_PumpMessages_7());
   }
 
   @Test
   public void testPumpMessagesTODOFree() {
-    assertTODOFree(get_PumpMessages_5());
+    assertTODOFree(get_PumpMessages_7());
   }
 
   @Test
-  public void stable_PumpMessages_5() {
-    String live = get_PumpMessages_5();
+  public void stable_PumpMessages_7() {
+    String live = get_PumpMessages_7();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Testing_PumpMessages_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1704,7 +1784,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class PumpMessages_5 extends LivingDocument {");
+    gold.append("\npublic class PumpMessages_7 extends LivingDocument {");
     gold.append("\n  private final RxString status;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -1712,7 +1792,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    __sum += status.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public PumpMessages_5(DocumentMonitor __monitor) {");
+    gold.append("\n  public PumpMessages_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    status = new RxString(this, \"\");");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -1940,9 +2020,9 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    status.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaPumpMessages_5 implements DeltaNode {");
+    gold.append("\n  private class DeltaPumpMessages_7 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaPumpMessages_5() {");
+    gold.append("\n    private DeltaPumpMessages_7() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1950,7 +2030,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(PumpMessages_5 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(PumpMessages_7 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -1978,8 +2058,8 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    PumpMessages_5 __self = this;");
-    gold.append("\n    DeltaPumpMessages_5 __state = new DeltaPumpMessages_5();");
+    gold.append("\n    PumpMessages_7 __self = this;");
+    gold.append("\n    DeltaPumpMessages_7 __state = new DeltaPumpMessages_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -2336,38 +2416,38 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_PumpNoChannel_6 = null;
-  private String get_PumpNoChannel_6() {
-    if (cached_PumpNoChannel_6 != null) {
-      return cached_PumpNoChannel_6;
+  private String cached_PumpNoChannel_8 = null;
+  private String get_PumpNoChannel_8() {
+    if (cached_PumpNoChannel_8 != null) {
+      return cached_PumpNoChannel_8;
     }
-    cached_PumpNoChannel_6 = generateTestOutput(false, "PumpNoChannel_6", "./test_code/Testing_PumpNoChannel_failure.a");
-    return cached_PumpNoChannel_6;
+    cached_PumpNoChannel_8 = generateTestOutput(false, "PumpNoChannel_8", "./test_code/Testing_PumpNoChannel_failure.a");
+    return cached_PumpNoChannel_8;
   }
 
   @Test
   public void testPumpNoChannelFailure() {
-    assertLiveFail(get_PumpNoChannel_6());
+    assertLiveFail(get_PumpNoChannel_8());
   }
 
   @Test
   public void testPumpNoChannelNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_PumpNoChannel_6());
+    assertNotTerribleLineNumbers(get_PumpNoChannel_8());
   }
 
   @Test
   public void testPumpNoChannelExceptionFree() {
-    assertExceptionFree(get_PumpNoChannel_6());
+    assertExceptionFree(get_PumpNoChannel_8());
   }
 
   @Test
   public void testPumpNoChannelTODOFree() {
-    assertTODOFree(get_PumpNoChannel_6());
+    assertTODOFree(get_PumpNoChannel_8());
   }
 
   @Test
-  public void stable_PumpNoChannel_6() {
-    String live = get_PumpNoChannel_6();
+  public void stable_PumpNoChannel_8() {
+    String live = get_PumpNoChannel_8();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Testing_PumpNoChannel_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2376,38 +2456,38 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_PumpNoMessage_7 = null;
-  private String get_PumpNoMessage_7() {
-    if (cached_PumpNoMessage_7 != null) {
-      return cached_PumpNoMessage_7;
+  private String cached_PumpNoMessage_9 = null;
+  private String get_PumpNoMessage_9() {
+    if (cached_PumpNoMessage_9 != null) {
+      return cached_PumpNoMessage_9;
     }
-    cached_PumpNoMessage_7 = generateTestOutput(false, "PumpNoMessage_7", "./test_code/Testing_PumpNoMessage_failure.a");
-    return cached_PumpNoMessage_7;
+    cached_PumpNoMessage_9 = generateTestOutput(false, "PumpNoMessage_9", "./test_code/Testing_PumpNoMessage_failure.a");
+    return cached_PumpNoMessage_9;
   }
 
   @Test
   public void testPumpNoMessageFailure() {
-    assertLiveFail(get_PumpNoMessage_7());
+    assertLiveFail(get_PumpNoMessage_9());
   }
 
   @Test
   public void testPumpNoMessageNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_PumpNoMessage_7());
+    assertNotTerribleLineNumbers(get_PumpNoMessage_9());
   }
 
   @Test
   public void testPumpNoMessageExceptionFree() {
-    assertExceptionFree(get_PumpNoMessage_7());
+    assertExceptionFree(get_PumpNoMessage_9());
   }
 
   @Test
   public void testPumpNoMessageTODOFree() {
-    assertTODOFree(get_PumpNoMessage_7());
+    assertTODOFree(get_PumpNoMessage_9());
   }
 
   @Test
-  public void stable_PumpNoMessage_7() {
-    String live = get_PumpNoMessage_7();
+  public void stable_PumpNoMessage_9() {
+    String live = get_PumpNoMessage_9();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Testing_PumpNoMessage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");

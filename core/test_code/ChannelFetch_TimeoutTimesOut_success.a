@@ -1,0 +1,37 @@
+message X {
+  int x;
+  int y;
+}
+
+channel<X> chan;
+
+principal person;
+
+@construct {
+  person = @who;
+  transition #ask;
+}
+
+public int z;
+
+#ask {
+  let r = chan.fetchTimeoutSync(person, 0.25);
+  if (r as v) {
+    z  = v.x + v.y;
+  } else {
+    z = -1;
+  }
+}
+
+test drive_it {
+  assert !(@blocked);
+  @step;
+  assert @blocked;
+  @forward 0.150;
+  @step;
+  assert @blocked;
+  @forward 0.150;
+  @step;
+  assert !(@blocked);
+  assert z == -1;
+}
