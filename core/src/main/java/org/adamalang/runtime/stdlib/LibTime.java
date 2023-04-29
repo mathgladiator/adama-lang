@@ -27,7 +27,7 @@ public class LibTime {
     return new NtTime(end / 60, end % 60);
   }
 
-  public static boolean overlap(NtTime aStart, NtTime aEnd, NtTime bStart, NtTime bEnd) {
+  public static boolean overlaps(NtTime aStart, NtTime aEnd, NtTime bStart, NtTime bEnd) {
     return LibMath.intersects(aStart.toInt(), aEnd.toInt(), bStart.toInt(), bEnd.toInt());
   }
 }

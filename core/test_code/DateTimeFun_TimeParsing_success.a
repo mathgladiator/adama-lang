@@ -5,6 +5,8 @@ bool eq1;
 public formula x_hr = x.hour();
 public formula x_min = x.minute();
 
+public formula ov = Time.overlaps(x,x,x,x);
+
 message M {
   time a;
   maybe<time> b;

@@ -26,13 +26,19 @@ public class TyNativeGlobalObject extends TyType implements //
   public final String globalName;
   public final String importPackage;
   public final boolean availableForStatic;
+  private TyNativeGlobalObject parentOverride;
 
   public TyNativeGlobalObject(final String globalName, final String importPackage, boolean availableForStatic) {
     super(TypeBehavior.ReadOnlyNativeValue);
     this.globalName = globalName;
     this.importPackage = importPackage;
     this.availableForStatic = availableForStatic;
+    this.parentOverride = null;
     functions = new HashMap<>();
+  }
+
+  public void setParentOverride(TyNativeGlobalObject parentOverride) {
+    this.parentOverride = parentOverride;
   }
 
   @Override
@@ -75,6 +81,12 @@ public class TyNativeGlobalObject extends TyType implements //
 
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
+    if (parentOverride != null && !functions.containsKey(name)) {
+      TyNativeFunctional result = parentOverride.lookupMethod(name, environment);
+      if (result != null) {
+        return result;
+      }
+    }
     if (environment.state.isStatic() && !availableForStatic) {
       return null;
     }

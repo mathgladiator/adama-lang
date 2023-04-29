@@ -1054,6 +1054,7 @@ public class LibMath {
     return max(a, c) <= min(b, d);
   }
 
+  @Extension
   public static boolean isTrue(@HiddenType(clazz = Boolean.class) NtMaybe<Boolean> x) {
     if (x.has()) {
       return x.get();

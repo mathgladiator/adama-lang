@@ -627,7 +627,7 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BlindSendPolicy_TimeNotStatic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":33},\"end\":{\"line\":2,\"character\":20,\"byte\":41}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'Time' lacks 'now' (GlobalLookup)\"},{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":33},\"end\":{\"line\":2,\"character\":20,\"byte\":41}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":31},\"end\":{\"line\":2,\"character\":20,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'Time' lacks 'now' (GlobalLookup)\"},{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":31},\"end\":{\"line\":2,\"character\":20,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

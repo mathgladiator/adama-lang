@@ -38,7 +38,6 @@ public class GlobalObjectPool {
     pool.add(GlobalFactory.makeGlobal("Adama", LibAdama.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Date", LibDate.class, pool.extensions));
-    pool.add(GlobalFactory.makeGlobal("Time", LibTime.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Client", LibPrincipal.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Dynamic", LibDynamic.class, pool.extensions));
     final var document = new TyNativeGlobalObject("Document", null, false);
@@ -57,7 +56,7 @@ public class GlobalObjectPool {
     pool.add(random);
     final var time = new TyNativeGlobalObject("Time", null, false);
     time.functions.put("now", generateInternalDocumentFunction("__timeNow", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null)));
-
+    time.setParentOverride((GlobalFactory.makeGlobal("LibTime", LibTime.class, pool.extensions)));
     pool.add(time);
     return pool;
   }

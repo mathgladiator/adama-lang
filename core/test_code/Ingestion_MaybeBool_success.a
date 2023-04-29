@@ -1,0 +1,21 @@
+record X {
+  public bool x;
+}
+
+record Y {
+  public X z;
+}
+
+message dX {
+  maybe<bool> x;
+}
+
+message dY {
+  dX z;
+}
+
+public Y val;
+
+channel foo(dY dV) {
+  val <- dV;
+}

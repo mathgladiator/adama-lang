@@ -17,8 +17,8 @@ import org.junit.Test;
 public class LibTimeTests {
   @Test
   public void overlaps() {
-    Assert.assertTrue(LibTime.overlap(new NtTime(13, 23), new NtTime(14, 50), new NtTime(13, 40), new NtTime(19, 00)));
-    Assert.assertFalse(LibTime.overlap(new NtTime(13, 23), new NtTime(14, 50), new NtTime(15, 40), new NtTime(19, 00)));
+    Assert.assertTrue(LibTime.overlaps(new NtTime(13, 23), new NtTime(14, 50), new NtTime(13, 40), new NtTime(19, 00)));
+    Assert.assertFalse(LibTime.overlaps(new NtTime(13, 23), new NtTime(14, 50), new NtTime(15, 40), new NtTime(19, 00)));
   }
 
   @Test
