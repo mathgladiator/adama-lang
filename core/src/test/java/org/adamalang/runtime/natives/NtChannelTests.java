@@ -43,7 +43,7 @@ public class NtChannelTests {
 
   public OutstandingFutureTracker makeFutures() {
     final var src = new RxInt32(null, 42);
-    final var futures = new OutstandingFutureTracker(src, new TimeoutTracker(new RxInt64(null, 0), new RxInt64(null, 0)));
+    final var futures = new OutstandingFutureTracker(src, new TimeoutTracker(new RxInt64(null, 0)));
     return futures;
   }
 

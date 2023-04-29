@@ -20,8 +20,7 @@ public class TimeoutTrackerTests {
   @Test
   public void save_load() {
     RxInt64 time = new RxInt64(null, 0);
-    RxInt64 next = new RxInt64(null, 1000);
-    TimeoutTracker tracker = new TimeoutTracker(time, next);
+    TimeoutTracker tracker = new TimeoutTracker(time);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       tracker.dump(writer);
@@ -54,8 +53,7 @@ public class TimeoutTrackerTests {
   @Test
   public void commit() {
     RxInt64 time = new RxInt64(null, 0);
-    RxInt64 next = new RxInt64(null, 1000);
-    TimeoutTracker tracker = new TimeoutTracker(time, next);
+    TimeoutTracker tracker = new TimeoutTracker(time);
     {
       tracker.create(42, 3.13);
       JsonStreamWriter forward = new JsonStreamWriter();
@@ -74,5 +72,39 @@ public class TimeoutTrackerTests {
     }
     tracker.create(123, 6.9);
     tracker.revert();
+  }
+
+  @Test
+  public void temporal_logic_first() {
+    RxInt64 time = new RxInt64(null, 1000);
+    TimeoutTracker tracker = new TimeoutTracker(time);
+    RxInt64 next = new RxInt64(null, 0);
+    Assert.assertFalse(tracker.needsInvalidationAndUpdateNext(next));
+    tracker.create(12, 5.25);
+    Assert.assertTrue(tracker.needsInvalidationAndUpdateNext(next));
+    Assert.assertEquals(6250L, next.get().longValue());
+  }
+
+  @Test
+  public void temporal_logic_closest() {
+    RxInt64 time = new RxInt64(null, 1000);
+    TimeoutTracker tracker = new TimeoutTracker(time);
+    RxInt64 next = new RxInt64(null, 1750);
+    Assert.assertFalse(tracker.needsInvalidationAndUpdateNext(next));
+    tracker.create(12, 5.25);
+    Assert.assertTrue(tracker.needsInvalidationAndUpdateNext(next));
+    Assert.assertEquals(1750L, next.get().longValue());
+  }
+
+  @Test
+  public void temporal_logic_first_pick_closest() {
+    RxInt64 time = new RxInt64(null, 1000);
+    TimeoutTracker tracker = new TimeoutTracker(time);
+    RxInt64 next = new RxInt64(null, 0);
+    Assert.assertFalse(tracker.needsInvalidationAndUpdateNext(next));
+    tracker.create(12, 5.25);
+    tracker.create(102, 1.25);
+    Assert.assertTrue(tracker.needsInvalidationAndUpdateNext(next));
+    Assert.assertEquals(2250L, next.get().longValue());
   }
 }

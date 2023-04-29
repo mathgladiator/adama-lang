@@ -20,13 +20,11 @@ import java.util.Map;
 /** track the timeouts */
 public class TimeoutTracker {
   public final RxInt64 time;
-  public final RxInt64 next;
   public final HashMap<Integer, Timeout> timeouts;
   public final HashSet<Integer> created;
 
-  public TimeoutTracker(RxInt64 time, RxInt64 next) {
+  public TimeoutTracker(RxInt64 time) {
     this.time = time;
-    this.next = next;
     this.timeouts = new HashMap<>();
     this.created = new HashSet<>();
   }
@@ -70,6 +68,19 @@ public class TimeoutTracker {
     timeouts.put(id, to);
     created.add(id);
     return to;
+  }
+
+  public boolean needsInvalidationAndUpdateNext(RxInt64 next) {
+    long expectedNext = next.get();
+    boolean forceSetFirst = expectedNext <= time.get();
+    for (Timeout to : timeouts.values()) {
+      long computedNext = to.timestamp + (long) (to.timeoutSeconds * 1000L);
+      if (computedNext < expectedNext || forceSetFirst) {
+        next.set(computedNext);
+        forceSetFirst = false;
+      }
+    }
+    return timeouts.size() > 0;
   }
 
   public void revert() {

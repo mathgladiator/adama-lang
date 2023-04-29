@@ -97,7 +97,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __last_expire_time = new RxInt64(this, 0L);
     __auto_cache_id = new RxInt32(this, 0);
     __queue = new ArrayList<>();
-    __timeouts = new TimeoutTracker(__time, __next_time);
+    __timeouts = new TimeoutTracker(__time);
     __futures = new OutstandingFutureTracker(__auto_future_id, __timeouts);
     __trackedViews = new HashMap<>();
     __cache = new RxCache(this, this);
@@ -216,11 +216,12 @@ public abstract class LivingDocument implements RxParent, Caller {
     __cache.clear();
     __reset_future_queues();
     __internalCommit(forward, reverse);
+    boolean hasTimeouts = __timeouts.needsInvalidationAndUpdateNext(__next_time);
     __commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), (int) (__next_time.get() - __time.get()), 0L, UpdateType.Invalidate);
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts, (int) (__next_time.get() - __time.get()), 0L, UpdateType.Invalidate);
     return new LivingDocumentChange(update, broadcasts, null);
   }
 
@@ -231,10 +232,11 @@ public abstract class LivingDocument implements RxParent, Caller {
     reverse.beginObject();
     __commit(null, forward, reverse);
     __internalCommit(forward, reverse);
+    boolean hasTimeouts = __timeouts.needsInvalidationAndUpdateNext(__next_time);
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), (int) (__next_time.get() - __time.get()), assetBytes, UpdateType.AddUserData);
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts, (int) (__next_time.get() - __time.get()), assetBytes, UpdateType.AddUserData);
     return new LivingDocumentChange(update, broadcasts, response);
   }
 
