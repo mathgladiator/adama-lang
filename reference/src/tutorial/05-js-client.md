@@ -166,7 +166,7 @@ This will connect each user's identity to appropriate window and make the button
 Here, we can observe that reactivity is no longer a client concern.
 Instead, we have very simple JavaScript with data bound to a tree.
 
-At this point, the tutorial is over which is sad. However, there are [examples](/examples/start/md) to inspect.
+At this point, the tutorial is over which is sad. However, there are [examples](/examples/start.md) to inspect.
 Given the early release nature of this, questions and feedback are welcomed!
 
 The best place for help is to [join the discord channel!](https://discord.gg/W3Cj4By)
