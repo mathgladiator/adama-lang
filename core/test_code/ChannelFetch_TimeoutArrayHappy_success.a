@@ -1,0 +1,26 @@
+message X {
+  int x;
+  int y;
+}
+
+channel<X[]> chan;
+
+principal person;
+
+@construct {
+  person = @who;
+  transition #ask;
+}
+
+public int z;
+
+#ask {
+  let r = chan.fetchTimed(person, 0.25).await();
+  if (r as pp) {
+    if (pp[0] as v) {
+      z  = v.x + v.y;
+    }
+  } else {
+    z = -1;
+  }
+}

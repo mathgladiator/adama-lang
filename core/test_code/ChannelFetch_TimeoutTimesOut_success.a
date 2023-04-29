@@ -15,7 +15,7 @@ principal person;
 public int z;
 
 #ask {
-  let r = chan.fetchTimeoutSync(person, 0.25);
+  let r = chan.fetchTimed(person, 0.25).await();
   if (r as v) {
     z  = v.x + v.y;
   } else {

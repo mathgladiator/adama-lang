@@ -26,6 +26,14 @@ public class SinkTests {
   }
 
   @Test
+  public void dequeue_if_works_as_expected() {
+    final var sink = new Sink<String>("channel");
+    sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, "channel", 1000, "origin", "ip","message"), "A");
+    Assert.assertFalse(sink.dequeueIf(NtPrincipal.NO_ONE, 500).exists());
+    Assert.assertEquals("A", sink.dequeueIf(NtPrincipal.NO_ONE, 3000).await());
+  }
+
+  @Test
   public void flow_in_clear_out() {
     final var sink = new Sink<String>("channel");
     sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, "channel", 0, "origin", "ip","message"), "Cake");

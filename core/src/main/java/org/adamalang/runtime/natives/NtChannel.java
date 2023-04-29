@@ -10,6 +10,7 @@
 package org.adamalang.runtime.natives;
 
 import org.adamalang.runtime.async.*;
+import org.adamalang.runtime.exceptions.ComputeBlockedException;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a channel */
@@ -93,7 +94,8 @@ public class NtChannel<T> {
     return future;
   }
 
-  private OutstandingFuture fetchCommon(final NtPrincipal who, boolean array) {
+  /** ask the user for item/items */
+  public SimpleFuture<T> fetch(final NtPrincipal who, boolean array) {
     final var oldFuture = tracker.make(sink.channel, who);
     final var writer = new JsonStreamWriter();
     writer.beginObject();
@@ -105,12 +107,6 @@ public class NtChannel<T> {
     writer.writeBoolean(array);
     writer.endObject();
     oldFuture.json = writer.toString();
-    return oldFuture;
-  }
-
-  /** ask the user for item/items */
-  public SimpleFuture<T> fetch(final NtPrincipal who, boolean array) {
-    final var oldFuture = fetchCommon(who, array);
     final var future = sink.dequeue(who);
     if (future.exists()) {
       oldFuture.take();
@@ -128,24 +124,57 @@ public class NtChannel<T> {
     return fetch(who, true);
   }
 
-  public NtMaybe<T> fetchTimeout(final NtPrincipal who, boolean array, double timeout) {
-    final var oldFuture = fetchCommon(who, array);
-    final var future = sink.dequeue(who);
+  public SimpleFuture<NtMaybe<T>> fetchTimeout(final NtPrincipal who, boolean array, double timeout) {
+    final var oldFuture = tracker.make(sink.channel, who);
     Timeout to = tracker.timeouts.create(oldFuture.id, timeout);
+    final var writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("id");
+    writer.writeInteger(oldFuture.id);
+    writer.writeObjectFieldIntro("channel");
+    writer.writeFastString(oldFuture.channel);
+    if (to != null) {
+      writer.writeObjectFieldIntro("timeout");
+      writer.beginObject();
+      writer.writeObjectFieldIntro("started");
+      writer.writeLong(to.timestamp);
+      writer.writeObjectFieldIntro("seconds");
+      writer.writeDouble(to.timeoutSeconds);
+      writer.endObject();
+    }
+    writer.writeObjectFieldIntro("array");
+    writer.writeBoolean(array);
+    writer.endObject();
+    oldFuture.json = writer.toString();
+
+    // when does the timeout occur
+    long limit = to.timestamp + (long) (to.timeoutSeconds * 1000);
+
+    // we establish an exclusive timeline for the channel such that only the first message in the window belongs to this request
+    final var future = sink.dequeueIf(who, limit);
+
+    // it exists, so let's return it!
     if (future.exists()) {
       oldFuture.take();
+      return new SimpleFuture<>(future.channel, future.who, new NtMaybe<>(future.await()));
     }
-    if (tracker.timeouts.expired(to)) {
-      return new NtMaybe<>();
+
+    // if the request is expired
+    boolean expired = limit <= tracker.timeouts.time.get();
+    if (expired) {
+      // return an empty maybe to indicate a timeout
+      return new SimpleFuture<>(future.channel, future.who, new NtMaybe<>());
+    } else {
+      // otherwise, let null indicates a future compute blocked
+      return new SimpleFuture<>(future.channel, future.who, null);
     }
-    return new NtMaybe<>(future.await());
   }
 
-  public NtMaybe<T> fetchTimeoutItem(final NtPrincipal who, double timeout) {
+  public SimpleFuture<NtMaybe<T>> fetchTimeoutItem(final NtPrincipal who, double timeout) {
     return fetchTimeout(who, false, timeout);
   }
 
-  public NtMaybe<T> fetchTimeoutArray(final NtPrincipal who, double timeout) {
+  public SimpleFuture<NtMaybe<T>> fetchTimeoutArray(final NtPrincipal who, double timeout) {
     return fetchTimeout(who, true, timeout);
   }
 }

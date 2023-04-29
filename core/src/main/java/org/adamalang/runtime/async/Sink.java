@@ -38,7 +38,21 @@ public class Sink<T> {
     final var queue = queueFor(who);
     T value = null;
     if (queue.queue.size() > 0) {
-      value = queue.queue.remove(0);
+      value = queue.queue.remove(0).item;
+    }
+    return new SimpleFuture<>(channel, who, value);
+  }
+
+  /** dequeue a message for a particular user against a timestamp limit; the future may not have a value */
+  public SimpleFuture<T> dequeueIf(final NtPrincipal who, long timestampLimit) {
+    final var queue = queueFor(who);
+    T value = null;
+    if (queue.queue.size() > 0) {
+      ClientChannelQueuePair pair = queue.queue.get(0);
+      if (pair.timestamp <= timestampLimit) {
+        queue.queue.remove(0);
+        value = pair.item;
+      }
     }
     return new SimpleFuture<>(channel, who, value);
   }
@@ -59,19 +73,29 @@ public class Sink<T> {
     final var queue = queueFor(who);
     NtMaybe<T> value = null;
     if (queue.queue.size() > 0) {
-      value = new NtMaybe<>(queue.queue.remove(0));
+      value = new NtMaybe<>(queue.queue.remove(0).item);
     }
     return new SimpleFuture<>(channel, who, value);
   }
 
   /** enqueue the given task and message; the task has the user in it */
   public void enqueue(final AsyncTask task, final T message) {
-    queueFor(task.who).queue.add(message);
+    queueFor(task.who).queue.add(new ClientChannelQueuePair(message, task.timestamp));
+  }
+
+  private class ClientChannelQueuePair {
+    public final T item;
+    public final long timestamp;
+
+    public ClientChannelQueuePair(T item, long timestamp) {
+      this.item = item;
+      this.timestamp = timestamp;
+    }
   }
 
   /** a queue for a particular user */
   private class ClientChannelQueue {
-    private final ArrayList<T> queue;
+    private final ArrayList<ClientChannelQueuePair> queue;
 
     private ClientChannelQueue() {
       this.queue = new ArrayList<>();

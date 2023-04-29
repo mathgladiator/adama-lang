@@ -14,9 +14,9 @@ import org.adamalang.runtime.natives.NtPrincipal;
 
 /** represents a future which holds a value which */
 public class SimpleFuture<T> {
-  private final String channel;
+  public final String channel;
+  public final NtPrincipal who;
   private final T value;
-  private final NtPrincipal who;
 
   public SimpleFuture(final String channel, final NtPrincipal who, final T value) {
     this.channel = channel;
