@@ -43,6 +43,10 @@ public class NtTime implements Comparable<NtTime> {
     return 24;
   }
 
+  public int toInt() {
+    return hour * 60 + minute;
+  }
+
   @Override
   public int compareTo(NtTime o) {
     if (hour < o.hour) {

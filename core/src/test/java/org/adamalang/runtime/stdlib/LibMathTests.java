@@ -17,6 +17,16 @@ import org.junit.Test;
 public class LibMathTests {
 
   @Test
+  public void intersects() {
+    Assert.assertTrue(LibMath.intersects(1, 4, 2, 3));
+    Assert.assertFalse(LibMath.intersects(1, 4, 5, 10));
+    Assert.assertTrue(LibMath.intersects(1.0, 4.0, 2.0, 3.0));
+    Assert.assertFalse(LibMath.intersects(1.0, 4.0, 5.0, 10.0));
+    Assert.assertTrue(LibMath.intersects(1L, 4L, 2L, 3L));
+    Assert.assertFalse(LibMath.intersects(1L, 4L, 5L, 10L));
+  }
+
+  @Test
   public void valid() {
     Assert.assertTrue(LibMath.isInfinite(Double.POSITIVE_INFINITY));
     Assert.assertTrue(LibMath.isInfinite(new NtMaybe<>(Double.POSITIVE_INFINITY)));

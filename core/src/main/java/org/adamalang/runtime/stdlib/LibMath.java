@@ -1042,6 +1042,18 @@ public class LibMath {
     return length(x);
   }
 
+  public static boolean intersects(int a, int b, int c, int d) {
+    return max(a, c) <= min(b, d);
+  }
+
+  public static boolean intersects(double a, double b, double c, double d) {
+    return max(a, c) <= min(b, d);
+  }
+
+  public static boolean intersects(long a, long b, long c, long d) {
+    return max(a, c) <= min(b, d);
+  }
+
   public static boolean isTrue(@HiddenType(clazz = Boolean.class) NtMaybe<Boolean> x) {
     if (x.has()) {
       return x.get();

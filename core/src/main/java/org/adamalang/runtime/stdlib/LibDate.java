@@ -14,16 +14,14 @@ import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.adamalang.translator.reflect.Extension;
 import org.adamalang.translator.reflect.HiddenType;
-import org.adamalang.translator.reflect.UseName;
 
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/** date math for just days */
 public class LibDate {
-
-  @UseName(name = "calendarViewOf")
   @Extension
   public static @HiddenType(clazz = NtDate.class) NtList<NtDate> calendarViewOf(NtDate day) {
     ArrayList<NtDate> dates = new ArrayList<>();
@@ -47,6 +45,71 @@ public class LibDate {
     return new ArrayNtList<>(dates);
   }
 
+  public static int patternOf(boolean monday, boolean tuesday, boolean wednesday, boolean thursday, boolean friday, boolean saturday, boolean sunday) {
+    int p = 0;
+    if (monday) {
+      p |= 0x01;
+    }
+    if (tuesday) {
+      p |= 0x02;
+    }
+    if (wednesday) {
+      p |= 0x04;
+    }
+    if (thursday) {
+      p |= 0x08;
+    }
+    if (friday) {
+      p |= 0x10;
+    }
+    if (saturday) {
+      p |= 0x20;
+    }
+    if (sunday) {
+      p |= 0x40;
+    }
+    return p;
+  }
+
+  @Extension
+  public static boolean satisfiesWeeklyPattern(NtDate date, int pattern) {
+    return ((1 << date.toLocalDate().getDayOfWeek().ordinal()) & pattern) > 0;
+  }
+
+  @Extension
+  public static @HiddenType(clazz = NtDate.class) NtList<NtDate> inclusiveRange(NtDate from, NtDate to) {
+    ArrayList<NtDate> dates = new ArrayList<>();
+    LocalDate at = LocalDate.of(from.year, from.month, from.day);
+    LocalDate toLD = LocalDate.of(to.year, to.month, to.day);
+    while (at.compareTo(toLD) <= 0) {
+      dates.add(new NtDate(at.getYear(), at.getMonthValue(), at.getDayOfMonth()));
+      at = at.plusDays(1);
+    }
+    return new ArrayNtList<>(dates);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = NtDate.class) NtList<NtDate> inclusiveRangeSatisfiesWeeklyPattern(NtDate from, NtDate to, int pattern) {
+    ArrayList<NtDate> dates = new ArrayList<>();
+    LocalDate at = LocalDate.of(from.year, from.month, from.day);
+    LocalDate toLD = LocalDate.of(to.year, to.month, to.day);
+    while (at.compareTo(toLD) <= 0) {
+      boolean add = ((1 << (at.getDayOfWeek().ordinal())) & pattern) > 0;
+      if (add) {
+        dates.add(new NtDate(at.getYear(), at.getMonthValue(), at.getDayOfMonth()));
+      }
+      at = at.plusDays(1);
+    }
+    return new ArrayNtList<>(dates);
+  }
+
+  @Extension
+  public static int dayOfWeek(NtDate day) {
+    // 1 = Monday, 7 = Sunday
+    return day.toLocalDate().getDayOfWeek().getValue();
+  }
+
+  @Extension
   public static String monthNameEnglish(NtDate day) {
     return day.toLocalDate().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
   }
