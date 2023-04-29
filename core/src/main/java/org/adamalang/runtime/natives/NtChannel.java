@@ -9,9 +9,7 @@
  */
 package org.adamalang.runtime.natives;
 
-import org.adamalang.runtime.async.OutstandingFutureTracker;
-import org.adamalang.runtime.async.SimpleFuture;
-import org.adamalang.runtime.async.Sink;
+import org.adamalang.runtime.async.*;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a channel */
@@ -95,13 +93,7 @@ public class NtChannel<T> {
     return future;
   }
 
-  /** ask the user for one array of items, blocks entire universe */
-  public SimpleFuture<T> fetchArray(final NtPrincipal who) {
-    return fetch(who, true);
-  }
-
-  /** ask the user for item/items */
-  public SimpleFuture<T> fetch(final NtPrincipal who, boolean array) {
+  private OutstandingFuture fetchCommon(final NtPrincipal who, boolean array) {
     final var oldFuture = tracker.make(sink.channel, who);
     final var writer = new JsonStreamWriter();
     writer.beginObject();
@@ -113,6 +105,12 @@ public class NtChannel<T> {
     writer.writeBoolean(array);
     writer.endObject();
     oldFuture.json = writer.toString();
+    return oldFuture;
+  }
+
+  /** ask the user for item/items */
+  public SimpleFuture<T> fetch(final NtPrincipal who, boolean array) {
+    final var oldFuture = fetchCommon(who, array);
     final var future = sink.dequeue(who);
     if (future.exists()) {
       oldFuture.take();
@@ -123,5 +121,31 @@ public class NtChannel<T> {
   /** ask the user for one item, blocks entire universe */
   public SimpleFuture<T> fetchItem(final NtPrincipal who) {
     return fetch(who, false);
+  }
+
+  /** ask the user for one array of items, blocks entire universe */
+  public SimpleFuture<T> fetchArray(final NtPrincipal who) {
+    return fetch(who, true);
+  }
+
+  public NtMaybe<T> fetchTimeout(final NtPrincipal who, boolean array, double timeout) {
+    final var oldFuture = fetchCommon(who, array);
+    final var future = sink.dequeue(who);
+    Timeout to = tracker.timeouts.create(oldFuture.id, timeout);
+    if (future.exists()) {
+      oldFuture.take();
+    }
+    if (tracker.timeouts.expired(to)) {
+      return new NtMaybe<>();
+    }
+    return new NtMaybe<>(future.await());
+  }
+
+  public NtMaybe<T> fetchTimeoutItem(final NtPrincipal who, double timeout) {
+    return fetchTimeout(who, false, timeout);
+  }
+
+  public NtMaybe<T> fetchTimeoutArray(final NtPrincipal who, double timeout) {
+    return fetchTimeout(who, true, timeout);
   }
 }

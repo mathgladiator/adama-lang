@@ -104,6 +104,12 @@ public class TyNativeChannel extends TyType implements //
         argTypes.add(ct.withPosition(this));
         return new TyNativeFunctional("fetchArray", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("fetchArray", ft.withPosition(this), argTypes, false, false)), FunctionStyleJava.ExpressionThenNameWithArgs);
       }
+      if ("fetchTimeoutSync".equals(name)) {
+        final var rt = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, readonlyToken, null, new TokenizedItem<>(resolvedChannelType.withPosition(this)));
+        argTypes.add(ct.withPosition(this));
+        argTypes.add(new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, readonlyToken, null));
+        return new TyNativeFunctional("fetchTimeoutArray", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("fetchTimeoutArray", rt.withPosition(this), argTypes, false, false)), FunctionStyleJava.ExpressionThenNameWithArgs);
+      }
       if ("choose".equals(name)) {
         final var maft = new TyNativeFuture(TypeBehavior.ReadOnlyNativeValue, readonlyToken, null, new TokenizedItem<>(new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(resolvedChannelType)).withPosition(this)));
         final var limit = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("int"));
@@ -117,6 +123,12 @@ public class TyNativeChannel extends TyType implements //
         final var ft = new TyNativeFuture(TypeBehavior.ReadOnlyNativeValue, readonlyToken, null, new TokenizedItem<>(resolvedChannelType.withPosition(this)));
         argTypes.add(ct.withPosition(this));
         return new TyNativeFunctional("fetchItem", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("fetchItem", ft.withPosition(this), argTypes, false, false)), FunctionStyleJava.ExpressionThenNameWithArgs);
+      }
+      if ("fetchTimeoutSync".equals(name)) {
+        final var rt = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, readonlyToken, null, new TokenizedItem<>(resolvedChannelType.withPosition(this)));
+        argTypes.add(ct.withPosition(this));
+        argTypes.add(new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, readonlyToken, null));
+        return new TyNativeFunctional("fetchTimeoutItem", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("fetchTimeoutItem", rt.withPosition(this), argTypes, false, false)), FunctionStyleJava.ExpressionThenNameWithArgs);
       }
       if ("decide".equals(name)) {
         final var mft = new TyNativeFuture(TypeBehavior.ReadOnlyNativeValue, readonlyToken, null, new TokenizedItem<>(new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(resolvedChannelType)).withPosition(this)));

@@ -278,6 +278,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -1846,6 +1849,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -2797,6 +2803,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n            break;");
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
     gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
@@ -4092,6 +4101,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n            break;");
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
     gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
@@ -5562,6 +5574,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -6718,6 +6733,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -7554,6 +7572,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -8371,6 +8392,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n            break;");
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
     gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
@@ -9375,6 +9399,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n            break;");
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__timeouts\":");
+    gold.append("\n            __hydrateTimeouts(__reader);");
     gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");

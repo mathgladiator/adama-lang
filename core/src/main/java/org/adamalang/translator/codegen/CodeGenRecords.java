@@ -361,6 +361,9 @@ public class CodeGenRecords {
       sb.append("case \"__messages\":").tabUp().writeNewline();
       sb.append("__hydrateMessages(__reader);").writeNewline();
       sb.append("break;").tabDown().writeNewline();
+      sb.append("case \"__timeouts\":").tabUp().writeNewline();
+      sb.append("__hydrateTimeouts(__reader);").writeNewline();
+      sb.append("break;").tabDown().writeNewline();
     }
     sb.append("default:").tabUp().writeNewline();
     sb.append("__reader.skipValue();").tabDown().tabDown().writeNewline();
@@ -407,7 +410,6 @@ public class CodeGenRecords {
       sb.append("case \"__timeouts\":").tabUp().writeNewline();
       sb.append("__hydrateTimeouts(__reader);").writeNewline();
       sb.append("break;").tabDown().writeNewline();
-
     }
     sb.append("default:").tabUp().writeNewline();
     sb.append("__reader.skipValue();").tabDown().tabDown().writeNewline();

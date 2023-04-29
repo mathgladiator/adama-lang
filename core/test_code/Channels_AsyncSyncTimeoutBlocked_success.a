@@ -1,0 +1,24 @@
+message X {
+  int x;
+  int y;
+}
+
+channel<X> chan;
+
+principal person;
+
+@construct {
+  person = @who;
+  transition #ask;
+}
+
+public int z;
+
+#ask {
+  let r = chan.fetchTimeoutSync(person, 3 * 60);
+  if (r as v) {
+    z  = v.x + v.y;
+  } else {
+    z = -1;
+  }
+}

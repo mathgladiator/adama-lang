@@ -42,6 +42,11 @@ public class TimeoutTracker {
     }
   }
 
+  public boolean expired(Timeout to) {
+    long at = to.timestamp + (long) (to.timeoutSeconds * 1000);
+    return at < time.get();
+  }
+
   /** restore the timeouts from a snapshot or patch */
   public void hydrate(JsonStreamReader reader) {
     if (reader.testLackOfNull()) {
@@ -64,7 +69,11 @@ public class TimeoutTracker {
   }
 
   public Timeout create(int id, double timeout) {
-    Timeout to = new Timeout(time.get(), timeout);
+    Timeout to = timeouts.get(id);
+    if (to != null) {
+      return to;
+    }
+    to = new Timeout(time.get(), timeout);
     timeouts.put(id, to);
     created.add(id);
     return to;
