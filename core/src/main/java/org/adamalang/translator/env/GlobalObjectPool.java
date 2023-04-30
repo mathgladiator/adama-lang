@@ -68,7 +68,7 @@ public class GlobalObjectPool {
   private static TyNativeFunctional generateInternalDocumentFunction(final String name, final TyType returnType) {
     final var overloads = new ArrayList<FunctionOverloadInstance>();
     final var args = new ArrayList<TyType>();
-    overloads.add(new FunctionOverloadInstance(name, returnType, args, true, false));
+    overloads.add(new FunctionOverloadInstance(name, returnType, args, true, false, false));
     return new TyNativeFunctional(name, overloads, FunctionStyleJava.InjectNameThenArgs);
   }
 
@@ -76,7 +76,7 @@ public class GlobalObjectPool {
     final var overloads = new ArrayList<FunctionOverloadInstance>();
     final var args = new ArrayList<TyType>();
     args.add(arg);
-    overloads.add(new FunctionOverloadInstance(name, returnType, args, true, false));
+    overloads.add(new FunctionOverloadInstance(name, returnType, args, true, false, false));
     return new TyNativeFunctional(name, overloads, FunctionStyleJava.InjectNameThenArgs);
   }
 

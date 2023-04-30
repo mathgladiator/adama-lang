@@ -37,12 +37,13 @@ public class DefineMethod extends StructureComponent {
   public final Token openParen;
 
   public final Token tokenReadonly;
+  public final Token abortsToken;
   public TyType returnType;
   private FunctionOverloadInstance cachedInstance;
   private int functionId;
 
   /** construct the function of a type with a name */
-  public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final Token tokenReadonly, final Block code) {
+  public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final Token tokenReadonly, final Token abortsToken, final Block code) {
     this.methodToken = methodToken;
     this.nameToken = nameToken;
     name = nameToken.text;
@@ -52,6 +53,7 @@ public class DefineMethod extends StructureComponent {
     this.introduceReturnToken = introduceReturnToken;
     this.returnType = returnType;
     this.tokenReadonly = tokenReadonly;
+    this.abortsToken = abortsToken;
     this.code = code;
     cachedInstance = null;
     ingest(methodToken);
@@ -81,6 +83,9 @@ public class DefineMethod extends StructureComponent {
     if (tokenReadonly != null) {
       yielder.accept(tokenReadonly);
     }
+    if (abortsToken != null) {
+      yielder.accept(abortsToken);
+    }
     code.emit(yielder);
   }
 
@@ -97,7 +102,7 @@ public class DefineMethod extends StructureComponent {
       if (returnType != null && flow == ControlFlow.Open) {
         environment.document.createError(this, String.format("Function '%s' does not return in all cases", nameToken.text), "MethodDefine");
       }
-      cachedInstance = new FunctionOverloadInstance("__METH_" + functionId + "_" + name, returnType, argTypes, tokenReadonly != null, false);
+      cachedInstance = new FunctionOverloadInstance("__METH_" + functionId + "_" + name, returnType, argTypes, tokenReadonly != null, false, abortsToken != null);
       cachedInstance.ingest(this);
     }
     return cachedInstance;
@@ -106,6 +111,9 @@ public class DefineMethod extends StructureComponent {
   /** prepare the environment for execution */
   private Environment prepareEnvironment(final Environment environment) {
     var toUse = tokenReadonly != null ? environment.scopeAsReadOnlyBoundary() : environment.scopeWithCache("__cache");
+    if (abortsToken != null) {
+      toUse = toUse.scopeAsAbortable();
+    }
     for (final FunctionArg arg : args) {
       toUse.define(arg.argName, arg.type, true, arg.type);
     }
@@ -132,6 +140,9 @@ public class DefineMethod extends StructureComponent {
       sb.append(arg.type.getJavaConcreteType(environment)).append(" ").append(arg.argName);
     }
     sb.append(") ");
+    if (abortsToken != null) {
+      sb.append("throws AbortMessageException ");
+    }
     code.writeJava(sb, prepareEnvironment(environment));
     sb.writeNewline();
   }

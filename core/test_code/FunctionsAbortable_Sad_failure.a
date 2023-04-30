@@ -1,0 +1,17 @@
+procedure fake_abort() aborts {
+  abort;
+}
+
+record R {
+  method a() -> int aborts {
+    abort;
+  }
+}
+
+R r;
+
+procedure nope() {
+  fake_abort();
+  r.a();
+}
+

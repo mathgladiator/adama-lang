@@ -33,6 +33,7 @@ public class EnvironmentState {
   private String webMethod;
   private String cacheObject;
   private boolean readonlyEnv;
+  private boolean abortion;
 
   private EnvironmentState(final EnvironmentState prior) {
     autoId = prior.autoId;
@@ -55,6 +56,7 @@ public class EnvironmentState {
     readonlyEnv = prior.readonlyEnv;
     isConstructor = prior.isConstructor;
     isDocumentEvent = prior.isDocumentEvent;
+    abortion = prior.abortion;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -77,6 +79,7 @@ public class EnvironmentState {
     cacheObject = null;
     isConstructor = false;
     isDocumentEvent = false;
+    abortion = false;
   }
 
   public boolean hasNoCost() {
@@ -118,6 +121,11 @@ public class EnvironmentState {
   /** is the current environment operating inside a message handler */
   public boolean isMessageHandler() {
     return isMessageHandler;
+  }
+
+  /** does the current environment allow aborting */
+  public boolean isAbortable() {
+    return abortion;
   }
 
   public boolean isDocumentEvent() {
@@ -222,6 +230,12 @@ public class EnvironmentState {
     final var next = new EnvironmentState(this);
     next.readonly = true;
     next.readonlyEnv = true;
+    return next;
+  }
+
+  public EnvironmentState scopeAbortion() {
+    final var next = new EnvironmentState(this);
+    next.abortion = true;
     return next;
   }
 

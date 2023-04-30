@@ -212,12 +212,12 @@ public class TyNativeMessage extends TyType implements //
   @Override
   public TyNativeFunctional lookupMethod(String name, Environment environment) {
     if ("to_dynamic".equals(name)) {
-      return new TyNativeFunctional("to_dynamic", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("to_dynamic", new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("to_dynamic", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("to_dynamic", new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("ingest_dynamic".equals(name)) {
       ArrayList<TyType> args = new ArrayList<>();
       args.add(new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, null));
-      return new TyNativeFunctional("ingest_dynamic", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("ingest_dynamic", new TyNativeVoid(), args, true, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("ingest_dynamic", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("ingest_dynamic", new TyNativeVoid(), args, true, false, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return storage.methodTypes.get(name);
   }

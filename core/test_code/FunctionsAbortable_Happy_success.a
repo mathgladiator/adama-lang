@@ -1,0 +1,21 @@
+procedure fake_abort() aborts {
+  abort;
+}
+
+message M {}
+
+channel foo(M m) {
+  fake_abort();
+}
+
+record R {
+  method a() -> int aborts {
+    abort;
+  }
+}
+
+R r;
+
+channel foo2(M m) {
+  r.a();
+}

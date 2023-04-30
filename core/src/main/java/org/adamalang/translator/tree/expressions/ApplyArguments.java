@@ -108,6 +108,9 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       if (environmentToUse.state.isPure() && !functionInstance.pure) {
         environmentToUse.document.createError(expression, String.format("Pure functions can only call other pure functions"), "FunctionInvoke");
       }
+      if (functionInstance.aborts && !(environmentToUse.state.isAbortable() || environmentToUse.state.isMessageHandler())) {
+        environmentToUse.document.createError(expression, String.format("Abortable functions can only be called from another abortable function or within a message handler"), "FunctionInvoke");
+      }
       if (environmentToUse.state.isReadonlyEnvironment() && !functionInstance.pure) {
         environmentToUse.document.createError(expression, String.format("Read only methods can only call other read-only methods or pure functions"), "FunctionInvoke");
       }

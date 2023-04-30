@@ -61,7 +61,7 @@ public class DefineDispatcher extends Definition {
     for (final FunctionArg arg : args) {
       types.add(arg.type);
     }
-    return new FunctionOverloadInstance(" __DISPATCH_" + signatureId + "_" + functionName.text, returnType, types, false, false);
+    return new FunctionOverloadInstance(" __DISPATCH_" + signatureId + "_" + functionName.text, returnType, types, false, false, false);
   }
 
   @Override

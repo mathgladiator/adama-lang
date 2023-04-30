@@ -4755,43 +4755,83 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_Map_9 = null;
-  private String get_Map_9() {
-    if (cached_Map_9 != null) {
-      return cached_Map_9;
+  private String cached_MapCantAbort_9 = null;
+  private String get_MapCantAbort_9() {
+    if (cached_MapCantAbort_9 != null) {
+      return cached_MapCantAbort_9;
     }
-    cached_Map_9 = generateTestOutput(true, "Map_9", "./test_code/Linq_Map_success.a");
-    return cached_Map_9;
+    cached_MapCantAbort_9 = generateTestOutput(false, "MapCantAbort_9", "./test_code/Linq_MapCantAbort_failure.a");
+    return cached_MapCantAbort_9;
+  }
+
+  @Test
+  public void testMapCantAbortFailure() {
+    assertLiveFail(get_MapCantAbort_9());
+  }
+
+  @Test
+  public void testMapCantAbortNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_MapCantAbort_9());
+  }
+
+  @Test
+  public void testMapCantAbortExceptionFree() {
+    assertExceptionFree(get_MapCantAbort_9());
+  }
+
+  @Test
+  public void testMapCantAbortTODOFree() {
+    assertTODOFree(get_MapCantAbort_9());
+  }
+
+  @Test
+  public void stable_MapCantAbort_9() {
+    String live = get_MapCantAbort_9();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Linq_MapCantAbort_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":13,\"character\":34,\"byte\":220},\"end\":{\"line\":13,\"character\":60,\"byte\":246}},\"severity\":1,\"source\":\"error\",\"message\":\"Function '$<shared_sqr>' must not abort within a map function (Map)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_Map_10 = null;
+  private String get_Map_10() {
+    if (cached_Map_10 != null) {
+      return cached_Map_10;
+    }
+    cached_Map_10 = generateTestOutput(true, "Map_10", "./test_code/Linq_Map_success.a");
+    return cached_Map_10;
   }
 
   @Test
   public void testMapEmission() {
-    assertEmissionGood(get_Map_9());
+    assertEmissionGood(get_Map_10());
   }
 
   @Test
   public void testMapSuccess() {
-    assertLivePass(get_Map_9());
+    assertLivePass(get_Map_10());
   }
 
   @Test
   public void testMapGoodWillHappy() {
-    assertGoodWillHappy(get_Map_9());
+    assertGoodWillHappy(get_Map_10());
   }
 
   @Test
   public void testMapExceptionFree() {
-    assertExceptionFree(get_Map_9());
+    assertExceptionFree(get_Map_10());
   }
 
   @Test
   public void testMapTODOFree() {
-    assertTODOFree(get_Map_9());
+    assertTODOFree(get_Map_10());
   }
 
   @Test
-  public void stable_Map_9() {
-    String live = get_Map_9();
+  public void stable_Map_10() {
+    String live = get_Map_10();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Linq_Map_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -4824,7 +4864,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Map_9 extends LivingDocument {");
+    gold.append("\npublic class Map_10 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> tbl;");
     gold.append("\n  private final RxLazy<NtList<RTxR>> all;");
     gold.append("\n  private final RxLazy<NtList<Integer>> all_sqr_explicit;");
@@ -4846,7 +4886,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __sum += dumb_join_annoy2.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Map_9(DocumentMonitor __monitor) {");
+    gold.append("\n  public Map_10(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxR(__parent), 0);");
     gold.append("\n    all = new RxLazy<NtList<RTxR>>(this, () -> (tbl.iterate(true)));");
@@ -5099,7 +5139,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    assocs.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaMap_9 implements DeltaNode {");
+    gold.append("\n  private class DeltaMap_10 implements DeltaNode {");
     gold.append("\n    private int __gall;");
     gold.append("\n    private DRecordList<DeltaRTxR> __dall;");
     gold.append("\n    private int __gall_sqr_explicit;");
@@ -5113,7 +5153,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    private int __gdumb_join_annoy2;");
     gold.append("\n    private DList<DRecordList<DeltaRTxAssoc>> __ddumb_join_annoy2;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaMap_9() {");
+    gold.append("\n    private DeltaMap_10() {");
     gold.append("\n      __gall = -1;");
     gold.append("\n      __dall = new DRecordList<DeltaRTxR>();");
     gold.append("\n      __gall_sqr_explicit = -1;");
@@ -5139,7 +5179,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      __sum += __ddumb_join_annoy2.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Map_9 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Map_10 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 6;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -5297,8 +5337,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Map_9 __self = this;");
-    gold.append("\n    DeltaMap_9 __state = new DeltaMap_9();");
+    gold.append("\n    Map_10 __self = this;");
+    gold.append("\n    DeltaMap_10 __state = new DeltaMap_10();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -6151,38 +6191,38 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_NonOrderable_10 = null;
-  private String get_NonOrderable_10() {
-    if (cached_NonOrderable_10 != null) {
-      return cached_NonOrderable_10;
+  private String cached_NonOrderable_11 = null;
+  private String get_NonOrderable_11() {
+    if (cached_NonOrderable_11 != null) {
+      return cached_NonOrderable_11;
     }
-    cached_NonOrderable_10 = generateTestOutput(false, "NonOrderable_10", "./test_code/Linq_NonOrderable_failure.a");
-    return cached_NonOrderable_10;
+    cached_NonOrderable_11 = generateTestOutput(false, "NonOrderable_11", "./test_code/Linq_NonOrderable_failure.a");
+    return cached_NonOrderable_11;
   }
 
   @Test
   public void testNonOrderableFailure() {
-    assertLiveFail(get_NonOrderable_10());
+    assertLiveFail(get_NonOrderable_11());
   }
 
   @Test
   public void testNonOrderableNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_NonOrderable_10());
+    assertNotTerribleLineNumbers(get_NonOrderable_11());
   }
 
   @Test
   public void testNonOrderableExceptionFree() {
-    assertExceptionFree(get_NonOrderable_10());
+    assertExceptionFree(get_NonOrderable_11());
   }
 
   @Test
   public void testNonOrderableTODOFree() {
-    assertTODOFree(get_NonOrderable_10());
+    assertTODOFree(get_NonOrderable_11());
   }
 
   @Test
-  public void stable_NonOrderable_10() {
-    String live = get_NonOrderable_10();
+  public void stable_NonOrderable_11() {
+    String live = get_NonOrderable_11();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Linq_NonOrderable_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -6191,38 +6231,38 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_NotApplicableToNonLists_11 = null;
-  private String get_NotApplicableToNonLists_11() {
-    if (cached_NotApplicableToNonLists_11 != null) {
-      return cached_NotApplicableToNonLists_11;
+  private String cached_NotApplicableToNonLists_12 = null;
+  private String get_NotApplicableToNonLists_12() {
+    if (cached_NotApplicableToNonLists_12 != null) {
+      return cached_NotApplicableToNonLists_12;
     }
-    cached_NotApplicableToNonLists_11 = generateTestOutput(false, "NotApplicableToNonLists_11", "./test_code/Linq_NotApplicableToNonLists_failure.a");
-    return cached_NotApplicableToNonLists_11;
+    cached_NotApplicableToNonLists_12 = generateTestOutput(false, "NotApplicableToNonLists_12", "./test_code/Linq_NotApplicableToNonLists_failure.a");
+    return cached_NotApplicableToNonLists_12;
   }
 
   @Test
   public void testNotApplicableToNonListsFailure() {
-    assertLiveFail(get_NotApplicableToNonLists_11());
+    assertLiveFail(get_NotApplicableToNonLists_12());
   }
 
   @Test
   public void testNotApplicableToNonListsNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_NotApplicableToNonLists_11());
+    assertNotTerribleLineNumbers(get_NotApplicableToNonLists_12());
   }
 
   @Test
   public void testNotApplicableToNonListsExceptionFree() {
-    assertExceptionFree(get_NotApplicableToNonLists_11());
+    assertExceptionFree(get_NotApplicableToNonLists_12());
   }
 
   @Test
   public void testNotApplicableToNonListsTODOFree() {
-    assertTODOFree(get_NotApplicableToNonLists_11());
+    assertTODOFree(get_NotApplicableToNonLists_12());
   }
 
   @Test
-  public void stable_NotApplicableToNonLists_11() {
-    String live = get_NotApplicableToNonLists_11();
+  public void stable_NotApplicableToNonLists_12() {
+    String live = get_NotApplicableToNonLists_12();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Linq_NotApplicableToNonLists_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -6231,43 +6271,43 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_SortLegacy_12 = null;
-  private String get_SortLegacy_12() {
-    if (cached_SortLegacy_12 != null) {
-      return cached_SortLegacy_12;
+  private String cached_SortLegacy_13 = null;
+  private String get_SortLegacy_13() {
+    if (cached_SortLegacy_13 != null) {
+      return cached_SortLegacy_13;
     }
-    cached_SortLegacy_12 = generateTestOutput(true, "SortLegacy_12", "./test_code/Linq_SortLegacy_success.a");
-    return cached_SortLegacy_12;
+    cached_SortLegacy_13 = generateTestOutput(true, "SortLegacy_13", "./test_code/Linq_SortLegacy_success.a");
+    return cached_SortLegacy_13;
   }
 
   @Test
   public void testSortLegacyEmission() {
-    assertEmissionGood(get_SortLegacy_12());
+    assertEmissionGood(get_SortLegacy_13());
   }
 
   @Test
   public void testSortLegacySuccess() {
-    assertLivePass(get_SortLegacy_12());
+    assertLivePass(get_SortLegacy_13());
   }
 
   @Test
   public void testSortLegacyGoodWillHappy() {
-    assertGoodWillHappy(get_SortLegacy_12());
+    assertGoodWillHappy(get_SortLegacy_13());
   }
 
   @Test
   public void testSortLegacyExceptionFree() {
-    assertExceptionFree(get_SortLegacy_12());
+    assertExceptionFree(get_SortLegacy_13());
   }
 
   @Test
   public void testSortLegacyTODOFree() {
-    assertTODOFree(get_SortLegacy_12());
+    assertTODOFree(get_SortLegacy_13());
   }
 
   @Test
-  public void stable_SortLegacy_12() {
-    String live = get_SortLegacy_12();
+  public void stable_SortLegacy_13() {
+    String live = get_SortLegacy_13();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Linq_SortLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -6300,7 +6340,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class SortLegacy_12 extends LivingDocument {");
+    gold.append("\npublic class SortLegacy_13 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> tbl;");
     gold.append("\n  private final RxLazy<NtList<RTxX>> l1;");
     gold.append("\n  private final RxLazy<NtList<RTxX>> l2;");
@@ -6322,7 +6362,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __sum += l7.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public SortLegacy_12(DocumentMonitor __monitor) {");
+    gold.append("\n  public SortLegacy_13(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent), 0);");
     gold.append("\n    l1 = new RxLazy<NtList<RTxX>>(this, () -> (tbl.iterate(false).orderBy(true, __ORDER_X_i_a)));");
@@ -6564,9 +6604,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    tbl.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaSortLegacy_12 implements DeltaNode {");
+    gold.append("\n  private class DeltaSortLegacy_13 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaSortLegacy_12() {");
+    gold.append("\n    private DeltaSortLegacy_13() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -6574,7 +6614,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(SortLegacy_12 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(SortLegacy_13 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -6602,8 +6642,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    SortLegacy_12 __self = this;");
-    gold.append("\n    DeltaSortLegacy_12 __state = new DeltaSortLegacy_12();");
+    gold.append("\n    SortLegacy_13 __self = this;");
+    gold.append("\n    DeltaSortLegacy_13 __state = new DeltaSortLegacy_13();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -7418,43 +7458,43 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_WhereBuildClosure_13 = null;
-  private String get_WhereBuildClosure_13() {
-    if (cached_WhereBuildClosure_13 != null) {
-      return cached_WhereBuildClosure_13;
+  private String cached_WhereBuildClosure_14 = null;
+  private String get_WhereBuildClosure_14() {
+    if (cached_WhereBuildClosure_14 != null) {
+      return cached_WhereBuildClosure_14;
     }
-    cached_WhereBuildClosure_13 = generateTestOutput(true, "WhereBuildClosure_13", "./test_code/Linq_WhereBuildClosure_success.a");
-    return cached_WhereBuildClosure_13;
+    cached_WhereBuildClosure_14 = generateTestOutput(true, "WhereBuildClosure_14", "./test_code/Linq_WhereBuildClosure_success.a");
+    return cached_WhereBuildClosure_14;
   }
 
   @Test
   public void testWhereBuildClosureEmission() {
-    assertEmissionGood(get_WhereBuildClosure_13());
+    assertEmissionGood(get_WhereBuildClosure_14());
   }
 
   @Test
   public void testWhereBuildClosureSuccess() {
-    assertLivePass(get_WhereBuildClosure_13());
+    assertLivePass(get_WhereBuildClosure_14());
   }
 
   @Test
   public void testWhereBuildClosureGoodWillHappy() {
-    assertGoodWillHappy(get_WhereBuildClosure_13());
+    assertGoodWillHappy(get_WhereBuildClosure_14());
   }
 
   @Test
   public void testWhereBuildClosureExceptionFree() {
-    assertExceptionFree(get_WhereBuildClosure_13());
+    assertExceptionFree(get_WhereBuildClosure_14());
   }
 
   @Test
   public void testWhereBuildClosureTODOFree() {
-    assertTODOFree(get_WhereBuildClosure_13());
+    assertTODOFree(get_WhereBuildClosure_14());
   }
 
   @Test
-  public void stable_WhereBuildClosure_13() {
-    String live = get_WhereBuildClosure_13();
+  public void stable_WhereBuildClosure_14() {
+    String live = get_WhereBuildClosure_14();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Linq_WhereBuildClosure_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -7487,7 +7527,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class WhereBuildClosure_13 extends LivingDocument {");
+    gold.append("\npublic class WhereBuildClosure_14 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -7495,7 +7535,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __sum += t.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public WhereBuildClosure_13(DocumentMonitor __monitor) {");
+    gold.append("\n  public WhereBuildClosure_14(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -7723,9 +7763,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaWhereBuildClosure_13 implements DeltaNode {");
+    gold.append("\n  private class DeltaWhereBuildClosure_14 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaWhereBuildClosure_13() {");
+    gold.append("\n    private DeltaWhereBuildClosure_14() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -7733,7 +7773,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(WhereBuildClosure_13 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(WhereBuildClosure_14 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -7761,8 +7801,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    WhereBuildClosure_13 __self = this;");
-    gold.append("\n    DeltaWhereBuildClosure_13 __state = new DeltaWhereBuildClosure_13();");
+    gold.append("\n    WhereBuildClosure_14 __self = this;");
+    gold.append("\n    DeltaWhereBuildClosure_14 __state = new DeltaWhereBuildClosure_14();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -8257,43 +8297,43 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_WhereDuplicateFields_14 = null;
-  private String get_WhereDuplicateFields_14() {
-    if (cached_WhereDuplicateFields_14 != null) {
-      return cached_WhereDuplicateFields_14;
+  private String cached_WhereDuplicateFields_15 = null;
+  private String get_WhereDuplicateFields_15() {
+    if (cached_WhereDuplicateFields_15 != null) {
+      return cached_WhereDuplicateFields_15;
     }
-    cached_WhereDuplicateFields_14 = generateTestOutput(true, "WhereDuplicateFields_14", "./test_code/Linq_WhereDuplicateFields_success.a");
-    return cached_WhereDuplicateFields_14;
+    cached_WhereDuplicateFields_15 = generateTestOutput(true, "WhereDuplicateFields_15", "./test_code/Linq_WhereDuplicateFields_success.a");
+    return cached_WhereDuplicateFields_15;
   }
 
   @Test
   public void testWhereDuplicateFieldsEmission() {
-    assertEmissionGood(get_WhereDuplicateFields_14());
+    assertEmissionGood(get_WhereDuplicateFields_15());
   }
 
   @Test
   public void testWhereDuplicateFieldsSuccess() {
-    assertLivePass(get_WhereDuplicateFields_14());
+    assertLivePass(get_WhereDuplicateFields_15());
   }
 
   @Test
   public void testWhereDuplicateFieldsGoodWillHappy() {
-    assertGoodWillHappy(get_WhereDuplicateFields_14());
+    assertGoodWillHappy(get_WhereDuplicateFields_15());
   }
 
   @Test
   public void testWhereDuplicateFieldsExceptionFree() {
-    assertExceptionFree(get_WhereDuplicateFields_14());
+    assertExceptionFree(get_WhereDuplicateFields_15());
   }
 
   @Test
   public void testWhereDuplicateFieldsTODOFree() {
-    assertTODOFree(get_WhereDuplicateFields_14());
+    assertTODOFree(get_WhereDuplicateFields_15());
   }
 
   @Test
-  public void stable_WhereDuplicateFields_14() {
-    String live = get_WhereDuplicateFields_14();
+  public void stable_WhereDuplicateFields_15() {
+    String live = get_WhereDuplicateFields_15();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Linq_WhereDuplicateFields_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -8326,7 +8366,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class WhereDuplicateFields_14 extends LivingDocument {");
+    gold.append("\npublic class WhereDuplicateFields_15 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -8334,7 +8374,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __sum += t.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public WhereDuplicateFields_14(DocumentMonitor __monitor) {");
+    gold.append("\n  public WhereDuplicateFields_15(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -8562,9 +8602,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaWhereDuplicateFields_14 implements DeltaNode {");
+    gold.append("\n  private class DeltaWhereDuplicateFields_15 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaWhereDuplicateFields_14() {");
+    gold.append("\n    private DeltaWhereDuplicateFields_15() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -8572,7 +8612,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(WhereDuplicateFields_14 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(WhereDuplicateFields_15 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -8600,8 +8640,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    WhereDuplicateFields_14 __self = this;");
-    gold.append("\n    DeltaWhereDuplicateFields_14 __state = new DeltaWhereDuplicateFields_14();");
+    gold.append("\n    WhereDuplicateFields_15 __self = this;");
+    gold.append("\n    DeltaWhereDuplicateFields_15 __state = new DeltaWhereDuplicateFields_15();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -9058,43 +9098,43 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_WhereOtherIndexingModes_15 = null;
-  private String get_WhereOtherIndexingModes_15() {
-    if (cached_WhereOtherIndexingModes_15 != null) {
-      return cached_WhereOtherIndexingModes_15;
+  private String cached_WhereOtherIndexingModes_16 = null;
+  private String get_WhereOtherIndexingModes_16() {
+    if (cached_WhereOtherIndexingModes_16 != null) {
+      return cached_WhereOtherIndexingModes_16;
     }
-    cached_WhereOtherIndexingModes_15 = generateTestOutput(true, "WhereOtherIndexingModes_15", "./test_code/Linq_WhereOtherIndexingModes_success.a");
-    return cached_WhereOtherIndexingModes_15;
+    cached_WhereOtherIndexingModes_16 = generateTestOutput(true, "WhereOtherIndexingModes_16", "./test_code/Linq_WhereOtherIndexingModes_success.a");
+    return cached_WhereOtherIndexingModes_16;
   }
 
   @Test
   public void testWhereOtherIndexingModesEmission() {
-    assertEmissionGood(get_WhereOtherIndexingModes_15());
+    assertEmissionGood(get_WhereOtherIndexingModes_16());
   }
 
   @Test
   public void testWhereOtherIndexingModesSuccess() {
-    assertLivePass(get_WhereOtherIndexingModes_15());
+    assertLivePass(get_WhereOtherIndexingModes_16());
   }
 
   @Test
   public void testWhereOtherIndexingModesGoodWillHappy() {
-    assertGoodWillHappy(get_WhereOtherIndexingModes_15());
+    assertGoodWillHappy(get_WhereOtherIndexingModes_16());
   }
 
   @Test
   public void testWhereOtherIndexingModesExceptionFree() {
-    assertExceptionFree(get_WhereOtherIndexingModes_15());
+    assertExceptionFree(get_WhereOtherIndexingModes_16());
   }
 
   @Test
   public void testWhereOtherIndexingModesTODOFree() {
-    assertTODOFree(get_WhereOtherIndexingModes_15());
+    assertTODOFree(get_WhereOtherIndexingModes_16());
   }
 
   @Test
-  public void stable_WhereOtherIndexingModes_15() {
-    String live = get_WhereOtherIndexingModes_15();
+  public void stable_WhereOtherIndexingModes_16() {
+    String live = get_WhereOtherIndexingModes_16();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Linq_WhereOtherIndexingModes_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -9127,7 +9167,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class WhereOtherIndexingModes_15 extends LivingDocument {");
+    gold.append("\npublic class WhereOtherIndexingModes_16 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  private final RxLazy<NtList<RTxX>> t_less;");
     gold.append("\n  private final RxLazy<NtList<RTxX>> t_lesseq;");
@@ -9145,7 +9185,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __sum += t_great.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public WhereOtherIndexingModes_15(DocumentMonitor __monitor) {");
+    gold.append("\n  public WhereOtherIndexingModes_16(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent), 1);");
     gold.append("\n    t_less = new RxLazy<NtList<RTxX>>(this, () -> ((t.iterate(false)).where(true, new __CLOSURE_WhereClause0())));");
@@ -9383,7 +9423,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaWhereOtherIndexingModes_15 implements DeltaNode {");
+    gold.append("\n  private class DeltaWhereOtherIndexingModes_16 implements DeltaNode {");
     gold.append("\n    private int __gt_less;");
     gold.append("\n    private DRecordList<DeltaRTxX> __dt_less;");
     gold.append("\n    private int __gt_lesseq;");
@@ -9395,7 +9435,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    private int __gt_great;");
     gold.append("\n    private DRecordList<DeltaRTxX> __dt_great;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaWhereOtherIndexingModes_15() {");
+    gold.append("\n    private DeltaWhereOtherIndexingModes_16() {");
     gold.append("\n      __gt_less = -1;");
     gold.append("\n      __dt_less = new DRecordList<DeltaRTxX>();");
     gold.append("\n      __gt_lesseq = -1;");
@@ -9418,7 +9458,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      __sum += __dt_great.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(WhereOtherIndexingModes_15 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(WhereOtherIndexingModes_16 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 5;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -9527,8 +9567,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    WhereOtherIndexingModes_15 __self = this;");
-    gold.append("\n    DeltaWhereOtherIndexingModes_15 __state = new DeltaWhereOtherIndexingModes_15();");
+    gold.append("\n    WhereOtherIndexingModes_16 __self = this;");
+    gold.append("\n    DeltaWhereOtherIndexingModes_16 __state = new DeltaWhereOtherIndexingModes_16();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -10085,43 +10125,43 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_WherePrimaryKeyExtraction_16 = null;
-  private String get_WherePrimaryKeyExtraction_16() {
-    if (cached_WherePrimaryKeyExtraction_16 != null) {
-      return cached_WherePrimaryKeyExtraction_16;
+  private String cached_WherePrimaryKeyExtraction_17 = null;
+  private String get_WherePrimaryKeyExtraction_17() {
+    if (cached_WherePrimaryKeyExtraction_17 != null) {
+      return cached_WherePrimaryKeyExtraction_17;
     }
-    cached_WherePrimaryKeyExtraction_16 = generateTestOutput(true, "WherePrimaryKeyExtraction_16", "./test_code/Linq_WherePrimaryKeyExtraction_success.a");
-    return cached_WherePrimaryKeyExtraction_16;
+    cached_WherePrimaryKeyExtraction_17 = generateTestOutput(true, "WherePrimaryKeyExtraction_17", "./test_code/Linq_WherePrimaryKeyExtraction_success.a");
+    return cached_WherePrimaryKeyExtraction_17;
   }
 
   @Test
   public void testWherePrimaryKeyExtractionEmission() {
-    assertEmissionGood(get_WherePrimaryKeyExtraction_16());
+    assertEmissionGood(get_WherePrimaryKeyExtraction_17());
   }
 
   @Test
   public void testWherePrimaryKeyExtractionSuccess() {
-    assertLivePass(get_WherePrimaryKeyExtraction_16());
+    assertLivePass(get_WherePrimaryKeyExtraction_17());
   }
 
   @Test
   public void testWherePrimaryKeyExtractionGoodWillHappy() {
-    assertGoodWillHappy(get_WherePrimaryKeyExtraction_16());
+    assertGoodWillHappy(get_WherePrimaryKeyExtraction_17());
   }
 
   @Test
   public void testWherePrimaryKeyExtractionExceptionFree() {
-    assertExceptionFree(get_WherePrimaryKeyExtraction_16());
+    assertExceptionFree(get_WherePrimaryKeyExtraction_17());
   }
 
   @Test
   public void testWherePrimaryKeyExtractionTODOFree() {
-    assertTODOFree(get_WherePrimaryKeyExtraction_16());
+    assertTODOFree(get_WherePrimaryKeyExtraction_17());
   }
 
   @Test
-  public void stable_WherePrimaryKeyExtraction_16() {
-    String live = get_WherePrimaryKeyExtraction_16();
+  public void stable_WherePrimaryKeyExtraction_17() {
+    String live = get_WherePrimaryKeyExtraction_17();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Linq_WherePrimaryKeyExtraction_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -10154,7 +10194,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class WherePrimaryKeyExtraction_16 extends LivingDocument {");
+    gold.append("\npublic class WherePrimaryKeyExtraction_17 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> t;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -10162,7 +10202,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __sum += t.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public WherePrimaryKeyExtraction_16(DocumentMonitor __monitor) {");
+    gold.append("\n  public WherePrimaryKeyExtraction_17(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -10390,9 +10430,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaWherePrimaryKeyExtraction_16 implements DeltaNode {");
+    gold.append("\n  private class DeltaWherePrimaryKeyExtraction_17 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaWherePrimaryKeyExtraction_16() {");
+    gold.append("\n    private DeltaWherePrimaryKeyExtraction_17() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -10400,7 +10440,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(WherePrimaryKeyExtraction_16 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(WherePrimaryKeyExtraction_17 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -10428,8 +10468,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    WherePrimaryKeyExtraction_16 __self = this;");
-    gold.append("\n    DeltaWherePrimaryKeyExtraction_16 __state = new DeltaWherePrimaryKeyExtraction_16();");
+    gold.append("\n    WherePrimaryKeyExtraction_17 __self = this;");
+    gold.append("\n    DeltaWherePrimaryKeyExtraction_17 __state = new DeltaWherePrimaryKeyExtraction_17();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");

@@ -33,13 +33,14 @@ public class DefineFunction extends Definition {
   public final Token nameToken;
   public final Token openParen;
   public final Token readOnlyToken;
+  public final Token abortsToken;
   public final FunctionSpecialization specialization;
   public Block code;
   public TyType returnType;
   private boolean beenGivenId;
   private int uniqueFunctionId;
 
-  public DefineFunction(final Token functionTypeToken, final FunctionSpecialization specialization, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introReturnType, final TyType returnType, final Token readOnlyToken, final Block code) {
+  public DefineFunction(final Token functionTypeToken, final FunctionSpecialization specialization, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introReturnType, final TyType returnType, final Token readOnlyToken, final Token abortsToken, final Block code) {
     this.functionTypeToken = functionTypeToken;
     this.specialization = specialization;
     this.nameToken = nameToken;
@@ -50,6 +51,7 @@ public class DefineFunction extends Definition {
     this.introReturnType = introReturnType;
     this.returnType = returnType;
     this.readOnlyToken = readOnlyToken;
+    this.abortsToken = abortsToken;
     this.code = code;
     uniqueFunctionId = 0;
     beenGivenId = false;
@@ -79,6 +81,9 @@ public class DefineFunction extends Definition {
     }
     if (readOnlyToken != null) {
       yielder.accept(readOnlyToken);
+    }
+    if (abortsToken != null) {
+      yielder.accept(abortsToken);
     }
     code.emit(yielder);
   }
@@ -117,6 +122,9 @@ public class DefineFunction extends Definition {
         toUse = environment.scopeWithCache("__cache");
       }
     }
+    if (abortsToken != null) {
+      toUse = toUse.scopeAsAbortable();
+    }
     for (final FunctionArg arg : args) {
       toUse.define(arg.argName, arg.type, pure || readOnlyToken != null || arg.type instanceof TyNativeMessage, arg.type);
     }
@@ -129,7 +137,7 @@ public class DefineFunction extends Definition {
     for (final FunctionArg arg : args) {
       argTypes.add(arg.type);
     }
-    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, specialization == FunctionSpecialization.Pure, false);
+    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, specialization == FunctionSpecialization.Pure, false, abortsToken != null);
     foi.ingest(this);
     return foi;
   }
@@ -153,6 +161,9 @@ public class DefineFunction extends Definition {
       sb.append(arg.type.getJavaConcreteType(environment)).append(" ").append(arg.argName);
     }
     sb.append(") ");
+    if (abortsToken != null) {
+      sb.append("throws AbortMessageException ");
+    }
     code.writeJava(sb, environment);
     sb.writeNewline();
   }

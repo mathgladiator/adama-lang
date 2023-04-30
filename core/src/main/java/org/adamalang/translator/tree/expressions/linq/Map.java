@@ -54,12 +54,15 @@ public class Map extends LinqExpression {
     if (typeSql != null && RuleSetLists.IsNativeList(environment, typeSql, false)) {
       ArrayList<TyType> guessInputTypes = new ArrayList<>();
       guessInputTypes.add(RuleSetCommon.ExtractEmbeddedType(environment, typeSql, false));
-      FunctionOverloadInstance guess = new FunctionOverloadInstance("unknown", null, guessInputTypes, true, false);
+      FunctionOverloadInstance guess = new FunctionOverloadInstance("unknown", null, guessInputTypes, true, false, false);
       TyType guessType = new TyNativeFunctional("unknown", FunctionOverloadInstance.WRAP(guess), FunctionStyleJava.None);
       TyType funcType = func.typing(environment, guessType);
       if (environment.rules.IsFunction(funcType, false)) {
         functionalType = (TyNativeFunctional) funcType;
         functionInstance = functionalType.find(this, guessInputTypes, environment);
+        if (functionInstance.aborts) {
+          environment.document.createError(this, String.format("Function '%s' must not abort within a map function", funcType.getAdamaType()), "Map");
+        }
         if (functionInstance.returnType == null) {
           environment.document.createError(this, String.format("Function '%s' must return value", funcType.getAdamaType()), "Map");
         }

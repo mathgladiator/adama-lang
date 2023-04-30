@@ -47,7 +47,7 @@ public class GeneratedControlTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Control_CantAbortOutsideOfMessageHandler_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":63},\"end\":{\"line\":8,\"character\":8,\"byte\":69}},\"severity\":1,\"source\":\"error\",\"message\":\"Can only 'abort' from a message handler (EvaluationContext)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":63},\"end\":{\"line\":8,\"character\":8,\"byte\":69}},\"severity\":1,\"source\":\"error\",\"message\":\"Can only 'abort' from a message handler or an abortable procedure/method (EvaluationContext)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

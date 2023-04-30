@@ -1,0 +1,14 @@
+record R {
+  public int x;
+  public int y;
+}
+
+table<R> tbl;
+
+public formula all = iterate tbl;
+
+procedure shared_sqr(R r) -> int aborts {
+  return r.x * r.x + r.y * r.y;
+}
+
+public formula all_sqr_explicit = iterate tbl map shared_sqr;

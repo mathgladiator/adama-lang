@@ -78,6 +78,11 @@ public class Environment {
     return new Environment(document, state.scopeReadonly(), this).scope();
   }
 
+  /** createa a new environment which allows abortion */
+  public Environment scopeAsAbortable() {
+    return new Environment(document, state.scopeAbortion(), this).scope();
+  }
+
   /** need to capture special variables */
   public Environment captureSpecials() {
     Environment next = scope();

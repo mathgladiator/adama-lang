@@ -89,11 +89,11 @@ public class TyNativeDate extends TySimpleNative implements //
   @Override
   public TyNativeFunctional lookupMethod(String name, Environment environment) {
     if ("year".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement("year", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("year", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("year", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("year", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.None);
     } else if ("month".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement("month", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("month", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("month", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("month", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.None);
     } else if ("day".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement("day", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("day", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("day", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("day", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.None);
     }
     return environment.state.globals.findExtension(this, name);
   }

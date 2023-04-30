@@ -114,7 +114,7 @@ public class Lambda extends Expression implements LatentCodeSnippet {
 
       exprType = expr.typing(next, null);
       if (exprType != null && variableType != null) {
-        FunctionOverloadInstance created = new FunctionOverloadInstance("apply", exprType, instance.types, true, false);
+        FunctionOverloadInstance created = new FunctionOverloadInstance("apply", exprType, instance.types, true, false, false);
         return new TyNativeFunctional("apply", FunctionOverloadInstance.WRAP(created), FunctionStyleJava.ExpressionThenArgs);
       }
     }

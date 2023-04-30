@@ -203,7 +203,7 @@ public class TyReactiveRecord extends TyType implements //
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if (!environment.state.isPure()) {
       if ("delete".equals(name) && storage.specialization == StorageSpecialization.Record) {
-        return new TyNativeFunctionInternalFieldReplacement("__delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__delete", null, new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
+        return new TyNativeFunctionInternalFieldReplacement("__delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__delete", null, new ArrayList<>(), false, false, false)), FunctionStyleJava.ExpressionThenArgs);
       }
       return storage.methodTypes.get(name);
     }

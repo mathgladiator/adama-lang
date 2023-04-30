@@ -827,7 +827,7 @@ public class Parser {
     final var introReturn = consumeArrow("pure functions must have return types.");
     final var returnType = native_type();
     final var code = block();
-    final var df = new DefineFunction(functionToken, FunctionSpecialization.Pure, name, openParen, args, closeParen, introReturn, returnType, null, code);
+    final var df = new DefineFunction(functionToken, FunctionSpecialization.Pure, name, openParen, args, closeParen, introReturn, returnType, null, null, code);
     return doc -> doc.add(df);
   }
 
@@ -921,8 +921,9 @@ public class Parser {
       returnType = native_type();
     }
     final var readonlyToken = tokens.popIf(t -> t.isIdentifier("readonly"));
+    final var abortsToken = tokens.popIf(t -> t.isIdentifier("aborts"));
     final var code = block();
-    return new DefineMethod(methodToken, name, openParen, args, closeParen, hasReturnType, returnType, readonlyToken, code);
+    return new DefineMethod(methodToken, name, openParen, args, closeParen, hasReturnType, returnType, readonlyToken, abortsToken, code);
   }
 
   public DefineCustomPolicy define_policy_trailer(final Token definePolicy) throws AdamaLangException {
@@ -941,8 +942,9 @@ public class Parser {
       returnType = native_type();
     }
     final var readonlyToken = tokens.popIf(t -> t.isIdentifier("readonly"));
+    final var abortToken = tokens.popIf(t -> t.isIdentifier("aborts"));
     final var code = block();
-    final var df = new DefineFunction(procedureToken, FunctionSpecialization.Impure, name, openParen, args, closeParen, introReturn, returnType, readonlyToken, code);
+    final var df = new DefineFunction(procedureToken, FunctionSpecialization.Impure, name, openParen, args, closeParen, introReturn, returnType, readonlyToken, abortToken, code);
     return doc -> doc.add(df);
   }
 

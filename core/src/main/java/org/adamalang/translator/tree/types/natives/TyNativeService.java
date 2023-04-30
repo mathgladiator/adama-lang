@@ -93,7 +93,7 @@ public class TyNativeService extends TyType implements //
       }
       outputType = outputType.withPosition(service);
       outputType = new TyNativeResult(TypeBehavior.ReadOnlyNativeValue, null, method.methodToken, new TokenizedItem<>(outputType)).withPosition(this);
-      return new TyNativeFunctional(name, FunctionOverloadInstance.WRAP(new FunctionOverloadInstance(name, outputType, argTypes, true, false)), FunctionStyleJava.RemoteCall);
+      return new TyNativeFunctional(name, FunctionOverloadInstance.WRAP(new FunctionOverloadInstance(name, outputType, argTypes, true, false, false)), FunctionStyleJava.RemoteCall);
     }
     return null;
   }

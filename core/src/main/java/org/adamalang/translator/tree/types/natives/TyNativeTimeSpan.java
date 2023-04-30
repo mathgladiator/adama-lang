@@ -89,7 +89,7 @@ public class TyNativeTimeSpan extends TySimpleNative implements //
   @Override
   public TyNativeFunctional lookupMethod(String name, Environment environment) {
     if ("seconds".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement("seconds", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("seconds", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("seconds", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("seconds", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.None);
     }
     return environment.state.globals.findExtension(this, name);
   }

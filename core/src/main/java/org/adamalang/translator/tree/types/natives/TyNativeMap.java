@@ -146,22 +146,22 @@ public class TyNativeMap extends TyType implements //
     if ("insert".equals(name)) {
       final var args = new ArrayList<TyType>();
       args.add(this);
-      return new TyNativeFunctional("insert", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("insert", this, args, false, true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("insert", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("insert", this, args, false, true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("remove".equals(name)) {
       final var args = new ArrayList<TyType>();
       args.add(environment.rules.Resolve(domainType, false));
       TyType returnType = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(rangeType)).withPosition(this);
-      return new TyNativeFunctional("remove", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("remove", returnType, args, false, true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("remove", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("remove", returnType, args, false, true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("min".equals(name)) {
-      return new TyNativeFunctional("min", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("min", getCommonQueryResultType(environment), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("min", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("min", getCommonQueryResultType(environment), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("max".equals(name)) {
-      return new TyNativeFunctional("max", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("max", getCommonQueryResultType(environment), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("max", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("max", getCommonQueryResultType(environment), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
   }

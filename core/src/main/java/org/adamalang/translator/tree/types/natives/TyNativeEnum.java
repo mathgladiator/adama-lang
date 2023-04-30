@@ -129,13 +129,13 @@ public class TyNativeEnum extends TySimpleNative implements //
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("to_int".equals(name)) {
-      return new TyNativeFunctional("to_int", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("Utility.identity", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, enumToken).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+      return new TyNativeFunctional("to_int", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("Utility.identity", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, enumToken).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
     }
     if ("next".equals(name)) {
-      return new TyNativeFunctional("next", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumCycleNext_" + this.name, this, new ArrayList<>(), true, false)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+      return new TyNativeFunctional("next", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumCycleNext_" + this.name, this, new ArrayList<>(), true, false, false)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
     }
     if ("prev".equals(name)) {
-      return new TyNativeFunctional("prev", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumCyclePrev_" + this.name, this, new ArrayList<>(), true, false)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+      return new TyNativeFunctional("prev", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumCyclePrev_" + this.name, this, new ArrayList<>(), true, false, false)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
     }
     return storage.computeDispatcherType(name);
   }

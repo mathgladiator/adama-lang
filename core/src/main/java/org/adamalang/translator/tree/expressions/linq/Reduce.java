@@ -72,7 +72,7 @@ public class Reduce extends LinqExpression {
     if (isGoodSql && viaToken != null) {
       ArrayList<TyType> guessInputTypes = new ArrayList<>();
       guessInputTypes.add(typeSql);
-      FunctionOverloadInstance guess = new FunctionOverloadInstance("unknown", null, guessInputTypes, true, false);
+      FunctionOverloadInstance guess = new FunctionOverloadInstance("unknown", null, guessInputTypes, true, false, false);
       TyType guessType = new TyNativeFunctional("unknown", FunctionOverloadInstance.WRAP(guess), FunctionStyleJava.None);
       TyType funcType = functionToReduceWith.typing(environment, guessType);
       if (environment.rules.IsFunction(funcType, false)) {
