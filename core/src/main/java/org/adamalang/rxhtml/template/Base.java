@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 public class Base {
-  private static final String[] EVENTS = new String[]{"click", "mouseenter", "mouseleave", "load"};
+  private static final String[] EVENTS = new String[]{"click", "mouseenter", "mouseleave", "load", "success", "failed"};
 
   private static String xmlnsOf(Environment env) {
     String xmlns = env.element.hasAttr("xmlns") ? env.element.attr("xmlns") : null;

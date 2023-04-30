@@ -643,6 +643,16 @@ var RxHTML = (function () {
     });
   };
 
+  // custom event on forms; rx:success="..."
+  var fire_success = function(form) {
+    form.dispatchEvent(new Event("success"));
+  };
+
+  // custom event on forms; rx:failed="..."
+  var fire_failure = function(form) {
+    form.dispatchEvent(new Event("failed"));
+  };
+
   self.aCC = function (form, state, customCommandName, statusVar) {
     var signal = make_failure_signal(state, statusVar);
     form.onsubmit = function (evt) {
@@ -650,6 +660,9 @@ var RxHTML = (function () {
         evt.preventDefault();
         var obj = get_form(form);
         customs[customCommandName](obj, state, signal, self);
+        fire_success(form);
+      } else {
+        fire_failure(form);
       }
     };
   };
@@ -963,6 +976,7 @@ var RxHTML = (function () {
       }
       var delta = path_to(state.view, obj);
       state.view.tree.update(delta);
+      fire_success(form);
     };
   };
 
@@ -1493,11 +1507,13 @@ var RxHTML = (function () {
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
           self.goto(state.view, forwardTo);
+          fire_success(form);
         },
         failure: function (code) {
           signal(true);
           // TODO: sort out console logging
           console.log("Sign in failure:" + code);
+          fire_failure(form);
         }
       });
     };
@@ -1514,10 +1530,12 @@ var RxHTML = (function () {
           signal(false);
           localStorage.setItem("email", req.email);
           self.goto(state.view, forwardTo);
+          fire_success(form);
         },
         failure: function (code) {
           signal(true);
           console.log("Sign up failure:");
+          fire_failure(form);
         }
       });
     };
@@ -1540,15 +1558,17 @@ var RxHTML = (function () {
               signal(false);
               localStorage.setItem("identity_default", identity);
               self.goto(state.view, forwardTo);
+              fire_success(form);
             },
             failure: function (reason) {
               signal(true);
+              fire_failure(form);
             }
           });
-
         },
         failure: function (reason) {
           signal(true);
+          fire_failure(form);
         }
       });
     };
@@ -1563,11 +1583,13 @@ var RxHTML = (function () {
       state.data.connection.ptr.send(channel, get_form(form), {
         success: function (payload) {
           signal(false);
+          fire_success(form);
           console.log("Success|" + payload.seq + ";latency=" + (performance.now() - start)); // TODO: graph it
         },
         failure: function (reason) {
           signal(true);
           console.log("Send failure:" + reason); // TODO: log it
+          fire_failure(form);
         }
       });
     };
