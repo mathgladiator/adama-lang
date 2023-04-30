@@ -216,9 +216,9 @@ var RxHTML = (function () {
   // HELPER | construct a path to
   var path_to = function (ss, obj) {
     if (ss.parent != null) {
-      var parent = path_to(ss.parent, {});
-      parent[ss.path] = obj;
-      return parent;
+      var peel = {};
+      peel[ss.path] = obj;
+      return path_to(ss.parent, peel);
     } else {
       return obj;
     }
@@ -385,6 +385,15 @@ var RxHTML = (function () {
     };
   };
   self.newStateCreateViewChild = self.pEV;
+
+  self.pIE = function(state, name, expandView) {
+    var next = self.pI(state, name);
+    if (expandView) {
+      return self.pEV(next, name);
+    } else {
+      return next;
+    }
+  };
 
   var fork = function (priorState) {
     var state = {
@@ -563,17 +572,13 @@ var RxHTML = (function () {
 
   // RUNTIME | <tag rx:iterate=path ...>
   self.IT = function (parentDom, state, name, expandView, maker) {
-    var it_state = self.pI(state, name);
+    var it_state = self.pIE(state, name, expandView);
     var domByKey = {};
     var viewUnSubByKey = {};
 
     var sub = {
       "+": function (key) {
-        // TODO: view propagates don't work here
-        var new_state = self.pI(it_state, key);
-        if (expandView) {
-          new_state = self.pEV(it_state, key);
-        }
+        var new_state = self.pIE(it_state, key, expandView);
         new_state = {
           service: new_state.service,
           data: new_state.data,
@@ -787,7 +792,7 @@ var RxHTML = (function () {
       } else {
         obj[name] = value;
       }
-      var delta = path_to(state, obj);
+      var delta = path_to(state[state.current], obj);
       state[state.current].tree.update(delta);
     };
     if (type == "load") {
@@ -803,7 +808,7 @@ var RxHTML = (function () {
     dom.addEventListener(type, function () {
       var obj = {};
       obj[name] = !captured.value;
-      var delta = path_to(state, obj);
+      var delta = path_to(state[state.current], obj);
       state[state.current].tree.update(delta);
     });
     subscribe(state, name, function (value) {
@@ -817,7 +822,7 @@ var RxHTML = (function () {
     dom.addEventListener(type, function () {
       var obj = {};
       obj[name] = captured.value + diff;
-      var delta = path_to(state, obj);
+      var delta = path_to(state[state.current], obj);
       state[state.current].tree.update(delta);
     });
     subscribe(state, name, function (value) {
@@ -942,8 +947,7 @@ var RxHTML = (function () {
         makerFalse(parent, next);
       }
       subscribe_state(state, unsub);
-    }.bind({shown: shouldBe});
-    set(!shouldBe);
+    }.bind({shown: 'no'});
     subscribe(priorState, name, set);
   };
 
@@ -957,7 +961,7 @@ var RxHTML = (function () {
         no[name] = obj;
         obj = no;
       }
-      var delta = path_to(state, obj);
+      var delta = path_to(state.view, obj);
       state.view.tree.update(delta);
     };
   };
@@ -968,7 +972,7 @@ var RxHTML = (function () {
     var signal = function (value) {
       var obj = {};
       obj[name] = el.value;
-      var delta = path_to(state, obj);
+      var delta = path_to(state.view, obj);
       state.view.tree.update(delta);
     };
     if (type == "CHECKBOX") {
@@ -1056,7 +1060,7 @@ var RxHTML = (function () {
     return function (fail) {
       var obj = {};
       obj[failureVar] = fail;
-      var delta = path_to(self.pV(state), obj);
+      var delta = path_to(state.view, obj);
       state.view.tree.update(delta);
     };
   };
