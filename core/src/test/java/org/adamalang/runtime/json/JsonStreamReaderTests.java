@@ -524,6 +524,24 @@ public class JsonStreamReaderTests {
   }
 
   @Test
+  public void readDate1alt() {
+    JsonStreamReader reader = new JsonStreamReader("\"1970-1-23\"");
+    NtDate date = reader.readNtDate();
+    Assert.assertEquals(1970, date.year);
+    Assert.assertEquals(1, date.month);
+    Assert.assertEquals(23, date.day);
+  }
+
+  @Test
+  public void readDate1altFull() {
+    JsonStreamReader reader = new JsonStreamReader("\"1970-01-23\"");
+    NtDate date = reader.readNtDate();
+    Assert.assertEquals(1970, date.year);
+    Assert.assertEquals(1, date.month);
+    Assert.assertEquals(23, date.day);
+  }
+
+  @Test
   public void readDate2() {
     JsonStreamReader reader = new JsonStreamReader("\"1970/07/31\"");
     NtDate date = reader.readNtDate();

@@ -1022,6 +1022,16 @@ var RxHTML = (function () {
       if ("name" in el) {
         var name = el.name;
         var insertAt = obj;
+        kDot = name.indexOf('.');
+        while (kDot > 0) {
+          var par = name.substring(0, kDot);
+          if (!(par in insertAt)) {
+            insertAt[par] = {};
+          }
+          insertAt = insertAt[par];
+          name = name.substring(kDot + 1);
+          kDot = name.indexOf('.');
+        }
         var push = name.endsWith("[]");
         if (push) {
           name = name.substr(0, name.length - 2);
