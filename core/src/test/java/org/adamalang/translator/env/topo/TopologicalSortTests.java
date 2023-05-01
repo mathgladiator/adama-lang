@@ -61,9 +61,9 @@ public class TopologicalSortTests {
     ts.add("b", "vb", D("a"));
     ts.add("a", "va", D("c"));
     ArrayList<String> sorted = ts.sort();
-    Assert.assertEquals("vb", sorted.get(0));
-    Assert.assertEquals("vc", sorted.get(1));
-    Assert.assertEquals("va", sorted.get(2));
+    Assert.assertEquals("va", sorted.get(0));
+    Assert.assertEquals("vb", sorted.get(1));
+    Assert.assertEquals("vc", sorted.get(2));
     Assert.assertFalse(ts.cycles().isEmpty());
   }
 
