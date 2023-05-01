@@ -1011,30 +1011,39 @@ var RxHTML = (function () {
   };
 
   // HELPER | extract all the inputs from the given element and build an object
-  var build_obj = function (el, obj) {
-    if (el.tagName.toUpperCase() == "TEXTAREA") {
-      obj[el.name] = el.value;
-    } else if (el.tagName.toUpperCase() == "SELECT") {
-      obj[el.name] = el.value;
-    } else if (el.tagName.toUpperCase() == "INPUT") {
+  var build_obj = function (el, objToInsertInto) {
+    var justSet = el.tagName.toUpperCase() == "TEXTAREA" || el.tagName.toUpperCase() == "SELECT";
+    var isInputBox = el.tagName.toUpperCase() == "INPUT";
+
+    var hasName = "name" in el;
+    var name = "";
+    var insertAt = objToInsertInto;
+    var push = false;
+    if (hasName && (justSet || isInputBox)) {
+      name = el.name;
+      kDot = name.indexOf('.');
+      while (kDot > 0) {
+        var par = name.substring(0, kDot);
+        if (!(par in insertAt)) {
+          insertAt[par] = {};
+        }
+        insertAt = insertAt[par];
+        name = name.substring(kDot + 1);
+        kDot = name.indexOf('.');
+      }
+      push = name.endsWith("[]");
+      if (push) {
+        name = name.substring(0, name.length - 2);
+      }
+    }
+
+    if (justSet) {
+      insertAt[name] = el.value;
+    } else if (isInputBox) {
       var type = ("type" in el) ? el.type.toUpperCase() : "text";
       if (type == "SUBMIT" || type == "RESET") return;
-      if ("name" in el) {
-        var name = el.name;
-        var insertAt = obj;
-        kDot = name.indexOf('.');
-        while (kDot > 0) {
-          var par = name.substring(0, kDot);
-          if (!(par in insertAt)) {
-            insertAt[par] = {};
-          }
-          insertAt = insertAt[par];
-          name = name.substring(kDot + 1);
-          kDot = name.indexOf('.');
-        }
-        var push = name.endsWith("[]");
+      if (hasName) {
         if (push) {
-          name = name.substr(0, name.length - 2);
           if (name in insertAt) {
             insertAt[name] = [];
           }
@@ -1066,7 +1075,7 @@ var RxHTML = (function () {
         var n = arr.length;
         for (var k = 0; k < n; k++) {
           var ch = el.children[k];
-          build_obj(ch, obj);
+          build_obj(ch, objToInsertInto);
         }
       }
     }
