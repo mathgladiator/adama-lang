@@ -60,10 +60,10 @@ public class RxDateTests {
     a.set(B);
     a.__commit("x", redo, undo);
     Assert.assertEquals(
-        "\"x\":\"2014/10/8\"",
+        "\"x\":\"2014-10-08\"",
         redo.toString());
     Assert.assertEquals(
-        "\"x\":\"2011/11/9\"",
+        "\"x\":\"2011-11-09\"",
         undo.toString());
   }
 
@@ -85,7 +85,7 @@ public class RxDateTests {
     RxDate a = new RxDate(null, A);
     a.__dump(c);
     Assert.assertEquals(
-        "\"2011/11/9\"",
+        "\"2011-11-09\"",
         c.toString());
   }
 
@@ -99,7 +99,7 @@ public class RxDateTests {
             "\"2021/1/2\""));
     a.__dump(c);
     Assert.assertEquals(
-        "\"2014/10/8\"\"2021/1/2\"",
+        "\"2014-10-08\"\"2021-01-02\"",
         c.toString());
   }
 
@@ -112,7 +112,7 @@ public class RxDateTests {
             "\"2021/1/2\""));
     a.__dump(c);
     Assert.assertEquals(
-        "\"2021/1/2\"",
+        "\"2021-01-02\"",
         c.toString());
   }
 }

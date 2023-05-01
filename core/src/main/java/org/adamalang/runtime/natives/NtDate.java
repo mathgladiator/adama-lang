@@ -39,7 +39,7 @@ public class NtDate implements Comparable<NtDate> {
 
   @Override
   public String toString() {
-    return year + "/" + month + "/" + day;
+    return year + (month < 10 ? "-0" : "-") + month + (day < 10 ? "-0" : "-") + day;
   }
 
   public long memory() {

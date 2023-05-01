@@ -29,7 +29,7 @@ public class DDateTests {
     db.hide(writer);
     db.show(new NtDate(1, 2, 3), writer);
     db.show(new NtDate(3, 4, 5), writer);
-    Assert.assertEquals("\"1/2/3\"\"3/4/5\"null\"1/2/3\"\"3/4/5\"", stream.toString());
+    Assert.assertEquals("\"1-02-03\"\"3-04-05\"null\"1-02-03\"\"3-04-05\"", stream.toString());
     Assert.assertEquals(56, db.__memory());
     db.clear();
   }

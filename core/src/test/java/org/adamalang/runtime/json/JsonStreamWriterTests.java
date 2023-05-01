@@ -463,7 +463,7 @@ public class JsonStreamWriterTests {
   public void writeDate() {
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.writeNtDate(new NtDate(2021, 6, 17));
-    Assert.assertEquals("\"2021/6/17\"", writer.toString());
+    Assert.assertEquals("\"2021-06-17\"", writer.toString());
   }
 
   @Test

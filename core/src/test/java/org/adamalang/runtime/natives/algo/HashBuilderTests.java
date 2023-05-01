@@ -39,7 +39,7 @@ public class HashBuilderTests {
     hash.hashNtTime(new NtTime(13, 14));
     hash.hashNtTimeSpan(new NtTimeSpan(100));
     hash.hashNtDateTime(new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]")));
-    Assert.assertEquals("ttpYd5Gv3srhfbQvj0fvGk0A9qIRrSl81mu/uRRkVBTmCW5PXcaP0tkOM+78sQB3", hash.finish());
+    Assert.assertEquals("vNvWxgbcpGdiCJxs0y5avo8q8FgEeSq+s58wqyBH1Ps79feA8rPpZypP9HE+/jxB", hash.finish());
   }
 
   @Test

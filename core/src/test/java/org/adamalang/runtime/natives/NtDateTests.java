@@ -24,7 +24,7 @@ public class NtDateTests {
     Assert.assertNotEquals(d, "");
     Assert.assertNotEquals(d, null);
     d.hashCode();
-    Assert.assertEquals("2010/11/22", d.toString());
+    Assert.assertEquals("2010-11-22", d.toString());
     Assert.assertEquals(24, d.memory());
   }
 
