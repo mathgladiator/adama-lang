@@ -2,12 +2,14 @@
 
 This document is a living road map of the Adama Platform. As such, it contains the investment details for the entire vision and future products.
 
-## Developer Relations
+## Developer relations &amp; adoption
 
 | project                         | milestones/description                                                                                                                                                          |
 |---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| vs code extension               | (1.) Syntax high-lighting, (2.) Language server protocol (LSP) - local, (3) LSP - cloud, (4) new ".adama.deploy" file to have 1-click shipping                                  |
+| vs code extension               | (1.) Syntax highlighting, (2.) Language server protocol (LSP) - local, (3) LSP - cloud, (4) new ".adama.deploy" file to have 1-click shipping                                   |
+| sublime extension               | Since sublime is so fast, try to get core Adama language support for syntax highlighting                                                                                        |                                                                                                     
 | improve command line experience | (1) Create a new "micro-language" for defining the CLI api to leverage code generation, (2) use language to create new execution framework, (3) shell prediction and completion |
+| Android client                  | (1) Write a simplified web-socket interface, (2) implement interface with OkHttp, (3) update apikit code generator to produce a SDK talking to the web socket interface.        |
 
 ## Contributer Experience
 
@@ -43,20 +45,17 @@ This document is a living road map of the Adama Platform. As such, it contains t
 | control plane  | (1) Manual definition of raft shards definitions                                                                                                                                                                                                |
 
 ## Infrastructure - Multi-region &amp; massive scale
-| project    | milestones/description                  |
-|------------|-----------------------------------------|
-| proxy-mode | proxy the API from region A to region B |
+| project    | milestones                     |
+|------------|-------------------------------------------|
+| proxy-mode | proxy the WS API from region A to region B |
+| remote-finder | extend WS API to implement a Finder for region A to do core tasks |
+| finder in adama | Turn core service into a finder cache for web tier |
+| region-isolate | Allow regions to have storage for local documents |
 
 ## Infrastructure - Core Service
-| project | milestones/description  |
-|---------|------------|
-|  |            |
-
-## Roslin (RxImage)
-| project         | milestones/description                                                              |
-|-----------------|-------------------------------------------------------------------------------------|
-| runtime-android | (1) write a design document from Jeff's notes, (2) write a test version for Android |
-| runtime-web     | Implement runtime for web using rust                                                |
+| project | milestones/description        |
+|---------|-------------------------------|
+| dx      |  |
 
 ## RxHTML
 | project      | milestones/description                                                                |
@@ -66,6 +65,23 @@ This document is a living road map of the Adama Platform. As such, it contains t
 | time         | Custom component for selecting a time of day (Blocked on *components* model)          |
 | date         | Custom component for selecting a date or a date range (Blocked on *components* model) |
 | color        | Custom component for selecting a color (Blocked on *components* model)                |
+
+## Roslin (RxImage)
+| project           | milestones/description                               |
+|-------------------|------------------------------------------------------|
+| design document   | Write a design document from Jeff's notes            | 
+| runtime-android   | Implement a starting runtime for web using android   |
+| gameboard demo(s) | Write a game board demo of various games             |
+| runtime-web       | Implement runtime for web using rust                 |
+| rxhtml-integ      | Integrate runtime-web into RxHTML as a new component | 
+
+## RxApp
+
+| project         | milestones                                                                                               |
+|-----------------|----------------------------------------------------------------------------------------------------------|
+| design document | design a simple XML only way to build Android applications using reactive data binding similar to RxHTML |
+
+
 
 | project | milestones/description  |
 |---------|------------|
