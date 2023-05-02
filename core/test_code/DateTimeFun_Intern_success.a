@@ -1,0 +1,12 @@
+public long now;
+public date today;
+public datetime deepnow;
+public string zone;
+
+#sm {
+  now = Time.now();
+  today = Time.today();
+  deepnow = Time.datetime();
+  zone = Time.zone();
+  Time.setZone("America/Chicago");
+}

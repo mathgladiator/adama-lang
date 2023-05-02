@@ -32,6 +32,12 @@ public class GlobalObjectPool {
   }
 
   public static GlobalObjectPool createPoolWithStdLib() {
+    final TyNativeString tyStr = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null);
+    final TyNativeInteger tyInt = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null);
+    final TyNativeDouble tyDbl = new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null);
+    final TyNativeLong tyLng = new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null);
+    final TyNativeBoolean tyBool = new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null);
+
     final var pool = new GlobalObjectPool();
     pool.add(GlobalFactory.makeGlobal("String", LibString.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Math", LibMath.class, pool.extensions));
@@ -42,20 +48,24 @@ public class GlobalObjectPool {
     pool.add(GlobalFactory.makeGlobal("Dynamic", LibDynamic.class, pool.extensions));
     final var document = new TyNativeGlobalObject("Document", null, false);
     document.functions.put("destroy", generateInternalDocumentFunction("__destroyDocument", new TyNativeVoid()));
-    document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeVoid()));
-    document.functions.put("key", generateInternalDocumentFunction("__getKey", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null)));
-    document.functions.put("space", generateInternalDocumentFunction("__getSpace", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null)));
-    document.functions.put("seq", generateInternalDocumentFunction("__getSeq", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", tyInt, new TyNativeVoid()));
+    document.functions.put("key", generateInternalDocumentFunction("__getKey", tyStr));
+    document.functions.put("space", generateInternalDocumentFunction("__getSpace", tyStr));
+    document.functions.put("seq", generateInternalDocumentFunction("__getSeq", tyInt));
     pool.add(document);
     final var random = new TyNativeGlobalObject("Random", null, false);
-    random.functions.put("genBoundInt", generateInternalDocumentFunction("__randomBoundInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
-    random.functions.put("genInt", generateInternalDocumentFunction("__randomInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
-    random.functions.put("genDouble", generateInternalDocumentFunction("__randomDouble", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null)));
-    random.functions.put("getDoubleGaussian", generateInternalDocumentFunction("__randomGaussian", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null)));
-    random.functions.put("genLong", generateInternalDocumentFunction("__randomLong", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    random.functions.put("genBoundInt", generateInternalDocumentFunction("__randomBoundInt", tyInt, tyInt));
+    random.functions.put("genInt", generateInternalDocumentFunction("__randomInt", tyInt));
+    random.functions.put("genDouble", generateInternalDocumentFunction("__randomDouble", tyDbl));
+    random.functions.put("getDoubleGaussian", generateInternalDocumentFunction("__randomGaussian", tyDbl));
+    random.functions.put("genLong", generateInternalDocumentFunction("__randomLong", tyLng));
     pool.add(random);
     final var time = new TyNativeGlobalObject("Time", null, false);
-    time.functions.put("now", generateInternalDocumentFunction("__timeNow", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    time.functions.put("now", generateInternalDocumentFunction("__timeNow", tyLng));
+    time.functions.put("today", generateInternalDocumentFunction("__dateOfToday", new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    time.functions.put("datetime", generateInternalDocumentFunction("__datetimeNow", new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    time.functions.put("zone", generateInternalDocumentFunction("__timeZone", tyStr));
+    time.functions.put("setZone", generateInternalDocumentFunction("__setTimeZone", tyStr, tyBool));
     time.setParentOverride((GlobalFactory.makeGlobal("LibTime", LibTime.class, pool.extensions)));
     pool.add(time);
     return pool;

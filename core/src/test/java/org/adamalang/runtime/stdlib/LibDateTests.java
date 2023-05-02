@@ -14,6 +14,10 @@ import org.adamalang.runtime.natives.NtList;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+
 public class LibDateTests {
   @Test
   public void calendarViewOf_LaunchSample() {
@@ -112,5 +116,13 @@ public class LibDateTests {
   @Test
   public void monthNameEnglish_LaunchSample() {
     Assert.assertEquals("April", LibDate.monthNameEnglish(new NtDate(2023, 4, 25)));
+  }
+
+  @Test
+  public void timezone() {
+    ZoneId zid = ZoneId.systemDefault();
+    System.err.println(ZoneId.of("America/Chicago"));
+    System.err.println(zid);
+    System.err.println(ZoneId.getAvailableZoneIds());
   }
 }

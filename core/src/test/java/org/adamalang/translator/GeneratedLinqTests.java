@@ -265,6 +265,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
@@ -337,6 +340,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
@@ -394,6 +400,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__timezone\");");
+    gold.append("\n    __timezone.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
@@ -421,6 +429,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __timezone.__commit(\"__timezone\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
@@ -441,6 +450,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    instances.__revert();");
     gold.append("\n    /* root */");
@@ -954,10 +964,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:832");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"instances\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"instances\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"instances\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"instances\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"instances\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"instances\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -1088,6 +1098,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
@@ -1160,6 +1173,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
@@ -1217,6 +1233,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__timezone\");");
+    gold.append("\n    __timezone.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
@@ -1244,6 +1262,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __timezone.__commit(\"__timezone\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
@@ -1264,6 +1283,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    itbl.__revert();");
     gold.append("\n    /* root */");
@@ -2477,10 +2497,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:742");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"itbl\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"itbl\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"itbl\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"itbl\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"itbl\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"itbl\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -2659,6 +2679,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
@@ -2731,6 +2754,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
@@ -2788,6 +2814,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__timezone\");");
+    gold.append("\n    __timezone.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
@@ -2815,6 +2843,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __timezone.__commit(\"__timezone\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
@@ -2835,6 +2864,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    tbl.__revert();");
     gold.append("\n    /* root */");
@@ -3400,10 +3430,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":7}");
     gold.append("\nMEMORY:2654");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
-    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -3614,6 +3644,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
@@ -3710,6 +3743,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
@@ -3783,6 +3819,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__timezone\");");
+    gold.append("\n    __timezone.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
@@ -3810,6 +3848,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __timezone.__commit(\"__timezone\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
@@ -3838,6 +3877,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    z0.__revert();");
     gold.append("\n    z1.__revert();");
@@ -4746,10 +4786,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:4746");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"z0\":{},\"z1\":{\"tbl\":{},\"id\":0},\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"count1\":3,\"count2\":1,\"count3\":2,\"tbl2\":{\"4\":{\"x\":100,\"y\":3,\"id\":4},\"5\":{\"x\":2,\"y\":2,\"id\":5},\"6\":{\"x\":2,\"y\":2,\"id\":6},\"7\":{\"x\":100,\"y\":1,\"id\":7},\"8\":{\"x\":4,\"y\":2,\"id\":8},\"10\":{\"x\":1,\"y\":2,\"id\":10}},\"tbl3\":{\"11\":{\"x\":100,\"y\":3,\"id\":11},\"12\":{\"x\":2,\"y\":2,\"id\":12},\"13\":{\"x\":2,\"y\":2,\"id\":13},\"14\":{\"x\":100,\"y\":1,\"id\":14},\"15\":{\"x\":4,\"y\":2,\"id\":15},\"16\":{\"x\":1,\"y\":2,\"id\":16}},\"count_tbl2\":7,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":16,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"z0\":{},\"z1\":{\"tbl\":{},\"id\":0},\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"count1\":3,\"count2\":1,\"count3\":2,\"tbl2\":{\"4\":{\"x\":100,\"y\":3,\"id\":4},\"5\":{\"x\":2,\"y\":2,\"id\":5},\"6\":{\"x\":2,\"y\":2,\"id\":6},\"7\":{\"x\":100,\"y\":1,\"id\":7},\"8\":{\"x\":4,\"y\":2,\"id\":8},\"10\":{\"x\":1,\"y\":2,\"id\":10}},\"tbl3\":{\"11\":{\"x\":100,\"y\":3,\"id\":11},\"12\":{\"x\":2,\"y\":2,\"id\":12},\"13\":{\"x\":2,\"y\":2,\"id\":13},\"14\":{\"x\":100,\"y\":1,\"id\":14},\"15\":{\"x\":4,\"y\":2,\"id\":15},\"16\":{\"x\":1,\"y\":2,\"id\":16}},\"count_tbl2\":7,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":16,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"z0\":{},\"z1\":{\"tbl\":{},\"id\":0},\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"count1\":3,\"count2\":1,\"count3\":2,\"tbl2\":{\"4\":{\"x\":100,\"y\":3,\"id\":4},\"5\":{\"x\":2,\"y\":2,\"id\":5},\"6\":{\"x\":2,\"y\":2,\"id\":6},\"7\":{\"x\":100,\"y\":1,\"id\":7},\"8\":{\"x\":4,\"y\":2,\"id\":8},\"10\":{\"x\":1,\"y\":2,\"id\":10}},\"tbl3\":{\"11\":{\"x\":100,\"y\":3,\"id\":11},\"12\":{\"x\":2,\"y\":2,\"id\":12},\"13\":{\"x\":2,\"y\":2,\"id\":13},\"14\":{\"x\":100,\"y\":1,\"id\":14},\"15\":{\"x\":4,\"y\":2,\"id\":15},\"16\":{\"x\":1,\"y\":2,\"id\":16}},\"count_tbl2\":7,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":16,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"z0\":{},\"z1\":{\"tbl\":{},\"id\":0},\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"count1\":3,\"count2\":1,\"count3\":2,\"tbl2\":{\"4\":{\"x\":100,\"y\":3,\"id\":4},\"5\":{\"x\":2,\"y\":2,\"id\":5},\"6\":{\"x\":2,\"y\":2,\"id\":6},\"7\":{\"x\":100,\"y\":1,\"id\":7},\"8\":{\"x\":4,\"y\":2,\"id\":8},\"10\":{\"x\":1,\"y\":2,\"id\":10}},\"tbl3\":{\"11\":{\"x\":100,\"y\":3,\"id\":11},\"12\":{\"x\":2,\"y\":2,\"id\":12},\"13\":{\"x\":2,\"y\":2,\"id\":13},\"14\":{\"x\":100,\"y\":1,\"id\":14},\"15\":{\"x\":4,\"y\":2,\"id\":15},\"16\":{\"x\":1,\"y\":2,\"id\":16}},\"count_tbl2\":7,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":16,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"z0\":{},\"z1\":{\"tbl\":{},\"id\":0},\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"count1\":3,\"count2\":1,\"count3\":2,\"tbl2\":{\"4\":{\"x\":100,\"y\":3,\"id\":4},\"5\":{\"x\":2,\"y\":2,\"id\":5},\"6\":{\"x\":2,\"y\":2,\"id\":6},\"7\":{\"x\":100,\"y\":1,\"id\":7},\"8\":{\"x\":4,\"y\":2,\"id\":8},\"10\":{\"x\":1,\"y\":2,\"id\":10}},\"tbl3\":{\"11\":{\"x\":100,\"y\":3,\"id\":11},\"12\":{\"x\":2,\"y\":2,\"id\":12},\"13\":{\"x\":2,\"y\":2,\"id\":13},\"14\":{\"x\":100,\"y\":1,\"id\":14},\"15\":{\"x\":4,\"y\":2,\"id\":15},\"16\":{\"x\":1,\"y\":2,\"id\":16}},\"count_tbl2\":7,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":16,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"z0\":{},\"z1\":{\"tbl\":{},\"id\":0},\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}},\"count1\":3,\"count2\":1,\"count3\":2,\"tbl2\":{\"4\":{\"x\":100,\"y\":3,\"id\":4},\"5\":{\"x\":2,\"y\":2,\"id\":5},\"6\":{\"x\":2,\"y\":2,\"id\":6},\"7\":{\"x\":100,\"y\":1,\"id\":7},\"8\":{\"x\":4,\"y\":2,\"id\":8},\"10\":{\"x\":1,\"y\":2,\"id\":10}},\"tbl3\":{\"11\":{\"x\":100,\"y\":3,\"id\":11},\"12\":{\"x\":2,\"y\":2,\"id\":12},\"13\":{\"x\":2,\"y\":2,\"id\":13},\"14\":{\"x\":100,\"y\":1,\"id\":14},\"15\":{\"x\":4,\"y\":2,\"id\":15},\"16\":{\"x\":1,\"y\":2,\"id\":16}},\"count_tbl2\":7,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":16,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -4952,6 +4992,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
@@ -5027,6 +5070,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
@@ -5086,6 +5132,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__timezone\");");
+    gold.append("\n    __timezone.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
@@ -5113,6 +5161,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __timezone.__commit(\"__timezone\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
@@ -5134,6 +5183,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    tbl.__revert();");
     gold.append("\n    assocs.__revert();");
@@ -6182,10 +6232,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:5106");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":2,\"id\":1},\"2\":{\"x\":3,\"y\":3,\"id\":2}},\"assocs\":{\"3\":{\"x\":1,\"z\":42,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":2,\"id\":1},\"2\":{\"x\":3,\"y\":3,\"id\":2}},\"assocs\":{\"3\":{\"x\":1,\"z\":42,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":2,\"id\":1},\"2\":{\"x\":3,\"y\":3,\"id\":2}},\"assocs\":{\"3\":{\"x\":1,\"z\":42,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":2,\"id\":1},\"2\":{\"x\":3,\"y\":3,\"id\":2}},\"assocs\":{\"3\":{\"x\":1,\"z\":42,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":2,\"id\":1},\"2\":{\"x\":3,\"y\":3,\"id\":2}},\"assocs\":{\"3\":{\"x\":1,\"z\":42,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"x\":1,\"y\":2,\"id\":1},\"2\":{\"x\":3,\"y\":3,\"id\":2}},\"assocs\":{\"3\":{\"x\":1,\"z\":42,\"id\":3}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":3,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -6424,6 +6474,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
@@ -6496,6 +6549,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
@@ -6553,6 +6609,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__timezone\");");
+    gold.append("\n    __timezone.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
@@ -6580,6 +6638,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __timezone.__commit(\"__timezone\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
@@ -6600,6 +6659,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    tbl.__revert();");
     gold.append("\n    /* root */");
@@ -7449,10 +7509,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:5692");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"tbl\":{\"1\":{\"i\":4,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":1},\"2\":{\"i\":null,\"s\":null,\"b\":null,\"d\":3.14,\"i1\":123,\"id\":2},\"3\":{\"i\":null,\"s\":null,\"b\":true,\"d\":null,\"i1\":123,\"id\":3},\"4\":{\"i\":null,\"s\":\"Hi\",\"b\":null,\"d\":null,\"i1\":123,\"id\":4},\"5\":{\"i\":8,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":5},\"6\":{\"i\":null,\"s\":null,\"b\":null,\"d\":2.71,\"i1\":123,\"id\":6},\"7\":{\"i\":null,\"s\":null,\"b\":false,\"d\":null,\"i1\":123,\"id\":7},\"8\":{\"i\":null,\"s\":\"Joe\",\"b\":null,\"d\":null,\"i1\":123,\"id\":8}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":8,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"i\":4,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":1},\"2\":{\"i\":null,\"s\":null,\"b\":null,\"d\":3.14,\"i1\":123,\"id\":2},\"3\":{\"i\":null,\"s\":null,\"b\":true,\"d\":null,\"i1\":123,\"id\":3},\"4\":{\"i\":null,\"s\":\"Hi\",\"b\":null,\"d\":null,\"i1\":123,\"id\":4},\"5\":{\"i\":8,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":5},\"6\":{\"i\":null,\"s\":null,\"b\":null,\"d\":2.71,\"i1\":123,\"id\":6},\"7\":{\"i\":null,\"s\":null,\"b\":false,\"d\":null,\"i1\":123,\"id\":7},\"8\":{\"i\":null,\"s\":\"Joe\",\"b\":null,\"d\":null,\"i1\":123,\"id\":8}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":8,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"tbl\":{\"1\":{\"i\":4,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":1},\"2\":{\"i\":null,\"s\":null,\"b\":null,\"d\":3.14,\"i1\":123,\"id\":2},\"3\":{\"i\":null,\"s\":null,\"b\":true,\"d\":null,\"i1\":123,\"id\":3},\"4\":{\"i\":null,\"s\":\"Hi\",\"b\":null,\"d\":null,\"i1\":123,\"id\":4},\"5\":{\"i\":8,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":5},\"6\":{\"i\":null,\"s\":null,\"b\":null,\"d\":2.71,\"i1\":123,\"id\":6},\"7\":{\"i\":null,\"s\":null,\"b\":false,\"d\":null,\"i1\":123,\"id\":7},\"8\":{\"i\":null,\"s\":\"Joe\",\"b\":null,\"d\":null,\"i1\":123,\"id\":8}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":8,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"tbl\":{\"1\":{\"i\":4,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":1},\"2\":{\"i\":null,\"s\":null,\"b\":null,\"d\":3.14,\"i1\":123,\"id\":2},\"3\":{\"i\":null,\"s\":null,\"b\":true,\"d\":null,\"i1\":123,\"id\":3},\"4\":{\"i\":null,\"s\":\"Hi\",\"b\":null,\"d\":null,\"i1\":123,\"id\":4},\"5\":{\"i\":8,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":5},\"6\":{\"i\":null,\"s\":null,\"b\":null,\"d\":2.71,\"i1\":123,\"id\":6},\"7\":{\"i\":null,\"s\":null,\"b\":false,\"d\":null,\"i1\":123,\"id\":7},\"8\":{\"i\":null,\"s\":\"Joe\",\"b\":null,\"d\":null,\"i1\":123,\"id\":8}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":8,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"i\":4,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":1},\"2\":{\"i\":null,\"s\":null,\"b\":null,\"d\":3.14,\"i1\":123,\"id\":2},\"3\":{\"i\":null,\"s\":null,\"b\":true,\"d\":null,\"i1\":123,\"id\":3},\"4\":{\"i\":null,\"s\":\"Hi\",\"b\":null,\"d\":null,\"i1\":123,\"id\":4},\"5\":{\"i\":8,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":5},\"6\":{\"i\":null,\"s\":null,\"b\":null,\"d\":2.71,\"i1\":123,\"id\":6},\"7\":{\"i\":null,\"s\":null,\"b\":false,\"d\":null,\"i1\":123,\"id\":7},\"8\":{\"i\":null,\"s\":\"Joe\",\"b\":null,\"d\":null,\"i1\":123,\"id\":8}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":8,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"i\":4,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":1},\"2\":{\"i\":null,\"s\":null,\"b\":null,\"d\":3.14,\"i1\":123,\"id\":2},\"3\":{\"i\":null,\"s\":null,\"b\":true,\"d\":null,\"i1\":123,\"id\":3},\"4\":{\"i\":null,\"s\":\"Hi\",\"b\":null,\"d\":null,\"i1\":123,\"id\":4},\"5\":{\"i\":8,\"s\":null,\"b\":null,\"d\":null,\"i1\":123,\"id\":5},\"6\":{\"i\":null,\"s\":null,\"b\":null,\"d\":2.71,\"i1\":123,\"id\":6},\"7\":{\"i\":null,\"s\":null,\"b\":false,\"d\":null,\"i1\":123,\"id\":7},\"8\":{\"i\":null,\"s\":\"Joe\",\"b\":null,\"d\":null,\"i1\":123,\"id\":8}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":8,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -7583,6 +7643,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
@@ -7655,6 +7718,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
@@ -7712,6 +7778,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__timezone\");");
+    gold.append("\n    __timezone.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
@@ -7739,6 +7807,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __timezone.__commit(\"__timezone\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
@@ -7759,6 +7828,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
@@ -8288,10 +8358,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:766");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"t\":{\"1\":{\"x\":2,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"x\":2,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"t\":{\"1\":{\"x\":2,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"t\":{\"1\":{\"x\":2,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"x\":2,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"x\":2,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -8422,6 +8492,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
@@ -8494,6 +8567,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
@@ -8551,6 +8627,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__timezone\");");
+    gold.append("\n    __timezone.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
@@ -8578,6 +8656,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __timezone.__commit(\"__timezone\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
@@ -8598,6 +8677,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
@@ -9089,10 +9169,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:766");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"t\":{\"1\":{\"x\":0,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"x\":0,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"t\":{\"1\":{\"x\":0,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"t\":{\"1\":{\"x\":0,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"x\":0,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"x\":0,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -9243,6 +9323,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
@@ -9315,6 +9398,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
@@ -9372,6 +9458,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__timezone\");");
+    gold.append("\n    __timezone.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
@@ -9399,6 +9487,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __timezone.__commit(\"__timezone\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
@@ -9419,6 +9508,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
@@ -10116,10 +10206,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:81776");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":3},\"5\":{\"id\":5,\"z\":4},\"6\":{\"id\":6,\"z\":5},\"7\":{\"id\":7,\"z\":6},\"8\":{\"id\":8,\"z\":7},\"9\":{\"id\":9,\"z\":8},\"10\":{\"id\":10,\"z\":9},\"11\":{\"id\":11,\"z\":10},\"12\":{\"id\":12,\"z\":11},\"13\":{\"id\":13,\"z\":12},\"14\":{\"id\":14,\"z\":13},\"15\":{\"id\":15,\"z\":14},\"16\":{\"id\":16,\"z\":15},\"17\":{\"id\":17,\"z\":16},\"18\":{\"id\":18,\"z\":17},\"19\":{\"id\":19,\"z\":18},\"20\":{\"id\":20,\"z\":19},\"21\":{\"id\":21,\"z\":20},\"22\":{\"id\":22,\"z\":21},\"23\":{\"id\":23,\"z\":22},\"24\":{\"id\":24,\"z\":23},\"25\":{\"id\":25,\"z\":24},\"26\":{\"id\":26,\"z\":25},\"27\":{\"id\":27,\"z\":26},\"28\":{\"id\":28,\"z\":27},\"29\":{\"id\":29,\"z\":28},\"30\":{\"id\":30,\"z\":29},\"31\":{\"id\":31,\"z\":30},\"32\":{\"id\":32,\"z\":31},\"33\":{\"id\":33,\"z\":32},\"34\":{\"id\":34,\"z\":33},\"35\":{\"id\":35,\"z\":34},\"36\":{\"id\":36,\"z\":35},\"37\":{\"id\":37,\"z\":36},\"38\":{\"id\":38,\"z\":37},\"39\":{\"id\":39,\"z\":38},\"40\":{\"id\":40,\"z\":39},\"41\":{\"id\":41,\"z\":40},\"42\":{\"id\":42,\"z\":41},\"43\":{\"id\":43,\"z\":42},\"44\":{\"id\":44,\"z\":43},\"45\":{\"id\":45,\"z\":44},\"46\":{\"id\":46,\"z\":45},\"47\":{\"id\":47,\"z\":46},\"48\":{\"id\":48,\"z\":47},\"49\":{\"id\":49,\"z\":48},\"50\":{\"id\":50,\"z\":49},\"51\":{\"id\":51,\"z\":50},\"52\":{\"id\":52,\"z\":51},\"53\":{\"id\":53,\"z\":52},\"54\":{\"id\":54,\"z\":53},\"55\":{\"id\":55,\"z\":54},\"56\":{\"id\":56,\"z\":55},\"57\":{\"id\":57,\"z\":56},\"58\":{\"id\":58,\"z\":57},\"59\":{\"id\":59,\"z\":58},\"60\":{\"id\":60,\"z\":59},\"61\":{\"id\":61,\"z\":60},\"62\":{\"id\":62,\"z\":61},\"63\":{\"id\":63,\"z\":62},\"64\":{\"id\":64,\"z\":63},\"65\":{\"id\":65,\"z\":64},\"66\":{\"id\":66,\"z\":65},\"67\":{\"id\":67,\"z\":66},\"68\":{\"id\":68,\"z\":67},\"69\":{\"id\":69,\"z\":68},\"70\":{\"id\":70,\"z\":69},\"71\":{\"id\":71,\"z\":70},\"72\":{\"id\":72,\"z\":71},\"73\":{\"id\":73,\"z\":72},\"74\":{\"id\":74,\"z\":73},\"75\":{\"id\":75,\"z\":74},\"76\":{\"id\":76,\"z\":75},\"77\":{\"id\":77,\"z\":76},\"78\":{\"id\":78,\"z\":77},\"79\":{\"id\":79,\"z\":78},\"80\":{\"id\":80,\"z\":79},\"81\":{\"id\":81,\"z\":80},\"82\":{\"id\":82,\"z\":81},\"83\":{\"id\":83,\"z\":82},\"84\":{\"id\":84,\"z\":83},\"85\":{\"id\":85,\"z\":84},\"86\":{\"id\":86,\"z\":85},\"87\":{\"id\":87,\"z\":86},\"88\":{\"id\":88,\"z\":87},\"89\":{\"id\":89,\"z\":88},\"90\":{\"id\":90,\"z\":89},\"91\":{\"id\":91,\"z\":90},\"92\":{\"id\":92,\"z\":91},\"93\":{\"id\":93,\"z\":92},\"94\":{\"id\":94,\"z\":93},\"95\":{\"id\":95,\"z\":94},\"96\":{\"id\":96,\"z\":95},\"97\":{\"id\":97,\"z\":96},\"98\":{\"id\":98,\"z\":97},\"99\":{\"id\":99,\"z\":98},\"100\":{\"id\":100,\"z\":99}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":100,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":3},\"5\":{\"id\":5,\"z\":4},\"6\":{\"id\":6,\"z\":5},\"7\":{\"id\":7,\"z\":6},\"8\":{\"id\":8,\"z\":7},\"9\":{\"id\":9,\"z\":8},\"10\":{\"id\":10,\"z\":9},\"11\":{\"id\":11,\"z\":10},\"12\":{\"id\":12,\"z\":11},\"13\":{\"id\":13,\"z\":12},\"14\":{\"id\":14,\"z\":13},\"15\":{\"id\":15,\"z\":14},\"16\":{\"id\":16,\"z\":15},\"17\":{\"id\":17,\"z\":16},\"18\":{\"id\":18,\"z\":17},\"19\":{\"id\":19,\"z\":18},\"20\":{\"id\":20,\"z\":19},\"21\":{\"id\":21,\"z\":20},\"22\":{\"id\":22,\"z\":21},\"23\":{\"id\":23,\"z\":22},\"24\":{\"id\":24,\"z\":23},\"25\":{\"id\":25,\"z\":24},\"26\":{\"id\":26,\"z\":25},\"27\":{\"id\":27,\"z\":26},\"28\":{\"id\":28,\"z\":27},\"29\":{\"id\":29,\"z\":28},\"30\":{\"id\":30,\"z\":29},\"31\":{\"id\":31,\"z\":30},\"32\":{\"id\":32,\"z\":31},\"33\":{\"id\":33,\"z\":32},\"34\":{\"id\":34,\"z\":33},\"35\":{\"id\":35,\"z\":34},\"36\":{\"id\":36,\"z\":35},\"37\":{\"id\":37,\"z\":36},\"38\":{\"id\":38,\"z\":37},\"39\":{\"id\":39,\"z\":38},\"40\":{\"id\":40,\"z\":39},\"41\":{\"id\":41,\"z\":40},\"42\":{\"id\":42,\"z\":41},\"43\":{\"id\":43,\"z\":42},\"44\":{\"id\":44,\"z\":43},\"45\":{\"id\":45,\"z\":44},\"46\":{\"id\":46,\"z\":45},\"47\":{\"id\":47,\"z\":46},\"48\":{\"id\":48,\"z\":47},\"49\":{\"id\":49,\"z\":48},\"50\":{\"id\":50,\"z\":49},\"51\":{\"id\":51,\"z\":50},\"52\":{\"id\":52,\"z\":51},\"53\":{\"id\":53,\"z\":52},\"54\":{\"id\":54,\"z\":53},\"55\":{\"id\":55,\"z\":54},\"56\":{\"id\":56,\"z\":55},\"57\":{\"id\":57,\"z\":56},\"58\":{\"id\":58,\"z\":57},\"59\":{\"id\":59,\"z\":58},\"60\":{\"id\":60,\"z\":59},\"61\":{\"id\":61,\"z\":60},\"62\":{\"id\":62,\"z\":61},\"63\":{\"id\":63,\"z\":62},\"64\":{\"id\":64,\"z\":63},\"65\":{\"id\":65,\"z\":64},\"66\":{\"id\":66,\"z\":65},\"67\":{\"id\":67,\"z\":66},\"68\":{\"id\":68,\"z\":67},\"69\":{\"id\":69,\"z\":68},\"70\":{\"id\":70,\"z\":69},\"71\":{\"id\":71,\"z\":70},\"72\":{\"id\":72,\"z\":71},\"73\":{\"id\":73,\"z\":72},\"74\":{\"id\":74,\"z\":73},\"75\":{\"id\":75,\"z\":74},\"76\":{\"id\":76,\"z\":75},\"77\":{\"id\":77,\"z\":76},\"78\":{\"id\":78,\"z\":77},\"79\":{\"id\":79,\"z\":78},\"80\":{\"id\":80,\"z\":79},\"81\":{\"id\":81,\"z\":80},\"82\":{\"id\":82,\"z\":81},\"83\":{\"id\":83,\"z\":82},\"84\":{\"id\":84,\"z\":83},\"85\":{\"id\":85,\"z\":84},\"86\":{\"id\":86,\"z\":85},\"87\":{\"id\":87,\"z\":86},\"88\":{\"id\":88,\"z\":87},\"89\":{\"id\":89,\"z\":88},\"90\":{\"id\":90,\"z\":89},\"91\":{\"id\":91,\"z\":90},\"92\":{\"id\":92,\"z\":91},\"93\":{\"id\":93,\"z\":92},\"94\":{\"id\":94,\"z\":93},\"95\":{\"id\":95,\"z\":94},\"96\":{\"id\":96,\"z\":95},\"97\":{\"id\":97,\"z\":96},\"98\":{\"id\":98,\"z\":97},\"99\":{\"id\":99,\"z\":98},\"100\":{\"id\":100,\"z\":99}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":100,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":3},\"5\":{\"id\":5,\"z\":4},\"6\":{\"id\":6,\"z\":5},\"7\":{\"id\":7,\"z\":6},\"8\":{\"id\":8,\"z\":7},\"9\":{\"id\":9,\"z\":8},\"10\":{\"id\":10,\"z\":9},\"11\":{\"id\":11,\"z\":10},\"12\":{\"id\":12,\"z\":11},\"13\":{\"id\":13,\"z\":12},\"14\":{\"id\":14,\"z\":13},\"15\":{\"id\":15,\"z\":14},\"16\":{\"id\":16,\"z\":15},\"17\":{\"id\":17,\"z\":16},\"18\":{\"id\":18,\"z\":17},\"19\":{\"id\":19,\"z\":18},\"20\":{\"id\":20,\"z\":19},\"21\":{\"id\":21,\"z\":20},\"22\":{\"id\":22,\"z\":21},\"23\":{\"id\":23,\"z\":22},\"24\":{\"id\":24,\"z\":23},\"25\":{\"id\":25,\"z\":24},\"26\":{\"id\":26,\"z\":25},\"27\":{\"id\":27,\"z\":26},\"28\":{\"id\":28,\"z\":27},\"29\":{\"id\":29,\"z\":28},\"30\":{\"id\":30,\"z\":29},\"31\":{\"id\":31,\"z\":30},\"32\":{\"id\":32,\"z\":31},\"33\":{\"id\":33,\"z\":32},\"34\":{\"id\":34,\"z\":33},\"35\":{\"id\":35,\"z\":34},\"36\":{\"id\":36,\"z\":35},\"37\":{\"id\":37,\"z\":36},\"38\":{\"id\":38,\"z\":37},\"39\":{\"id\":39,\"z\":38},\"40\":{\"id\":40,\"z\":39},\"41\":{\"id\":41,\"z\":40},\"42\":{\"id\":42,\"z\":41},\"43\":{\"id\":43,\"z\":42},\"44\":{\"id\":44,\"z\":43},\"45\":{\"id\":45,\"z\":44},\"46\":{\"id\":46,\"z\":45},\"47\":{\"id\":47,\"z\":46},\"48\":{\"id\":48,\"z\":47},\"49\":{\"id\":49,\"z\":48},\"50\":{\"id\":50,\"z\":49},\"51\":{\"id\":51,\"z\":50},\"52\":{\"id\":52,\"z\":51},\"53\":{\"id\":53,\"z\":52},\"54\":{\"id\":54,\"z\":53},\"55\":{\"id\":55,\"z\":54},\"56\":{\"id\":56,\"z\":55},\"57\":{\"id\":57,\"z\":56},\"58\":{\"id\":58,\"z\":57},\"59\":{\"id\":59,\"z\":58},\"60\":{\"id\":60,\"z\":59},\"61\":{\"id\":61,\"z\":60},\"62\":{\"id\":62,\"z\":61},\"63\":{\"id\":63,\"z\":62},\"64\":{\"id\":64,\"z\":63},\"65\":{\"id\":65,\"z\":64},\"66\":{\"id\":66,\"z\":65},\"67\":{\"id\":67,\"z\":66},\"68\":{\"id\":68,\"z\":67},\"69\":{\"id\":69,\"z\":68},\"70\":{\"id\":70,\"z\":69},\"71\":{\"id\":71,\"z\":70},\"72\":{\"id\":72,\"z\":71},\"73\":{\"id\":73,\"z\":72},\"74\":{\"id\":74,\"z\":73},\"75\":{\"id\":75,\"z\":74},\"76\":{\"id\":76,\"z\":75},\"77\":{\"id\":77,\"z\":76},\"78\":{\"id\":78,\"z\":77},\"79\":{\"id\":79,\"z\":78},\"80\":{\"id\":80,\"z\":79},\"81\":{\"id\":81,\"z\":80},\"82\":{\"id\":82,\"z\":81},\"83\":{\"id\":83,\"z\":82},\"84\":{\"id\":84,\"z\":83},\"85\":{\"id\":85,\"z\":84},\"86\":{\"id\":86,\"z\":85},\"87\":{\"id\":87,\"z\":86},\"88\":{\"id\":88,\"z\":87},\"89\":{\"id\":89,\"z\":88},\"90\":{\"id\":90,\"z\":89},\"91\":{\"id\":91,\"z\":90},\"92\":{\"id\":92,\"z\":91},\"93\":{\"id\":93,\"z\":92},\"94\":{\"id\":94,\"z\":93},\"95\":{\"id\":95,\"z\":94},\"96\":{\"id\":96,\"z\":95},\"97\":{\"id\":97,\"z\":96},\"98\":{\"id\":98,\"z\":97},\"99\":{\"id\":99,\"z\":98},\"100\":{\"id\":100,\"z\":99}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":100,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":3},\"5\":{\"id\":5,\"z\":4},\"6\":{\"id\":6,\"z\":5},\"7\":{\"id\":7,\"z\":6},\"8\":{\"id\":8,\"z\":7},\"9\":{\"id\":9,\"z\":8},\"10\":{\"id\":10,\"z\":9},\"11\":{\"id\":11,\"z\":10},\"12\":{\"id\":12,\"z\":11},\"13\":{\"id\":13,\"z\":12},\"14\":{\"id\":14,\"z\":13},\"15\":{\"id\":15,\"z\":14},\"16\":{\"id\":16,\"z\":15},\"17\":{\"id\":17,\"z\":16},\"18\":{\"id\":18,\"z\":17},\"19\":{\"id\":19,\"z\":18},\"20\":{\"id\":20,\"z\":19},\"21\":{\"id\":21,\"z\":20},\"22\":{\"id\":22,\"z\":21},\"23\":{\"id\":23,\"z\":22},\"24\":{\"id\":24,\"z\":23},\"25\":{\"id\":25,\"z\":24},\"26\":{\"id\":26,\"z\":25},\"27\":{\"id\":27,\"z\":26},\"28\":{\"id\":28,\"z\":27},\"29\":{\"id\":29,\"z\":28},\"30\":{\"id\":30,\"z\":29},\"31\":{\"id\":31,\"z\":30},\"32\":{\"id\":32,\"z\":31},\"33\":{\"id\":33,\"z\":32},\"34\":{\"id\":34,\"z\":33},\"35\":{\"id\":35,\"z\":34},\"36\":{\"id\":36,\"z\":35},\"37\":{\"id\":37,\"z\":36},\"38\":{\"id\":38,\"z\":37},\"39\":{\"id\":39,\"z\":38},\"40\":{\"id\":40,\"z\":39},\"41\":{\"id\":41,\"z\":40},\"42\":{\"id\":42,\"z\":41},\"43\":{\"id\":43,\"z\":42},\"44\":{\"id\":44,\"z\":43},\"45\":{\"id\":45,\"z\":44},\"46\":{\"id\":46,\"z\":45},\"47\":{\"id\":47,\"z\":46},\"48\":{\"id\":48,\"z\":47},\"49\":{\"id\":49,\"z\":48},\"50\":{\"id\":50,\"z\":49},\"51\":{\"id\":51,\"z\":50},\"52\":{\"id\":52,\"z\":51},\"53\":{\"id\":53,\"z\":52},\"54\":{\"id\":54,\"z\":53},\"55\":{\"id\":55,\"z\":54},\"56\":{\"id\":56,\"z\":55},\"57\":{\"id\":57,\"z\":56},\"58\":{\"id\":58,\"z\":57},\"59\":{\"id\":59,\"z\":58},\"60\":{\"id\":60,\"z\":59},\"61\":{\"id\":61,\"z\":60},\"62\":{\"id\":62,\"z\":61},\"63\":{\"id\":63,\"z\":62},\"64\":{\"id\":64,\"z\":63},\"65\":{\"id\":65,\"z\":64},\"66\":{\"id\":66,\"z\":65},\"67\":{\"id\":67,\"z\":66},\"68\":{\"id\":68,\"z\":67},\"69\":{\"id\":69,\"z\":68},\"70\":{\"id\":70,\"z\":69},\"71\":{\"id\":71,\"z\":70},\"72\":{\"id\":72,\"z\":71},\"73\":{\"id\":73,\"z\":72},\"74\":{\"id\":74,\"z\":73},\"75\":{\"id\":75,\"z\":74},\"76\":{\"id\":76,\"z\":75},\"77\":{\"id\":77,\"z\":76},\"78\":{\"id\":78,\"z\":77},\"79\":{\"id\":79,\"z\":78},\"80\":{\"id\":80,\"z\":79},\"81\":{\"id\":81,\"z\":80},\"82\":{\"id\":82,\"z\":81},\"83\":{\"id\":83,\"z\":82},\"84\":{\"id\":84,\"z\":83},\"85\":{\"id\":85,\"z\":84},\"86\":{\"id\":86,\"z\":85},\"87\":{\"id\":87,\"z\":86},\"88\":{\"id\":88,\"z\":87},\"89\":{\"id\":89,\"z\":88},\"90\":{\"id\":90,\"z\":89},\"91\":{\"id\":91,\"z\":90},\"92\":{\"id\":92,\"z\":91},\"93\":{\"id\":93,\"z\":92},\"94\":{\"id\":94,\"z\":93},\"95\":{\"id\":95,\"z\":94},\"96\":{\"id\":96,\"z\":95},\"97\":{\"id\":97,\"z\":96},\"98\":{\"id\":98,\"z\":97},\"99\":{\"id\":99,\"z\":98},\"100\":{\"id\":100,\"z\":99}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":100,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":3},\"5\":{\"id\":5,\"z\":4},\"6\":{\"id\":6,\"z\":5},\"7\":{\"id\":7,\"z\":6},\"8\":{\"id\":8,\"z\":7},\"9\":{\"id\":9,\"z\":8},\"10\":{\"id\":10,\"z\":9},\"11\":{\"id\":11,\"z\":10},\"12\":{\"id\":12,\"z\":11},\"13\":{\"id\":13,\"z\":12},\"14\":{\"id\":14,\"z\":13},\"15\":{\"id\":15,\"z\":14},\"16\":{\"id\":16,\"z\":15},\"17\":{\"id\":17,\"z\":16},\"18\":{\"id\":18,\"z\":17},\"19\":{\"id\":19,\"z\":18},\"20\":{\"id\":20,\"z\":19},\"21\":{\"id\":21,\"z\":20},\"22\":{\"id\":22,\"z\":21},\"23\":{\"id\":23,\"z\":22},\"24\":{\"id\":24,\"z\":23},\"25\":{\"id\":25,\"z\":24},\"26\":{\"id\":26,\"z\":25},\"27\":{\"id\":27,\"z\":26},\"28\":{\"id\":28,\"z\":27},\"29\":{\"id\":29,\"z\":28},\"30\":{\"id\":30,\"z\":29},\"31\":{\"id\":31,\"z\":30},\"32\":{\"id\":32,\"z\":31},\"33\":{\"id\":33,\"z\":32},\"34\":{\"id\":34,\"z\":33},\"35\":{\"id\":35,\"z\":34},\"36\":{\"id\":36,\"z\":35},\"37\":{\"id\":37,\"z\":36},\"38\":{\"id\":38,\"z\":37},\"39\":{\"id\":39,\"z\":38},\"40\":{\"id\":40,\"z\":39},\"41\":{\"id\":41,\"z\":40},\"42\":{\"id\":42,\"z\":41},\"43\":{\"id\":43,\"z\":42},\"44\":{\"id\":44,\"z\":43},\"45\":{\"id\":45,\"z\":44},\"46\":{\"id\":46,\"z\":45},\"47\":{\"id\":47,\"z\":46},\"48\":{\"id\":48,\"z\":47},\"49\":{\"id\":49,\"z\":48},\"50\":{\"id\":50,\"z\":49},\"51\":{\"id\":51,\"z\":50},\"52\":{\"id\":52,\"z\":51},\"53\":{\"id\":53,\"z\":52},\"54\":{\"id\":54,\"z\":53},\"55\":{\"id\":55,\"z\":54},\"56\":{\"id\":56,\"z\":55},\"57\":{\"id\":57,\"z\":56},\"58\":{\"id\":58,\"z\":57},\"59\":{\"id\":59,\"z\":58},\"60\":{\"id\":60,\"z\":59},\"61\":{\"id\":61,\"z\":60},\"62\":{\"id\":62,\"z\":61},\"63\":{\"id\":63,\"z\":62},\"64\":{\"id\":64,\"z\":63},\"65\":{\"id\":65,\"z\":64},\"66\":{\"id\":66,\"z\":65},\"67\":{\"id\":67,\"z\":66},\"68\":{\"id\":68,\"z\":67},\"69\":{\"id\":69,\"z\":68},\"70\":{\"id\":70,\"z\":69},\"71\":{\"id\":71,\"z\":70},\"72\":{\"id\":72,\"z\":71},\"73\":{\"id\":73,\"z\":72},\"74\":{\"id\":74,\"z\":73},\"75\":{\"id\":75,\"z\":74},\"76\":{\"id\":76,\"z\":75},\"77\":{\"id\":77,\"z\":76},\"78\":{\"id\":78,\"z\":77},\"79\":{\"id\":79,\"z\":78},\"80\":{\"id\":80,\"z\":79},\"81\":{\"id\":81,\"z\":80},\"82\":{\"id\":82,\"z\":81},\"83\":{\"id\":83,\"z\":82},\"84\":{\"id\":84,\"z\":83},\"85\":{\"id\":85,\"z\":84},\"86\":{\"id\":86,\"z\":85},\"87\":{\"id\":87,\"z\":86},\"88\":{\"id\":88,\"z\":87},\"89\":{\"id\":89,\"z\":88},\"90\":{\"id\":90,\"z\":89},\"91\":{\"id\":91,\"z\":90},\"92\":{\"id\":92,\"z\":91},\"93\":{\"id\":93,\"z\":92},\"94\":{\"id\":94,\"z\":93},\"95\":{\"id\":95,\"z\":94},\"96\":{\"id\":96,\"z\":95},\"97\":{\"id\":97,\"z\":96},\"98\":{\"id\":98,\"z\":97},\"99\":{\"id\":99,\"z\":98},\"100\":{\"id\":100,\"z\":99}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":100,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":3},\"5\":{\"id\":5,\"z\":4},\"6\":{\"id\":6,\"z\":5},\"7\":{\"id\":7,\"z\":6},\"8\":{\"id\":8,\"z\":7},\"9\":{\"id\":9,\"z\":8},\"10\":{\"id\":10,\"z\":9},\"11\":{\"id\":11,\"z\":10},\"12\":{\"id\":12,\"z\":11},\"13\":{\"id\":13,\"z\":12},\"14\":{\"id\":14,\"z\":13},\"15\":{\"id\":15,\"z\":14},\"16\":{\"id\":16,\"z\":15},\"17\":{\"id\":17,\"z\":16},\"18\":{\"id\":18,\"z\":17},\"19\":{\"id\":19,\"z\":18},\"20\":{\"id\":20,\"z\":19},\"21\":{\"id\":21,\"z\":20},\"22\":{\"id\":22,\"z\":21},\"23\":{\"id\":23,\"z\":22},\"24\":{\"id\":24,\"z\":23},\"25\":{\"id\":25,\"z\":24},\"26\":{\"id\":26,\"z\":25},\"27\":{\"id\":27,\"z\":26},\"28\":{\"id\":28,\"z\":27},\"29\":{\"id\":29,\"z\":28},\"30\":{\"id\":30,\"z\":29},\"31\":{\"id\":31,\"z\":30},\"32\":{\"id\":32,\"z\":31},\"33\":{\"id\":33,\"z\":32},\"34\":{\"id\":34,\"z\":33},\"35\":{\"id\":35,\"z\":34},\"36\":{\"id\":36,\"z\":35},\"37\":{\"id\":37,\"z\":36},\"38\":{\"id\":38,\"z\":37},\"39\":{\"id\":39,\"z\":38},\"40\":{\"id\":40,\"z\":39},\"41\":{\"id\":41,\"z\":40},\"42\":{\"id\":42,\"z\":41},\"43\":{\"id\":43,\"z\":42},\"44\":{\"id\":44,\"z\":43},\"45\":{\"id\":45,\"z\":44},\"46\":{\"id\":46,\"z\":45},\"47\":{\"id\":47,\"z\":46},\"48\":{\"id\":48,\"z\":47},\"49\":{\"id\":49,\"z\":48},\"50\":{\"id\":50,\"z\":49},\"51\":{\"id\":51,\"z\":50},\"52\":{\"id\":52,\"z\":51},\"53\":{\"id\":53,\"z\":52},\"54\":{\"id\":54,\"z\":53},\"55\":{\"id\":55,\"z\":54},\"56\":{\"id\":56,\"z\":55},\"57\":{\"id\":57,\"z\":56},\"58\":{\"id\":58,\"z\":57},\"59\":{\"id\":59,\"z\":58},\"60\":{\"id\":60,\"z\":59},\"61\":{\"id\":61,\"z\":60},\"62\":{\"id\":62,\"z\":61},\"63\":{\"id\":63,\"z\":62},\"64\":{\"id\":64,\"z\":63},\"65\":{\"id\":65,\"z\":64},\"66\":{\"id\":66,\"z\":65},\"67\":{\"id\":67,\"z\":66},\"68\":{\"id\":68,\"z\":67},\"69\":{\"id\":69,\"z\":68},\"70\":{\"id\":70,\"z\":69},\"71\":{\"id\":71,\"z\":70},\"72\":{\"id\":72,\"z\":71},\"73\":{\"id\":73,\"z\":72},\"74\":{\"id\":74,\"z\":73},\"75\":{\"id\":75,\"z\":74},\"76\":{\"id\":76,\"z\":75},\"77\":{\"id\":77,\"z\":76},\"78\":{\"id\":78,\"z\":77},\"79\":{\"id\":79,\"z\":78},\"80\":{\"id\":80,\"z\":79},\"81\":{\"id\":81,\"z\":80},\"82\":{\"id\":82,\"z\":81},\"83\":{\"id\":83,\"z\":82},\"84\":{\"id\":84,\"z\":83},\"85\":{\"id\":85,\"z\":84},\"86\":{\"id\":86,\"z\":85},\"87\":{\"id\":87,\"z\":86},\"88\":{\"id\":88,\"z\":87},\"89\":{\"id\":89,\"z\":88},\"90\":{\"id\":90,\"z\":89},\"91\":{\"id\":91,\"z\":90},\"92\":{\"id\":92,\"z\":91},\"93\":{\"id\":93,\"z\":92},\"94\":{\"id\":94,\"z\":93},\"95\":{\"id\":95,\"z\":94},\"96\":{\"id\":96,\"z\":95},\"97\":{\"id\":97,\"z\":96},\"98\":{\"id\":98,\"z\":97},\"99\":{\"id\":99,\"z\":98},\"100\":{\"id\":100,\"z\":99}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":100,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -10250,6 +10340,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
     gold.append("\n            break;");
@@ -10322,6 +10415,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__timezone\":");
+    gold.append("\n            __timezone.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
@@ -10379,6 +10475,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__timezone\");");
+    gold.append("\n    __timezone.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_gen\");");
@@ -10406,6 +10504,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __timezone.__commit(\"__timezone\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
@@ -10426,6 +10525,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
@@ -11051,10 +11151,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:608");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"t\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"t\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"t\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"t\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");

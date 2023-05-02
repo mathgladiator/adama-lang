@@ -26,9 +26,7 @@ import org.adamalang.runtime.exceptions.*;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
-import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtMessageBase;
-import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.natives.*;
 import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
@@ -37,6 +35,9 @@ import org.adamalang.runtime.stdlib.LibPrincipal;
 import org.adamalang.runtime.sys.web.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 /** The central class for a living document (i.e. a tiny VM) */
@@ -62,6 +63,8 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final RxString __state;
   protected final RxInt64 __time;
   protected final RxCache __cache;
+  protected final RxString __timezone;
+  private ZoneId __timezoneCachedZoneId;
   private final TreeMap<NtPrincipal, Integer> __clients;
   private final HashMap<NtPrincipal, ArrayList<PrivateView>> __trackedViews;
   private final HashMap<String, Long> __dedupe;
@@ -110,6 +113,8 @@ public abstract class LivingDocument implements RxParent, Caller {
     __auto_gen = new RxInt32(this, 0);
     __routing = new TreeMap<>();
     __deliverer = Deliverer.FAILURE;
+    __timezone = new RxString(this, "UTC");
+    __timezoneCachedZoneId = ZoneId.of(__timezone.get());
   }
 
   /** bind a route to a cache */
@@ -126,6 +131,40 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** exposed: get the current time */
   protected long __timeNow() {
     return __time.get().longValue();
+  }
+
+  /** exposed: set the document's time zone */
+  protected boolean __setTimeZone(String timezone) {
+    try {
+      ZoneId zoneId = ZoneId.of(timezone);
+      if (zoneId != null) {
+        __timezone.set(timezone);
+        __timezoneCachedZoneId = zoneId;
+        return true;
+      }
+    } catch (Exception nope) {
+    }
+    return false;
+  }
+
+  /** exposed: get the document's time zone */
+  protected String __timeZone() {
+    return __timezone.get();
+  }
+
+  /** exposed: get the document's timestamp as a date */
+  protected NtDate __dateOfToday() {
+    ZonedDateTime dt = __datetimeNow().dateTime;
+    return new NtDate(dt.getYear(), dt.getMonthValue(), dt.getDayOfMonth());
+  }
+
+  /** exposed: get the document's timestamp as a datetime */
+  protected NtDateTime __datetimeNow() {
+    // create a system instance
+    Instant instant = Instant.ofEpochMilli(__time.get().longValue());
+    ZonedDateTime pdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+    // convert to the document
+    return new NtDateTime(pdt.withZoneSameInstant(__timezoneCachedZoneId));
   }
 
   /** is the given route id in-flight */
