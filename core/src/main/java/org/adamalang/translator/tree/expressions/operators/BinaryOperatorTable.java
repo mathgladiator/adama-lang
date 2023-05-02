@@ -529,10 +529,10 @@ public class BinaryOperatorTable {
       insert(tyString, "==", tyString, tyBoolean, "(%s).equals(%s)", false);
       insert(tyLabel, "==", tyLabel, tyBoolean, "(%s).equals(%s)", false);
 
-      insert(tyMaybeInt, "==", tyInt, tyBoolean, "LibMath.equality(%s, %s, (__x, __y) -> __x == __y)", false);
-      insert(tyInt, "==", tyMaybeInt, tyBoolean, "LibMath.equality(%s, %s, (__x, __y) -> __x == __y)", true);
-      insert(tyMaybeLong, "==", tyLong, tyBoolean, "LibMath.equality(%s, %s, (__x, __y) -> __x == __y)", false);
-      insert(tyLong, "==", tyMaybeLong, tyBoolean, "LibMath.equality(%s, %s, (__x, __y) -> __x == __y)", true);
+      insert(tyMaybeInt, "==", tyInt, tyBoolean, "LibMath.equality(%s, %s, (__x, __y) -> __x.intValue() == __y)", false);
+      insert(tyInt, "==", tyMaybeInt, tyBoolean, "LibMath.equality(%s, %s, (__x, __y) -> __x.intValue() == __y)", true);
+      insert(tyMaybeLong, "==", tyLong, tyBoolean, "LibMath.equality(%s, %s, (__x, __y) -> __x.longValue() == __y)", false);
+      insert(tyLong, "==", tyMaybeLong, tyBoolean, "LibMath.equality(%s, %s, (__x, __y) -> __x.longValue() == __y)", true);
       insert(tyMaybeDouble, "==", tyDouble, tyBoolean, "LibMath.equality(%s, %s, (__x, __y) -> LibMath.near(__x, __y))", false);
       insert(tyDouble, "==", tyMaybeDouble, tyBoolean, "LibMath.equality(%s, %s, (__x, __y) -> LibMath.near(__x, __y))", true);
       insert(tyMaybeComplex, "==", tyComplex, tyBoolean, "LibMath.equality(%s, %s, (__x, __y) -> LibMath.near(__x, __y))", false);
@@ -569,10 +569,10 @@ public class BinaryOperatorTable {
       insert(tyString, "!=", tyString, tyBoolean, "!(%s).equals(%s)", false);
       insert(tyLabel, "!=", tyLabel, tyBoolean, "!(%s).equals(%s)", false);
 
-      insert(tyMaybeInt, "!=", tyInt, tyBoolean, "!LibMath.equality(%s, %s, (__x, __y) -> __x == __y)", false);
-      insert(tyInt, "!=", tyMaybeInt, tyBoolean, "!LibMath.equality(%s, %s, (__x, __y) -> __x == __y)", true);
-      insert(tyMaybeLong, "!=", tyLong, tyBoolean, "!LibMath.equality(%s, %s, (__x, __y) -> __x == __y)", false);
-      insert(tyLong, "!=", tyMaybeLong, tyBoolean, "!LibMath.equality(%s, %s, (__x, __y) -> __x == __y)", true);
+      insert(tyMaybeInt, "!=", tyInt, tyBoolean, "!LibMath.equality(%s, %s, (__x, __y) -> __x.intValue() == __y)", false);
+      insert(tyInt, "!=", tyMaybeInt, tyBoolean, "!LibMath.equality(%s, %s, (__x, __y) -> __x.intValue() == __y)", true);
+      insert(tyMaybeLong, "!=", tyLong, tyBoolean, "!LibMath.equality(%s, %s, (__x, __y) -> __x.longValue() == __y)", false);
+      insert(tyLong, "!=", tyMaybeLong, tyBoolean, "!LibMath.equality(%s, %s, (__x, __y) -> __x.longValue() == __y)", true);
       insert(tyMaybeDouble, "!=", tyDouble, tyBoolean, "!LibMath.equality(%s, %s, (__x, __y) -> LibMath.near(__x, __y))", false);
       insert(tyDouble, "!=", tyMaybeDouble, tyBoolean, "!LibMath.equality(%s, %s, (__x, __y) -> LibMath.near(__x, __y))", true);
       insert(tyMaybeComplex, "!=", tyComplex, tyBoolean, "!LibMath.equality(%s, %s, (__x, __y) -> LibMath.near(__x, __y))", false);

@@ -9,6 +9,7 @@
 package org.adamalang.runtime.natives;
 
 import org.adamalang.runtime.mocks.MockCanGetAndSet;
+import org.adamalang.runtime.stdlib.LibMath;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -117,5 +118,11 @@ public class NtMaybeTests {
     maybe.delete();
     Assert.assertFalse(maybe.unpackTransfer((x) -> new NtMaybe<>(x * x)).has());
     Assert.assertEquals("", maybe.toString());
+  }
+
+  @Test
+  public void regression() {
+    NtMaybe<Integer> i871 = new NtMaybe<>(871);
+    Assert.assertTrue(LibMath.equality(i871, 871, (__x, __y) -> __x.intValue() == __y));
   }
 }

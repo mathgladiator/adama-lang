@@ -27,22 +27,22 @@ This document is a living road map of the Adama Platform. As such, it contains t
 |--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | index-tensor | Tables should be indexable based on integer tuples. Beyond efficiency, language extensions can help work with tables in a more natural array style (think 2D grids) |
 | index-graph  | Tables should be able to become hyper graphs for efficient navigation between records using a graph where edges can be annotated (this maps)                        |
-| math-matrix | The type system and math library should come with vectors and matrices out of the box |
+| math-matrix  | The type system and math library should come with vectors and matrices out of the box                                                                               |
 
 ## Infrastructure - Protocols
-| project  | milestones/description                                                                                    |
-|----------|-----------------------------------------------------------------------------------------------------------|
-| mqtt     | (1) Write design document how to adapt Adama to MQTT, (2) Build it with TLS, (3) Built it with plain-text |
-| sse      | (1) Write design document how to adapt Adama to Server-Sent Events, (2) Build it with TLS                 |                             
+| project   | milestones/description                                                                                    |
+|-----------|-----------------------------------------------------------------------------------------------------------|
+| mqtt      | (1) Write design document how to adapt Adama to MQTT, (2) Build it with TLS, (3) Built it with plain-text |
+| sse       | (1) Write design document how to adapt Adama to Server-Sent Events, (2) Build it with TLS                 |                             
 | web async | Allow all web operations operations to become asynchronous                                                |
 
 ## Infrastructure - Enterprise data
-| project        | milestones/description                                                                                                                                                                                                                          |
-|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| project        | milestones/description                                                                                                                                                                                                                 |
+|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | smaller deltas | (1) Define a log format that leverages binary serialization and compacts field definitions, (2) convert JSON deltas to binary in the logger to measure impact (throughput and latency), (3) leverage format upstream to minimize future network |
-| healing log    | Implement a log data structure that can heal (anti entropy) across machines using Adama's network stack                                                                                                                                         |
-| raft           | Implement raft leader election and log append using Adama's network stack                                                                                                                                                                       |
-| control plane  | (1) Manual definition of raft shards definitions                                                                                                                                                                                                |
+| healing log    | Implement a log data structure that can heal (anti entropy) across machines using Adama's network stack                                                                                                                                |
+| raft           | Implement raft leader election and log append using Adama's network stack                                                                                                                                                              |
+| control plane  | (1) Manual definition of raft shards definitions, (2) automatic machine management                                                                                                                                                     |
 
 ## Infrastructure - Multi-region &amp; massive scale
 | project    | milestones                     |
@@ -56,6 +56,11 @@ This document is a living road map of the Adama Platform. As such, it contains t
 | project | milestones/description        |
 |---------|-------------------------------|
 | dx      |  |
+
+## Infrastructure - Overlord
+| --------- | -------------------------------                                                                                           |
+|-----------|---------------------------------------------------------------------------------------------------------------------------|
+| canary    | for testing the service health and correctness; overlord should maintain a constant state of various high-value API calls |
 
 ## RxHTML
 | project      | milestones/description                                                                |

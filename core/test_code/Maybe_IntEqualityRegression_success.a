@@ -1,0 +1,16 @@
+record R {
+  public maybe<int> val;
+}
+
+table<R> tbl;
+
+public formula all = iterate tbl;
+
+@construct {
+  tbl <- {val:0};
+  tbl <- {val:42};
+  tbl <- {val:42};
+}
+
+public formula v1 = iterate tbl where val == 42;
+public formula v2 = iterate tbl where 42 == val;
