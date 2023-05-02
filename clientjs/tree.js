@@ -351,8 +351,9 @@ function AdamaTree() {
       if (k[0] == "#" || k == "@o" || k == "__key") continue; // skip these
       var v = st[k];
       if (("#" + k) in st) { // the result is an array
+        var pv = st['#' + k];
         var d = {};
-        if ("@o" in st["#" + k]) { // and we have a specific ordering to memoize
+        if ("@o" in pv) { // and we have a specific ordering to memoize
           var o = [];
           for (var j = 0; j < v.length; j++) { // copy the elements from the array
             var vj = v[j];
@@ -362,7 +363,7 @@ function AdamaTree() {
           d["@o"] = o;
         } else { // otherwise; record the size as we recurse
           for (var j = 0; j < v.length; j++) {
-            d["" + j] = make_delta(v[j]);
+            d["" + j] = make_delta(pv[j]);
           }
           d["@s"] = v.length;
         }
