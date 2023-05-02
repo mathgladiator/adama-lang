@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.expressions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -60,5 +61,11 @@ public class PairCons extends Expression {
     sb.append(",");
     value.writeJava(sb, environment);
     sb.append(")");
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    key.free(environment);
+    value.free(environment);
   }
 }

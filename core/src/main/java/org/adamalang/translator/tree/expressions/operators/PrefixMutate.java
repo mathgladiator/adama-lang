@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.expressions.operators;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.operands.PrefixMutateOp;
@@ -88,5 +89,10 @@ public class PrefixMutate extends Expression {
         sb.append(".transform((item) -> ").append(op.javaOp).append("item)");
         break;
     }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    expression.free(environment);
   }
 }

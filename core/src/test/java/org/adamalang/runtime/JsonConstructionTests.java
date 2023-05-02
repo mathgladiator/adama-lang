@@ -28,7 +28,7 @@ public class JsonConstructionTests {
         "{\"x\":123,\"y\":3.14,\"z\":\"w00t\",\"b\":true}",
         new RealDocumentSetup.AssertInt(4));
     Assert.assertEquals(
-        "{\"xx\":123,\"yy\":3.14,\"zz\":\"w00t\",\"bb\":true,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":4,\"__entropy\":\"-4186135525725789677\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"0\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__dedupe\":{\"?/?/marker\":\"0\"},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}",
+        "{\"xx\":123,\"yy\":3.14,\"zz\":\"w00t\",\"bb\":true,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":4,\"__entropy\":\"-4186135525725789677\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"0\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__dedupe\":{\"?/?/marker\":\"0\"},\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}",
         setup.document.json());
   }
 

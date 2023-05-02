@@ -12,6 +12,7 @@ package org.adamalang.translator.tree.expressions;
 import org.adamalang.translator.codegen.CodeGenFunctions;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
@@ -281,6 +282,14 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       for (final String line : latentLines) {
         sb.append(line).writeNewline();
       }
+    }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    expression.free(environment);
+    for (var arg : args) {
+      arg.item.free(environment);
     }
   }
 }

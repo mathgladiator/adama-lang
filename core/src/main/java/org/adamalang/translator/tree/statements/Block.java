@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.statements;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 
@@ -122,5 +123,13 @@ public class Block extends Statement {
   public void end(final Token closeBraceToken) {
     this.closeBraceToken = closeBraceToken;
     ingest(closeBraceToken);
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    FreeEnvironment next = environment.push();
+    for (Statement stmt : statements) {
+      stmt.free(next);
+    }
   }
 }

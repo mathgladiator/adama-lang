@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.privacy;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetAsync;
@@ -62,5 +63,10 @@ public class ViewerIsPolicy extends Policy {
   @Override
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
     writer.writeString("viewer_is");
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    environment.require(fieldToken.text);
   }
 }

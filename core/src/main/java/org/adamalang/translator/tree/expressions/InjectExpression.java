@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.expressions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.TyType;
 
@@ -29,5 +30,9 @@ public abstract class InjectExpression extends Expression {
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     return type;
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
   }
 }

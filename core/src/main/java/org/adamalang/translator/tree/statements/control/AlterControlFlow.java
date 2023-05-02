@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.statements.control;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.ControlFlow;
@@ -61,5 +62,9 @@ public class AlterControlFlow extends Statement {
     } else if (how == AlterControlFlowMode.Block) {
       sb.append("throw new ComputeBlockedException(null, null);");
     }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
   }
 }

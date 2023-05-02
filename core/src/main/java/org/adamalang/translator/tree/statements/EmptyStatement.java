@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.statements;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 
@@ -37,5 +38,9 @@ public class EmptyStatement extends Statement {
   @Override
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
     sb.append(";").writeNewline();
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
   }
 }

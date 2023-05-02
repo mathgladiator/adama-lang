@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.expressions.operators;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
@@ -72,5 +73,10 @@ public class Parentheses extends Expression implements SupportsTwoPhaseTyping {
       ((SupportsTwoPhaseTyping) expression).upgradeType(environment, newType);
     }
     cachedType = newType;
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    expression.free(environment);
   }
 }

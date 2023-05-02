@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.expressions.linq;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
@@ -52,5 +53,10 @@ public class Iterate extends LinqExpression {
   public void writeJava(final StringBuilder sb, final Environment environment) {
     expression.writeJava(sb, environment);
     sb.append(".iterate(").append(intermediateExpression ? "false" : "true").append(")");
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    expression.free(environment);
   }
 }

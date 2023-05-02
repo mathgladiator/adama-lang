@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.expressions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
@@ -144,6 +145,13 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
           ((SupportsTwoPhaseTyping) elementExpr.item).upgradeType(environment, proposalElement);
         }
       }
+    }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    for (var expr : elements) {
+      expr.item.free(environment);
     }
   }
 }

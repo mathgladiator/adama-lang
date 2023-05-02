@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.expressions.operators;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.TokenizedItem;
@@ -49,7 +50,6 @@ public class BinaryExpression extends Expression {
     yielder.accept(opToken);
     right.emit(yielder);
   }
-
 
   private boolean areBothTypesEnums(final Environment environment, TyType leftPreMaybe, TyType rightPreMaybe) {
     final TyType left;
@@ -125,5 +125,11 @@ public class BinaryExpression extends Expression {
         sb.append(String.format("%s", String.format(operatorResult.javaPattern, leftStr, rightStr)));
       }
     }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    left.free(environment);
+    right.free(environment);
   }
 }

@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.statements.testing;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.ControlFlow;
@@ -54,5 +55,9 @@ public class Force extends Statement {
 
   public enum Action {
     Step
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
   }
 }

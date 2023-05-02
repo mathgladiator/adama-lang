@@ -12,6 +12,7 @@ package org.adamalang.translator.tree.statements;
 import org.adamalang.translator.codegen.CodeGenIngestion;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -36,7 +37,6 @@ public class Assignment extends Statement {
   public final Token trailingToken;
   public final Token asToken;
   public final Token ingestionDefine;
-  public Expression altExpression;
   private LocalTypeAssignmentResult result;
 
   public Assignment(final Expression ref, final Token opToken, final Expression expression, Token asToken, Token ingestionDefine, final Token trailingToken, final boolean inForLoop) {
@@ -51,7 +51,6 @@ public class Assignment extends Statement {
     if (trailingToken != null) {
       ingest(trailingToken);
     }
-    altExpression = null;
     this.asToken = asToken;
     this.ingestionDefine = ingestionDefine;
     if (this.ingestionDefine != null) {
@@ -142,5 +141,11 @@ public class Assignment extends Statement {
     } else if (result.assignResult == CanAssignResult.YesWithIngestionCodeGen) {
       CodeGenIngestion.writeJava(sb, environment, this, ingestionDefine);
     }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    ref.free(environment);
+    expression.free(environment);
   }
 }

@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.privacy;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
@@ -46,5 +47,9 @@ public class PublicPolicy extends Policy {
   @Override
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
     writer.writeString("public");
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
   }
 }

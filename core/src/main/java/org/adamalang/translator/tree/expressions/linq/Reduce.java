@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.expressions.linq;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
@@ -140,5 +141,11 @@ public class Reduce extends LinqExpression {
       sb.append("(__list) -> (__list)");
     }
     sb.append(")");
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    sql.free(environment);
+    functionToReduceWith.free(environment);
   }
 }

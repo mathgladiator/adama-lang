@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.statements.loops;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -115,5 +116,19 @@ public class For extends Statement {
     sb.append(") ");
     code.writeJava(sb, next);
     sb.tabDown().writeNewline().append("}");
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    if (initial != null) {
+      initial.free(environment);
+    }
+    if (condition != null) {
+      condition.free(environment);
+    }
+    if (advance != null) {
+      advance.free(environment);
+    }
+    code.free(environment.push());
   }
 }

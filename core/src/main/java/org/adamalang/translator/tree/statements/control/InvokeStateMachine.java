@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.statements.control;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -53,5 +54,10 @@ public class InvokeStateMachine extends Statement {
     sb.append("__invoke(");
     expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
     sb.append(");");
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    expression.free(environment);
   }
 }

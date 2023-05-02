@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.expressions.linq;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
@@ -362,5 +363,16 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     sb.append("return " + exprCode.toString() + ";").tabDown().writeNewline();
     sb.append("}").tabDown().writeNewline();
     sb.append("}").writeNewline();
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    sql.free(environment);
+    FreeEnvironment next = environment;
+    if (aliasToken != null) {
+      next = next.push();
+      next.define(aliasToken.text);
+    }
+    expression.free(next);
   }
 }

@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.expressions.constants;
 
 import org.adamalang.translator.codegen.CodeGenEnums;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
@@ -84,5 +85,9 @@ public class EnumValuesArray extends Expression implements LatentCodeSnippet {
   @Override
   public void writeLatentJava(final StringBuilderWithTabs sb) {
     CodeGenEnums.writeEnumArray(sb, enumTypeName, prefixToken.text + prefixCachedID, prefixToken.text, storage);
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
   }
 }

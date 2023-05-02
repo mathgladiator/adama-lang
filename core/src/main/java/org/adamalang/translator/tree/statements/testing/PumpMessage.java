@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.statements.testing;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -79,5 +80,10 @@ public class PumpMessage extends Statement {
     sb.append("__queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"").append(channelToken.text).append("\", 0, \"origin\", \"ip\", ");
     expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
     sb.append("));");
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    expression.free(environment);
   }
 }

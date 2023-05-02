@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.statements.control;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
@@ -217,6 +218,17 @@ public class MegaIf extends Statement {
       }
       condition.emit(yielder);
       code.emit(yielder);
+    }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    for (final If branch : branches) {
+      branch.condition.expression.free(environment);
+      branch.code.free(environment.push());
+    }
+    if (elseBranch != null) {
+      elseBranch.free(environment.push());
     }
   }
 }

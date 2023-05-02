@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.expressions;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
@@ -180,5 +181,12 @@ public class Lambda extends Expression implements LatentCodeSnippet {
     sb.append("return " + exprCode.toString() + ";").tabDown().writeNewline();
     sb.append("}").tabDown().writeNewline();
     sb.append("}").writeNewline();
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    FreeEnvironment next = environment.push();
+    next.define(variable.text);
+    expr.free(next);
   }
 }

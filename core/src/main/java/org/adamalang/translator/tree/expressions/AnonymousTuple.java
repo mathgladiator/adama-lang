@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.expressions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.TyType;
 
@@ -92,5 +93,12 @@ public class AnonymousTuple extends Expression {
   @Override
   public void writeJava(StringBuilder sb, Environment environment) {
     anonymousObject.writeJava(sb, environment);
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    for(var expr : expressions) {
+      expr.expression.free(environment);
+    }
   }
 }

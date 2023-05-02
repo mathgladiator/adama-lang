@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.expressions.operators;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.operands.PostfixMutateOp;
@@ -73,5 +74,10 @@ public class PostfixMutate extends Expression {
         sb.append(".transform((item) -> item").append(op.javaOp).append(")");
         return;
     }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    expression.free(environment);
   }
 }

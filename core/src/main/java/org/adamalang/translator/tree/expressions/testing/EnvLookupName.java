@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.translator.tree.expressions;
+package org.adamalang.translator.tree.expressions.testing;
 
 /** which environment variable should EnvStatus lookup */
 public enum EnvLookupName {

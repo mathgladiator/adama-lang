@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.expressions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
@@ -71,5 +72,10 @@ public class Lookup extends Expression {
         sb.append(".get()");
       }
     }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    environment.require(variableToken.text);
   }
 }

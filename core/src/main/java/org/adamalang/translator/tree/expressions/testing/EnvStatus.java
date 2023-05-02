@@ -7,10 +7,12 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.translator.tree.expressions;
+package org.adamalang.translator.tree.expressions.testing;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
@@ -45,5 +47,9 @@ public class EnvStatus extends Expression {
       return;
     }
     sb.append("(!__state.has())");
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
   }
 }

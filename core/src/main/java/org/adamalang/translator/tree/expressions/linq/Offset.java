@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.expressions.linq;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
@@ -55,5 +56,11 @@ public class Offset extends LinqExpression {
     sb.append(".skip(").append(intermediateExpression ? "false, " : "true, ");
     offset.writeJava(sb, computeEnv);
     sb.append(")");
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    sql.free(environment);
+    offset.free(environment);
   }
 }

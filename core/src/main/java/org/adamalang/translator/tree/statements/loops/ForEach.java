@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.statements.loops;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -39,7 +40,6 @@ public class ForEach extends Statement {
   public final Token openParen;
   public final String variable;
   public final Token variableToken;
-  private boolean elementIsMap;
   private TyType elementType;
 
   public ForEach(final Token foreachToken, final Token openParen, final Token variableToken, final Token inToken, final Expression iterable, final Token endParen, final Block code) {
@@ -52,7 +52,6 @@ public class ForEach extends Statement {
     this.endParen = endParen;
     this.code = code;
     elementType = null;
-    elementIsMap = false;
     ingest(foreachToken);
     ingest(iterable);
     ingest(code);
@@ -95,5 +94,11 @@ public class ForEach extends Statement {
       next.define(variable, elementType, false, elementType);
       code.writeJava(sb, next);
     }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    iterable.free(environment);
+    code.free(environment.push());
   }
 }

@@ -14,7 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.DocumentEvent;
 import org.adamalang.translator.tree.definitions.FunctionSpecialization;
 import org.adamalang.translator.tree.definitions.MessageHandlerBehavior;
-import org.adamalang.translator.tree.expressions.EnvLookupName;
+import org.adamalang.translator.tree.expressions.testing.EnvLookupName;
 import org.adamalang.translator.tree.expressions.MessageConversionStyle;
 import org.adamalang.translator.tree.expressions.constants.DynamicNullConstant;
 import org.adamalang.translator.tree.operands.AssignmentOp;

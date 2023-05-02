@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.statements.control;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -54,5 +55,10 @@ public class PreemptStateMachine extends Statement {
     sb.append("__preemptStateMachine(");
     next.writeJava(sb, scoped);
     sb.append(");");
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    next.free(environment);
   }
 }

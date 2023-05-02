@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.statements;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -146,5 +147,11 @@ public class DefineVariable extends Statement {
       }
       environment.define(name, type, isReadOnly, type);
     }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    environment.define(name);
+    value.free(environment);
   }
 }

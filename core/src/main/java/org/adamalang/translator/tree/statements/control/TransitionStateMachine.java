@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.statements.control;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -72,6 +73,14 @@ public class TransitionStateMachine extends Statement {
       sb.append(");");
     } else {
       sb.append(", 0);");
+    }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    next.free(environment);
+    if (evaluateIn != null) {
+      evaluateIn.free(environment);
     }
   }
 }

@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.expressions.operators;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
@@ -129,5 +130,12 @@ public class InlineConditional extends Expression implements SupportsTwoPhaseTyp
     if (falseValue instanceof SupportsTwoPhaseTyping) {
       ((SupportsTwoPhaseTyping) falseValue).upgradeType(environment, newType);
     }
+  }
+
+  @Override
+  public void free(FreeEnvironment environment) {
+    condition.free(environment);
+    trueValue.free(environment);
+    falseValue.free(environment);
   }
 }

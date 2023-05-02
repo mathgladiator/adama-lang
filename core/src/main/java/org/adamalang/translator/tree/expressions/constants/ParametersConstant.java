@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.expressions.constants;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
@@ -46,4 +47,7 @@ public class ParametersConstant extends Expression {
   public void writeJava(final StringBuilder sb, final Environment environment) {
     sb.append("__request.parameters");
   }
+
+  @Override
+  public void free(FreeEnvironment environment) {}
 }

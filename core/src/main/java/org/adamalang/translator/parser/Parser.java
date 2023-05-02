@@ -22,6 +22,8 @@ import org.adamalang.translator.tree.expressions.*;
 import org.adamalang.translator.tree.expressions.constants.*;
 import org.adamalang.translator.tree.expressions.linq.*;
 import org.adamalang.translator.tree.expressions.operators.*;
+import org.adamalang.translator.tree.expressions.testing.EnvLookupName;
+import org.adamalang.translator.tree.expressions.testing.EnvStatus;
 import org.adamalang.translator.tree.privacy.*;
 import org.adamalang.translator.tree.statements.*;
 import org.adamalang.translator.tree.statements.control.*;

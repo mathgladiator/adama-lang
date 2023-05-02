@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.expressions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
@@ -49,6 +50,8 @@ public abstract class Expression extends DocumentPosition {
     writeJava(child, environment);
     sb.append(child.toString());
   }
+
+  public abstract void free(FreeEnvironment environment);
 
   public abstract void writeJava(StringBuilder sb, Environment environment);
 }
