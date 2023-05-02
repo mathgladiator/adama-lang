@@ -148,6 +148,9 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   /** exposed: get the document's time zone */
   protected String __timeZone() {
+    if ("".equals(__timezone.get())) {
+      return "UTC";
+    }
     return __timezone.get();
   }
 
@@ -159,6 +162,9 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   /** exposed: get the document's timestamp as a datetime */
   protected NtDateTime __datetimeNow() {
+    if (__timezoneCachedZoneId == null) {
+      __timezoneCachedZoneId = ZoneId.of(__timeZone());
+    }
     // create a system instance
     Instant instant = Instant.ofEpochMilli(__time.get().longValue());
     ZonedDateTime pdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
