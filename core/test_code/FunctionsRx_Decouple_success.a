@@ -1,0 +1,15 @@
+record R {
+  int z;
+}
+
+R x;
+
+procedure foo() -> int readonly {
+  return x.z;
+}
+
+public formula xy = foo();
+
+@construct {
+  x.z = 10203040;
+}

@@ -14,16 +14,21 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
+import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
+import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.function.Consumer;
 
 /** defines a function */
 public class DefineFunction extends Definition {
   /** write the set of all functions in the environment */
   public final ArrayList<FunctionArg> args;
+  public final HashSet<String> depends;
 
   public final Token closeParen;
   public final Token functionTypeToken;
@@ -38,8 +43,10 @@ public class DefineFunction extends Definition {
   public TyType returnType;
   private boolean beenGivenId;
   private int uniqueFunctionId;
+  private FunctionOverloadInstance producedInstance;
 
   public DefineFunction(final Token functionTypeToken, final FunctionSpecialization specialization, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introReturnType, final TyType returnType, final Token readOnlyToken, final Token abortsToken, final Block code) {
+    this.depends = new HashSet<>();
     this.functionTypeToken = functionTypeToken;
     this.specialization = specialization;
     this.nameToken = nameToken;
@@ -54,6 +61,7 @@ public class DefineFunction extends Definition {
     this.code = code;
     uniqueFunctionId = 0;
     beenGivenId = false;
+    producedInstance = null;
     ingest(functionTypeToken);
     ingest(nameToken);
     ingest(openParen);
@@ -95,6 +103,9 @@ public class DefineFunction extends Definition {
       arg.typing(environment);
     }
     final var flow = code.typing(prepareEnvironment(environment));
+    if (producedInstance != null) {
+      producedInstance.dependOn(depends);
+    }
     if (returnType != null && flow == ControlFlow.Open) {
       environment.document.createError(this, String.format("The %s '%s' does not return in all cases", specialization == FunctionSpecialization.Pure ? "function" : "procedure", nameToken.text), "FunctionDefine");
     }
@@ -124,6 +135,16 @@ public class DefineFunction extends Definition {
     if (abortsToken != null) {
       toUse = toUse.scopeAsAbortable();
     }
+    toUse = toUse.watch((escName, type) -> {
+      TyType resolved = environment.rules.Resolve(type, true);
+      if (resolved instanceof TyNativeGlobalObject) return;
+      if (resolved instanceof TyNativeFunctional) {
+        depends.addAll(((TyNativeFunctional) resolved).gatherDependencies());
+        return;
+      }
+      if (resolved instanceof TyNativeService) return;
+      depends.add(escName);
+    }).scope();
     for (final FunctionArg arg : args) {
       toUse.define(arg.argName, arg.type, pure || readOnlyToken != null || arg.type instanceof TyNativeMessage, arg.type);
     }
@@ -132,12 +153,16 @@ public class DefineFunction extends Definition {
   }
 
   public FunctionOverloadInstance toFunctionOverloadInstance() {
+    if (producedInstance != null) {
+      return producedInstance;
+    }
     final var argTypes = new ArrayList<TyType>();
     for (final FunctionArg arg : args) {
       argTypes.add(arg.type);
     }
-    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, specialization == FunctionSpecialization.Pure, false, abortsToken != null);
+    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, specialization == FunctionSpecialization.Pure || readOnlyToken != null, false, abortsToken != null);
     foi.ingest(this);
+    producedInstance = foi;
     return foi;
   }
 

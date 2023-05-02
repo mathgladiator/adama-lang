@@ -104,7 +104,10 @@ public class StructureStorage extends DocumentPosition {
     return (name, type) -> {
       TyType resolved = env.rules.Resolve(type, true);
       if (resolved instanceof TyNativeGlobalObject) return;
-      if (resolved instanceof TyNativeFunctional) return;
+      if (resolved instanceof TyNativeFunctional) {
+        variablesToWatch.addAll(((TyNativeFunctional) resolved).gatherDependencies());
+        return;
+      }
       if (resolved instanceof TyNativeService) {
         services.add(((TyNativeService) resolved).service.name.text);
         return;

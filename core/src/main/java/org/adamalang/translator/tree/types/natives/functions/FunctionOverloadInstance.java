@@ -14,6 +14,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * a function overload instance is set of arguments bound to the same name such that the types of
@@ -21,6 +22,7 @@ import java.util.ArrayList;
  */
 public class FunctionOverloadInstance extends DocumentPosition {
   public final ArrayList<String> hiddenSuffixArgs;
+  public final ArrayList<String> dependencies;
   public final String javaFunction;
   public final boolean pure;
   public final TyType returnType;
@@ -35,9 +37,15 @@ public class FunctionOverloadInstance extends DocumentPosition {
     this.pure = pure;
     this.castArgs = castArgs;
     this.aborts = aborts;
-    hiddenSuffixArgs = new ArrayList<>();
+    this.hiddenSuffixArgs = new ArrayList<>();
+    this.dependencies = new ArrayList<>();
   }
 
+  public void dependOn(Collection<String> depends) {
+    for (String depend : depends) {
+      this.dependencies.add(depend);
+    }
+  }
 
   public static ArrayList<FunctionOverloadInstance> WRAP(final FunctionOverloadInstance foi) {
     final var list = new ArrayList<FunctionOverloadInstance>();

@@ -4937,6 +4937,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    assocs = new RxTable<>(__self, this, \"assocs\", (RxParent __parent) -> new RTxAssoc(__parent), 0);");
     gold.append("\n    dumb_join_explicit = new RxLazy<NtList<NtList<RTxAssoc>>>(this, () -> (tbl.iterate(false).mapFunction((__item) -> __FUNC_1_dj_1(__item))));");
     gold.append("\n    tbl.__subscribe(dumb_join_explicit);");
+    gold.append("\n    assocs.__subscribe(dumb_join_explicit);");
     gold.append("\n    dumb_join_annoy1 = new RxLazy<NtList<NtList<RTxAssoc>>>(this, () -> (tbl.iterate(false).mapFunction((new __CLOSURE_Lambda4(assocs)))));");
     gold.append("\n    tbl.__subscribe(dumb_join_annoy1);");
     gold.append("\n    assocs.__subscribe(dumb_join_annoy1);");

@@ -284,6 +284,8 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Functions_PureVariablesReadOnly_failure.a,0,0,2,1,"The function 'whoops1' does not return in all cases (FunctionDefine)"
 ./test_code/Functions_PureVariablesReadOnly_failure.a,11,2,11,3,"The variable 'z' is readonly due to the environment (VariableLookup)"
 ./test_code/Functions_PureVariablesReadOnly_failure.a,11,2,11,3,"The variable 'z' is readonly due to the environment (VariableLookup)"
+./test_code/Functions_PureVariablesReadOnly_failure.a,11,2,11,3,"The variable 'z' is readonly due to the environment (VariableLookup)"
+./test_code/Functions_PureVariablesReadOnly_failure.a,11,2,11,3,"The variable 'z' is readonly due to the environment (VariableLookup)"
 ./test_code/Functions_PureVariablesReadOnly_failure.a,16,9,16,10,"The variable 'z' was not defined (VariableLookup)"
 ./test_code/Functions_PureVariablesReadOnly_failure.a,15,0,17,1,"The function 'cantread' does not return in all cases (FunctionDefine)"
 ./test_code/Functions_ReactiveCantInvokeProcedure_failure.a,4,13,4,16,"Reactive expressions can only invoke pure functions (FunctionInvoke)"

@@ -18,6 +18,8 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadIns
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class TyNativeFunctional extends TyType {
@@ -91,5 +93,13 @@ public class TyNativeFunctional extends TyType {
     }
     result.test(position, environment, argTypes);
     return result;
+  }
+
+  public Set<String> gatherDependencies() {
+    HashSet<String> set = new HashSet<>();
+    for (FunctionOverloadInstance foi : overloads) {
+      set.addAll(foi.dependencies);
+    }
+    return set;
   }
 }

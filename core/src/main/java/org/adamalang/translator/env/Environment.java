@@ -136,7 +136,15 @@ public class Environment {
     return null;
   }
 
-  private TyType lookup_internal(final String name, final boolean compute, final DocumentPosition position, final boolean silent) {
+  private TyType lookup_return(String name, TyType result) {
+    if (watch != null) {
+      watch.accept(name, result);
+    }
+    return result;
+  }
+
+  /** look up the type of the given variable; will throw issues */
+  public TyType lookup(final String name, final boolean compute, final DocumentPosition position, final boolean silent) {
     // test the current environment
     var result = variables.get(name);
     if (result != null) {
@@ -144,7 +152,7 @@ public class Environment {
       if (!compute && (readonly.contains(name) || result.behavior == TypeBehavior.ReadOnlyNativeValue) && !silent) {
         document.createError(position, String.format("The variable '%s' is readonly", name), "VariableLookup");
       }
-      return result;
+      return lookup_return(name, result);
     }
     // let's try to invent the type if a trap has been set
     if (result == null && trap != null) {
@@ -161,33 +169,23 @@ public class Environment {
     if (result == null) {
       final var func = document.functionTypes.get(name);
       if (func != null) {
-        return func;
+        return lookup_return(name, func);
       }
     }
 
     // Ok, maybe it is a global object
     final var globalObject = state.globals.get(name);
     if (globalObject != null) {
-      return globalObject;
+      return lookup_return(name, globalObject);
     }
 
     // Or, a service?
     DefineService ds = document.services.get(name);
     if (ds != null) {
-      return new TyNativeService(ds).withPosition(position);
+      return lookup_return(name, new TyNativeService(ds).withPosition(position));
     }
 
-    return result;
-  }
-
-  /** look up the type of the given variable; will throw issues */
-  public TyType lookup(final String name, final boolean compute, final DocumentPosition position, final boolean silent) {
-    // something is watching what flows pass this
-    TyType type = lookup_internal(name, compute, position, silent);
-    if (watch != null) {
-      watch.accept(name, type);
-    }
-    return type;
+    return lookup_return(name, result);
   }
 
   /** test the immediate environment for a variable definition */
