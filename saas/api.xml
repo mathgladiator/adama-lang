@@ -627,6 +627,16 @@
         <field name="publishable-key"/>
     </responder>
 
+    <field-definition name="password-hash" type="string">
+        <documentation>
+            The hash of a password.
+        </documentation>
+    </field-definition>
+
+    <responder name="hashed-password">
+        <field name="password-hash"/>
+    </responder>
+
     <method name="account/get-payment-plan" responder="payment">
         <parameter name="identity"/>
         <documentation>
@@ -975,6 +985,15 @@
         <parameter name="connection"/>
         <documentation>
             Disconnect from the document.
+        </documentation>
+    </method>
+
+    <method name="documents/hash-password" responder="hashed-password">
+        <parameter name="password"/>
+        <documentation>
+            For documents that want to hold secrets, then these secrets should not be stored plaintext.
+
+            This method provides the client the ability to hash a password for plain text transmission.
         </documentation>
     </method>
 

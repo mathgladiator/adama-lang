@@ -845,6 +845,24 @@ public class ConnectionRouter {
                 }
               });
             } return;
+            case "documents/hash-password": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentsHashPassword.start();
+              DocumentsHashPasswordRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(DocumentsHashPasswordRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new HashedPasswordResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "configure/make-or-get-asset-key": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConfigureMakeOrGetAssetKey.start();
               ConfigureMakeOrGetAssetKeyRequest.resolve(session, nexus, request, new Callback<>() {

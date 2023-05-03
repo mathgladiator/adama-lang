@@ -83,6 +83,11 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
+  public void handle(Session session, DocumentsHashPasswordRequest request, HashedPasswordResponder responder) {
+    responder.complete(SCryptUtil.scrypt(request.password, 16384, 8, 1));
+  }
+
+  @Override
   public void handle(Session session, AccountGetPaymentPlanRequest request, PaymentResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {

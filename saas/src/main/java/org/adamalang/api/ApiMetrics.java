@@ -52,6 +52,7 @@ public class ApiMetrics {
   public final RequestResponseMonitor monitor_ConnectionAttach;
   public final RequestResponseMonitor monitor_ConnectionUpdate;
   public final RequestResponseMonitor monitor_ConnectionEnd;
+  public final RequestResponseMonitor monitor_DocumentsHashPassword;
   public final RequestResponseMonitor monitor_ConfigureMakeOrGetAssetKey;
   public final StreamMonitor monitor_AttachmentStart;
   public final RequestResponseMonitor monitor_AttachmentAppend;
@@ -101,6 +102,7 @@ public class ApiMetrics {
     this.monitor_ConnectionAttach = factory.makeRequestResponseMonitor("connection/attach");
     this.monitor_ConnectionUpdate = factory.makeRequestResponseMonitor("connection/update");
     this.monitor_ConnectionEnd = factory.makeRequestResponseMonitor("connection/end");
+    this.monitor_DocumentsHashPassword = factory.makeRequestResponseMonitor("documents/hash-password");
     this.monitor_ConfigureMakeOrGetAssetKey = factory.makeRequestResponseMonitor("configure/make-or-get-asset-key");
     this.monitor_AttachmentStart = factory.makeStreamMonitor("attachment/start");
     this.monitor_AttachmentAppend = factory.makeRequestResponseMonitor("attachment/append");

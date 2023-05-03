@@ -461,78 +461,85 @@ public class GeneratedMissingParameterTest {
       Iterator<String> c94 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:405505", c94.next());
       node.put("connection", 100L);
-      //ConfigureMakeOrGetAssetKey
+      //DocumentsHashPassword
       node = Json.newJsonObject();
       node.put("id", 94);
+      node.put("method", "documents/hash-password");
+      Iterator<String> c95 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:465917", c95.next());
+      node.put("password", "xzya");
+      //ConfigureMakeOrGetAssetKey
+      node = Json.newJsonObject();
+      node.put("id", 95);
       node.put("method", "configure/make-or-get-asset-key");
       //AttachmentStart
       node = Json.newJsonObject();
-      node.put("id", 94);
+      node.put("id", 95);
       node.put("method", "attachment/start");
-      Iterator<String> c95 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:458759", c95.next());
-      node.put("identity", _identity);
       Iterator<String> c96 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:461828", c96.next());
-      node.put("space", "xzya");
+      Assert.assertEquals("ERROR:458759", c96.next());
+      node.put("identity", _identity);
       Iterator<String> c97 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:466947", c97.next());
-      node.put("key", "xzya");
+      Assert.assertEquals("ERROR:461828", c97.next());
+      node.put("space", "xzya");
       Iterator<String> c98 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:470028", c98.next());
-      node.put("filename", "xzya");
+      Assert.assertEquals("ERROR:466947", c98.next());
+      node.put("key", "xzya");
       Iterator<String> c99 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:455691", c99.next());
+      Assert.assertEquals("ERROR:470028", c99.next());
+      node.put("filename", "xzya");
+      Iterator<String> c100 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:455691", c100.next());
       node.put("content-type", "xzya");
       //AttachmentAppend
       node = Json.newJsonObject();
-      node.put("id", 99);
+      node.put("id", 100);
       node.put("method", "attachment/append");
-      Iterator<String> c100 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:409609", c100.next());
-      node.put("upload", 100L);
       Iterator<String> c101 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:462859", c101.next());
-      node.put("chunk-md5", "xzya");
+      Assert.assertEquals("ERROR:409609", c101.next());
+      node.put("upload", 100L);
       Iterator<String> c102 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:409608", c102.next());
+      Assert.assertEquals("ERROR:462859", c102.next());
+      node.put("chunk-md5", "xzya");
+      Iterator<String> c103 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:409608", c103.next());
       node.put("base64-bytes", "xzya");
       //AttachmentFinish
       node = Json.newJsonObject();
-      node.put("id", 102);
+      node.put("id", 103);
       node.put("method", "attachment/finish");
-      Iterator<String> c103 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:409609", c103.next());
+      Iterator<String> c104 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:409609", c104.next());
       node.put("upload", 100L);
       //SuperCheckIn
       node = Json.newJsonObject();
-      node.put("id", 103);
-      node.put("method", "super/check-in");
-      Iterator<String> c104 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:458759", c104.next());
-      node.put("identity", _identity);
-      //SuperListAutomaticDomains
-      node = Json.newJsonObject();
       node.put("id", 104);
-      node.put("method", "super/list-automatic-domains");
+      node.put("method", "super/check-in");
       Iterator<String> c105 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:458759", c105.next());
       node.put("identity", _identity);
+      //SuperListAutomaticDomains
+      node = Json.newJsonObject();
+      node.put("id", 105);
+      node.put("method", "super/list-automatic-domains");
       Iterator<String> c106 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:439292", c106.next());
+      Assert.assertEquals("ERROR:458759", c106.next());
+      node.put("identity", _identity);
+      Iterator<String> c107 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:439292", c107.next());
       node.put("timestamp", 100L);
       //SuperSetDomainCertificate
       node = Json.newJsonObject();
-      node.put("id", 106);
+      node.put("id", 107);
       node.put("method", "super/set-domain-certificate");
-      Iterator<String> c107 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:458759", c107.next());
-      node.put("identity", _identity);
       Iterator<String> c108 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:488444", c108.next());
-      node.put("domain", "xzya");
+      Assert.assertEquals("ERROR:458759", c108.next());
+      node.put("identity", _identity);
       Iterator<String> c109 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:439292", c109.next());
+      Assert.assertEquals("ERROR:488444", c109.next());
+      node.put("domain", "xzya");
+      Iterator<String> c110 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:439292", c110.next());
       node.put("timestamp", 100L);
     }
   }

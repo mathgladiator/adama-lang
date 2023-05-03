@@ -615,6 +615,15 @@ class WebSocketAdamaConnection {
       }
     });
   }
+  DocumentsHashPassword(password, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"documents/hash-password", "id":parId, "password": password}
+    });
+  }
   ConfigureMakeOrGetAssetKey(responder) {
     var self = this;
     var parId = self.__id();
