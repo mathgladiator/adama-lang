@@ -20,15 +20,49 @@ You can create a keystore via the CLI tool.
 ```shell
 java -jar ~/adama.jar authority create
 ```
-This will return the name for your new keystore.
+This will return the name for your new keystore. For the remainder of this document, we will use ```3LZXGH9PUOEH25GZYQ17IL7W713XLJ``` as the name.
 
-### OLD
-The [tutorial lays out the basics](/tutorial/04-authorities.md), but we can do a bit more with the tooling.
+### Create the keystore
+The tooling can create a keystore that contains an initial public key. The below command will create the keystore for the prior created authority.
+```
+java -jar adama.jar authority create-local \
+--authority 3LZXGH9PUOEH25GZYQ17IL7W713XLJ \
+--keystore my.keystore.json \
+--private first.private.key.json
+```
 
-TODO: illustrate more about the tooling
+This will create two files within your working directory:
+* **my.keystore.json** is a collection of public keys used by Adama to validate a private
+* **first.private.key.json** is a private key used by your software to sign your users' id. <font color="red">***This requires safe-keeping!***</font>
+
+This keystore and private key were created entirely locally on your machine (for exceptional security), and now you upload ***only*** the keystore with:
+
+### Upload the keystore
+With a keystore full of public keys, we can upload the keystore to Adama.
+```shell
+java -jar adama.jar authority set \
+  --authority 3LZXGH9PUOEH25GZYQ17IL7W713XLJ \
+  --keystore my.keystore.json
+```
+This will allow the users signed by that private key into Adama.
+
+### Sign an example identity
+Consuming the private key will require some crypto libraries in some infrastructure that you manage, but we can get started by using the Adama tooling to create an identity today!
+
+```shell
+java -jar adama.jar authority sign \
+  --key first.private.key.json \
+  --agent user001 
+```
+
+This will create a principal with agent ```user001``` and authority of ```3LZXGH9PUOEH25GZYQ17IL7W713XLJ```
+
+### Adding another public key
+
+Similar to create-local which initializes a keystore, we can generate and append a new public key and side-channel write the private key.
 ```shell
 java -jar adama.jar authority append-local \
-  --authority Z2YISR3YMJRYCHN29XZ2 \
+  --authority 3LZXGH9PUOEH25GZYQ17IL7W713XLJ \
   --keystore my.keystore.json
   --private second.private.key.json
 ```

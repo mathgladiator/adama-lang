@@ -28,6 +28,8 @@ This document is a living road map of the Adama Platform. As such, it contains t
 | index-tensor | Tables should be indexable based on integer tuples. Beyond efficiency, language extensions can help work with tables in a more natural array style (think 2D grids) |
 | index-graph  | Tables should be able to become hyper graphs for efficient navigation between records using a graph where edges can be annotated (this maps)                        |
 | math-matrix  | The type system and math library should come with vectors and matrices out of the box                                                                               |
+| xml support  | Convert messages to XML                                                                                                                                             |
+| rxhtml       | Embed rxhtml into compile process                                                                                                                                   |
 
 ## Infrastructure - Protocols
 | project   | milestones/description                                                                                    |
