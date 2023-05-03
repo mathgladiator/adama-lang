@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<cli output-path="./cli/src/main/java/org/adamalang/cli/router" test-output-path="./cli/src/test/java/org/adamalang/cli/router" package="org.adamalang.cli.router" docs="./reference/src/reference/cli.md">
+    <!-- define all the arguments -->
+    <arg-definition name="space" type="string">
+        <documentation>
+            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
+            denote the name of that collection.
+        </documentation>
+    </arg-definition>
+
+    <!-- groups collect commands -->
+    <group name="space">
+        <documentation>
+            Provides command related to working with space collections...
+        </documentation>
+        <command name="create">
+            <arg name="space" />
+            <documentation>
+                Create a space
+            </documentation>
+        </command>
+    </group>
+</cli>
