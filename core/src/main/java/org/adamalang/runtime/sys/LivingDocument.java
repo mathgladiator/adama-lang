@@ -127,6 +127,16 @@ public abstract class LivingDocument implements RxParent, Caller {
     return __auto_cache_id.bumpUpPre();
   }
 
+  /** exposed: is the principal from the document */
+  protected boolean __isFromDocument(NtPrincipal p) {
+    return p.authority.equals("doc/" + __space + "/" + __key);
+  }
+
+  /** exposed: get a principal for the document */
+  protected NtPrincipal __principalOf(String agent) {
+    return new NtPrincipal(agent, "doc/" + __space + "/" + __key);
+  }
+
   /** exposed: get the current time */
   protected long __timeNow() {
     return __time.get().longValue();

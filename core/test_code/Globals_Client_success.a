@@ -1,0 +1,10 @@
+public principal p0;
+public bool b0;
+
+public principal p1;
+
+@construct {
+  p0 = Client.principalOf("mooo");
+  b0 = p0.isFromDocument();
+  p1 = "mopey".principalOf();
+}

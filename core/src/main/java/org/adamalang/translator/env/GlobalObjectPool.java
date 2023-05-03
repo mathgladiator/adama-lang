@@ -36,6 +36,7 @@ public class GlobalObjectPool {
     final TyNativeDouble tyDbl = new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null);
     final TyNativeLong tyLng = new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null);
     final TyNativeBoolean tyBool = new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null);
+    final TyNativePrincipal tyPrincipal = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, null);
 
     final var pool = new GlobalObjectPool();
     pool.add(GlobalFactory.makeGlobal("String", LibString.class, pool.extensions));
@@ -43,17 +44,23 @@ public class GlobalObjectPool {
     pool.add(GlobalFactory.makeGlobal("Adama", LibAdama.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Date", LibDate.class, pool.extensions));
-    pool.add(GlobalFactory.makeGlobal("Client", LibPrincipal.class, pool.extensions));
+
+    final var client = new TyNativeGlobalObject("Client", null, false);
+    client.setParentOverride(GlobalFactory.makeGlobal("Client", LibPrincipal.class, pool.extensions));
+    client.functions.put("principalOf", generateInternalDocumentFunction("__principalOf", tyStr, tyPrincipal, "principalOf", pool.extensions));
+    client.functions.put("isFromDocument", generateInternalDocumentFunction("__isFromDocument", tyPrincipal, tyBool, "isFromDocument", pool.extensions));
+    pool.add(client);
+
     pool.add(GlobalFactory.makeGlobal("Dynamic", LibDynamic.class, pool.extensions));
     final var document = new TyNativeGlobalObject("Document", null, false);
     document.functions.put("destroy", generateInternalDocumentFunction("__destroyDocument", new TyNativeVoid()));
-    document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", tyInt, new TyNativeVoid()));
+    document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", tyInt, new TyNativeVoid(), null, null));
     document.functions.put("key", generateInternalDocumentFunction("__getKey", tyStr));
     document.functions.put("space", generateInternalDocumentFunction("__getSpace", tyStr));
     document.functions.put("seq", generateInternalDocumentFunction("__getSeq", tyInt));
     pool.add(document);
     final var random = new TyNativeGlobalObject("Random", null, false);
-    random.functions.put("genBoundInt", generateInternalDocumentFunction("__randomBoundInt", tyInt, tyInt));
+    random.functions.put("genBoundInt", generateInternalDocumentFunction("__randomBoundInt", tyInt, tyInt, null, null));
     random.functions.put("genInt", generateInternalDocumentFunction("__randomInt", tyInt));
     random.functions.put("genDouble", generateInternalDocumentFunction("__randomDouble", tyDbl));
     random.functions.put("getDoubleGaussian", generateInternalDocumentFunction("__randomGaussian", tyDbl));
@@ -64,7 +71,7 @@ public class GlobalObjectPool {
     time.functions.put("today", generateInternalDocumentFunction("__dateOfToday", new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null)));
     time.functions.put("datetime", generateInternalDocumentFunction("__datetimeNow", new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, null)));
     time.functions.put("zone", generateInternalDocumentFunction("__timeZone", tyStr));
-    time.functions.put("setZone", generateInternalDocumentFunction("__setTimeZone", tyStr, tyBool));
+    time.functions.put("setZone", generateInternalDocumentFunction("__setTimeZone", tyStr, tyBool, null, null));
     time.setParentOverride((GlobalFactory.makeGlobal("LibTime", LibTime.class, pool.extensions)));
     pool.add(time);
     return pool;
@@ -81,11 +88,17 @@ public class GlobalObjectPool {
     return new TyNativeFunctional(name, overloads, FunctionStyleJava.InjectNameThenArgs);
   }
 
-  private static TyNativeFunctional generateInternalDocumentFunction(final String name, final TyType arg, final TyType returnType) {
+  private static TyNativeFunctional generateInternalDocumentFunction(final String name, final TyType arg, final TyType returnType, String adamaName, final HashMap<String, HashMap<String, TyNativeFunctional>> extensions) {
     final var overloads = new ArrayList<FunctionOverloadInstance>();
     final var args = new ArrayList<TyType>();
     args.add(arg);
-    overloads.add(new FunctionOverloadInstance(name, returnType, args, true, false, false));
+    FunctionOverloadInstance foi = new FunctionOverloadInstance(name, returnType, args, true, false, false);
+    overloads.add(foi);
+    if (extensions != null) {
+      HashMap<String, ArrayList<FunctionOverloadInstance>> byFirstParameterType = new HashMap<>();
+      GlobalFactory.prepareForExtension(foi, byFirstParameterType);
+      GlobalFactory.injectExtension(adamaName, byFirstParameterType, extensions);
+    }
     return new TyNativeFunctional(name, overloads, FunctionStyleJava.InjectNameThenArgs);
   }
 

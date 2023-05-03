@@ -69,6 +69,39 @@ public class GlobalFactory {
     return object;
   }
 
+  public static void prepareForExtension(FunctionOverloadInstance fo, HashMap<String, ArrayList<FunctionOverloadInstance>> byFirstParameterType) {
+    String key = null;
+    ArrayList<TyType> affix = new ArrayList<>();
+    boolean first = true;
+    for (TyType argType : fo.types) {
+      if (first) {
+        key = argType.getAdamaType();
+        first = false;
+      } else {
+        affix.add(argType);
+      }
+    }
+    if (key != null) {
+      ArrayList<FunctionOverloadInstance> newOverloads = byFirstParameterType.get(key);
+      if (newOverloads == null) {
+        newOverloads = new ArrayList<>();
+        byFirstParameterType.put(key, newOverloads);
+      }
+      newOverloads.add(new FunctionOverloadInstance(fo.javaFunction, fo.returnType, affix, fo.pure, false, false));
+    }
+  }
+
+  public static void injectExtension(String methodName, HashMap<String, ArrayList<FunctionOverloadInstance>> byFirstParameterType, HashMap<String, HashMap<String, TyNativeFunctional>> extensions) {
+    for (Map.Entry<String, ArrayList<FunctionOverloadInstance>> firstParamKey : byFirstParameterType.entrySet()) {
+      HashMap<String, TyNativeFunctional> extensionByFirstParam = extensions.get(firstParamKey.getKey());
+      if (extensionByFirstParam == null) {
+        extensionByFirstParam = new HashMap<>();
+        extensions.put(firstParamKey.getKey(), extensionByFirstParam);
+      }
+      extensionByFirstParam.put(methodName, new TyNativeFunctional(methodName, firstParamKey.getValue(), FunctionStyleJava.InjectNameThenExpressionAndArgs));
+    }
+  }
+
   public static void mergeInto(final TyNativeGlobalObject object, final Class<?> clazz, HashMap<String, HashMap<String, TyNativeFunctional>> extensions, boolean forceException, final String... methodsToGet) {
     final var index = indexMethods(clazz, methodsToGet);
     for (final Map.Entry<String, ArrayList<Method>> entry : index.entrySet()) { // for each method
@@ -79,39 +112,14 @@ public class GlobalFactory {
         if (fo != null) {
           overloads.add(fo);
           if (isExtension(method) || forceException) {
-            String key = null;
-            ArrayList<TyType> affix = new ArrayList<>();
-            boolean first = true;
-            for (TyType argType : fo.types) {
-              if (first) {
-                key = argType.getAdamaType();
-                first = false;
-              } else {
-                affix.add(argType);
-              }
-            }
-            if (key != null) {
-              ArrayList<FunctionOverloadInstance> newOverloads = byFirstParameterType.get(key);
-              if (newOverloads == null) {
-                newOverloads = new ArrayList<>();
-                byFirstParameterType.put(key, newOverloads);
-              }
-              newOverloads.add(new FunctionOverloadInstance(fo.javaFunction, fo.returnType, affix, fo.pure, false, false));
-            }
+            prepareForExtension(fo, byFirstParameterType);
           }
         }
       }
 
       if (overloads.size() > 0) {
         object.functions.put(entry.getKey(), new TyNativeFunctional(entry.getKey(), overloads, FunctionStyleJava.InjectNameThenArgs));
-        for (Map.Entry<String, ArrayList<FunctionOverloadInstance>> firstParamKey : byFirstParameterType.entrySet()) {
-          HashMap<String, TyNativeFunctional> extensionByFirstParam = extensions.get(firstParamKey.getKey());
-          if (extensionByFirstParam == null) {
-            extensionByFirstParam = new HashMap<>();
-            extensions.put(firstParamKey.getKey(), extensionByFirstParam);
-          }
-          extensionByFirstParam.put(entry.getKey(), new TyNativeFunctional(entry.getKey(), firstParamKey.getValue(), FunctionStyleJava.InjectNameThenExpressionAndArgs));
-        }
+        injectExtension(entry.getKey(), byFirstParameterType, extensions);
       } else {
         try {
           final var fld = clazz.getField(entry.getKey());
