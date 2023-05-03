@@ -29,6 +29,7 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
@@ -67,7 +68,9 @@ public class Document implements TopLevelDocumentHandler {
   private final HashSet<String> functionsDefines;
   private final ArrayList<LatentCodeSnippet> latentCodeSnippets;
   private final ArrayList<File> searchPaths;
+  @Deprecated
   private final ArrayList<Consumer<Environment>> typeCheckOrder;
+  private final TypeCheckerProxy typeChecker;
   private int autoClassId;
   private String className;
   public final UriTable webGet;
@@ -82,6 +85,7 @@ public class Document implements TopLevelDocumentHandler {
     autoClassId = 0;
     errorLists = new ArrayList<>();
     typeCheckOrder = new ArrayList<>();
+    typeChecker = new TypeCheckerProxy(typeCheckOrder);
     root = new TyReactiveRecord(null, Token.WRAP("Root"), new StructureStorage(StorageSpecialization.Record, false, null));
     types = new LinkedHashMap<>();
     handlers = new ArrayList<>();
@@ -168,9 +172,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(final BubbleDefinition bd) {
     if (root.storage.has(bd.nameToken.text)) {
-      typeCheckOrder.add(env -> {
-        env.document.createError(bd, String.format("Global field '%s' was already defined", bd.nameToken.text), "GlobalDefine");
-      });
+      typeChecker.issueError(bd, String.format("Global field '%s' was already defined", bd.nameToken.text), "GlobalDefine");
       return;
     }
     root.storage().add(bd, typeCheckOrder);
@@ -184,9 +186,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(final DefineCustomPolicy customPolicy) {
     if (root.storage.policies.containsKey(customPolicy.name.text)) {
-      typeCheckOrder.add(env -> {
-        env.document.createError(customPolicy, String.format("Global policy '%s' was already defined", customPolicy.name.text), "GlobalDefine");
-      });
+      typeChecker.issueError(customPolicy, String.format("Global policy '%s' was already defined", customPolicy.name.text), "GlobalDefine");
       return;
     }
     root.storage.policies.put(customPolicy.name.text, customPolicy);
@@ -205,13 +205,9 @@ public class Document implements TopLevelDocumentHandler {
       ((TyNativeEnum) type).storage.associate(dd);
     } else {
       if (type == null) {
-        typeCheckOrder.add(env -> {
-          env.document.createError(dd, String.format("Dispatcher '%s' was unable to find the given enumeration type of '%s'", dd.functionName.text, dd.enumNameToken.text), "DocumentDefine");
-        });
+        typeChecker.issueError(dd, String.format("Dispatcher '%s' was unable to find the given enumeration type of '%s'", dd.functionName.text, dd.enumNameToken.text), "DocumentDefine");
       } else {
-        typeCheckOrder.add(env -> {
-          env.document.createError(dd, String.format("Dispatcher '%s' found '%s', but it was '%s'", dd.functionName.text, dd.enumNameToken.text, type.getAdamaType()), "DocumentDefine");
-        });
+        typeChecker.issueError(dd, String.format("Dispatcher '%s' found '%s', but it was '%s'", dd.functionName.text, dd.enumNameToken.text, type.getAdamaType()), "DocumentDefine");
       }
     }
   }
@@ -226,18 +222,14 @@ public class Document implements TopLevelDocumentHandler {
   public void add(Include in) {
     String codeToParseIntoDoc = includes.get(in.resource.text);
     if (codeToParseIntoDoc == null) {
-      typeCheckOrder.add(env -> {
-        env.document.createError(in, String.format("Failed to include '%s' as it was not bound to the deployment", in.resource.text), "DocumentInclude");
-      });
+      typeChecker.issueError(in, String.format("Failed to include '%s' as it was not bound to the deployment", in.resource.text), "DocumentInclude");
     } else {
       final var tokenEngine = new TokenEngine(in.resource.text, codeToParseIntoDoc.codePoints().iterator());
       final var parser = new Parser(tokenEngine);
       try {
         parser.document().accept(this);
       } catch (AdamaLangException ale) {
-        typeCheckOrder.add(env -> {
-          env.document.createError(in, String.format("Inclusion of '%s' resulted in an error; '%s'", in.resource.text, ale.getMessage()), "DocumentInclude");
-        });
+        typeChecker.issueError(in, String.format("Inclusion of '%s' resulted in an error; '%s'", in.resource.text, ale.getMessage()), "DocumentInclude");
       }
     }
   }
@@ -245,9 +237,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(DefineService ds) {
     if (defined.contains(ds.name.text)) {
-      typeCheckOrder.add(env -> {
-        env.document.createError(ds, String.format("The service '%s' was already defined.", ds.name.text), "DocumentDefine");
-      });
+      typeChecker.issueError(ds, String.format("The service '%s' was already defined.", ds.name.text), "DocumentDefine");
     }
     services.put(ds.name.text, ds);
     defined.add(ds.name.text);
@@ -259,9 +249,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(final DefineFunction func) {
     if (defined.contains(func.name)) {
-      typeCheckOrder.add(env -> {
-        env.document.createError(func, String.format("The %s '%s' was already defined.", func.specialization == FunctionSpecialization.Pure ? "function" : "procedure", func.name), "DocumentDefine");
-      });
+      typeChecker.issueError(func, String.format("The %s '%s' was already defined.", func.specialization == FunctionSpecialization.Pure ? "function" : "procedure", func.name), "DocumentDefine");
     }
     functionsDefines.add(func.name);
     functionDefinitions.add(func);
@@ -276,9 +264,7 @@ public class Document implements TopLevelDocumentHandler {
     channelToMessageType.put(handler.channel, handler.typeName);
     if (handler.behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
       if (functionsDefines.contains(handler.channel)) {
-        typeCheckOrder.add(env -> {
-          env.document.createError(handler, String.format("Handler '%s' was already defined.", handler.channel), "DocumentDefine");
-        });
+        typeChecker.issueError(handler, String.format("Handler '%s' was already defined.", handler.channel), "DocumentDefine");
       }
       defined.add(handler.channel);
       channelsThatAreFutures.add(handler.channel);
@@ -307,9 +293,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(final FieldDefinition fd) {
     if (root.storage.has(fd.name) || defined.contains(fd.name)) {
-      typeCheckOrder.add(env -> {
-        env.document.createError(fd, String.format("Global field '%s' was already defined", fd.nameToken.text), "GlobalDefine");
-      });
+      typeChecker.issueError(fd, String.format("Global field '%s' was already defined", fd.nameToken.text), "GlobalDefine");
       return;
     }
     defined.add(fd.name);
@@ -321,20 +305,16 @@ public class Document implements TopLevelDocumentHandler {
     if (storage instanceof TyType) {
       if (types.containsKey(storage.name())) {
         TyType prior = types.get(storage.name());
-        typeCheckOrder.add(env -> {
-          env.document.createError((TyType) storage, String.format("The enumeration '%s' was already defined.", storage.name()), "DocumentDefine");
-          env.document.createError(prior, String.format("The enumeration '%s' was defined here.", storage.name()), "DocumentDefine");
-        });
+        typeChecker.issueError((TyType) storage, String.format("The enumeration '%s' was already defined.", storage.name()), "DocumentDefine");
+        typeChecker.issueError(prior, String.format("The enumeration '%s' was defined here.", storage.name()), "DocumentDefine");
         return;
       }
       typeCheckOrder.add(env -> {
         storage.storage().typing(env);
       });
-      typeCheckOrder.add(env -> {
-        for (final String s : storage.storage().duplicates) {
-          env.document.createError((TyType) storage, String.format("The enumeration '%s' has duplicates for '%s' defined.", storage.name(), s), "DocumentDefine");
-        }
-      });
+      for (final String s : storage.storage().duplicates) {
+        typeChecker.issueError((TyType) storage, String.format("The enumeration '%s' has duplicates for '%s' defined.", storage.name(), s), "DocumentDefine");
+      }
       types.put(storage.name(), (TyType) storage);
     }
   }
@@ -344,10 +324,8 @@ public class Document implements TopLevelDocumentHandler {
     if (storage instanceof TyType) {
       if (types.containsKey(storage.name())) {
         TyType prior = types.get(storage.name());
-        typeCheckOrder.add(env -> {
-          env.document.createError((TyType) storage, String.format("The %s '%s' was already defined.", storage instanceof TyNativeMessage ? "message" : "record", storage.name()), "DocumentDefine");
-          env.document.createError(prior, String.format("The %s '%s' was defined here.", prior instanceof TyNativeMessage ? "message" : "record", storage.name()), "DocumentDefine");
-        });
+        typeChecker.issueError((TyType) storage, String.format("The %s '%s' was already defined.", storage instanceof TyNativeMessage ? "message" : "record", storage.name()), "DocumentDefine");
+        typeChecker.issueError(prior, String.format("The %s '%s' was defined here.", prior instanceof TyNativeMessage ? "message" : "record", storage.name()), "DocumentDefine");
       }
       types.put(storage.name(), (TyType) storage);
       typeCheckOrder.add(env -> {
@@ -364,9 +342,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(AugmentViewerState avs) {
     if (defined.contains(avs.name.text)) {
-      typeCheckOrder.add(env -> {
-        env.document.createError(avs, String.format("View field '%s' was already defined.", avs.name.text), "GlobalDefine");
-      });
+      typeChecker.issueError(avs, String.format("View field '%s' was already defined.", avs.name.text), "GlobalDefine");
     }
     defined.add(avs.name.text);
     viewerType.storage.add(new FieldDefinition(null, null, avs.type, avs.name, null, null, null, avs.semicolon));
