@@ -310,6 +310,8 @@ public class ErrorTable {
     descriptions.put(966671, "no description of error (yet)");
     names.put(950322, "AUTH_FAILED_SUPER_AUTHENTICATE");
     descriptions.put(950322, "no description of error (yet)");
+    names.put(982253, "AUTH_FAILED_DOC_AUTHENTICATE");
+    descriptions.put(982253, "no description of error (yet)");
     names.put(916531, "AUTH_FAILED_VALIDATING_AGAINST_KEYSTORE");
     descriptions.put(916531, "no description of error (yet)");
     names.put(973839, "AUTH_UNKNOWN_EXCEPTION");

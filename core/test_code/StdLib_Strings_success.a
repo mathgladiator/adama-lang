@@ -9,7 +9,6 @@ public string x8;
 public string x9;
 public string x10;
 
-public string x11;
 public bool checkF;
 public bool checkT;
 
@@ -24,7 +23,7 @@ public bool checkT;
   x8 = "OKOK".right(3).left(2).getOrDefaultTo("Noooooo");
   x9 = " abc ".trim().mid(2, 1).getOrDefaultTo("Noooooo");
   x10 = "abcdefg".substr(1, 4).getOrDefaultTo("Noooooo").upper();
-  x11 = "secret".passwordHash();
+  string x11 = "secret".passwordHash();
   checkF = x11.passwordCheck("nope");
   checkT = x11.passwordCheck("secret");
 }

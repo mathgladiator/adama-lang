@@ -45,6 +45,7 @@ public class AuthenticatedUser {
     Adama, //
     Anonymous, //
     Authority, //
+    Document, //
     Super //
   }
 

@@ -58,6 +58,19 @@ public class Installer {
         .append(" DEFAULT CHARACTER SET = utf8mb4;") //
         .toString();
 
+    String createDocumentSecrets = new StringBuilder() //
+        .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`document_secrets` (") //
+        .append("  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,") //
+        .append("  `space` VARCHAR(128) NOT NULL,") //
+        .append("  `key` VARCHAR(512) NOT NULL,") //
+        .append("  `name` VARCHAR(64) NOT NULL,") //
+        .append("  `secret` VARCHAR(2048) NOT NULL,") //
+        .append("  PRIMARY KEY (`id`),") //
+        .append("  UNIQUE `u` (`space`, `key`, `name`))") //
+        .append(" ENGINE = InnoDB") //
+        .append(" DEFAULT CHARACTER SET = utf8mb4;") //
+        .toString();
+
     String createEmailsTableSQL = new StringBuilder() //
         .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`emails` (") //
         .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
@@ -238,6 +251,7 @@ public class Installer {
       DataBase.execute(connection, createDatabaseSQL);
       DataBase.execute(connection, createCapacityTableSQL);
       DataBase.execute(connection, createDirectoryTableSQL);
+      DataBase.execute(connection, createDocumentSecrets);
       DataBase.execute(connection, createInitiationsTableSQL);
       DataBase.execute(connection, createEmailsTableSQL);
       DataBase.execute(connection, createAccessKeysTableSQL);
@@ -267,6 +281,7 @@ public class Installer {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`metering`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`bills`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`directory`;").toString());
+      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`document_secrets`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`capacity`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`hosts`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`secrets`;").toString());

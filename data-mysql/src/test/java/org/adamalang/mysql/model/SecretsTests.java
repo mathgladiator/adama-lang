@@ -8,6 +8,7 @@
  */
 package org.adamalang.mysql.model;
 
+import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
 import org.junit.Assert;
@@ -25,6 +26,9 @@ public class SecretsTests {
         int key2 = Secrets.insertSecretKey(dataBase, "space", "private-key2");
         Assert.assertEquals("private-key1", Secrets.getPrivateKey(dataBase, "space", key1));
         Assert.assertEquals("private-key2", Secrets.getPrivateKey(dataBase, "space", key2));
+        String masterKey = MasterKey.generateMasterKey();
+        Secrets.getOrCreateDocumentSigningKey(dataBase, masterKey,"space", "doc-1");
+        Secrets.getOrCreateDocumentSigningKey(dataBase, masterKey,"space", "doc-1");
       } finally {
         installer.uninstall();
       }

@@ -18,10 +18,12 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.keys.SigningKeyPair;
 import org.adamalang.connection.Session;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Authorities;
 import org.adamalang.mysql.model.Hosts;
+import org.adamalang.mysql.model.Secrets;
 import org.adamalang.mysql.model.Users;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.transforms.results.AuthenticatedUser;
@@ -107,7 +109,22 @@ public class PerSessionAuthenticator {
         callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Anonymous, -1, new NtPrincipal(agent, "anonymous"), defaultContext, false));
         return;
       }
+
       ParsedToken parsedToken = new ParsedToken(identity);
+      if (parsedToken.iss.startsWith("doc/")) {
+        try {
+          String[] docSpaceKey = parsedToken.iss.split(Pattern.quote("/"));
+          SigningKeyPair skp = Secrets.getOrCreateDocumentSigningKey(database, "masterKey", docSpaceKey[1], docSpaceKey[2]);
+          skp.validateTokenThrows(identity);
+          NtPrincipal who = new NtPrincipal(parsedToken.sub, parsedToken.iss);
+          AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Document, -1, who, defaultContext, false);
+          callback.success(user);
+        } catch (Exception ex) {
+          callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_DOC_AUTHENTICATE));
+        }
+        return;
+      }
+
       if ("host".equals(parsedToken.iss)) {
         PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(database, parsedToken.key_id));
         Jwts.parserBuilder()
