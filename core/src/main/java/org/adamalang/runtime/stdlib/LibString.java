@@ -8,6 +8,7 @@
  */
 package org.adamalang.runtime.stdlib;
 
+import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
@@ -20,6 +21,21 @@ import java.util.regex.Pattern;
 
 /** a basic string library */
 public class LibString {
+
+  @Extension
+  public static String passwordHash(String password) {
+    return SCryptUtil.scrypt(password, 16384, 8, 1);
+  }
+
+  @Extension
+  public static boolean passwordCheck(String hash, String password) {
+    try {
+      return SCryptUtil.check(password, hash);
+    } catch (Exception ex) {
+      return false;
+    }
+  }
+
   public static @HiddenTypes2(class1 = NtList.class, class2 = String.class)
   NtMaybe<NtList<String>> split(final @HiddenType(clazz = String.class) NtMaybe<String> sentence, final String word) {
     if (sentence.has()) {

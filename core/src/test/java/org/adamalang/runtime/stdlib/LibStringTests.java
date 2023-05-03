@@ -15,6 +15,13 @@ import org.junit.Test;
 
 public class LibStringTests {
   @Test
+  public void passwords() {
+    Assert.assertTrue(LibString.passwordCheck(LibString.passwordHash("secret"), "secret"));
+    Assert.assertFalse(LibString.passwordCheck(LibString.passwordHash("secret"), "public"));
+    Assert.assertFalse(LibString.passwordCheck("nope", "secret"));
+  }
+
+  @Test
   public void reverse2() {
     Assert.assertEquals("zyx", LibString.reverse("xyz"));
     Assert.assertEquals("zyx", LibString.reverse(new NtMaybe<>("xyz")).get());
