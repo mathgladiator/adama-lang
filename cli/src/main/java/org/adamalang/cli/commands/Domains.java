@@ -76,10 +76,10 @@ public class Domains {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();
         if (key != null) {
-          request.put("method", "domain/map");
+          request.put("method", "domain/map-document");
           request.put("key", key);
         } else {
-          request.put("method", "domain/map-document");
+          request.put("method", "domain/map");
         }
         request.put("identity", identity);
         request.put("domain", domain);
