@@ -223,6 +223,7 @@ public class Installer {
         .append("  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,") //
         .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
         .append("  `space` VARCHAR(128) NOT NULL,") //
+        .append("  `key` VARCHAR(128),") //
         .append("  `domain` VARCHAR(254) NOT NULL,") //
         .append("  `certificate` LONGTEXT NOT NULL,") //
         .append("  `automatic` BOOLEAN DEFAULT FALSE,") //

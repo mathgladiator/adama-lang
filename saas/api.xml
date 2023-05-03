@@ -834,6 +834,17 @@
         </documentation>
     </method>
 
+    <method name="domain/map-document" responder="simple">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <parameter name="space"/>
+        <parameter name="key" />
+        <parameter name="certificate"/>
+        <documentation>
+            Map a domain to a space.
+        </documentation>
+    </method>
+
     <responder name="domain-listing" stream="true">
         <field name="domain" />
         <field name="space" />

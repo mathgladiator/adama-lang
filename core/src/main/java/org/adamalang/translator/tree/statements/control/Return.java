@@ -74,6 +74,9 @@ public class Return extends Statement {
         if (consider("html", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
           body++;
         }
+        if (consider("sign", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+          body++;
+        }
         if (consider("xml", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
           body++;
         }

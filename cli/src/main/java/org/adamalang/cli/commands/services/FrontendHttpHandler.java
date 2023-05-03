@@ -8,15 +8,19 @@
  */
 package org.adamalang.cli.commands.services;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.Json;
+import org.adamalang.common.keys.SigningKeyPair;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.Domain;
 import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.mysql.model.Domains;
 import org.adamalang.mysql.model.Health;
+import org.adamalang.mysql.model.Secrets;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.Client;
 import org.adamalang.runtime.natives.NtDynamic;
@@ -75,10 +79,22 @@ public class FrontendHttpHandler implements HttpHandler {
       @Override
       public void success(WebResponse response) {
         if (response != null) {
-          if (response.asset != null) {
-            callback.success(new HttpResult(skr.space, skr.key, response.asset, response.cors));
+          if ("text/agent".equals(response.contentType)) {
+            try {
+              SigningKeyPair keyPair = Secrets.getOrCreateDocumentSigningKey(init.database, init.masterKey, skr.space, skr.key);
+              String identity = keyPair.signDocument(skr.space, skr.key, Json.parseJsonObject(response.body).get("sign").textValue());
+              ObjectNode json = Json.newJsonObject();
+              json.put("identity", identity);
+              callback.success(new HttpResult("text/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
+            } catch (Exception ex) {
+              callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_SECRETS_SIGNING_EXCEPTION, ex, EXLOGGER));
+            }
           } else {
-            callback.success(new HttpResult(response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors));
+            if (response.asset != null) {
+              callback.success(new HttpResult(skr.space, skr.key, response.asset, response.cors));
+            } else {
+              callback.success(new HttpResult(response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors));
+            }
           }
         } else {
           callback.success(null);
@@ -162,7 +178,12 @@ public class FrontendHttpHandler implements HttpHandler {
       try {
         Domain domain = Domains.get(init.database, host); // TODO: cache this?
         if (domain != null) {
-          getSpace(domain.space, uri, headers, parametersJson, callback);
+          if (domain.key != null) {
+            SpaceKeyRequest skr = new SpaceKeyRequest(domain.space, domain.key, uri);
+            get(skr, headers, parametersJson, callback);
+          } else {
+            getSpace(domain.space, uri, headers, parametersJson, callback);
+          }
         } else {
           callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_NO_DOMAIN_MAPPING));
         }

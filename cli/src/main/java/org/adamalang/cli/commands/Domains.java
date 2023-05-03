@@ -62,6 +62,7 @@ public class Domains {
     String identity = config.get_string("identity", null);
     String domain = Util.extractOrCrash("--domain", "-d", args);
     String space = Util.extractOrCrash("--space", "-s", args);
+    String key = Util.extractWithDefault("--key", "-k", null, args);
     String autoStr = Util.extractWithDefault("--auto", "-a", "true", args).toLowerCase();
     boolean automatic = "true".equals(autoStr) || "yes".equals(autoStr);
     final String cert;
@@ -74,7 +75,12 @@ public class Domains {
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();
-        request.put("method", "domain/map");
+        if (key != null) {
+          request.put("method", "domain/map");
+          request.put("key", key);
+        } else {
+          request.put("method", "domain/map-document");
+        }
         request.put("identity", identity);
         request.put("domain", domain);
         request.put("space", space);

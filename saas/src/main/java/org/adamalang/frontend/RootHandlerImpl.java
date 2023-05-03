@@ -27,6 +27,7 @@ import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateEmail;
@@ -325,14 +326,13 @@ public class RootHandlerImpl implements RootHandler {
     }
   }
 
-  @Override
-  public void handle(Session session, DomainMapRequest request, SimpleResponder responder) {
+  private void handleDomainMap(SpacePolicy policy, AuthenticatedUser who, String domain, String certificate, String space, String key, SimpleResponder responder) {
     try {
-      if (request.policy.canUserManageDomain(request.who)) {
-        String cert = request.certificate != null ? MasterKey.encrypt(nexus.masterKey, request.certificate) : null;
-        if (Domains.map(nexus.database, request.who.id, fixDomain(request.domain), request.space, cert)) { // Domains.map ensures ownership on UPDATE to prevent conflicts
+      if (policy.canUserManageDomain(who)) {
+        String cert = certificate != null ? MasterKey.encrypt(nexus.masterKey, certificate) : null;
+        if (Domains.map(nexus.database, who.id, fixDomain(domain), space, key, cert)) { // Domains.map ensures ownership on UPDATE to prevent conflicts
           if (cert == null) {
-            nexus.signalControl.raiseAutomaticDomain(request.domain);
+            nexus.signalControl.raiseAutomaticDomain(domain);
           }
           responder.complete();
         } else {
@@ -344,6 +344,16 @@ public class RootHandlerImpl implements RootHandler {
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DOMAIN_MAP_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
+  }
+
+  @Override
+  public void handle(Session session, DomainMapRequest request, SimpleResponder responder) {
+    handleDomainMap(request.policy, request.who, request.domain, request.certificate, request.space, null, responder);
+  }
+
+  @Override
+  public void handle(Session session, DomainMapDocumentRequest request, SimpleResponder responder) {
+    handleDomainMap(request.policy, request.who, request.domain, request.certificate, request.space, request.key, responder);
   }
 
   @Override

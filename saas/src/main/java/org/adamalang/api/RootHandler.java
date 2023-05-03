@@ -61,6 +61,8 @@ public interface RootHandler {
 
   public void handle(Session session, DomainMapRequest request, SimpleResponder responder);
 
+  public void handle(Session session, DomainMapDocumentRequest request, SimpleResponder responder);
+
   public void handle(Session session, DomainListRequest request, DomainListingResponder responder);
 
   public void handle(Session session, DomainUnmapRequest request, SimpleResponder responder);

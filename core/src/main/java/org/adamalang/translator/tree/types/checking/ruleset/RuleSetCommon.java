@@ -321,6 +321,17 @@ public class RuleSetCommon {
     return false;
   }
 
+  public static boolean IsPrincipal(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    final var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType != null) {
+      if (tyType instanceof TyNativePrincipal || tyType instanceof TyNativeSecurePrincipal || tyType instanceof TyReactivePrincipal) {
+        return true;
+      }
+      SignalTypeFailure(environment, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+    }
+    return false;
+  }
+
   public static boolean IsNumeric(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {

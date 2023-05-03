@@ -33,6 +33,12 @@ public class WebResponse {
     return this;
   }
 
+  public WebResponse sign(String agent) {
+    this.contentType = "text/agent";
+    this.body = agent;
+    return this;
+  }
+
   public WebResponse css(String body) {
     this.contentType = "text/css";
     this.body = body;

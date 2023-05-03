@@ -1,5 +1,5 @@
 @web get / {
-  return {html:"HTML",xml:"XML"};
+  return {html:"HTML",xml:"XML",sign:"joe"};
 }
 
 @web options / {

@@ -155,6 +155,10 @@ public class Rules {
     return RuleSetCommon.IsNumeric(environment, tyType, silent);
   }
 
+  public boolean IsPrincipal(final TyType tyType, final boolean silent) {
+    return RuleSetCommon.IsPrincipal(environment, tyType, silent);
+  }
+
   public boolean IsStateMachineRef(final TyType tyType, final boolean silent) {
     return RuleSetStateMachine.IsStateMachineRef(environment, tyType, silent);
   }

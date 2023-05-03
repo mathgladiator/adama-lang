@@ -595,6 +595,8 @@ public class ErrorTable {
     descriptions.put(973020, "no description of error (yet)");
     names.put(909532, "FRONTEND_UNKNOWN_EXCEPTION_DOMAIN_LOOKUP");
     descriptions.put(909532, "no description of error (yet)");
+    names.put(917740, "FRONTEND_SECRETS_SIGNING_EXCEPTION");
+    descriptions.put(917740, "no description of error (yet)");
     names.put(929987, "CACHE_ASSET_FILE_FAILED_WRITE");
     descriptions.put(929987, "no description of error (yet)");
     names.put(920811, "CACHE_ASSET_FILE_CLOSED_PRIOR_ATTACH");
