@@ -31,7 +31,7 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
@@ -71,7 +71,7 @@ public class Document implements TopLevelDocumentHandler {
   private final ArrayList<LatentCodeSnippet> latentCodeSnippets;
   private final ArrayList<File> searchPaths;
   @Deprecated private final ArrayList<Consumer<Environment>> typeCheckOrder;
-  private final TypeCheckerProxy typeChecker;
+  private final TypeCheckerRoot typeChecker;
   private int autoClassId;
   private String className;
   public final UriTable webGet;
@@ -86,7 +86,7 @@ public class Document implements TopLevelDocumentHandler {
     autoClassId = 0;
     errorLists = new ArrayList<>();
     typeCheckOrder = new ArrayList<>();
-    typeChecker = new TypeCheckerProxy(typeCheckOrder);
+    typeChecker = new TypeCheckerRoot(typeCheckOrder);
     root = new TyReactiveRecord(null, Token.WRAP("Root"), new StructureStorage(StorageSpecialization.Record, false, null));
     types = new LinkedHashMap<>();
     handlers = new ArrayList<>();

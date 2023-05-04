@@ -10,7 +10,7 @@ package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.TyType;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 
 import java.util.Collections;
 import java.util.function.Consumer;
@@ -36,7 +36,7 @@ public class AugmentViewerState extends Definition {
     yielder.accept(semicolon);
   }
 
-  public void typing(TypeCheckerProxy checker) {
+  public void typing(TypeCheckerRoot checker) {
     checker.define(name, Collections.EMPTY_SET, (env) -> type.typing(env));
   }
 }

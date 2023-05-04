@@ -8,13 +8,12 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.privacy.PublicPolicy;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
@@ -59,7 +58,7 @@ public class DefineRPC extends Definition {
     code.emit(yielder);
   }
 
-  public void typing(TypeCheckerProxy checker) {
+  public void typing(TypeCheckerRoot checker) {
     FreeEnvironment fe = FreeEnvironment.root();
     for (FunctionArg arg : args) {
       fe.define(arg.argNameToken.text);

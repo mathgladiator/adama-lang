@@ -15,7 +15,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
 import org.adamalang.translator.tree.definitions.config.DocumentConfig;
 import org.adamalang.translator.tree.definitions.config.StaticPiece;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyInternalReadonlyClass;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class DefineStatic extends Definition {
     yielder.accept(closeToken);
   }
 
-  public void typing(TypeCheckerProxy checker) {
+  public void typing(TypeCheckerRoot checker) {
     FreeEnvironment fe = FreeEnvironment.root();
     if (contextName != null) {
       fe.define(contextName.text);

@@ -13,7 +13,7 @@ import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.TyType;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 
 import java.util.function.Consumer;
@@ -66,7 +66,7 @@ public class DefineConstructor extends Definition {
     }
   }
 
-  public void typing(TypeCheckerProxy checker) {
+  public void typing(TypeCheckerRoot checker) {
     FreeEnvironment fe = FreeEnvironment.root();
     code.free(fe);
     checker.register(fe.free, (env) -> {

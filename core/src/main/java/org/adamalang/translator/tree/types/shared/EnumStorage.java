@@ -9,11 +9,10 @@
 package org.adamalang.translator.tree.types.shared;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.definitions.DefineDispatcher;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -145,7 +144,7 @@ public class EnumStorage extends DocumentPosition {
     return signatureToNameAndId.get(name + "/" + signature);
   }
 
-  public void typing(final TypeCheckerProxy checker) {
+  public void typing(final TypeCheckerRoot checker) {
     checker.register(Collections.EMPTY_SET, (environment) -> {
       if (options.size() == 0) {
         environment.document.createError(this, String.format("enum '%s' has no values", name), "EnumStorage");

@@ -16,7 +16,7 @@ import org.adamalang.translator.tree.definitions.web.UriAction;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 
 import java.util.TreeMap;
 import java.util.function.Consumer;
@@ -58,7 +58,7 @@ public class DefineWebDelete extends Definition implements UriAction {
     return env;
   }
 
-  public void typing(TypeCheckerProxy checker) {
+  public void typing(TypeCheckerRoot checker) {
     FreeEnvironment fe = FreeEnvironment.root();
     code.free(fe);
     checker.register(fe.free, (environment) -> {

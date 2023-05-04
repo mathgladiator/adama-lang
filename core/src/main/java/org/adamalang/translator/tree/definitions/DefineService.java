@@ -13,7 +13,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -146,7 +146,7 @@ public class DefineService extends Definition {
     yielder.accept(close);
   }
 
-  public void typing(TypeCheckerProxy checker) {
+  public void typing(TypeCheckerRoot checker) {
     FreeEnvironment fe = FreeEnvironment.root();
     checker.register(fe.free, (environment) -> {
       HashSet<String> alreadyDefinedAspects = new HashSet<>();

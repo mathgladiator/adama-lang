@@ -15,7 +15,7 @@ import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeChannel;
 import org.adamalang.translator.tree.types.traits.IsStructure;
@@ -87,7 +87,7 @@ public class DefineHandler extends Definition {
     }
   }
 
-  public void typing(TypeCheckerProxy checker) {
+  public void typing(TypeCheckerRoot checker) {
     FreeEnvironment fe = FreeEnvironment.root();
     if (messageVarToken != null) {
       fe.define(messageVarToken.text);

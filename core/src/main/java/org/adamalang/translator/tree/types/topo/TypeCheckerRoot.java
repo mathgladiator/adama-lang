@@ -6,7 +6,7 @@
  *
  * (c) 2020 - 2023 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.translator.tree.types;
+package org.adamalang.translator.tree.types.topo;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -17,24 +17,11 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /** This is a hack class to introduce topological ordering as this is going to be a very complex change */
-public class TypeCheckerProxy {
+public class TypeCheckerRoot {
   private final ArrayList<Consumer<Environment>> typeCheckOrder;
 
-  public TypeCheckerProxy(ArrayList<Consumer<Environment>> typeCheckOrder) {
+  public TypeCheckerRoot(ArrayList<Consumer<Environment>> typeCheckOrder) {
     this.typeCheckOrder = typeCheckOrder;
-  }
-
-  private Token zoneName;
-
-  public void push(Token zoneName) {
-    if (this.zoneName != null) {
-      throw new IllegalStateException("can't double push a zone");
-    }
-    this.zoneName = zoneName;
-  }
-
-  public void pop() {
-    this.zoneName = null;
   }
 
   public void define(Token name, Set<String> depends, Consumer<Environment> checker) {

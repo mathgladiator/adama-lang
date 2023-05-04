@@ -20,7 +20,7 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.InjectExpression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.structures.DefineMethod;
@@ -157,7 +157,7 @@ public class TyNativeMessage extends TyType implements //
   }
 
   @Override
-  public void typing(TypeCheckerProxy checker) {
+  public void typing(TypeCheckerRoot checker) {
     checker.register(Collections.emptySet(), (environment -> typing(environment.scope())));
   }
 

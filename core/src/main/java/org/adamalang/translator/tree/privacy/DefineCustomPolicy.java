@@ -17,9 +17,8 @@ import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
-import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 
 import java.util.function.Consumer;
 
@@ -56,7 +55,7 @@ public class DefineCustomPolicy extends DocumentPosition {
     return env;
   }
 
-  public void typing(TypeCheckerProxy checker) {
+  public void typing(TypeCheckerRoot checker) {
     FreeEnvironment fe = FreeEnvironment.root();
     code.free(fe);
     checker.register(fe.free, (environment -> {

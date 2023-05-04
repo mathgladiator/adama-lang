@@ -14,7 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
-import org.adamalang.translator.tree.types.TypeCheckerProxy;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ public class DefineDispatcher extends Definition {
     code.emit(yielder);
   }
 
-  public void typing(TypeCheckerProxy checker) {
+  public void typing(TypeCheckerRoot checker) {
     FreeEnvironment fe = FreeEnvironment.root();
     for(FunctionArg arg : args) {
       fe.define(arg.argName);
