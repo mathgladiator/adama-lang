@@ -6,20 +6,17 @@
  *
  * (c) 2020 - 2023 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.translator.tree.definitions;
+package org.adamalang.translator.tree.definitions.config;
 
+import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
-import org.junit.Test;
+import org.adamalang.translator.tree.common.DocumentPosition;
 
 import java.util.function.Consumer;
 
-public class DefinitionTests {
-  @Test
-  public void coverage() {
-    Definition df =
-        new Definition() {
-          @Override
-          public void emit(Consumer<Token> yielder) {}
-        };
-  }
+/** a piece of the static config */
+public abstract class StaticPiece extends DocumentPosition {
+  public abstract void emit(Consumer<Token> yielder);
+
+  public abstract void typing(Environment environment);
 }

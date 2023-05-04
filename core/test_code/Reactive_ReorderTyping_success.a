@@ -1,0 +1,4 @@
+public int x;
+// TODO : swap these around
+public formula y = x + 1;
+

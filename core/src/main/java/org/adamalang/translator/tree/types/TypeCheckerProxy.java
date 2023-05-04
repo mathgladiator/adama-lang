@@ -24,7 +24,25 @@ public class TypeCheckerProxy {
     this.typeCheckOrder = typeCheckOrder;
   }
 
-  public void register(Set<String> depends, String name, Consumer<Environment> checker) {
+  private Token zoneName;
+
+  public void push(Token zoneName) {
+    if (this.zoneName != null) {
+      throw new IllegalStateException("can't double push a zone");
+    }
+    this.zoneName = zoneName;
+  }
+
+  public void pop() {
+    this.zoneName = null;
+  }
+
+  public void define(Token name, Set<String> depends, Consumer<Environment> checker) {
+    typeCheckOrder.add(checker);
+  }
+
+  public void register(Set<String> depends, Consumer<Environment> checker) {
+    typeCheckOrder.add(checker);
   }
 
   public void issueError(DocumentPosition dp, String message, String tutorial) {

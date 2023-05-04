@@ -15,6 +15,7 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.privacy.PrivatePolicy;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
@@ -219,9 +220,7 @@ public class StructureStorage extends DocumentPosition {
       return;
     }
     policies.put(policy.name.text, policy);
-    typeCheckOrder.add(env -> {
-      policy.typeCheck(env);
-    });
+    policy.typing(new TypeCheckerProxy(typeCheckOrder));
   }
 
   public void emit(final Consumer<Token> yielder) {

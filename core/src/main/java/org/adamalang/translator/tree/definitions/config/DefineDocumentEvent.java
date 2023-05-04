@@ -6,23 +6,26 @@
  *
  * (c) 2020 - 2023 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.translator.tree.definitions;
+package org.adamalang.translator.tree.definitions.config;
 
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.definitions.DocumentEvent;
+import org.adamalang.translator.tree.definitions.config.StaticPiece;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.TyInternalReadonlyClass;
 import org.adamalang.translator.tree.types.natives.TyNativeAsset;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
-import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 
 import java.util.function.Consumer;
 
 /** defines an event for when connected or not */
-public class DefineDocumentEvent extends Definition {
+public class DefineDocumentEvent extends StaticPiece {
   public final Token parameterNameToken;
   public final Token closeParen;
   public final Block code;
@@ -59,6 +62,19 @@ public class DefineDocumentEvent extends Definition {
 
   @Override
   public void typing(final Environment environment) {
+    internalTyping(environment);
+  }
+
+  public void typing(TypeCheckerProxy checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
+    if (parameterNameToken != null) {
+      fe.define(parameterNameToken.text);
+    }
+    code.free(fe);
+    checker.register(fe.free, (env) -> internalTyping(env.scopeAsPolicy()));
+  }
+
+  public void internalTyping(final Environment environment) {
     switch (which) {
       case AssetAttachment: {
         if (parameterNameToken == null) {

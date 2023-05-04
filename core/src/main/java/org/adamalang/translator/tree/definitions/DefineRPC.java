@@ -9,10 +9,12 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.privacy.PublicPolicy;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
@@ -30,6 +32,7 @@ public class DefineRPC extends Definition {
   public final List<FunctionArg> args;
   public final Token closeParen;
   public final Block code;
+  private TyNativeMessage genMessageType;
 
   public DefineRPC(Token rpcToken, Token name, Token openParen, Token clientVar, List<FunctionArg> args, Token closeParen, Block code) {
     this.rpcToken = rpcToken;
@@ -56,24 +59,35 @@ public class DefineRPC extends Definition {
     code.emit(yielder);
   }
 
-  @Override
-  public void typing(Environment environment) {
-    final var next = environment.scopeAsMessageHandler();
-    next.define(clientVar.text, new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, clientVar).withPosition(this), true, this);
-    for (final FunctionArg arg : args) {
-      next.define(arg.argName, arg.type, true, arg.type);
+  public void typing(TypeCheckerProxy checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
+    for (FunctionArg arg : args) {
+      fe.define(arg.argNameToken.text);
     }
-    code.typing(next);
+    code.free(fe);
+    checker.register(fe.free, (environment) -> {
+      final var next = environment.scopeAsMessageHandler();
+      next.define(clientVar.text, new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, clientVar).withPosition(this), true, this);
+      for (final FunctionArg arg : args) {
+        next.define(arg.argName, arg.type, true, arg.type);
+      }
+      code.typing(next);
+      genTyNativeMessage().typing(environment);
+    });
   }
 
   public TyNativeMessage genTyNativeMessage() {
+    if (genMessageType != null) {
+      return genMessageType;
+    }
     StructureStorage storage = new StructureStorage(StorageSpecialization.Message, false, openParen);
     PublicPolicy policy = new PublicPolicy(null);
     policy.ingest(rpcToken);
     for (FunctionArg arg : args) {
       storage.add(new FieldDefinition(policy, null, arg.type, arg.argNameToken, null, null, null, null));
     }
-    return new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, rpcToken, name.cloneWithNewText(genMessageTypeName()), storage);
+    genMessageType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, rpcToken, name.cloneWithNewText(genMessageTypeName()), storage);
+    return genMessageType;
   }
 
   public String genMessageTypeName() {

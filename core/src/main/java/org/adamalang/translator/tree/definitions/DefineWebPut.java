@@ -9,6 +9,7 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.web.Uri;
 import org.adamalang.translator.tree.definitions.web.UriAction;
@@ -16,6 +17,7 @@ import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.TyNativeRef;
 
 import java.util.TreeMap;
@@ -71,16 +73,19 @@ public class DefineWebPut extends Definition implements UriAction {
     return env;
   }
 
-  @Override
-  public void typing(Environment environment) {
-    messageTypeFound = environment.rules.Resolve(new TyNativeRef(TypeBehavior.ReadWriteNative, null, messageType), false);
-    if (messageTypeFound != null) {
-      if (environment.rules.IsNativeMessage(messageTypeFound, false)) {
-        Environment env = next(environment);
-        if (code.typing(env) == ControlFlow.Open) {
-          environment.document.createError(this, String.format("The @web handlers must return a message"), "Web");
+  public void typing(TypeCheckerProxy checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
+    code.free(fe);
+    checker.register(fe.free, (environment) -> {
+      messageTypeFound = environment.rules.Resolve(new TyNativeRef(TypeBehavior.ReadWriteNative, null, messageType), false);
+      if (messageTypeFound != null) {
+        if (environment.rules.IsNativeMessage(messageTypeFound, false)) {
+          Environment env = next(environment);
+          if (code.typing(env) == ControlFlow.Open) {
+            environment.document.createError(this, String.format("The @web handlers must return a message"), "Web");
+          }
         }
       }
-    }
+    });
   }
 }

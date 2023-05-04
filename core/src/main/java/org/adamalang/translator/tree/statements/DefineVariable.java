@@ -151,6 +151,8 @@ public class DefineVariable extends Statement {
   @Override
   public void free(FreeEnvironment environment) {
     environment.define(name);
-    value.free(environment);
+    if (value != null) {
+      value.free(environment);
+    }
   }
 }

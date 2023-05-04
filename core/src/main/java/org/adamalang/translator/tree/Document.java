@@ -24,6 +24,8 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.*;
+import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
+import org.adamalang.translator.tree.definitions.config.DocumentConfig;
 import org.adamalang.translator.tree.definitions.web.UriTable;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
@@ -181,6 +183,8 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(final DefineConstructor dc) {
     constructors.add(dc);
+    // TODO ADD BACK (SEE BELOW)
+    // dc.typing(typeChecker);
   }
 
   @Override
@@ -190,18 +194,14 @@ public class Document implements TopLevelDocumentHandler {
       return;
     }
     root.storage.policies.put(customPolicy.name.text, customPolicy);
-    typeCheckOrder.add(env -> {
-      customPolicy.typeCheck(env);
-    });
+    customPolicy.typing(typeChecker);
   }
 
   @Override
   public void add(final DefineDispatcher dd) {
     final var type = types.get(dd.enumNameToken.text);
     if (type != null && type instanceof TyNativeEnum) {
-      typeCheckOrder.add(env -> {
-        dd.typing(env);
-      });
+      dd.typing(typeChecker);
       ((TyNativeEnum) type).storage.associate(dd);
     } else {
       if (type == null) {
@@ -214,7 +214,7 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(final DefineDocumentEvent dce) {
-    typeCheckOrder.add(env -> dce.typing(env.scopeAsPolicy()));
+    dce.typing(typeChecker);
     events.add(dce);
   }
 
@@ -241,9 +241,7 @@ public class Document implements TopLevelDocumentHandler {
     }
     services.put(ds.name.text, ds);
     defined.add(ds.name.text);
-    typeCheckOrder.add((env) -> {
-      ds.typing(env);
-    });
+    ds.typing(typeChecker);
   }
 
   @Override
@@ -253,9 +251,7 @@ public class Document implements TopLevelDocumentHandler {
     }
     functionsDefines.add(func.name);
     functionDefinitions.add(func);
-    typeCheckOrder.add(env -> {
-      func.typing(env);
-    });
+    func.typing(typeChecker);
   }
 
   @Override
@@ -269,25 +265,19 @@ public class Document implements TopLevelDocumentHandler {
       defined.add(handler.channel);
       channelsThatAreFutures.add(handler.channel);
     }
-    typeCheckOrder.add(env -> {
-      handler.typing(env);
-    });
+    handler.typing(typeChecker);
   }
 
   @Override
   public void add(final DefineStateTransition transition) {
     transitions.put(transition.name, transition);
-    typeCheckOrder.add(env -> {
-      transition.typing(env);
-    });
+    transition.typing(typeChecker);
   }
 
   @Override
   public void add(final DefineTest test) {
     tests.add(test);
-    typeCheckOrder.add(env -> {
-      test.typing(env);
-    });
+    test.typing(typeChecker);
   }
 
   @Override
@@ -346,7 +336,7 @@ public class Document implements TopLevelDocumentHandler {
     }
     defined.add(avs.name.text);
     viewerType.storage.add(new FieldDefinition(null, null, avs.type, avs.name, null, null, null, avs.semicolon));
-    typeCheckOrder.add((env) -> avs.typing(env));
+    avs.typing(typeChecker);
   }
 
   @Override
@@ -354,19 +344,12 @@ public class Document implements TopLevelDocumentHandler {
     TyNativeMessage nativeMessageType = rpc.genTyNativeMessage();
     types.put(rpc.genMessageTypeName(), nativeMessageType);
     channelToMessageType.put(rpc.name.text, rpc.genMessageTypeName());
-    typeCheckOrder.add(env -> {
-      rpc.typing(env);
-      if (env.document.errorLists.size() == 0) {
-        nativeMessageType.typing(env);
-      }
-    });
+    rpc.typing(typeChecker);
   }
 
   @Override
   public void add(DefineWebGet dwg) {
-    typeCheckOrder.add((env) -> {
-      dwg.typing(env);
-    });
+    dwg.typing(typeChecker);
     if (!webGet.map(dwg.uri, dwg)) {
       createError(dwg, String.format("Web get path %s has a conflict", dwg.uri), "Web");
     }
@@ -374,9 +357,7 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(DefineWebDelete dwd) {
-    typeCheckOrder.add((env) -> {
-      dwd.typing(env);
-    });
+    dwd.typing(typeChecker);
     if (!webDelete.map(dwd.uri, dwd)) {
       createError(dwd, String.format("Web delete path %s has a conflict", dwd.uri), "Web");
     }
@@ -384,9 +365,7 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(DefineWebPut dwp) {
-    typeCheckOrder.add((env) -> {
-      dwp.typing(env);
-    });
+    dwp.typing(typeChecker);
     if (!webPut.map(dwp.uri, dwp)) {
       createError(dwp, String.format("Web put path %s has a conflict", dwp.uri), "Web");
     }
@@ -394,9 +373,7 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(DefineWebOptions dwo) {
-    typeCheckOrder.add((env) -> {
-      dwo.typing(env);
-    });
+    dwo.typing(typeChecker);
     if (!webOptions.map(dwo.uri, dwo)) {
       createError(dwo, String.format("Web options path %s has a conflict", dwo.uri), "Web");
     }
@@ -404,7 +381,7 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(DefineStatic ds) {
-    typeCheckOrder.add((env) -> ds.typing(env));
+    ds.typing(typeChecker);
     events.addAll(ds.events);
     for (DocumentConfig config : ds.configs) {
       configs.put(config.name.text, config.value);
@@ -499,8 +476,8 @@ public class Document implements TopLevelDocumentHandler {
         instances.add(df.toFunctionOverloadInstance());
       }
       final var functional = new TyNativeFunctional(entry.getKey(), instances, FunctionStyleJava.InjectNameThenArgs);
-      typeCheckOrder.add(env -> functional.typing(environment));
       functionTypes.put(entry.getKey(), functional);
+      typeCheckOrder.add(env -> functional.typing(environment));
     }
     while (typeCheckOrder.size() > 0) {
       final var cloneTypeChecks = new ArrayList<>(typeCheckOrder);
@@ -528,7 +505,7 @@ public class Document implements TopLevelDocumentHandler {
     }
     for (final DefineConstructor dc : constructors) {
       dc.unifiedMessageType = constructorMessageType;
-      dc.typing(environment);
+      dc.internalTyping(environment); // TODO: remove
     }
     return !hasErrors();
   }

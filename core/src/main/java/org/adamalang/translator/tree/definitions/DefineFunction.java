@@ -9,11 +9,13 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
@@ -95,20 +97,26 @@ public class DefineFunction extends Definition {
     code.emit(yielder);
   }
 
-  @Override
-  public void typing(final Environment environment) {
-    getFuncId(environment);
-    returnType = environment.rules.Resolve(returnType, false);
-    for (final FunctionArg arg : args) {
-      arg.typing(environment);
+  public void typing(TypeCheckerProxy checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
+    for(FunctionArg arg : args) {
+      fe.define(arg.argName);
     }
-    final var flow = code.typing(prepareEnvironment(environment));
-    if (producedInstance != null) {
-      producedInstance.dependOn(depends);
-    }
-    if (returnType != null && flow == ControlFlow.Open) {
-      environment.document.createError(this, String.format("The %s '%s' does not return in all cases", specialization == FunctionSpecialization.Pure ? "function" : "procedure", nameToken.text), "FunctionDefine");
-    }
+    code.free(fe);
+    checker.define(nameToken, fe.free, (environment) -> {
+      getFuncId(environment);
+      returnType = environment.rules.Resolve(returnType, false);
+      for (final FunctionArg arg : args) {
+        arg.typing(environment);
+      }
+      final var flow = code.typing(prepareEnvironment(environment));
+      if (producedInstance != null) {
+        producedInstance.dependOn(depends);
+      }
+      if (returnType != null && flow == ControlFlow.Open) {
+        environment.document.createError(this, String.format("The %s '%s' does not return in all cases", specialization == FunctionSpecialization.Pure ? "function" : "procedure", nameToken.text), "FunctionDefine");
+      }
+    });
   }
 
   public int getFuncId(final Environment environment) {

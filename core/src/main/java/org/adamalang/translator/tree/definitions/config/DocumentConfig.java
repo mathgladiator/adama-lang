@@ -6,7 +6,7 @@
  *
  * (c) 2020 - 2023 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.translator.tree.definitions;
+package org.adamalang.translator.tree.definitions.config;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
@@ -18,7 +18,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import java.util.function.Consumer;
 
 /** there are operational parameters which are embedded with the document */
-public class DocumentConfig extends Definition {
+public class DocumentConfig extends StaticPiece {
   public final Token name;
   public final Token equals;
   public final Expression value;

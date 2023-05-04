@@ -10,7 +10,7 @@ package org.adamalang.translator.codegen;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
-import org.adamalang.translator.tree.definitions.DefineDocumentEvent;
+import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
 import org.adamalang.translator.tree.definitions.DocumentEvent;
 
 import java.util.HashMap;

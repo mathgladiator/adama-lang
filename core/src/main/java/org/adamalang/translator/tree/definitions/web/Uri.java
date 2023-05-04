@@ -142,7 +142,6 @@ public class Uri extends Definition {
     }
   }
 
-  @Override
   public void typing(Environment environment) {
     for (Map.Entry<String, TyType> var : variables.entrySet()) {
       TyType typeToCheck = var.getValue();

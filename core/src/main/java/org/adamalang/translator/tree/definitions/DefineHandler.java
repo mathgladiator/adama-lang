@@ -9,11 +9,13 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeChannel;
 import org.adamalang.translator.tree.types.traits.IsStructure;
@@ -85,20 +87,28 @@ public class DefineHandler extends Definition {
     }
   }
 
-  @Override
-  public void typing(final Environment environment) {
-    final IsStructure messageType = environment.rules.FindMessageStructure(typeName, this, false);
-    if (messageType == null) {
-      return;
+  public void typing(TypeCheckerProxy checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
+    if (messageVarToken != null) {
+      fe.define(messageVarToken.text);
     }
-    final var next = prepareEnv(environment, messageType);
     if (code != null) {
-      code.typing(next);
+      code.free(fe);
     }
-    if (behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
-      final var nativeChannel = new TyNativeChannel(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(isArray ? new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, null) : (TyType) messageType)).withPosition(this);
-      environment.define(channel, nativeChannel, false, nativeChannel);
-    }
+    checker.register(fe.free, (environment) -> {
+      final IsStructure messageType = environment.rules.FindMessageStructure(typeName, this, false);
+      if (messageType == null) {
+        return;
+      }
+      final var next = prepareEnv(environment, messageType);
+      if (code != null) {
+        code.typing(next);
+      }
+      if (behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
+        final var nativeChannel = new TyNativeChannel(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(isArray ? new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, null) : (TyType) messageType)).withPosition(this);
+        environment.define(channel, nativeChannel, false, nativeChannel);
+      }
+    });
   }
 
   public Environment prepareEnv(final Environment environment, final IsStructure messageType) {

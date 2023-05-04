@@ -9,8 +9,10 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 
 import java.util.function.Consumer;
 
@@ -36,8 +38,9 @@ public class DefineTest extends Definition {
     code.emit(yielder);
   }
 
-  @Override
-  public void typing(final Environment environment) {
-    code.typing(environment.scopeAsUnitTest());
+  public void typing(TypeCheckerProxy checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
+    code.free(fe);
+    checker.register(fe.free, (env) -> code.typing(env.scopeAsUnitTest()));
   }
 }

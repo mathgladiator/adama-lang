@@ -16,6 +16,9 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.definitions.*;
+import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
+import org.adamalang.translator.tree.definitions.config.DocumentConfig;
+import org.adamalang.translator.tree.definitions.config.StaticPiece;
 import org.adamalang.translator.tree.definitions.web.Uri;
 import org.adamalang.translator.tree.expressions.*;
 import org.adamalang.translator.tree.expressions.constants.*;
@@ -481,7 +484,7 @@ public class Parser {
     }
     var open = consumeExpectedSymbol("{");
     blackhole_commas(open);
-    ArrayList<Definition> definitions = new ArrayList<>();
+    ArrayList<StaticPiece> definitions = new ArrayList<>();
 
     var nextOrClose = tokens.pop();
     while (!nextOrClose.isSymbolWithTextEq("}")) {

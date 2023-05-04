@@ -10,12 +10,14 @@ package org.adamalang.translator.tree.privacy;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 
@@ -54,10 +56,14 @@ public class DefineCustomPolicy extends DocumentPosition {
     return env;
   }
 
-  public void typeCheck(final Environment environment) {
-    final var flow = code.typing(scope(environment, null));
-    if (flow == ControlFlow.Open) {
-      environment.document.createError(this, String.format("Policy '%s' does not return in all cases", name.text), "PolicyDefine");
-    }
+  public void typing(TypeCheckerProxy checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
+    code.free(fe);
+    checker.register(fe.free, (environment -> {
+      final var flow = code.typing(scope(environment, null));
+      if (flow == ControlFlow.Open) {
+        environment.document.createError(this, String.format("Policy '%s' does not return in all cases", name.text), "PolicyDefine");
+      }
+    }));
   }
 }

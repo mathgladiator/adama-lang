@@ -8,7 +8,6 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 
 import java.util.function.Consumer;
@@ -31,10 +30,5 @@ public class Include extends Definition {
     yielder.accept(include);
     yielder.accept(resource);
     yielder.accept(semicolon);
-  }
-
-  @Override
-  public void typing(Environment environment) {
-
   }
 }

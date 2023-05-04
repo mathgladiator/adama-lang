@@ -9,9 +9,11 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 
 import java.util.function.Consumer;
@@ -50,8 +52,9 @@ public class DefineConstructor extends Definition {
     code.emit(yielder);
   }
 
-  @Override
-  public void typing(final Environment environment) {
+  // TODO: move to typing()
+  @Deprecated
+  public void internalTyping(final Environment environment) {
     final var next = environment.scopeAsPolicy().scopeAsConstructor();
     if (messageNameToken != null && messageTypeToken != null && unifiedMessageType != null) {
       next.define(messageNameToken.text, unifiedMessageType, false, unifiedMessageType);
@@ -61,5 +64,13 @@ public class DefineConstructor extends Definition {
     if (code != null) {
       code.typing(next);
     }
+  }
+
+  public void typing(TypeCheckerProxy checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
+    code.free(fe);
+    checker.register(fe.free, (env) -> {
+      internalTyping(env);
+    });
   }
 }

@@ -10,8 +10,10 @@ package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,7 +45,6 @@ public class DefineService extends Definition {
       yielder.accept(semicolon);
     }
 
-    @Override
     public void typing(Environment environment) {
       expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     }
@@ -98,7 +99,6 @@ public class DefineService extends Definition {
       yielder.accept(semicolon);
     }
 
-    @Override
     public void typing(Environment environment) {
       environment.rules.FindMessageStructure(inputTypeName.text, this, false);
       environment.rules.FindMessageStructure(outputTypeName.text, this, false);
@@ -146,23 +146,25 @@ public class DefineService extends Definition {
     yielder.accept(close);
   }
 
-  @Override
-  public void typing(Environment environment) {
-    HashSet<String> alreadyDefinedAspects = new HashSet<>();
-    for (ServiceAspect aspect : aspects) {
-      if (alreadyDefinedAspects.contains(aspect.name.text)) {
-        environment.document.createError(this, String.format("'%s' was already defined as an aspect within the service.", aspect.name.text), "ServiceDefine");
+  public void typing(TypeCheckerProxy checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
+    checker.register(fe.free, (environment) -> {
+      HashSet<String> alreadyDefinedAspects = new HashSet<>();
+      for (ServiceAspect aspect : aspects) {
+        if (alreadyDefinedAspects.contains(aspect.name.text)) {
+          environment.document.createError(this, String.format("'%s' was already defined as an aspect within the service.", aspect.name.text), "ServiceDefine");
+        }
+        alreadyDefinedAspects.add(aspect.name.text);
+        aspect.typing(environment);
       }
-      alreadyDefinedAspects.add(aspect.name.text);
-      aspect.typing(environment);
-    }
-    HashSet<String> alreadyDefinedMethods = new HashSet<>();
-    for (ServiceMethod method : methods) {
-      if (alreadyDefinedMethods.contains(method.name.text)) {
-        environment.document.createError(this, String.format("'%s' was already defined as a method within the service.", method.name.text), "ServiceDefine");
+      HashSet<String> alreadyDefinedMethods = new HashSet<>();
+      for (ServiceMethod method : methods) {
+        if (alreadyDefinedMethods.contains(method.name.text)) {
+          environment.document.createError(this, String.format("'%s' was already defined as a method within the service.", method.name.text), "ServiceDefine");
+        }
+        alreadyDefinedMethods.add(method.name.text);
+        method.typing(environment);
       }
-      alreadyDefinedMethods.add(method.name.text);
-      method.typing(environment);
-    }
+    });
   }
 }

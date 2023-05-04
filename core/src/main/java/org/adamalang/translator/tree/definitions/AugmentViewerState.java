@@ -8,10 +8,11 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 
+import java.util.Collections;
 import java.util.function.Consumer;
 
 public class AugmentViewerState extends Definition {
@@ -35,8 +36,7 @@ public class AugmentViewerState extends Definition {
     yielder.accept(semicolon);
   }
 
-  @Override
-  public void typing(Environment environment) {
-    type.typing(environment);
+  public void typing(TypeCheckerProxy checker) {
+    checker.define(name, Collections.EMPTY_SET, (env) -> type.typing(env));
   }
 }

@@ -9,9 +9,13 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.runtime.sys.CoreRequestContext;
-import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
+import org.adamalang.translator.tree.definitions.config.DocumentConfig;
+import org.adamalang.translator.tree.definitions.config.StaticPiece;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.TyInternalReadonlyClass;
 
 import java.util.ArrayList;
@@ -26,10 +30,10 @@ public class DefineStatic extends Definition {
   public final ArrayList<DocumentConfig> configs;
   private final Token staticToken;
   private final Token openToken;
-  private final ArrayList<Definition> definitions;
+  private final ArrayList<StaticPiece> definitions;
   private final Token closeToken;
 
-  public DefineStatic(Token staticToken, Token openContext, Token contextName, Token closeContext, Token openToken, ArrayList<Definition> definitions, Token closeToken) {
+  public DefineStatic(Token staticToken, Token openContext, Token contextName, Token closeContext, Token openToken, ArrayList<StaticPiece> definitions, Token closeToken) {
     this.staticToken = staticToken;
     this.openContext = openContext;
     this.contextName = contextName;
@@ -39,7 +43,7 @@ public class DefineStatic extends Definition {
     this.closeToken = closeToken;
     this.events = new ArrayList<>();
     this.configs = new ArrayList<>();
-    for (Definition definition : definitions) {
+    for (StaticPiece definition : definitions) {
       if (definition instanceof DefineDocumentEvent) {
         events.add((DefineDocumentEvent) definition);
         if (contextName != null) {
@@ -62,20 +66,25 @@ public class DefineStatic extends Definition {
       yielder.accept(closeContext);
     }
     yielder.accept(openToken);
-    for (Definition definition : definitions) {
+    for (StaticPiece definition : definitions) {
       definition.emit(yielder);
     }
     yielder.accept(closeToken);
   }
 
-  @Override
-  public void typing(Environment environment) {
-    Environment next = environment.staticPolicy().scopeStatic();
+  public void typing(TypeCheckerProxy checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
     if (contextName != null) {
-      next.define(contextName.text, new TyInternalReadonlyClass(CoreRequestContext.class), true, this);
+      fe.define(contextName.text);
     }
-    for (Definition definition : definitions) {
-      definition.typing(next);
-    }
+    checker.register(fe.free, (environment) -> {
+      Environment next = environment.staticPolicy().scopeStatic();
+      if (contextName != null) {
+        next.define(contextName.text, new TyInternalReadonlyClass(CoreRequestContext.class), true, this);
+      }
+      for (StaticPiece definition : definitions) {
+        definition.typing(next);
+      }
+    });
   }
 }

@@ -9,10 +9,12 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 
 import java.util.ArrayList;
@@ -91,17 +93,23 @@ public class DefineDispatcher extends Definition {
     code.emit(yielder);
   }
 
-  @Override
-  public void typing(final Environment environment) {
-    returnType = environment.rules.Resolve(returnType, false);
-    environment.rules.FindEnumType(enumNameToken.text, this, false);
-    for (final FunctionArg arg : args) {
-      arg.typing(environment);
+  public void typing(TypeCheckerProxy checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
+    for(FunctionArg arg : args) {
+      fe.define(arg.argName);
     }
-    final var flow = code.typing(prepareEnvironment(environment));
-    if (returnType != null && flow == ControlFlow.Open) {
-      environment.document.createError(this, String.format("Dispatch '%s' does not return in all cases", functionName.text), "DefineDispatcher");
-    }
+    code.free(fe);
+    checker.register(fe.free, (environment) -> {
+      returnType = environment.rules.Resolve(returnType, false);
+      environment.rules.FindEnumType(enumNameToken.text, this, false);
+      for (final FunctionArg arg : args) {
+        arg.typing(environment);
+      }
+      final var flow = code.typing(prepareEnvironment(environment));
+      if (returnType != null && flow == ControlFlow.Open) {
+        environment.document.createError(this, String.format("Dispatch '%s' does not return in all cases", functionName.text), "DefineDispatcher");
+      }
+    });
   }
 
   public Environment prepareEnvironment(final Environment environment) {
