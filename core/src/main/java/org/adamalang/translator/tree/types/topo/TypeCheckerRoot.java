@@ -17,21 +17,24 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /** This is a hack class to introduce topological ordering as this is going to be a very complex change */
-public class TypeCheckerRoot {
+public class TypeCheckerRoot implements TypeChecker {
   private final ArrayList<Consumer<Environment>> typeCheckOrder;
 
   public TypeCheckerRoot(ArrayList<Consumer<Environment>> typeCheckOrder) {
     this.typeCheckOrder = typeCheckOrder;
   }
 
+  @Override
   public void define(Token name, Set<String> depends, Consumer<Environment> checker) {
     typeCheckOrder.add(checker);
   }
 
+  @Override
   public void register(Set<String> depends, Consumer<Environment> checker) {
     typeCheckOrder.add(checker);
   }
 
+  @Override
   public void issueError(DocumentPosition dp, String message, String tutorial) {
     typeCheckOrder.add(env -> {
       env.document.createError(dp, message, tutorial);
