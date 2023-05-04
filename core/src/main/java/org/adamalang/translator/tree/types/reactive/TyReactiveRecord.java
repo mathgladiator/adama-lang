@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
@@ -32,6 +33,7 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 public class TyReactiveRecord extends TyType implements //
@@ -178,6 +180,11 @@ public class TyReactiveRecord extends TyType implements //
     }
     typedAlready = true;
     storage.typing(environment.scope());
+  }
+
+  @Override
+  public void typing(TypeCheckerProxy checker) {
+    checker.register(Collections.emptySet(), (environment -> typing(environment.scope())));
   }
 
   @Override

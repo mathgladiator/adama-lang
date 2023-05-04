@@ -13,6 +13,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.definitions.DefineDispatcher;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -144,57 +145,59 @@ public class EnumStorage extends DocumentPosition {
     return signatureToNameAndId.get(name + "/" + signature);
   }
 
-  public void typing(final Environment environment) {
-    if (options.size() == 0) {
-      environment.document.createError(this, String.format("enum '%s' has no values", name), "EnumStorage");
-    }
-    for (final Map.Entry<String, HashMap<String, ArrayList<DefineDispatcher>>> dispatcherMap : dispatchersByNameThenSignature.entrySet()) {
-      for (final Map.Entry<String, ArrayList<DefineDispatcher>> dispatchers : dispatcherMap.getValue().entrySet()) {
-        final var firstDispatcher = dispatchers.getValue().get(0);
-        // validate the values
-        final var coverage = new HashSet<String>();
-        for (final DefineDispatcher dd : dispatchers.getValue()) {
-          if (!valueFound(dd, coverage)) {
-            environment.document.createError(dd, String.format("Dispatcher '%s' has a value prefix '%s' which does not relate to any value within enum '%s'", dd.functionName.text, dd.valueToken.text, dd.enumNameToken.text), "EnumStorage");
-          }
-        }
-        // make sure we have coverage
-        StringBuilder missing = null;
-        for (final String value : options.keySet()) {
-          if (!coverage.contains(value)) {
-            if (missing == null) {
-              missing = new StringBuilder();
-              missing.append(value);
-            } else {
-              missing.append(", ").append(value);
+  public void typing(final TypeCheckerProxy checker) {
+    checker.register(Collections.EMPTY_SET, (environment) -> {
+      if (options.size() == 0) {
+        environment.document.createError(this, String.format("enum '%s' has no values", name), "EnumStorage");
+      }
+      for (final Map.Entry<String, HashMap<String, ArrayList<DefineDispatcher>>> dispatcherMap : dispatchersByNameThenSignature.entrySet()) {
+        for (final Map.Entry<String, ArrayList<DefineDispatcher>> dispatchers : dispatcherMap.getValue().entrySet()) {
+          final var firstDispatcher = dispatchers.getValue().get(0);
+          // validate the values
+          final var coverage = new HashSet<String>();
+          for (final DefineDispatcher dd : dispatchers.getValue()) {
+            if (!valueFound(dd, coverage)) {
+              environment.document.createError(dd, String.format("Dispatcher '%s' has a value prefix '%s' which does not relate to any value within enum '%s'", dd.functionName.text, dd.valueToken.text, dd.enumNameToken.text), "EnumStorage");
             }
           }
-        }
-        for (final DefineDispatcher other : dispatchers.getValue()) {
-          if (firstDispatcher.returnType != null && other.returnType != null) {
-            final var checkF2Oret = environment.rules.CanTypeAStoreTypeB(firstDispatcher.returnType, other.returnType, StorageTweak.None, true);
-            final var checkO2Fret = environment.rules.CanTypeAStoreTypeB(other.returnType, firstDispatcher.returnType, StorageTweak.None, true);
-            if (!checkF2Oret || !checkO2Fret) {
+          // make sure we have coverage
+          StringBuilder missing = null;
+          for (final String value : options.keySet()) {
+            if (!coverage.contains(value)) {
+              if (missing == null) {
+                missing = new StringBuilder();
+                missing.append(value);
+              } else {
+                missing.append(", ").append(value);
+              }
+            }
+          }
+          for (final DefineDispatcher other : dispatchers.getValue()) {
+            if (firstDispatcher.returnType != null && other.returnType != null) {
+              final var checkF2Oret = environment.rules.CanTypeAStoreTypeB(firstDispatcher.returnType, other.returnType, StorageTweak.None, true);
+              final var checkO2Fret = environment.rules.CanTypeAStoreTypeB(other.returnType, firstDispatcher.returnType, StorageTweak.None, true);
+              if (!checkF2Oret || !checkO2Fret) {
+                environment.document.createError(firstDispatcher, String.format("Dispatcher '%s' do not agree on return type.", firstDispatcher.functionName.text), "EnumStorage");
+                environment.document.createError(other, String.format("Dispatcher '%s' do not agree on return type.", firstDispatcher.functionName.text), "EnumStorage");
+              }
+            } else if (!(firstDispatcher.returnType == null && other.returnType == null)) {
               environment.document.createError(firstDispatcher, String.format("Dispatcher '%s' do not agree on return type.", firstDispatcher.functionName.text), "EnumStorage");
               environment.document.createError(other, String.format("Dispatcher '%s' do not agree on return type.", firstDispatcher.functionName.text), "EnumStorage");
             }
-          } else if (!(firstDispatcher.returnType == null && other.returnType == null)) {
-            environment.document.createError(firstDispatcher, String.format("Dispatcher '%s' do not agree on return type.", firstDispatcher.functionName.text), "EnumStorage");
-            environment.document.createError(other, String.format("Dispatcher '%s' do not agree on return type.", firstDispatcher.functionName.text), "EnumStorage");
           }
-        }
-        if (firstDispatcher.returnType != null) {
-          for (final String value : options.keySet()) {
-            if (findFindingDispatchers(dispatchers.getValue(), value, false).size() > 1) {
-              environment.document.createError(firstDispatcher, String.format("Dispatcher '%s' returns and matches too many for '%s'", firstDispatcher.functionName.text, value), "EnumStorage");
+          if (firstDispatcher.returnType != null) {
+            for (final String value : options.keySet()) {
+              if (findFindingDispatchers(dispatchers.getValue(), value, false).size() > 1) {
+                environment.document.createError(firstDispatcher, String.format("Dispatcher '%s' returns and matches too many for '%s'", firstDispatcher.functionName.text, value), "EnumStorage");
+              }
             }
           }
-        }
-        if (missing != null) {
-          environment.document.createError(this, String.format("Enum '%s' has a dispatcher '%s' which is incomplete and lacks: %s.", name, dispatcherMap.getKey(), missing), "EnumStorage");
+          if (missing != null) {
+            environment.document.createError(this, String.format("Enum '%s' has a dispatcher '%s' which is incomplete and lacks: %s.", name, dispatcherMap.getKey(), missing), "EnumStorage");
+          }
         }
       }
-    }
+    });
   }
 
   private boolean valueFound(final DefineDispatcher dd, final HashSet<String> coverage) {

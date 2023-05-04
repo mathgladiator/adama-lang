@@ -10,6 +10,7 @@ package org.adamalang.translator.tree.types.traits;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 
 import java.util.function.Consumer;
@@ -22,4 +23,6 @@ public interface IsStructure {
   StructureStorage storage();
 
   void typing(Environment environment);
+
+  void typing(TypeCheckerProxy checker);
 }

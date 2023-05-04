@@ -20,6 +20,7 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.InjectExpression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.TypeCheckerProxy;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.structures.DefineMethod;
@@ -31,6 +32,7 @@ import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNativeOnly
 import org.adamalang.translator.tree.types.traits.details.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -152,6 +154,11 @@ public class TyNativeMessage extends TyType implements //
   @Override
   public void typing(final Environment environment) {
     storage.typing(environment.scope());
+  }
+
+  @Override
+  public void typing(TypeCheckerProxy checker) {
+    checker.register(Collections.emptySet(), (environment -> typing(environment.scope())));
   }
 
   @Override

@@ -70,8 +70,7 @@ public class Document implements TopLevelDocumentHandler {
   private final HashSet<String> functionsDefines;
   private final ArrayList<LatentCodeSnippet> latentCodeSnippets;
   private final ArrayList<File> searchPaths;
-  @Deprecated
-  private final ArrayList<Consumer<Environment>> typeCheckOrder;
+  @Deprecated private final ArrayList<Consumer<Environment>> typeCheckOrder;
   private final TypeCheckerProxy typeChecker;
   private int autoClassId;
   private String className;
@@ -177,7 +176,7 @@ public class Document implements TopLevelDocumentHandler {
       typeChecker.issueError(bd, String.format("Global field '%s' was already defined", bd.nameToken.text), "GlobalDefine");
       return;
     }
-    root.storage().add(bd, typeCheckOrder);
+    root.storage().addFromRoot(bd, typeChecker);
   }
 
   @Override
@@ -287,7 +286,7 @@ public class Document implements TopLevelDocumentHandler {
       return;
     }
     defined.add(fd.name);
-    root.storage().add(fd, typeCheckOrder);
+    root.storage.addFromRoot(fd, typeChecker);
   }
 
   @Override
@@ -299,9 +298,7 @@ public class Document implements TopLevelDocumentHandler {
         typeChecker.issueError(prior, String.format("The enumeration '%s' was defined here.", storage.name()), "DocumentDefine");
         return;
       }
-      typeCheckOrder.add(env -> {
-        storage.storage().typing(env);
-      });
+      storage.storage().typing(typeChecker);;
       for (final String s : storage.storage().duplicates) {
         typeChecker.issueError((TyType) storage, String.format("The enumeration '%s' has duplicates for '%s' defined.", storage.name(), s), "DocumentDefine");
       }
@@ -318,9 +315,7 @@ public class Document implements TopLevelDocumentHandler {
         typeChecker.issueError(prior, String.format("The %s '%s' was defined here.", prior instanceof TyNativeMessage ? "message" : "record", storage.name()), "DocumentDefine");
       }
       types.put(storage.name(), (TyType) storage);
-      typeCheckOrder.add(env -> {
-        storage.typing(env.scope());
-      });
+      storage.typing(typeChecker);
     }
   }
 
