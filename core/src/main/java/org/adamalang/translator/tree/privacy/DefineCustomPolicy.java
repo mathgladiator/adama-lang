@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.topo.TypeChecker;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 
@@ -55,10 +56,10 @@ public class DefineCustomPolicy extends DocumentPosition {
     return env;
   }
 
-  public void typing(TypeCheckerRoot checker) {
+  public void typing(TypeChecker checker) {
     FreeEnvironment fe = FreeEnvironment.root();
     code.free(fe);
-    checker.register(fe.free, (environment -> {
+    checker.define(Token.WRAP("policy:" + name), fe.free, (environment -> {
       final var flow = code.typing(scope(environment, null));
       if (flow == ControlFlow.Open) {
         environment.document.createError(this, String.format("Policy '%s' does not return in all cases", name.text), "PolicyDefine");

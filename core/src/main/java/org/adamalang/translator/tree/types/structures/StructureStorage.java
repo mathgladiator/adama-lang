@@ -13,14 +13,17 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.topo.TypeChecker;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.reactive.*;
+import org.adamalang.translator.tree.types.topo.TypeCheckerStructure;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -41,7 +44,7 @@ public class StructureStorage extends DocumentPosition {
   public final TreeMap<String, DefineCustomPolicy> policies;
   public final ArrayList<String> policiesForVisibility;
   public final StorageSpecialization specialization;
-  public final ArrayList<Consumer<Environment>> typeCheckOrder;
+  public TypeCheckerStructure checker;
   public final HashSet<String> fieldsWithDefaults;
   public Token closeBraceToken;
   private boolean typedAlready;
@@ -50,8 +53,8 @@ public class StructureStorage extends DocumentPosition {
     this.specialization = specialization;
     this.anonymous = anonymous;
     this.openBraceToken = openBraceToken;
+    this.checker = new TypeCheckerStructure();
     closeBraceToken = null;
-    typeCheckOrder = new ArrayList<>();
     fields = new TreeMap<>();
     bubbles = new TreeMap<>();
     methods = new ArrayList<>();
@@ -116,32 +119,20 @@ public class StructureStorage extends DocumentPosition {
   }
 
   public void add(final BubbleDefinition bd) {
-    add(bd, typeCheckOrder);
-  }
-
-  private void add(final BubbleDefinition bd, final ArrayList<Consumer<Environment>> order) {
-    emissions.add(emit -> bd.emit(emit));
-    ingest(bd);
-    order.add(env -> {
-      bd.typing(env.watch(watcher(env, bd.variablesToWatch, bd.servicesToWatch)));
-    });
-    if (has(bd.nameToken.text)) {
-      order.add(env -> {
-        env.document.createError(bd, String.format("Bubble '%s' was already defined", bd.nameToken.text), "StructureDefine");
-      });
-      return;
-    }
-    bubbles.put(bd.nameToken.text, bd);
+    addCommon(bd, FreeEnvironment.root(), checker);
   }
 
   public void addFromRoot(final BubbleDefinition bd, TypeCheckerRoot checker) {
+    addCommon(bd, FreeEnvironment.root(), checker);
+  }
+
+  public void addCommon(final BubbleDefinition bd, FreeEnvironment fe, TypeChecker inChecker) {
     emissions.add(emit -> bd.emit(emit));
     ingest(bd);
-    FreeEnvironment fe = FreeEnvironment.root();
     bd.expression.free(fe);
-    checker.register(fe.free, env -> bd.typing(env.watch(watcher(env, bd.variablesToWatch, bd.servicesToWatch))));
+    inChecker.register(fe.free, env -> bd.typing(env.watch(watcher(env, bd.variablesToWatch, bd.servicesToWatch))));
     if (has(bd.nameToken.text)) {
-      checker.issueError(bd, String.format("Bubble '%s' was already defined", bd.nameToken.text), "StructureDefine");
+      inChecker.issueError(bd, String.format("Bubble '%s' was already defined", bd.nameToken.text), "StructureDefine");
       return;
     }
     bubbles.put(bd.nameToken.text, bd);
@@ -156,7 +147,12 @@ public class StructureStorage extends DocumentPosition {
     emissions.add(emit -> dm.emit(emit));
     ingest(dm);
     methods.add(dm);
-    typeCheckOrder.add(env -> {
+    FreeEnvironment fe = FreeEnvironment.root();
+    for (FunctionArg arg : dm.args) {
+      dm.code.free(fe);
+    }
+
+    checker.define(dm.nameToken, fe.free, env -> {
         final var foi = dm.typing(env);
         var functional = methodTypes.get(dm.name);
         if (functional == null) {
@@ -176,45 +172,28 @@ public class StructureStorage extends DocumentPosition {
 
   /** add the given field to the record */
   public void add(final FieldDefinition fd) {
-    this.add(fd, typeCheckOrder);
-  }
-
-  /** add the given field to the record such that type checking is done in the given order */
-  private void add(final FieldDefinition fd, final ArrayList<Consumer<Environment>> order) {
-    emissions.add(emit -> fd.emit(emit));
-    ingest(fd);
-    if (has(fd.nameToken.text)) {
-      order.add(env -> {
-        env.document.createError(fd, String.format("Field '%s' was already defined", fd.nameToken.text), "StructureDefine");
-      });
-      return;
-    }
-    if (fd.defaultValueOverride != null) {
-      fieldsWithDefaults.add(fd.name);
-    }
-    order.add(env -> {
-      fd.typing(env.watch(watcher(env, fd.variablesToWatch, fd.servicesToWatch)), this);
-      env.define(fd.name, fd.type, specialization == StorageSpecialization.Record && fd.name.equals("id"), fd);
-    });
-    fields.put(fd.name, fd);
-    fieldsByOrder.add(fd);
+    addCommon(fd, FreeEnvironment.root(), checker);
   }
 
   public void addFromRoot(final FieldDefinition fd, TypeCheckerRoot checker) {
+    addCommon(fd, FreeEnvironment.root(), checker);
+  }
+
+  public void addCommon(final FieldDefinition fd, FreeEnvironment fe, TypeChecker insertChecker) {
     emissions.add(emit -> fd.emit(emit));
     ingest(fd);
+
     if (has(fd.nameToken.text)) {
-      checker.issueError(fd, String.format("Field '%s' was already defined", fd.nameToken.text), "StructureDefine");
+      insertChecker.issueError(fd, String.format("Field '%s' was already defined", fd.nameToken.text), "StructureDefine");
       return;
     }
     if (fd.defaultValueOverride != null) {
       fieldsWithDefaults.add(fd.name);
     }
-    FreeEnvironment fe = FreeEnvironment.root();
     if (fd.computeExpression != null) {
       fd.computeExpression.free(fe);
     }
-    checker.define(fd.nameToken, fe.free, env -> {
+    insertChecker.define(fd.nameToken, fe.free, env -> {
       fd.typing(env.watch(watcher(env, fd.variablesToWatch, fd.servicesToWatch)), this);
       env.define(fd.name, fd.type, false, fd);
     });
@@ -227,7 +206,7 @@ public class StructureStorage extends DocumentPosition {
     if (!indexSet.contains(indexDefn.nameToken.text)) {
       indices.add(indexDefn);
       indexSet.add(indexDefn.nameToken.text);
-      typeCheckOrder.add(env -> {
+      checker.register(Collections.singleton(indexDefn.nameToken.text), env -> {
         final var fd = fields.get(indexDefn.nameToken.text);
         if (fd == null) {
           env.document.createError(indexDefn, String.format("Index could not find field '%s'", indexDefn.nameToken.text), "StructureDefine");
@@ -239,9 +218,7 @@ public class StructureStorage extends DocumentPosition {
         }
       });
     } else {
-      typeCheckOrder.add(env -> {
-        env.document.createError(indexDefn, String.format("Index was already defined: '%s'", indexDefn.nameToken.text), "StructureDefine");
-      });
+      checker.issueError(indexDefn, String.format("Index was already defined: '%s'", indexDefn.nameToken.text), "StructureDefine");
     }
   }
 
@@ -249,13 +226,11 @@ public class StructureStorage extends DocumentPosition {
   public void addPolicy(final DefineCustomPolicy policy) {
     emissions.add(emit -> policy.emit(emit));
     if (policies.containsKey(policy.name.text)) {
-      typeCheckOrder.add(env -> {
-        env.document.createError(policy, String.format("Policy '%s' was already defined", policy.name.text), "RecordMethodDefine");
-      });
+      checker.issueError(policy, String.format("Policy '%s' was already defined", policy.name.text), "RecordMethodDefine");
       return;
     }
     policies.put(policy.name.text, policy);
-    policy.typing(new TypeCheckerRoot(typeCheckOrder));
+    policy.typing(checker);
   }
 
   public void emit(final Consumer<Token> yielder) {
@@ -296,7 +271,7 @@ public class StructureStorage extends DocumentPosition {
     final var policyToCheck = policyToCheckToken.text;
 
     policiesForVisibility.add(policyToCheck);
-    typeCheckOrder.add(env -> {
+    checker.register(Collections.singleton("policy:" + policyToCheck), env -> {
       if (!policies.containsKey(policyToCheck) && !env.document.root.storage.policies.containsKey(policyToCheck)) {
         final var dp = new DocumentPosition();
         dp.ingest(requireToken);
@@ -327,13 +302,16 @@ public class StructureStorage extends DocumentPosition {
     if (typedAlready) {
       return;
     }
+    typedAlready = true;
+    checker.register(Collections.emptySet(), env -> {
+      for (final TyNativeFunctional functional : methodTypes.values()) {
+        functional.typing(env);
+      }
+    });
+
     Environment envToUse = specialization == StorageSpecialization.Message ? envParent.scopeMessage() : envParent;
-    for (final Consumer<Environment> type : typeCheckOrder) {
+    for (final Consumer<Environment> type : checker.typeCheckOrder) {
       type.accept(envToUse);
     }
-    for (final TyNativeFunctional functional : methodTypes.values()) {
-      functional.typing(envToUse);
-    }
-    typedAlready = true;
   }
 }
