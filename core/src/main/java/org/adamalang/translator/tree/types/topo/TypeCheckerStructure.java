@@ -14,7 +14,6 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 
-import javax.print.attribute.SetOfIntegerSyntax;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -65,7 +64,6 @@ public class TypeCheckerStructure implements TypeChecker {
 
   private final ArrayList<Check> checks;
   private final HashSet<String> defined;
-
 
   public TypeCheckerStructure() {
     this.checks = new ArrayList<>();
