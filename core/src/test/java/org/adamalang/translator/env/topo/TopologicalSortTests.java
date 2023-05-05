@@ -47,9 +47,9 @@ public class TopologicalSortTests {
     ts.add("e", "ve", null);
     ArrayList<String> sorted = ts.sort();
     Assert.assertEquals("va", sorted.get(0));
-    Assert.assertEquals("ve", sorted.get(1));
-    Assert.assertEquals("vb", sorted.get(2));
-    Assert.assertEquals("vd", sorted.get(3));
+    Assert.assertEquals("vd", sorted.get(1));
+    Assert.assertEquals("ve", sorted.get(2));
+    Assert.assertEquals("vb", sorted.get(3));
     Assert.assertEquals("vc", sorted.get(4));
   }
 
@@ -66,5 +66,16 @@ public class TopologicalSortTests {
     Assert.assertFalse(ts.cycles().isEmpty());
   }
 
-
+  @Test
+  public void linear() {
+    TopologicalSort<String> ts = new TopologicalSort<>();
+    ts.add("a", "va", null);
+    ts.add("b", "vb", D("a"));
+    ts.add("c", "vc", D("b"));
+    ArrayList<String> sorted = ts.sort();
+    Assert.assertEquals("va", sorted.get(0));
+    Assert.assertEquals("vb", sorted.get(1));
+    Assert.assertEquals("vc", sorted.get(2));
+    Assert.assertTrue(ts.cycles().isEmpty());
+  }
 }
