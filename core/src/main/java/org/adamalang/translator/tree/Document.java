@@ -70,7 +70,6 @@ public class Document implements TopLevelDocumentHandler {
   private final HashSet<String> functionsDefines;
   private final ArrayList<LatentCodeSnippet> latentCodeSnippets;
   private final ArrayList<File> searchPaths;
-  @Deprecated private final ArrayList<Consumer<Environment>> typeCheckOrder;
   private final TypeCheckerRoot typeChecker;
   private int autoClassId;
   private String className;
@@ -85,8 +84,7 @@ public class Document implements TopLevelDocumentHandler {
   public Document() {
     autoClassId = 0;
     errorLists = new ArrayList<>();
-    typeCheckOrder = new ArrayList<>();
-    typeChecker = new TypeCheckerRoot(typeCheckOrder);
+    typeChecker = new TypeCheckerRoot();
     root = new TyReactiveRecord(null, Token.WRAP("Root"), new StructureStorage(StorageSpecialization.Record, false, null));
     types = new LinkedHashMap<>();
     handlers = new ArrayList<>();
@@ -472,15 +470,9 @@ public class Document implements TopLevelDocumentHandler {
       }
       final var functional = new TyNativeFunctional(entry.getKey(), instances, FunctionStyleJava.InjectNameThenArgs);
       functionTypes.put(entry.getKey(), functional);
-      typeCheckOrder.add(env -> functional.typing(environment));
+      typeChecker.register(Collections.emptySet(), env -> functional.typing(env));
     }
-    while (typeCheckOrder.size() > 0) {
-      final var cloneTypeChecks = new ArrayList<>(typeCheckOrder);
-      typeCheckOrder.clear();
-      for (final Consumer<Environment> checkInOrder : cloneTypeChecks) {
-        checkInOrder.accept(environment);
-      }
-    }
+    typeChecker.check(environment);
     TyType constructorMessageType = null;
     for (final DefineConstructor dc : constructors) {
       if (dc.messageTypeToken != null) {

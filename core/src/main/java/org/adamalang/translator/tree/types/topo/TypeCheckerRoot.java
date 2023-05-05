@@ -20,8 +20,8 @@ import java.util.function.Consumer;
 public class TypeCheckerRoot implements TypeChecker {
   private final ArrayList<Consumer<Environment>> typeCheckOrder;
 
-  public TypeCheckerRoot(ArrayList<Consumer<Environment>> typeCheckOrder) {
-    this.typeCheckOrder = typeCheckOrder;
+  public TypeCheckerRoot() {
+    this.typeCheckOrder = new ArrayList<>();
   }
 
   @Override
@@ -35,7 +35,6 @@ public class TypeCheckerRoot implements TypeChecker {
   }
 
   public void alias(String from, String to) {
-
   }
 
   @Override
@@ -43,5 +42,15 @@ public class TypeCheckerRoot implements TypeChecker {
     typeCheckOrder.add(env -> {
       env.document.createError(dp, message, tutorial);
     });
+  }
+
+  public void check(Environment environment) {
+    while (typeCheckOrder.size() > 0) {
+      final var cloneTypeChecks = new ArrayList<>(typeCheckOrder);
+      typeCheckOrder.clear();
+      for (final Consumer<Environment> checkInOrder : cloneTypeChecks) {
+        checkInOrder.accept(environment);
+      }
+    }
   }
 }
