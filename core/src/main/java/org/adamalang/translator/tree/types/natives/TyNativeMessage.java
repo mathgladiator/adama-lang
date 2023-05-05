@@ -157,7 +157,7 @@ public class TyNativeMessage extends TyType implements //
 
   @Override
   public void typing(TypeCheckerRoot checker) {
-    storage.typing(checker);
+    storage.typing(name, checker);
   }
 
   @Override

@@ -177,7 +177,7 @@ public class TyReactiveRecord extends TyType implements //
     if (fdId == null || !(fdId.type instanceof TyReactiveInteger)) {
       checker.issueError(this, "id must be type int", "Record");
     }
-    storage.typing(checker);
+    storage.typing(name, checker);
   }
 
   @Override

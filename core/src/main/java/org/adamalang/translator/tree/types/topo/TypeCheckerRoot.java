@@ -34,6 +34,10 @@ public class TypeCheckerRoot implements TypeChecker {
     typeCheckOrder.add(checker);
   }
 
+  public void alias(String from, String to) {
+
+  }
+
   @Override
   public void issueError(DocumentPosition dp, String message, String tutorial) {
     typeCheckOrder.add(env -> {

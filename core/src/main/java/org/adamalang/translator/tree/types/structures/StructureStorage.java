@@ -300,19 +300,12 @@ public class StructureStorage extends DocumentPosition {
   public void typing(Environment envParent) {
   }
 
-  public void typing(TypeCheckerRoot rootChecker) {
+  public void typing(String name, TypeCheckerRoot rootChecker) {
     checker.register(Collections.emptySet(), env -> {
       for (final TyNativeFunctional functional : methodTypes.values()) {
         functional.typing(env);
       }
     });
-
-    Once<Environment> onceEnv = new Once<>();
-    for (final Consumer<Environment> type : checker.typeCheckOrder) {
-      rootChecker.register(Collections.emptySet(), (stale -> {
-        Environment envToUse = onceEnv.access(() -> specialization == StorageSpecialization.Message ? stale.scope().scopeMessage() : stale.scope());
-        type.accept(envToUse);
-      }));
-    }
+    checker.transferInto(name, specialization, rootChecker);
   }
 }
