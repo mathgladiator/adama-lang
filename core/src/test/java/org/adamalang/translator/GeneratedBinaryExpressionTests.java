@@ -90,7 +90,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public AggregateMath_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -559,6 +559,10 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
     gold.append("\n    }");
@@ -961,10 +965,10 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    special_one = new RxLazy<NtComplex>(this, () -> (LibArithmetic.Add.CI(LibArithmetic.Multiply.CI(new NtComplex(0.0, 1.0), 0), 1)));");
     gold.append("\n    forty_five = new RxLazy<NtComplex>(this, () -> (LibArithmetic.Add.CD(LibArithmetic.Multiply.CD(new NtComplex(0.0, 1.0), 0.707), 0.707)));");
     gold.append("\n    recip = new RxLazy<NtMaybe<NtComplex>>(this, () -> (LibArithmetic.Divide.DC(1.0, forty_five.get())));");
-    gold.append("\n    forty_five.__subscribe(recip);");
     gold.append("\n    final_foo = new RxComplex(this, new NtComplex(0.0, 0.0));");
     gold.append("\n    final_foo2 = new RxComplex(this, new NtComplex(0.0, 0.0));");
     gold.append("\n    final_foo3 = new RxComplex(this, new NtComplex(0.0, 0.0));");
+    gold.append("\n    forty_five.__subscribe(recip);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

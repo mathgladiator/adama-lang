@@ -2888,10 +2888,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    y = new RxDouble(this, 3.14);");
     gold.append("\n    z = new RxDouble(this, 2000.0);");
     gold.append("\n    sum = new RxLazy<Double>(this, () -> (x.get() + y.get() + z.get()));");
+    gold.append("\n    tiny = new RxDouble(this, 2.0E-32);");
     gold.append("\n    x.__subscribe(sum);");
     gold.append("\n    y.__subscribe(sum);");
     gold.append("\n    z.__subscribe(sum);");
-    gold.append("\n    tiny = new RxDouble(this, 2.0E-32);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -10058,7 +10058,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public LongFun_19(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt64(this, 0L);");
-    gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent), 0);");
+    gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -10510,6 +10510,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxR __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"R\";");

@@ -726,10 +726,10 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    document = new RxText(this,__auto_gen);");
     gold.append("\n    document_str = new RxLazy<String>(this, () -> (document.get()));");
-    gold.append("\n    document.__subscribe(document_str);");
     gold.append("\n    issues = new RxLazy<NtDynamic>(this, () -> (LibAdama.validate(document_str.get())));");
-    gold.append("\n    document_str.__subscribe(issues);");
     gold.append("\n    reflection = new RxLazy<NtDynamic>(this, () -> (LibAdama.reflect(document_str.get())));");
+    gold.append("\n    document.__subscribe(document_str);");
+    gold.append("\n    document_str.__subscribe(issues);");
     gold.append("\n    document_str.__subscribe(reflection);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -2027,6 +2027,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    document = new RxText(this,__auto_gen);");
     gold.append("\n    r = new RTxR(this);");
+    gold.append("\n    r.__link();");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -2489,6 +2490,10 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxR __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"R\";");

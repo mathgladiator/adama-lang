@@ -112,7 +112,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    x4 = new RxString(this, \"\");");
     gold.append("\n    z1 = new RxDouble(this, 0.0);");
     gold.append("\n    z2 = new RxInt64(this, 0L);");
-    gold.append("\n    rows = new RxTable<>(__self, this, \"rows\", (RxParent __parent) -> new RTxR(__parent), 0);");
+    gold.append("\n    rows = new RxTable<>(__self, this, \"rows\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    d1 = new RxInt32(this, 0);");
     gold.append("\n    d2 = new RxDouble(this, 0.0);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -691,6 +691,10 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxR __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"R\";");
     gold.append("\n    }");
@@ -1114,7 +1118,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public Stats_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    rows = new RxTable<>(__self, this, \"rows\", (RxParent __parent) -> new RTxR(__parent), 0);");
+    gold.append("\n    rows = new RxTable<>(__self, this, \"rows\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    y1 = new RxDouble(this, 0.0);");
     gold.append("\n    y2 = new RxDouble(this, 0.0);");
     gold.append("\n    y3 = new RxDouble(this, 0.0);");
@@ -1723,6 +1727,10 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxR __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"R\";");

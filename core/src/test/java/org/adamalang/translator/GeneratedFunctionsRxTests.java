@@ -94,6 +94,7 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RTxR(this);");
     gold.append("\n    xy = new RxLazy<Integer>(this, () -> (__FUNC_0_foo()));");
+    gold.append("\n    x.__link();");
     gold.append("\n    x.__subscribe(xy);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -547,6 +548,10 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxR __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"R\";");

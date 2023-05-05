@@ -660,7 +660,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public IndexLookupLegacy_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    sum = new RxInt32(this, 0);");
     gold.append("\n    found_impossible_thing = new RxBoolean(this, false);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -1137,6 +1137,10 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");

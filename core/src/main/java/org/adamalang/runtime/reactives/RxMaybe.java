@@ -40,6 +40,12 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
     return true;
   }
 
+  public void __link() {
+    if (value != null && value instanceof RxRecordBase) {
+      ((RxRecordBase<?>) value).__link();
+    }
+  }
+
   @Override
   public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {

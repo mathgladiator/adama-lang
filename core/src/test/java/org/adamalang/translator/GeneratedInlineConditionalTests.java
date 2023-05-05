@@ -94,6 +94,8 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    a = new RTxX(this);");
     gold.append("\n    b = new RTxX(this);");
+    gold.append("\n    a.__link();");
+    gold.append("\n    b.__link();");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -545,6 +547,10 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");

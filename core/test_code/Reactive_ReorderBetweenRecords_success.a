@@ -1,0 +1,14 @@
+public formula val_sum = x.val + y.val;
+public X x;
+public Y y;
+public formula val_sum2 = x.z1 + y.z2;
+
+record X {
+  public int val;
+  public formula z1 = y.val;
+}
+
+record Y {
+  public int val;
+  public formula z2 = x.val;
+}

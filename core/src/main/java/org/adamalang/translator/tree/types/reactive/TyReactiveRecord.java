@@ -62,7 +62,8 @@ public class TyReactiveRecord extends TyType implements //
   public void compile(final StringBuilderWithTabs sb, final Environment environment) {
     final var classFields = new StringBuilderWithTabs().tabUp().tabUp();
     final var classConstructor = new StringBuilderWithTabs().tabUp().tabUp().tabUp();
-    CodeGenRecords.writeCommonBetweenRecordAndRoot(storage, classConstructor, classFields, environment.scope(), true);
+    final var classLinker = new StringBuilderWithTabs().tabUp().tabUp().tabUp();
+    CodeGenRecords.writeCommonBetweenRecordAndRoot(storage, classConstructor, classLinker, classFields, environment.scope(), true);
     classConstructor.append("if (__owner instanceof RxTable) {").tabUp().writeNewline();
     var colNum = 0;
     for (final IndexDefinition idefn : storage.indices) {
@@ -107,6 +108,14 @@ public class TyReactiveRecord extends TyType implements //
     CodeGenRecords.writePrivacyCommonBetweenRecordAndRoot(storage, sb, environment);
     CodeGenRecords.writeIndices(name, storage, sb, environment);
     CodeGenRecords.writeCommitAndRevert(storage, sb, environment, false);
+    String linkerCompact = classLinker.toString().stripTrailing();
+    sb.append("@Override").writeNewline();
+    sb.append("public RTx" + name + " __link() {").tabUp().writeNewline();
+    if (linkerCompact.trim().length() > 0) {
+      sb.append(linkerCompact).writeNewline();
+    }
+    sb.append("return this;").tabDown().writeNewline();
+    sb.append("}").writeNewline();
     sb.append("@Override").writeNewline();
     sb.append("public String __name() {").tabUp().writeNewline();
     sb.append("return \"").append(name).append("\";").tabDown().writeNewline();

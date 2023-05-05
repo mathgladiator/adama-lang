@@ -246,7 +246,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  public Legacy_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxString(this, \"\");");
-    gold.append("\n    zzz = new RxTable<>(__self, this, \"zzz\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    zzz = new RxTable<>(__self, this, \"zzz\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -711,6 +711,10 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");

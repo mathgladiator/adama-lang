@@ -43,6 +43,11 @@ public class MockRecord extends RxRecordBase<MockRecord> {
     }
   }
 
+  @Override
+  public MockRecord __link() {
+    return this;
+  }
+
   public static MockRecord make(final int id) {
     final var mr = new MockRecord(null);
     mr.id = id;

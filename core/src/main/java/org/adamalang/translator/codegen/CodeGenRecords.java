@@ -143,24 +143,27 @@ public class CodeGenRecords {
     }
   }
 
-  public static String make(String parent, String className, TyType fieldType, Expression valueOverride, Environment environment) {
+  public static String make(String parent, String className, TyType fieldType, Expression valueOverride, Environment environment, boolean link) {
     StringBuilder result = new StringBuilder();
     if (fieldType instanceof TyReactiveTable) {
       final var numberIndicies = ((TyReactiveRecord) ((TyReactiveTable) fieldType).getEmbeddedType(environment)).storage.indices.size();
       result.append("new RxTable<>(__self, ").append(parent).append(", \"").append(className);
       result.append("\", (RxParent __parent) -> new RTx").append(((TyReactiveTable) fieldType).recordName);
-      result.append("(__parent), ").append(numberIndicies).append(")");
+      result.append("(__parent).__link(), ").append(numberIndicies).append(")");
     } else if (fieldType instanceof TyReactiveText) {
       result.append("new RxText(").append(parent).append(",__auto_gen)");
     } else if (fieldType instanceof TyReactiveRecord) {
       result.append("new ").append(fieldType.getJavaConcreteType(environment)).append("(").append(parent).append(")");
+      if (link) {
+        result.append(".__link()");
+      }
     } else if (fieldType instanceof TyReactiveMap) {
       String codec = ((CanBeMapDomain) ((TyReactiveMap) fieldType).domainType).getRxStringCodexName();
-      var rangeType = ((TyReactiveMap) fieldType).getRangeType(environment);
+      var rangeType = environment.rules.Resolve(((TyReactiveMap) fieldType).getRangeType(environment), true);
       String range = rangeType.getJavaBoxType(environment);
       result.append("new ").append(fieldType.getJavaConcreteType(environment)).append("(").append(parent).append(", new ").append(codec).append("<").append(range).append(">() { @Override public ");
       result.append(range).append(" make(RxParent __parent) { return ");
-      result.append(make("__parent", range, rangeType, null, environment));
+      result.append(make("__parent", range, rangeType, null, environment, true));
       result.append(";}").append(" })");
     } else if (fieldType instanceof IsReactiveValue) {
       final var javaConcreteType = fieldType.getJavaConcreteType(environment);
@@ -181,12 +184,12 @@ public class CodeGenRecords {
         result.append(")");
       }
     } else if (fieldType instanceof TyReactiveMaybe) {
-
+      // OK, what do I do here... is this bad?
     }
     return result.toString();
   }
 
-  public static void writeCommonBetweenRecordAndRoot(final StructureStorage storage, final StringBuilderWithTabs classConstructorX, final StringBuilderWithTabs classFields, final Environment environment, final boolean injectRootObject) {
+  public static void writeCommonBetweenRecordAndRoot(final StructureStorage storage, final StringBuilderWithTabs classConstructorX, final StringBuilderWithTabs classLinker, final StringBuilderWithTabs classFields, final Environment environment, final boolean injectRootObject) {
     if (injectRootObject) {
       classConstructorX.append("super(__owner);").writeNewline();
     }
@@ -213,7 +216,7 @@ public class CodeGenRecords {
         }
         environment.define(fieldName, new TyReactiveLazy(lazyType), false, fdInOrder);
         for (final String watched : fdInOrder.variablesToWatch) {
-          classConstructorX.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
+          classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
         }
         if (hasCache) {
           classConstructorX.append("__c").append(fieldName).append(".__subscribe(").append(fieldName).append(");").writeNewline();
@@ -223,19 +226,25 @@ public class CodeGenRecords {
         }
         continue;
       }
+      if (fieldType instanceof TyReactiveLazy && fdInOrder.computeExpression != null) {
+        classConstructorX.append(fieldName).append(".__link();").writeNewline();
+      }
       final var javaConcreteType = fieldType.getJavaConcreteType(environment);
       classFields.append("private final ").append(javaConcreteType).append(" ").append(fieldName).append(";").writeNewline();
       if (fieldType instanceof TyReactiveTable || fieldType instanceof TyReactiveText || fieldType instanceof TyReactiveMap || fieldType instanceof TyReactiveRecord) {
-        classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, null, environment)).append(";").writeNewline();
+        classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, null, environment, false)).append(";").writeNewline();
+        if (fieldType instanceof TyReactiveRecord) {
+          classLinker.append(fieldName + ".__link();").writeNewline();
+        }
       } else if (fieldType instanceof IsReactiveValue) {
-        classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, fdInOrder.defaultValueOverride, environment)).append(";").writeNewline();
+        classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, fdInOrder.defaultValueOverride, environment, true)).append(";").writeNewline();
       } else if (fieldType instanceof TyReactiveMaybe) {
         var doImmediateGet = false;
         boolean doSetDefaultValueOverride = false;
         final var elementType = ((DetailContainsAnEmbeddedType) fieldType).getEmbeddedType(environment);
         classConstructorX.append(fieldName).append(" = new RxMaybe<>(this, (RxParent __parent) -> ");
         if (elementType instanceof TyReactiveRecord) {
-          classConstructorX.append("new ").append(elementType.getJavaConcreteType(environment)).append("(__parent)");
+          classConstructorX.append("new ").append(elementType.getJavaConcreteType(environment)).append("(__parent).__link()");
         } else if (elementType instanceof DetailInventDefaultValueExpression && elementType instanceof IsReactiveValue) {
           var defaultValue = ((DetailInventDefaultValueExpression) elementType).inventDefaultValueExpression(fieldType);
           if (defaultValue != null) {
@@ -253,6 +262,9 @@ public class CodeGenRecords {
           classConstructorX.append("new " + elementType.getJavaConcreteType(environment) + "(__parent, ");
           defaultValue.writeJava(classConstructorX, environment.scopeWithComputeContext(ComputeContext.Computation));
           classConstructorX.append(")");
+          if (elementType instanceof TyReactiveRecord) {
+            classLinker.append(fieldName + ".__link()");
+          }
         }
         classConstructorX.append(");").writeNewline();
         if (doSetDefaultValueOverride) {
@@ -478,7 +490,8 @@ public class CodeGenRecords {
   public static void writeRootDocument(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
     final var classConstructor = new StringBuilderWithTabs().tabUp().tabUp();
     final var classFields = new StringBuilderWithTabs().tabUp();
-    writeCommonBetweenRecordAndRoot(storage, classConstructor, classFields, environment, false);
+    final var classLinker = new StringBuilderWithTabs().tabUp().tabUp();
+    writeCommonBetweenRecordAndRoot(storage, classConstructor, classLinker, classFields, environment, false);
     final var trimedClassFields = classFields.toString().stripTrailing();
     if (trimedClassFields.length() > 0) {
       sb.append(trimedClassFields).writeNewline();
@@ -488,6 +501,10 @@ public class CodeGenRecords {
       sb.append("public " + environment.document.getClassName() + "(DocumentMonitor __monitor) {").tabUp().writeNewline();
       sb.append("super(__monitor);").writeNewline();
       sb.append(classConstructor.toString().stripTrailing()).writeNewline();
+      String linkerCompact = classLinker.toString().trim();
+      if (linkerCompact.length() > 0) {
+        sb.append(linkerCompact).writeNewline();
+      }
     } else {
       sb.append("public " + environment.document.getClassName() + "(DocumentMonitor __monitor) {").tabUp().writeNewline();
       sb.append("super(__monitor);").writeNewline();

@@ -23,6 +23,8 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
     this.__isDying = false;
   }
 
+  public abstract Ty __link();
+
   public abstract void __deindex();
 
   public void __delete() {

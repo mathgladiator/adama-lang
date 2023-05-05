@@ -90,7 +90,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public Legacy_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    things = new RxTable<>(__self, this, \"things\", (RxParent __parent) -> new RTxThing(__parent), 0);");
+    gold.append("\n    things = new RxTable<>(__self, this, \"things\", (RxParent __parent) -> new RTxThing(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -558,6 +558,10 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxThing __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Thing\";");

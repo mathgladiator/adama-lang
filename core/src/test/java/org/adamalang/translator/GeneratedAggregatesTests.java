@@ -90,7 +90,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public BulkMaybeAssign_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    x = new RxTable<>(__self, this, \"x\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    x = new RxTable<>(__self, this, \"x\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -535,6 +535,10 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n      i.__kill();");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
     gold.append("\n    }");
@@ -855,7 +859,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public InvokeMethods_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    x = new RxTable<>(__self, this, \"x\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    x = new RxTable<>(__self, this, \"x\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -1291,6 +1295,10 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
     gold.append("\n    }");
@@ -1569,8 +1577,8 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public Legacy_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    zzz = new RxTable<>(__self, this, \"zzz\", (RxParent __parent) -> new RTxX(__parent), 0);");
-    gold.append("\n    zzz2 = new RxTable<>(__self, this, \"zzz2\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    zzz = new RxTable<>(__self, this, \"zzz\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
+    gold.append("\n    zzz2 = new RxTable<>(__self, this, \"zzz2\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    count = new RxInt32(this, 0);");
     gold.append("\n    count_after = new RxInt32(this, 0);");
     gold.append("\n    vkzsum = new RxInt32(this, 0);");
@@ -2095,6 +2103,10 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
     gold.append("\n    }");
@@ -2523,7 +2535,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public MethodOnList_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxR(__parent), 0);");
+    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    x = new RxLazy<NtList<Integer>>(this, () -> ((tbl.iterate(true)).transform((__item) -> __item.__METH_0_foo())));");
     gold.append("\n    tbl.__subscribe(x);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -2995,6 +3007,10 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxR __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"R\";");
     gold.append("\n    }");
@@ -3375,7 +3391,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public NegateBoolList_6(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -3818,6 +3834,10 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
     gold.append("\n    }");
@@ -4086,7 +4106,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public NegateIntList_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -4528,6 +4548,10 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");

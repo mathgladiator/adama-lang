@@ -90,7 +90,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public Array_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -545,6 +545,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
@@ -1017,8 +1021,8 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public Copy_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    x1 = new RxTable<>(__self, this, \"x1\", (RxParent __parent) -> new RTxX(__parent), 0);");
-    gold.append("\n    x2 = new RxTable<>(__self, this, \"x2\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    x1 = new RxTable<>(__self, this, \"x1\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
+    gold.append("\n    x2 = new RxTable<>(__self, this, \"x2\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -1470,6 +1474,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
@@ -1947,7 +1955,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public IntoMaybeRecord_9(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    mr = new RxMaybe<>(this, (RxParent __parent) -> new RTxR(__parent));");
+    gold.append("\n    mr = new RxMaybe<>(this, (RxParent __parent) -> new RTxR(__parent).__link());");
     gold.append("\n    got = new RxBoolean(this, false);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -2414,6 +2422,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxR __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"R\";");
     gold.append("\n    }");
@@ -2804,6 +2816,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  public MaybeBool_10(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    val = new RTxY(this);");
+    gold.append("\n    val.__link();");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -3252,6 +3265,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
     gold.append("\n    }");
@@ -3409,6 +3426,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {");
     gold.append("\n      z.__kill();");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxY __link() {");
+    gold.append("\n      z.__link();");
+    gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -3959,7 +3981,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public RecursiveMap_13(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    maaaap = new RxMap<String,RTxZ>(this, new RxMap.StringCodec<RTxZ>() { @Override public RTxZ make(RxParent __parent) { return new RTxZ(__parent);} });");
+    gold.append("\n    maaaap = new RxMap<String,RTxZ>(this, new RxMap.StringCodec<RTxZ>() { @Override public RTxZ make(RxParent __parent) { return new RTxZ(__parent).__link();} });");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -4447,6 +4469,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      properties2.__kill();");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxZ __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Z\";");
     gold.append("\n    }");
@@ -4926,7 +4952,8 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  public RecursiveTable_14(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    v = new RTxX(this);");
-    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
+    gold.append("\n    v.__link();");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -5379,6 +5406,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxZ __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"Z\";");
     gold.append("\n    }");
@@ -5440,7 +5471,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      super(__owner);");
     gold.append("\n      x = new RxInt32(this, 0);");
     gold.append("\n      y = new RxInt32(this, 0);");
-    gold.append("\n      z = new RxTable<>(__self, this, \"z\", (RxParent __parent) -> new RTxZ(__parent), 0);");
+    gold.append("\n      z = new RxTable<>(__self, this, \"z\", (RxParent __parent) -> new RTxZ(__parent).__link(), 0);");
     gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -5556,6 +5587,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {");
     gold.append("\n      z.__kill();");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -6052,7 +6087,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public SimpleAs_15(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    last_id1 = new RxInt32(this, 0);");
     gold.append("\n    last_id2 = new RxInt32(this, 0);");
     gold.append("\n    last_id3 = new RxInt32(this, 0);");
@@ -6541,6 +6576,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
     gold.append("\n    }");
@@ -6944,7 +6983,8 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  public Simple_16(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    v = new RTxX(this);");
-    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
+    gold.append("\n    v.__link();");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -7410,6 +7450,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
     gold.append("\n    }");
@@ -7777,7 +7821,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public SkipID_17(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent), 0);");
+    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -8207,6 +8251,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
     gold.append("\n    }");
@@ -8556,8 +8604,9 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  public UnfoldMaybe_18(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    v = new RTxX(this);");
-    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent), 0);");
-    gold.append("\n    pairing = new RxMap<Integer,RTxX>(this, new RxMap.IntegerCodec<RTxX>() { @Override public RTxX make(RxParent __parent) { return new RTxX(__parent);} });");
+    gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
+    gold.append("\n    pairing = new RxMap<Integer,RTxX>(this, new RxMap.IntegerCodec<RTxX>() { @Override public RTxX make(RxParent __parent) { return new RTxX(__parent).__link();} });");
+    gold.append("\n    v.__link();");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -9032,6 +9081,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxX __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
     gold.append("\n      return \"X\";");
