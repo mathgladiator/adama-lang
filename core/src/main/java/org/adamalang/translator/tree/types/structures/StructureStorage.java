@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.tree.types.structures;
 
+import org.adamalang.common.Once;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
@@ -47,7 +48,6 @@ public class StructureStorage extends DocumentPosition {
   public TypeCheckerStructure checker;
   public final HashSet<String> fieldsWithDefaults;
   public Token closeBraceToken;
-  private boolean typedAlready;
 
   public StructureStorage(final StorageSpecialization specialization, final boolean anonymous, final Token openBraceToken) {
     this.specialization = specialization;
@@ -68,7 +68,6 @@ public class StructureStorage extends DocumentPosition {
     internalMethods = new HashMap<>();
     fieldsWithDefaults = new HashSet<>();
     ingest(openBraceToken);
-    typedAlready = false;
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
@@ -299,19 +298,21 @@ public class StructureStorage extends DocumentPosition {
   }
 
   public void typing(Environment envParent) {
-    if (typedAlready) {
-      return;
-    }
-    typedAlready = true;
+  }
+
+  public void typing(TypeCheckerRoot rootChecker) {
     checker.register(Collections.emptySet(), env -> {
       for (final TyNativeFunctional functional : methodTypes.values()) {
         functional.typing(env);
       }
     });
 
-    Environment envToUse = specialization == StorageSpecialization.Message ? envParent.scopeMessage() : envParent;
+    Once<Environment> onceEnv = new Once<>();
     for (final Consumer<Environment> type : checker.typeCheckOrder) {
-      type.accept(envToUse);
+      rootChecker.register(Collections.emptySet(), (stale -> {
+        Environment envToUse = onceEnv.access(() -> specialization == StorageSpecialization.Message ? stale.scope().scopeMessage() : stale.scope());
+        type.accept(envToUse);
+      }));
     }
   }
 }

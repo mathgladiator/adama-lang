@@ -153,12 +153,11 @@ public class TyNativeMessage extends TyType implements //
 
   @Override
   public void typing(final Environment environment) {
-    storage.typing(environment.scope());
   }
 
   @Override
   public void typing(TypeCheckerRoot checker) {
-    checker.register(Collections.emptySet(), (environment -> typing(environment.scope())));
+    storage.typing(checker);
   }
 
   @Override

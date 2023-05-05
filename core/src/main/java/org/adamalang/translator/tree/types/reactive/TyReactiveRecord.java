@@ -46,7 +46,6 @@ public class TyReactiveRecord extends TyType implements //
   public Token nameToken;
   public Token recordToken;
   public StructureStorage storage;
-  private boolean typedAlready;
 
   public TyReactiveRecord(final Token recordToken, final Token nameToken, final StructureStorage storage) {
     super(TypeBehavior.ReadWriteWithSetGet);
@@ -57,7 +56,6 @@ public class TyReactiveRecord extends TyType implements //
     ingest(recordToken);
     ingest(nameToken);
     ingest(storage);
-    typedAlready = false;
   }
 
   @Override
@@ -171,20 +169,15 @@ public class TyReactiveRecord extends TyType implements //
 
   @Override
   public void typing(final Environment environment) {
-    if (typedAlready) {
-      return;
-    }
-    final var fdId = storage.fields.get("id");
-    if (fdId == null || !(fdId.type instanceof TyReactiveInteger)) {
-      environment.document.createError(this, "id must be type int", "Record");
-    }
-    typedAlready = true;
-    storage.typing(environment.scope());
   }
 
   @Override
   public void typing(TypeCheckerRoot checker) {
-    checker.register(Collections.emptySet(), (environment -> typing(environment.scope())));
+    final var fdId = storage.fields.get("id");
+    if (fdId == null || !(fdId.type instanceof TyReactiveInteger)) {
+      checker.issueError(this, "id must be type int", "Record");
+    }
+    storage.typing(checker);
   }
 
   @Override
