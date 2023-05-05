@@ -504,6 +504,7 @@ public class Document implements TopLevelDocumentHandler {
 
   /** compile the document to java */
   public String compileJava(final EnvironmentState state) {
+    root.storage.reorder();
     var environment = Environment.fresh(this, state);
     if (state.options.disableBillingCost) {
       environment = environment.scopeAsNoCost();

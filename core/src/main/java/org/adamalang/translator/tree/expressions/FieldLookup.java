@@ -203,6 +203,7 @@ public class FieldLookup extends Expression {
 
   @Override
   public void free(FreeEnvironment environment) {
+    environment.require("::" + fieldName);
     expression.free(environment);
   }
 }

@@ -7374,13 +7374,13 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static String[] __INDEX_COLUMNS_Card = new String[] {};");
     gold.append("\n  private class RTxCard extends RxRecordBase<RTxCard> {");
-    gold.append("\n    private final RxLazy<Integer> boom;");
     gold.append("\n    private final RxInt32 id;");
+    gold.append("\n    private final RxLazy<Integer> boom;");
     gold.append("\n    private RTxCard(RxParent __owner) {");
     gold.append("\n      super(__owner);");
+    gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      boom = new RxLazy<Integer>(this, () -> (__METH_0_one()));");
     gold.append("\n      boom.__subscribe(this);");
-    gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
     gold.append("\n      } else {");
@@ -7395,8 +7395,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
     gold.append("\n      long __sum = super.__memory();");
-    gold.append("\n      __sum += boom.__memory();");
     gold.append("\n      __sum += id.__memory();");
+    gold.append("\n      __sum += boom.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -7641,7 +7641,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nBegin");
     gold.append("\nEnd");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"card\":{\"type\":{\"nature\":\"reactive_record\",\"name\":\"Card\",\"fields\":{\"boom\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}}}},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"Card\":{\"nature\":\"reactive_record\",\"name\":\"Card\",\"fields\":{\"boom\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"card\":{\"type\":{\"nature\":\"reactive_record\",\"name\":\"Card\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}},\"boom\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"Card\":{\"nature\":\"reactive_record\",\"name\":\"Card\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}},\"boom\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");

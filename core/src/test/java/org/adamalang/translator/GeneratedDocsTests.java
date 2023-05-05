@@ -1374,14 +1374,14 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n  private static String[] __INDEX_COLUMNS_R2 = new String[] {\"score\"};");
     gold.append("\n  private class RTxR2 extends RxRecordBase<RTxR2> {");
     gold.append("\n    private final RxInt32 score;");
-    gold.append("\n    private final RxLazy<Integer> ds;");
     gold.append("\n    private final RxInt32 id;");
+    gold.append("\n    private final RxLazy<Integer> ds;");
     gold.append("\n    private RTxR2(RxParent __owner) {");
     gold.append("\n      super(__owner);");
     gold.append("\n      score = new RxInt32(this, 0);");
+    gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      ds = new RxLazy<Integer>(this, () -> (__METH_1_double_score()));");
     gold.append("\n      ds.__subscribe(this);");
-    gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
     gold.append("\n      } else {");
@@ -1397,8 +1397,8 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    public long __memory() {");
     gold.append("\n      long __sum = super.__memory();");
     gold.append("\n      __sum += score.__memory();");
-    gold.append("\n      __sum += ds.__memory();");
     gold.append("\n      __sum += id.__memory();");
+    gold.append("\n      __sum += ds.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2163,7 +2163,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\nBegin");
     gold.append("\nEnd");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"R\":{\"nature\":\"reactive_record\",\"name\":\"R\",\"fields\":{\"score\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}}}},\"R2\":{\"nature\":\"reactive_record\",\"name\":\"R2\",\"fields\":{\"score\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"ds\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}}}},\"R3\":{\"nature\":\"reactive_record\",\"name\":\"R3\",\"fields\":{\"owner\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"private\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}}}},\"R4\":{\"nature\":\"reactive_record\",\"name\":\"R4\",\"fields\":{\"owner\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"private\"},\"balance\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"policy\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}}}},\"R5\":{\"nature\":\"reactive_record\",\"name\":\"R5\",\"fields\":{\"owner\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"private\"},\"balance\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"R\":{\"nature\":\"reactive_record\",\"name\":\"R\",\"fields\":{\"score\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}}}},\"R2\":{\"nature\":\"reactive_record\",\"name\":\"R2\",\"fields\":{\"score\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}},\"ds\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"R3\":{\"nature\":\"reactive_record\",\"name\":\"R3\",\"fields\":{\"owner\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"private\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}}}},\"R4\":{\"nature\":\"reactive_record\",\"name\":\"R4\",\"fields\":{\"owner\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"private\"},\"balance\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"policy\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}}}},\"R5\":{\"nature\":\"reactive_record\",\"name\":\"R5\",\"fields\":{\"owner\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"private\"},\"balance\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"}}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");

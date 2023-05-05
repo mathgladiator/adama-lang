@@ -1,4 +1,7 @@
-public int x;
-// TODO : swap these around
+public formula w = z  + y;
+
 public formula y = x + 1;
 
+public int x;
+
+public formula z = y + 2;

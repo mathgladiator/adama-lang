@@ -38,13 +38,34 @@ public class TopologicalSort<T> {
   /** add a single item */
   public void add(String key, T value, Set<String> rawDependencies) {
     Set<String> dependencies = rawDependencies != null ? (rawDependencies.isEmpty() ? null : rawDependencies) : null;
-    values.put(key, new TopoValue(value, dependencies));
+    TopoValue val = new TopoValue(value, dependencies);
+    values.put(key, val);
+
+    if (dependencies != null) {
+      if (allDependenciesHandled(dependencies)) {
+        dependencies = null;
+      }
+    }
+
     if (dependencies == null) {
-      // immediately spit out a "free" result
+      val.handled = true;
       result.add(value);
     } else {
       remain.add(key);
     }
+  }
+
+  private boolean allDependenciesHandled(Set<String> dependencies) {
+    for (String depend : dependencies) {
+      TopoValue exists = values.get(depend);
+      if (exists == null) {
+        return false;
+      }
+      if (!exists.handled) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /** core algorithm to insert items requiring dependencies first */
@@ -55,6 +76,9 @@ public class TopologicalSort<T> {
     }
 
     TopoValue val = values.get(key);
+    if (val == null) {
+      return;
+    }
     if (val.handled) {
       return;
     }
