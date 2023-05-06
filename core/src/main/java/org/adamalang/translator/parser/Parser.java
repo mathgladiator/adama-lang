@@ -860,7 +860,8 @@ public class Parser {
     final var arrayToken = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("[]"));
     final var messageVarToken = id();
     final var endParen = consumeExpectedSymbol(")");
-    handler.setMessageOnlyHandler(openParen, messageType, arrayToken, messageVarToken, endParen, block());
+    final var isOpen = tokens.popIf((t) -> t.isIdentifier("open"));
+    handler.setMessageOnlyHandler(openParen, messageType, arrayToken, messageVarToken, endParen, isOpen, block());
     return doc -> doc.add(handler);
   }
 

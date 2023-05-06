@@ -42,6 +42,7 @@ public class DefineHandler extends Definition {
   private Token messageTypeToken = null;
   private Token messageVarToken = null;
   private Token openParenToken = null;
+  private Token isOpen = null;
   private Token openType = null;
   private Token semicolonToken = null;
 
@@ -81,6 +82,9 @@ public class DefineHandler extends Definition {
       }
       yielder.accept(messageVarToken);
       yielder.accept(endParenToken);
+      if (isOpen != null) {
+        yielder.accept(isOpen);
+      }
       if (code != null) {
         code.emit(yielder);
       }
@@ -145,12 +149,13 @@ public class DefineHandler extends Definition {
     ingest(semicolonToken);
   }
 
-  public void setMessageOnlyHandler(final Token openParenToken, final Token messageTypeToken, final Token messageTypeArrayToken, final Token messageVarToken, final Token endParenToken, final Block code) {
+  public void setMessageOnlyHandler(final Token openParenToken, final Token messageTypeToken, final Token messageTypeArrayToken, final Token messageVarToken, final Token endParenToken, final Token isOpen, final Block code) {
     this.openParenToken = openParenToken;
     this.messageTypeToken = messageTypeToken;
     this.messageTypeArrayToken = messageTypeArrayToken;
     this.messageVarToken = messageVarToken;
     this.endParenToken = endParenToken;
+    this.isOpen = isOpen;
     typeName = this.messageTypeToken.text;
     messageVar = this.messageVarToken.text;
     if (this.messageTypeArrayToken != null) {

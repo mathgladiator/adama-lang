@@ -23,6 +23,8 @@ import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.LivingDocument;
+import org.adamalang.runtime.sys.auth.AuthRequest;
+import org.adamalang.runtime.sys.auth.AuthResponse;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
@@ -79,6 +81,11 @@ public class MockLivingDocument extends LivingDocument {
 
   @Override
   public PrivateView __createPrivateView(final NtPrincipal __who, final Perspective __perspective, AssetIdEncoder encoder) {
+    return null;
+  }
+
+  @Override
+  public String __auth(String username, String password) {
     return null;
   }
 

@@ -31,6 +31,8 @@ import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
 import org.adamalang.runtime.remote.*;
 import org.adamalang.runtime.stdlib.LibPrincipal;
+import org.adamalang.runtime.sys.auth.AuthRequest;
+import org.adamalang.runtime.sys.auth.AuthResponse;
 import org.adamalang.runtime.sys.web.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
@@ -655,6 +657,9 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   /** code generated: state machine labelslabels can be dynamically invoked */
   protected abstract void __invoke_label(String __new_state);
+
+  /** authenticate a user; return null to indicate forbidden, return an agent to sign for the document */
+  public abstract String __auth(String username, String password);
 
   /** code generated: respond to a get request */
   public abstract WebResponse __get(WebGet __get);

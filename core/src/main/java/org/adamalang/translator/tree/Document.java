@@ -521,6 +521,7 @@ public class Document implements TopLevelDocumentHandler {
     CodeGenFunctions.writeFunctionsJava(sb, environment);
     CodeGenServices.writeServices(sb, environment);
     CodeGenMessageHandling.writeMessageHandlers(sb, environment);
+    CodeGenAuth.writeAuth(sb, environment);
     CodeGenWeb.writeWebHandlers(sb, environment);
     CodeGenStateMachine.writeStateMachine(sb, environment);
     CodeGenEventHandlers.writeEventHandlers(sb, environment);
