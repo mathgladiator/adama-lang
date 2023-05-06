@@ -22,6 +22,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.mocks.MockDataObserver;
 import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.env.CompilerOptions;
@@ -238,6 +239,19 @@ public class LivingDocumentTests {
       RealDocumentSetup.AssertSuccess success = new RealDocumentSetup.AssertSuccess();
       setup.document.delete(ContextSupport.WRAP(A), success);
       success.test();
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+      Assert.fail();
+    }
+  }
+
+  @Test
+  public void auth() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup(
+          "@authorize(u,pw) { return u + pw; }",
+          null);
+      Assert.assertEquals("xy", setup.document.document().__authorize(new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", "key"), "x", "y"));
     } catch (RuntimeException re) {
       re.printStackTrace();
       Assert.fail();

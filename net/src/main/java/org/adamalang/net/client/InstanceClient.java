@@ -213,6 +213,54 @@ public class InstanceClient implements AutoCloseable {
     return success.get();
   }
 
+  public void authorize(String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
+    executor.execute(new NamedRunnable("execute-authorize") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_AUTH_TIMEOUT, ErrorCodes.ADAMA_NET_AUTH_REJECTED, metrics.client_auth.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamAuth() {
+              @Override
+              public void handle(ServerMessage.AuthResponse payload) {
+                callback.success(payload.agent);
+              }
+
+              @Override
+              public void completed() {
+
+              }
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new CallbackByteStreamWriter(callback) {
+              @Override
+              public void write(ByteStream stream) {
+                ByteBuf toWrite = stream.create(space.length() + key.length() + username.length() + password.length() + 40);
+                ClientMessage.Authorize auth = new ClientMessage.Authorize();
+                auth.space = space;
+                auth.key = key;
+                auth.username = username;
+                auth.password = password;
+                auth.origin = origin;
+                auth.ip = ip;
+                ClientCodec.write(toWrite, auth);
+                stream.next(toWrite);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
   public void webGet(String space, String key, WebGet request, Callback<WebResponse> callback) {
     executor.execute(new NamedRunnable("execute-web-get") {
       @Override

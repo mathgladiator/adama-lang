@@ -457,4 +457,21 @@ public class ClientMessage {
   @Flow("Server")
   public static class ReplicaDisconnect {
   }
+
+  @TypeId(2124)
+  @Flow("Server")
+  public static class Authorize {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+    @FieldOrder(3)
+    public String username;
+    @FieldOrder(4)
+    public String password;
+    @FieldOrder(5)
+    public String ip;
+    @FieldOrder(6)
+    public String origin;
+  }
 }

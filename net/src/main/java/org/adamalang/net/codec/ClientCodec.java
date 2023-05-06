@@ -12,6 +12,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ClientMessage.Authorize;
 import org.adamalang.net.codec.ClientMessage.ReplicaDisconnect;
 import org.adamalang.net.codec.ClientMessage.ReplicaConnect;
 import org.adamalang.net.codec.ClientMessage.DirectSend;
@@ -48,6 +49,8 @@ import org.adamalang.net.codec.ClientMessage.PingRequest;
 public class ClientCodec {
 
   public static abstract class StreamServer implements ByteStream {
+    public abstract void handle(Authorize payload);
+
     public abstract void handle(ReplicaDisconnect payload);
 
     public abstract void handle(ReplicaConnect payload);
@@ -120,6 +123,9 @@ public class ClientCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
+        case 2124:
+          handle(readBody_2124(buf, new Authorize()));
+          return;
         case 13337:
           handle(readBody_13337(buf, new ReplicaDisconnect()));
           return;
@@ -215,6 +221,7 @@ public class ClientCodec {
   }
 
   public static interface HandlerServer {
+    public void handle(Authorize payload);
     public void handle(ReplicaDisconnect payload);
     public void handle(ReplicaConnect payload);
     public void handle(DirectSend payload);
@@ -249,6 +256,9 @@ public class ClientCodec {
 
   public static void route(ByteBuf buf, HandlerServer handler) {
     switch (buf.readIntLE()) {
+      case 2124:
+        handler.handle(readBody_2124(buf, new Authorize()));
+        return;
       case 13337:
         handler.handle(readBody_13337(buf, new ReplicaDisconnect()));
         return;
@@ -412,6 +422,25 @@ public class ClientCodec {
     }
   }
 
+
+  public static Authorize read_Authorize(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 2124:
+        return readBody_2124(buf, new Authorize());
+    }
+    return null;
+  }
+
+
+  private static Authorize readBody_2124(ByteBuf buf, Authorize o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    o.username = Helper.readString(buf);
+    o.password = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
+    o.origin = Helper.readString(buf);
+    return o;
+  }
 
   public static ReplicaDisconnect read_ReplicaDisconnect(ByteBuf buf) {
     switch (buf.readIntLE()) {
@@ -949,6 +978,20 @@ public class ClientCodec {
 
   private static PingRequest readBody_24321(ByteBuf buf, PingRequest o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, Authorize o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(2124);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
+    Helper.writeString(buf, o.username);;
+    Helper.writeString(buf, o.password);;
+    Helper.writeString(buf, o.ip);;
+    Helper.writeString(buf, o.origin);;
   }
 
   public static void write(ByteBuf buf, ReplicaDisconnect o) {

@@ -202,6 +202,28 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     });
   }
 
+
+  @Override
+  public void handle(ClientMessage.Authorize payload) {
+    Key key = new Key(payload.space, payload.key);
+    nexus.service.authorize(payload.origin, payload.ip, key, payload.username, payload.password, new Callback<String>() {
+      @Override
+      public void success(String agent) {
+        ServerMessage.AuthResponse response = new ServerMessage.AuthResponse();
+        response.agent = agent;
+        ByteBuf buf = upstream.create(response.agent.length() + 32);
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
+  }
+
   private void commonWebHandle(WebResponse value) {
     ServerMessage.WebResponseNet response = new ServerMessage.WebResponseNet();
     response.body = value.body;

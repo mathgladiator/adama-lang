@@ -69,6 +69,8 @@ public interface RootHandler {
 
   public void handle(Session session, DomainGetRequest request, DomainPolicyResponder responder);
 
+  public void handle(Session session, DocumentAuthorizeRequest request, InitiationResponder responder);
+
   public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder);
 
   public void handle(Session session, DocumentDeleteRequest request, SimpleResponder responder);

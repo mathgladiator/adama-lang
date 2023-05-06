@@ -655,7 +655,14 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected abstract void __invoke_label(String __new_state);
 
   /** authenticate a user; return null to indicate forbidden, return an agent to sign for the document */
-  public abstract String __auth(String username, String password);
+  public abstract String __auth(CoreRequestContext context, String username, String password);
+
+  public String __authorize(CoreRequestContext __context, String username, String password) {
+    __time.set(System.currentTimeMillis());
+    String result = __auth(__context, username, password);
+    __revert();
+    return result;
+  };
 
   /** code generated: respond to a get request */
   public abstract WebResponse __get(WebGet __get);

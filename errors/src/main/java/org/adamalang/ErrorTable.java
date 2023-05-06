@@ -153,6 +153,8 @@ public class ErrorTable {
     descriptions.put(114881, "no description of error (yet)");
     names.put(110832, "DOCUMENT_WEB_DELETE_NOT_FOUND");
     descriptions.put(110832, "no description of error (yet)");
+    names.put(191713, "DOCUMENT_AUTHORIIZE_FAILURE");
+    descriptions.put(191713, "no description of error (yet)");
     names.put(130092, "SERVICE_DOCUMENT_ALREADY_CREATED");
     descriptions.put(130092, "The document is already created, so please try connecting instead. This happens when two create calls are executed");
     userspace.add(130092);
@@ -334,6 +336,8 @@ public class ErrorTable {
     descriptions.put(909436, "no description of error (yet)");
     names.put(998384, "API_SPACE_CREATE_FAILED_NOT_ADAMA_DEVELOPER");
     descriptions.put(998384, "no description of error (yet)");
+    names.put(980204, "API_AUTH_DOCUMENT_UNKNOWN_EXCEPTION");
+    descriptions.put(980204, "no description of error (yet)");
     names.put(991368, "API_SET_PASSWORD_UNKNOWN_EXCEPTION");
     descriptions.put(991368, "no description of error (yet)");
     names.put(983199, "API_SET_PASSWORD_ONLY_ADAMA_DEV_EXCEPTION");
@@ -661,6 +665,8 @@ public class ErrorTable {
     descriptions.put(750799, "no description of error (yet)");
     names.put(752841, "ADAMA_NET_REFLECT_FOUND_REGION_RATHER_THAN_MACHINE");
     descriptions.put(752841, "no description of error (yet)");
+    names.put(797872, "ADAMA_NET_AUTH_FOUND_REGION_RATHER_THAN_MACHINE");
+    descriptions.put(797872, "no description of error (yet)");
     names.put(797824, "ADAMA_NET_WEBGET_FOUND_REGION_RATHER_THAN_MACHINE");
     descriptions.put(797824, "no description of error (yet)");
     names.put(773309, "ADAMA_NET_WEBOPTIONS_FOUND_REGION_RATHER_THAN_MACHINE");
@@ -708,6 +714,10 @@ public class ErrorTable {
     descriptions.put(703667, "no description of error (yet)");
     names.put(786615, "ADAMA_NET_WEBOPTIONS_REJECTED");
     descriptions.put(786615, "no description of error (yet)");
+    names.put(793779, "ADAMA_NET_AUTH_TIMEOUT");
+    descriptions.put(793779, "no description of error (yet)");
+    names.put(790732, "ADAMA_NET_AUTH_REJECTED");
+    descriptions.put(790732, "no description of error (yet)");
     names.put(769085, "ADAMA_NET_CONNECTION_DONE");
     descriptions.put(769085, "no description of error (yet)");
     retry.add(769085);

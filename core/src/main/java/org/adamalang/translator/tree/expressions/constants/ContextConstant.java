@@ -34,13 +34,13 @@ public class ContextConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    if (environment.state.isStatic() || environment.state.isConstructor() || environment.state.isDocumentEvent() || environment.state.isMessageHandler()) {
+    if (environment.state.isStatic() || environment.state.isConstructor() || environment.state.isDocumentEvent() || environment.state.isMessageHandler() || environment.state.isAuthorize()) {
       environment.mustBeComputeContext(this);
       TyType type = new TyInternalReadonlyClass(CoreRequestContext.class);
       environment.useSpecial(type, "__context");
       return type;
     } else {
-      environment.document.createError(this, "@context is only available within static policies, constructors, document events, message handlers", "WHO");
+      environment.document.createError(this, "@context is only available within static policies, constructors, document events, authorize handler, message handlers", "WHO");
       return null;
     }
   }

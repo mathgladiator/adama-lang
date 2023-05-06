@@ -175,6 +175,13 @@ public class ServerMessage {
     public String asset_transform;
   }
 
+  @TypeId(2123)
+  @Flow("Auth")
+  public static class AuthResponse {
+    @FieldOrder(1)
+    public String agent;
+  }
+
   @TypeId(2001)
   @Flow("Query")
   public static class QueryResult {

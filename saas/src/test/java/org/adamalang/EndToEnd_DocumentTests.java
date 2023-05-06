@@ -25,6 +25,7 @@ public class EndToEnd_DocumentTests {
               "@static { create { return true; } }" +
                   "@connected { return true; }" +
                   "@delete { return true; }" +
+                  "@authorize (u, p) { return u + \":\" + p; }" +
                   "public int x = 1;" +
                   "message M { int z; }" +
                   "channel foo(M m) { x += m.z; }" +
@@ -48,6 +49,8 @@ public class EndToEnd_DocumentTests {
       Iterator<String> c10 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/list\",\"space\":\"newspace\"}");
       Assert.assertTrue(c10.next().startsWith("STREAM:{\"key\":\"a\",\"created\":"));
       Assert.assertEquals("FINISH:null", c10.next());
+      Iterator<String> cLOGIN = fe.execute("{\"id\":100,\"method\":\"document/authorize\",\"space\":\"newspace\",\"key\":\"a\",\"username\":\"cake\",\"password\":\"ninja\"}");
+      Assert.assertTrue(cLOGIN.next().startsWith("FINISH:{\"identity\":\""));
       Iterator<String> c11 = fe.execute("{\"id\":8,\"method\":\"connection/send\",\"connection\":100,\"channel\":\"foo\",\"message\":{\"z\":2}}");
       Assert.assertEquals("ERROR:457745", c11.next());
       Assert.assertEquals("ERROR:438302", fe.execute("{\"id\":1000,\"method\":\"connection/update\",\"connection\":1000,\"viewer-state\":{\"z\":100}}").next());

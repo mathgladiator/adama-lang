@@ -57,7 +57,13 @@
 
     <parameter-definition name="password" type="string" missing-error="465917" logged="false">
         <documentation>
-            The password for your account.
+            The password for your account or a document
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="username" type="string" missing-error="458737" logged="false">
+        <documentation>
+            The username for a document authorization
         </documentation>
     </parameter-definition>
 
@@ -873,6 +879,16 @@
         </documentation>
     </method>
 
+    <method name="document/authorize" responder="initiation">
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <parameter name="username"/>
+        <parameter name="password"/>
+        <documentation>
+            Authorize a username and password against a document.
+        </documentation>
+    </method>
+
     <method name="document/create" responder="simple">
         <parameter name="identity"/>
         <parameter name="space"/>
@@ -1584,7 +1600,6 @@
 406514
 466931
 462832
-458737
 -->
 
 </api>

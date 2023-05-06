@@ -1,6 +1,6 @@
 # API Reference 
  Methods: 
-[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceUsage](#method-spaceusage), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [DomainMap](#method-domainmap), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionSend](#method-connectionsend), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish), [SuperCheckIn](#method-supercheckin), [SuperListAutomaticDomains](#method-superlistautomaticdomains), [SuperSetDomainCertificate](#method-supersetdomaincertificate)
+[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceUsage](#method-spaceusage), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [DomainMap](#method-domainmap), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentAuthorize](#method-documentauthorize), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionSend](#method-connectionsend), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish), [SuperCheckIn](#method-supercheckin), [SuperListAutomaticDomains](#method-superlistautomaticdomains), [SuperSetDomainCertificate](#method-supersetdomaincertificate)
 
 ## Method: InitSetupAccount
 This initiates developer machine via email verification.
@@ -91,7 +91,7 @@ Set the password for an Adama developer.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
-| password | yes | String | The password for your account. |
+| password | yes | String | The password for your account or a document |
 
 
 ### Template
@@ -141,7 +141,7 @@ Sign an Adama developer in with an email and password pair.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 | email | yes | String | The email of an Adama developer. |
-| password | yes | String | The password for your account. |
+| password | yes | String | The password for your account or a document |
 
 
 ### Template
@@ -783,6 +783,35 @@ connection.DomainGet(identity, domain, {
 | --- | --- | --- |
 | space | String | A space which is a collection of documents with a common Adama schema. |
 
+## Method: DocumentAuthorize
+Authorize a username and password against a document.
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
+| key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
+| username | yes | String | The username for a document authorization |
+| password | yes | String | The password for your account or a document |
+
+
+### Template
+```js
+connection.DocumentAuthorize(space, key, username, password, {
+  success: function(response) {
+    // response.identity
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+
+### Request response fields
+| name | type | documentation |
+| --- | --- | --- |
+| identity | String | A private token used to authenticate to Adama. |
+
 ## Method: DocumentCreate
 Create a document.
 
@@ -1128,7 +1157,7 @@ This method provides the client the ability to hash a password for plain text tr
 ### Parameters
 | name | required | type | documentation |
 | --- | --- | --- | --- |
-| password | yes | String | The password for your account. |
+| password | yes | String | The password for your account or a document |
 
 
 ### Template

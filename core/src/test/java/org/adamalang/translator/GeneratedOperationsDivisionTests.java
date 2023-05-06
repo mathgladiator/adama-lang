@@ -3661,7 +3661,7 @@ public class GeneratedOperationsDivisionTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __auth(String username, String password) {");
+    gold.append("\n  public String __auth(CoreRequestContext __context, String username, String password) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");

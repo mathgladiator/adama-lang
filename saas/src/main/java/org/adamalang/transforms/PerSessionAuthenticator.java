@@ -50,6 +50,16 @@ public class PerSessionAuthenticator {
     this.superKeys = superKeys;
   }
 
+  /** get the origin */
+  public String origin() {
+    return defaultContext.origin;
+  }
+
+  /** get the remote ip */
+  public String ip() {
+    return defaultContext.remoteIp;
+  }
+
   /** update the default asset key within the default context */
   public void updateAssetKey(String assetKey) {
     this.defaultContext = new ConnectionContext(defaultContext.origin, defaultContext.remoteIp, defaultContext.userAgent, assetKey);

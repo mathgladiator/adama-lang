@@ -20,6 +20,7 @@ import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.*;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.mysql.model.*;
@@ -81,6 +82,26 @@ public class RootHandlerImpl implements RootHandler {
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SET_PASSWORD_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
+  }
+
+  @Override
+  public void handle(Session session, DocumentAuthorizeRequest request, InitiationResponder responder) {
+    nexus.adama.authorize(session.authenticator.ip(), session.authenticator.origin(), request.space, request.key, request.username, request.password, new Callback<String>() {
+      @Override
+      public void success(String agent) {
+        try {
+          String identity = Secrets.getOrCreateDocumentSigningKey(nexus.database, nexus.masterKey, request.space, request.key).signDocument(request.space, request.key, agent);
+          responder.complete(identity);
+        } catch (Exception ex) {
+          responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_AUTH_DOCUMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
   }
 
   @Override

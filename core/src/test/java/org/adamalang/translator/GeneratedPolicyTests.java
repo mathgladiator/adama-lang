@@ -46,7 +46,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Policy_ContextOutOfStatic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11,\"byte\":18},\"end\":{\"line\":1,\"character\":19,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"@context is only available within static policies, constructors, document events, message handlers (WHO)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11,\"byte\":18},\"end\":{\"line\":1,\"character\":19,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"@context is only available within static policies, constructors, document events, authorize handler, message handlers (WHO)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -529,7 +529,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __auth(String username, String password) {");
+    gold.append("\n  public String __auth(CoreRequestContext __context, String username, String password) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1135,7 +1135,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __auth(String username, String password) {");
+    gold.append("\n  public String __auth(CoreRequestContext __context, String username, String password) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");

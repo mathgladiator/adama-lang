@@ -585,6 +585,24 @@ public class ConnectionRouter {
                 }
               });
             } return;
+            case "document/authorize": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentAuthorize.start();
+              DocumentAuthorizeRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(DocumentAuthorizeRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "document/create": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentCreate.start();
               DocumentCreateRequest.resolve(session, nexus, request, new Callback<>() {

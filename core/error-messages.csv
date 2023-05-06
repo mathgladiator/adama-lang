@@ -535,7 +535,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Parser_TupleEOS2_failure.a,0,0,0,0,"Import failed (Unknown) (ImportIssue)"
 ./test_code/Parser_TupleEOS3_failure.a,1,12,1,13,"File './test_code/Parser_TupleEOS3_failure.a' failed to parse: Parser was expecting one of the following symbols:,, >; instead, the parser got an end of stream. {Token: `3` @ (1,12) -> (1,13): NumberLiteral:NumberIsInteger} (ParseException)"
 ./test_code/Parser_TupleEOS3_failure.a,0,0,0,0,"Import failed (Parse): Parser was expecting one of the following symbols:,, >; instead, the parser got an end of stream. {Token: `3` @ (1,12) -> (1,13): NumberLiteral:NumberIsInteger} (ImportIssue)"
-./test_code/Policy_ContextOutOfStatic_failure.a,1,11,1,19,"@context is only available within static policies, constructors, document events, message handlers (WHO)"
+./test_code/Policy_ContextOutOfStatic_failure.a,1,11,1,19,"@context is only available within static policies, constructors, document events, authorize handler, message handlers (WHO)"
 ./test_code/Policy_ContextVariablesBadTypes_failure.a,1,2,1,8,"Type check failure: the type 'bool' is unable to store type 'int'. (TypeCheckReferences)"
 ./test_code/Policy_ContextVariablesBadTypes_failure.a,1,9,3,3,"The 'create' policy must return a boolean (DocumentEvents)"
 ./test_code/Policy_ContextVariablesBadTypes_failure.a,4,2,4,8,"Type check failure: the type 'bool' is unable to store type 'string'. (TypeCheckReferences)"

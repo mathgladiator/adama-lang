@@ -568,6 +568,27 @@ public class CoreService implements Deliverer, Queryable {
     }));
   }
 
+  public void authorize(String origin, String ip, Key key, String username, String password, Callback<String> callback) {
+    CoreRequestContext context = new CoreRequestContext(NtPrincipal.NO_ONE, origin, ip, key.key);
+    load(key, new Callback<>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        document.registerActivity();
+        String agent = document.document().__authorize(context, username, password);
+        if (agent != null) {
+          callback.success(agent);
+        } else {
+          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_AUTHORIIZE_FAILURE));
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
   /** execute a web get against the document */
   public void webGet(Key key, WebGet request, Callback<WebResponse> callback) {
     load(key, new Callback<DurableLivingDocument>() {

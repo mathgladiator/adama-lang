@@ -154,4 +154,8 @@ public class MultiRegionClient {
     });
     return stream;
   }
+
+  public void authorize(String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
+    local.authorize(ip, origin, space, key, username, password, callback);
+  }
 }

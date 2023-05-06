@@ -83,7 +83,7 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  public String __auth(String username, String password) {
+  public String __auth(CoreRequestContext context, String username, String password) {
     return null;
   }
 

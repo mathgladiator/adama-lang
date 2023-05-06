@@ -182,6 +182,27 @@ public class Client {
     });
   }
 
+  public void authorize(String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
+    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_auth_found_machine.start();
+    router.routerForDocuments.get(new Key(space, key), new InRegionRoutingCallbackWrapper<>(mInstance, callback, ErrorCodes.ADAMA_NET_AUTH_FOUND_REGION_RATHER_THAN_MACHINE) {
+      @Override
+      public void onMachine(String machine) {
+        mInstance.success();
+        clientFinder.find(machine,  new Callback<>() {
+          @Override
+          public void success(InstanceClient client) {
+            client.authorize(ip, origin, space, key, username, password, callback);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+      }
+    });
+  }
+
   public void webGet(String space, String key, WebGet request, Callback<WebResponse> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_webget_found_machine.start();
     router.routerForDocuments.get(new Key(space, key), new InRegionRoutingCallbackWrapper<>(mInstance, callback, ErrorCodes.ADAMA_NET_WEBGET_FOUND_REGION_RATHER_THAN_MACHINE) {

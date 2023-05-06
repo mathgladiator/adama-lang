@@ -15,6 +15,7 @@ import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.codec.ServerMessage.ReplicaData;
 import org.adamalang.net.codec.ServerMessage.DirectSendResponse;
 import org.adamalang.net.codec.ServerMessage.QueryResult;
+import org.adamalang.net.codec.ServerMessage.AuthResponse;
 import org.adamalang.net.codec.ServerMessage.WebResponseNet;
 import org.adamalang.net.codec.ServerMessage.ProxyLocalDataChange;
 import org.adamalang.net.codec.ServerMessage.ProxyIntResponse;
@@ -501,6 +502,41 @@ public class ServerCodec {
   }
 
 
+  public static abstract class StreamAuth implements ByteStream {
+    public abstract void handle(AuthResponse payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 2123:
+          handle(readBody_2123(buf, new AuthResponse()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerAuth {
+    public void handle(AuthResponse payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerAuth handler) {
+    switch (buf.readIntLE()) {
+      case 2123:
+        handler.handle(readBody_2123(buf, new AuthResponse()));
+        return;
+    }
+  }
+
+
   public static abstract class StreamPing implements ByteStream {
     public abstract void handle(PingResponse payload);
 
@@ -655,6 +691,20 @@ public class ServerCodec {
 
   private static QueryResult readBody_2001(ByteBuf buf, QueryResult o) {
     o.result = Helper.readString(buf);
+    return o;
+  }
+
+  public static AuthResponse read_AuthResponse(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 2123:
+        return readBody_2123(buf, new AuthResponse());
+    }
+    return null;
+  }
+
+
+  private static AuthResponse readBody_2123(ByteBuf buf, AuthResponse o) {
+    o.agent = Helper.readString(buf);
     return o;
   }
 
@@ -946,6 +996,15 @@ public class ServerCodec {
     }
     buf.writeIntLE(2001);
     Helper.writeString(buf, o.result);;
+  }
+
+  public static void write(ByteBuf buf, AuthResponse o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(2123);
+    Helper.writeString(buf, o.agent);;
   }
 
   public static void write(ByteBuf buf, WebResponseNet o) {
