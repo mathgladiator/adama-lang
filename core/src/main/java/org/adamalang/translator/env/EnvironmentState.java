@@ -33,6 +33,7 @@ public class EnvironmentState {
   private String cacheObject;
   private boolean readonlyEnv;
   private boolean abortion;
+  private boolean authorize;
 
   private EnvironmentState(final EnvironmentState prior) {
     autoId = prior.autoId;
@@ -56,6 +57,7 @@ public class EnvironmentState {
     isConstructor = prior.isConstructor;
     isDocumentEvent = prior.isDocumentEvent;
     abortion = prior.abortion;
+    authorize = prior.authorize;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -79,6 +81,7 @@ public class EnvironmentState {
     isConstructor = false;
     isDocumentEvent = false;
     abortion = false;
+    authorize = false;
   }
 
   public boolean hasNoCost() {
@@ -125,6 +128,11 @@ public class EnvironmentState {
   /** does the current environment allow aborting */
   public boolean isAbortable() {
     return abortion;
+  }
+
+  /** does the current environment exist within an @authorize */
+  public boolean isAuthorize() {
+    return authorize;
   }
 
   public boolean isDocumentEvent() {
@@ -254,6 +262,14 @@ public class EnvironmentState {
   public EnvironmentState scopeTesting() {
     final var next = new EnvironmentState(this);
     next.testing = true;
+    return next;
+  }
+
+  public EnvironmentState scopeAuthorize() {
+    final var next = new EnvironmentState(this);
+    next.readonly = true;
+    next.readonlyEnv = true;
+    next.authorize = true;
     return next;
   }
 

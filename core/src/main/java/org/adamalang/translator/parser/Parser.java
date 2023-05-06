@@ -629,7 +629,7 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block());
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@load"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@load"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service"));
     }
@@ -637,6 +637,8 @@ public class Parser {
       switch (op.text) {
         case "@include":
           return execute_include(op);
+        case "@authorize":
+          return define_authorize(op);
         case "enum":
           return define_enum_trailer(op);
         case "dispatch":
@@ -711,6 +713,16 @@ public class Parser {
     } else {
       return new DefineDocumentEvent(eventToken, which,  null, null, null, block());
     }
+  }
+
+  public Consumer<TopLevelDocumentHandler> define_authorize(final Token authorizeToken) throws AdamaLangException {
+    Token openParen = consumeExpectedSymbol("(");
+    Token username = id();
+    Token comma = consumeExpectedSymbol(",");
+    Token password = id();
+    Token closeParen = consumeExpectedSymbol(")");
+    Block code = block();
+    return (doc) -> doc.add(new DefineAuthorization(authorizeToken, openParen, username, comma, password, closeParen, code));
   }
 
   public Consumer<TopLevelDocumentHandler> define_document_event(final Token eventToken, final DocumentEvent which) throws AdamaLangException {

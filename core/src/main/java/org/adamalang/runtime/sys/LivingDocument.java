@@ -13,7 +13,6 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
-import org.adamalang.runtime.async.Timeout;
 import org.adamalang.runtime.async.TimeoutTracker;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
@@ -30,9 +29,6 @@ import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
 import org.adamalang.runtime.remote.*;
-import org.adamalang.runtime.stdlib.LibPrincipal;
-import org.adamalang.runtime.sys.auth.AuthRequest;
-import org.adamalang.runtime.sys.auth.AuthResponse;
 import org.adamalang.runtime.sys.web.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
@@ -655,7 +651,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
-  /** code generated: state machine labelslabels can be dynamically invoked */
+  /** code generated: state machine labels can be dynamically invoked */
   protected abstract void __invoke_label(String __new_state);
 
   /** authenticate a user; return null to indicate forbidden, return an agent to sign for the document */

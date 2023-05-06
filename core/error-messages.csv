@@ -6,6 +6,8 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Assets_Failures_failure.a,4,2,4,8,"Type 'asset' lacks field 'food' (FieldLookup)"
 ./test_code/Assets_Failures_failure.a,4,2,4,8,"Expression is not a function (FunctionInvoke)"
 ./test_code/Assets_Failures_failure.a,5,2,5,7,"Type check failure: the type 'asset' is unable to store type 'int'. (TypeCheckReferences)"
+./test_code/Auth_NoReturn_failure.a,0,0,1,1,"@authorize must either return a string or abort (Authorize)"
+./test_code/Auth_TooMany_failure.a,7,0,9,1,"Only one @authorize action allowed (DocumentDefine)"
 ./test_code/BinaryExpression_WhenCantAdd_failure.a,17,12,17,21,"Could not find a meaning for 'long' + 'bool' (OperatorTable)"
 ./test_code/BinaryExpression_WhenCantAdd_failure.a,18,12,18,34,"Could not find a meaning for 'list<int>' + 'bool' (OperatorTable)"
 ./test_code/BinaryExpression_WhenCantAdd_failure.a,22,3,22,11,"Expression expected to be computed, rather than assigned to (Environment)"

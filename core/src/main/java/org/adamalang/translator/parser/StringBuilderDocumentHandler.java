@@ -149,4 +149,9 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   public void add(DefineService ds) {
     ds.emit(this);
   }
+
+  @Override
+  public void add(DefineAuthorization da) {
+    da.emit(this);
+  }
 }

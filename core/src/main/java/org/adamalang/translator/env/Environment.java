@@ -77,9 +77,14 @@ public class Environment {
     return new Environment(document, state.scopeReadonly(), this).scope();
   }
 
-  /** createa a new environment which allows abortion */
+  /** create a new environment which allows abortion */
   public Environment scopeAsAbortable() {
     return new Environment(document, state.scopeAbortion(), this).scope();
+  }
+
+  /** create a new environment for @authorize */
+  public Environment scopeAsAuthorize() {
+    return new Environment(document, state.scopeAuthorize(), this);
   }
 
   /** need to capture special variables */

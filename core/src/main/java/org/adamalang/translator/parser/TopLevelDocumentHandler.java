@@ -62,4 +62,6 @@ public interface TopLevelDocumentHandler {
   void add(Include in);
 
   void add(DefineService ds);
+
+  void add(DefineAuthorization da);
 }

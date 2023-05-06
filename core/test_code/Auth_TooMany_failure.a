@@ -1,0 +1,10 @@
+@authorize (username, password) {
+  if (username == "goodguy") {
+    return "agent";
+  }
+  abort;
+}
+
+@authorize (username, password) {
+  abort;
+}

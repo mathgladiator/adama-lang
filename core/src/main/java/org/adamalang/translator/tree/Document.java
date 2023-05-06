@@ -71,6 +71,7 @@ public class Document implements TopLevelDocumentHandler {
   private final ArrayList<LatentCodeSnippet> latentCodeSnippets;
   private final ArrayList<File> searchPaths;
   private final TypeCheckerRoot typeChecker;
+  public final ArrayList<DefineAuthorization> auths;
   private int autoClassId;
   private String className;
   public final UriTable webGet;
@@ -111,6 +112,7 @@ public class Document implements TopLevelDocumentHandler {
     includes = new HashMap<>();
     services = new LinkedHashMap<>();
     defined = new HashSet<>();
+    auths = new ArrayList<>();
   }
 
   public void setIncludes(HashMap<String, String> include) {
@@ -239,6 +241,15 @@ public class Document implements TopLevelDocumentHandler {
     services.put(ds.name.text, ds);
     defined.add(ds.name.text);
     ds.typing(typeChecker);
+  }
+
+  @Override
+  public void add(DefineAuthorization da) {
+    if (auths.size() >= 1) {
+      typeChecker.issueError(da, "Only one @authorize action allowed", "DocumentDefine");
+    }
+    auths.add(da);
+    da.typing(typeChecker);
   }
 
   @Override
