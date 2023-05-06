@@ -58,6 +58,10 @@ public class DefineHandler extends Definition {
     ingest(channelNameToken);
   }
 
+  public boolean isOpen() {
+    return isOpen != null;
+  }
+
   @Override
   public void emit(final Consumer<Token> yielder) {
     if (openType != null) {

@@ -449,6 +449,10 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public boolean __open_channel(String name) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public String __auth(CoreRequestContext __context, String username, String password) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
@@ -1013,6 +1017,10 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public boolean __open_channel(String name) {");
+    gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String __auth(CoreRequestContext __context, String username, String password) {");
@@ -1592,6 +1600,10 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public boolean __open_channel(String name) {");
+    gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String __auth(CoreRequestContext __context, String username, String password) {");

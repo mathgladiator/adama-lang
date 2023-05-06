@@ -66,6 +66,11 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public boolean __open_channel(String name) {
+    return false;
+  }
+
+  @Override
   protected void __executeServiceCalls(boolean cancel) {
   }
 

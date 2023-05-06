@@ -1145,6 +1145,16 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void blind_send_with_open() throws Exception {
+    final var setup = new RealDocumentSetup("@static {  } @construct {} @connected { return true; } message M {} channel foo(M m) open { };");
+    setup.document.send(
+        ContextSupport.WRAP(NtPrincipal.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertInt(2));
+    setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(3));
+    setup.document.send(ContextSupport.WRAP(NtPrincipal.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertInt(5));
+    setup.assertCompare();
+  }
+
+  @Test
   public void multi_views() throws Exception {
     final var setup =
         new RealDocumentSetup(

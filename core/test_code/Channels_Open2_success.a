@@ -1,0 +1,18 @@
+message M {}
+
+channel chan1(M m) open {
+}
+
+channel chan2(M m) open {
+}
+
+channel chan3(M m) open {
+}
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+
+}

@@ -654,6 +654,9 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** code generated: state machine labels can be dynamically invoked */
   protected abstract void __invoke_label(String __new_state);
 
+  /** is the channel open */
+  public abstract boolean __open_channel(String name);
+
   /** authenticate a user; return null to indicate forbidden, return an agent to sign for the document */
   public abstract String __auth(CoreRequestContext context, String username, String password);
 
@@ -1570,7 +1573,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
     try {
       // they must be connected OR document allows blind/direct sends OR be overlord
-      if (!__clients.containsKey(context.who) && !factory.canSendWhileDisconnected(context)) {
+      if (!__open_channel(channel) && !__clients.containsKey(context.who) && !factory.canSendWhileDisconnected(context)) {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
       }
 

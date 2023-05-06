@@ -973,6 +973,10 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n    __queue_foo.clear();");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public boolean __open_channel(String name) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public String __auth(CoreRequestContext __context, String username, String password) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
