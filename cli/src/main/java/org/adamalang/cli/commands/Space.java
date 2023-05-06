@@ -465,6 +465,7 @@ public class Space {
     String identity = config.get_string("identity", null);
     String space = Util.extractOrCrash("--space", "-s", args);
     String key = Util.extractWithDefault("--key", "-k", "", args);
+    String writeAs = Util.extractOrCrash("--output", "-o", args);
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();
@@ -473,7 +474,7 @@ public class Space {
         request.put("space", space);
         request.put("key", key);
         ObjectNode response = connection.execute(request);
-        System.err.println(response.toPrettyString());
+        Files.writeString(new File(writeAs).toPath(), response.toPrettyString());
       }
     }
   }
