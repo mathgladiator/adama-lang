@@ -6273,11 +6273,13 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
-    gold.append("\n    switch (name) {case \"chan1\":");
+    gold.append("\n    switch (name) {");
+    gold.append("\n      case \"chan1\":");
     gold.append("\n      case \"chan2\":");
     gold.append("\n      case \"chan3\":");
     gold.append("\n        return true;");
-    gold.append("\n      default:return false;");
+    gold.append("\n      default:");
+    gold.append("\n        return false;");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
