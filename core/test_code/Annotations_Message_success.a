@@ -1,0 +1,3 @@
+message M {
+  int ( Z = 42 , uri = "/blah/{tenant}/view/thing/{id}" ) xyz;
+}

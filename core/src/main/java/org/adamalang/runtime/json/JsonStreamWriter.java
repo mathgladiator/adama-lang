@@ -9,6 +9,7 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.natives.*;
+import org.adamalang.translator.parser.token.Token;
 
 import java.util.*;
 
@@ -127,6 +128,15 @@ public class JsonStreamWriter {
 
   public void writeNtDate(final NtDate d) {
     writeString(d.toString());
+  }
+
+  public void writeToken(final Token token) {
+    if (token.isStringLiteral() || token.isNumberLiteralDouble() || token.isNumberLiteralInteger()) {
+      maybe_comma();
+      sb.append(token.text);
+    } else {
+      writeString(token.text);
+    }
   }
 
   public void writeString(final String s) {

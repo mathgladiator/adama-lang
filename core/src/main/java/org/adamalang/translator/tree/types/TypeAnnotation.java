@@ -16,11 +16,24 @@ import java.util.function.Consumer;
 
 /** a list of annotations to apply to a type; this is for reflection to do some magic */
 public class TypeAnnotation {
+
+  public static class Annotation {
+    public final Token name;
+    public final Token equals;
+    public final Token value;
+
+    public Annotation(Token name, Token equals, Token value) {
+      this.name = name;
+      this.equals = equals;
+      this.value = value;
+    }
+  }
+
   public final Token open;
-  public final ArrayList<TokenizedItem<Token>> annotations;
+  public final ArrayList<TokenizedItem<Annotation>> annotations;
   public final Token close;
 
-  public TypeAnnotation(Token open, ArrayList<TokenizedItem<Token>> annotations, Token close) {
+  public TypeAnnotation(Token open, ArrayList<TokenizedItem<Annotation>> annotations, Token close) {
     this.open = open;
     this.annotations = annotations;
     this.close = close;
@@ -28,9 +41,13 @@ public class TypeAnnotation {
 
   public void emit(Consumer<Token> yielder) {
     yielder.accept(open);
-    for (TokenizedItem<Token> annotation : annotations) {
+    for (TokenizedItem<Annotation> annotation : annotations) {
       annotation.emitBefore(yielder);
-      yielder.accept(annotation.item);
+      yielder.accept(annotation.item.name);
+      if (annotation.item.equals != null) {
+        yielder.accept(annotation.item.equals);
+        yielder.accept(annotation.item.value);
+      }
       annotation.emitAfter(yielder);
     }
     yielder.accept(close);

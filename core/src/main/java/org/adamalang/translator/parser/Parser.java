@@ -1266,10 +1266,18 @@ public class Parser {
   private TyType enrich(TyType tyType) throws AdamaLangException {
     Token openAnnotation = tokens.popIf((t) -> t.isSymbolWithTextEq("("));
     if (openAnnotation != null) {
-      ArrayList<TokenizedItem<Token>> annotations = new ArrayList<>();
+      ArrayList<TokenizedItem<TypeAnnotation.Annotation>> annotations = new ArrayList<>();
       Token commaOrEnd = tokens.popIf((t) -> t.isSymbolWithTextEq(",", ")"));
       while (commaOrEnd == null || commaOrEnd.isSymbolWithTextEq(",")) {
-        TokenizedItem<Token> annotation = new TokenizedItem<>(id());
+        Token name = id();
+        Token comma = tokens.popIf((t) -> t.isSymbolWithTextEq("="));
+        TokenizedItem<TypeAnnotation.Annotation> annotation;
+        if (comma != null) {
+          Token value = tokens.pop();
+          annotation = new TokenizedItem<>(new TypeAnnotation.Annotation(name, comma, value));
+        } else {
+          annotation = new TokenizedItem<>(new TypeAnnotation.Annotation(name, null, null));
+        }
         if (commaOrEnd != null) {
           annotation.before.add(commaOrEnd);
         }

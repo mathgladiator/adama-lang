@@ -71,8 +71,15 @@ public abstract class TyType extends DocumentPosition {
     if (annotation != null) {
       writer.writeObjectFieldIntro("annotations");
       writer.beginArray();
-      for (TokenizedItem<Token> token : annotation.annotations) {
-        writer.writeString(token.item.text);
+      for (TokenizedItem<TypeAnnotation.Annotation> token : annotation.annotations) {
+        if (token.item.equals != null) {
+          writer.beginObject();
+          writer.writeObjectFieldIntro(token.item.name.text);
+          writer.writeToken(token.item.value);
+          writer.endObject();
+        } else {
+          writer.writeString(token.item.name.text);
+        }
       }
       writer.endArray();
     }
