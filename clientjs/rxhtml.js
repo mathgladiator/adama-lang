@@ -1287,8 +1287,20 @@ var RxHTML = (function () {
     });
   };
 
+  /** RUNTIME | redirect to a page with state */
+  self.aRDp = function(vs, depends, puller) {
+    // TODO
+  };
+
+  /** RUNTIME | redirect to a static page */
+  self.aRDz = function(raw) {
+    return function() {
+      return raw;
+    }
+  };
+
   /** for custom elements to learn of the identity */
-  self.ID = function (identityName, redirectTo) {
+  self.ID = function (identityName, redirectToFunc) {
     if (identityName === true) {
       identityName = "default";
     }
@@ -1310,13 +1322,13 @@ var RxHTML = (function () {
       cleanup = function () {
         delete identities[identityName];
         localStorage.removeItem("identity_" + identityName);
-        self.goto(null, redirectTo);
+        self.goto(null, redirectToFunc());
       };
     } else {
       // whatever page we are, needs to die which means we need to nuke everything!
       window.setTimeout(function () {
         // TODO: this assumes a full app goes to the window
-        self.goto(null, redirectTo);
+        self.goto(null, redirectToFunc());
       }, 10);
       return {abort: true};
     }
@@ -1388,7 +1400,7 @@ var RxHTML = (function () {
   };
 
   // <connection ...>
-  self.CONNECT = function (state, rxobj, redirectTo) {
+  self.CONNECT = function (state, rxobj) {
     var unsub = {
       view: function () {
       }
@@ -1432,7 +1444,7 @@ var RxHTML = (function () {
         co.ptr = null;
       }
       co.bound = desired;
-      var idLookup = self.ID(rxobj.identity, redirectTo);
+      var idLookup = self.ID(rxobj.identity, function() { return rxobj.redirect; });
       if (idLookup.abort) {
         return;
       }
@@ -1498,7 +1510,7 @@ var RxHTML = (function () {
   };
 
   self.aUP = function (form, state, identityName, failureVar, redirectTo) {
-    var idLookup = self.ID(identityName, redirectTo);
+    var idLookup = self.ID(identityName, function() { return redirectTo; }); // TODO: make rxvar
     if (idLookup.abort) {
       return;
     }

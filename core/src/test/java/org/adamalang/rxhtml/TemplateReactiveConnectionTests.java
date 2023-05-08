@@ -31,7 +31,8 @@ public class TemplateReactiveConnectionTests extends BaseRxHtmlTest {
     gold.append("\n      c.__();");
     gold.append("\n    });");
     gold.append("\n    c.identity=true;");
-    gold.append("\n    $.CONNECT(a,c,'/sign-in');");
+    gold.append("\n    c.redirect='/sign-in';");
+    gold.append("\n    $.CONNECT(a,c);");
     gold.append("\n    var d=$.RX([]);");
     gold.append("\n    d.name='myname';");
     gold.append("\n    var f=$.E('div');");

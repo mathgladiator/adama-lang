@@ -1,0 +1,21 @@
+<forest>
+    <page uri="/customeraction/$customer_id:text/signin" default-redirect-source>
+        Sign in for customers
+    </page>
+    <page uri="/customer/$customer_id:text" authenticate>
+        Simple Page for customers
+    </page>
+
+    <page uri="/adminaction/$admin_id:text/signin" default-redirect-source>
+        Sign in for admins
+    </page>
+    <page uri="/admin/$admin_id:text" authenticate>
+        Simple Page for admins
+    </page>
+    <page uri="/bounce" authenticate>
+
+    </page>
+    <page uri="/logingeneric" default-redirect-source>
+        Simple Page
+    </page>
+</forest>

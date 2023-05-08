@@ -25,7 +25,8 @@ public class TemplateChooseSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    c.space='space';");
     gold.append("\n    c.key='key';");
     gold.append("\n    c.identity=true;");
-    gold.append("\n    $.CONNECT(a,c,'/sign-in');");
+    gold.append("\n    c.redirect='/sign-in';");
+    gold.append("\n    $.CONNECT(a,c);");
     gold.append("\n    c.__();");
     gold.append("\n    var d=$.RX([]);");
     gold.append("\n    d.name='default';");

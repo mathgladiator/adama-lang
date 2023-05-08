@@ -13,7 +13,8 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.cookie.CookieHeaderNames;
+import io.netty.handler.codec.http.cookie.*;
+import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.DefaultCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import io.netty.handler.codec.http.multipart.Attribute;
@@ -38,6 +39,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private static final Logger LOG = LoggerFactory.getLogger(WebHandler.class);
@@ -49,6 +51,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private static final byte[] NOT_FOUND_RESPONSE = "<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_UPLOAD_FAILURE = "<html><head><title>Bad Request; Internal Error Uploading</title></head><body>Sorry, the upload failed.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_UPLOAD_INCOMPLETE_FIELDS = "<html><head><title>Bad Request; Incomplete</title></head><body>Sorry, the post request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
+  private static final byte[] COOKIE_SET_FAILURE = "<html><head><title>Bad Request; Failed to set cookie</title></head><body>Sorry, the request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
+  private static final byte[] COOKIE_GET_FAILURE = "<html><head><title>Bad Request; Failed to get cookie</title></head><body>Sorry, the request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
 
   private final WebConfig webConfig;
   private final WebMetrics metrics;
@@ -335,6 +339,57 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       return true;
     } else if (req.uri().startsWith("/~assets/")) { // assets that are encrypted and private to the connection
       handleEncryptedAsset(req, ctx);
+      return true;
+    } else if (req.uri().startsWith("/~set/")) { // set a secure cookie
+      String[] fragments = req.uri().split(Pattern.quote("/"));
+      if (fragments.length == 4) {
+        final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(OK_RESPONSE));
+        String name = fragments[2];
+        String value = fragments[3];
+        String origin = req.headers().get(HttpHeaderNames.ORIGIN);
+        if (origin != null) { // CORS support directly
+          res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+          res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
+        }
+        res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
+        DefaultCookie cookie = new DefaultCookie("skvp_" + name, value);
+        cookie.setSameSite(CookieHeaderNames.SameSite.None);
+        cookie.setMaxAge(60 * 60 * 24 * 7);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
+        res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
+        sendWithKeepAlive(webConfig, ctx, req, res);
+      } else {
+        sendImmediate(metrics.webhandler_failed_cookie_set, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_SET_FAILURE, "text/html; charset=UTF-8", true);
+      }
+      return true;
+    } else if (req.uri().startsWith("/~get/")) { // set a secure cookie
+      String[] fragments = req.uri().split(Pattern.quote("/"));
+      if (fragments.length == 3) {
+        String name = "skvp_" + fragments[2];
+        String found = null;
+        for (Cookie cookie : ServerCookieDecoder.STRICT.decode(req.headers().get(HttpHeaderNames.COOKIE))) {
+          if (name.equalsIgnoreCase(cookie.name())) {
+            found = cookie.value();
+          }
+        }
+        if (found == null) {
+          sendImmediate(metrics.webhandler_failed_cookie_get, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_GET_FAILURE, "text/html; charset=UTF-8", true);
+        } else {
+          final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(found.getBytes(StandardCharsets.UTF_8)));
+          String origin = req.headers().get(HttpHeaderNames.ORIGIN);
+          if (origin != null) { // CORS support directly
+            res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+            res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
+          }
+          res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
+          res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
+          sendWithKeepAlive(webConfig, ctx, req, res);
+        }
+      } else {
+        sendImmediate(metrics.webhandler_failed_cookie_get, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_GET_FAILURE, "text/html; charset=UTF-8", true);
+      }
       return true;
     } else if (req.uri().startsWith("/~p")) { // set an asset key
       final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(OK_RESPONSE));

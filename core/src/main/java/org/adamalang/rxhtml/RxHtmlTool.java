@@ -26,44 +26,21 @@ import java.util.Map;
 
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
-  private static String getDefaultRedirect(Document document) {
-    String defaultRedirect = null;
+  private static ArrayList<String> getDefaultRedirect(Document document) {
+    ArrayList<String> defaults = new ArrayList<>();
     for (Element element : document.getElementsByTag("page")) {
       if (element.hasAttr("default-redirect-source")) {
-        defaultRedirect = element.attr("uri");
+        defaults.add(Root.uri_to_instructions(element.attr("uri")).formula);
       }
     }
-    return defaultRedirect;
+    return defaults;
   }
-
-  // SKETCH of things to come
-  /*
-  private static String buildDefaultRedirectSource(Document document) {
-    StringBuilder redirect = new StringBuilder();
-    String defaultRedirect = null;
-    for (Element element : document.getElementsByTag("page")) {
-      if (element.hasAttr("default-redirect-source")) {
-        String value = element.attr("uri");
-
-
-        Tree tree = Parser.parse(value);
-        Map<String, String> vars = tree.variables();
-        if (vars.size() == 0) {
-          defaultRedirect = Escapes.constantOf(value);
-        } else {
-          // defaultRedirect = "function(){ return \"" + tree.js(oVar) + "\";}";
-        }
-      }
-    }
-    return defaultRedirect;
-  }
-  */
 
   public static RxHtmlResult convertStringToTemplateForest(String str, Feedback feedback) {
     Environment env = Environment.fresh(feedback);
     Root.start(env);
     Document document = Jsoup.parse(str);
-    String defaultRedirect = getDefaultRedirect(document);
+    ArrayList<String> defaultRedirects = getDefaultRedirect(document);
     StringBuilder style = new StringBuilder();
     Shell shell = new Shell(feedback);
     shell.scan(document);
@@ -76,7 +53,7 @@ public class RxHtmlTool {
     }
     for (Element element : document.getElementsByTag("page")) {
       patterns.add(element.attr("uri"));
-      Root.page(env.element(element, true), defaultRedirect);
+      Root.page(env.element(element, true), defaultRedirects);
     }
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
@@ -92,7 +69,7 @@ public class RxHtmlTool {
     for (File file : files) {
       Document document = Jsoup.parse(file, "UTF-8");
       shell.scan(document);
-      String defaultRedirect = getDefaultRedirect(document);
+      ArrayList<String> defaultRedirects = getDefaultRedirect(document);
       for (Element element : document.getElementsByTag("template")) {
         Root.template(env.element(element, true));
       }
@@ -102,7 +79,7 @@ public class RxHtmlTool {
       for (Element element : document.getElementsByTag("page")) {
         matchers.add(RxHtmlToAdama.uriOf(element.attr("uri")).matcher());
         patterns.add(element.attr("uri"));
-        Root.page(env.element(element, true), defaultRedirect);
+        Root.page(env.element(element, true), defaultRedirects);
       }
     }
     String javascript = Root.finish(env);

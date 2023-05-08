@@ -29,6 +29,8 @@ public class WebMetrics {
   public final Runnable webhandler_found;
   public final Runnable webhandler_notfound;
   public final Runnable webhandler_upload_asset_failure;
+  public final Runnable webhandler_failed_cookie_set;
+  public final Runnable webhandler_failed_cookie_get;
   public final Runnable webhandler_wta_crash;
   public final Runnable webhandler_options_failure;
   public final Runnable webhandler_healthcheck;
@@ -62,7 +64,8 @@ public class WebMetrics {
     this.webhandler_assets_invalid_uri = factory.counter("webhandler_assets_invalid_uri");
     this.webhandler_assets_start = factory.counter("webhandler_assets_start");
     this.webhandler_assets_failed_start = factory.counter("webhandler_assets_failed_start");
-
+    this.webhandler_failed_cookie_set = factory.counter("webhandler_failed_cookie_set");
+    this.webhandler_failed_cookie_get = factory.counter("webhandler_failed_cookie_get");
     this.redirect_server_heartbeat = factory.counter("redirect_server_heartbeat");
     this.webhandler_get = factory.counter("webhandler_get");
     this.webhandler_post = factory.counter("webhandler_post");

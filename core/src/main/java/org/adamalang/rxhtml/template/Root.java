@@ -8,6 +8,13 @@
  */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.rxhtml.atl.Parser;
+import org.adamalang.rxhtml.atl.tree.Tree;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+
 public class Root {
   public static void start(Environment env) {
     env.writer.append("(function($){").tabUp().newline();
@@ -25,34 +32,83 @@ public class Root {
     env.writer.tabDown().tab().append("});").newline();
   }
 
-  public static void page(Environment env, String defaultRedirect) {
+  public static void page(Environment env, ArrayList<String> defaultRedirects) {
     String stateVar = env.pool.ask();
     String rootVar = env.pool.ask();
-    env.writer.tab().append("$.PG(").append(uri_to_instructions(env.element.attr("uri"))).append(", function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();
+    Environment envToUse = env.parentVariable(rootVar).stateVar(stateVar);
+    Instructions instructions = uri_to_instructions(env.element.attr("uri"));
+    env.writer.tab().append("$.PG(").append(instructions.javascript).append(", function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();
     if (env.element.hasAttr("authenticate")) {
       String identity = env.element.attr("authenticate");
       if (identity == null || identity.trim().equals("")) {
         identity = "default";
       }
-      String redirect = defaultRedirect;
+      ArrayList<String> failAuthRedirects = new ArrayList<>(defaultRedirects);
       if (env.element.hasAttr("redirect")) {
         String redirectTo = env.element.attr("redirect");
         if (redirectTo != null && !redirectTo.trim().equals("")) {
-          redirect = redirectTo;
+          failAuthRedirects.add(redirectTo);
         }
       }
-      env.writer.tab().append("if ($.ID('").append(identity).append("','").append(redirect != null ? redirect : "").append("').abort) {").tabUp().newline();
+      String varForAuthTest = env.pool.ask();
+      String zeroArgs = "$.aRDz('/');";
+      String pullArgs = null;
+      for (String redirect : failAuthRedirects) {
+        // parse the redirect
+        Tree tree = Parser.parse(redirect);
+        Map<String, String> vars = tree.variables();
+        if (vars.size() == 0) {
+          zeroArgs = "$.aRDz('" + redirect + "');";
+        } else {
+          boolean hasAll = true;
+          ArrayList<String> varsToPullFromView = new ArrayList<>();
+          for (String key : vars.keySet()) {
+            varsToPullFromView.add("'" + key + "'");
+            if (!instructions.depends.contains(key)) {
+              hasAll = false;
+              break;
+            }
+          }
+          if (hasAll) {
+            pullArgs = "$.aRDp(" + stateVar + ",[" + String.join(",", varsToPullFromView) + "], function(vs) { return " + tree.js("vs") + "; });";
+          }
+        }
+      }
+      env.writer.tab().append("var ").append(varForAuthTest).append(" = ");
+      if (pullArgs != null) {
+        env.writer.append(pullArgs).newline();
+      } else {
+        env.writer.append(zeroArgs).newline();
+      }
+      env.writer.tab().append("if ($.ID('").append(identity).append("',").append(varForAuthTest).append(").abort) {").tabUp().newline();
       env.writer.tab().append("return;").tabDown().newline();
       env.writer.tab().append("}").newline();
+      env.pool.give(varForAuthTest);
+
     }
-    Base.children(env.parentVariable(rootVar).stateVar(stateVar));
+    Base.children(envToUse);
     env.writer.tabDown().tab().append("});").newline();
     env.pool.give(rootVar);
     env.pool.give(stateVar);
   }
 
-  public static String uri_to_instructions(String uriRaw) {
+  public static class Instructions {
+    public final String javascript;
+    public final HashSet<String> depends;
+    public final String formula;
+
+    public Instructions(final String javascript, HashSet<String> depends, String formula) {
+      this.javascript = javascript;
+      this.depends = depends;
+      this.formula = formula;
+    }
+  }
+
+  /** convert a raw uri to an instruction set */
+  public static Instructions uri_to_instructions(String uriRaw) {
+    HashSet<String> depends = new HashSet<>();
     String uri = uriRaw.startsWith("/") ? uriRaw.substring(1) : uriRaw;
+    StringBuilder formula = new StringBuilder();
     StringBuilder sb = new StringBuilder();
     sb.append("[");
     boolean first = true;
@@ -63,18 +119,24 @@ public class Root {
       if (!first) {
         sb.append(",");
       }
+      if (kSlash >= 0) {
+        formula.append("/");
+      }
       first = false;
       if (fragment.startsWith("$")) {
         int colon = fragment.indexOf(':');
         String type = colon > 0 ? fragment.substring(colon + 1) : "text";
         String name = colon > 0 ? fragment.substring(1, colon) : fragment.substring(1);
+        depends.add(name);
         sb.append("'").append(type).append("','").append(name).append("'");
+        formula.append("{").append(name).append("}");
       } else {
         sb.append("'fixed','").append(fragment).append("'");
+        formula.append(fragment);
       }
     } while (uri.length() > 0);
     sb.append("]");
-    return sb.toString();
+    return new Instructions(sb.toString(), depends, formula.toString());
   }
 
   public static String finish(Environment env) {
