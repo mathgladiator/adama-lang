@@ -14,12 +14,42 @@ import org.adamalang.rxhtml.template.Environment;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ParserTests {
+import java.util.ArrayList;
 
+public class ParserTests {
   private static void assertIs(Command command, String expected) {
     Environment env = Environment.fresh(Feedback.NoOp);
     command.write(env.stateVar("State"), "type", "DOM");
     Assert.assertEquals(expected, env.writer.toString());
+  }
+
+  @Test
+  public void fragments() {
+    ArrayList<String> f;
+    {
+      f = Parser.fragmentize("set:x='42 42'");
+      Assert.assertEquals(1, f.size());
+      Assert.assertEquals("set:x=42 42", f.get(0));
+    }
+    {
+      f = Parser.fragmentize("set:x='42 42' toggle:x   goto:'[ happy ]'   ");
+      Assert.assertEquals(3, f.size());
+      Assert.assertEquals("set:x=42 42", f.get(0));
+      Assert.assertEquals("toggle:x", f.get(1));
+      Assert.assertEquals("goto:[ happy ]", f.get(2));
+    }
+  }
+
+  @Test
+  public void cmd_goto1() {
+    Goto goto_ = (Goto) (Parser.parse("goto:/view/x-yz-{data}").get(0));
+    assertIs(goto_, "var a = {};\n" + "$.YS(State,a,'data');\n" + "$.onGO(DOM,'type',State,function(){ return \"/view/x-yz-\" + a['data'];});\n");
+  }
+
+  @Test
+  public void cmd_goto2() {
+    Goto goto_ = (Goto) (Parser.parse("goto:/fixed").get(0));
+    assertIs(goto_, "$.onGO(DOM,'type',State,'/fixed');\n");
   }
 
   @Test

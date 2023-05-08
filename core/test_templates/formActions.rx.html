@@ -7,6 +7,17 @@
             <input name="remember" type="checkbox" />
             <input type="submit" />
         </form>
+        <form rx:action="document:sign-in" rx:failure="docnope" rx:forward="/w00t">
+            <input type="hidden" name="space" value="s "/>
+            <input type="hidden" name="key" value="k" />
+            <input name="username" type="username" />
+            <input name="password" type="password" />
+            <input name="remember" type="checkbox" />
+            <input type="submit" />
+        </form>
+        <form rx:action="document:put">
+            <input type="submit" />
+        </form>
         <form rx:action="custom:foo">
             <input type="submit" />
         </form>

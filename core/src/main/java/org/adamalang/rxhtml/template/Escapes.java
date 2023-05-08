@@ -23,4 +23,18 @@ public class Escapes {
   public static String escape34(String x) {
     return String.join("\\\"", escapeNewLine(escapeSlash(x)).split(Pattern.quote("\""), -1));
   }
+
+  public static String constantOf(String value) {
+    String processedValue = "'" + Escapes.escape39(value) + "'";
+    try {
+      Double.parseDouble(value);
+      processedValue = value;
+    } catch (NumberFormatException nfe) {
+    }
+    if (value.equals("true") || value.equals("false")) {
+      processedValue = value;
+    }
+    return processedValue;
+  }
+
 }

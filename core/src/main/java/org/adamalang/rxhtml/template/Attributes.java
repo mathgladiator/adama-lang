@@ -245,6 +245,36 @@ public class Attributes {
     }, "email", "password", "remember");
   }
 
+  private void check_action_document_sign_in() {
+    walkAndValidateAndCheck(env, (el) -> {
+      String name = el.attr("name");
+      String type = el.attr("type");
+      if ("password".equals(name)) {
+        if (!("password".equals(type))) {
+          env.feedback.warn(el, "Passwords should have type 'password'.");
+        }
+        return true;
+      }
+      if ("username".equals(name)) {
+        return true;
+      }
+      if ("space".equals(name)) {
+        return true;
+      }
+      if ("key".equals(name)) {
+        return true;
+      }
+      if ("remember".equals(name)) {
+        return true;
+      }
+      if ("submit".equals(type)) {
+        return true;
+      }
+      env.feedback.warn(el, "The input '" + name + "' is excessive.");
+      return false;
+    }, "username", "password", "space", "key", "remember");
+  }
+
   private void check_action_upload() {
     walkAndValidateAndCheck(env, (el) -> {
       String name = el.attr("name");
@@ -296,14 +326,26 @@ public class Attributes {
 
   public void _action() {
     String action = env.element.attr("rx:action").trim();
-    if ("adama:sign-in".equalsIgnoreCase(action)) { // sign in as an Adama user
-      check_action_sign_in();
-      env.writer.tab().append("$.aSO(").append(eVar) //
+    if ("document:sign-in".equalsIgnoreCase(action)) { // sign in as an Adama user
+      check_action_document_sign_in();
+      env.writer.tab().append("$.aDSO(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(env.val("rx:identity", "default")) //
           .append("','").append(env.val("rx:failure", "sign_in_failed")) //
           .append("','").append(env.val("rx:forward", "/")) //
           .append("');").newline();
+    } else if ("document:put".equalsIgnoreCase(action)) { // sign in as an Adama user
+        env.writer.tab().append("$.aDPUT(").append(eVar) //
+            .append(",").append(env.stateVar) //
+            .append("');").newline();
+     } else if ("adama:sign-in".equalsIgnoreCase(action)) { // sign in as an Adama user
+      check_action_sign_in();
+        env.writer.tab().append("$.aSO(").append(eVar) //
+            .append(",").append(env.stateVar) //
+            .append(",'").append(env.val("rx:identity", "default")) //
+            .append("','").append(env.val("rx:failure", "sign_in_failed")) //
+            .append("','").append(env.val("rx:forward", "/")) //
+            .append("');").newline();
     } else if (action.startsWith("custom:")) { // execute custom logic
       String customCommandName = action.substring(7).trim();
       env.writer.tab().append("$.aCC(").append(eVar) //

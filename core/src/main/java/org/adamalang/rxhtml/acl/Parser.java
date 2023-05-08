@@ -14,6 +14,31 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class Parser {
+
+  public static ArrayList<String> fragmentize(String command) {
+    ArrayList<String> fragments = new ArrayList<>();
+    String tail = command;
+    while (tail.length() > 0) {
+      int kCut = tail.indexOf(' ');
+      if (kCut > 0) {
+        int kQuote = tail.indexOf('\'');
+        if (kQuote < kCut) {
+          int kEnd = tail.indexOf('\'', kQuote + 1);
+          if (kEnd > kCut) {
+            kCut = kEnd;
+          }
+        }
+        String add = tail.substring(0, kCut).replaceAll(Pattern.quote("'"), "");
+        fragments.add(add);
+        tail = tail.substring(kCut + 1).trim();
+      } else {
+        fragments.add(tail);
+        return fragments;
+      }
+    }
+    return fragments;
+  }
+
   public static ArrayList<Command> parse(String command) {
     ArrayList<Command> commands = new ArrayList<>();
     for (String phrase : command.split(Pattern.quote(" "))) {
@@ -62,11 +87,16 @@ public class Parser {
             commands.add(new Finalize(body));
             break;
           }
+          case "goto": {
+            commands.add(new Goto(body));
+            break;
+          }
           case "set": {
             int kEq = body.indexOf('=');
             if (kEq > 0) {
               commands.add(new Set(body.substring(0, kEq).trim(), body.substring(kEq + 1).trim()));
             }
+            break;
           }
           case "force-auth": {
             int kEq = body.indexOf('=');

@@ -9,7 +9,10 @@
 package org.adamalang.rxhtml;
 
 import org.adamalang.common.web.UriMatcher;
+import org.adamalang.rxhtml.atl.Parser;
+import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.template.Escapes;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.Shell;
 import org.jsoup.Jsoup;
@@ -19,6 +22,7 @@ import org.jsoup.nodes.Element;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
@@ -31,6 +35,29 @@ public class RxHtmlTool {
     }
     return defaultRedirect;
   }
+
+  // SKETCH of things to come
+  /*
+  private static String buildDefaultRedirectSource(Document document) {
+    StringBuilder redirect = new StringBuilder();
+    String defaultRedirect = null;
+    for (Element element : document.getElementsByTag("page")) {
+      if (element.hasAttr("default-redirect-source")) {
+        String value = element.attr("uri");
+
+
+        Tree tree = Parser.parse(value);
+        Map<String, String> vars = tree.variables();
+        if (vars.size() == 0) {
+          defaultRedirect = Escapes.constantOf(value);
+        } else {
+          // defaultRedirect = "function(){ return \"" + tree.js(oVar) + "\";}";
+        }
+      }
+    }
+    return defaultRedirect;
+  }
+  */
 
   public static RxHtmlResult convertStringToTemplateForest(String str, Feedback feedback) {
     Environment env = Environment.fresh(feedback);

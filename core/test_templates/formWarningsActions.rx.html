@@ -4,6 +4,12 @@
         <form rx:action="adama:sign-in">
             <input name="x" />
         </form>
+        <form rx:action="document:sign-in" rx:failure="docnope" rx:forward="/w00t">
+            <input type="hidden" name="space" value="s "/>
+            <input type="hidden" name="x" value="k" />
+            <input name="username" type="username" />
+            <input name="email" type="password" />
+        </form>
         <form rx:action="custom:foo">
             <input name="x" />
         </form>

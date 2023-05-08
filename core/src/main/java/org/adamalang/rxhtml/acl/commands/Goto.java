@@ -16,28 +16,20 @@ import org.adamalang.rxhtml.template.StatePath;
 
 import java.util.Map;
 
-/** set the string value of the path to the given value */
-public class Set implements Command {
-  public String path;
-  public String value;
+/** send the view to another page within the forest */
+public class Goto implements Command {
+  public final String value;
 
-  public Set(String path, String value) {
-    if (path.startsWith("view:") | path.startsWith("data:")) {
-      this.path = path;
-    } else {
-      this.path = "view:" + path;
-    }
+  public Goto(String value) {
     this.value = value;
   }
 
-
   @Override
   public void write(Environment env, String type, String eVar) {
-    StatePath pathSet = StatePath.resolve(this.path, env.stateVar);
     Tree tree = Parser.parse(value);
     Map<String, String> vars = tree.variables();
     if (vars.size() == 0) {
-      env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',").append(Escapes.constantOf(value)).append(");").newline();
+      env.writer.tab().append("$.onGO(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(",").append(Escapes.constantOf(value)).append(");").newline();
     } else {
       var oVar = env.pool.ask();
       env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
@@ -45,7 +37,7 @@ public class Set implements Command {
         StatePath pathVar = StatePath.resolve(ve.getValue(), env.stateVar);
         env.writer.tab().append("$.YS(").append(pathVar.command).append(",").append(oVar).append(",'").append(pathVar.name).append("');").newline();
       }
-      env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',function(){ return ").append(tree.js(oVar)).append(";});").newline();
+      env.writer.tab().append("$.onGO(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(",function(){ return ").append(tree.js(oVar)).append(";});").newline();
     }
   }
 }

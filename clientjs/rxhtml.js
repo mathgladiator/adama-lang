@@ -815,6 +815,19 @@ var RxHTML = (function () {
     }
   };
 
+  // RUNTIME: <tag .. rx:event="... goto:uri ...">
+  self.onGO = function (dom, type, state, value) {
+    var runnable = function () {
+      var uri = (typeof (value) == "function") ? value() : value;
+      self.goto(state.view.tree, uri);
+    };
+    if (type == "load") {
+      window.setTimeout(runnable, 1);
+    } else {
+      dom.addEventListener(type, runnable);
+    }
+  };
+
   // RUNTIME: <tag .. rx:event="... toggle:name ...">
   self.onT = function (dom, type, state, name) {
     var captured = {value: false};
@@ -1504,6 +1517,39 @@ var RxHTML = (function () {
 
     form.appendChild(iframeTarget);
     form.target = iframeTarget.name;
+  };
+
+  // RUNTIME | rx:action=document:sign-in
+  self.aDSO = function (form, state, identityName, failureVar, forwardTo) {
+    var signal = make_failure_signal(state, failureVar);
+    form.onsubmit = function (evt) {
+      evt.preventDefault();
+      var req = get_form(form);
+      connection.DocumentAuthorize(req.space, req.key, req.username, req.password, {
+        success: function (payload) {
+          signal(false);
+          identities[identityName] = payload.identity;
+          localStorage.setItem("identity_" + identityName, payload.identity);
+          self.goto(state.view, forwardTo);
+          fire_success(form);
+        },
+        failure: function (code) {
+          signal(true);
+          // TODO: sort out console logging
+          console.log("Sign in failure:" + code);
+          fire_failure(form);
+        }
+      });
+    };
+  };
+
+  // RUNTIME | rx:action=document:put
+  self.aDPUT = function (form, state) {
+    form.onsubmit = function (evt) {
+      evt.preventDefault();
+      var req = get_form(form);
+      // NEED the path to POST to
+    };
   };
 
   // RUNTIME | rx:action=adama:sign-in
