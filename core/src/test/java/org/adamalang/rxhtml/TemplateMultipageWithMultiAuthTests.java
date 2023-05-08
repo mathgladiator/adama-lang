@@ -23,7 +23,7 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Sign in for customers '));");
     gold.append("\n  });");
     gold.append("\n  $.PG(['fixed','customer','text','customer_id'], function(b,a) {");
-    gold.append("\n    var c = $.aRDp(a,['customer_id'], function(vs) { return \"/customeraction/\" + vs['customer_id'] + \"signin\"; });");
+    gold.append("\n    var c = $.aRDp(a, function(vs) { return \"/customeraction/\" + vs['customer_id'] + \"/signin\"; });");
     gold.append("\n    if ($.ID('default',c).abort) {");
     gold.append("\n      return;");
     gold.append("\n    }");
@@ -33,14 +33,14 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Sign in for admins '));");
     gold.append("\n  });");
     gold.append("\n  $.PG(['fixed','admin','text','admin_id'], function(b,a) {");
-    gold.append("\n    var c = $.aRDp(a,['admin_id'], function(vs) { return \"/adminaction/\" + vs['admin_id'] + \"signin\"; });");
+    gold.append("\n    var c = $.aRDp(a, function(vs) { return \"/adminaction/\" + vs['admin_id'] + \"/signin\"; });");
     gold.append("\n    if ($.ID('default',c).abort) {");
     gold.append("\n      return;");
     gold.append("\n    }");
     gold.append("\n    b.append($.T(' Simple Page for admins '));");
     gold.append("\n  });");
     gold.append("\n  $.PG(['fixed','bounce'], function(b,a) {");
-    gold.append("\n    var c = $.aRDz('logingeneric');");
+    gold.append("\n    var c = $.aRDz('/logingeneric');");
     gold.append("\n    if ($.ID('default',c).abort) {");
     gold.append("\n      return;");
     gold.append("\n    }");

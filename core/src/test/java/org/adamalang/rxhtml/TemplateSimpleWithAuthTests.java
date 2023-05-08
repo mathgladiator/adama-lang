@@ -20,7 +20,7 @@ public class TemplateSimpleWithAuthTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c = $.aRDz('signin');");
+    gold.append("\n    var c = $.aRDz('/signin');");
     gold.append("\n    if ($.ID('default',c).abort) {");
     gold.append("\n      return;");
     gold.append("\n    }");
@@ -30,7 +30,7 @@ public class TemplateSimpleWithAuthTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n  });");
     gold.append("\n  $.PG(['fixed','page'], function(b,a) {");
-    gold.append("\n    var c = $.aRDz('signin');");
+    gold.append("\n    var c = $.aRDz('/signin');");
     gold.append("\n    if ($.ID('special',c).abort) {");
     gold.append("\n      return;");
     gold.append("\n    }");

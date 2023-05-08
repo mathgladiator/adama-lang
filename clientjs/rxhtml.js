@@ -1238,6 +1238,7 @@ var RxHTML = (function () {
     nuke(where);
     if (foo != null) {
       var state = {service: connection, data: null, view: fresh(where), current: "view"};
+      state.view.init = init;
       foo(where, state);
       state.view.tree.subscribe(state.view.delta);
       state.view.tree.update(init);
@@ -1288,8 +1289,11 @@ var RxHTML = (function () {
   };
 
   /** RUNTIME | redirect to a page with state */
-  self.aRDp = function(vs, depends, puller) {
-    // TODO
+  self.aRDp = function(state, puller) {
+    return function() {
+      var uri = puller(state.view.init);
+      return uri;
+    };
   };
 
   /** RUNTIME | redirect to a static page */

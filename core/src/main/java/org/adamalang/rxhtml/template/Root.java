@@ -70,7 +70,7 @@ public class Root {
             }
           }
           if (hasAll) {
-            pullArgs = "$.aRDp(" + stateVar + ",[" + String.join(",", varsToPullFromView) + "], function(vs) { return " + tree.js("vs") + "; });";
+            pullArgs = "$.aRDp(" + stateVar + ", function(vs) { return " + tree.js("vs") + "; });";
           }
         }
       }
@@ -109,6 +109,9 @@ public class Root {
     HashSet<String> depends = new HashSet<>();
     String uri = uriRaw.startsWith("/") ? uriRaw.substring(1) : uriRaw;
     StringBuilder formula = new StringBuilder();
+    if (uriRaw.startsWith("/")) {
+      formula.append("/");
+    }
     StringBuilder sb = new StringBuilder();
     sb.append("[");
     boolean first = true;
@@ -118,9 +121,6 @@ public class Root {
       uri = kSlash >= 0 ? uri.substring(kSlash + 1) : "";
       if (!first) {
         sb.append(",");
-      }
-      if (kSlash >= 0) {
-        formula.append("/");
       }
       first = false;
       if (fragment.startsWith("$")) {
@@ -133,6 +133,9 @@ public class Root {
       } else {
         sb.append("'fixed','").append(fragment).append("'");
         formula.append(fragment);
+      }
+      if (kSlash >= 0) {
+        formula.append("/");
       }
     } while (uri.length() > 0);
     sb.append("]");
