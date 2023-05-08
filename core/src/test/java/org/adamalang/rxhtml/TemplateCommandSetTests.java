@@ -30,6 +30,7 @@ public class TemplateCommandSetTests extends BaseRxHtmlTest {
     gold.append("\n    var g = {};");
     gold.append("\n    $.YS($.pD(a),g,'there');");
     gold.append("\n    $.onS(c,'click',$.pV(a),'x',function(){ return g['there'];});");
+    gold.append("\n    $.onS(c,'click',$.pV(a),'y','The Big Long Title');");
     gold.append("\n    c.append($.T('Set Data'));");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
@@ -46,7 +47,7 @@ public class TemplateCommandSetTests extends BaseRxHtmlTest {
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
     source.append("\n        <button rx:click=\"set:x={view:here}\">Set View</button>");
-    source.append("\n        <button rx:click=\"set:x={data:there}\">Set Data</button>");
+    source.append("\n        <button rx:click=\"set:x={data:there} set:y='The Big Long Title'\">Set Data</button>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

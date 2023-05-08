@@ -8,7 +8,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateScopeEimpleTests extends BaseRxHtmlTest {
+public class TemplateScopeSimpleTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
@@ -21,8 +21,9 @@ public class TemplateScopeEimpleTests extends BaseRxHtmlTest {
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c = $.E('div');");
-    gold.append("\n    var d = $.pI($.pD(a),'set');");
+    gold.append("\n    var d = $.pI(a,'obj');");
     gold.append("\n    c.append($.L(d,'key'));");
+    gold.append("\n    c.append($.T(' - '));");
     gold.append("\n    c.append($.L(d,'value'));");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
@@ -38,9 +39,8 @@ public class TemplateScopeEimpleTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <div rx:scope=\"data:set\">");
-    source.append("\n            <lookup path=\"key\" />");
-    source.append("\n            <lookup path=\"value\" />");
+    source.append("\n        <div rx:scope=\"obj\">");
+    source.append("\n            <lookup path=\"key\" /> - <lookup path=\"value\" />");
     source.append("\n        </div>");
     source.append("\n    </page>");
     source.append("\n</forest>");

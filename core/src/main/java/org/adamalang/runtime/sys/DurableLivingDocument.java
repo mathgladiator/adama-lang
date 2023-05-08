@@ -320,7 +320,21 @@ public class DurableLivingDocument implements Queryable {
     document.__usurp(newDocument);
     document = newDocument;
     currentFactory = factory;
-    invalidate(callback);
+    load(new Callback<LivingDocumentChange>() {
+      @Override
+      public void success(LivingDocumentChange value) {
+        invalidate(callback);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        if (ex.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CHANGE) {
+          invalidate(callback);
+        } else {
+          callback.failure(ex);
+        }
+      }
+    });
   }
 
   public void triggerExpire() {

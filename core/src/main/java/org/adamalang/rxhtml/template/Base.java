@@ -105,6 +105,7 @@ public class Base {
       StatePath path = StatePath.resolve(env.element.attr("rx:scope"), env.stateVar);
       String newStateVar = env.pool.ask();
       env.writer.tab().append("var ").append(newStateVar).append(" = $.pI(").append(path.command).append(",'").append(path.name).append("');").newline();
+      next = next.stateVar(newStateVar);
     }
 
     // write the body of the element (the children and more)

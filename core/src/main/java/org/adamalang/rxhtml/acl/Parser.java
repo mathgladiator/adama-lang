@@ -41,7 +41,7 @@ public class Parser {
 
   public static ArrayList<Command> parse(String command) {
     ArrayList<Command> commands = new ArrayList<>();
-    for (String phrase : command.split(Pattern.quote(" "))) {
+    for (String phrase : fragmentize(command)) {
       int kColon = phrase.indexOf(':');
       if (kColon > 0) {
         String cmd = phrase.substring(0, kColon);
