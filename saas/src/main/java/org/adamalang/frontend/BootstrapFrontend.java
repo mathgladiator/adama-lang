@@ -37,7 +37,7 @@ public class BootstrapFrontend {
       @Override
       public ServiceConnection establish(ConnectionContext context) {
         return new ServiceConnection() {
-          final Session session = new Session(new PerSessionAuthenticator(extern.database, context, extern.superPublicKeys));
+          final Session session = new Session(new PerSessionAuthenticator(extern.database, extern.masterKey, context, extern.superPublicKeys));
           final ConnectionNexus nexus =
               new ConnectionNexus(extern.accessLogger, //
                   extern.metrics, //

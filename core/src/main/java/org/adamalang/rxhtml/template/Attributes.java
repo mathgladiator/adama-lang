@@ -328,24 +328,32 @@ public class Attributes {
     String action = env.element.attr("rx:action").trim();
     if ("document:sign-in".equalsIgnoreCase(action)) { // sign in as an Adama user
       check_action_document_sign_in();
+      if (!env.element.hasAttr("rx:forward")) {
+        env.element.attr("rx:forward", "/");
+      }
+      RxObject obj = new RxObject(env, "rx:forward");
       env.writer.tab().append("$.aDSO(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(env.val("rx:identity", "default")) //
           .append("','").append(env.val("rx:failure", "sign_in_failed")) //
-          .append("','").append(env.val("rx:forward", "/")) //
-          .append("');").newline();
+          .append("',").append(obj.rxObj) //
+          .append(");").newline();
     } else if ("document:put".equalsIgnoreCase(action)) { // sign in as an Adama user
         env.writer.tab().append("$.aDPUT(").append(eVar) //
             .append(",").append(env.stateVar) //
             .append("');").newline();
      } else if ("adama:sign-in".equalsIgnoreCase(action)) { // sign in as an Adama user
+      if (!env.element.hasAttr("rx:forward")) {
+        env.element.attr("rx:forward", "/");
+      }
+      RxObject obj = new RxObject(env, "rx:forward");
       check_action_sign_in();
         env.writer.tab().append("$.aSO(").append(eVar) //
             .append(",").append(env.stateVar) //
             .append(",'").append(env.val("rx:identity", "default")) //
             .append("','").append(env.val("rx:failure", "sign_in_failed")) //
-            .append("','").append(env.val("rx:forward", "/")) //
-            .append("');").newline();
+            .append("',").append(obj.rxObj) //
+            .append(");").newline();
     } else if (action.startsWith("custom:")) { // execute custom logic
       String customCommandName = action.substring(7).trim();
       env.writer.tab().append("$.aCC(").append(eVar) //

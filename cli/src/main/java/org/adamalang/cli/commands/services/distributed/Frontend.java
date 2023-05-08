@@ -44,7 +44,7 @@ public class Frontend {
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
     this.adama = init.makeGlobalClient(client);
-    AssetSystemImpl assets = new AssetSystemImpl(init.database, adama, init.s3);
+    AssetSystemImpl assets = new AssetSystemImpl(init.database, init.masterKey, adama, init.s3);
     ArrayList<String> superKeys = config.get_str_list("super-public-keys");
 
     ExternNexus nexus = new ExternNexus(frontendConfig, email, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {

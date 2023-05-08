@@ -51,7 +51,7 @@ public class PerSessionAuthenticatorTests {
 
   @Test
   public void anonymous() throws Exception {
-    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(null, new ConnectionContext("a", "b", "c", "D"), new String[] {});
+    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(null, "masterkey", new ConnectionContext("a", "b", "c", "D"), new String[] {});
     Assert.assertEquals("D", authenticator.assetKey());
     authenticator.updateAssetKey("E");
     Assert.assertEquals("E", authenticator.assetKey());
@@ -78,7 +78,7 @@ public class PerSessionAuthenticatorTests {
     KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
     String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
     String token = Jwts.builder().setSubject("super").setIssuer("super").signWith(pair.getPrivate()).compact();
-    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(null, new ConnectionContext("a", "b", "c", "D"), new String[] { publicKey });
+    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(null, "masterkey", new ConnectionContext("a", "b", "c", "D"), new String[] { publicKey });
     CountDownLatch latch = new CountDownLatch(1);
     authenticator.execute(new Session(authenticator), token, new Callback<AuthenticatedUser>() {
       @Override

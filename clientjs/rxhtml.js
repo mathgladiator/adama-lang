@@ -1536,7 +1536,8 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | rx:action=document:sign-in
-  self.aDSO = function (form, state, identityName, failureVar, forwardTo) {
+  self.aDSO = function (form, state, identityName, failureVar, rxobj) {
+    rxobj.__ = function() {};
     var signal = make_failure_signal(state, failureVar);
     form.onsubmit = function (evt) {
       evt.preventDefault();
@@ -1546,7 +1547,7 @@ var RxHTML = (function () {
           signal(false);
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
-          self.goto(state.view, forwardTo);
+          self.goto(state.view, rxobj.rx_forward);
           fire_success(form);
         },
         failure: function (code) {
@@ -1569,7 +1570,8 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | rx:action=adama:sign-in
-  self.aSO = function (form, state, identityName, failureVar, forwardTo) {
+  self.aSO = function (form, state, identityName, failureVar, rxobj) {
+    rxobj.__ = function() {};
     var signal = make_failure_signal(state, failureVar);
     window.setTimeout(function () {
       recall_email(form);
@@ -1587,7 +1589,7 @@ var RxHTML = (function () {
           signal(false);
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
-          self.goto(state.view, forwardTo);
+          self.goto(state.view, rxobj.rx_forward);
           fire_success(form);
         },
         failure: function (code) {

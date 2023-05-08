@@ -14,6 +14,7 @@ import org.jsoup.nodes.Attribute;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class RxObject {
   public final String rxObj;
@@ -33,6 +34,7 @@ public class RxObject {
       if (nameToUse.startsWith("parameter:")) {
         nameToUse = nameToUse.substring(10);
       }
+      nameToUse = nameToUse.replaceAll(Pattern.quote(":"), "_");
       if (env.element.hasAttr(attrName)) {
         Tree tree = Parser.parse(env.element.attr(attrName));
         if (tree.variables().size() > 0) {
@@ -51,6 +53,7 @@ public class RxObject {
       if (nameToUse.startsWith("parameter:")) {
         nameToUse = nameToUse.substring(10);
       }
+      nameToUse = nameToUse.replaceAll(Pattern.quote(":"), "_");
       if (env.element.hasAttr(attrName)) {
         String value = env.element.attr(attrName);
         Tree tree = Parser.parse(value);

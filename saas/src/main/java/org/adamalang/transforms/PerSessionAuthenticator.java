@@ -41,11 +41,13 @@ import java.util.regex.Pattern;
 public class PerSessionAuthenticator {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(PerSessionAuthenticator.class);
   private final DataBase database;
+  private final String masterKey;
   private ConnectionContext defaultContext;
   private final String[] superKeys;
 
-  public PerSessionAuthenticator(DataBase database, ConnectionContext defaultContext, String[] superKeys) {
+  public PerSessionAuthenticator(DataBase database, String masterKey, ConnectionContext defaultContext, String[] superKeys) {
     this.database = database;
+    this.masterKey = masterKey;
     this.defaultContext = defaultContext;
     this.superKeys = superKeys;
   }
@@ -124,7 +126,7 @@ public class PerSessionAuthenticator {
       if (parsedToken.iss.startsWith("doc/")) {
         try {
           String[] docSpaceKey = parsedToken.iss.split(Pattern.quote("/"));
-          SigningKeyPair skp = Secrets.getOrCreateDocumentSigningKey(database, "masterKey", docSpaceKey[1], docSpaceKey[2]);
+          SigningKeyPair skp = Secrets.getOrCreateDocumentSigningKey(database, masterKey, docSpaceKey[1], docSpaceKey[2]);
           skp.validateTokenThrows(identity);
           NtPrincipal who = new NtPrincipal(parsedToken.sub, parsedToken.iss);
           AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Document, -1, who, defaultContext, false);

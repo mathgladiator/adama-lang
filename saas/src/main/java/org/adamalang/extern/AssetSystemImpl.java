@@ -31,11 +31,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** a concrete implementation of the asset system */
 public class AssetSystemImpl implements AssetSystem {
   public final DataBase database;
+  public final String masterKey;
   public final MultiRegionClient adama;
   public final S3 s3;
 
-  public AssetSystemImpl(DataBase database, MultiRegionClient adama, S3 s3) {
+  public AssetSystemImpl(DataBase database, String masterKey, MultiRegionClient adama, S3 s3) {
     this.database = database;
+    this.masterKey = masterKey;
     this.adama = adama;
     this.s3 = s3;
   }
@@ -53,7 +55,7 @@ public class AssetSystemImpl implements AssetSystem {
 
   @Override
   public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback) {
-    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(database, context, new String[] {});
+    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(database, masterKey, context, new String[] {});
     authenticator.execute(new Session(authenticator), identity, new Callback<AuthenticatedUser>() {
       @Override
       public void success(AuthenticatedUser who) {
