@@ -1,17 +1,17 @@
 <factory>
-    <rule type="string" annotation-present:large append:children>
+    <rule type="string" annotation-present:large annotation-absent:hidden>
         <tr>
             <td><label for="%%instance%%_%%name%%">%%annotation:label%%</label></td>
-            <td><textarea id="%%instance%%_%%name%%" name="%%name%%">%%value|htmlescape%%</textarea></tr>
+            <td><textarea id="%%instance%%_%%name%%" name="%%name%%"></textarea></td>
         </tr>
     </rule>
-    <rule type="string" annotation-absent:large append:children>
+    <rule type="string" annotation-absent:large annotation-absent:hidden>
         <tr>
             <td><label for="%%instance%%_%%name%%">%%annotation:label%%</label></td>
             <td><input type="text" name="%%name%%" /></td>
         </tr>
     </rule>
-    <rule type="int" append:children>
+    <rule type="int" annotation-absent:hidden>
         <tr>
             <td><label for="%%instance%%_%%name%%">%%annotation:label%%</label></td>
             <td><input type="number" name="%%name%%" /></td>
@@ -19,7 +19,7 @@
     </rule>
     <root>
         <form rx:action="send:%%channel%%">
-            <h1>%%%%</h1>
+            <h1>%%title%%</h1>
             <table>
                 %%children%%
                 <tr>

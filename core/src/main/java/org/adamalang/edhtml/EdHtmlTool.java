@@ -8,11 +8,13 @@
  */
 package org.adamalang.edhtml;
 
+import org.adamalang.edhtml.phases.Generate;
 import org.adamalang.edhtml.phases.Use;
 
 public class EdHtmlTool {
   public static void phases(EdHtmlState state) throws Exception {
     Use.execute(state);
+    Generate.execute(state);
   }
 
   public static void main(String[] args) throws Exception {

@@ -11,28 +11,35 @@ package org.adamalang.edhtml.phases;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.edhtml.EdHtmlState;
+import org.adamalang.edhtml.phases.generate.AttributePair;
+import org.adamalang.edhtml.phases.generate.Factory;
+import org.adamalang.edhtml.phases.generate.FieldList;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.function.Function;
 
 /** the generator for taking a type and evaluating against a factory tree */
 public class Generate {
   public static void execute(EdHtmlState state) throws Exception {
-    HashMap<String, Element> factoryCache = new HashMap<>();
+    HashMap<String, Factory> factoryCache = new HashMap<>();
     HashMap<String, ObjectNode> reflectionCache = new HashMap<>();
 
     // get the factory (which may be cached between <generate> invocations) by name
-    Function<String, Element> getFactory = (factoryName) -> {
-      Element found = factoryCache.get(factoryName);
+    Function<String, Factory> getFactory = (factoryName) -> {
+      Factory found = factoryCache.get(factoryName);
       if (found != null) {
         return found;
       }
       try {
-        found = Jsoup.parse(new File(state.gen_path, factoryName + ".factory.html")).getElementsByTag("factory").get(0);
+        String html = Files.readString(new File(state.gen_path, factoryName + ".factory.html").toPath());
+        found = new Factory(Jsoup.parse(html, "", Parser.xmlParser()).getElementsByTag("factory").get(0));
         factoryCache.put(factoryName, found);
         return found;
       } catch (Exception ex) {
@@ -66,27 +73,44 @@ public class Generate {
         throw new RuntimeException("No 'from' field available for generate");
       }
 
-      final Element factory;
+      final Factory factory;
       if (generate.hasAttr("factory")) {
         factory = getFactory.apply(generate.attr("factory"));
       } else {
         throw new RuntimeException("No 'factory' field available for generate");
       }
 
-      // TODO: define a core "type manifest"
+      HashMap<String, String> defines = new HashMap<>();
 
+      FieldList manifest = null;
       if (generate.hasAttr("channel")) {
-        String typeToUse = from.get("channels").get(generate.attr("channel")).textValue();
-        // TODO: inject into "type manifest"
+        String channelToUse = generate.attr("channel");
+        defines.put("channel", channelToUse);
+        String typeToUse = from.get("channels").get(channelToUse).textValue(); // TODO: validate
+        manifest = FieldList.of((ObjectNode) from.get("types").get(typeToUse));
       }
 
       if (generate.hasAttr("type")) {
         String typeToUse = generate.attr("type");
-        // TODO: if "type manifest" exists, then intersect
-        // TODO: otherwise, inject into
+        if (manifest == null) {
+          manifest = FieldList.of((ObjectNode) from.get("types").get(typeToUse)); // TODO: validate
+        } else {
+          manifest = FieldList.intersect(manifest, FieldList.of((ObjectNode) from.get("types").get(typeToUse))); // TODO: validate
+        }
       }
 
-      // TODO: feed the type into the factory and get resulting RxHTML output
+      if (manifest == null) {
+        throw new RuntimeException("no manifest; need either a channel or type (or both)");
+      }
+
+      for (Attribute attribute : generate.attributes()) {
+        AttributePair ap = new AttributePair(attribute.getKey());
+        if ("define".equals(ap.key)) {
+          defines.put(ap.value, attribute.getValue());
+        }
+      }
+
+      state.output_rx.append(factory.produce(manifest, defines));
     }
   }
 }

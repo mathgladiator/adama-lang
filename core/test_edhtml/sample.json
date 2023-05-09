@@ -47,7 +47,7 @@
             "nature": "native_maybe",
             "annotations": [
               {
-                "Label": "Sub-title"
+                "Label": "Subtitle"
               }
             ],
             "type": {
@@ -77,7 +77,7 @@
     }
   },
   "channels": {
-    "create": "PostOrUpdateBlog"
+    "create_blog_post": "PostOrUpdateBlog"
   },
   "constructors": [],
   "labels": []

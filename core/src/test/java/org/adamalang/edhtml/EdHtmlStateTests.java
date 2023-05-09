@@ -8,7 +8,6 @@
  */
 package org.adamalang.edhtml;
 
-import org.adamalang.edhtml.phases.Use;
 import org.junit.Test;
 
 import java.io.File;
@@ -26,7 +25,6 @@ public class EdHtmlStateTests {
   public void validate_test_edhtml_path() throws Exception {
     EdHtmlState state = new EdHtmlState(new String[] { "--base", test_edhtml_path(), "--input", "sample.ed.html" });
     EdHtmlTool.phases(state);
-
     String result = state.finish();
     System.out.println(result);
   }
