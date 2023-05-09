@@ -8,6 +8,7 @@
  */
 package org.adamalang.web.service;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -23,6 +24,7 @@ import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.common.ProtectedUUID;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
@@ -39,6 +41,8 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
@@ -232,6 +236,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       String identity = null;
       String space = null;
       String key = null;
+      String channel = null;
+      HashMap<String, String> message_parts = new HashMap<>();
       for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
         switch (data.getHttpDataType()) {
           case Attribute:
@@ -246,6 +252,17 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
               case "key":
                 key = attribute.getValue();
                 break;
+              case "channel":
+                channel = attribute.getValue();
+                break;
+              default: {
+                if (attribute.getName().startsWith("message_")) {
+                  message_parts.put(attribute.getName().substring(8), attribute.getValue());
+                }
+                if (attribute.getName().startsWith("message.")) {
+                  message_parts.put(attribute.getName().substring(8), attribute.getValue());
+                }
+              }
             }
             break;
           case FileUpload:
@@ -281,11 +298,23 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
           };
           AssetFact fact = AssetFact.of(body);
           NtAsset asset = new NtAsset(ProtectedUUID.generate(), upload.getFilename(), upload.getContentType(), fact.size, fact.md5, fact.sha384);
+          final String message;
+          if (channel != null) {
+            ObjectNode messageNode = Json.newJsonObject();
+            messageNode.put("asset_id", asset.id);
+            for (Map.Entry<String, String> entry : message_parts.entrySet()) {
+              messageNode.put(entry.getKey(), entry.getValue());
+            }
+            message = messageNode.toString();
+          } else {
+            message = null;
+          }
+          final String channelFinal = channel;
           final String identityFinal = identity;
           assets.upload(uploadKey, asset, body, new Callback<>() {
             @Override
             public void success(Void value) {
-              assets.attach(identityFinal, context, uploadKey, asset, new Callback<Integer>() {
+              assets.attach(identityFinal, context, uploadKey, asset, channelFinal, message, new Callback<Integer>() {
                 @Override
                 public void success(Integer value) {
                   // TODO: multi-latch report success

@@ -54,7 +54,7 @@ public class AssetSystemImpl implements AssetSystem {
   }
 
   @Override
-  public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, Callback<Integer> callback) {
+  public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, String channel, String message, Callback<Integer> callback) {
     PerSessionAuthenticator authenticator = new PerSessionAuthenticator(database, masterKey, context, new String[] {});
     authenticator.execute(new Session(authenticator), identity, new Callback<AuthenticatedUser>() {
       @Override
@@ -90,9 +90,29 @@ public class AssetSystemImpl implements AssetSystem {
               stream.attach(asset.id, asset.name, asset.contentType, asset.size, asset.md5, asset.sha384, new Callback<Integer>() {
                 @Override
                 public void success(Integer value) {
-                  if (responded.compareAndSet(false, true)) {
-                    callback.success(value);
-                    stream.close();
+                  if (channel != null) {
+                    stream.send(channel, null, message, new Callback<Integer>() {
+                      @Override
+                      public void success(Integer value) {
+                        if (responded.compareAndSet(false, true)) {
+                          callback.success(value);
+                          stream.close();
+                        }
+                      }
+
+                      @Override
+                      public void failure(ErrorCodeException ex) {
+                        if (responded.compareAndSet(false, true)) {
+                          callback.failure(ex);
+                          stream.close();
+                        }
+                      }
+                    });
+                  } else {
+                    if (responded.compareAndSet(false, true)) {
+                      callback.success(value);
+                      stream.close();
+                    }
                   }
                 }
 

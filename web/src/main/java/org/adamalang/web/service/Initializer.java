@@ -37,7 +37,7 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
   private final ServiceBase base;
   private final CertificateFinder certificateFinder;
   private final SslContext context;
-  private final  WebHandlerAssetCache cache;
+  private final WebHandlerAssetCache cache;
 
   public Initializer(final WebConfig webConfig, final WebMetrics metrics, final ServiceBase base, final CertificateFinder certificateFinder, SslContext context, WebHandlerAssetCache cache) {
     this.logger = LoggerFactory.getLogger("Initializer");
