@@ -1,0 +1,84 @@
+{
+  "types": {
+    "__Root": {
+      "nature": "reactive_record",
+      "name": "Root",
+      "fields": {}
+    },
+    "__ViewerType": {
+      "nature": "native_message",
+      "name": "__ViewerType",
+      "anonymous": true,
+      "fields": {}
+    },
+    "PostOrUpdateBlog": {
+      "nature": "native_message",
+      "name": "PostOrUpdateBlog",
+      "anonymous": false,
+      "fields": {
+        "id": {
+          "type": {
+            "nature": "native_value",
+            "annotations": [
+              "Hidden",
+              "EditOnly"
+            ],
+            "type": "int"
+          },
+          "privacy": "public"
+        },
+        "title": {
+          "type": {
+            "nature": "native_maybe",
+            "annotations": [
+              {
+                "Label": "Title"
+              }
+            ],
+            "type": {
+              "nature": "native_value",
+              "type": "string"
+            }
+          },
+          "privacy": "public"
+        },
+        "sub_title": {
+          "type": {
+            "nature": "native_maybe",
+            "annotations": [
+              {
+                "Label": "Sub-title"
+              }
+            ],
+            "type": {
+              "nature": "native_value",
+              "type": "string"
+            }
+          },
+          "privacy": "public"
+        },
+        "body": {
+          "type": {
+            "nature": "native_maybe",
+            "annotations": [
+              {
+                "Label": "Body"
+              },
+              "Large"
+            ],
+            "type": {
+              "nature": "native_value",
+              "type": "string"
+            }
+          },
+          "privacy": "public"
+        }
+      }
+    }
+  },
+  "channels": {
+    "create": "PostOrUpdateBlog"
+  },
+  "constructors": [],
+  "labels": []
+}

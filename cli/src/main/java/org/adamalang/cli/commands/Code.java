@@ -12,19 +12,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.ErrorCodes;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.lsp.LanguageServer;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
-import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
-import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 
@@ -50,6 +46,9 @@ public class Code {
         return;
       case "compile-file":
         compileFile(config, next);
+        return;
+      case "reflect-dump":
+        reflectDump(config, next);
         return;
       case "help":
         codeHelp();
@@ -89,17 +88,41 @@ public class Code {
       System.err.println(Util.prefix("File is a directory; stopping", Util.ANSI.Red));
       return false;
     }
-    String java = sharedCompileCode(codeFilename, Files.readString(codeFile.toPath()));
-    if (java != null) {
+    CompileResult result = sharedCompileCode(codeFilename, Files.readString(codeFile.toPath()));
+    if (result != null) {
       System.out.println(Util.prefix("Compiled!", Util.ANSI.Green));
       if (dumpTo != null) {
         System.out.println("Dumped: " + dumpTo);
-        Files.writeString(new File(dumpTo).toPath(), java);
+        Files.writeString(new File(dumpTo).toPath(), result.code);
       }
       return true;
     } else {
       System.err.println(Util.prefix("File failed to compile", Util.ANSI.Red));
       return false;
+    }
+  }
+
+  public static void reflectDump(Config config, String[] args) throws Exception {
+    String codeFilename = Util.extractOrCrash("--file", "-f", args);
+    String dumpTo = Util.extractWithDefault("--dump-to", "-d", null, args);
+    File codeFile = new File(codeFilename);
+    if (!codeFile.exists()) {
+      System.err.println(Util.prefix("File does not exist; stopping", Util.ANSI.Red));
+      return;
+    }
+    if (codeFile.isDirectory()) {
+      System.err.println(Util.prefix("File is a directory; stopping", Util.ANSI.Red));
+      return;
+    }
+    CompileResult result = sharedCompileCode(codeFilename, Files.readString(codeFile.toPath()));
+    if (result != null) {
+      System.out.println(Util.prefix("Compiled!", Util.ANSI.Green));
+      if (dumpTo != null) {
+        System.out.println("Dumped: " + dumpTo);
+        Files.writeString(new File(dumpTo).toPath(), result.reflection);
+      }
+    } else {
+      System.err.println(Util.prefix("File failed to compile", Util.ANSI.Red));
     }
   }
 
@@ -166,7 +189,17 @@ public class Code {
     return success;
   }
 
-  public static String sharedCompileCode(String filename, String code) {
+  public static class CompileResult {
+    public final String code;
+    public final String reflection;
+
+    public CompileResult(String code, String reflection) {
+      this.code = code;
+      this.reflection = reflection;
+    }
+  }
+
+  public static CompileResult sharedCompileCode(String filename, String code) {
     try {
       final var options = CompilerOptions.start().make();
       final var globals = GlobalObjectPool.createPoolWithStdLib();
@@ -178,7 +211,10 @@ public class Code {
       parser.document().accept(document);
       boolean result = document.check(state);
       if (result) {
-        return document.compileJava(state);
+        String javaCode = document.compileJava(state);
+        JsonStreamWriter reflect = new JsonStreamWriter();
+        document.writeTypeReflectionJson(reflect);
+        return new CompileResult(javaCode, reflect.toString());
       }
       ArrayNode parsed = (ArrayNode) (new JsonMapper().readTree(document.errorsJson()));
       for (int k = 0; k < parsed.size(); k++) {
@@ -208,6 +244,7 @@ public class Code {
     System.out.println(Util.prefix("CODESUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("validate-plan", Util.ANSI.Green) + "     Validates a deployment plan (locally) for speed");
     System.out.println("    " + Util.prefix("compile-file", Util.ANSI.Green) + "      Compiles the adama file and shows any problems");
+    System.out.println("    " + Util.prefix("reflect-dump", Util.ANSI.Green) + "      Compiles the adama file and dumps the reflection json");
     System.out.println("    " + Util.prefix("lsp", Util.ANSI.Green) + "               Spin up a single threaded language service protocol server");
   }
 

@@ -1,0 +1,34 @@
+<factory>
+    <rule type="string" annotation-present:large append:children>
+        <tr>
+            <td><label for="%%instance%%_%%name%%">%%annotation:label%%</label></td>
+            <td><textarea id="%%instance%%_%%name%%" name="%%name%%">%%value|htmlescape%%</textarea></tr>
+        </tr>
+    </rule>
+    <rule type="string" annotation-absent:large append:children>
+        <tr>
+            <td><label for="%%instance%%_%%name%%">%%annotation:label%%</label></td>
+            <td><input type="text" name="%%name%%" /></td>
+        </tr>
+    </rule>
+    <rule type="int" append:children>
+        <tr>
+            <td><label for="%%instance%%_%%name%%">%%annotation:label%%</label></td>
+            <td><input type="number" name="%%name%%" /></td>
+        </tr>
+    </rule>
+    <root>
+        <form rx:action="send:%%channel%%">
+            <h1>%%%%</h1>
+            <table>
+                %%children%%
+                <tr>
+                    <td></td>
+                    <td>
+                        <button type="submit">%%action%%</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </root>
+</factory>

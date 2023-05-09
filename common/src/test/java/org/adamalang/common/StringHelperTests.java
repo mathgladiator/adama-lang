@@ -6,10 +6,15 @@
  *
  * (c) 2020 - 2023 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.support;
+package org.adamalang.common;
 
-public class GenerateEdTests {
-  public static void generate(int argOffset, final String[] args) throws Exception {
+import org.junit.Assert;
+import org.junit.Test;
 
+public class StringHelperTests {
+  @Test
+  public void coverage() {
+    String result = StringHelper.splitNewlineAndTabify("x\n  y\n    z", "-");
+    Assert.assertEquals("-x\n" + "-  y\n" + "-    z\n", result);
   }
 }

@@ -1,0 +1,10 @@
+
+message PostOrUpdateBlog {
+  int (Hidden, EditOnly)                   id;
+  maybe<string> (Label="Title")            title;
+  maybe<string> (Label="Subtitle")         sub_title;
+  maybe<string> (Label="Body", Large)      body;
+}
+
+channel create_blog_post(PostOrUpdateBlog post) {
+}

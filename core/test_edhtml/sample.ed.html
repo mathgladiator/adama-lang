@@ -1,4 +1,12 @@
 <build>
     <use file="root.rx.html" />
-    <use file="page.rx.html" />
+    <use file="single.page.rx.html" />
+    <generate
+        from="sample.json"
+        mode="create"
+        channel="create_blog_post"
+        factory="simple"
+        define:instance="{id}"
+        define:action="Post New Entry"
+    />
 </build>
