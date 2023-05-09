@@ -14,6 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetTable;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -88,7 +89,11 @@ public class TyReactiveMap extends TyType implements //
     rangeType.typing(environment);
     final var resolvedDomainType = environment.rules.Resolve(domainType, false);
     if (resolvedDomainType != null && !(resolvedDomainType instanceof CanBeMapDomain)) {
-      environment.document.createError(this, String.format("The domain type '%s' is not an appropriate.", resolvedDomainType.getAdamaType()), "TyNativeMap");
+      environment.document.createError(this, String.format("The domain type '%s' is not an appropriate.", resolvedDomainType.getAdamaType()), "TyReactiveMap");
+    }
+    final var resolvedRangeType = environment.rules.Resolve(rangeType, false);
+    if (RuleSetTable.IsTable(environment, resolvedRangeType, true)) {
+      environment.document.createError(this, String.format("The range type '%s' is not an appropriate for a map.", resolvedRangeType.getAdamaType()), "TyReactiveMap");
     }
   }
 

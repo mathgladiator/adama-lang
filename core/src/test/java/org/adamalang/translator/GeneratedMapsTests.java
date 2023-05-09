@@ -818,43 +818,83 @@ public class GeneratedMapsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Maps_InvalidDomains_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":34},\"end\":{\"line\":4,\"character\":21,\"byte\":53}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'principal' is not an appropriate. (TyNativeMap)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":60},\"end\":{\"line\":5,\"character\":13,\"byte\":71}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'M' is not an appropriate. (TyNativeMap)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11,\"byte\":87},\"end\":{\"line\":6,\"character\":12,\"byte\":88}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'K' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":7,\"character\":6,\"byte\":101},\"end\":{\"line\":7,\"character\":7,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'K' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":7,\"character\":6,\"byte\":101},\"end\":{\"line\":7,\"character\":7,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'K' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":10,\"character\":12,\"byte\":150},\"end\":{\"line\":10,\"character\":24,\"byte\":162}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'map<int,int>' lacks field 'notFound' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":10,\"character\":12,\"byte\":150},\"end\":{\"line\":10,\"character\":24,\"byte\":162}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":34},\"end\":{\"line\":4,\"character\":21,\"byte\":53}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'principal' is not an appropriate. (TyNativeMap)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":60},\"end\":{\"line\":5,\"character\":13,\"byte\":71}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'M' is not an appropriate. (TyNativeMap)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11,\"byte\":87},\"end\":{\"line\":6,\"character\":12,\"byte\":88}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'K' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11,\"byte\":87},\"end\":{\"line\":6,\"character\":12,\"byte\":88}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'K' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":7,\"character\":6,\"byte\":101},\"end\":{\"line\":7,\"character\":7,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'K' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":7,\"character\":6,\"byte\":101},\"end\":{\"line\":7,\"character\":7,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: the type 'K' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":10,\"character\":12,\"byte\":150},\"end\":{\"line\":10,\"character\":24,\"byte\":162}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'map<int,int>' lacks field 'notFound' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":10,\"character\":12,\"byte\":150},\"end\":{\"line\":10,\"character\":24,\"byte\":162}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_PairFail_4 = null;
-  private String get_PairFail_4() {
-    if (cached_PairFail_4 != null) {
-      return cached_PairFail_4;
+  private String cached_NoTableInRange_4 = null;
+  private String get_NoTableInRange_4() {
+    if (cached_NoTableInRange_4 != null) {
+      return cached_NoTableInRange_4;
     }
-    cached_PairFail_4 = generateTestOutput(false, "PairFail_4", "./test_code/Maps_PairFail_failure.a");
-    return cached_PairFail_4;
+    cached_NoTableInRange_4 = generateTestOutput(false, "NoTableInRange_4", "./test_code/Maps_NoTableInRange_failure.a");
+    return cached_NoTableInRange_4;
+  }
+
+  @Test
+  public void testNoTableInRangeFailure() {
+    assertLiveFail(get_NoTableInRange_4());
+  }
+
+  @Test
+  public void testNoTableInRangeNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_NoTableInRange_4());
+  }
+
+  @Test
+  public void testNoTableInRangeExceptionFree() {
+    assertExceptionFree(get_NoTableInRange_4());
+  }
+
+  @Test
+  public void testNoTableInRangeTODOFree() {
+    assertTODOFree(get_NoTableInRange_4());
+  }
+
+  @Test
+  public void stable_NoTableInRange_4() {
+    String live = get_NoTableInRange_4();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Maps_NoTableInRange_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":0,\"byte\":37},\"end\":{\"line\":5,\"character\":21,\"byte\":58}},\"severity\":1,\"source\":\"error\",\"message\":\"The range type 'table<R>' is not an appropriate for a map. (TyReactiveMap)\"},{\"range\":{\"start\":{\"line\":12,\"character\":2,\"byte\":107},\"end\":{\"line\":12,\"character\":23,\"byte\":128}},\"severity\":1,\"source\":\"error\",\"message\":\"The range type 'table<M>' is not an appropriate for a map. (TyNativeMap)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_PairFail_5 = null;
+  private String get_PairFail_5() {
+    if (cached_PairFail_5 != null) {
+      return cached_PairFail_5;
+    }
+    cached_PairFail_5 = generateTestOutput(false, "PairFail_5", "./test_code/Maps_PairFail_failure.a");
+    return cached_PairFail_5;
   }
 
   @Test
   public void testPairFailFailure() {
-    assertLiveFail(get_PairFail_4());
+    assertLiveFail(get_PairFail_5());
   }
 
   @Test
   public void testPairFailNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_PairFail_4());
+    assertNotTerribleLineNumbers(get_PairFail_5());
   }
 
   @Test
   public void testPairFailExceptionFree() {
-    assertExceptionFree(get_PairFail_4());
+    assertExceptionFree(get_PairFail_5());
   }
 
   @Test
   public void testPairFailTODOFree() {
-    assertTODOFree(get_PairFail_4());
+    assertTODOFree(get_PairFail_5());
   }
 
   @Test
-  public void stable_PairFail_4() {
-    String live = get_PairFail_4();
+  public void stable_PairFail_5() {
+    String live = get_PairFail_5();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Maps_PairFail_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -863,43 +903,43 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_PairType_5 = null;
-  private String get_PairType_5() {
-    if (cached_PairType_5 != null) {
-      return cached_PairType_5;
+  private String cached_PairType_6 = null;
+  private String get_PairType_6() {
+    if (cached_PairType_6 != null) {
+      return cached_PairType_6;
     }
-    cached_PairType_5 = generateTestOutput(true, "PairType_5", "./test_code/Maps_PairType_success.a");
-    return cached_PairType_5;
+    cached_PairType_6 = generateTestOutput(true, "PairType_6", "./test_code/Maps_PairType_success.a");
+    return cached_PairType_6;
   }
 
   @Test
   public void testPairTypeEmission() {
-    assertEmissionGood(get_PairType_5());
+    assertEmissionGood(get_PairType_6());
   }
 
   @Test
   public void testPairTypeSuccess() {
-    assertLivePass(get_PairType_5());
+    assertLivePass(get_PairType_6());
   }
 
   @Test
   public void testPairTypeGoodWillHappy() {
-    assertGoodWillHappy(get_PairType_5());
+    assertGoodWillHappy(get_PairType_6());
   }
 
   @Test
   public void testPairTypeExceptionFree() {
-    assertExceptionFree(get_PairType_5());
+    assertExceptionFree(get_PairType_6());
   }
 
   @Test
   public void testPairTypeTODOFree() {
-    assertTODOFree(get_PairType_5());
+    assertTODOFree(get_PairType_6());
   }
 
   @Test
-  public void stable_PairType_5() {
-    String live = get_PairType_5();
+  public void stable_PairType_6() {
+    String live = get_PairType_6();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Maps_PairType_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -932,7 +972,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class PairType_5 extends LivingDocument {");
+    gold.append("\npublic class PairType_6 extends LivingDocument {");
     gold.append("\n  private final RxInt32 result;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -940,7 +980,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __sum += result.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public PairType_5(DocumentMonitor __monitor) {");
+    gold.append("\n  public PairType_6(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    result = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -1178,10 +1218,10 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    result.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaPairType_5 implements DeltaNode {");
+    gold.append("\n  private class DeltaPairType_6 implements DeltaNode {");
     gold.append("\n    private DInt32 __dresult;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaPairType_5() {");
+    gold.append("\n    private DeltaPairType_6() {");
     gold.append("\n      __dresult = new DInt32();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
@@ -1191,7 +1231,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      __sum += __dresult.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(PairType_5 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(PairType_6 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -1222,8 +1262,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    PairType_5 __self = this;");
-    gold.append("\n    DeltaPairType_5 __state = new DeltaPairType_5();");
+    gold.append("\n    PairType_6 __self = this;");
+    gold.append("\n    DeltaPairType_6 __state = new DeltaPairType_6();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -1563,43 +1603,43 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_PairUsage_6 = null;
-  private String get_PairUsage_6() {
-    if (cached_PairUsage_6 != null) {
-      return cached_PairUsage_6;
+  private String cached_PairUsage_7 = null;
+  private String get_PairUsage_7() {
+    if (cached_PairUsage_7 != null) {
+      return cached_PairUsage_7;
     }
-    cached_PairUsage_6 = generateTestOutput(true, "PairUsage_6", "./test_code/Maps_PairUsage_success.a");
-    return cached_PairUsage_6;
+    cached_PairUsage_7 = generateTestOutput(true, "PairUsage_7", "./test_code/Maps_PairUsage_success.a");
+    return cached_PairUsage_7;
   }
 
   @Test
   public void testPairUsageEmission() {
-    assertEmissionGood(get_PairUsage_6());
+    assertEmissionGood(get_PairUsage_7());
   }
 
   @Test
   public void testPairUsageSuccess() {
-    assertLivePass(get_PairUsage_6());
+    assertLivePass(get_PairUsage_7());
   }
 
   @Test
   public void testPairUsageGoodWillHappy() {
-    assertGoodWillHappy(get_PairUsage_6());
+    assertGoodWillHappy(get_PairUsage_7());
   }
 
   @Test
   public void testPairUsageExceptionFree() {
-    assertExceptionFree(get_PairUsage_6());
+    assertExceptionFree(get_PairUsage_7());
   }
 
   @Test
   public void testPairUsageTODOFree() {
-    assertTODOFree(get_PairUsage_6());
+    assertTODOFree(get_PairUsage_7());
   }
 
   @Test
-  public void stable_PairUsage_6() {
-    String live = get_PairUsage_6();
+  public void stable_PairUsage_7() {
+    String live = get_PairUsage_7();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Maps_PairUsage_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1632,7 +1672,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class PairUsage_6 extends LivingDocument {");
+    gold.append("\npublic class PairUsage_7 extends LivingDocument {");
     gold.append("\n  private final RxInt32 z_s;");
     gold.append("\n  private final RxLazy<RTxM> x;");
     gold.append("\n  @Override");
@@ -1642,7 +1682,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __sum += x.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public PairUsage_6(DocumentMonitor __monitor) {");
+    gold.append("\n  public PairUsage_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    z_s = new RxInt32(this, 0);");
     gold.append("\n    x = new RxLazy<RTxM>(this, () -> (__FUNC_0_foo()));");
@@ -1881,12 +1921,12 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    z_s.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaPairUsage_6 implements DeltaNode {");
+    gold.append("\n  private class DeltaPairUsage_7 implements DeltaNode {");
     gold.append("\n    private DInt32 __dz_s;");
     gold.append("\n    private int __gx;");
     gold.append("\n    private DeltaRTxM __dx;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaPairUsage_6() {");
+    gold.append("\n    private DeltaPairUsage_7() {");
     gold.append("\n      __dz_s = new DInt32();");
     gold.append("\n      __gx = -1;");
     gold.append("\n      __dx = new DeltaRTxM();");
@@ -1899,7 +1939,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      __sum += __dx.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(PairUsage_6 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(PairUsage_7 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -1935,8 +1975,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    PairUsage_6 __self = this;");
-    gold.append("\n    DeltaPairUsage_6 __state = new DeltaPairUsage_6();");
+    gold.append("\n    PairUsage_7 __self = this;");
+    gold.append("\n    DeltaPairUsage_7 __state = new DeltaPairUsage_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -2301,83 +2341,83 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ReactiveBad_7 = null;
-  private String get_ReactiveBad_7() {
-    if (cached_ReactiveBad_7 != null) {
-      return cached_ReactiveBad_7;
+  private String cached_ReactiveBad_8 = null;
+  private String get_ReactiveBad_8() {
+    if (cached_ReactiveBad_8 != null) {
+      return cached_ReactiveBad_8;
     }
-    cached_ReactiveBad_7 = generateTestOutput(false, "ReactiveBad_7", "./test_code/Maps_ReactiveBad_failure.a");
-    return cached_ReactiveBad_7;
+    cached_ReactiveBad_8 = generateTestOutput(false, "ReactiveBad_8", "./test_code/Maps_ReactiveBad_failure.a");
+    return cached_ReactiveBad_8;
   }
 
   @Test
   public void testReactiveBadFailure() {
-    assertLiveFail(get_ReactiveBad_7());
+    assertLiveFail(get_ReactiveBad_8());
   }
 
   @Test
   public void testReactiveBadNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_ReactiveBad_7());
+    assertNotTerribleLineNumbers(get_ReactiveBad_8());
   }
 
   @Test
   public void testReactiveBadExceptionFree() {
-    assertExceptionFree(get_ReactiveBad_7());
+    assertExceptionFree(get_ReactiveBad_8());
   }
 
   @Test
   public void testReactiveBadTODOFree() {
-    assertTODOFree(get_ReactiveBad_7());
+    assertTODOFree(get_ReactiveBad_8());
   }
 
   @Test
-  public void stable_ReactiveBad_7() {
-    String live = get_ReactiveBad_7();
+  public void stable_ReactiveBad_8() {
+    String live = get_ReactiveBad_8();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Maps_ReactiveBad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7,\"byte\":83},\"end\":{\"line\":1,\"character\":26,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'principal' is not an appropriate. (TyNativeMap)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":190},\"end\":{\"line\":5,\"character\":14,\"byte\":202}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'r<map<principal,r<int>>>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":190},\"end\":{\"line\":5,\"character\":14,\"byte\":202}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7,\"byte\":83},\"end\":{\"line\":1,\"character\":26,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'principal' is not an appropriate. (TyReactiveMap)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":190},\"end\":{\"line\":5,\"character\":14,\"byte\":202}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'r<map<principal,r<int>>>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":190},\"end\":{\"line\":5,\"character\":14,\"byte\":202}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_Reactive_8 = null;
-  private String get_Reactive_8() {
-    if (cached_Reactive_8 != null) {
-      return cached_Reactive_8;
+  private String cached_Reactive_9 = null;
+  private String get_Reactive_9() {
+    if (cached_Reactive_9 != null) {
+      return cached_Reactive_9;
     }
-    cached_Reactive_8 = generateTestOutput(true, "Reactive_8", "./test_code/Maps_Reactive_success.a");
-    return cached_Reactive_8;
+    cached_Reactive_9 = generateTestOutput(true, "Reactive_9", "./test_code/Maps_Reactive_success.a");
+    return cached_Reactive_9;
   }
 
   @Test
   public void testReactiveEmission() {
-    assertEmissionGood(get_Reactive_8());
+    assertEmissionGood(get_Reactive_9());
   }
 
   @Test
   public void testReactiveSuccess() {
-    assertLivePass(get_Reactive_8());
+    assertLivePass(get_Reactive_9());
   }
 
   @Test
   public void testReactiveGoodWillHappy() {
-    assertGoodWillHappy(get_Reactive_8());
+    assertGoodWillHappy(get_Reactive_9());
   }
 
   @Test
   public void testReactiveExceptionFree() {
-    assertExceptionFree(get_Reactive_8());
+    assertExceptionFree(get_Reactive_9());
   }
 
   @Test
   public void testReactiveTODOFree() {
-    assertTODOFree(get_Reactive_8());
+    assertTODOFree(get_Reactive_9());
   }
 
   @Test
-  public void stable_Reactive_8() {
-    String live = get_Reactive_8();
+  public void stable_Reactive_9() {
+    String live = get_Reactive_9();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Maps_Reactive_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -2410,7 +2450,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Reactive_8 extends LivingDocument {");
+    gold.append("\npublic class Reactive_9 extends LivingDocument {");
     gold.append("\n  private final RxMap<Integer,RxInt32> my_map1;");
     gold.append("\n  private final RxMap<String,RTxX> my_map2;");
     gold.append("\n  private final RxInt32 v;");
@@ -2432,7 +2472,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __sum += simple.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Reactive_8(DocumentMonitor __monitor) {");
+    gold.append("\n  public Reactive_9(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    my_map1 = new RxMap<Integer,RxInt32>(this, new RxMap.IntegerCodec<RxInt32>() { @Override public RxInt32 make(RxParent __parent) { return new RxInt32(__parent, 0);} });");
     gold.append("\n    my_map2 = new RxMap<String,RTxX>(this, new RxMap.StringCodec<RTxX>() { @Override public RTxX make(RxParent __parent) { return new RTxX(__parent).__link();} });");
@@ -2747,14 +2787,14 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    simple.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaReactive_8 implements DeltaNode {");
+    gold.append("\n  private class DeltaReactive_9 implements DeltaNode {");
     gold.append("\n    private DMap<Integer,DInt32> __dmy_map1;");
     gold.append("\n    private DMap<String,DeltaRTxX> __dmy_map2;");
     gold.append("\n    private DMap<Long,DInt32> __dmy_map3;");
     gold.append("\n    private DMap<Long,DMap<Integer,DInt32>> __dcrazy;");
     gold.append("\n    private DMap<Integer,DInt32> __dsimple;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaReactive_8() {");
+    gold.append("\n    private DeltaReactive_9() {");
     gold.append("\n      __dmy_map1 = new DMap<Integer,DInt32>();");
     gold.append("\n      __dmy_map2 = new DMap<String,DeltaRTxX>();");
     gold.append("\n      __dmy_map3 = new DMap<Long,DInt32>();");
@@ -2772,7 +2812,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      __sum += __dsimple.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Reactive_8 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Reactive_9 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 5;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -2871,8 +2911,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Reactive_8 __self = this;");
-    gold.append("\n    DeltaReactive_8 __state = new DeltaReactive_8();");
+    gold.append("\n    Reactive_9 __self = this;");
+    gold.append("\n    DeltaReactive_9 __state = new DeltaReactive_9();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -3448,43 +3488,43 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ReduceHappy_9 = null;
-  private String get_ReduceHappy_9() {
-    if (cached_ReduceHappy_9 != null) {
-      return cached_ReduceHappy_9;
+  private String cached_ReduceHappy_10 = null;
+  private String get_ReduceHappy_10() {
+    if (cached_ReduceHappy_10 != null) {
+      return cached_ReduceHappy_10;
     }
-    cached_ReduceHappy_9 = generateTestOutput(true, "ReduceHappy_9", "./test_code/Maps_ReduceHappy_success.a");
-    return cached_ReduceHappy_9;
+    cached_ReduceHappy_10 = generateTestOutput(true, "ReduceHappy_10", "./test_code/Maps_ReduceHappy_success.a");
+    return cached_ReduceHappy_10;
   }
 
   @Test
   public void testReduceHappyEmission() {
-    assertEmissionGood(get_ReduceHappy_9());
+    assertEmissionGood(get_ReduceHappy_10());
   }
 
   @Test
   public void testReduceHappySuccess() {
-    assertLivePass(get_ReduceHappy_9());
+    assertLivePass(get_ReduceHappy_10());
   }
 
   @Test
   public void testReduceHappyGoodWillHappy() {
-    assertGoodWillHappy(get_ReduceHappy_9());
+    assertGoodWillHappy(get_ReduceHappy_10());
   }
 
   @Test
   public void testReduceHappyExceptionFree() {
-    assertExceptionFree(get_ReduceHappy_9());
+    assertExceptionFree(get_ReduceHappy_10());
   }
 
   @Test
   public void testReduceHappyTODOFree() {
-    assertTODOFree(get_ReduceHappy_9());
+    assertTODOFree(get_ReduceHappy_10());
   }
 
   @Test
-  public void stable_ReduceHappy_9() {
-    String live = get_ReduceHappy_9();
+  public void stable_ReduceHappy_10() {
+    String live = get_ReduceHappy_10();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Maps_ReduceHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -3517,7 +3557,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class ReduceHappy_9 extends LivingDocument {");
+    gold.append("\npublic class ReduceHappy_10 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  private final RxInt32 x1;");
     gold.append("\n  private final RxInt32 x2;");
@@ -3533,7 +3573,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __sum += x4.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public ReduceHappy_9(DocumentMonitor __monitor) {");
+    gold.append("\n  public ReduceHappy_10(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    x1 = new RxInt32(this, 0);");
@@ -3815,9 +3855,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    x4.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaReduceHappy_9 implements DeltaNode {");
+    gold.append("\n  private class DeltaReduceHappy_10 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaReduceHappy_9() {");
+    gold.append("\n    private DeltaReduceHappy_10() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -3825,7 +3865,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(ReduceHappy_9 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(ReduceHappy_10 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -3853,8 +3893,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    ReduceHappy_9 __self = this;");
-    gold.append("\n    DeltaReduceHappy_9 __state = new DeltaReduceHappy_9();");
+    gold.append("\n    ReduceHappy_10 __self = this;");
+    gold.append("\n    DeltaReduceHappy_10 __state = new DeltaReduceHappy_10();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -4425,43 +4465,43 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ReduceLambda_10 = null;
-  private String get_ReduceLambda_10() {
-    if (cached_ReduceLambda_10 != null) {
-      return cached_ReduceLambda_10;
+  private String cached_ReduceLambda_11 = null;
+  private String get_ReduceLambda_11() {
+    if (cached_ReduceLambda_11 != null) {
+      return cached_ReduceLambda_11;
     }
-    cached_ReduceLambda_10 = generateTestOutput(true, "ReduceLambda_10", "./test_code/Maps_ReduceLambda_success.a");
-    return cached_ReduceLambda_10;
+    cached_ReduceLambda_11 = generateTestOutput(true, "ReduceLambda_11", "./test_code/Maps_ReduceLambda_success.a");
+    return cached_ReduceLambda_11;
   }
 
   @Test
   public void testReduceLambdaEmission() {
-    assertEmissionGood(get_ReduceLambda_10());
+    assertEmissionGood(get_ReduceLambda_11());
   }
 
   @Test
   public void testReduceLambdaSuccess() {
-    assertLivePass(get_ReduceLambda_10());
+    assertLivePass(get_ReduceLambda_11());
   }
 
   @Test
   public void testReduceLambdaGoodWillHappy() {
-    assertGoodWillHappy(get_ReduceLambda_10());
+    assertGoodWillHappy(get_ReduceLambda_11());
   }
 
   @Test
   public void testReduceLambdaExceptionFree() {
-    assertExceptionFree(get_ReduceLambda_10());
+    assertExceptionFree(get_ReduceLambda_11());
   }
 
   @Test
   public void testReduceLambdaTODOFree() {
-    assertTODOFree(get_ReduceLambda_10());
+    assertTODOFree(get_ReduceLambda_11());
   }
 
   @Test
-  public void stable_ReduceLambda_10() {
-    String live = get_ReduceLambda_10();
+  public void stable_ReduceLambda_11() {
+    String live = get_ReduceLambda_11();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Maps_ReduceLambda_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -4494,7 +4534,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class ReduceLambda_10 extends LivingDocument {");
+    gold.append("\npublic class ReduceLambda_11 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  private final RxMap<Integer,RxInt32> result;");
     gold.append("\n  @Override");
@@ -4504,7 +4544,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __sum += result.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public ReduceLambda_10(DocumentMonitor __monitor) {");
+    gold.append("\n  public ReduceLambda_11(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    result = new RxMap<Integer,RxInt32>(this, new RxMap.IntegerCodec<RxInt32>() { @Override public RxInt32 make(RxParent __parent) { return new RxInt32(__parent, 0);} });");
@@ -4753,9 +4793,9 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    result.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaReduceLambda_10 implements DeltaNode {");
+    gold.append("\n  private class DeltaReduceLambda_11 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaReduceLambda_10() {");
+    gold.append("\n    private DeltaReduceLambda_11() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -4763,7 +4803,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(ReduceLambda_10 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(ReduceLambda_11 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -4791,8 +4831,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    ReduceLambda_10 __self = this;");
-    gold.append("\n    DeltaReduceLambda_10 __state = new DeltaReduceLambda_10();");
+    gold.append("\n    ReduceLambda_11 __self = this;");
+    gold.append("\n    DeltaReduceLambda_11 __state = new DeltaReduceLambda_11();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -5326,38 +5366,38 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ReduceSad_11 = null;
-  private String get_ReduceSad_11() {
-    if (cached_ReduceSad_11 != null) {
-      return cached_ReduceSad_11;
+  private String cached_ReduceSad_12 = null;
+  private String get_ReduceSad_12() {
+    if (cached_ReduceSad_12 != null) {
+      return cached_ReduceSad_12;
     }
-    cached_ReduceSad_11 = generateTestOutput(false, "ReduceSad_11", "./test_code/Maps_ReduceSad_failure.a");
-    return cached_ReduceSad_11;
+    cached_ReduceSad_12 = generateTestOutput(false, "ReduceSad_12", "./test_code/Maps_ReduceSad_failure.a");
+    return cached_ReduceSad_12;
   }
 
   @Test
   public void testReduceSadFailure() {
-    assertLiveFail(get_ReduceSad_11());
+    assertLiveFail(get_ReduceSad_12());
   }
 
   @Test
   public void testReduceSadNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_ReduceSad_11());
+    assertNotTerribleLineNumbers(get_ReduceSad_12());
   }
 
   @Test
   public void testReduceSadExceptionFree() {
-    assertExceptionFree(get_ReduceSad_11());
+    assertExceptionFree(get_ReduceSad_12());
   }
 
   @Test
   public void testReduceSadTODOFree() {
-    assertTODOFree(get_ReduceSad_11());
+    assertTODOFree(get_ReduceSad_12());
   }
 
   @Test
-  public void stable_ReduceSad_11() {
-    String live = get_ReduceSad_11();
+  public void stable_ReduceSad_12() {
+    String live = get_ReduceSad_12();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Maps_ReduceSad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");

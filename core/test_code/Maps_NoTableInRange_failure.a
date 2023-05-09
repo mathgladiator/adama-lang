@@ -1,0 +1,14 @@
+record R {
+  int x;
+  int v;
+}
+
+map<string, table<R>> tables;
+
+message M {
+  int x;
+}
+
+#sm {
+  map<string, table<M>> local;
+}
