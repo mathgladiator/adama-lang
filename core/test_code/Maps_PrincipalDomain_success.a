@@ -1,0 +1,15 @@
+record R {
+  int x;
+  int y;
+}
+
+public map<principal, R> themap;
+
+@construct {
+  themap[@no_one] <- {x:1,y:2};
+}
+
+#sm {
+  map<principal, string> m2s;
+  m2s[@no_one] = "42";
+}

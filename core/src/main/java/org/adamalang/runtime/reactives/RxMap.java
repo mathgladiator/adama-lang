@@ -8,6 +8,7 @@
  */
 package org.adamalang.runtime.reactives;
 
+import org.adamalang.common.SlashStringArrayEncoder;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
@@ -16,6 +17,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtMap;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.NtPair;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -253,6 +255,17 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
 
     public String fromStr(String key) {
       return key;
+    }
+  }
+
+  public abstract static class PrincipalCodec<R extends RxBase> implements Codec<NtPrincipal, R> {
+    public String toStr(NtPrincipal key) {
+      return SlashStringArrayEncoder.encode(key.agent, key.authority);
+    }
+
+    public NtPrincipal fromStr(String key) {
+      String[] parts = SlashStringArrayEncoder.decode(key);
+      return new NtPrincipal(parts[0], parts[1]);
     }
   }
 }

@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.expressions.constants.NoOneClientConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
@@ -26,6 +27,7 @@ import java.util.function.Consumer;
 
 public class TyNativeSecurePrincipal extends TySimpleNative implements //
     DetailHasDeltaType, //
+    CanBeMapDomain, //
     IsOrderable, //
     DetailTypeHasMethods, //
     AssignmentViaNative //
@@ -56,6 +58,11 @@ public class TyNativeSecurePrincipal extends TySimpleNative implements //
     yielder.accept(openToken);
     yielder.accept(principalToken);
     yielder.accept(closedToken);
+  }
+
+  @Override
+  public String getRxStringCodexName() {
+    return "RxMap.PrincipalCodec";
   }
 
   @Override
