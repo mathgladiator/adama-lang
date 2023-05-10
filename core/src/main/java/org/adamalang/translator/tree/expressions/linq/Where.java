@@ -231,7 +231,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         if (ty instanceof TyNativeGlobalObject) {
           return;
         }
-        if ("__time".equals(name)) {
+        if ("__time".equals(name) || "__today".equals(name)) {
           return;
         }
         if (environment.document.root.storage.has(name)) {

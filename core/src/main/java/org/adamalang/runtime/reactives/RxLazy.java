@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 /** a reactive lazy formula which is computed on demand */
 public class RxLazy<Ty> extends RxBase implements RxChild {
   private final Supplier<Ty> formula;
-  private Ty cached;
+  protected Ty cached;
   private int generation;
   private boolean invalid;
 

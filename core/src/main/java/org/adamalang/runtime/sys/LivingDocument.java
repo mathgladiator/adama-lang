@@ -59,6 +59,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final RxInt32 __seq;
   protected final RxString __state;
   protected final RxInt64 __time;
+  protected final RxLazy<NtDate> __today;
   protected final RxCache __cache;
   protected final RxString __timezone;
   private ZoneId __timezoneCachedZoneId;
@@ -93,6 +94,16 @@ public abstract class LivingDocument implements RxParent, Caller {
     __connection_id = new RxInt32(this, 0);
     __message_id = new RxInt32(this, 0);
     __time = new RxInt64(this, 0L);
+    __today = new RxLazy<>(this, () -> __dateOfToday()) {
+      @Override
+      public boolean __raiseInvalid() {
+        if (this.cached == null || !__dateOfToday().equals(this.cached)) {
+          return super.__raiseInvalid();
+        }
+        return true;
+      }
+    };
+    __time.__subscribe(__today);
     __next_time = new RxInt64(this, 0L);
     __last_expire_time = new RxInt64(this, 0L);
     __auto_cache_id = new RxInt32(this, 0);

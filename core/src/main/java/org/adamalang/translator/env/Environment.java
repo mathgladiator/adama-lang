@@ -14,6 +14,7 @@ import org.adamalang.translator.tree.definitions.DefineService;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.Rules;
+import org.adamalang.translator.tree.types.natives.TyNativeDate;
 import org.adamalang.translator.tree.types.natives.TyNativeLong;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLong;
@@ -194,6 +195,10 @@ public class Environment {
 
     if ("__time".equals(name)) {
       return lookup_return(name, new TyReactiveLong(null));
+    }
+
+    if ("__today".equals(name)) {
+      return lookup_return(name, new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null));
     }
 
     return lookup_return(name, result);

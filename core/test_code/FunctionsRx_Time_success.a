@@ -1,0 +1,3 @@
+public formula now = Time.now();
+public formula datetime = Time.datetime();
+public formula today = Time.today();
