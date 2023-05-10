@@ -28,7 +28,7 @@ public class Factory {
     }
   }
 
-  public String produce(FieldList fields, HashMap<String, String> defines) {
+  public String produce(String name, FieldList fields, HashMap<String, String> defines) {
     for (Field field : fields) {
       for (Rule rule : rules) {
         if (rule.test(field)) {
@@ -41,6 +41,6 @@ public class Factory {
     for (Map.Entry<String, String> entry : defines.entrySet()) {
       next = next.replaceAll("%%" + entry.getKey() + "%%", entry.getValue());
     }
-    return Jsoup.parse("<template name=\"foo\">" + next + "</template>").getElementsByTag("template").outerHtml();
+    return Jsoup.parse("<template name=\"" + name + "\">" + next + "</template>").getElementsByTag("template").outerHtml();
   }
 }

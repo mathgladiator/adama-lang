@@ -47,15 +47,24 @@ public class FieldList implements Iterable<Field> {
 
   private static void add(ArrayList<Field> fields, String name, String path, ObjectNode type, Annotations annotations) {
     ArrayNode an = ((ArrayNode) type.get("annotations"));
-    if ("native_value".equals(type.get("nature").textValue())) {
-      fields.add(new Field(name, path, type.get("type").textValue(), annotations.of(an)));
-      return;
+    String nature = type.get("nature").textValue();
+    if (nature != null) {
+      switch (nature) {
+        case "reactive_table":
+          return;
+        case "reactive_value":
+        case "native_value":
+          fields.add(new Field(name, path, type.get("type").textValue(), annotations.of(an)));
+          return;
+        case "native_maybe":
+          add(fields, name, path, (ObjectNode) type.get("type"), annotations.of(an));
+          return;
+        case "native_message":
+          fill(fields, name + ".", path + "/", (ObjectNode) type.get("fields"), annotations.of(an));
+          return;
+      }
     }
-    if ("native_maybe".equals(type.get("nature").textValue())) {
-      add(fields, name, path, (ObjectNode) type.get("type"), annotations.of(an));
-      return;
-    }
-    System.err.println("ADD:" + name + "," + path + ":" + an);
+    System.err.println("UNKNOWN:" + name + "," + path + ":" + an + "::" + type);
   }
 
   public static FieldList intersect(FieldList as, FieldList bs) {

@@ -110,7 +110,7 @@ public class Generate {
         }
       }
 
-      state.output_rx.append(factory.produce(manifest, defines));
+      state.output_rx.append(factory.produce(generate.attr("name"), manifest, defines));
     }
   }
 }
