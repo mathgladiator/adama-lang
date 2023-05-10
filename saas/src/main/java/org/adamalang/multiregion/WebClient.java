@@ -117,6 +117,16 @@ public class WebClient implements WebLifecycle {
     }
 
     @Override
+    public void password(String password, Callback<Integer> callback) {
+      enqueue((connection) -> {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "connection/password");
+        request.put("connection", connection.id);
+        // TODO:
+      }, callback);
+    }
+
+    @Override
     public void canAttach(Callback<Boolean> callback) {
       enqueue((connection) -> {
         ObjectNode request = Json.newJsonObject();

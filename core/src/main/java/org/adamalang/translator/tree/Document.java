@@ -72,6 +72,7 @@ public class Document implements TopLevelDocumentHandler {
   private final ArrayList<File> searchPaths;
   private final TypeCheckerRoot typeChecker;
   public final ArrayList<DefineAuthorization> auths;
+  public final ArrayList<DefinePassword> passwords;
   private int autoClassId;
   private String className;
   public final UriTable webGet;
@@ -113,6 +114,7 @@ public class Document implements TopLevelDocumentHandler {
     services = new LinkedHashMap<>();
     defined = new HashSet<>();
     auths = new ArrayList<>();
+    passwords = new ArrayList<>();
   }
 
   public void setIncludes(HashMap<String, String> include) {
@@ -250,6 +252,15 @@ public class Document implements TopLevelDocumentHandler {
     }
     auths.add(da);
     da.typing(typeChecker);
+  }
+
+  @Override
+  public void add(DefinePassword dp) {
+    if (passwords.size() >= 1) {
+      typeChecker.issueError(dp, "Only one @password action allowed", "DocumentDefine");
+    }
+    passwords.add(dp);
+    dp.typing(typeChecker);
   }
 
   @Override

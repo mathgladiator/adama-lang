@@ -57,6 +57,7 @@ public class ClientMetrics {
   public final Runnable client_rxcache_fallback;
   public final Runnable client_rxcache_found;
 
+  public final ItemActionMonitor lcsm_connection_password;
   public final ItemActionMonitor lcsm_connection_update;
   public final ItemActionMonitor lcsm_connection_send;
   public final ItemActionMonitor lcsm_connection_can_attach;
@@ -110,6 +111,7 @@ public class ClientMetrics {
     client_rxcache_fallback = factory.counter("client_rxcache_fallback");
     client_rxcache_found = factory.counter("client_rxcache_found");
 
+    lcsm_connection_password = factory.makeItemActionMonitor("lcsm_connection_password");
     lcsm_connection_update = factory.makeItemActionMonitor("lcsm_connection_update");
     lcsm_connection_send = factory.makeItemActionMonitor("lcsm_connection_send");
     lcsm_connection_can_attach = factory.makeItemActionMonitor("lcsm_connection_can_attach");

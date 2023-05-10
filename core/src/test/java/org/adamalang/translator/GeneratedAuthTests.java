@@ -121,13 +121,16 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\npublic class Primary_2 extends LivingDocument {");
+    gold.append("\n  private final RxString password_last;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    __sum += password_last.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
     gold.append("\n  public Primary_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
+    gold.append("\n    password_last = new RxString(this, \"\");");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -137,6 +140,9 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("\n      while(__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
+    gold.append("\n          case \"password_last\":");
+    gold.append("\n            password_last.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__insert(__reader);");
     gold.append("\n            break;");
@@ -209,6 +215,9 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("\n      while(__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
+    gold.append("\n          case \"password_last\":");
+    gold.append("\n            password_last.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__patch(__reader);");
     gold.append("\n            break;");
@@ -278,6 +287,8 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"password_last\");");
+    gold.append("\n    password_last.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__constructed\");");
@@ -334,6 +345,7 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("\n    __auto_gen.__commit(\"__auto_gen\", __forward, __reverse);");
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
+    gold.append("\n    password_last.__commit(\"password_last\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -351,28 +363,35 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("\n    __time.__revert();");
     gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
+    gold.append("\n    password_last.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  private class DeltaPrimary_2 implements DeltaNode {");
+    gold.append("\n    private DString __dpassword_last;");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaPrimary_2() {");
+    gold.append("\n      __dpassword_last = new DString();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
     gold.append("\n      long __sum = 40;");
+    gold.append("\n      __sum += __dpassword_last.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
     gold.append("\n    public void show(Primary_2 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
+    gold.append("\n      __dpassword_last.show(__item.password_last.get(), __obj.planField(\"password_last\"));");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
-    gold.append("\n      __code_cost += 0;");
+    gold.append("\n      __dpassword_last.clear();");
+    gold.append("\n      __code_cost += 1;");
     gold.append("\n    }");
     gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      if (__emitted) {");
@@ -510,6 +529,17 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __password(CoreRequestContext __context, String password) {");
+    gold.append("\n    NtPrincipal __who = __context.who;");
+    gold.append("\n    __code_cost += 2;");
+    gold.append("\n    __track(3);");
+    gold.append("\n    if ((__who).equals(NtPrincipal.NO_ONE)) {");
+    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __track(4);");
+    gold.append("\n      password_last.set(password);");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -582,68 +612,108 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("\nBegin");
     gold.append("\nEnd");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"password_last\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"string\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:384");
+    gold.append("\nMEMORY:440");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
-    gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"password_last\":\"\"},\"seq\":3}");
     gold.append("\nNO_ONE|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__time\":\"75\"} need:false in:-75");
     gold.append("\nRANDO: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":4}");
-    gold.append("\n+ RANDO DELTA:{\"seq\":4}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{\"password_last\":\"\"},\"seq\":4}");
     gold.append("\nRANDO|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__time\":\"100\"} need:false in:-100");
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:502");
+    gold.append("\nMEMORY:638");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"password_last\":\"\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
-    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"password_last\":\"\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
+    gold.append("\n{\"password_last\":\"\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_TooMany_3 = null;
-  private String get_TooMany_3() {
-    if (cached_TooMany_3 != null) {
-      return cached_TooMany_3;
+  private String cached_TooManyPW_3 = null;
+  private String get_TooManyPW_3() {
+    if (cached_TooManyPW_3 != null) {
+      return cached_TooManyPW_3;
     }
-    cached_TooMany_3 = generateTestOutput(false, "TooMany_3", "./test_code/Auth_TooMany_failure.a");
-    return cached_TooMany_3;
+    cached_TooManyPW_3 = generateTestOutput(false, "TooManyPW_3", "./test_code/Auth_TooManyPW_failure.a");
+    return cached_TooManyPW_3;
+  }
+
+  @Test
+  public void testTooManyPWFailure() {
+    assertLiveFail(get_TooManyPW_3());
+  }
+
+  @Test
+  public void testTooManyPWNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_TooManyPW_3());
+  }
+
+  @Test
+  public void testTooManyPWExceptionFree() {
+    assertExceptionFree(get_TooManyPW_3());
+  }
+
+  @Test
+  public void testTooManyPWTODOFree() {
+    assertTODOFree(get_TooManyPW_3());
+  }
+
+  @Test
+  public void stable_TooManyPW_3() {
+    String live = get_TooManyPW_3();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Auth_TooManyPW_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":0,\"byte\":22},\"end\":{\"line\":4,\"character\":1,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"Only one @password action allowed (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_TooMany_4 = null;
+  private String get_TooMany_4() {
+    if (cached_TooMany_4 != null) {
+      return cached_TooMany_4;
+    }
+    cached_TooMany_4 = generateTestOutput(false, "TooMany_4", "./test_code/Auth_TooMany_failure.a");
+    return cached_TooMany_4;
   }
 
   @Test
   public void testTooManyFailure() {
-    assertLiveFail(get_TooMany_3());
+    assertLiveFail(get_TooMany_4());
   }
 
   @Test
   public void testTooManyNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_TooMany_3());
+    assertNotTerribleLineNumbers(get_TooMany_4());
   }
 
   @Test
   public void testTooManyExceptionFree() {
-    assertExceptionFree(get_TooMany_3());
+    assertExceptionFree(get_TooMany_4());
   }
 
   @Test
   public void testTooManyTODOFree() {
-    assertTODOFree(get_TooMany_3());
+    assertTODOFree(get_TooMany_4());
   }
 
   @Test
-  public void stable_TooMany_3() {
-    String live = get_TooMany_3();
+  public void stable_TooMany_4() {
+    String live = get_TooMany_4();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Auth_TooMany_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");

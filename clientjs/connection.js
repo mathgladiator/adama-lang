@@ -591,6 +591,14 @@ class WebSocketAdamaConnection {
           request: { method: "connection/send", id: subId, "connection":parId, "channel": channel, "message": message}
         });
       },
+      password: function(username, password, new_password, subResponder) {
+        var subId = self.__id();
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/password", id: subId, "connection":parId, "username": username, "password": password, "new_password": new_password}
+        });
+      },
       sendOnce: function(channel, dedupe, message, subResponder) {
         var subId = self.__id();
         self.__execute_rr({

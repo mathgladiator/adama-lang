@@ -4,3 +4,11 @@
   }
   abort;
 }
+
+public string password_last;
+
+@password (password) {
+  if (@who == @no_one) {
+    password_last = password;
+  }
+}

@@ -55,9 +55,11 @@ This document is a living road map of the Adama Platform. As such, it contains t
 | region-isolate | Allow regions to have storage for local documents |
 
 ## Infrastructure - Core Service
-| project | milestones/description        |
-|---------|-------------------------------|
-| dx      |  |
+| project                 | milestones/description                                                                                                                                                                                                                                                                                             |
+|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| third-party replication | the language should allow specification of a endpoint to replace a piece of data to on data changes. This requires maintaining a local copy in the document along with a state machine about status. The tricky bit requires a delete notification. There is also the need to load every document on a deployment. |
+| replication-search      | provide a "between document" search using replication tech                                                                                                                                                                                                                                                         |
+| replication-graph       | similar to search, replicate part of the document into a graph database                                                                                                                                                                                                                                            |
 
 ## Infrastructure - Overlord
 | --------- | -------------------------------                                                                                           |
@@ -65,14 +67,15 @@ This document is a living road map of the Adama Platform. As such, it contains t
 | canary    | for testing the service health and correctness; overlord should maintain a constant state of various high-value API calls |
 
 ## RxHTML
-| project     | milestones/description                                                                         |
-|-------------|------------------------------------------------------------------------------------------------|
-| headwindcss | Port tailwindcss to Java for vertical control                                                  |
-| components  | Bring clarity for single javascript extentions for new controls                                |
-| time        | Custom component for selecting a time of day (Blocked on *components* model)                   |
-| date        | Custom component for selecting a date or a date range (Blocked on *components* model)          |
-| color       | Custom component for selecting a color (Blocked on *components* model)                         |
-| server-side | Create a customized shell for each page such that server side rendering allows faster presence | 
+| project        | milestones/description                                                                         |
+|----------------|------------------------------------------------------------------------------------------------|
+| headwindcss    | Port tailwindcss to Java for vertical control                                                  |
+| components     | Bring clarity for single javascript extentions for new controls                                |
+| time           | Custom component for selecting a time of day (Blocked on *components* model)                   |
+| date           | Custom component for selecting a date or a date range (Blocked on *components* model)          |
+| color          | Custom component for selecting a color (Blocked on *components* model)                         |
+| server-side    | Create a customized shell for each page such that server side rendering allows faster presence |
+| convert-react  | Convert the RxHTML forest into a complete React app                                            |
 
 ## Roslin (RxImage)
 | project           | milestones/description                               |

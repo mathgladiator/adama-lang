@@ -276,6 +276,15 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
+  public void handle(ClientMessage.StreamPassword payload) {
+    if (bits.fail) {
+      upstream.error(24242);
+      return;
+    }
+    real.handle(payload);
+  }
+
+  @Override
   public void handle(ClientMessage.StreamConnect payload) {
     if (bits.closeStream) {
       upstream.completed();

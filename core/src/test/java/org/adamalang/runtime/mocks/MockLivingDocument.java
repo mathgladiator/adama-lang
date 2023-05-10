@@ -93,6 +93,9 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public void __password(CoreRequestContext context, String password) { }
+
+  @Override
   public WebResponse __get(WebGet __get) {
     return null;
   }

@@ -22,6 +22,7 @@ public class ServerMetrics {
   public final CallbackMonitor server_stream_ask;
   public final CallbackMonitor server_stream_attach;
   public final CallbackMonitor server_stream_send;
+  public final CallbackMonitor server_stream_password;
   public final Runnable server_stream_update;
   public final Runnable server_stream_disconnect;
   public final StreamMonitor server_stream;
@@ -40,6 +41,7 @@ public class ServerMetrics {
     server_stream_ask = factory.makeCallbackMonitor("server_stream_ask");
     server_stream_attach = factory.makeCallbackMonitor("server_stream_attach");
     server_stream_send = factory.makeCallbackMonitor("server_stream_send");
+    server_stream_password = factory.makeCallbackMonitor("server_stream_password");
     server_stream_update = factory.counter("server_stream_update");
     server_stream_disconnect = factory.counter("server_stream_disconnect");
 

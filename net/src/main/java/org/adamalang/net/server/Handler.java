@@ -485,6 +485,33 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   }
 
   @Override
+  public void handle(ClientMessage.StreamPassword payload) {
+    if (stream != null) {
+      stream.password(payload.password, nexus.metrics.server_stream_password.wrap(new Callback<>() {
+        @Override
+        public void success(Integer value) {
+          ServerMessage.StreamSeqResponse response = new ServerMessage.StreamSeqResponse();
+          response.op = payload.op;
+          response.seq = value;
+          ByteBuf buf = upstream.create(8);
+          ServerCodec.write(buf, response);
+          upstream.next(buf);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ServerMessage.StreamError error = new ServerMessage.StreamError();
+          error.op = payload.op;
+          error.code = ex.code;
+          ByteBuf errorBuf = upstream.create(8);
+          ServerCodec.write(errorBuf, error);
+          upstream.next(errorBuf);
+        }
+      }));
+    }
+  }
+
+  @Override
   public void handle(ClientMessage.StreamConnect payload) {
     monitorStreamback = nexus.metrics.server_stream.start();
     CoreRequestContext context = new CoreRequestContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);

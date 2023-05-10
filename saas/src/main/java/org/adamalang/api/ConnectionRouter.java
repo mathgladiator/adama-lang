@@ -741,6 +741,34 @@ public class ConnectionRouter {
                 }
               });
             } return;
+            case "connection/password": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConnectionPassword.start();
+              ConnectionPasswordRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(ConnectionPasswordRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
+                  if (handlerToUse != null) {
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("failure-code", 462832);
+                    nexus.logger.log(_accessLogItem);
+                    mInstance.failure(462832);
+                    responder.error(new ErrorCodeException(462832));
+                  }
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "connection/send-once": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConnectionSendOnce.start();
               ConnectionSendOnceRequest.resolve(session, nexus, request, new Callback<>() {

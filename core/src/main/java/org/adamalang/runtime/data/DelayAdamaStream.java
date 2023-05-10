@@ -81,6 +81,11 @@ public class DelayAdamaStream implements AdamaStream {
   }
 
   @Override
+  public void password(String password, Callback<Integer> callback) {
+    buffer((stream) -> stream.password(password, callback), callback);
+  }
+
+  @Override
   public void canAttach(Callback<Boolean> callback) {
     buffer((stream) -> stream.canAttach(callback), callback);
   }

@@ -61,6 +61,12 @@
         </documentation>
     </parameter-definition>
 
+    <parameter-definition name="new_password" type="string" missing-error="466931" logged="false">
+        <documentation>
+            The new password for your account or document
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="username" type="string" missing-error="458737" logged="false">
         <documentation>
             The username for a document authorization
@@ -964,6 +970,16 @@
         </documentation>
     </method>
 
+    <method name="connection/password" responder="seq" handler="document-stream" find-by="connection" error-find-by="462832">
+        <parameter name="connection"/>
+        <parameter name="username"/>
+        <parameter name="password"/>
+        <parameter name="new_password"/>
+        <documentation>
+            Set the viewer's password to the document; requires their old password.
+        </documentation>
+    </method>
+
     <method name="connection/send-once" responder="seq" handler="document-stream" find-by="connection" error-find-by="410619">
         <parameter name="connection"/>
         <parameter name="channel"/>
@@ -1598,8 +1614,7 @@
 460787
 492531
 406514
-466931
-462832
+
 -->
 
 </api>

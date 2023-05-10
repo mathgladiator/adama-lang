@@ -19,6 +19,9 @@ public interface AdamaStream {
   /** send the document a message on the given channel */
   void send(String channel, String marker, String message, Callback<Integer> callback);
 
+  /** send a password to the document for this person */
+  void password(String password, Callback<Integer> callback);
+
   /** can attachments be made with the owner of the connection */
   void canAttach(Callback<Boolean> callback);
 

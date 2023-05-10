@@ -77,6 +77,12 @@ public class ErrorTable {
     descriptions.put(143373, "no description of error (yet)");
     names.put(125966, "LIVING_DOCUMENT_TRANSACTION_CANT_ATTACH_NOT_CONNECTED");
     descriptions.put(125966, "no description of error (yet)");
+    names.put(197852, "LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_CONTEXT");
+    descriptions.put(197852, "no description of error (yet)");
+    names.put(199907, "LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_PASSWORD");
+    descriptions.put(199907, "no description of error (yet)");
+    names.put(113884, "LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NOT_CONNECTED");
+    descriptions.put(113884, "no description of error (yet)");
     names.put(184333, "LIVING_DOCUMENT_TRANSACTION_CLIENT_REJECTED");
     descriptions.put(184333, "no description of error (yet)");
     names.put(147186, "LIVING_DOCUMENT_TRANSACTION_DELETE_REJECTED");
@@ -531,6 +537,10 @@ public class ErrorTable {
     descriptions.put(934083, "no description of error (yet)");
     names.put(977091, "WEB_BASE_EXECUTE_SHARED_TOO_MANY_INFLIGHT");
     descriptions.put(977091, "no description of error (yet)");
+    names.put(990447, "NET_LCSM_PASSWORD_TIMEOUT");
+    descriptions.put(990447, "no description of error (yet)");
+    names.put(915695, "NET_LCSM_PASSWORD_REJECTED");
+    descriptions.put(915695, "no description of error (yet)");
     names.put(998434, "NET_LCSM_UPDATE_TIMEOUT");
     descriptions.put(998434, "no description of error (yet)");
     names.put(930848, "NET_LCSM_UPDATE_REJECTED");

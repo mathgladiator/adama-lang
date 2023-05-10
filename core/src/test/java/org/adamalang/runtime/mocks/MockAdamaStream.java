@@ -40,6 +40,16 @@ public class MockAdamaStream implements AdamaStream {
   }
 
   @Override
+  public void password(String password, Callback<Integer> callback) {
+    writer.append("PASSWORD!\n");
+    if (password.equals("failed")) {
+      callback.failure(new ErrorCodeException(-23));
+    } else {
+      callback.success(42);
+    }
+  }
+
+  @Override
   public void canAttach(Callback<Boolean> callback) {
     writer.append("CANATTACH\n");
     callback.success(true);

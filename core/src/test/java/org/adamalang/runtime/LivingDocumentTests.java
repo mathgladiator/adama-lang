@@ -259,6 +259,33 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void pw_set_no_connection() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup(
+          "@connected { return true; } @password (pw) {}",
+          null);
+      setup.document.setPassword(new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", "key"), "password", new RealDocumentSetup.AssertFailure(113884));
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+      Assert.fail();
+    }
+  }
+
+  @Test
+  public void pw_set_good() throws Exception {
+    try {
+      RealDocumentSetup setup = new RealDocumentSetup(
+          "@connected { return true; } @password (pw) { pass = pw; } public string pass;",
+          null);
+      setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
+      setup.document.setPassword(ContextSupport.WRAP(A), "password", new RealDocumentSetup.AssertInt(4));
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+      Assert.fail();
+    }
+  }
+
+  @Test
   public void deletion_allowed_by_overlord() throws Exception {
     try {
       RealDocumentSetup setup = new RealDocumentSetup(

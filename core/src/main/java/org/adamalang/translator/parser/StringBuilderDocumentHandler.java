@@ -154,4 +154,7 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   public void add(DefineAuthorization da) {
     da.emit(this);
   }
+
+  @Override
+  public void add(DefinePassword dp) { dp.emit(this); }
 }

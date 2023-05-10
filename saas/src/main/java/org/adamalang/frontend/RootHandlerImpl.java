@@ -782,6 +782,22 @@ public class RootHandlerImpl implements RootHandler {
       }
 
       @Override
+      public void handle(ConnectionPasswordRequest request, SeqResponder responder) {
+        // public void authorize(String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
+        nexus.adama.authorize(session.authenticator.ip(), session.authenticator.origin(), connect.space, connect.key, request.username, request.password, new Callback<String>() {
+          @Override
+          public void success(String identity) {
+            connection.password(request.password, WRAP(responder));
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            responder.error(ex);
+          }
+        });
+      }
+
+      @Override
       public void handle(ConnectionEndRequest request, SimpleResponder responder) {
         connection.close();
         responder.complete();

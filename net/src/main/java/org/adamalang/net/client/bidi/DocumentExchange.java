@@ -211,6 +211,19 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     }
   }
 
+  @Override
+  public void password(String password, Callback<Integer> callback) {
+    int op = bind(callback);
+    if (op > 0) {
+      ClientMessage.StreamPassword send = new ClientMessage.StreamPassword();
+      send.op = op;
+      send.password = password;
+      ByteBuf toWrite = upstream.create(8 + password.length());
+      ClientCodec.write(toWrite, send);
+      upstream.next(toWrite);
+    }
+  }
+
   @Override // From Remote
   public void update(String viewerState) {
     ClientMessage.StreamUpdate update = new ClientMessage.StreamUpdate();

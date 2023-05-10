@@ -885,6 +885,24 @@ public class DurableLivingDocument implements Queryable {
     }), false, false);
   }
 
+  public void setPassword(CoreRequestContext context, String password, Callback<Integer> callback) {
+    final var writer = forgeWithContext("password", context);
+    writer.writeObjectFieldIntro("password");
+    writer.writeString(password);
+    writer.endObject();
+    ingest(context.who, writer.toString(), base.metrics.document_password.wrap(new Callback<>() {
+      @Override
+      public void success(LivingDocumentChange value) {
+        callback.success(value.update.seqEnd);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    }), false, false);
+  }
+
   public String json() {
     final var writer = new JsonStreamWriter();
     document.__dump(writer);

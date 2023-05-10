@@ -897,6 +897,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
+    gold.append("\n  @Override");
     gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -2191,6 +2193,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
+    gold.append("\n  @Override");
     gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -2962,6 +2966,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n  public String __auth(CoreRequestContext __context, String username, String password) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
     gold.append("\n  public WebResponse __get(WebGet __request) {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");

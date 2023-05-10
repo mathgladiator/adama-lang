@@ -41,6 +41,7 @@ public class CoreMetrics {
   public final CallbackMonitor document_disconnect;
   public final CallbackMonitor document_connect;
   public final CallbackMonitor document_execute_patch;
+  public final CallbackMonitor document_password;
   public final Runnable document_queue_full;
   public final Runnable document_queue_running_behind;
   public final Runnable document_catastrophic_failure;
@@ -79,6 +80,7 @@ public class CoreMetrics {
     document_disconnect = metricsFactory.makeCallbackMonitor("core_document_disconnect");
     document_connect = metricsFactory.makeCallbackMonitor("core_document_connect");
     document_execute_patch = metricsFactory.makeCallbackMonitor("core_document_execute_patch");
+    document_password = metricsFactory.makeCallbackMonitor("core_document_document_password");
     inflight_streams = metricsFactory.inflight("core_inflight_streams");
     inflight_documents = metricsFactory.inflight("core_inflight_documents");
     document_queue_full = metricsFactory.counter("core_document_full");

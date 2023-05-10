@@ -127,8 +127,6 @@ public class Connection implements AdamaStream {
             events.delta(data);
           }
 
-
-
           @Override
           public void error(int code) {
             base.executor.execute(new NamedRunnable("lcsm-connected") {
@@ -201,7 +199,7 @@ public class Connection implements AdamaStream {
 
   @Override
   public void send(String channel, String marker, String message, Callback<Integer> callback) {
-    ItemActionMonitor.ItemActionMonitorInstance instance = base.metrics.lcsm_connection_update.start();
+    ItemActionMonitor.ItemActionMonitorInstance instance = base.metrics.lcsm_connection_send.start();
     base.executor.execute(new NamedRunnable("lcsm-send") {
       @Override
       public void execute() throws Exception {
@@ -209,6 +207,27 @@ public class Connection implements AdamaStream {
           @Override
           protected void executeNow(Remote remote) {
             remote.send(channel, marker, message, callback);
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
+  @Override
+  public void password(String password, Callback<Integer> callback) {
+    ItemActionMonitor.ItemActionMonitorInstance instance = base.metrics.lcsm_connection_password.start();
+    base.executor.execute(new NamedRunnable("lcsm-send") {
+      @Override
+      public void execute() throws Exception {
+        queue.add(new ItemAction<>(ErrorCodes.NET_LCSM_PASSWORD_TIMEOUT, ErrorCodes.NET_LCSM_PASSWORD_REJECTED, instance) {
+          @Override
+          protected void executeNow(Remote remote) {
+            remote.password(password, callback);
           }
 
           @Override

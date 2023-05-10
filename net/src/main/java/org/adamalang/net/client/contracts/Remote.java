@@ -17,6 +17,8 @@ public interface Remote {
 
   void send(String channel, String marker, String message, Callback<Integer> callback);
 
+  void password(String password, Callback<Integer> callback);
+
   void update(String viewerState);
 
   void disconnect();

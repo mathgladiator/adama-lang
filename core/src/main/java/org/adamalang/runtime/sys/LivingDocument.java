@@ -678,6 +678,8 @@ public abstract class LivingDocument implements RxParent, Caller {
     return result;
   };
 
+  public abstract void __password(CoreRequestContext context, String password);
+
   /** code generated: respond to a get request */
   public abstract WebResponse __get(WebGet __get);
 
@@ -687,7 +689,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** code generated: respond to a put request */
   protected abstract WebResponse __put_internal(WebPut __put);
 
-  /** code generated: respond to a put request */
+  /** code generated: respond to a delete request */
   protected abstract WebResponse __delete_internal(WebDelete __delete);
 
   public boolean __isConnected(final NtPrincipal __who) {
@@ -873,6 +875,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       String patch = null;
       String entropy = null;
       String marker = null;
+      String password = null;
       Integer delivery_id = null;
       RemoteResult result = null;
       NtAsset asset = null;
@@ -914,6 +917,9 @@ public abstract class LivingDocument implements RxParent, Caller {
               break;
             case "entropy":
               entropy = reader.readString();
+              break;
+            case "password":
+              password = reader.readString();
               break;
             case "patch":
               patch = reader.skipValueIntoJson();
@@ -1014,6 +1020,14 @@ public abstract class LivingDocument implements RxParent, Caller {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
           }
           return __transaction_send(context, requestJson, marker, channel, timestamp, message, factory);
+        case "password":
+          if (context == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_CONTEXT);
+          }
+          if (password == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_PASSWORD);
+          }
+          return _transact_password(context, password);
         case "deliver":
           if (who == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
@@ -1129,6 +1143,31 @@ public abstract class LivingDocument implements RxParent, Caller {
       WebResponse response = __put_internal(put);
       exception = false;
       return __simple_commit(put.context.who, request, response, 0L);
+    } finally {
+      if (exception) {
+        __revert();
+      }
+      if (__monitor != null) {
+        __monitor.pop(System.nanoTime() - startedTime, exception);
+      }
+    }
+  }
+
+  private LivingDocumentChange _transact_password(CoreRequestContext context, String password) throws ErrorCodeException {
+    final var startedTime = System.nanoTime();
+    boolean exception = true;
+    if (__monitor != null) {
+      __monitor.push("TransactionPassword");
+    }
+    try {
+      if (!__clients.containsKey(context.who)) {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NOT_CONNECTED);
+      }
+      __seq.bumpUpPre();
+      __randomizeOutOfBand();
+      __password(context, password);
+      exception = false;
+      return __simple_commit(context.who, "{\"password\":\"private\"}", null, 0L);
     } finally {
       if (exception) {
         __revert();

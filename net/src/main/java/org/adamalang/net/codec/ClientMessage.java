@@ -124,6 +124,15 @@ public class ClientMessage {
     public String message;
   }
 
+  @TypeId(12945)
+  @Flow("Server")
+  public static class StreamPassword {
+    @FieldOrder(1)
+    public int op;
+    @FieldOrder(2)
+    public String password;
+  }
+
   @TypeId(14345)
   @Flow("Server")
   public static class StreamUpdate {

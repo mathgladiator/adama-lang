@@ -157,7 +157,8 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
   }
 
   @Override
-  public void add(DefineAuthorization da) {
+  public void add(DefineAuthorization da) {}
 
-  }
+  @Override
+  public void add(DefinePassword dp) {}
 }

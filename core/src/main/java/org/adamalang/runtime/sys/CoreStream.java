@@ -73,6 +73,17 @@ public class CoreStream implements AdamaStream {
   }
 
   @Override
+  public void password(String password, Callback<Integer> callback) {
+    document.base.executor.execute(new NamedRunnable("core-stream-password") {
+      @Override
+      public void execute() throws Exception {
+        inventory.message();
+        document.setPassword(context, password, callback);
+      }
+    });
+  }
+
+  @Override
   public void canAttach(Callback<Boolean> callback) {
     if (!document.base.shield.canSendMessageExisting.get()) {
       callback.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_SEND_MESSAGE));

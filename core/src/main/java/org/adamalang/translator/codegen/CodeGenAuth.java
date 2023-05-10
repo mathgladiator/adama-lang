@@ -12,6 +12,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineAuthorization;
 import org.adamalang.translator.tree.definitions.DefineHandler;
+import org.adamalang.translator.tree.definitions.DefinePassword;
 
 import java.util.ArrayList;
 
@@ -60,6 +61,18 @@ public class CodeGenAuth {
     } else {
       sb.append("public String __auth(CoreRequestContext __context, String username, String password) {").tabUp().writeNewline();
       sb.append("return null;").tabDown().writeNewline();
+    }
+    sb.append("}").writeNewline();
+
+    sb.append("@Override").writeNewline();
+    if (raw.document.passwords.size() == 1) {
+      DefinePassword dp = raw.document.passwords.get(0);
+      Environment environment = dp.next(raw);
+      sb.append("public void __password(CoreRequestContext __context, String ").append(dp.passwordVar.text).append(") {").tabUp().writeNewline();
+      sb.append("NtPrincipal __who = __context.who;").writeNewline();
+      dp.code.specialWriteJava(sb, environment, false, true);
+    } else {
+      sb.append("public void __password(CoreRequestContext __context, String __pw) {");
     }
     sb.append("}").writeNewline();
   }

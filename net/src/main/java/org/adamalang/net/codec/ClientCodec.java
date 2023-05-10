@@ -36,6 +36,7 @@ import org.adamalang.net.codec.ClientMessage.StreamAttach;
 import org.adamalang.net.codec.ClientMessage.StreamAskAttachmentRequest;
 import org.adamalang.net.codec.ClientMessage.StreamDisconnect;
 import org.adamalang.net.codec.ClientMessage.StreamUpdate;
+import org.adamalang.net.codec.ClientMessage.StreamPassword;
 import org.adamalang.net.codec.ClientMessage.StreamSend;
 import org.adamalang.net.codec.ClientMessage.StreamConnect;
 import org.adamalang.net.codec.ClientMessage.MeteringDeleteBatch;
@@ -92,6 +93,8 @@ public class ClientCodec {
     public abstract void handle(StreamDisconnect payload);
 
     public abstract void handle(StreamUpdate payload);
+
+    public abstract void handle(StreamPassword payload);
 
     public abstract void handle(StreamSend payload);
 
@@ -189,6 +192,9 @@ public class ClientCodec {
         case 14345:
           handle(readBody_14345(buf, new StreamUpdate()));
           return;
+        case 12945:
+          handle(readBody_12945(buf, new StreamPassword()));
+          return;
         case 13345:
           handle(readBody_13345(buf, new StreamSend()));
           return;
@@ -243,6 +249,7 @@ public class ClientCodec {
     public void handle(StreamAskAttachmentRequest payload);
     public void handle(StreamDisconnect payload);
     public void handle(StreamUpdate payload);
+    public void handle(StreamPassword payload);
     public void handle(StreamSend payload);
     public void handle(StreamConnect payload);
     public void handle(MeteringDeleteBatch payload);
@@ -321,6 +328,9 @@ public class ClientCodec {
         return;
       case 14345:
         handler.handle(readBody_14345(buf, new StreamUpdate()));
+        return;
+      case 12945:
+        handler.handle(readBody_12945(buf, new StreamPassword()));
         return;
       case 13345:
         handler.handle(readBody_13345(buf, new StreamSend()));
@@ -833,6 +843,21 @@ public class ClientCodec {
     return o;
   }
 
+  public static StreamPassword read_StreamPassword(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 12945:
+        return readBody_12945(buf, new StreamPassword());
+    }
+    return null;
+  }
+
+
+  private static StreamPassword readBody_12945(ByteBuf buf, StreamPassword o) {
+    o.op = buf.readIntLE();
+    o.password = Helper.readString(buf);
+    return o;
+  }
+
   public static StreamSend read_StreamSend(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 13345:
@@ -1268,6 +1293,16 @@ public class ClientCodec {
     }
     buf.writeIntLE(14345);
     Helper.writeString(buf, o.viewerState);;
+  }
+
+  public static void write(ByteBuf buf, StreamPassword o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(12945);
+    buf.writeIntLE(o.op);
+    Helper.writeString(buf, o.password);;
   }
 
   public static void write(ByteBuf buf, StreamSend o) {

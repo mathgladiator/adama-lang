@@ -49,6 +49,7 @@ public class ApiMetrics {
   public final RequestResponseMonitor monitor_MessageDirectSendOnce;
   public final StreamMonitor monitor_ConnectionCreate;
   public final RequestResponseMonitor monitor_ConnectionSend;
+  public final RequestResponseMonitor monitor_ConnectionPassword;
   public final RequestResponseMonitor monitor_ConnectionSendOnce;
   public final RequestResponseMonitor monitor_ConnectionCanAttach;
   public final RequestResponseMonitor monitor_ConnectionAttach;
@@ -101,6 +102,7 @@ public class ApiMetrics {
     this.monitor_MessageDirectSendOnce = factory.makeRequestResponseMonitor("message/direct-send-once");
     this.monitor_ConnectionCreate = factory.makeStreamMonitor("connection/create");
     this.monitor_ConnectionSend = factory.makeRequestResponseMonitor("connection/send");
+    this.monitor_ConnectionPassword = factory.makeRequestResponseMonitor("connection/password");
     this.monitor_ConnectionSendOnce = factory.makeRequestResponseMonitor("connection/send-once");
     this.monitor_ConnectionCanAttach = factory.makeRequestResponseMonitor("connection/can-attach");
     this.monitor_ConnectionAttach = factory.makeRequestResponseMonitor("connection/attach");
