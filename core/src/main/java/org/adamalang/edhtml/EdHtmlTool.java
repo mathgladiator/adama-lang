@@ -11,6 +11,8 @@ package org.adamalang.edhtml;
 import org.adamalang.edhtml.phases.Generate;
 import org.adamalang.edhtml.phases.Use;
 
+import java.nio.file.Files;
+
 public class EdHtmlTool {
   public static void phases(EdHtmlState state) throws Exception {
     Use.execute(state);
@@ -20,5 +22,7 @@ public class EdHtmlTool {
   public static void main(String[] args) throws Exception {
     EdHtmlState state = new EdHtmlState(args);
     phases(state);
+    String result = state.finish();
+    Files.writeString(state.output.toPath(), result);
   }
 }

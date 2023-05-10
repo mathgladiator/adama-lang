@@ -11,6 +11,7 @@ package org.adamalang.cli.commands;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.commands.frontend.FrontendDeveloperServer;
+import org.adamalang.edhtml.EdHtmlTool;
 import org.adamalang.rxhtml.Feedback;
 import org.adamalang.rxhtml.RxHtmlTool;
 import org.jsoup.nodes.Element;
@@ -32,6 +33,9 @@ public class Frontend {
       case "rxhtml":
         makeRxHTMLTemplate(next);
         return;
+      case "edhtml":
+        buildEdHTML(next);
+        return;
       case "dev":
       case "dev-server":
         FrontendDeveloperServer.go(config, next);
@@ -50,6 +54,7 @@ public class Frontend {
     System.out.println();
     System.out.println(Util.prefix("FRONTENDSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("rxhtml", Util.ANSI.Green) + "            Compile an rxhtml template set");
+    System.out.println("    " + Util.prefix("edhtml", Util.ANSI.Green) + "            Compile an edhtml build instruction file");
     System.out.println("    " + Util.prefix("dev-server", Util.ANSI.Green) + "        Host the working directory as a webserver");
   }
 
@@ -85,5 +90,9 @@ public class Frontend {
     ArrayList<File> files = convertArgsToFileList(args);
     String output = Util.extractOrCrash("--output", "-o", args);
     Files.writeString(new File(output).toPath(), RxHtmlTool.convertFilesToTemplateForest(files, new ArrayList<>(), (element, warning) -> System.err.println(warning)).javascript);
+  }
+
+  public static void buildEdHTML(String[] args) throws Exception {
+    EdHtmlTool.main(args);
   }
 }
