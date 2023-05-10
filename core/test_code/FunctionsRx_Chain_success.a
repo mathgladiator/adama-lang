@@ -1,0 +1,20 @@
+record R {
+  int z;
+}
+
+R x;
+R y;
+
+procedure foo_y() -> int readonly {
+  return y.z;
+}
+
+procedure foo() -> int readonly {
+  return x.z + foo_y();
+}
+
+public formula xy_HERE = foo();
+
+@construct {
+  x.z = 10203040;
+}

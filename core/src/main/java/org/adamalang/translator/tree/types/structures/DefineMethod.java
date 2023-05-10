@@ -15,31 +15,31 @@ import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 
+/** defines a method within a structure */
 public class DefineMethod extends StructureComponent {
   public final ArrayList<FunctionArg> args;
   public final Token closeParen;
-  /** code that defines the function */
   public final Block code;
-  /** return type of the function */
   public final Token introduceReturnToken;
-  /** the name of the function */
   public final Token methodToken;
-
   public final String name;
   public final Token nameToken;
-  /** arguments of the function */
   public final Token openParen;
-
   public final Token tokenReadonly;
   public final Token abortsToken;
   public TyType returnType;
   private FunctionOverloadInstance cachedInstance;
   private int functionId;
+  private LinkedHashSet<String> depends;
+  private LinkedHashSet<String> services;
 
   /** construct the function of a type with a name */
   public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final Token tokenReadonly, final Token abortsToken, final Block code) {
@@ -60,6 +60,8 @@ public class DefineMethod extends StructureComponent {
     ingest(openParen);
     ingest(closeParen);
     ingest(code);
+    this.depends = new LinkedHashSet<>();
+    this.services = new LinkedHashSet<>();
   }
 
   @Override
@@ -88,7 +90,7 @@ public class DefineMethod extends StructureComponent {
     code.emit(yielder);
   }
 
-  public FunctionOverloadInstance typing(final Environment environment) {
+  public FunctionOverloadInstance typing(final Environment environment, HashSet<String> local) {
     if (cachedInstance == null) {
       functionId = environment.autoVariable();
       returnType = environment.rules.Resolve(returnType, false);
@@ -102,6 +104,11 @@ public class DefineMethod extends StructureComponent {
         environment.document.createError(this, String.format("Function '%s' does not return in all cases", nameToken.text), "MethodDefine");
       }
       cachedInstance = new FunctionOverloadInstance("__METH_" + functionId + "_" + name, returnType, argTypes, tokenReadonly != null, false, abortsToken != null);
+      for (String depend : depends) {
+        if (!local.contains(depend)) {
+          cachedInstance.dependencies.add(depend);
+        }
+      }
       cachedInstance.ingest(this);
     }
     return cachedInstance;
@@ -110,6 +117,7 @@ public class DefineMethod extends StructureComponent {
   /** prepare the environment for execution */
   private Environment prepareEnvironment(final Environment environment) {
     var toUse = tokenReadonly != null ? environment.scopeAsReadOnlyBoundary() : environment.scopeWithCache("__cache");
+    toUse = toUse.watch(Watcher.make(toUse, depends, services));
     if (abortsToken != null) {
       toUse = toUse.scopeAsAbortable();
     }

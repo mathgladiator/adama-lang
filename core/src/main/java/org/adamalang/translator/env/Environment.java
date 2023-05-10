@@ -14,7 +14,9 @@ import org.adamalang.translator.tree.definitions.DefineService;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.Rules;
+import org.adamalang.translator.tree.types.natives.TyNativeLong;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
+import org.adamalang.translator.tree.types.reactive.TyReactiveLong;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -188,6 +190,10 @@ public class Environment {
     DefineService ds = document.services.get(name);
     if (ds != null) {
       return lookup_return(name, new TyNativeService(ds).withPosition(position));
+    }
+
+    if ("__time".equals(name)) {
+      return lookup_return(name, new TyReactiveLong(null));
     }
 
     return lookup_return(name, result);

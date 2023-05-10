@@ -21,6 +21,7 @@ import org.adamalang.translator.tree.expressions.Lookup;
 import org.adamalang.translator.tree.expressions.operators.BinaryExpression;
 import org.adamalang.translator.tree.expressions.operators.Parentheses;
 import org.adamalang.translator.tree.operands.BinaryOp;
+import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
@@ -30,6 +31,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeList;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
+import org.adamalang.translator.tree.types.traits.IsReactiveValue;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 
@@ -227,6 +229,12 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       final var watch = environment.watch((name, tyUn) -> {
         TyType ty = environment.rules.Resolve(tyUn, false);
         if (ty instanceof TyNativeGlobalObject) {
+          return;
+        }
+        if ("__time".equals(name)) {
+          return;
+        }
+        if (environment.document.root.storage.has(name)) {
           return;
         }
         if (!closureTypes.containsKey(name) && ty != null) {

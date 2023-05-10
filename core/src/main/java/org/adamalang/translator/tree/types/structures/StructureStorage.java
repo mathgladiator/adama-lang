@@ -8,7 +8,6 @@
  */
 package org.adamalang.translator.tree.types.structures;
 
-import org.adamalang.common.Once;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
@@ -17,18 +16,15 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
-import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.topo.TypeChecker;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
-import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
-import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.topo.TypeCheckerStructure;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class StructureStorage extends DocumentPosition {
@@ -100,23 +96,7 @@ public class StructureStorage extends DocumentPosition {
     writer.endObject();
   }
 
-  private BiConsumer<String, TyType> watcher(Environment env, LinkedHashSet<String> variablesToWatch, LinkedHashSet<String> services) {
-    return (name, type) -> {
-      TyType resolved = env.rules.Resolve(type, true);
-      if (resolved instanceof TyNativeGlobalObject) return;
-      if (resolved instanceof TyNativeFunctional) {
-        variablesToWatch.addAll(((TyNativeFunctional) resolved).gatherDependencies());
-        return;
-      }
-      if (resolved instanceof TyNativeService) {
-        services.add(((TyNativeService) resolved).service.name.text);
-        return;
-      }
-      if (!env.document.functionTypes.containsKey(name)) {
-        variablesToWatch.add(name);
-      }
-    };
-  }
+
 
   public void add(final BubbleDefinition bd) {
     addCommon(bd, FreeEnvironment.root(), checker);
@@ -130,7 +110,7 @@ public class StructureStorage extends DocumentPosition {
     emissions.add(emit -> bd.emit(emit));
     ingest(bd);
     bd.expression.free(fe);
-    inChecker.register(fe.free, env -> bd.typing(env.watch(watcher(env, bd.variablesToWatch, bd.servicesToWatch))));
+    inChecker.register(fe.free, env -> bd.typing(env.watch(Watcher.make(env, bd.variablesToWatch, bd.servicesToWatch))));
     if (has(bd.nameToken.text)) {
       inChecker.issueError(bd, String.format("Bubble '%s' was already defined", bd.nameToken.text), "StructureDefine");
       return;
@@ -149,24 +129,32 @@ public class StructureStorage extends DocumentPosition {
     methods.add(dm);
     FreeEnvironment fe = FreeEnvironment.root();
     for (FunctionArg arg : dm.args) {
-      dm.code.free(fe);
+      fe.define(arg.argName);
     }
+    dm.code.free(fe);
 
     checker.define(dm.nameToken, fe.free, env -> {
-        final var foi = dm.typing(env);
-        var functional = methodTypes.get(dm.name);
-        if (functional == null) {
-          functional = new TyNativeFunctional(dm.name, new ArrayList<>(), FunctionStyleJava.ExpressionThenNameWithArgs);
-          methodTypes.put(dm.name, functional);
-        }
-        functional.overloads.add(foi);
-        var interFunctional = internalMethods.get(dm.name);
-        if (interFunctional == null) {
-          interFunctional = new TyNativeFunctional(dm.name, new ArrayList<>(), FunctionStyleJava.InjectNameThenArgs);
-          internalMethods.put(dm.name, interFunctional);
-          env.define(dm.name, interFunctional, false, dm);
-        }
-        interFunctional.overloads.add(foi);
+      HashSet<String> local = new HashSet<>();
+      for (String field : fields.keySet()) {
+        local.add(field);
+      }
+      for (DefineMethod method : methods) {
+        local.add(method.name);
+      }
+      final var foi = dm.typing(env, local);
+      var functional = methodTypes.get(dm.name);
+      if (functional == null) {
+        functional = new TyNativeFunctional(dm.name, new ArrayList<>(), FunctionStyleJava.ExpressionThenNameWithArgs);
+        methodTypes.put(dm.name, functional);
+      }
+      functional.overloads.add(foi);
+      var interFunctional = internalMethods.get(dm.name);
+      if (interFunctional == null) {
+        interFunctional = new TyNativeFunctional(dm.name, new ArrayList<>(), FunctionStyleJava.InjectNameThenArgs);
+        internalMethods.put(dm.name, interFunctional);
+        env.define(dm.name, interFunctional, false, dm);
+      }
+      interFunctional.overloads.add(foi);
     });
   }
 
@@ -194,7 +182,7 @@ public class StructureStorage extends DocumentPosition {
       fd.computeExpression.free(fe);
     }
     insertChecker.define(fd.nameToken, fe.free, env -> {
-      fd.typing(env.watch(watcher(env, fd.variablesToWatch, fd.servicesToWatch)), this);
+      fd.typing(env.watch(Watcher.make(env, fd.variablesToWatch, fd.servicesToWatch)), this);
       env.define(fd.name, fd.type, false, fd);
     });
     fields.put(fd.name, fd);

@@ -15,6 +15,7 @@ import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 
 /**
  * a function overload instance is set of arguments bound to the same name such that the types of
@@ -22,7 +23,7 @@ import java.util.Collection;
  */
 public class FunctionOverloadInstance extends DocumentPosition {
   public final ArrayList<String> hiddenSuffixArgs;
-  public final ArrayList<String> dependencies;
+  public final LinkedHashSet<String> dependencies;
   public final String javaFunction;
   public final boolean pure;
   public final TyType returnType;
@@ -38,7 +39,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
     this.castArgs = castArgs;
     this.aborts = aborts;
     this.hiddenSuffixArgs = new ArrayList<>();
-    this.dependencies = new ArrayList<>();
+    this.dependencies = new LinkedHashSet<>();
   }
 
   public void dependOn(Collection<String> depends) {

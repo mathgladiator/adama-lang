@@ -67,14 +67,21 @@ public class GlobalObjectPool {
     random.functions.put("genLong", generateInternalDocumentFunction("__randomLong", tyLng));
     pool.add(random);
     final var time = new TyNativeGlobalObject("Time", null, false);
-    time.functions.put("now", generateInternalDocumentFunction("__timeNow", tyLng));
-    time.functions.put("today", generateInternalDocumentFunction("__dateOfToday", new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null)));
-    time.functions.put("datetime", generateInternalDocumentFunction("__datetimeNow", new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    time.functions.put("now", subscribeTime(generateInternalDocumentFunction("__timeNow", tyLng)));
+    time.functions.put("today", (generateInternalDocumentFunction("__dateOfToday", new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null))));
+    time.functions.put("datetime", subscribeTime(generateInternalDocumentFunction("__datetimeNow", new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, null))));
     time.functions.put("zone", generateInternalDocumentFunction("__timeZone", tyStr));
     time.functions.put("setZone", generateInternalDocumentFunction("__setTimeZone", tyStr, tyBool, null, null));
     time.setParentOverride((GlobalFactory.makeGlobal("LibTime", LibTime.class, pool.extensions)));
     pool.add(time);
     return pool;
+  }
+
+  private static TyNativeFunctional subscribeTime(TyNativeFunctional func) {
+    for (FunctionOverloadInstance foi : func.overloads) {
+      foi.dependencies.add("__time");
+    }
+    return func;
   }
 
   public void add(final TyNativeGlobalObject globalObject) {

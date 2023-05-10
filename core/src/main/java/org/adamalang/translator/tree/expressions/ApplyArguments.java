@@ -105,6 +105,9 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
         }
       }
       functionInstance = ((TyNativeFunctional) exprType).find(expression, argTypes, environmentToUse);
+      for (String depend : functionInstance.dependencies) {
+        environmentToUse.lookup(depend, true, this, true);
+      }
       if (environmentToUse.state.isPure() && !functionInstance.pure) {
         environmentToUse.document.createError(expression, String.format("Pure functions can only call other pure functions"), "FunctionInvoke");
       }
