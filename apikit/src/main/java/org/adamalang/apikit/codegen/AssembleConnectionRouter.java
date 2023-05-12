@@ -112,8 +112,10 @@ public class AssembleConnectionRouter {
       } else {
         if (method.create != null) {
           router.append("                  ").append(Common.camelize(method.create)).append("Handler handlerMade = handler.handle(session, resolved, new ").append(method.responder.camelName).append("Responder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflight").append(Common.camelize(method.create)).append(", requestId, responder, _accessLogItem, nexus.logger)));\n");
-          router.append("                  ").append("inflight").append(Common.camelize(method.create)).append(".put(requestId, handlerMade);\n");
-          router.append("                  ").append("handlerMade.bind();\n");
+          router.append("                  if (handlerMade != null) {\n");
+          router.append("                    ").append("inflight").append(Common.camelize(method.create)).append(".put(requestId, handlerMade);\n");
+          router.append("                    ").append("handlerMade.bind();\n");
+          router.append("                  }\n");
         } else {
           router.append("                  handler.handle(session, resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));\n");
         }

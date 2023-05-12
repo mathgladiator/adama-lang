@@ -29,6 +29,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateEmail;
@@ -55,10 +56,12 @@ public class RootHandlerImpl implements RootHandler {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LOG);
   private final ExternNexus nexus;
   private final Random rng;
+  private final SpacePolicyLocator policyLocator;
 
-  public RootHandlerImpl(ExternNexus nexus) throws Exception {
+  public RootHandlerImpl(ExternNexus nexus, SpacePolicyLocator policyLocator) throws Exception {
     this.nexus = nexus;
     this.rng = new Random();
+    this.policyLocator = policyLocator;
   }
 
   @Override
@@ -710,6 +713,19 @@ public class RootHandlerImpl implements RootHandler {
         responder.error(ex);
       }
     });
+  }
+
+  @Override
+  public DocumentStreamHandler handle(Session session, ConnectionCreateViaDomainRequest request, DataResponder responder) {
+    if (request.resolvedDomain.domain == null || request.resolvedDomain.policy == null) {
+      responder.error(new ErrorCodeException(ErrorCodes.API_CONNECT_DOMAIN_NO_SPACE_FOUND));
+      return null;
+    }
+    if (request.resolvedDomain.domain.key == null) {
+      responder.error(new ErrorCodeException(ErrorCodes.API_CONNECT_DOMAIN_NO_KEY_FOUND));
+      return null;
+    }
+    return handle(session, new ConnectionCreateRequest(request.identity, request.who, request.resolvedDomain.domain.space, request.resolvedDomain.policy, request.resolvedDomain.domain.key, request.viewerState), responder);
   }
 
   @Override

@@ -14,6 +14,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.transforms.results.DomainWithPolicy;
 import org.adamalang.web.io.*;
 
 /** Unmap a domain */
@@ -21,21 +22,25 @@ public class DomainUnmapRequest {
   public final String identity;
   public final AuthenticatedUser who;
   public final String domain;
+  public final DomainWithPolicy resolvedDomain;
 
-  public DomainUnmapRequest(final String identity, final AuthenticatedUser who, final String domain) {
+  public DomainUnmapRequest(final String identity, final AuthenticatedUser who, final String domain, final DomainWithPolicy resolvedDomain) {
     this.identity = identity;
     this.who = who;
     this.domain = domain;
+    this.resolvedDomain = resolvedDomain;
   }
 
   public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<DomainUnmapRequest> callback) {
     try {
-      final BulkLatch<DomainUnmapRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
+      final BulkLatch<DomainUnmapRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String domain = request.getString("domain", true, 488444);
-      _latch.with(() -> new DomainUnmapRequest(identity, who.get(), domain));
+      final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
+      _latch.with(() -> new DomainUnmapRequest(identity, who.get(), domain, resolvedDomain.get()));
       nexus.identityService.execute(session, identity, who);
+      nexus.domainService.execute(session, domain, resolvedDomain);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("domainunmap-error") {
         @Override
@@ -48,5 +53,6 @@ public class DomainUnmapRequest {
 
   public void logInto(ObjectNode _node) {
     org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
+    org.adamalang.transforms.DomainResolver.logInto(resolvedDomain, _node);
   }
 }

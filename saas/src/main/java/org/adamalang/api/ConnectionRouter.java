@@ -700,8 +700,32 @@ public class ConnectionRouter {
                 public void success(ConnectionCreateRequest resolved) {
                   resolved.logInto(_accessLogItem);
                   DocumentStreamHandler handlerMade = handler.handle(session, resolved, new DataResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightDocumentStream, requestId, responder, _accessLogItem, nexus.logger)));
-                  inflightDocumentStream.put(requestId, handlerMade);
-                  handlerMade.bind();
+                  if (handlerMade != null) {
+                    inflightDocumentStream.put(requestId, handlerMade);
+                    handlerMade.bind();
+                  }
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "connection/create-via-domain": {
+              StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_ConnectionCreateViaDomain.start();
+              ConnectionCreateViaDomainRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(ConnectionCreateViaDomainRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  DocumentStreamHandler handlerMade = handler.handle(session, resolved, new DataResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightDocumentStream, requestId, responder, _accessLogItem, nexus.logger)));
+                  if (handlerMade != null) {
+                    inflightDocumentStream.put(requestId, handlerMade);
+                    handlerMade.bind();
+                  }
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -952,8 +976,10 @@ public class ConnectionRouter {
                 public void success(AttachmentStartRequest resolved) {
                   resolved.logInto(_accessLogItem);
                   AttachmentUploadHandler handlerMade = handler.handle(session, resolved, new ProgressResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightAttachmentUpload, requestId, responder, _accessLogItem, nexus.logger)));
-                  inflightAttachmentUpload.put(requestId, handlerMade);
-                  handlerMade.bind();
+                  if (handlerMade != null) {
+                    inflightAttachmentUpload.put(requestId, handlerMade);
+                    handlerMade.bind();
+                  }
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {

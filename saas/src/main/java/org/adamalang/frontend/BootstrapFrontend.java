@@ -14,6 +14,7 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.SimpleExecutorFactory;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.transforms.DomainResolver;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
@@ -28,9 +29,10 @@ import java.util.Random;
 public class BootstrapFrontend {
   public static ServiceBase make(ExternNexus extern, HttpHandler httpHandler) throws Exception {
     SimpleExecutor[] executors = SimpleExecutorFactory.DEFAULT.makeMany("saas", extern.config.threads);
-    RootHandlerImpl handler = new RootHandlerImpl(extern);
     SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(SimpleExecutor.create("space-policy-locator"), extern);
     UserIdResolver userIdResolver = new UserIdResolver(SimpleExecutor.create("user-id-resolver"), extern);
+    RootHandlerImpl handler = new RootHandlerImpl(extern, spacePolicyLocator);
+    DomainResolver domainResolver = new DomainResolver(SimpleExecutor.create("domain-resolver"), spacePolicyLocator, extern);
 
     Random randomExecutorIndex = new Random();
     return new ServiceBase() {
@@ -42,6 +44,7 @@ public class BootstrapFrontend {
               new ConnectionNexus(extern.accessLogger, //
                   extern.metrics, //
                   executors[randomExecutorIndex.nextInt(executors.length)], //
+                  domainResolver, //
                   userIdResolver, //
                   session.authenticator, //
                   spacePolicyLocator); //

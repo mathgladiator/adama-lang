@@ -1,6 +1,6 @@
 # API Reference 
  Methods: 
-[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceUsage](#method-spaceusage), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [DomainMap](#method-domainmap), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentAuthorize](#method-documentauthorize), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish), [SuperCheckIn](#method-supercheckin), [SuperListAutomaticDomains](#method-superlistautomaticdomains), [SuperSetDomainCertificate](#method-supersetdomaincertificate)
+[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceUsage](#method-spaceusage), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [DomainMap](#method-domainmap), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentAuthorize](#method-documentauthorize), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionCreateViaDomain](#method-connectioncreateviadomain), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish), [SuperCheckIn](#method-supercheckin), [SuperListAutomaticDomains](#method-superlistautomaticdomains), [SuperSetDomainCertificate](#method-supersetdomaincertificate)
 
 ## Method: InitSetupAccount
 This initiates developer machine via email verification.
@@ -976,6 +976,36 @@ Create a connection to a document.
 ### Template
 ```js
 connection.ConnectionCreate(identity, space, key, viewer-state, {
+  next: function(payload) {
+    // payload.delta
+  },
+  complete: function() {
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+
+### Streaming payload fields
+| name | type | documentation |
+| --- | --- | --- |
+| delta | ObjectNode | A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information. |
+
+## Method: ConnectionCreateViaDomain
+Create a connection to a document via a domain name.
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| identity | yes | String | Identity is a token to authenticate a user. |
+| domain | yes | String | A domain name. |
+| viewer-state | no | ObjectNode | A connection to a document has a side-channel for passing information about the client's view into the evaluation of bubbles.             This allows for developers to implement real-time queries and pagination. |
+
+
+### Template
+```js
+connection.ConnectionCreateViaDomain(identity, domain, viewer-state, {
   next: function(payload) {
     // payload.delta
   },

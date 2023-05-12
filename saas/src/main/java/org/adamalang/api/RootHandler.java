@@ -83,6 +83,8 @@ public interface RootHandler {
 
   public DocumentStreamHandler handle(Session session, ConnectionCreateRequest request, DataResponder responder);
 
+  public DocumentStreamHandler handle(Session session, ConnectionCreateViaDomainRequest request, DataResponder responder);
+
   public void handle(Session session, DocumentsHashPasswordRequest request, HashedPasswordResponder responder);
 
   public void handle(Session session, ConfigureMakeOrGetAssetKeyRequest request, AssetKeyResponder responder);

@@ -336,6 +336,8 @@ public class ErrorTable {
     descriptions.put(905293, "no description of error (yet)");
     names.put(969741, "SPACE_POLICY_LOCATOR_UNKNOWN_EXCEPTION");
     descriptions.put(969741, "no description of error (yet)");
+    names.put(942318, "DOMAIN_RESOLVE_UNKNOWN_EXCEPTION");
+    descriptions.put(942318, "no description of error (yet)");
     names.put(900104, "API_SPACE_CREATE_UNKNOWN_EXCEPTION");
     descriptions.put(900104, "no description of error (yet)");
     names.put(909436, "API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION");

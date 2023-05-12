@@ -259,6 +259,11 @@
         <documentation>
             A domain name.
         </documentation>
+
+        <transform service="org.adamalang.transforms.DomainResolver"
+                   output-name="resolvedDomain"
+                   output-java-type="org.adamalang.transforms.results.DomainWithPolicy"
+                   error-code="406514"/>
     </parameter-definition>
 
     <parameter-definition name="certificate" type="string" optional="true">
@@ -961,6 +966,15 @@
         </documentation>
     </method>
 
+    <method name="connection/create-via-domain" responder="data" create="document-stream">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <parameter name="viewer-state"/>
+        <documentation>
+            Create a connection to a document via a domain name.
+        </documentation>
+    </method>
+
     <method name="connection/send" responder="seq" handler="document-stream" find-by="connection" error-find-by="457745">
         <parameter name="connection"/>
         <parameter name="channel"/>
@@ -1613,7 +1627,6 @@
 453621
 460787
 492531
-406514
 
 -->
 

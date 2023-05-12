@@ -641,6 +641,71 @@ class WebSocketAdamaConnection {
       }
     });
   }
+  ConnectionCreateViaDomain(identity, domain, viewerState, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_stream({
+      id: parId,
+      responder: responder,
+      request: {"method":"connection/create-via-domain", "id":parId, "identity": identity, "domain": domain, "viewer-state": viewerState},
+      send: function(channel, message, subResponder) {
+        var subId = self.__id();
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/send", id: subId, "connection":parId, "channel": channel, "message": message}
+        });
+      },
+      password: function(username, password, new_password, subResponder) {
+        var subId = self.__id();
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/password", id: subId, "connection":parId, "username": username, "password": password, "new_password": new_password}
+        });
+      },
+      sendOnce: function(channel, dedupe, message, subResponder) {
+        var subId = self.__id();
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/send-once", id: subId, "connection":parId, "channel": channel, "dedupe": dedupe, "message": message}
+        });
+      },
+      canAttach: function(subResponder) {
+        var subId = self.__id();
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/can-attach", id: subId, "connection":parId}
+        });
+      },
+      attach: function(assetId, filename, contentType, size, digestMd5, digestSha384, subResponder) {
+        var subId = self.__id();
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/attach", id: subId, "connection":parId, "asset-id": assetId, "filename": filename, "content-type": contentType, "size": size, "digest-md5": digestMd5, "digest-sha384": digestSha384}
+        });
+      },
+      update: function(viewerState, subResponder) {
+        var subId = self.__id();
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/update", id: subId, "connection":parId, "viewer-state": viewerState}
+        });
+      },
+      end: function(subResponder) {
+        var subId = self.__id();
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/end", id: subId, "connection":parId}
+        });
+      }
+    });
+  }
   DocumentsHashPassword(password, responder) {
     var self = this;
     var parId = self.__id();
