@@ -416,6 +416,10 @@ public class ErrorTable {
     descriptions.put(913436, "no description of error (yet)");
     names.put(901144, "API_DELETE_AUTHORITY_NO_PERMISSION_TO_EXECUTE");
     descriptions.put(901144, "no description of error (yet)");
+    names.put(990417, "API_CONNECT_DOMAIN_NO_SPACE_FOUND");
+    descriptions.put(990417, "no description of error (yet)");
+    names.put(916689, "API_CONNECT_DOMAIN_NO_KEY_FOUND");
+    descriptions.put(916689, "no description of error (yet)");
     names.put(995505, "API_CREATE_DOCUMENT_SPACE_RESERVED");
     descriptions.put(995505, "no description of error (yet)");
     names.put(947404, "API_CREATE_SPACE_RESERVED");
