@@ -1583,7 +1583,7 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | rx:action=document:put
-  self.aDPUT = function (form, state, rxobj) {
+  self.aDPUT = function (form, state, identityName, rxobj) {
     // WIP
     rxobj.__ = function() {};
     form.onsubmit = function (evt) {
@@ -1600,9 +1600,16 @@ var RxHTML = (function () {
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4) {
             if (this.status == 200) {
-              console.log("GOOD");
+              var payload = JSON.parse(this.responseText);
+              if ('identity' in payload) {
+                identities[identityName] = payload.identity;
+                localStorage.setItem("identity_" + identityName, payload.identity);
+              }
+              self.goto(state.view, rxobj.rx_forward);
+              fire_success(form);
             } else {
-              console.log("BAD?" + this.status);
+              console.log("Failed document-put");
+              fire_failure(form);
             }
           }
         };
@@ -1618,7 +1625,8 @@ var RxHTML = (function () {
             next();
           },
           failed: function() {
-            console.log("Failed to hash password");
+            console.log("Failed document put");
+            fire_failure(form);
           }
         });
       } else {

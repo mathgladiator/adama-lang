@@ -345,7 +345,8 @@ public class Attributes {
       RxObject obj = new RxObject(env, "space", "key", "path", "rx:forward");
       env.writer.tab().append("$.aDPUT(").append(eVar) //
           .append(",").append(env.stateVar) //
-          .append(",").append(obj.rxObj) //
+          .append(",'").append(env.val("rx:identity", "default")) //
+          .append("',").append(obj.rxObj) //
           .append(");").newline();
     } else if ("adama:sign-in".equalsIgnoreCase(action)) { // sign in as an Adama user
       if (!env.element.hasAttr("rx:forward")) {

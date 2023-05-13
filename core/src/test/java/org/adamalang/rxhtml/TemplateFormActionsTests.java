@@ -77,7 +77,7 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
     gold.append("\n    f.key=true;");
     gold.append("\n    f.path=true;");
     gold.append("\n    f.rx_forward='/';");
-    gold.append("\n    $.aDPUT(c,a,f);");
+    gold.append("\n    $.aDPUT(c,a,'default',f);");
     gold.append("\n    var g = $.E('input');");
     gold.append("\n    g.setAttribute('type','submit');");
     gold.append("\n    c.append(g);");
