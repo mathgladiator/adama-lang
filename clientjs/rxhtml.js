@@ -1632,10 +1632,6 @@ var RxHTML = (function () {
       } else {
         next();
       }
-
-
-
-      // NEED the path to POST to
     };
   };
 
