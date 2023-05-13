@@ -1,0 +1,25 @@
+record Family {
+  public int id;
+  public string name;
+}
+
+table<Family> _families;
+
+record Person {
+  public int id;
+  public principal account;
+  public int family_id;
+}
+
+table<Person> _people;
+
+procedure your_family_id_or_zero(principal w) -> int readonly {
+  if ((iterate _people where account == w)[0] as person) {
+    return person.family_id;
+  }
+  return 0;
+}
+
+bubble your_family_1 = (iterate _families where id == your_family_id_or_zero(@who))[0];
+
+bubble your_family_2 = (iterate _families where id == (iterate _people where account == @who)[0].family_id)[0];

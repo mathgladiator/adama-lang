@@ -186,6 +186,7 @@ public class ClientTests {
                  12700,
                  "@static { create { return true; } }" +
                      "@web get / { return {html:\"root\"};\n" + "} " +
+                     "@web options /moop { return {cors:true};\n" + "} " +
                      "@web get /cors { return {html:\"my-cors\", cors:true, cache_ttl_seconds:42};\n" + "} " +
                      "@web delete /deldel { return {html:\"deleted\", cors:true, cache_ttl_seconds:42};\n" + "} " +
                      "message M { int x; } public int z = 1000; @web put / (M m) { z = m.x; return {html:\"c:\" + z}; } ")) {
@@ -276,7 +277,7 @@ public class ClientTests {
           }
         });
 
-        CountDownLatch putLatches = new CountDownLatch(3);
+        CountDownLatch putLatches = new CountDownLatch(4);
         client.webPut("space", "key1", new WebPut(CONTEXT, "/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}"), new Callback<>() {
           @Override
           public void success(WebResponse value) {
@@ -306,6 +307,19 @@ public class ClientTests {
           public void success(WebResponse value) {
             System.err.println(value.body);
             Assert.assertEquals("deleted", value.body);
+            putLatches.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            ex.printStackTrace();
+          }
+        });
+
+        client.webOptions("space", "key1", new WebGet(CONTEXT, "/moop", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+          @Override
+          public void success(WebResponse value) {
+            Assert.assertTrue(value.cors);
             putLatches.countDown();
           }
 

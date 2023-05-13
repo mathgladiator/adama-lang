@@ -77,6 +77,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     String origin = req.headers().get(HttpHeaderNames.ORIGIN);
     if (origin != null && allow) { // CORS support directly
       res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS, "OPTIONS,GET,PUT,POST,DELETE");
       res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
     }
   }
@@ -458,8 +459,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     // otherwise, send the body
     metrics.webhandler_found.run();
-    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(httpResult.body));
-    HttpUtil.setContentLength(res, httpResult.body.length);
+    byte[] body = httpResult.body != null ? httpResult.body : EMPTY_RESPONSE;
+    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(body));
+    HttpUtil.setContentLength(res, body.length);
     if (httpResult.contentType.length() > 0) {
       res.headers().set(HttpHeaderNames.CONTENT_TYPE, httpResult.contentType);
     }

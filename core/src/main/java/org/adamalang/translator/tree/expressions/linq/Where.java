@@ -21,17 +21,15 @@ import org.adamalang.translator.tree.expressions.Lookup;
 import org.adamalang.translator.tree.expressions.operators.BinaryExpression;
 import org.adamalang.translator.tree.expressions.operators.Parentheses;
 import org.adamalang.translator.tree.operands.BinaryOp;
-import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
-import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
-import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
+import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
+import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
-import org.adamalang.translator.tree.types.traits.IsReactiveValue;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 
@@ -58,6 +56,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
   private String iterType;
   private StructureStorage structureStorage;
   private HashMap<String, TyType> specialsUsed;
+  private boolean writtenDependentExpressionsForClosure;
 
   public Where(final Expression sql, final Token tokenWhere, final Token aliasToken, final Token colonToken, final Expression expression) {
     super(sql);
@@ -78,6 +77,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     applyQuerySetStatements = new ArrayList<>();
     closureTyTypes = new TreeMap<>();
     specialsUsed = null;
+    writtenDependentExpressionsForClosure = false;
   }
 
   public static Expression findIndex(final Expression root, final String aliasName, final String indexName, BinaryOp mode) {
@@ -228,7 +228,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       structureStorage = storageType.storage();
       final var watch = environment.watch((name, tyUn) -> {
         TyType ty = environment.rules.Resolve(tyUn, false);
-        if (ty instanceof TyNativeGlobalObject) {
+        if (ty instanceof TyNativeGlobalObject || ty instanceof TyNativeFunctional) {
           return;
         }
         if ("__time".equals(name) || "__today".equals(name)) {
@@ -296,14 +296,25 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       }
       // list the variables
       sb.append("))");
-      expression.writeJava(exprCode, environment.scopeWithComputeContext(ComputeContext.Computation));
-      final var primaryKey = findIndex(expression, aliasToken != null ? aliasToken.text : null, "id", BinaryOp.Equal);
-      if (primaryKey != null) {
-        primaryKey.writeJava(primaryKeyExpr, environment.scopeWithComputeContext(ComputeContext.Computation));
-      } else {
-        primaryKeyExpr.append("null");
+      if (!writtenDependentExpressionsForClosure) {
+        expression.writeJava(exprCode, environment.scopeWithComputeContext(ComputeContext.Computation));
+        final var primaryKey = findIndex(expression, aliasToken != null ? aliasToken.text : null, "id", BinaryOp.Equal);
+        if (primaryKey != null) {
+          boolean forceId = false;
+          if (primaryKey.typing(environment, null) instanceof TyNativeMaybe) {
+            primaryKeyExpr.append("LibMath.forceId(");
+            forceId = true;
+          }
+          primaryKey.writeJava(primaryKeyExpr, environment.scopeWithComputeContext(ComputeContext.Computation));
+          if (forceId) {
+            primaryKeyExpr.append(")");
+          }
+        } else {
+          primaryKeyExpr.append("null");
+        }
+        buildIndex(environment.scopeWithComputeContext(ComputeContext.Computation));
+        writtenDependentExpressionsForClosure = true;
       }
-      buildIndex(environment.scopeWithComputeContext(ComputeContext.Computation));
     }
   }
 

@@ -1068,4 +1068,12 @@ public class LibMath {
     }
     return false;
   }
+
+  @Extension
+  public static int forceId(@HiddenType(clazz = Integer.class) NtMaybe<Integer> x) {
+    if (x.has()) {
+      return x.get();
+    }
+    return -1;
+  }
 }

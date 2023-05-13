@@ -658,7 +658,7 @@ var RxHTML = (function () {
     form.onsubmit = function (evt) {
       if (customCommandName in customs) {
         evt.preventDefault();
-        var obj = get_form(form);
+        var obj = get_form(form, false);
         customs[customCommandName](obj, state, signal, self);
         fire_success(form);
       } else {
@@ -981,7 +981,7 @@ var RxHTML = (function () {
   self.aCP = function (form, state, name) {
     form.onsubmit = function (evt) {
       evt.preventDefault();
-      var obj = get_form(form);
+      var obj = get_form(form, false);
       if (name != "." && name != "") {
         var no = {};
         no[name] = obj;
@@ -1024,7 +1024,7 @@ var RxHTML = (function () {
   };
 
   // HELPER | extract all the inputs from the given element and build an object
-  var build_obj = function (el, objToInsertInto) {
+  var build_obj = function (el, objToInsertInto, allow_passwords) {
     var justSet = el.tagName.toUpperCase() == "TEXTAREA" || el.tagName.toUpperCase() == "SELECT";
     var isInputBox = el.tagName.toUpperCase() == "INPUT";
 
@@ -1055,6 +1055,9 @@ var RxHTML = (function () {
     } else if (isInputBox) {
       var type = ("type" in el) ? el.type.toUpperCase() : "text";
       if (type == "SUBMIT" || type == "RESET") return;
+      if (type == "PASSWORD" && !allow_passwords) {
+        return;
+      }
       if (hasName) {
         if (push) {
           if (name in insertAt) {
@@ -1088,17 +1091,36 @@ var RxHTML = (function () {
         var n = arr.length;
         for (var k = 0; k < n; k++) {
           var ch = el.children[k];
-          build_obj(ch, objToInsertInto);
+          build_obj(ch, objToInsertInto, allow_passwords);
         }
       }
     }
   };
 
   // HELPER | return an object of all the inputs of the given form element
-  var get_form = function (form) {
+  var get_form = function (form, allow_passwords) {
     var obj = {};
-    build_obj(form, obj);
+    build_obj(form, obj, allow_passwords);
     return obj;
+  };
+
+  // HELPER | return a password from the given form
+  var get_password = function(el) {
+    if (el.tagName.toUpperCase() == "INPUT" && el.type.toUpperCase() == "PASSWORD") {
+      return [el.name, el.value];
+    }
+    if ("children" in el) {
+      var arr = el.children;
+      var n = arr.length;
+      for (var k = 0; k < n; k++) {
+        var ch = el.children[k];
+        var result = get_password(ch);
+        if (result !== null) {
+          return result;
+        }
+      }
+    }
+    return null;
   };
 
   // HELPER | create a signal for when things fail; this will write into the the view
@@ -1541,7 +1563,7 @@ var RxHTML = (function () {
     var signal = make_failure_signal(state, failureVar);
     form.onsubmit = function (evt) {
       evt.preventDefault();
-      var req = get_form(form);
+      var req = get_form(form, true);
       connection.DocumentAuthorize(req.space, req.key, req.username, req.password, {
         success: function (payload) {
           signal(false);
@@ -1561,10 +1583,50 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | rx:action=document:put
-  self.aDPUT = function (form, state) {
+  self.aDPUT = function (form, state, rxobj) {
+    // WIP
+    rxobj.__ = function() {};
     form.onsubmit = function (evt) {
       evt.preventDefault();
-      var req = get_form(form);
+      var req = get_form(form, false);
+      // TODO: this assumes exactly one password in the root message
+      var pws = get_password(form);
+
+      var next = function() {
+        console.log(req);
+        var url = "https://" + connection.host + "/" + rxobj.space + "/" + rxobj.key + "/" + rxobj.path;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4) {
+            if (this.status == 200) {
+              console.log("GOOD");
+            } else {
+              console.log("BAD?" + this.status);
+            }
+          }
+        };
+        xhttp.open("PUT", url, true);
+        xhttp.withCredentials = true;
+        xhttp.send(JSON.stringify(req));
+      };
+
+      if (pws !== null) {
+        connection.DocumentsHashPassword(pws[1], {
+          success:function(hashed_pw) {
+            req[pws[0]] = hashed_pw.passwordHash;
+            next();
+          },
+          failed: function() {
+            console.log("Failed to hash password");
+          }
+        });
+      } else {
+        next();
+      }
+
+
+
       // NEED the path to POST to
     };
   };
@@ -1578,7 +1640,7 @@ var RxHTML = (function () {
     }, 1);
     form.onsubmit = function (evt) {
       evt.preventDefault();
-      var req = get_form(form);
+      var req = get_form(form, true);
       if (req.remember) {
         localStorage.setItem("email_remember", req.email);
       } else {
@@ -1629,7 +1691,7 @@ var RxHTML = (function () {
     var signal = make_failure_signal(state, failureVar);
     form.onsubmit = function (evt) {
       evt.preventDefault();
-      var req = get_form(form);
+      var req = get_form(form, true);
       if (!("email" in req)) {
         req.email = localStorage.getItem("email");
       }
@@ -1663,7 +1725,7 @@ var RxHTML = (function () {
     form.onsubmit = function (evt) {
       evt.preventDefault();
       var start = performance.now();
-      state.data.connection.ptr.send(channel, get_form(form), {
+      state.data.connection.ptr.send(channel, get_form(form, false), {
         success: function (payload) {
           signal(false);
           fire_success(form);
