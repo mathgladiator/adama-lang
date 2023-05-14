@@ -27,7 +27,7 @@ public class AWSConfigTests {
     aws.put("archive", "archive");
     aws.put("queue", "queue");
     AWSConfig config = new AWSConfig(new ConfigObject(aws));
-    Assert.assertEquals("secret", config.secretKey);
-    Assert.assertEquals("key", config.accessKeyId);
+    Assert.assertEquals("secret", config.credential.secretKey);
+    Assert.assertEquals("key", config.credential.accessKeyId);
   }
 }
