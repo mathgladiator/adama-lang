@@ -6,7 +6,7 @@
  *
  * (c) 2020 - 2023 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.extern.aws;
+package org.adamalang.aws;
 
 import org.adamalang.common.HMACSHA256;
 import org.adamalang.common.Hashing;
@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class SignatureV4 {
   // for thread safety, these must be local to signature
-  private final AWSConfig config;
+  private final Credential credential;
   private final String method;
   private final Instant now;
   private final TreeMap<String, String> headers;
@@ -33,9 +33,11 @@ public class SignatureV4 {
   private final String service;
   private String contentHashSha256;
   private final String path;
+  private final String region;
 
-  public SignatureV4(AWSConfig config, String service, String method, String host, String path) {
-    this.config = config;
+  public SignatureV4(Credential credential, String region, String service, String method, String host, String path) {
+    this.credential = credential;
+    this.region = region;
     this.service = service;
     this.method = method;
     this.path = path;
@@ -52,7 +54,7 @@ public class SignatureV4 {
     headers.put("X-Amz-Date", iso8601.format(now));
     writeTo.putAll(this.headers);
     Authorization authorization = new Authorization(false);
-    writeTo.put("Authorization", "AWS4-HMAC-SHA256 Credential=" + config.accessKeyId + "/" + authorization.scope + ", SignedHeaders=" + authorization.signedHeaders + ", Signature=" + authorization.signature);
+    writeTo.put("Authorization", "AWS4-HMAC-SHA256 Credential=" + credential.accessKeyId + "/" + authorization.scope + ", SignedHeaders=" + authorization.signedHeaders + ", Signature=" + authorization.signature);
   }
 
   private class Authorization {
@@ -61,7 +63,7 @@ public class SignatureV4 {
     public final String signature;
 
     public Authorization(boolean asQueryString) {
-      this.scope = date.format(now) + "/" + config.region + "/" + service + "/aws4_request";
+      this.scope = date.format(now) + "/" + region + "/" + service + "/aws4_request";
       { // get a list of the headers signed
         StringBuilder sb = new StringBuilder();
         boolean notFirst = false;
@@ -76,7 +78,7 @@ public class SignatureV4 {
       }
       if (asQueryString) {
         parameters.put("X-Amz-Algorithm", "AWS4-HMAC-SHA256");
-        parameters.put("X-Amz-Credential", config.accessKeyId + "/" + scope);
+        parameters.put("X-Amz-Credential", credential.accessKeyId + "/" + scope);
         parameters.put("X-Amz-Date", iso8601.format(now));
         parameters.put("X-Amz-Expires", "30");
         parameters.put("X-Amz-SignedHeaders", signedHeaders);
@@ -116,9 +118,9 @@ public class SignatureV4 {
         canonicalRequestSha256 = Hex.of(Hashing.sha256().digest(canonicalRequest.getBytes(StandardCharsets.UTF_8)));
       }
       final String toSign = "AWS4-HMAC-SHA256" + "\n" + iso8601.format(now) + "\n" + scope + "\n" + canonicalRequestSha256;
-      final byte[] kSecret = ("AWS4" + config.secretKey).getBytes(StandardCharsets.UTF_8);
+      final byte[] kSecret = ("AWS4" + credential.secretKey).getBytes(StandardCharsets.UTF_8);
       final byte[] kDate = HMACSHA256.of(kSecret, date.format(now));
-      final byte[] kRegion = HMACSHA256.of(kDate, config.region);
+      final byte[] kRegion = HMACSHA256.of(kDate, region);
       final byte[] kService = HMACSHA256.of(kRegion, service);
       final byte[] kSigning = HMACSHA256.of(kService, "aws4_request");
       this.signature = Hex.of(HMACSHA256.of(kSigning, toSign));

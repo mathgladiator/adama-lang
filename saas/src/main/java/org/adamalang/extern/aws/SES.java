@@ -10,6 +10,7 @@ package org.adamalang.extern.aws;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
+import org.adamalang.aws.SignatureV4;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.extern.Email;
@@ -21,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
+/** amazon simple email service */
 public class SES implements Email {
   private static final Logger LOGGER = LoggerFactory.getLogger(SES.class);
   private final WebClientBase base;
@@ -58,7 +60,7 @@ public class SES implements Email {
         }
         String sha256 = Hex.of(Hashing.sha256().digest(postBody));
 
-        new SignatureV4(config, "ses", "POST", "email.us-east-2.amazonaws.com", "/v2/email/outbound-emails") //
+        new SignatureV4(config.credential, config.region, "ses", "POST", "email.us-east-2.amazonaws.com", "/v2/email/outbound-emails") //
             .withHeader("Content-Type", "application/json") //
             .withHeader("Content-Length", postBody.length + "") //
             .withContentHashSha256(sha256) //

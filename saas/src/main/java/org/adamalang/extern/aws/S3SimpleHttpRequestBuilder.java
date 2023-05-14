@@ -8,6 +8,7 @@
  */
 package org.adamalang.extern.aws;
 
+import org.adamalang.aws.SignatureV4;
 import org.adamalang.common.Hashing;
 import org.adamalang.common.Hex;
 import org.adamalang.common.URL;
@@ -18,6 +19,7 @@ import org.adamalang.web.client.SimpleHttpRequestBody;
 import java.util.Map;
 import java.util.TreeMap;
 
+/** a builder for talking to amazon S3 */
 public class S3SimpleHttpRequestBuilder {
   private final AWSConfig config;
   private final String host;
@@ -41,7 +43,7 @@ public class S3SimpleHttpRequestBuilder {
   }
 
   private SignatureV4 startSigning() {
-    SignatureV4 v4 = new SignatureV4(config, "s3", method, host, "/" + config.bucket + "/" + s3key);
+    SignatureV4 v4 = new SignatureV4(config.credential, config.region, "s3", method, host, "/" + config.bucket + "/" + s3key);
     for (Map.Entry<String, String> entry : headers.entrySet()) {
       v4.withHeader(entry.getKey(), entry.getValue());
     }

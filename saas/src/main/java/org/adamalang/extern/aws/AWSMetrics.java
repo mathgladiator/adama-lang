@@ -13,6 +13,7 @@ import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 
+/** metrics for AWS */
 public class AWSMetrics {
   public final RequestResponseMonitor restore_document;
   public final RequestResponseMonitor backup_document;

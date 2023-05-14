@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+/** parsing for S3's XML */
 public class S3XmlParsing {
 
   public static class ListResult {

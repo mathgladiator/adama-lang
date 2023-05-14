@@ -9,6 +9,7 @@
 package org.adamalang.extern.aws;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.aws.SignatureV4;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.TreeMap;
 
+/** simple queue service */
 public class SQS implements SignalControl {
   private final Logger LOGGER = LoggerFactory.getLogger(SQS.class);
   private final WebClientBase base;
@@ -38,7 +40,7 @@ public class SQS implements SignalControl {
 
   public void queue(String message, Callback<Void> callback) {
     // https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_SendMessage.html
-    SignatureV4 v4 = new SignatureV4(config, "sqs", "GET", "sqs." + config.region + ".amazonaws.com", "/" + config.queue);
+    SignatureV4 v4 = new SignatureV4(config.credential, config.region, "sqs", "GET", "sqs." + config.region + ".amazonaws.com", "/" + config.queue);
     v4.withParameter("Action", "SendMessage");
     v4.withParameter("MessageBody", message);
     v4.withParameter("Version", "2012-11-05");
