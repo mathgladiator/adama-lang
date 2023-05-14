@@ -31,7 +31,6 @@ public class SampleService extends SimpleService {
 
   @Override
   public void request(String method, String request, Callback<String> callback) {
-    System.err.println("EXECUTE:" + method + "::" + request);
     if (method.equals("echo")) {
       callback.success(request);
     } else {
