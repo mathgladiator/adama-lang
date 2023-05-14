@@ -715,4 +715,7 @@ public class ErrorCodes {
   public static final int STORAGE_TIER_FAILED_TO_APPLY_GOTO = 788607;
   public static final int FINDER_SERVICE_MYSQL_CANT_UPDATE = 707651;
   public static final int FINDER_SERVICE_MYSQL_UPDATE_EXCEPTION = 792643;
+
+  public static final int FIRST_PARTY_SERVICES_METHOD_NOT_FOUND = 888888;
+  public static final int FIRST_PARTY_SERVICES_METHOD_NOT_IMPLEMENTED = 888889;
 }

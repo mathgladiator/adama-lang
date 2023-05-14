@@ -848,5 +848,9 @@ public class ErrorTable {
     descriptions.put(707651, "no description of error (yet)");
     names.put(792643, "FINDER_SERVICE_MYSQL_UPDATE_EXCEPTION");
     descriptions.put(792643, "no description of error (yet)");
+    names.put(888888, "FIRST_PARTY_SERVICES_METHOD_NOT_FOUND");
+    descriptions.put(888888, "no description of error (yet)");
+    names.put(888889, "FIRST_PARTY_SERVICES_METHOD_NOT_IMPLEMENTED");
+    descriptions.put(888889, "no description of error (yet)");
   }
 }

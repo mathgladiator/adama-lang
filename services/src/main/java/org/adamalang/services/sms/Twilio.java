@@ -25,10 +25,21 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ExecutorService;
 */
 
-public class Twilio { // extends SimpleService {
-  /*
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.ErrorCodes;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.SimpleService;
+import org.adamalang.services.ServiceConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ExecutorService;
+
+public class Twilio extends SimpleService {
   private static final Logger LOGGER = LoggerFactory.getLogger(Twilio.class);
-  private final TwilioRestClient client;
   private final ExecutorService executor;
 
   public Twilio(ServiceConfig config, ExecutorService executor) throws ErrorCodeException {
@@ -36,11 +47,19 @@ public class Twilio { // extends SimpleService {
     this.executor = executor;
     String username = config.getDecryptedSecret("username");
     String password = config.getDecryptedSecret("password");
-    this.client = new TwilioRestClient.Builder(username, password).build();
   }
 
   @Override
   public void request(String method, String request, Callback<String> callback) {
+    ObjectNode node = Json.parseJsonObject(request);
+    switch (method) {
+      case "send":
+        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_IMPLEMENTED));
+        return;
+      default:
+        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
+    }
+    /*
     if ("send".equals(method)) {
       String _from = null;
       String _to = null;
@@ -89,7 +108,6 @@ public class Twilio { // extends SimpleService {
         }
       });
     }
+    */
   }
-  *
-   */
 }

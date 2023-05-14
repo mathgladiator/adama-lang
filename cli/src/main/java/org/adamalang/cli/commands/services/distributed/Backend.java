@@ -51,7 +51,6 @@ public class Backend {
     String billingRootPath = config.get_string("billing-path", "billing");
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     ProxyDeploymentFactory factoryProxy = new ProxyDeploymentFactory(deploymentFactoryBase);
-    FirstPartyServices.install(init.database);
     CaravanInit caravan = new CaravanInit(init, config);
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), caravan.service, TimeSource.REAL_TIME, coreThreads);
@@ -77,6 +76,9 @@ public class Backend {
         return true;
       });
     });
+
+    // TODO: promote the concept of the multi-region client
+    FirstPartyServices.install(init.database, init.webBase);
     File billingRoot = new File(billingRootPath);
     billingRoot.mkdir();
     DiskMeteringBatchMaker billingBatchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot, 10 * 60000L);

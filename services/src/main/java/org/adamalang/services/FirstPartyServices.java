@@ -13,13 +13,19 @@ import org.adamalang.common.NamedThreadFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
+import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.sms.Twilio;
+import org.adamalang.web.client.WebClientBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class FirstPartyServices {
-  public static void install(DataBase dataBase) {
+  private static final Logger LOGGER = LoggerFactory.getLogger(FirstPartyServices.class);
+
+  public static void install(DataBase dataBase, WebClientBase webClientBase) {
     ExecutorService executor = Executors.newCachedThreadPool(new NamedThreadFactory("first-party"));
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
@@ -27,15 +33,32 @@ public class FirstPartyServices {
         executor.shutdown();
       }
     }));
-    /*
+    ServiceRegistry.REGISTRY.put("adama", (space, configRaw) -> {
+      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw);
+      try {
+        return new Adama(config, executor);
+      } catch (ErrorCodeException ex) {
+        LOGGER.error("failed-adama", ex);
+        return Service.FAILURE;
+      }
+    });
     ServiceRegistry.REGISTRY.put("twilio", (space, configRaw) -> {
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw);
       try {
         return new Twilio(config, executor);
       } catch (ErrorCodeException ex) {
+        LOGGER.error("failed-twilio", ex);
         return Service.FAILURE;
       }
     });
-    */
+    ServiceRegistry.REGISTRY.put("amazonses", (space, configRaw) -> {
+      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw);
+      try {
+        return new AmazonSES(config, executor);
+      } catch (ErrorCodeException ex) {
+        LOGGER.error("failed-amazonses", ex);
+        return Service.FAILURE;
+      }
+    });
   }
 }
