@@ -22,6 +22,9 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.SampleService;
+import org.adamalang.runtime.remote.Service;
+import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.mocks.MockDataObserver;
 import org.adamalang.support.testgen.DumbDataService;
@@ -38,6 +41,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.function.BiFunction;
 
 public class LivingDocumentTests {
   private static final NtAsset EXAMPLE =
@@ -331,6 +335,37 @@ public class LivingDocumentTests {
       re.printStackTrace();
       Assert.fail();
     }
+  }
+
+  @Test
+  public void sample_service() throws Exception {
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
+    RealDocumentSetup setup = new RealDocumentSetup(
+        "@link sample;" +
+            "public string msg = \"Hi\";" +
+            "public formula result = sample.echo(@no_one, {message:msg});" +
+            "@connected { msg =\"Hello\"; return true; }",
+        "{}");
+    RealDocumentSetup.GotView gv = new RealDocumentSetup.GotView();
+    ArrayList<String> list = new ArrayList<>();
+    Perspective linked =
+        new Perspective() {
+          @Override
+          public void data(String data) {
+            list.add(data);
+          }
+
+          @Override
+          public void disconnect() {}
+        };
+    setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+    setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(4));
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(8));
+    Thread.sleep(1000);
+    for (String item : list) {
+      System.err.println(item);
+    }
+    setup.assertCompare();
   }
 
   @Test

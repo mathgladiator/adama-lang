@@ -48,6 +48,8 @@ public class RemoteInvocation implements Comparable<RemoteInvocation> {
           case "parameter":
             _parameter = reader.skipValueIntoJson();
             break;
+          default:
+            reader.skipValue();
         }
       }
     }

@@ -8,6 +8,7 @@
  */
 package org.adamalang.runtime.remote;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,6 +17,7 @@ import java.util.function.Function;
 
 /** a service registry maps service names to services */
 public class ServiceRegistry {
+  private static TreeMap<String, Class<?>> INCLUDED_SERVICES = new TreeMap<>();
   public static TreeMap<String, BiFunction<String, HashMap<String, Object>, Service>> REGISTRY = new TreeMap<>();
   public static ServiceRegistry NOT_READY = new ServiceRegistry() {
     @Override
@@ -40,6 +42,26 @@ public class ServiceRegistry {
       return Service.FAILURE;
     }
     return local;
+  }
+
+  public static void add(String name, Class<?> clazz, BiFunction<String, HashMap<String, Object>, Service> cons) {
+    INCLUDED_SERVICES.put(name, clazz);
+    REGISTRY.put(name, cons);
+  }
+
+  public static String getLinkDefinition(String name, int autoId) {
+    Class<?> clazz = INCLUDED_SERVICES.get(name);
+    if (clazz == null) {
+      return null;
+    }
+    try {
+      Method method = clazz.getMethod("definition", int.class);
+      if (method != null) {
+        return (String) method.invoke(null, autoId);
+      }
+    } catch (Exception ex) {
+    }
+    return null;
   }
 
   public boolean contains(String name) {

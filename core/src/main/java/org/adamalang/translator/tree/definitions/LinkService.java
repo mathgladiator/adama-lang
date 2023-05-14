@@ -12,24 +12,24 @@ import org.adamalang.translator.parser.token.Token;
 
 import java.util.function.Consumer;
 
-/** include a file into the specification */
-public class Include extends Definition {
-  private final Token include;
-  public final Token resource;
+/** link a known service into the specification */
+public class LinkService extends Definition {
+  private final Token link;
+  public final Token name;
   private final Token semicolon;
 
-  public Include(Token include, Token resource, Token semicolon) {
-    this.include = include;
-    this.resource = resource;
+  public LinkService(Token link, Token name, Token semicolon) {
+    this.link = link;
+    this.name = name;
     this.semicolon = semicolon;
-    ingest(include);
+    ingest(link);
     ingest(semicolon);
   }
 
   @Override
   public void emit(Consumer<Token> yielder) {
-    yielder.accept(include);
-    yielder.accept(resource);
+    yielder.accept(link);
+    yielder.accept(name);
     yielder.accept(semicolon);
   }
 }

@@ -583,6 +583,13 @@ public class Parser {
     return (doc) -> doc.add(include);
   }
 
+  public Consumer<TopLevelDocumentHandler> execute_link(Token linkToken) throws AdamaLangException {
+    Token what = id();
+    Token semicolon = consumeExpectedSymbol(";");
+    LinkService include = new LinkService(linkToken, what, semicolon);
+    return (doc) -> doc.add(include);
+  }
+
   public Consumer<TopLevelDocumentHandler> define_service(Token serviceToken) throws AdamaLangException {
     Token name = id();
     Token open = consumeExpectedSymbol("{");
@@ -629,7 +636,7 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block());
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@load"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@link", "@load"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service"));
     }
@@ -637,6 +644,8 @@ public class Parser {
       switch (op.text) {
         case "@include":
           return execute_include(op);
+        case "@link":
+          return execute_link(op);
         case "@authorize":
           return define_authorize(op);
         case "@password":

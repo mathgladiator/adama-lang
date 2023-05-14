@@ -153,6 +153,10 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
   }
 
   @Override
+  public void add(LinkService link) {
+  }
+
+  @Override
   public void add(DefineService ds) {
   }
 

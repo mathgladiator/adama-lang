@@ -9,6 +9,7 @@
 package org.adamalang.translator.tree;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.translator.codegen.*;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.EnvironmentState;
@@ -232,6 +233,23 @@ public class Document implements TopLevelDocumentHandler {
       } catch (AdamaLangException ale) {
         typeChecker.issueError(in, String.format("Inclusion of '%s' resulted in an error; '%s'", in.resource.text, ale.getMessage()), "DocumentInclude");
       }
+    }
+  }
+
+  @Override
+  public void add(LinkService link) {
+    int id = inventClassId();
+    String defn = ServiceRegistry.getLinkDefinition(link.name.text, id);
+    if (defn == null) {
+      typeChecker.issueError(link, String.format("The link '%s' was not found.", link.name.text), "DocumentDefine");
+      return;
+    }
+    final var tokenEngine = new TokenEngine("link:" + link.name.text, defn.codePoints().iterator());
+    final var parser = new Parser(tokenEngine);
+    try {
+      parser.document().accept(this);
+    } catch (AdamaLangException ale) {
+      typeChecker.issueError(link, String.format("Linkage of '%s' resulted in an error; '%s'", link.name.text, ale.getMessage()), "DocumentInclude");
     }
   }
 

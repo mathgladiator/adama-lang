@@ -146,6 +146,9 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   }
 
   @Override
+  public void add(LinkService link) { link.emit(this); }
+
+  @Override
   public void add(DefineService ds) {
     ds.emit(this);
   }

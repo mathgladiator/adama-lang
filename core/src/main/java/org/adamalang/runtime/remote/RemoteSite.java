@@ -49,6 +49,8 @@ public class RemoteSite {
             break;
         }
       }
+    } else {
+      reader.skipValue();
     }
   }
 

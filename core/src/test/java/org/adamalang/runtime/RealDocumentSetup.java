@@ -76,7 +76,7 @@ public class RealDocumentSetup implements Deliverer {
     this.dumbDataService = dds;
     DocumentThreadBase base = new DocumentThreadBase(new ServiceShield(), dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
     dds.setData(json);
-    factory = LivingDocumentTests.compile(code, deliver);
+    factory = LivingDocumentTests.compile(code, this);
     this.code = code;
     DumbDataService.DumbDurableLivingDocumentAcquire acquireReal =
         new DumbDataService.DumbDurableLivingDocumentAcquire();
@@ -95,6 +95,13 @@ public class RealDocumentSetup implements Deliverer {
     }
     document = acquireReal.get();
     mirror = acquireMirror.get();
+
+    this.deliver = new Deliverer() {
+      @Override
+      public void deliver(NtPrincipal agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
+        document.deliver(agent, id, result, callback);
+      }
+    };
   }
 
   public void assertCompare() {

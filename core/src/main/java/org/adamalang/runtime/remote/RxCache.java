@@ -179,7 +179,16 @@ public class RxCache extends RxBase implements RxKillable {
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         int key = Integer.parseInt(reader.fieldName());
-        sites.put(key, new RemoteSite(key, reader));
+        if (reader.testLackOfNull()) {
+          RemoteSite prior = sites.get(key);
+          if (prior != null) {
+            prior.patch(reader);
+          } else {
+            sites.put(key, new RemoteSite(key, reader));
+          }
+        } else {
+          sites.remove(key);
+        }
       }
       index();
     }

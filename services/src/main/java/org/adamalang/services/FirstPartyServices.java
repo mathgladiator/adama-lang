@@ -33,7 +33,7 @@ public class FirstPartyServices {
         executor.shutdown();
       }
     }));
-    ServiceRegistry.REGISTRY.put("adama", (space, configRaw) -> {
+    ServiceRegistry.add("adama", Adama.class, (space, configRaw) -> {
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw);
       try {
         return new Adama(config, executor);
@@ -42,7 +42,7 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
-    ServiceRegistry.REGISTRY.put("twilio", (space, configRaw) -> {
+    ServiceRegistry.add("twilio", Twilio.class, (space, configRaw) -> {
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw);
       try {
         return new Twilio(config, executor);
@@ -51,7 +51,7 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
-    ServiceRegistry.REGISTRY.put("amazonses", (space, configRaw) -> {
+    ServiceRegistry.add("amazonses", AmazonSES.class, (space, configRaw) -> {
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw);
       try {
         return new AmazonSES(config, executor);

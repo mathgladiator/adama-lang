@@ -17,15 +17,21 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.SampleService;
+import org.adamalang.runtime.remote.Service;
+import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class PhaseRun {
   public static void go(final LivingDocumentFactory factory, final DocumentMonitor monitor, final AtomicBoolean passedTests, final StringBuilder outputFile) throws Exception {
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
     final var testTime = new AtomicLong(0);
     final var time = (TimeSource) () -> testTime.get();
     outputFile.append("--JAVA RUNNING-------------------------------------").append("\n");
