@@ -208,7 +208,6 @@ public class FrontendHttpHandler implements HttpHandler {
 
   @Override
   public void handleDeepHealth(Callback<String> callback) {
-    LOGGER.error("deep-health-inspection");
     try {
       final StringBuilder health = new StringBuilder();
       health.append("<!DOCTYPE html>\n<html><head><title>Adama Deep Health</title></head><body>\n");

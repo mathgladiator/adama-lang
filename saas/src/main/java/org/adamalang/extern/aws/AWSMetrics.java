@@ -29,6 +29,7 @@ public class AWSMetrics {
   public final RequestResponseMonitor delete_asset;
   public final RequestResponseMonitor enqueue;
   public final CallbackMonitor signal_control_domain;
+  public final Inflight alarm_file_not_found;
 
   public AWSMetrics(MetricsFactory factory) {
     restore_document = factory.makeRequestResponseMonitor("aws_restore_document");
@@ -45,5 +46,6 @@ public class AWSMetrics {
     upload_log_document = factory.makeRequestResponseMonitor("aws_upload_log_document");
     enqueue = factory.makeRequestResponseMonitor("aws_enqueue");
     signal_control_domain = factory.makeCallbackMonitor("aws_signal_control_domain");
+    alarm_file_not_found = factory.inflight("alarm_file_not_found");
   }
 }

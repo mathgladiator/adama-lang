@@ -10,6 +10,7 @@ package org.adamalang.web.client;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.metrics.Inflight;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,12 +21,30 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileWriterHttpResponderTests {
+
+  private final static Inflight alarm = new Inflight() {
+    @Override
+    public void up() {
+
+    }
+
+    @Override
+    public void down() {
+
+    }
+
+    @Override
+    public void set(int value) {
+
+    }
+  };
+
   @Test
   public void happy() throws Exception {
     AtomicInteger callbackValue = new AtomicInteger(0);
     File file = File.createTempFile("ADAMA_tempfile", "suffix");
     file.deleteOnExit();
-    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, wrap(callbackValue));
+    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, alarm, wrap(callbackValue));
     writer.start(new SimpleHttpResponseHeader(200, Collections.emptyMap()));
     writer.bodyStart(3);
     writer.bodyFragment("XYZ".getBytes(StandardCharsets.UTF_8), 0, 3);
@@ -40,7 +59,7 @@ public class FileWriterHttpResponderTests {
     AtomicInteger callbackValue = new AtomicInteger(0);
     File file = File.createTempFile("ADAMA_tempfile", "suffix");
     file.deleteOnExit();
-    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, wrap(callbackValue));
+    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, alarm, wrap(callbackValue));
     writer.start(new SimpleHttpResponseHeader(200, Collections.emptyMap()));
     writer.bodyStart(-1);
     writer.bodyFragment("XYZ".getBytes(StandardCharsets.UTF_8), 0, 3);
@@ -55,7 +74,7 @@ public class FileWriterHttpResponderTests {
     AtomicInteger callbackValue = new AtomicInteger(0);
     File file = File.createTempFile("ADAMA_tempfile", "suffix");
     file.deleteOnExit();
-    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, wrap(callbackValue));
+    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, alarm, wrap(callbackValue));
     writer.start(new SimpleHttpResponseHeader(200, Collections.emptyMap()));
     writer.bodyStart(5);
     writer.bodyFragment("XYZ".getBytes(StandardCharsets.UTF_8), 0, 3);
@@ -69,7 +88,7 @@ public class FileWriterHttpResponderTests {
     AtomicInteger callbackValue = new AtomicInteger(0);
     File file = File.createTempFile("ADAMA_tempfile", "suffix");
     file.deleteOnExit();
-    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, wrap(callbackValue));
+    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, alarm, wrap(callbackValue));
     writer.start(new SimpleHttpResponseHeader(302, Collections.emptyMap()));
     writer.bodyStart(5);
     writer.bodyFragment("XYZ".getBytes(StandardCharsets.UTF_8), 0, 3);
@@ -83,7 +102,7 @@ public class FileWriterHttpResponderTests {
     AtomicInteger callbackValue = new AtomicInteger(0);
     File file = File.createTempFile("ADAMA_tempfile", "suffix");
     file.deleteOnExit();
-    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, wrap(callbackValue));
+    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, alarm, wrap(callbackValue));
     writer.failure(new ErrorCodeException(123));
     Assert.assertEquals(123, callbackValue.get());
     writer.start(new SimpleHttpResponseHeader(200, Collections.emptyMap()));
@@ -96,7 +115,7 @@ public class FileWriterHttpResponderTests {
   @Test
   public void dumbCrash() throws Exception {
     try {
-      new FileWriterHttpResponder(null, null);
+      new FileWriterHttpResponder(null, alarm, null);
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(928944, ece.code);
     }

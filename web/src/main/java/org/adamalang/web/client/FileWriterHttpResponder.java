@@ -11,20 +11,28 @@ package org.adamalang.web.client;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.metrics.Inflight;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
 /** write the body of an HTTP response to disk */
 public class FileWriterHttpResponder implements SimpleHttpResponder {
+  private static final Logger LOGGER = LoggerFactory.getLogger(FileWriterHttpResponder.class);
+  private final File fileToWrite;
   public final FileOutputStream output;
   public final Callback<Void> callback;
   private boolean good;
   private long left;
   private boolean checkSize;
+  private final Inflight alarm;
 
-  public FileWriterHttpResponder(File fileToWrite, Callback<Void> callback) throws ErrorCodeException {
+  public FileWriterHttpResponder(File fileToWrite, Inflight alarm, Callback<Void> callback) throws ErrorCodeException {
     try {
+      this.fileToWrite = fileToWrite;
+      this.alarm = alarm;
       this.output = new FileOutputStream(fileToWrite);
       this.callback = callback;
       this.good = true;
@@ -37,6 +45,8 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
   public void start(SimpleHttpResponseHeader header) {
     if (good && header.status != 200) {
       this.good = false;
+      alarm.up();
+      LOGGER.error("failed-to-write: {} status:{} headers:{}", fileToWrite.toString(), header.status, header.headers.toString());
       callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_FILE_WRITER_NOT_200));
     }
   }

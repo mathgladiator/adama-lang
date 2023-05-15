@@ -144,7 +144,7 @@ public class Client {
   }
 
   public void reflect(String space, String key, Callback<String> callback) {
-    router.engine.get(new Key(space, key), new RoutingCallback() {
+    router.routerForDocuments.get(new Key(space, key), new RoutingCallback() {
       @Override
       public void onRegion(String region) {
         failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_REFLECT_FOUND_REGION_RATHER_THAN_MACHINE));
