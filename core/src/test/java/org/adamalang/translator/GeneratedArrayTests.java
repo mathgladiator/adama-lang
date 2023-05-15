@@ -373,7 +373,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n    Empty_1 __self = this;");
     gold.append("\n    DeltaEmpty_1 __state = new DeltaEmpty_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -969,7 +969,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n    IndexLookupLegacy_2 __self = this;");
     gold.append("\n    DeltaIndexLookupLegacy_2 __state = new DeltaIndexLookupLegacy_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1877,7 +1877,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n    OfAllTypes_3 __self = this;");
     gold.append("\n    DeltaOfAllTypes_3 __state = new DeltaOfAllTypes_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

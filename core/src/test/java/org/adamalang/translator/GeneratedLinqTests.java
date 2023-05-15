@@ -538,7 +538,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    IndexingDateTime_4 __self = this;");
     gold.append("\n    DeltaIndexingDateTime_4 __state = new DeltaIndexingDateTime_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1342,7 +1342,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    Indexing_5 __self = this;");
     gold.append("\n    DeltaIndexing_5 __state = new DeltaIndexing_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2992,7 +2992,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    LegacyShuffle_7 __self = this;");
     gold.append("\n    DeltaLegacyShuffle_7 __state = new DeltaLegacyShuffle_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -3985,7 +3985,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    Legacy_8 __self = this;");
     gold.append("\n    DeltaLegacy_8 __state = new DeltaLegacy_8();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -5463,7 +5463,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    Map_10 __self = this;");
     gold.append("\n    DeltaMap_10 __state = new DeltaMap_10();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -6796,7 +6796,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    SortLegacy_13 __self = this;");
     gold.append("\n    DeltaSortLegacy_13 __state = new DeltaSortLegacy_13();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -7979,7 +7979,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    WhereBuildClosure_14 __self = this;");
     gold.append("\n    DeltaWhereBuildClosure_14 __state = new DeltaWhereBuildClosure_14();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -8842,7 +8842,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    WhereDuplicateFields_15 __self = this;");
     gold.append("\n    DeltaWhereDuplicateFields_15 __state = new DeltaWhereDuplicateFields_15();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -9793,7 +9793,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    WhereOtherIndexingModes_16 __self = this;");
     gold.append("\n    DeltaWhereOtherIndexingModes_16 __state = new DeltaWhereOtherIndexingModes_16();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -10718,7 +10718,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    WherePrimaryKeyExtraction_17 __self = this;");
     gold.append("\n    DeltaWherePrimaryKeyExtraction_17 __state = new DeltaWherePrimaryKeyExtraction_17();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

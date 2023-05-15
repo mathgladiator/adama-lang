@@ -485,7 +485,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    FlowBasics_2 __self = this;");
     gold.append("\n    DeltaFlowBasics_2 __state = new DeltaFlowBasics_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1109,7 +1109,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    FlowChildRecordWithPrivacyChange_3 __self = this;");
     gold.append("\n    DeltaFlowChildRecordWithPrivacyChange_3 __state = new DeltaFlowChildRecordWithPrivacyChange_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2139,7 +2139,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    FlowMaybeComplex_4 __self = this;");
     gold.append("\n    DeltaFlowMaybeComplex_4 __state = new DeltaFlowMaybeComplex_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2998,7 +2998,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    FlowMessageArray_5 __self = this;");
     gold.append("\n    DeltaFlowMessageArray_5 __state = new DeltaFlowMessageArray_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -3643,7 +3643,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    FlowMessageList_6 __self = this;");
     gold.append("\n    DeltaFlowMessageList_6 __state = new DeltaFlowMessageList_6();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -4333,7 +4333,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    FlowRecordArray_7 __self = this;");
     gold.append("\n    DeltaFlowRecordArray_7 __state = new DeltaFlowRecordArray_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -5249,7 +5249,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    FlowRecordList_8 __self = this;");
     gold.append("\n    DeltaFlowRecordList_8 __state = new DeltaFlowRecordList_8();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -6270,7 +6270,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    FlowSimpleArray_9 __self = this;");
     gold.append("\n    DeltaFlowSimpleArray_9 __state = new DeltaFlowSimpleArray_9();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -6996,7 +6996,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    FlowSimpleMaybe_10 __self = this;");
     gold.append("\n    DeltaFlowSimpleMaybe_10 __state = new DeltaFlowSimpleMaybe_10();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -7627,7 +7627,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    FlowSimpleMessage_11 __self = this;");
     gold.append("\n    DeltaFlowSimpleMessage_11 __state = new DeltaFlowSimpleMessage_11();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

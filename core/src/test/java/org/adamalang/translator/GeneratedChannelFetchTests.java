@@ -386,7 +386,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n    TimeoutArrayHappy_1 __self = this;");
     gold.append("\n    DeltaTimeoutArrayHappy_1 __state = new DeltaTimeoutArrayHappy_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1115,7 +1115,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n    TimeoutHappy_2 __self = this;");
     gold.append("\n    DeltaTimeoutHappy_2 __state = new DeltaTimeoutHappy_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1857,7 +1857,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n    TimeoutTimesOut_3 __self = this;");
     gold.append("\n    DeltaTimeoutTimesOut_3 __state = new DeltaTimeoutTimesOut_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

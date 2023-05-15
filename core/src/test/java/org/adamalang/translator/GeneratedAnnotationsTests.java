@@ -354,7 +354,7 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("\n    Message_1 __self = this;");
     gold.append("\n    DeltaMessage_1 __state = new DeltaMessage_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1024,7 +1024,7 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("\n    Reactive_2 __self = this;");
     gold.append("\n    DeltaReactive_2 __state = new DeltaReactive_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

@@ -18,13 +18,15 @@ public abstract class PrivateView {
   public final Perspective perspective;
   public final NtPrincipal who;
   public final AssetIdEncoder assetIdEncoder;
+  private final int viewId;
   private boolean alive;
   private PrivateView usurper;
   private String lastWrittenFutures;
 
   /** construct the view based on the person (who) and the connection (perspective) */
-  public PrivateView(final NtPrincipal who, final Perspective perspective, final AssetIdEncoder assetIdEncoder) {
-    alive = true;
+  public PrivateView(final int viewId, final NtPrincipal who, final Perspective perspective, final AssetIdEncoder assetIdEncoder) {
+    this.viewId = viewId;
+    this.alive = true;
     this.who = who;
     this.assetIdEncoder = assetIdEncoder;
     this.perspective = perspective;

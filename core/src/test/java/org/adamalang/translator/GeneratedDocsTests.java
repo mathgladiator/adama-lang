@@ -380,7 +380,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    AssignmentLocalVars_1 __self = this;");
     gold.append("\n    DeltaAssignmentLocalVars_1 __state = new DeltaAssignmentLocalVars_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1157,7 +1157,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    Records_2 __self = this;");
     gold.append("\n    DeltaRecords_2 __state = new DeltaRecords_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

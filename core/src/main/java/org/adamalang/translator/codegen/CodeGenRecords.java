@@ -527,7 +527,7 @@ public class CodeGenRecords {
     sb.append(environment.document.getClassName()).append(" __self = this;").writeNewline();
     sb.append("Delta").append(environment.document.getClassName()).append(" __state = new Delta").append(environment.document.getClassName()).append("();").writeNewline();
     sb.append("RTx__ViewerType __viewerState = new RTx__ViewerType();").writeNewline();
-    sb.append("return new PrivateView(__who, ___perspective, __encoder) {").tabUp().writeNewline();
+    sb.append("return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {").tabUp().writeNewline();
     sb.append("@Override").writeNewline();
     sb.append("public long memory() {").tabUp().writeNewline();
     sb.append("return __state.__memory();").tabDown().writeNewline();

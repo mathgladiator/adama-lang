@@ -434,7 +434,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n    ContextVariables_3 __self = this;");
     gold.append("\n    DeltaContextVariables_3 __state = new DeltaContextVariables_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1046,7 +1046,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n    Happy_5 __self = this;");
     gold.append("\n    DeltaHappy_5 __state = new DeltaHappy_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

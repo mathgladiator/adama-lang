@@ -453,7 +453,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    DateParsing_1 __self = this;");
     gold.append("\n    DeltaDateParsing_1 __state = new DeltaDateParsing_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1311,7 +1311,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    DateTimeParsing_2 __self = this;");
     gold.append("\n    DeltaDateTimeParsing_2 __state = new DeltaDateTimeParsing_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2250,7 +2250,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    Intern_4 __self = this;");
     gold.append("\n    DeltaIntern_4 __state = new DeltaIntern_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2893,7 +2893,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    TimeParsing_5 __self = this;");
     gold.append("\n    DeltaTimeParsing_5 __state = new DeltaTimeParsing_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -3765,7 +3765,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    TimeSpanParsing_6 __self = this;");
     gold.append("\n    DeltaTimeSpanParsing_6 __state = new DeltaTimeSpanParsing_6();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

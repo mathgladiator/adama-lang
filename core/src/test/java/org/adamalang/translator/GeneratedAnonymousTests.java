@@ -367,7 +367,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    Legacy_1 __self = this;");
     gold.append("\n    DeltaLegacy_1 __state = new DeltaLegacy_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1409,7 +1409,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    MegaTypeConstruction_2 __self = this;");
     gold.append("\n    DeltaMegaTypeConstruction_2 __state = new DeltaMegaTypeConstruction_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2657,7 +2657,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    TypeConstruction_3 __self = this;");
     gold.append("\n    DeltaTypeConstruction_3 __state = new DeltaTypeConstruction_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

@@ -367,7 +367,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    AggregateMath_1 __self = this;");
     gold.append("\n    DeltaAggregateMath_1 __state = new DeltaAggregateMath_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1327,7 +1327,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    ComplexMath_2 __self = this;");
     gold.append("\n    DeltaComplexMath_2 __state = new DeltaComplexMath_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1914,7 +1914,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    NumberCompare_3 __self = this;");
     gold.append("\n    DeltaNumberCompare_3 __state = new DeltaNumberCompare_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2558,7 +2558,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    OperationsHappy_4 __self = this;");
     gold.append("\n    DeltaOperationsHappy_4 __state = new DeltaOperationsHappy_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -3293,7 +3293,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    StringCompare_5 __self = this;");
     gold.append("\n    DeltaStringCompare_5 __state = new DeltaStringCompare_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

@@ -393,7 +393,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    CanOnlyCallPure_1 __self = this;");
     gold.append("\n    DeltaCanOnlyCallPure_1 __state = new DeltaCanOnlyCallPure_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -987,7 +987,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    Define_2 __self = this;");
     gold.append("\n    DeltaDefine_2 __state = new DeltaDefine_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1571,7 +1571,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    ViewerStateDefine_3 __self = this;");
     gold.append("\n    DeltaViewerStateDefine_3 __state = new DeltaViewerStateDefine_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2146,7 +2146,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    ViewerStateUse_4 __self = this;");
     gold.append("\n    DeltaViewerStateUse_4 __state = new DeltaViewerStateUse_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

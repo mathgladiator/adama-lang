@@ -426,7 +426,7 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\n    Testing_1 __self = this;");
     gold.append("\n    DeltaTesting_1 __state = new DeltaTesting_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

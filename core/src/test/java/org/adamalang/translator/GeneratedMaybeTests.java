@@ -373,7 +373,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    CastIntToDefault_1 __self = this;");
     gold.append("\n    DeltaCastIntToDefault_1 __state = new DeltaCastIntToDefault_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -983,7 +983,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    InitRxMaybeWithMaybe_2 __self = this;");
     gold.append("\n    DeltaInitRxMaybeWithMaybe_2 __state = new DeltaInitRxMaybeWithMaybe_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1622,7 +1622,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    IntEqualityRegression_3 __self = this;");
     gold.append("\n    DeltaIntEqualityRegression_3 __state = new DeltaIntEqualityRegression_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2539,7 +2539,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    Unpack_4 __self = this;");
     gold.append("\n    DeltaUnpack_4 __state = new DeltaUnpack_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

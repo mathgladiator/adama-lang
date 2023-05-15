@@ -533,7 +533,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    Legacy_5 __self = this;");
     gold.append("\n    DeltaLegacy_5 __state = new DeltaLegacy_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1417,7 +1417,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    MessagingLegacy_6 __self = this;");
     gold.append("\n    DeltaMessagingLegacy_6 __state = new DeltaMessagingLegacy_6();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2114,7 +2114,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    PumpMessages_7 __self = this;");
     gold.append("\n    DeltaPumpMessages_7 __state = new DeltaPumpMessages_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

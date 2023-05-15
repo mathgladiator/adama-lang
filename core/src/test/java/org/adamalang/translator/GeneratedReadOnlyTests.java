@@ -794,7 +794,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n    Simples_12 __self = this;");
     gold.append("\n    DeltaSimples_12 __state = new DeltaSimples_12();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

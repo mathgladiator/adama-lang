@@ -367,7 +367,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    BulkMaybeAssign_1 __self = this;");
     gold.append("\n    DeltaBulkMaybeAssign_1 __state = new DeltaBulkMaybeAssign_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1146,7 +1146,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    InvokeMethods_3 __self = this;");
     gold.append("\n    DeltaInvokeMethods_3 __state = new DeltaInvokeMethods_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1918,7 +1918,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    Legacy_4 __self = this;");
     gold.append("\n    DeltaLegacy_4 __state = new DeltaLegacy_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2866,7 +2866,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    MethodOnList_5 __self = this;");
     gold.append("\n    DeltaMethodOnList_5 __state = new DeltaMethodOnList_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -3708,7 +3708,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    NegateBoolList_6 __self = this;");
     gold.append("\n    DeltaNegateBoolList_6 __state = new DeltaNegateBoolList_6();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -4433,7 +4433,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    NegateIntList_7 __self = this;");
     gold.append("\n    DeltaNegateIntList_7 __state = new DeltaNegateIntList_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");

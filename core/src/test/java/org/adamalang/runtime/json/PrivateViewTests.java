@@ -20,7 +20,7 @@ public class PrivateViewTests {
   public void killing() {
     ArrayList<String> list = new ArrayList<>();
     PrivateView pv =
-        new PrivateView(
+        new PrivateView(3,
             NtPrincipal.NO_ONE,
             new Perspective() {
               @Override
@@ -57,7 +57,7 @@ public class PrivateViewTests {
   public void usurp() {
     ArrayList<String> list = new ArrayList<>();
     PrivateView pv1 =
-        new PrivateView(
+        new PrivateView(2,
             NtPrincipal.NO_ONE,
             new Perspective() {
               @Override
@@ -85,7 +85,7 @@ public class PrivateViewTests {
         };
 
     PrivateView pv2 =
-        new PrivateView(NtPrincipal.NO_ONE, pv1.perspective, null) {
+        new PrivateView(1, NtPrincipal.NO_ONE, pv1.perspective, null) {
 
           @Override
           public long memory() {
@@ -112,7 +112,7 @@ public class PrivateViewTests {
   public void futures() {
     ArrayList<String> list = new ArrayList<>();
     PrivateView pv =
-        new PrivateView(
+        new PrivateView(4,
             NtPrincipal.NO_ONE,
             new Perspective() {
               @Override

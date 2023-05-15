@@ -79,6 +79,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private String __key;
   private Deliverer __deliverer;
   private boolean __raisedDirtyCalled;
+  private int __nextViewId;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -123,6 +124,12 @@ public abstract class LivingDocument implements RxParent, Caller {
     __deliverer = Deliverer.FAILURE;
     __timezone = new RxString(this, "UTC");
     __timezoneCachedZoneId = ZoneId.of(__timezone.get());
+    __nextViewId = 0;
+  }
+
+  /** generate a view id */
+  public int __genViewId() {
+    return __nextViewId++;
   }
 
   /** bind a route to a cache */
