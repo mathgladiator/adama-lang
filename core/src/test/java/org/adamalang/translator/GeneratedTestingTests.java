@@ -1693,7 +1693,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n      __track(1);");
     gold.append("\n      __assert_truth(true, 12, 2, 12, 14);");
     gold.append("\n      __track(2);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"chan\", 0, \"origin\", \"ip\", new RTxX(4, 8)));");
+    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, null, \"chan\", 0, \"origin\", \"ip\", new RTxX(4, 8)));");
     gold.append("\n      __track(3);");
     gold.append("\n      __test_progress();");
     gold.append("\n      __track(4);");
@@ -2401,7 +2401,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n      __track(8);");
     gold.append("\n      __assert_truth((status.get()).equals(\"\"), 25, 2, 25, 22);");
     gold.append("\n      __track(9);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"chan\", 0, \"origin\", \"ip\", new RTxX(4, 8)));");
+    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, null, \"chan\", 0, \"origin\", \"ip\", new RTxX(4, 8)));");
     gold.append("\n      __track(10);");
     gold.append("\n      __assert_truth(__blocked.get(), 27, 2, 27, 18);");
     gold.append("\n      __track(11);");

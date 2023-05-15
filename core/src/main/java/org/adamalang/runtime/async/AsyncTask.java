@@ -22,6 +22,7 @@ import org.adamalang.runtime.sys.CoreRequestContext;
  */
 public class AsyncTask {
   public final String channel;
+  public final Integer viewId; // note: we don't persist this as it is ephemeral
   public final Object message;
   public final int messageId;
   public final long timestamp;
@@ -32,9 +33,10 @@ public class AsyncTask {
   private AsyncAction action;
 
   /** Construct the task around a message */
-  public AsyncTask(final int messageId, final NtPrincipal who, final String channel, final long timestamp, final String origin, String ip, final Object message) {
+  public AsyncTask(final int messageId, final NtPrincipal who, final Integer viewId, final String channel, final long timestamp, final String origin, String ip, final Object message) {
     this.messageId = messageId;
     this.who = who;
+    this.viewId = viewId;
     this.channel = channel;
     this.timestamp = timestamp;
     this.origin = origin;

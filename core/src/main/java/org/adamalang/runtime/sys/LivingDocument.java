@@ -73,6 +73,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected int __code_cost;
   protected int __goodwillBudget;
   protected int __goodwillLimitOfBudget;
+  private int __currentViewId;
   protected Random __random;
   protected ArrayList<Integer> __trace;
   private String __preemptedStateOnNextComputeBlocked = null;
@@ -627,7 +628,7 @@ public abstract class LivingDocument implements RxParent, Caller {
                     reader.skipValue();
                 }
               }
-              final var task = new AsyncTask(msgId, who, channel, timestamp, origin, ip, message);
+              final var task = new AsyncTask(msgId, who, null, channel, timestamp, origin, ip, message);
               tasks.put(msgId, task);
             }
           } else {
@@ -648,6 +649,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** parse the message for the channel, and cache the result */
   protected abstract Object __parse_message(String channel, JsonStreamReader reader);
 
+  /** does the channel have code associated to it */
   protected abstract boolean __is_direct_channel(String channel);
 
   protected abstract void __handle_direct(CoreRequestContext context, String channel, Object message) throws AbortMessageException;
@@ -837,6 +839,11 @@ public abstract class LivingDocument implements RxParent, Caller {
       final long timeBackup = __time.get();
       for (final AsyncTask task : __queue) {
         __time.set(task.timestamp);
+        if (task.viewId != null) {
+          __currentViewId = task.viewId;
+        } else {
+          __currentViewId = -1;
+        }
         task.execute();
       }
       __time.set(timeBackup);
@@ -888,6 +895,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       String patch = null;
       String entropy = null;
       String marker = null;
+      Integer viewId = null;
       String password = null;
       Integer delivery_id = null;
       RemoteResult result = null;
@@ -915,6 +923,9 @@ public abstract class LivingDocument implements RxParent, Caller {
               break;
             case "marker":
               marker = reader.readString();
+              break;
+            case "view-id":
+              viewId = reader.readInteger();
               break;
             case "timestamp":
               timestamp = reader.readLong();
@@ -1032,7 +1043,7 @@ public abstract class LivingDocument implements RxParent, Caller {
           if (context == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
           }
-          return __transaction_send(context, requestJson, marker, channel, timestamp, message, factory);
+          return __transaction_send(context, requestJson, viewId, marker, channel, timestamp, message, factory);
         case "password":
           if (context == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_CONTEXT);
@@ -1581,7 +1592,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     return new LivingDocumentChange(update, broadcasts, null);
   }
 
-  private LivingDocumentChange __transaction_send_enqueue(final String request, final String dedupeKey, final CoreRequestContext context, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_send_enqueue(final String request, final Integer viewId, final String dedupeKey, final CoreRequestContext context, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     // create the delta
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
@@ -1600,7 +1611,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.writeObjectFieldIntro("__messages");
     forward.beginObject();
     forward.writeObjectFieldIntro(msgId);
-    final var task = new AsyncTask(msgId, context.who, channel, timestamp, context.origin, context.ip, message);
+    final var task = new AsyncTask(msgId, context.who, viewId, channel, timestamp, context.origin, context.ip, message);
     task.dump(forward);
     forward.endObject();
     reverse.beginObject();
@@ -1628,7 +1639,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: a person is sending the document a message */
-  private LivingDocumentChange __transaction_send(CoreRequestContext context, final String request, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_send(CoreRequestContext context, final String request, final Integer viewId, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -1639,13 +1650,17 @@ public abstract class LivingDocument implements RxParent, Caller {
       if (!__open_channel(channel) && !__clients.containsKey(context.who) && !factory.canSendWhileDisconnected(context)) {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
       }
-
       String dedupeKey = context.who.agent + "/" + context.who.authority + "/" + marker;
       if (marker != null) {
         if (__dedupe.containsKey(dedupeKey)) {
           throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_ALREADY_SENT);
         }
         __dedupe.put(dedupeKey, __time.get());
+      }
+      if (viewId != null) {
+        __currentViewId = viewId;
+      } else {
+        __currentViewId = -1;
       }
       LivingDocumentChange change;
       if (__is_direct_channel(channel)) {
@@ -1657,10 +1672,10 @@ public abstract class LivingDocument implements RxParent, Caller {
           throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT);
         } catch (ComputeBlockedException cbe) {
           __revert();
-          change = __transaction_send_enqueue(request, dedupeKey, context, marker, channel, timestamp, message, factory);
+          change = __transaction_send_enqueue(request, viewId, dedupeKey, context, marker, channel, timestamp, message, factory);
         }
       } else {
-        change = __transaction_send_enqueue(request, dedupeKey, context, marker, channel, timestamp, message, factory);
+        change = __transaction_send_enqueue(request, viewId, dedupeKey, context, marker, channel, timestamp, message, factory);
       }
       exception = false;
       return change;

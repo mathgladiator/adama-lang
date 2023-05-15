@@ -687,7 +687,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n      __track(12);");
     gold.append("\n      __assert_truth((status.get()).equals(\"\"), 28, 2, 28, 22);");
     gold.append("\n      __track(13);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"chan\", 0, \"origin\", \"ip\", new RTxX(4, 8)));");
+    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, null, \"chan\", 0, \"origin\", \"ip\", new RTxX(4, 8)));");
     gold.append("\n      __track(14);");
     gold.append("\n      __assert_truth(__blocked.get(), 30, 2, 30, 18);");
     gold.append("\n      __track(15);");
@@ -699,7 +699,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n      __track(18);");
     gold.append("\n      __assert_truth((status.get()).equals(\"\"), 34, 2, 34, 22);");
     gold.append("\n      __track(19);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"chan\", 0, \"origin\", \"ip\", new RTxX(5, 10)));");
+    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, null, \"chan\", 0, \"origin\", \"ip\", new RTxX(5, 10)));");
     gold.append("\n      __track(20);");
     gold.append("\n      __assert_truth(__blocked.get(), 36, 2, 36, 18);");
     gold.append("\n      __track(21);");

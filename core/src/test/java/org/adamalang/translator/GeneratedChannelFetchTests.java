@@ -1406,7 +1406,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n      __track(7);");
     gold.append("\n      __test_progress();");
     gold.append("\n      __track(8);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, \"chan\", 0, \"origin\", \"ip\", new RTxX(4, 8)));");
+    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, null, \"chan\", 0, \"origin\", \"ip\", new RTxX(4, 8)));");
     gold.append("\n      __track(9);");
     gold.append("\n      __test_progress();");
     gold.append("\n      __track(10);");

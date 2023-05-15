@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AsyncTaskTests {
   @Test
   public void abort_flow() {
-    final var at = new AsyncTask(0, NtPrincipal.NO_ONE, "ch", 0, "origin", "ip", "message");
+    final var at = new AsyncTask(0, NtPrincipal.NO_ONE, 123, "ch", 0, "origin", "ip", "message");
     at.setAction(
         () -> {
           throw new AbortMessageException();
@@ -33,7 +33,7 @@ public class AsyncTaskTests {
 
   @Test
   public void ideal_flow() throws Exception {
-    final var at = new AsyncTask(0, NtPrincipal.NO_ONE, "ch", 0, "origin", "ip","message");
+    final var at = new AsyncTask(0, NtPrincipal.NO_ONE, null, "ch", 0, "origin", "ip","message");
     final var ref = new AtomicInteger(0);
     at.setAction(
         () -> {
