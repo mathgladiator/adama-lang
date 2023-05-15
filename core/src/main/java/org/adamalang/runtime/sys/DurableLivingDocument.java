@@ -768,13 +768,17 @@ public class DurableLivingDocument implements Queryable {
     ingest(context.who, request.toString(), JUST_SEQ(base.metrics.document_disconnect.wrap(callback)), true, false);
   }
 
-  public void send(final CoreRequestContext context, final String marker, final String channel, final String message, Callback<Integer> callback) {
+  public void send(final CoreRequestContext context, final Integer fromViewId, final String marker, final String channel, final String message, Callback<Integer> callback) {
     final var writer = forgeWithContext("send", context);
     writer.writeObjectFieldIntro("channel");
     writer.writeFastString(channel);
     if (marker != null) {
       writer.writeObjectFieldIntro("marker");
       writer.writeString(marker);
+    }
+    if (fromViewId != null) {
+      writer.writeObjectFieldIntro("view-id");
+      writer.writeInteger(fromViewId);
     }
     writer.writeObjectFieldIntro("message");
     writer.injectJson(message);

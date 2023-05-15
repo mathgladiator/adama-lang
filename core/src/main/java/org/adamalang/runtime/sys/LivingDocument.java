@@ -65,6 +65,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private ZoneId __timezoneCachedZoneId;
   private final TreeMap<NtPrincipal, Integer> __clients;
   private final HashMap<NtPrincipal, ArrayList<PrivateView>> __trackedViews;
+  private final HashMap<Integer, PrivateView> __viewsById;
   private final HashMap<String, Long> __dedupe;
   private final TreeMap<Integer, RxCache> __routing;
   protected int __assertionFailures = 0;
@@ -112,6 +113,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __timeouts = new TimeoutTracker(__time);
     __futures = new OutstandingFutureTracker(__auto_future_id, __timeouts);
     __trackedViews = new HashMap<>();
+    __viewsById = new HashMap<>();
     __cache = new RxCache(this, this);
     __code_cost = 0;
     __trace = new ArrayList<>();
@@ -340,6 +342,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       viewsForWho = new ArrayList<>();
       __trackedViews.put(__who, viewsForWho);
     }
+    __viewsById.put(view.viewId, view);
     viewsForWho.add(view);
     return view;
   }
@@ -448,9 +451,11 @@ public abstract class LivingDocument implements RxParent, Caller {
     if (views != null) {
       final var it = views.iterator();
       while (it.hasNext()) {
-        if (it.next().isAlive()) {
+        PrivateView pv = it.next();
+        if (pv.isAlive()) {
           count++;
         } else {
+          __viewsById.remove(pv.viewId);
           it.remove();
         }
       }
@@ -471,6 +476,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       entry.getValue().clear();
     }
     __trackedViews.clear();
+    __viewsById.clear();
   }
 
   /** can we remove this document from memory */

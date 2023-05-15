@@ -18,7 +18,7 @@ public abstract class PrivateView {
   public final Perspective perspective;
   public final NtPrincipal who;
   public final AssetIdEncoder assetIdEncoder;
-  private final int viewId;
+  public final int viewId;
   private boolean alive;
   private PrivateView usurper;
   private String lastWrittenFutures;

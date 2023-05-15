@@ -22,6 +22,7 @@ public class JsonConstructionTests {
     setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
     setup.document.send(
         ContextSupport.WRAP(NtPrincipal.NO_ONE),
+        null,
         "marker",
         "foo",
         "{\"x\":123,\"y\":3.14,\"z\":\"w00t\",\"b\":true}",
@@ -39,6 +40,7 @@ public class JsonConstructionTests {
     setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
     setup.document.send(
         ContextSupport.WRAP(NtPrincipal.NO_ONE),
+        null,
         "marker1",
         "foo",
         "{\"x\":\"\",\"y\":null,\"z\":\"w00t\",\"b\":true}",
@@ -53,6 +55,7 @@ public class JsonConstructionTests {
     setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
     setup.document.send(
         ContextSupport.WRAP(NtPrincipal.NO_ONE),
+        null,
         "marker1",
         "foo",
         "{\"x\":true,\"y\":null,\"z\":\"w00t\",\"b\":true}",

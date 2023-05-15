@@ -67,7 +67,7 @@ public class CoreStream implements AdamaStream {
       @Override
       public void execute() throws Exception {
         inventory.message();
-        document.send(context, marker, channel, message, callback);
+        document.send(context, view.viewId, marker, channel, message, callback);
       }
     });
   }

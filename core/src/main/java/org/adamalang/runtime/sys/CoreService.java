@@ -707,7 +707,7 @@ public class CoreService implements Deliverer, Queryable {
     load(key, new Callback<DurableLivingDocument>() {
       @Override
       public void success(DurableLivingDocument document) {
-        document.send(context, marker, channel, message, result);
+        document.send(context, null, marker, channel, message, result);
       }
 
       @Override
