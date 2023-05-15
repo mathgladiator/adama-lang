@@ -1,3 +1,7 @@
 @web get / "path.js" {
   return {json:{error:true}};
 }
+
+@web get / "badboy" {
+  return {error:"Missing something..."};
+}

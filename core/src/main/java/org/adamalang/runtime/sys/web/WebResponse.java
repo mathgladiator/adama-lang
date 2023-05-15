@@ -33,6 +33,12 @@ public class WebResponse {
     return this;
   }
 
+  public WebResponse error(String errorMessage) {
+    this.contentType = "text/error";
+    this.body = errorMessage;
+    return this;
+  }
+
   public WebResponse sign(String agent) {
     this.contentType = "text/agent";
     this.body = agent;

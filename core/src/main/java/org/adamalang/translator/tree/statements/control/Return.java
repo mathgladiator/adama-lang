@@ -86,6 +86,9 @@ public class Return extends Statement {
         if (consider("css", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
           body++;
         }
+        if (consider("error", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+          body++;
+        }
         if (consider("json", webReturnType, (ty) -> environment.rules.IsNativeMessage(ty, false))) {
           body++;
         }
