@@ -9,15 +9,19 @@
 package org.adamalang.mysql.data;
 
 public class DocumentIndex {
+  public final String space;
   public final String key;
   public final String created;
   public final String updated;
   public final int seq;
+  public final String archive;
 
-  public DocumentIndex(String key, String created, String updated, int seq) {
+  public DocumentIndex(String space, String key, String created, String updated, int seq, String archive) {
+    this.space = space;
     this.key = key;
     this.created = created;
     this.updated = updated;
     this.seq = seq;
+    this.archive = archive;
   }
 }

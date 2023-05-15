@@ -18,6 +18,9 @@ public interface Cloud {
   /** the path for where cloud files are stored */
   File path();
 
+  /** check the key's archive exists in the cloud */
+  void exists(Key key, String archiveKey, Callback<Void> callback);
+
   /** restore the archive key from the cloud to a local file */
   void restore(Key key, String archiveKey, Callback<File> callback);
 

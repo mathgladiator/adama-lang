@@ -146,6 +146,11 @@ public class TestFrontEnd implements AutoCloseable, Email {
       }
 
       @Override
+      public void exists(Key key, String archiveKey, Callback<Void> callback) {
+        callback.failure(new ErrorCodeException(-13));
+      }
+
+      @Override
       public void restore(Key key, String archiveKey, Callback<File> callback) {
         callback.failure(new ErrorCodeException(-42));
       }

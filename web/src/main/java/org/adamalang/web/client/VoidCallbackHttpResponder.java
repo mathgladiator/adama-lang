@@ -31,7 +31,7 @@ public class VoidCallbackHttpResponder implements SimpleHttpResponder {
       monitor.success();
       callback.success(null);
     } else {
-      logger.error("void-callback-not-200:", header.status + ":" + header.headers.toString());
+      logger.error("void-callback-not-200: {} -> {}", header.status, header.headers.toString());
       monitor.failure(ErrorCodes.WEB_VOID_CALLBACK_NOT_200);
       callback.failure(new ErrorCodeException(ErrorCodes.WEB_VOID_CALLBACK_NOT_200, header.status + ""));
     }
@@ -46,7 +46,9 @@ public class VoidCallbackHttpResponder implements SimpleHttpResponder {
 
   @Override
   public void bodyFragment(byte[] chunk, int offset, int len) {
-    logger.error("unexpected-body:", new String(chunk, offset, len));
+    if (len > 0) {
+      logger.error("unexpected-body: {}", new String(chunk, offset, len));
+    }
   }
 
   @Override

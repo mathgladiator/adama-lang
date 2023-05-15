@@ -64,6 +64,7 @@ public class FinderTests {
           callback.assertSuccess();
         }
         listing = FinderOperations.list(dataBase, "space-1", "", 4);
+        Assert.assertEquals(1, FinderOperations.listAll(dataBase).size());
         Assert.assertEquals(1, listing.size());
         Assert.assertEquals("key-1", listing.get(0).key);
 
@@ -199,6 +200,7 @@ public class FinderTests {
           callback.assertSuccess();
         }
         listing = FinderOperations.list(dataBase, "space-1", "", 4);
+        Assert.assertEquals(0, FinderOperations.listAll(dataBase).size());
         Assert.assertEquals(0, listing.size());
       } finally {
         installer.uninstall();

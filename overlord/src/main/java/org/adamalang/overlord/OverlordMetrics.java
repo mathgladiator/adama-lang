@@ -64,6 +64,8 @@ public class OverlordMetrics {
   public final Inflight garbage_collector_behind;
   public final Runnable garbage_collector_found_task;
 
+  public final Inflight found_missing_document;
+
   public OverlordMetrics(MetricsFactory factory) {
     targets_watcher_fired = factory.counter("overlord_targets_watcher_fired");
     targets_made = factory.counter("overlord_targets_made");
@@ -111,5 +113,6 @@ public class OverlordMetrics {
     sentinel_behind = factory.inflight("alarm_sentinel_behind");
     garbage_collector_behind = factory.inflight("garbage_collector_behind");
     garbage_collector_found_task = factory.counter("garbage_collector_found_task");
+    found_missing_document = factory.inflight("alarm_missing_document");
   }
 }

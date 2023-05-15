@@ -57,7 +57,7 @@ public class WebConfig {
     this.globalDomains = config.stringsOf("global-domains", new String[] { "adama.games" });
     this.sharedConnectionPoolMaxLifetimeMilliseconds = config.intOf("shared-connection-max-lifetime-ms", 10000);
     this.sharedConnectionPoolMaxUsageCount = config.intOf("shared-connection-max-usage-count", 50);
-    this.sharedConnectionPoolMaxPoolSize = config.intOf("shared-connection-max-pool-size", 25);
+    this.sharedConnectionPoolMaxPoolSize = config.intOf("shared-connection-max-pool-size", 50);
     this.cacheRoot = new File(config.strOf("cache-root", "cache"));
     if (!cacheRoot.exists()) {
       cacheRoot.mkdir();

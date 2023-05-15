@@ -92,12 +92,14 @@ public class LocalDrive {
 
         @Override
         public void restore(Key key, String archiveKey, Callback<File> callback) {
+        }
 
+        @Override
+        public void exists(Key key, String archiveKey, Callback<Void> callback) {
         }
 
         @Override
         public void backup(Key key, File archiveFile, Callback<Void> callback) {
-
         }
 
         @Override

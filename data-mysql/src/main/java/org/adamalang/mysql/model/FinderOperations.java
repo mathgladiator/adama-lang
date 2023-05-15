@@ -33,6 +33,21 @@ public class FinderOperations {
     });
   }
 
+  public static ArrayList<DocumentIndex> listAll(DataBase dataBase) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT `space`, `key`, `created`, `updated`, `head_seq`, `archive` FROM `" + dataBase.databaseName + "`.`directory`";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (ResultSet rs = statement.executeQuery()) {
+          ArrayList<DocumentIndex> keys = new ArrayList<>();
+          while (rs.next()) {
+            keys.add(new DocumentIndex(rs.getString(1), rs.getString(2), rs.getDate(3).toString(), rs.getDate(4).toString(), rs.getInt(5), rs.getString(6)));
+          }
+          return keys;
+        }
+      }
+    });
+  }
+
   public static ArrayList<DocumentIndex> list(DataBase dataBase, String space, String marker, int limit) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `key`, `created`, `updated`, `head_seq` FROM `" + dataBase.databaseName + //
@@ -43,7 +58,7 @@ public class FinderOperations {
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<DocumentIndex> keys = new ArrayList<>();
           while (rs.next()) {
-            keys.add(new DocumentIndex(rs.getString(1), rs.getDate(2).toString(), rs.getDate(3).toString(), rs.getInt(4)));
+            keys.add(new DocumentIndex(space, rs.getString(1), rs.getDate(2).toString(), rs.getDate(3).toString(), rs.getInt(4), null));
           }
           return keys;
         }

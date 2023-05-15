@@ -155,6 +155,14 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
   }
 
   @Override
+  public void exists(Key key, String archiveKey, Callback<Void> callback) {
+    String s3key = "backups/" + key.space + "/" + key.key + "/#" + archiveKey;
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "HEAD", s3key, null).buildWithEmptyBody();
+    RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.exists_document.start();
+    base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, instance, callback));
+  }
+
+  @Override
   public void restore(Key key, String archiveKey, Callback<File> callback) {
     File root = new File(path(), key.space);
     if (!root.exists()) {

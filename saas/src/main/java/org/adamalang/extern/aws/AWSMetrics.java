@@ -16,6 +16,7 @@ import org.adamalang.common.metrics.RequestResponseMonitor;
 /** metrics for AWS */
 public class AWSMetrics {
   public final RequestResponseMonitor restore_document;
+  public final RequestResponseMonitor exists_document;
   public final RequestResponseMonitor backup_document;
   public final RequestResponseMonitor delete_document;
   public final RequestResponseMonitor list_assets;
@@ -33,6 +34,7 @@ public class AWSMetrics {
 
   public AWSMetrics(MetricsFactory factory) {
     restore_document = factory.makeRequestResponseMonitor("aws_restore_document");
+    exists_document = factory.makeRequestResponseMonitor("aws_exists_document");
     backup_document = factory.makeRequestResponseMonitor("aws_backup_document");
     delete_document = factory.makeRequestResponseMonitor("aws_delete_document");
     well_known_get = factory.makeRequestResponseMonitor("aws_well_known_get");
