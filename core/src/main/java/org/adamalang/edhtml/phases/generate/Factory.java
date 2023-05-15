@@ -14,6 +14,8 @@ import org.jsoup.nodes.Element;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** a factory for turning a field list into an RxHTML snippet */
 public class Factory {
@@ -39,7 +41,7 @@ public class Factory {
     }
     String next = root;
     for (Map.Entry<String, String> entry : defines.entrySet()) {
-      next = next.replaceAll("%%" + entry.getKey() + "%%", entry.getValue());
+      next = next.replaceAll(Pattern.quote("%%" + entry.getKey()) + "%%", Matcher.quoteReplacement(entry.getValue()));
     }
     return Jsoup.parse("<template name=\"" + name + "\">" + next + "</template>").getElementsByTag("template").outerHtml();
   }
