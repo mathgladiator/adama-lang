@@ -14,6 +14,8 @@ import org.jsoup.nodes.Element;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** the core factory rule */
 public class Rule {
@@ -93,7 +95,7 @@ public class Rule {
     HashMap<String, String> mapping = field.map(defines);
     String next = production;
     for (Map.Entry<String, String> entry : mapping.entrySet()) {
-      next = next.replaceAll("%%" + entry.getKey() + "%%", entry.getValue());
+      next = next.replaceAll(Pattern.quote("%%" + entry.getKey() + "%%"), Matcher.quoteReplacement(entry.getValue()));
     }
     if (destinationType == DestinationType.Set) {
       defines.put(destination, next);

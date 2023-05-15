@@ -128,7 +128,7 @@ public class Installer {
         .append("  `unbilled_third_party_service_calls` INT(4) DEFAULT 0,") // TOKILL
         .append("  `latest_billing_hour` INT(4) UNSIGNED DEFAULT 0,") //
         .append("  `plan` TEXT NOT NULL,") // MOVE to IDE document?
-        .append("  `rxhtml` TEXT,") // MOVE to IDE document?
+        .append("  `rxhtml` MEDIUMTEXT,") // MOVE to IDE document?
         .append("  `hash` VARCHAR(256) NOT NULL,") //
         .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
         .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
