@@ -47,12 +47,14 @@ This document is a living road map of the Adama Platform. As such, it contains t
 | control plane  | (1) Manual definition of raft shards definitions, (2) automatic machine management                                                                                                                                                     |
 
 ## Infrastructure - Multi-region &amp; massive scale
-| project    | milestones                     |
-|------------|-------------------------------------------|
-| proxy-mode | proxy the WS API from region A to region B |
-| remote-finder | extend WS API to implement a Finder for region A to do core tasks |
-| finder in adama | Turn core service into a finder cache for web tier |
-| region-isolate | Allow regions to have storage for local documents |
+| project         | milestones                                                        |
+|-----------------|-------------------------------------------------------------------|
+| diagram         | diagram the usage of the database in the adama service            |
+| billing         | have billing route partial metering records to billing document   |
+| proxy-mode      | proxy the WS API from region A to region B                        |
+| remote-finder   | extend WS API to implement a Finder for region A to do core tasks |
+| finder in adama | Turn core service into a finder cache for web tier                |
+| region-isolate  | Allow regions to have storage for local documents                 |
 
 ## Infrastructure - Core Service
 | project                 | milestones/description                                                                                                                                                                                                                                                                                             |
