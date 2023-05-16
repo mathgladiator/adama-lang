@@ -343,7 +343,7 @@ public class LivingDocumentTests {
   public void sample_service() throws Exception {
     ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
     RealDocumentSetup setup = new RealDocumentSetup(
-        "@link sample;" +
+        "@link sample{}" +
             "public string msg = \"Hi\";" +
             "public formula result = sample.echo(@no_one, {message:msg});" +
             "@connected { msg =\"Hello\"; return true; }",
@@ -368,6 +368,17 @@ public class LivingDocumentTests {
       System.err.println(item);
     }
     setup.assertCompare();
+  }
+
+  @Test
+  public void sample_service_with_error() throws Exception {
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
+    try {
+      LivingDocumentTests.compile("@link sample{ error = \"Nope\"; }" + "public string msg = \"Hi\";" + "public formula result = sample.echo(@no_one, {message:msg});" + "@connected { msg =\"Hello\"; return true; }", null);
+      Assert.fail();
+    } catch (Exception ex) {
+      Assert.assertTrue(ex.getMessage().contains("has an error param which is an error"));
+    }
   }
 
   @Test

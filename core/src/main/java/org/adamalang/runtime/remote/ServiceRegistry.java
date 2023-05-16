@@ -10,9 +10,11 @@ package org.adamalang.runtime.remote;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /** a service registry maps service names to services */
@@ -49,15 +51,15 @@ public class ServiceRegistry {
     REGISTRY.put(name, cons);
   }
 
-  public static String getLinkDefinition(String name, int autoId) {
+  public static String getLinkDefinition(String name, int autoId, String params, HashSet<String> names, Consumer<String> error) {
     Class<?> clazz = INCLUDED_SERVICES.get(name);
     if (clazz == null) {
       return null;
     }
     try {
-      Method method = clazz.getMethod("definition", int.class);
+      Method method = clazz.getMethod("definition", int.class, String.class, HashSet.class, Consumer.class);
       if (method != null) {
-        return (String) method.invoke(null, autoId);
+        return (String) method.invoke(null, autoId, params, names, error);
       }
     } catch (Exception ex) {
     }

@@ -585,9 +585,21 @@ public class Parser {
 
   public Consumer<TopLevelDocumentHandler> execute_link(Token linkToken) throws AdamaLangException {
     Token what = id();
-    Token semicolon = consumeExpectedSymbol(";");
-    LinkService include = new LinkService(linkToken, what, semicolon);
-    return (doc) -> doc.add(include);
+    Token open = consumeExpectedSymbol("{");
+    ArrayList<Consumer<Consumer<Token>>> emissions = new ArrayList<>();
+    ArrayList<DefineService.ServiceAspect> aspects = new ArrayList<>();
+    var nextOrClose = tokens.pop();
+    while (!nextOrClose.isSymbolWithTextEq("}")) {
+      Token equals = consumeExpectedSymbol("=");
+      Expression val = expression();
+      Token semicolon = consumeExpectedSymbol(";");
+      DefineService.ServiceAspect aspect = new DefineService.ServiceAspect(nextOrClose, equals, val, semicolon);
+      emissions.add((y) -> aspect.emit(y));
+      aspects.add(aspect);
+      nextOrClose = tokens.pop();
+    }
+    LinkService link = new LinkService(linkToken, what, open, emissions, aspects, nextOrClose);
+    return (doc) -> doc.add(link);
   }
 
   public Consumer<TopLevelDocumentHandler> define_service(Token serviceToken) throws AdamaLangException {

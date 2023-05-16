@@ -1317,6 +1317,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
     gold.append("\n    HashMap<String, Object> sample = new HashMap<>();");
     gold.append("\n    sample.put(\"class\", \"sample\");");
+    gold.append("\n    sample.put(\"demo\", \"here we are\");");
     gold.append("\n    __map.put(\"sample\",sample);");
     gold.append("\n    return __map;");
     gold.append("\n  }");
@@ -1461,78 +1462,118 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_LinkSampleNotFound_5 = null;
-  private String get_LinkSampleNotFound_5() {
-    if (cached_LinkSampleNotFound_5 != null) {
-      return cached_LinkSampleNotFound_5;
+  private String cached_LinkSampleHasError_5 = null;
+  private String get_LinkSampleHasError_5() {
+    if (cached_LinkSampleHasError_5 != null) {
+      return cached_LinkSampleHasError_5;
     }
-    cached_LinkSampleNotFound_5 = generateTestOutput(false, "LinkSampleNotFound_5", "./test_code/Service_LinkSampleNotFound_failure.a");
-    return cached_LinkSampleNotFound_5;
+    cached_LinkSampleHasError_5 = generateTestOutput(false, "LinkSampleHasError_5", "./test_code/Service_LinkSampleHasError_failure.a");
+    return cached_LinkSampleHasError_5;
   }
 
   @Test
-  public void testLinkSampleNotFoundFailure() {
-    assertLiveFail(get_LinkSampleNotFound_5());
+  public void testLinkSampleHasErrorFailure() {
+    assertLiveFail(get_LinkSampleHasError_5());
   }
 
   @Test
-  public void testLinkSampleNotFoundNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_LinkSampleNotFound_5());
+  public void testLinkSampleHasErrorNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_LinkSampleHasError_5());
   }
 
   @Test
-  public void testLinkSampleNotFoundExceptionFree() {
-    assertExceptionFree(get_LinkSampleNotFound_5());
+  public void testLinkSampleHasErrorExceptionFree() {
+    assertExceptionFree(get_LinkSampleHasError_5());
   }
 
   @Test
-  public void testLinkSampleNotFoundTODOFree() {
-    assertTODOFree(get_LinkSampleNotFound_5());
+  public void testLinkSampleHasErrorTODOFree() {
+    assertTODOFree(get_LinkSampleHasError_5());
   }
 
   @Test
-  public void stable_LinkSampleNotFound_5() {
-    String live = get_LinkSampleNotFound_5();
+  public void stable_LinkSampleHasError_5() {
+    String live = get_LinkSampleHasError_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:Service_LinkSampleNotFound_failure.a");
+    gold.append("Path:Service_LinkSampleHasError_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":26,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"The link 'oops_i_did_it_again' was not found. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":37}},\"severity\":1,\"source\":\"error\",\"message\":\"has an error param which is an error (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_MethodHasTypeNotFound_6 = null;
-  private String get_MethodHasTypeNotFound_6() {
-    if (cached_MethodHasTypeNotFound_6 != null) {
-      return cached_MethodHasTypeNotFound_6;
+  private String cached_LinkSampleNotFound_6 = null;
+  private String get_LinkSampleNotFound_6() {
+    if (cached_LinkSampleNotFound_6 != null) {
+      return cached_LinkSampleNotFound_6;
     }
-    cached_MethodHasTypeNotFound_6 = generateTestOutput(false, "MethodHasTypeNotFound_6", "./test_code/Service_MethodHasTypeNotFound_failure.a");
-    return cached_MethodHasTypeNotFound_6;
+    cached_LinkSampleNotFound_6 = generateTestOutput(false, "LinkSampleNotFound_6", "./test_code/Service_LinkSampleNotFound_failure.a");
+    return cached_LinkSampleNotFound_6;
+  }
+
+  @Test
+  public void testLinkSampleNotFoundFailure() {
+    assertLiveFail(get_LinkSampleNotFound_6());
+  }
+
+  @Test
+  public void testLinkSampleNotFoundNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_LinkSampleNotFound_6());
+  }
+
+  @Test
+  public void testLinkSampleNotFoundExceptionFree() {
+    assertExceptionFree(get_LinkSampleNotFound_6());
+  }
+
+  @Test
+  public void testLinkSampleNotFoundTODOFree() {
+    assertTODOFree(get_LinkSampleNotFound_6());
+  }
+
+  @Test
+  public void stable_LinkSampleNotFound_6() {
+    String live = get_LinkSampleNotFound_6();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Service_LinkSampleNotFound_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":27,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"The link 'oops_i_did_it_again' was not found. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_MethodHasTypeNotFound_7 = null;
+  private String get_MethodHasTypeNotFound_7() {
+    if (cached_MethodHasTypeNotFound_7 != null) {
+      return cached_MethodHasTypeNotFound_7;
+    }
+    cached_MethodHasTypeNotFound_7 = generateTestOutput(false, "MethodHasTypeNotFound_7", "./test_code/Service_MethodHasTypeNotFound_failure.a");
+    return cached_MethodHasTypeNotFound_7;
   }
 
   @Test
   public void testMethodHasTypeNotFoundFailure() {
-    assertLiveFail(get_MethodHasTypeNotFound_6());
+    assertLiveFail(get_MethodHasTypeNotFound_7());
   }
 
   @Test
   public void testMethodHasTypeNotFoundNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_MethodHasTypeNotFound_6());
+    assertNotTerribleLineNumbers(get_MethodHasTypeNotFound_7());
   }
 
   @Test
   public void testMethodHasTypeNotFoundExceptionFree() {
-    assertExceptionFree(get_MethodHasTypeNotFound_6());
+    assertExceptionFree(get_MethodHasTypeNotFound_7());
   }
 
   @Test
   public void testMethodHasTypeNotFoundTODOFree() {
-    assertTODOFree(get_MethodHasTypeNotFound_6());
+    assertTODOFree(get_MethodHasTypeNotFound_7());
   }
 
   @Test
-  public void stable_MethodHasTypeNotFound_6() {
-    String live = get_MethodHasTypeNotFound_6();
+  public void stable_MethodHasTypeNotFound_7() {
+    String live = get_MethodHasTypeNotFound_7();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_MethodHasTypeNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1541,43 +1582,43 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_Play_7 = null;
-  private String get_Play_7() {
-    if (cached_Play_7 != null) {
-      return cached_Play_7;
+  private String cached_Play_8 = null;
+  private String get_Play_8() {
+    if (cached_Play_8 != null) {
+      return cached_Play_8;
     }
-    cached_Play_7 = generateTestOutput(true, "Play_7", "./test_code/Service_Play_success.a");
-    return cached_Play_7;
+    cached_Play_8 = generateTestOutput(true, "Play_8", "./test_code/Service_Play_success.a");
+    return cached_Play_8;
   }
 
   @Test
   public void testPlayEmission() {
-    assertEmissionGood(get_Play_7());
+    assertEmissionGood(get_Play_8());
   }
 
   @Test
   public void testPlaySuccess() {
-    assertLivePass(get_Play_7());
+    assertLivePass(get_Play_8());
   }
 
   @Test
   public void testPlayGoodWillHappy() {
-    assertGoodWillHappy(get_Play_7());
+    assertGoodWillHappy(get_Play_8());
   }
 
   @Test
   public void testPlayExceptionFree() {
-    assertExceptionFree(get_Play_7());
+    assertExceptionFree(get_Play_8());
   }
 
   @Test
   public void testPlayTODOFree() {
-    assertTODOFree(get_Play_7());
+    assertTODOFree(get_Play_8());
   }
 
   @Test
-  public void stable_Play_7() {
-    String live = get_Play_7();
+  public void stable_Play_8() {
+    String live = get_Play_8();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_Play_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1610,13 +1651,13 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Play_7 extends LivingDocument {");
+    gold.append("\npublic class Play_8 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Play_7(DocumentMonitor __monitor) {");
+    gold.append("\n  public Play_8(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -1843,9 +1884,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaPlay_7 implements DeltaNode {");
+    gold.append("\n  private class DeltaPlay_8 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaPlay_7() {");
+    gold.append("\n    private DeltaPlay_8() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1853,7 +1894,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Play_7 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Play_8 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -1881,8 +1922,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Play_7 __self = this;");
-    gold.append("\n    DeltaPlay_7 __state = new DeltaPlay_7();");
+    gold.append("\n    Play_8 __self = this;");
+    gold.append("\n    DeltaPlay_8 __state = new DeltaPlay_8();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -2228,43 +2269,43 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ResultFunctions_8 = null;
-  private String get_ResultFunctions_8() {
-    if (cached_ResultFunctions_8 != null) {
-      return cached_ResultFunctions_8;
+  private String cached_ResultFunctions_9 = null;
+  private String get_ResultFunctions_9() {
+    if (cached_ResultFunctions_9 != null) {
+      return cached_ResultFunctions_9;
     }
-    cached_ResultFunctions_8 = generateTestOutput(true, "ResultFunctions_8", "./test_code/Service_ResultFunctions_success.a");
-    return cached_ResultFunctions_8;
+    cached_ResultFunctions_9 = generateTestOutput(true, "ResultFunctions_9", "./test_code/Service_ResultFunctions_success.a");
+    return cached_ResultFunctions_9;
   }
 
   @Test
   public void testResultFunctionsEmission() {
-    assertEmissionGood(get_ResultFunctions_8());
+    assertEmissionGood(get_ResultFunctions_9());
   }
 
   @Test
   public void testResultFunctionsSuccess() {
-    assertLivePass(get_ResultFunctions_8());
+    assertLivePass(get_ResultFunctions_9());
   }
 
   @Test
   public void testResultFunctionsGoodWillHappy() {
-    assertGoodWillHappy(get_ResultFunctions_8());
+    assertGoodWillHappy(get_ResultFunctions_9());
   }
 
   @Test
   public void testResultFunctionsExceptionFree() {
-    assertExceptionFree(get_ResultFunctions_8());
+    assertExceptionFree(get_ResultFunctions_9());
   }
 
   @Test
   public void testResultFunctionsTODOFree() {
-    assertTODOFree(get_ResultFunctions_8());
+    assertTODOFree(get_ResultFunctions_9());
   }
 
   @Test
-  public void stable_ResultFunctions_8() {
-    String live = get_ResultFunctions_8();
+  public void stable_ResultFunctions_9() {
+    String live = get_ResultFunctions_9();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_ResultFunctions_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -2297,7 +2338,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class ResultFunctions_8 extends LivingDocument {");
+    gold.append("\npublic class ResultFunctions_9 extends LivingDocument {");
     gold.append("\n  private final RxLazy<NtResult<RTxSendResponse>> foo;");
     gold.append("\n  private final RxCache __cfoo;private final RxLazy<Boolean> f_has;");
     gold.append("\n  private final RxLazy<Integer> f_code;");
@@ -2317,7 +2358,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __sum += f_maybe.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public ResultFunctions_8(DocumentMonitor __monitor) {");
+    gold.append("\n  public ResultFunctions_9(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __cfoo = new RxCache(__self, this);");
     gold.append("\n    foo = new RxLazy<NtResult<RTxSendResponse>>(this,__cfoo.wrap(() -> (sms.invoke(__self, \"send\", __cfoo, NtPrincipal.NO_ONE, new RTxSendRequest(\"M\", \"913\"), (__json) -> new RTxSendResponse(new JsonStreamReader(__json))))));");
@@ -2571,7 +2612,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __cfoo.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaResultFunctions_8 implements DeltaNode {");
+    gold.append("\n  private class DeltaResultFunctions_9 implements DeltaNode {");
     gold.append("\n    private int __gfoo;");
     gold.append("\n    private DResult<DeltaRTxSendResponse> __dfoo;");
     gold.append("\n    private int __gf_has;");
@@ -2587,7 +2628,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    private int __gf_maybe;");
     gold.append("\n    private DMaybe<DeltaRTxSendResponse> __df_maybe;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaResultFunctions_8() {");
+    gold.append("\n    private DeltaResultFunctions_9() {");
     gold.append("\n      __gfoo = -1;");
     gold.append("\n      __dfoo = new DResult<DeltaRTxSendResponse>();");
     gold.append("\n      __gf_has = -1;");
@@ -2616,7 +2657,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __sum += __df_maybe.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(ResultFunctions_8 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(ResultFunctions_9 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 7;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -2694,8 +2735,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    ResultFunctions_8 __self = this;");
-    gold.append("\n    DeltaResultFunctions_8 __state = new DeltaResultFunctions_8();");
+    gold.append("\n    ResultFunctions_9 __self = this;");
+    gold.append("\n    DeltaResultFunctions_9 __state = new DeltaResultFunctions_9();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");

@@ -13,17 +13,25 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.natives.NtPrincipal;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.function.Consumer;
+
 /** this is a sample service */
 public class SampleService extends SimpleService {
   public SampleService() {
     super("sample", new NtPrincipal("sample", "services"), true);
   }
 
-  public static String definition(int uniqueId) {
+  public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
     sb.append("message EchoRequestAndResponse_").append(uniqueId).append(" { string message; }\n");
     sb.append("service sample {\n");
-    sb.append("  class=\"sample\";");
+    sb.append("  class=\"sample\";\n");
+    sb.append("  ").append(params).append("\n");
+    if (names.contains("error")) {
+      error.accept("has an error param which is an error");
+    }
     sb.append("  method<EchoRequestAndResponse_").append(uniqueId).append(", EchoRequestAndResponse_").append(uniqueId).append("> echo;\n");
     sb.append("}\n");
     return sb.toString();

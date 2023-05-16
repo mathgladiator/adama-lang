@@ -239,7 +239,9 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(LinkService link) {
     int id = inventClassId();
-    String defn = ServiceRegistry.getLinkDefinition(link.name.text, id);
+    String defn = ServiceRegistry.getLinkDefinition(link.name.text, id, link.toParams(), link.names(), (err) -> {
+      typeChecker.issueError(link, err, "DocumentDefine");
+    });
     if (defn == null) {
       typeChecker.issueError(link, String.format("The link '%s' was not found.", link.name.text), "DocumentDefine");
       return;
