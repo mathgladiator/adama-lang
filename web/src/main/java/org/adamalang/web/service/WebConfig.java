@@ -34,6 +34,7 @@ public class WebConfig {
   public final int sharedConnectionPoolMaxUsageCount;
   public final int sharedConnectionPoolMaxPoolSize;
   public final File cacheRoot;
+  public final String adamaJarDomain;
 
   public WebConfig(ConfigObject config) throws Exception {
     // HTTP properties
@@ -54,6 +55,7 @@ public class WebConfig {
     this.bossThreads = config.intOf("http-boss-threads", 2);
     this.workerThreads = config.intOf("http-worker-threads", 16);
     this.regionalDomain = config.strOf("regional-domain", "adama-platform.com");
+    this.adamaJarDomain = config.strOf("adama-jar-domain", ".adama-platform.com");
     this.globalDomains = config.stringsOf("global-domains", new String[] { "adama.games" });
     this.sharedConnectionPoolMaxLifetimeMilliseconds = config.intOf("shared-connection-max-lifetime-ms", 10000);
     this.sharedConnectionPoolMaxUsageCount = config.intOf("shared-connection-max-usage-count", 50);
