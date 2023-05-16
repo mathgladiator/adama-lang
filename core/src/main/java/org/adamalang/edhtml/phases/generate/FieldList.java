@@ -60,6 +60,7 @@ public class FieldList implements Iterable<Field> {
           add(fields, name, path, (ObjectNode) type.get("type"), annotations.of(an));
           return;
         case "native_message":
+        case "reactive_record":
           fill(fields, name + ".", path + "/", (ObjectNode) type.get("fields"), annotations.of(an));
           return;
       }
