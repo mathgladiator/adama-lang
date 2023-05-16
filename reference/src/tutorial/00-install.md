@@ -18,13 +18,13 @@ OpenJDK 64-Bit Server VM (build 11.0.13+8-Ubuntu-0ubuntu1.20.04, mixed mode, sha
 That's all you need for Adama to work. Once Java is working, you can download the latest jar using wget [download directly](https://github.com/mathgladiator/adama-lang/releases/download/nightly/adama.jar) from [github](https://github.com/mathgladiator/adama-lang/releases).
 
 ```shell
-wget https://github.com/mathgladiator/adama-lang/releases/download/nightly/adama.jar
+wget https://aws-us-east-2.adama-platform.com/adama.jar
 java -jar adama.jar
 ```
 or (if you lack wget)
 
 ```shell
-curl -fSLO https://github.com/mathgladiator/adama-lang/releases/download/nightly/adama.jar
+curl -fSLO https://aws-us-east-2.adama-platform.com/adama.jar
 java -jar adama.jar
 ```
 
