@@ -14,10 +14,10 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.cookie.*;
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.DefaultCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
+import io.netty.handler.codec.http.cookie.*;
 import io.netty.handler.codec.http.multipart.Attribute;
 import io.netty.handler.codec.http.multipart.FileUpload;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
@@ -38,11 +38,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
@@ -57,12 +60,14 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private static final byte[] ASSET_UPLOAD_INCOMPLETE_FIELDS = "<html><head><title>Bad Request; Incomplete</title></head><body>Sorry, the post request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] COOKIE_SET_FAILURE = "<html><head><title>Bad Request; Failed to set cookie</title></head><body>Sorry, the request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] COOKIE_GET_FAILURE = "<html><head><title>Bad Request; Failed to get cookie</title></head><body>Sorry, the request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
+  private static final byte[] JAR_FAILURE = "<html><head><title>Bad Request; Internal Error Access Jar</title></head><body>Sorry, the download failed.</body></html>".getBytes(StandardCharsets.UTF_8);
 
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final HttpHandler httpHandler;
   private final AssetSystem assets;
   private final WebHandlerAssetCache cache;
+  private final ExecutorService jarThread;
 
   public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetSystem assets, WebHandlerAssetCache cache) {
     this.webConfig = webConfig;
@@ -70,6 +75,17 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     this.httpHandler = httpHandler;
     this.assets = assets;
     this.cache = cache;
+    this.jarThread = Executors.newSingleThreadExecutor();
+  }
+
+  private static void sendWithKeepAlive(final WebConfig webConfig, final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
+    final var responseStatus = res.status();
+    final var keepAlive = HttpUtil.isKeepAlive(req) && responseStatus.code() == 200;
+    HttpUtil.setKeepAlive(res, keepAlive);
+    final var future = ctx.writeAndFlush(res);
+    if (!keepAlive) {
+      future.addListener(ChannelFutureListener.CLOSE);
+    }
   }
 
   /** internal: copy the origin to access control when allowed */
@@ -108,18 +124,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         this.contentType = contentType;
       }
 
-      private void setResponseHeaders(HttpResponse response) {
-        if (this.contentLength < 0 && req.protocolVersion() == HttpVersion.HTTP_1_1) {
-          response.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
-        } else {
-          if (this.contentLength >= 0) {
-            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, contentLength);
-          }
-        }
-        response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
-        transferCors(response, req, cors);
-      }
-
       @Override
       public void body(byte[] chunk, int offset, int length, boolean last) {
         if (!started && last) {
@@ -147,6 +151,18 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             }
           }
         }
+      }
+
+      private void setResponseHeaders(HttpResponse response) {
+        if (this.contentLength < 0 && req.protocolVersion() == HttpVersion.HTTP_1_1) {
+          response.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
+        } else {
+          if (this.contentLength >= 0) {
+            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, contentLength);
+          }
+        }
+        response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
+        transferCors(response, req, cors);
       }
 
       @Override
@@ -344,7 +360,54 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
   }
 
+  private void sendJar(final ChannelHandlerContext ctx, final FullHttpRequest req) {
+    jarThread.execute(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          File adamaJar = new File("adama.jar");
+          FileInputStream input = new FileInputStream(adamaJar);
+          try {
+            boolean keepalive = HttpUtil.isKeepAlive(req);
+            HttpResponse res = new DefaultHttpResponse(req.protocolVersion(), HttpResponseStatus.OK);
+            res.headers().set(HttpHeaderNames.CONTENT_LENGTH, adamaJar.length());
+            res.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/java-archive");
+            HttpUtil.setKeepAlive(res, keepalive);
+            ctx.write(res);
+            long remaining = adamaJar.length();
+            byte[] buffer = new byte[8192];
+            int rd;
+            while ((rd = input.read(buffer)) >= 0) {
+              remaining -= rd;
+              if (rd == buffer.length) {
+                ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(buffer)));
+              } else {
+                ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(buffer, 0, rd)));
+              }
+              if (remaining <= 0) {
+                final var future = ctx.writeAndFlush(new DefaultLastHttpContent());
+                if (!keepalive) {
+                  future.addListener(ChannelFutureListener.CLOSE);
+                }
+              }
+              buffer = new byte[8192];
+            }
+          } finally {
+            input.close();
+          }
+        } catch (Exception ex) {
+          LOG.error("failed-sending-jar", ex);
+          sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, JAR_FAILURE, "text/html; charset=UTF-8", true);
+        }
+      }
+    });
+  }
+
   private boolean handleInternal(final ChannelHandlerContext ctx, final FullHttpRequest req) {
+    String host = req.headers().get(HttpHeaderNames.HOST);
+    if (host == null) {
+      host = "";
+    }
     if (webConfig.healthCheckPath.equals(req.uri())) { // health checks
       sendImmediate(metrics.webhandler_healthcheck, req, ctx, HttpResponseStatus.OK, ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8), "text/text; charset=UTF-8", true);
       return true;
@@ -363,6 +426,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       return true;
     } else if (req.uri().startsWith("/~upload") && req.method() == HttpMethod.POST) {
       handleAssetUpload(ctx, req);
+      return true;
+    } else if (req.uri().equalsIgnoreCase("/adama.jar") && host.endsWith(webConfig.adamaJarDomain)) {
+      sendJar(ctx, req);
       return true;
     } else if (req.uri().startsWith("/libadama.js")) { // in-memory JavaScript library for the client
       sendImmediate(metrics.webhandler_client_download, req, ctx, HttpResponseStatus.OK, JavaScriptClient.ADAMA_JS_CLIENT_BYTES, "text/javascript; charset=UTF-8", true);
@@ -443,8 +509,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     return false;
   }
 
-
-
   private void handleHttpResult(HttpHandler.HttpResult httpResultIncoming, final ChannelHandlerContext ctx, final FullHttpRequest req) {
     HttpHandler.HttpResult httpResult = httpResultIncoming;
     if (httpResult == null) { // no response found
@@ -517,16 +581,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     } catch (Exception ex) {
       LOG.error("failure-to-build-wta:", ex);
       sendImmediate(metrics.webhandler_wta_crash, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, EMPTY_RESPONSE, null, true);
-    }
-  }
-
-  private static void sendWithKeepAlive(final WebConfig webConfig, final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
-    final var responseStatus = res.status();
-    final var keepAlive = HttpUtil.isKeepAlive(req) && responseStatus.code() == 200;
-    HttpUtil.setKeepAlive(res, keepAlive);
-    final var future = ctx.writeAndFlush(res);
-    if (!keepAlive) {
-      future.addListener(ChannelFutureListener.CLOSE);
     }
   }
 }
