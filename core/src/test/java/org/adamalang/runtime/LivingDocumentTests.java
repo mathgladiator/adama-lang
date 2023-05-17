@@ -18,6 +18,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.ops.TestReportBuilder;
@@ -27,6 +28,9 @@ import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.mocks.MockDataObserver;
+import org.adamalang.runtime.sys.web.WebContext;
+import org.adamalang.runtime.sys.web.WebPut;
+import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
@@ -41,6 +45,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
 public class LivingDocumentTests {
@@ -367,6 +374,40 @@ public class LivingDocumentTests {
     for (String item : list) {
       System.err.println(item);
     }
+    setup.assertCompare();
+  }
+
+  @Test
+  public void webput_async_service() throws Exception {
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
+    RealDocumentSetup setup = new RealDocumentSetup(
+        "@link sample{}" +
+            "public string msg = \"Hi\";" +
+            "@connected { return true; }" +
+            "message M { string name; }" +
+            "@web put /data (M m) {" +
+            "  var mresult = sample.echo(@who, {message: \"Hello \" + m.name}).await();" +
+            "  if (mresult as result) { return {html:result.message}; }" +
+            "  return {html:\"NOPE\"};" +
+            "}",
+        "{}");
+    // String uri, TreeMap<String, String> headers, NtDynamic parameters, String bodyJson
+    WebPut put = new WebPut(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), "/data", new TreeMap<>(), new NtDynamic("{}"), "{\"name\":\"Jeff\"}");
+    CountDownLatch gotResponse = new CountDownLatch(1);
+    setup.document.webPut(put, new Callback<WebResponse>() {
+      @Override
+      public void success(WebResponse value) {
+        Assert.assertEquals("Hello Jeff", value.body);
+        gotResponse.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        ex.printStackTrace();
+      }
+    });
+    gotResponse.await(1000, TimeUnit.MILLISECONDS);
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(3));
     setup.assertCompare();
   }
 

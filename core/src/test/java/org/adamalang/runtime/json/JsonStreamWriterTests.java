@@ -9,6 +9,8 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.natives.*;
+import org.adamalang.translator.parser.token.MajorTokenType;
+import org.adamalang.translator.parser.token.Token;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -35,6 +37,15 @@ public class JsonStreamWriterTests {
     writer.force_comma_introduction();
     writer.writeNull();
     Assert.assertEquals(",null", writer.toString());
+  }
+
+  @Test
+  public void token() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.writeToken(new Token(null, "\"xyz\"", MajorTokenType.StringLiteral, null, 0, 0, 0, 0, 0, 0));
+    writer.writeToken(new Token(null, "123", MajorTokenType.NumberLiteral, null, 0, 0, 0, 0, 0, 0));
+    writer.writeToken(new Token(null, "w", MajorTokenType.Identifier, null, 0, 0, 0, 0, 0, 0));
+    Assert.assertEquals("\"xyz\"123\"w\"", writer.toString());
   }
 
   @Test

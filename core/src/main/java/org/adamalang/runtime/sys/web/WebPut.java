@@ -16,7 +16,8 @@ import org.adamalang.runtime.natives.NtMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class WebPut {
+/** a @web put $path (... ) invocation */
+public class WebPut implements WebItem {
   public final WebContext context;
   public final String uri;
   public final NtMap<String, String> headers;
@@ -70,7 +71,7 @@ public class WebPut {
     return null;
   }
 
-  public void write(JsonStreamWriter writer) {
+  public void injectWrite(JsonStreamWriter writer) {
     writer.writeObjectFieldIntro("put");
     writer.beginObject();
     writer.writeObjectFieldIntro("uri");
@@ -86,6 +87,13 @@ public class WebPut {
     writer.writeNtDynamic(parameters);
     writer.writeObjectFieldIntro("bodyJson");
     writer.writeNtDynamic(new NtDynamic(bodyJson));
+    writer.endObject();
+  }
+
+  @Override
+  public void writeAsObject(JsonStreamWriter writer) {
+    writer.beginObject();
+    injectWrite(writer);
     writer.endObject();
   }
 

@@ -70,7 +70,7 @@ public class DefineWebPut extends Definition implements UriAction {
     uri.extendInto(env);
     env.define(messageVariable.text, messageTypeFound, false, this);
     uri.typing(env);
-    return env;
+    return env.scopeWithCache("__currentWebCache");
   }
 
   public void typing(TypeCheckerRoot checker) {

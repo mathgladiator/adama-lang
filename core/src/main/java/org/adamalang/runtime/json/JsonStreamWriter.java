@@ -131,7 +131,7 @@ public class JsonStreamWriter {
   }
 
   public void writeToken(final Token token) {
-    if (token.isStringLiteral() || token.isNumberLiteralDouble() || token.isNumberLiteralInteger()) {
+    if (token.isStringLiteral() || token.isNumberLiteral()) {
       maybe_comma();
       sb.append(token.text);
     } else {

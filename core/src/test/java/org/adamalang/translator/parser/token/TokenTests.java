@@ -45,5 +45,26 @@ public class TokenTests {
   public void isKeyword() {
     Token t = new Token("source", "key", MajorTokenType.Keyword, null, 0, 0, 0, 0, 0, 0);
     Assert.assertTrue(t.isKeyword());
+    Assert.assertFalse(t.isNumberLiteral());
+    Assert.assertFalse(t.isNumberLiteralDouble());
+    Assert.assertFalse(t.isNumberLiteralInteger());
+  }
+
+  @Test
+  public void isDouble() {
+    Token t = new Token("source", "key", MajorTokenType.NumberLiteral, MinorTokenType.NumberIsDouble, 0, 0, 0, 0, 0, 0);
+    Assert.assertFalse(t.isKeyword());
+    Assert.assertTrue(t.isNumberLiteral());
+    Assert.assertTrue(t.isNumberLiteralDouble());
+    Assert.assertFalse(t.isNumberLiteralInteger());
+  }
+
+  @Test
+  public void isInt() {
+    Token t = new Token("source", "key", MajorTokenType.NumberLiteral, MinorTokenType.NumberIsInteger, 0, 0, 0, 0, 0, 0);
+    Assert.assertFalse(t.isKeyword());
+    Assert.assertTrue(t.isNumberLiteral());
+    Assert.assertFalse(t.isNumberLiteralDouble());
+    Assert.assertTrue(t.isNumberLiteralInteger());
   }
 }
