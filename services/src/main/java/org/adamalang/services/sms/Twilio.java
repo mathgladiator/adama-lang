@@ -32,6 +32,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
+import org.adamalang.services.FirstPartyMetrics;
 import org.adamalang.services.ServiceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +41,12 @@ import java.util.concurrent.ExecutorService;
 
 public class Twilio extends SimpleService {
   private static final Logger LOGGER = LoggerFactory.getLogger(Twilio.class);
+  private final FirstPartyMetrics metrics;
   private final ExecutorService executor;
 
-  public Twilio(ServiceConfig config, ExecutorService executor) throws ErrorCodeException {
+  public Twilio(FirstPartyMetrics metrics, ServiceConfig config, ExecutorService executor) throws ErrorCodeException {
     super("twilio", new NtPrincipal("twilio", "service"), true);
+    this.metrics = metrics;
     this.executor = executor;
     String username = config.getDecryptedSecret("username");
     String password = config.getDecryptedSecret("password");

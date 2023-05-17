@@ -22,10 +22,12 @@ import java.util.concurrent.ExecutorService;
 
 public class Adama extends SimpleService {
   private static final Logger LOGGER = LoggerFactory.getLogger(Adama.class);
+  private final FirstPartyMetrics metrics;
   private final ExecutorService executor;
 
-  public Adama(ServiceConfig config, ExecutorService executor) throws ErrorCodeException {
+  public Adama(FirstPartyMetrics metrics, ServiceConfig config, ExecutorService executor) throws ErrorCodeException {
     super("adama", new NtPrincipal("adama", "service"), true);
+    this.metrics = metrics;
     this.executor = executor;
   }
 

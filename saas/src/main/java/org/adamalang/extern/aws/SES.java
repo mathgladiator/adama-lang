@@ -115,24 +115,5 @@ public class SES implements Email {
       instance.failure(ErrorCodes.AWS_EMAIL_SEND_FAILURE_HARD_EXCEPTION);
       return false;
     }
-    /*
-    try {
-      SendEmailRequest.Builder builder = SendEmailRequest.builder();
-      builder.source(config.fromEmailAddressForInit);
-      builder.replyToAddresses(config.replyToEmailAddressForInit);
-      builder.destination(Destination.builder().toAddresses(email).build());
-      Content subject = Content.builder().data("Access code for Adama Platform").charset("UTF-8").build();
-      Content text = Content.builder().data().charset("UTF-8").build();
-      Body body = Body.builder().text(text).build();
-      builder.message(Message.builder().subject(subject).body(body).build());
-      client.sendEmail(builder.build());
-      instance.success();
-      return true;
-    } catch (Exception ex) {
-      LOGGER.error("failed-sending-code", ex);
-      instance.failure(ErrorCodes.AWS_EMAIL_SEND_FAILURE);
-      return false;
-    }
-    */
   }
 }
