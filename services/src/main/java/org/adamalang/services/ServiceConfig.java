@@ -15,15 +15,12 @@ import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Secrets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 
 /** a service config for a space */
 public class ServiceConfig {
-  private final Logger LOGGER = LoggerFactory.getLogger(ServiceConfig.class);
   private final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(ServiceConfig.class);
   private final DataBase dataBase;
   private final String space;
