@@ -48,35 +48,37 @@
 <!--        </documentation>-->
 <!--    </arg-definition>-->
 
-<!--    <arg-definition name="agent" type="string">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
+    <arg-definition name="agent" type="string">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
 
-<!--    <arg-definition name="validate">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
+    <arg-definition name="validate" type="file">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
 
-<!--    <arg-definition name="authority" type="string">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
+    <arg-definition name="authority" type="string">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
 
-<!--    <arg-definition name="keystore">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
+    <arg-definition name="keystore" type="file">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
 
-<!--    <arg-definition name="private">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
+    <arg-definition name="private">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
 
-<!--    <arg-definition name="email">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
+
 
 <!--    <arg-definition name="pennies">-->
 <!--        <documentation>-->
@@ -93,30 +95,31 @@
 <!--        </documentation>-->
 <!--    </arg-definition>-->
 
-<!--    <arg-definition name="arg">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
+    <arg-definition name="arg" type="node">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
 
-<!--    <arg-definition name="entropy">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
+    <arg-definition name="entropy" type="string">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
 
-<!--    <arg-definition name="name">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
+    <arg-definition name="name" type="path">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
 
-<!--    <arg-definition name="type">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
+    <arg-definition name="type" type="type">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
 
-<!--    <arg-definition name="marker">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
+
 
 <!--    <arg-definition name="auto">-->
 <!--        <documentation>-->
@@ -143,25 +146,23 @@
 <!--        </documentation>-->
 <!--    </arg-definition>-->
 
-<!--    <arg-definition name="limit">-->
-<!--        <documentation>-->
-<!--        </documentation>-->
-<!--    </arg-definition>-->
 
     <!--    Possible Methods-->
     <method name="connection" />
-    <method name="connection-stream" />
+    <method name="stream" />
 
     <group name="space">
         <documentation>
             Manage a space
         </documentation>
-        <command name="usage">
+        <command name="usage" method="stream">
+            <arg name="space" />
+            <arg name="limit" optional="true" default="336"/>
             <documentation>
                 Iterates the billed usage
             </documentation>
         </command>
-        <command name="create">
+        <command name="create" method="connection">
             <arg name="space" />
             <documentation>
                 Creates a new space
@@ -181,7 +182,7 @@
                 Deploy a plan to a space
             </documentation>
         </command>
-        <command name="download">
+        <command name="download" method="connection">
             <arg name="space" />
             <documentation>
                 Download a space's plan
@@ -194,10 +195,10 @@
                 List spaces available to your account
             </documentation>
         </command>
-        <command name="set-role">
+        <command name="set-role" method="connection">
             <arg name="space" />
             <arg name="email" optional="true" default=""/>
-            <arg name="role" optional="true" default=""/>
+            <arg name="role" optional="true" default="none"/>
             <documentation>
                 Share/unshare a space with another developer
             </documentation>
@@ -221,7 +222,7 @@
                 Set the frontend RxHTML forest
             </documentation>
         </command>
-        <command name="get-rxhtml">
+        <command name="get-rxhtml" method="connection">
             <arg name="space" />
             <documentation>
                 Get the frontend RxHTML forest
@@ -236,12 +237,118 @@
                 Reflect a space
             </documentation>
         </command>
-
         <command name="help">
             <documentation>
                 Displays this screen
             </documentation>
         </command>
+    </group>
+
+    <group name="authority">
+        <documentation>
+            Manage Authorities
+        </documentation>
+        <command name="create" method="connection">
+            <documentation>
+                Creates a new authority
+            </documentation>
+        </command>
+        <command name="destroy" method="connection"  warn="true">
+            <arg name="authority" />
+            <documentation>
+                Destroys an authority
+            </documentation>
+        </command>
+        <command name="list" method="stream">
+            <documentation>
+                List authorities this developer owns
+            </documentation>
+        </command>
+        <command name="get">
+            <documentation>
+                Get released public keys for an authority
+            </documentation>
+        </command>
+        <command name="set">
+            <documentation>
+                Set public keys to an authority
+            </documentation>
+        </command>
+        <command name="sign">
+            <arg name="key" />
+            <arg name="agent" />
+            <arg name="validate" optional="true" default="null"/>
+            <documentation>
+                Sign an agent with a local private key
+            </documentation>
+        </command>
+        <command name="create-local"  warn="true">
+            <arg name="authority" />
+            <arg name="keystore" />
+            <arg name="private" />
+            <documentation>
+                Make a new set of public keys
+            </documentation>
+        </command>
+        <command name="append-local"  warn="true">
+            <arg name="authority" />
+            <arg name="keystore" />
+            <arg name="private" />
+            <documentation>
+                Append a new public key to the public key file
+            </documentation>
+        </command>
+    </group>
+
+    <group name="documents" endpoint="document">
+        <documentation>
+            Interact with documents
+        </documentation>
+
+        <command name="connect" endpoint="connection/create" method="connection">
+            <arg name="space" />
+            <arg name="key" />
+            <documentation>
+                Connect to a document
+            </documentation>
+        </command>
+        <command name="create" method="connection">
+            <arg name="space" />
+            <arg name="key" />
+            <arg name="entropy" optional="true" default="null"/>
+            <arg name="arg" type="set"/>
+            <documentation>
+                Create a document
+            </documentation>
+        </command>
+
+        <command name="delete" method="connection">
+            <arg name="space" />
+            <arg name="key" />
+            <documentation>
+                Delete a Document
+            </documentation>
+        </command>
+
+        <command name="list" method="stream">
+            <arg name="space" />
+            <arg name="marker" optional="true" default="null"/>
+            <arg name="limit" optional="true" default="1000"/>
+            <documentation>
+                List documents in a space
+            </documentation>
+        </command>
+        <command name="attach">
+            <arg name="space" />
+            <arg name="key" />
+            <arg name="file" />
+            <arg name="name" optional="true" default="file"/>
+            <arg name="type" optional="true" default="contentType"/>
+            <documentation>
+                Attach an asset to a document
+            </documentation>
+        </command>
+
     </group>
 
 

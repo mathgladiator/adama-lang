@@ -57,6 +57,11 @@ public class GroupClassGen {
                         StringBuilder fullLine  = new StringBuilder();
                         String[] changeStrings = new String[]{"","","","",""};
                         switch (argument.definition.type) {
+                            case "node":
+                                changeStrings[0] = "    ObjectNode ";
+                                changeStrings[1] = "Json.parseJsonObject(";
+                                changeStrings[4] = ")";
+                                break;
                             case "file":
                                 changeStrings[0] = "    File ";
                                 changeStrings[1] = "new File(";
@@ -92,19 +97,29 @@ public class GroupClassGen {
                 sb.append("    try (WebSocketClient client = new WebSocketClient(config)) {\n");
                 sb.append("      try (Connection connection = client.open()) {\n");
                 sb.append("        ObjectNode request = Json.newJsonObject();\n");
-                sb.append("        request.put(\"method\", ").append("\"").append(group.name + "/" + command.name)
+                String endpoint;
+                if (!command.endpoint.equals("")) {
+                    endpoint = command.endpoint;
+                } else if (!group.endpoint.equals("")) {
+                    endpoint = group.endpoint + "/" + command.name;
+                } else {
+                    endpoint = group.name + "/" + command.name;
+                }
+
+                    sb.append("        request.put(\"method\", ").append("\"").append(endpoint)
                         .append("\");\n");
                 sb.append("        request.put(\"identity\", identity);\n");
                 for (Argument argument : command.argList) {
+                    String reqType = argument.definition.type.equals("node") ? "set" : "put";
                     if (command.output != null && command.output.equals(argument.name))
                         continue;
-                    if (argument.defaultValue.equals("null")) {
+                    if (argument.defaultValue.equals("null") && argument.definition.type.equals("string")) {
                         sb.append("        if (").append(argument.name).append(" != null) {\n");
-                        sb.append("          request.put(\"").append(argument.name).append("\", ")
+                        sb.append("          request."+reqType+"(\"").append(argument.name).append("\", ")
                                 .append(argument.name).append(");\n");
                         sb.append("        }\n");
                     } else {
-                        sb.append("        request.put(\"").append(argument.name).append("\", ")
+                        sb.append("        request."+reqType+"(\"").append(argument.name).append("\", ")
                                 .append(argument.name).append(");\n");
                     }
 
@@ -151,7 +166,11 @@ public class GroupClassGen {
                 sb.append(Common.lJust(command.name, 18));
                 sb.append("\", Util.ANSI.Green) + \"");
                 sb.append(command.documentation);
-                sb.append("\");\n");
+                sb.append("\"");
+                if (command.danger) {
+                    sb.append("+ Util.prefix(\" (WARNING)\", Util.ANSI.Red)");
+                }
+                sb.append(");\n");
             }
             sb.append("  }\n");
             sb.append("}");

@@ -59,9 +59,10 @@ public class Argument {
                         argOptional + "\"");
             }
             String defaultValue = argElem.getAttribute("default");
+            String headerType = argElem.getAttribute("type");
             Argument argument;
             if (argDef != null)
-                argument = new Argument(argName, optional, defaultValue ,argDef);
+                argument = new Argument(argName, optional, defaultValue, argDef);
             else
                 argument = new Argument(argName, optional);
             argumentArray.add(argument);
