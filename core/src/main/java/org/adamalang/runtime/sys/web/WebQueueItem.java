@@ -12,7 +12,6 @@ import org.adamalang.runtime.async.EphemeralFuture;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.remote.RxCache;
-import org.adamalang.runtime.sys.LivingDocument;
 
 /** an item within the queue for processing web tasks */
 public class WebQueueItem {
@@ -30,6 +29,32 @@ public class WebQueueItem {
     this.cache = cache;
     this.future = future;
     this.state = WebQueueState.Created;
+  }
+
+  public static WebQueueItem from(int taskId, JsonStreamReader reader, RxCache cache) {
+    if (reader.startObject()) {
+      WebContext _context = null;
+      WebItem _item = null;
+      while (reader.notEndOfObject()) {
+        switch (reader.fieldName()) {
+          case "cache":
+            cache.__insert(reader);
+            break;
+          case "context":
+            _context = WebContext.readFromObject(reader);
+            break;
+          case "item":
+            _item = WebItem.read(_context, reader);
+            break;
+          default:
+            reader.skipValue();
+        }
+      }
+      return new WebQueueItem(taskId, _context, _item, cache, null);
+    } else {
+      reader.skipValue();
+    }
+    return null;
   }
 
   public void commit(int key, JsonStreamWriter forward, JsonStreamWriter reverse) {
@@ -58,42 +83,14 @@ public class WebQueueItem {
   public void patch(JsonStreamReader reader) {
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
-        switch (reader.fieldName()) {
-          case "cache":
-            cache.__patch(reader);
-            break;
-          default:
-            reader.skipValue();
+        if ("cache".equals(reader.fieldName())) {
+          cache.__patch(reader);
+        } else {
+          reader.skipValue();
         }
       }
     } else {
       reader.skipValue();
     }
-  }
-
-  public static WebQueueItem from(int taskId, JsonStreamReader reader, RxCache cache) {
-    if (reader.startObject()) {
-      WebContext _context = null;
-      WebItem _item = null;
-      while (reader.notEndOfObject()) {
-        switch (reader.fieldName()) {
-          case "cache":
-            cache.__insert(reader);
-            break;
-          case "context":
-            _context = WebContext.readFromObject(reader);
-            break;
-          case "item":
-            _item = WebItem.read(_context, reader);
-            break;
-          default:
-            reader.skipValue();
-        }
-      }
-      return new WebQueueItem(taskId, _context, _item, cache, null);
-    } else {
-      reader.skipValue();
-    }
-    return null;
   }
 }

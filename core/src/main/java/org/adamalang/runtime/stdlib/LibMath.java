@@ -24,19 +24,19 @@ public class LibMath {
   public static double PI = Math.PI;
 
   @Extension
+  public static @HiddenType(clazz = NtComplex.class) NtMaybe<NtComplex> sqrt(@HiddenType(clazz = Double.class) final NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(sqrt(mx.get()));
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
   public static NtComplex sqrt(final double x) {
     if (x < 0) {
       return new NtComplex(0.0, Math.sqrt(-x));
     }
     return new NtComplex(Math.sqrt(x), 0.0);
-  }
-
-  @Extension
-  public static @HiddenType(clazz=NtComplex.class) NtMaybe<NtComplex> sqrt(@HiddenType(clazz=Double.class) final NtMaybe<Double> mx) {
-    if (mx.has()) {
-      return new NtMaybe<>(sqrt(mx.get()));
-    }
-    return new NtMaybe<>();
   }
 
   /** isInfinite */
@@ -46,7 +46,7 @@ public class LibMath {
   }
 
   @Extension
-  public static boolean isInfinite(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static boolean isInfinite(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
       return Double.isInfinite(mx.get());
     }
@@ -59,7 +59,7 @@ public class LibMath {
   }
 
   @Extension
-  public static boolean isNaN(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static boolean isNaN(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
       return Double.isNaN(mx.get());
     }
@@ -67,7 +67,7 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> valid(double x) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> valid(double x) {
     if (Double.isFinite(x) && !Double.isNaN(x)) {
       return new NtMaybe<>(x);
     }
@@ -75,7 +75,7 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> valid(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> valid(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
       if (Double.isFinite(mx.get()) && !Double.isNaN(mx.get())) {
         return mx;
@@ -85,28 +85,30 @@ public class LibMath {
     return mx;
   }
 
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> min(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, double y) {
+    if (mx.has()) {
+      return new NtMaybe<>(min(mx.get(), y));
+    }
+    return mx;
+  }
 
   /** min */
   @Extension
   public static double min(final double x, final double y) {
     return Math.min(x, y);
   }
+
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> min(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
-    if (mx.has()) {
-      return new NtMaybe<>(min(mx.get(), y));
-    }
-    return mx;
-  }
-  @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> min(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> min(double x, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (my.has()) {
       return new NtMaybe<>(min(x, my.get()));
     }
     return my;
   }
+
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> min(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> min(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(min(mx.get(), my.get()));
@@ -115,27 +117,31 @@ public class LibMath {
     }
     return mx;
   }
-  /** max */
+
   @Extension
-  public static double max(final double x, final double y) {
-    return Math.max(x, y);
-  }
-  @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> max(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> max(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, double y) {
     if (mx.has()) {
       return new NtMaybe<>(max(mx.get(), y));
     }
     return mx;
   }
+
+  /** max */
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> max(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static double max(final double x, final double y) {
+    return Math.max(x, y);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> max(double x, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (my.has()) {
       return new NtMaybe<>(max(x, my.get()));
     }
     return my;
   }
+
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> max(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> max(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(max(mx.get(), my.get()));
@@ -144,27 +150,31 @@ public class LibMath {
     }
     return mx;
   }
-  /** atan2 */
+
   @Extension
-  public static double atan2(final double x, final double y) {
-    return Math.atan2(x, y);
-  }
-  @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> atan2(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> atan2(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, double y) {
     if (mx.has()) {
       return new NtMaybe<>(atan2(mx.get(), y));
     }
     return mx;
   }
+
+  /** atan2 */
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> atan2(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static double atan2(final double x, final double y) {
+    return Math.atan2(x, y);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> atan2(double x, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (my.has()) {
       return new NtMaybe<>(atan2(x, my.get()));
     }
     return my;
   }
+
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> atan2(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> atan2(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(atan2(mx.get(), my.get()));
@@ -173,27 +183,31 @@ public class LibMath {
     }
     return mx;
   }
-  /** hypot */
+
   @Extension
-  public static double hypot(final double x, final double y) {
-    return Math.hypot(x, y);
-  }
-  @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> hypot(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> hypot(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, double y) {
     if (mx.has()) {
       return new NtMaybe<>(hypot(mx.get(), y));
     }
     return mx;
   }
+
+  /** hypot */
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> hypot(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static double hypot(final double x, final double y) {
+    return Math.hypot(x, y);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> hypot(double x, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (my.has()) {
       return new NtMaybe<>(hypot(x, my.get()));
     }
     return my;
   }
+
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> hypot(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> hypot(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(hypot(mx.get(), my.get()));
@@ -202,27 +216,31 @@ public class LibMath {
     }
     return mx;
   }
-  /** pow */
+
   @Extension
-  public static double pow(final double x, final double y) {
-    return Math.pow(x, y);
-  }
-  @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> pow(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> pow(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, double y) {
     if (mx.has()) {
       return new NtMaybe<>(pow(mx.get(), y));
     }
     return mx;
   }
+
+  /** pow */
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> pow(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static double pow(final double x, final double y) {
+    return Math.pow(x, y);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> pow(double x, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (my.has()) {
       return new NtMaybe<>(pow(x, my.get()));
     }
     return my;
   }
+
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> pow(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> pow(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(pow(mx.get(), my.get()));
@@ -231,27 +249,31 @@ public class LibMath {
     }
     return mx;
   }
-  /** IEEEremainder */
+
   @Extension
-  public static double IEEEremainder(final double x, final double y) {
-    return Math.IEEEremainder(x, y);
-  }
-  @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> IEEEremainder(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> IEEEremainder(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, double y) {
     if (mx.has()) {
       return new NtMaybe<>(IEEEremainder(mx.get(), y));
     }
     return mx;
   }
+
+  /** IEEEremainder */
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> IEEEremainder(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static double IEEEremainder(final double x, final double y) {
+    return Math.IEEEremainder(x, y);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> IEEEremainder(double x, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (my.has()) {
       return new NtMaybe<>(IEEEremainder(x, my.get()));
     }
     return my;
   }
+
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> IEEEremainder(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> IEEEremainder(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(IEEEremainder(mx.get(), my.get()));
@@ -260,32 +282,44 @@ public class LibMath {
     }
     return mx;
   }
-  /** copySign */
+
   @Extension
-  public static double copySign(final double x, final double y) {
-    return Math.copySign(x, y);
-  }
-  @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> copySign(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, double y) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> copySign(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, double y) {
     if (mx.has()) {
       return new NtMaybe<>(copySign(mx.get(), y));
     }
     return mx;
   }
+
+  /** copySign */
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> copySign(double x, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static double copySign(final double x, final double y) {
+    return Math.copySign(x, y);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> copySign(double x, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (my.has()) {
       return new NtMaybe<>(copySign(x, my.get()));
     }
     return my;
   }
+
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> copySign(@HiddenType(clazz=Double.class) NtMaybe<Double> mx, @HiddenType(clazz=Double.class) NtMaybe<Double> my) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> copySign(@HiddenType(clazz = Double.class) NtMaybe<Double> mx, @HiddenType(clazz = Double.class) NtMaybe<Double> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(copySign(mx.get(), my.get()));
       }
       return my;
+    }
+    return mx;
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> sin(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(sin(mx.get()));
     }
     return mx;
   }
@@ -297,9 +331,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> sin(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> cos(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(sin(mx.get()));
+      return new NtMaybe<>(cos(mx.get()));
     }
     return mx;
   }
@@ -311,9 +345,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> cos(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> tan(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(cos(mx.get()));
+      return new NtMaybe<>(tan(mx.get()));
     }
     return mx;
   }
@@ -325,9 +359,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> tan(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> asin(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(tan(mx.get()));
+      return new NtMaybe<>(asin(mx.get()));
     }
     return mx;
   }
@@ -339,9 +373,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> asin(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> acos(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(asin(mx.get()));
+      return new NtMaybe<>(acos(mx.get()));
     }
     return mx;
   }
@@ -353,9 +387,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> acos(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> atan(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(acos(mx.get()));
+      return new NtMaybe<>(atan(mx.get()));
     }
     return mx;
   }
@@ -367,9 +401,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> atan(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> sinh(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(atan(mx.get()));
+      return new NtMaybe<>(sinh(mx.get()));
     }
     return mx;
   }
@@ -381,9 +415,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> sinh(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> cosh(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(sinh(mx.get()));
+      return new NtMaybe<>(cosh(mx.get()));
     }
     return mx;
   }
@@ -395,9 +429,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> cosh(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> tanh(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(cosh(mx.get()));
+      return new NtMaybe<>(tanh(mx.get()));
     }
     return mx;
   }
@@ -409,9 +443,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> tanh(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> exp(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(tanh(mx.get()));
+      return new NtMaybe<>(exp(mx.get()));
     }
     return mx;
   }
@@ -423,9 +457,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> exp(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> log(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(exp(mx.get()));
+      return new NtMaybe<>(log(mx.get()));
     }
     return mx;
   }
@@ -437,9 +471,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> log(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> log10(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(log(mx.get()));
+      return new NtMaybe<>(log10(mx.get()));
     }
     return mx;
   }
@@ -451,9 +485,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> log10(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> cbrt(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(log10(mx.get()));
+      return new NtMaybe<>(cbrt(mx.get()));
     }
     return mx;
   }
@@ -465,9 +499,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> cbrt(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> expm1(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(cbrt(mx.get()));
+      return new NtMaybe<>(expm1(mx.get()));
     }
     return mx;
   }
@@ -479,9 +513,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> expm1(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> log1p(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(expm1(mx.get()));
+      return new NtMaybe<>(log1p(mx.get()));
     }
     return mx;
   }
@@ -493,9 +527,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> log1p(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> signum(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(log1p(mx.get()));
+      return new NtMaybe<>(signum(mx.get()));
     }
     return mx;
   }
@@ -507,9 +541,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> signum(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> ulp(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(signum(mx.get()));
+      return new NtMaybe<>(ulp(mx.get()));
     }
     return mx;
   }
@@ -521,9 +555,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> ulp(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> getExponent(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(ulp(mx.get()));
+      return new NtMaybe<>(getExponent(mx.get()));
     }
     return mx;
   }
@@ -534,10 +568,11 @@ public class LibMath {
     return Math.getExponent(x);
   }
 
+  @UseName(name = "min")
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> getExponent(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> min_i(@HiddenType(clazz = Integer.class) NtMaybe<Integer> mx, int y) {
     if (mx.has()) {
-      return new NtMaybe<>(getExponent(mx.get()));
+      return new NtMaybe<>(min(mx.get(), y));
     }
     return mx;
   }
@@ -547,25 +582,19 @@ public class LibMath {
   public static int min(final int x, final int y) {
     return Math.min(x, y);
   }
-  @UseName(name="min")
+
+  @UseName(name = "min")
   @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> min_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, int y) {
-    if (mx.has()) {
-      return new NtMaybe<>(min(mx.get(), y));
-    }
-    return mx;
-  }
-  @UseName(name="min")
-  @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> min_i(int x, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> min_i(int x, @HiddenType(clazz = Integer.class) NtMaybe<Integer> my) {
     if (my.has()) {
       return new NtMaybe<>(min(x, my.get()));
     }
     return my;
   }
-  @UseName(name="min")
+
+  @UseName(name = "min")
   @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> min_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> min_i(@HiddenType(clazz = Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz = Integer.class) NtMaybe<Integer> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(min(mx.get(), my.get()));
@@ -574,30 +603,34 @@ public class LibMath {
     }
     return mx;
   }
-  /** max */
+
+  @UseName(name = "max")
   @Extension
-  public static int max(final int x, final int y) {
-    return Math.max(x, y);
-  }
-  @UseName(name="max")
-  @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> max_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, int y) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> max_i(@HiddenType(clazz = Integer.class) NtMaybe<Integer> mx, int y) {
     if (mx.has()) {
       return new NtMaybe<>(max(mx.get(), y));
     }
     return mx;
   }
-  @UseName(name="max")
+
+  /** max */
   @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> max_i(int x, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+  public static int max(final int x, final int y) {
+    return Math.max(x, y);
+  }
+
+  @UseName(name = "max")
+  @Extension
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> max_i(int x, @HiddenType(clazz = Integer.class) NtMaybe<Integer> my) {
     if (my.has()) {
       return new NtMaybe<>(max(x, my.get()));
     }
     return my;
   }
-  @UseName(name="max")
+
+  @UseName(name = "max")
   @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> max_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> max_i(@HiddenType(clazz = Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz = Integer.class) NtMaybe<Integer> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(max(mx.get(), my.get()));
@@ -606,30 +639,34 @@ public class LibMath {
     }
     return mx;
   }
-  /** floorDiv */
+
+  @UseName(name = "floorDiv")
   @Extension
-  public static int floorDiv(final int x, final int y) {
-    return Math.floorDiv(x, y);
-  }
-  @UseName(name="floorDiv")
-  @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorDiv_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, int y) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> floorDiv_i(@HiddenType(clazz = Integer.class) NtMaybe<Integer> mx, int y) {
     if (mx.has()) {
       return new NtMaybe<>(floorDiv(mx.get(), y));
     }
     return mx;
   }
-  @UseName(name="floorDiv")
+
+  /** floorDiv */
   @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorDiv_i(int x, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+  public static int floorDiv(final int x, final int y) {
+    return Math.floorDiv(x, y);
+  }
+
+  @UseName(name = "floorDiv")
+  @Extension
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> floorDiv_i(int x, @HiddenType(clazz = Integer.class) NtMaybe<Integer> my) {
     if (my.has()) {
       return new NtMaybe<>(floorDiv(x, my.get()));
     }
     return my;
   }
-  @UseName(name="floorDiv")
+
+  @UseName(name = "floorDiv")
   @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorDiv_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> floorDiv_i(@HiddenType(clazz = Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz = Integer.class) NtMaybe<Integer> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(floorDiv(mx.get(), my.get()));
@@ -638,35 +675,48 @@ public class LibMath {
     }
     return mx;
   }
-  /** floorMod */
+
+  @UseName(name = "floorMod")
   @Extension
-  public static int floorMod(final int x, final int y) {
-    return Math.floorMod(x, y);
-  }
-  @UseName(name="floorMod")
-  @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorMod_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, int y) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> floorMod_i(@HiddenType(clazz = Integer.class) NtMaybe<Integer> mx, int y) {
     if (mx.has()) {
       return new NtMaybe<>(floorMod(mx.get(), y));
     }
     return mx;
   }
-  @UseName(name="floorMod")
+
+  /** floorMod */
   @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorMod_i(int x, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+  public static int floorMod(final int x, final int y) {
+    return Math.floorMod(x, y);
+  }
+
+  @UseName(name = "floorMod")
+  @Extension
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> floorMod_i(int x, @HiddenType(clazz = Integer.class) NtMaybe<Integer> my) {
     if (my.has()) {
       return new NtMaybe<>(floorMod(x, my.get()));
     }
     return my;
   }
-  @UseName(name="floorMod")
+
+  @UseName(name = "floorMod")
   @Extension
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> floorMod_i(@HiddenType(clazz=Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz=Integer.class) NtMaybe<Integer> my) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> floorMod_i(@HiddenType(clazz = Integer.class) NtMaybe<Integer> mx, @HiddenType(clazz = Integer.class) NtMaybe<Integer> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(floorMod(mx.get(), my.get()));
       }
       return my;
+    }
+    return mx;
+  }
+
+  @UseName(name = "min")
+  @Extension
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> min_l(@HiddenType(clazz = Long.class) NtMaybe<Long> mx, long y) {
+    if (mx.has()) {
+      return new NtMaybe<>(min(mx.get(), y));
     }
     return mx;
   }
@@ -676,25 +726,19 @@ public class LibMath {
   public static long min(final long x, final long y) {
     return Math.min(x, y);
   }
-  @UseName(name="min")
+
+  @UseName(name = "min")
   @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> min_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, long y) {
-    if (mx.has()) {
-      return new NtMaybe<>(min(mx.get(), y));
-    }
-    return mx;
-  }
-  @UseName(name="min")
-  @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> min_l(long x, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> min_l(long x, @HiddenType(clazz = Long.class) NtMaybe<Long> my) {
     if (my.has()) {
       return new NtMaybe<>(min(x, my.get()));
     }
     return my;
   }
-  @UseName(name="min")
+
+  @UseName(name = "min")
   @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> min_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> min_l(@HiddenType(clazz = Long.class) NtMaybe<Long> mx, @HiddenType(clazz = Long.class) NtMaybe<Long> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(min(mx.get(), my.get()));
@@ -703,30 +747,34 @@ public class LibMath {
     }
     return mx;
   }
-  /** max */
+
+  @UseName(name = "max")
   @Extension
-  public static long max(final long x, final long y) {
-    return Math.max(x, y);
-  }
-  @UseName(name="max")
-  @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> max_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, long y) {
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> max_l(@HiddenType(clazz = Long.class) NtMaybe<Long> mx, long y) {
     if (mx.has()) {
       return new NtMaybe<>(max(mx.get(), y));
     }
     return mx;
   }
-  @UseName(name="max")
+
+  /** max */
   @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> max_l(long x, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+  public static long max(final long x, final long y) {
+    return Math.max(x, y);
+  }
+
+  @UseName(name = "max")
+  @Extension
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> max_l(long x, @HiddenType(clazz = Long.class) NtMaybe<Long> my) {
     if (my.has()) {
       return new NtMaybe<>(max(x, my.get()));
     }
     return my;
   }
-  @UseName(name="max")
+
+  @UseName(name = "max")
   @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> max_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> max_l(@HiddenType(clazz = Long.class) NtMaybe<Long> mx, @HiddenType(clazz = Long.class) NtMaybe<Long> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(max(mx.get(), my.get()));
@@ -735,30 +783,34 @@ public class LibMath {
     }
     return mx;
   }
-  /** floorDiv */
+
+  @UseName(name = "floorDiv")
   @Extension
-  public static long floorDiv(final long x, final long y) {
-    return Math.floorDiv(x, y);
-  }
-  @UseName(name="floorDiv")
-  @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorDiv_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, long y) {
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> floorDiv_l(@HiddenType(clazz = Long.class) NtMaybe<Long> mx, long y) {
     if (mx.has()) {
       return new NtMaybe<>(floorDiv(mx.get(), y));
     }
     return mx;
   }
-  @UseName(name="floorDiv")
+
+  /** floorDiv */
   @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorDiv_l(long x, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+  public static long floorDiv(final long x, final long y) {
+    return Math.floorDiv(x, y);
+  }
+
+  @UseName(name = "floorDiv")
+  @Extension
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> floorDiv_l(long x, @HiddenType(clazz = Long.class) NtMaybe<Long> my) {
     if (my.has()) {
       return new NtMaybe<>(floorDiv(x, my.get()));
     }
     return my;
   }
-  @UseName(name="floorDiv")
+
+  @UseName(name = "floorDiv")
   @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorDiv_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> floorDiv_l(@HiddenType(clazz = Long.class) NtMaybe<Long> mx, @HiddenType(clazz = Long.class) NtMaybe<Long> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(floorDiv(mx.get(), my.get()));
@@ -767,30 +819,34 @@ public class LibMath {
     }
     return mx;
   }
-  /** floorMod */
+
+  @UseName(name = "floorMod")
   @Extension
-  public static long floorMod(final long x, final long y) {
-    return Math.floorMod(x, y);
-  }
-  @UseName(name="floorMod")
-  @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorMod_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, long y) {
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> floorMod_l(@HiddenType(clazz = Long.class) NtMaybe<Long> mx, long y) {
     if (mx.has()) {
       return new NtMaybe<>(floorMod(mx.get(), y));
     }
     return mx;
   }
-  @UseName(name="floorMod")
+
+  /** floorMod */
   @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorMod_l(long x, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+  public static long floorMod(final long x, final long y) {
+    return Math.floorMod(x, y);
+  }
+
+  @UseName(name = "floorMod")
+  @Extension
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> floorMod_l(long x, @HiddenType(clazz = Long.class) NtMaybe<Long> my) {
     if (my.has()) {
       return new NtMaybe<>(floorMod(x, my.get()));
     }
     return my;
   }
-  @UseName(name="floorMod")
+
+  @UseName(name = "floorMod")
   @Extension
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> floorMod_l(@HiddenType(clazz=Long.class) NtMaybe<Long> mx, @HiddenType(clazz=Long.class) NtMaybe<Long> my) {
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> floorMod_l(@HiddenType(clazz = Long.class) NtMaybe<Long> mx, @HiddenType(clazz = Long.class) NtMaybe<Long> my) {
     if (mx.has()) {
       if (my.has()) {
         return new NtMaybe<>(floorMod(mx.get(), my.get()));
@@ -800,6 +856,13 @@ public class LibMath {
     return mx;
   }
 
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> radians(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
+    if (mx.has()) {
+      return new NtMaybe<>(radians(mx.get()));
+    }
+    return mx;
+  }
 
   /** radians */
   @Extension
@@ -808,9 +871,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> radians(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> degrees(@HiddenType(clazz = Double.class) NtMaybe<Double> mx) {
     if (mx.has()) {
-      return new NtMaybe<>(radians(mx.get()));
+      return new NtMaybe<>(degrees(mx.get()));
     }
     return mx;
   }
@@ -819,14 +882,6 @@ public class LibMath {
   @Extension
   public static double degrees(final double x) {
     return Math.toDegrees(x);
-  }
-
-  @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> degrees(@HiddenType(clazz=Double.class) NtMaybe<Double> mx) {
-    if (mx.has()) {
-      return new NtMaybe<>(degrees(mx.get()));
-    }
-    return mx;
   }
 
   /** ceil */
@@ -841,7 +896,7 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> ceil(final @HiddenType(clazz=Double.class) NtMaybe<Double> x) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> ceil(final @HiddenType(clazz = Double.class) NtMaybe<Double> x) {
     if (x.has()) {
       return new NtMaybe<>(Math.ceil(x.get()));
     }
@@ -849,7 +904,7 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> ceil(final @HiddenType(clazz=Double.class) NtMaybe<Double> x, double precision) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> ceil(final @HiddenType(clazz = Double.class) NtMaybe<Double> x, double precision) {
     if (x.has()) {
       return new NtMaybe<>(Math.ceil(x.get() / precision) * precision);
     }
@@ -868,7 +923,7 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> floor(final @HiddenType(clazz=Double.class) NtMaybe<Double> x) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> floor(final @HiddenType(clazz = Double.class) NtMaybe<Double> x) {
     if (x.has()) {
       return new NtMaybe<>(Math.floor(x.get()));
     }
@@ -876,11 +931,19 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> floor(final @HiddenType(clazz=Double.class) NtMaybe<Double> x, double precision) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> floor(final @HiddenType(clazz = Double.class) NtMaybe<Double> x, double precision) {
     if (x.has()) {
       return new NtMaybe<>(Math.floor(x.get() / precision) * precision);
     }
     return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> round(final @HiddenType(clazz = Double.class) NtMaybe<Double> x) {
+    if (x.has()) {
+      return new NtMaybe<>(round(x.get()));
+    }
+    return x;
   }
 
   /** round() */
@@ -890,9 +953,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> round(final @HiddenType(clazz=Double.class) NtMaybe<Double> x) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> round(final @HiddenType(clazz = Double.class) NtMaybe<Double> x, double precision) {
     if (x.has()) {
-      return new NtMaybe<>(round(x.get()));
+      return new NtMaybe<>(round(x.get(), precision));
     }
     return x;
   }
@@ -903,9 +966,9 @@ public class LibMath {
   }
 
   @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> round(final @HiddenType(clazz=Double.class) NtMaybe<Double> x, double precision) {
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> roundTo(final @HiddenType(clazz = Double.class) NtMaybe<Double> x, int numberOfDigits) {
     if (x.has()) {
-      return new NtMaybe<>(round(x.get(), precision));
+      return new NtMaybe<>(roundTo(x.get(), numberOfDigits));
     }
     return x;
   }
@@ -915,14 +978,6 @@ public class LibMath {
   public static double roundTo(final double x, int numberOfDigits) {
     double shift = Math.pow(10, numberOfDigits);
     return Math.round(x * shift) / shift;
-  }
-
-  @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> roundTo(final @HiddenType(clazz=Double.class) NtMaybe<Double> x, int numberOfDigits) {
-    if (x.has()) {
-      return new NtMaybe<>(roundTo(x.get(), numberOfDigits));
-    }
-    return x;
   }
 
   /** NEAR **/
@@ -961,18 +1016,17 @@ public class LibMath {
     return b;
   }
 
-
   @Extension
-  public static NtComplex conj(final NtComplex x) {
-    return new NtComplex(x.real, -x.imaginary);
-  }
-
-  @Extension
-  public static @HiddenType(clazz=NtComplex.class) NtMaybe<NtComplex> conj(final @HiddenType(clazz=NtComplex.class)NtMaybe<NtComplex> x) {
+  public static @HiddenType(clazz = NtComplex.class) NtMaybe<NtComplex> conj(final @HiddenType(clazz = NtComplex.class) NtMaybe<NtComplex> x) {
     if (x.has()) {
       return new NtMaybe<>(conj(x.get()));
     }
     return x;
+  }
+
+  @Extension
+  public static NtComplex conj(final NtComplex x) {
+    return new NtComplex(x.real, -x.imaginary);
   }
 
   @Extension
@@ -981,8 +1035,8 @@ public class LibMath {
   }
 
   @Extension
-  @UseName(name="abs")
-  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> abs_i(final @HiddenType(clazz=Integer.class) NtMaybe<Integer> x) {
+  @UseName(name = "abs")
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> abs_i(final @HiddenType(clazz = Integer.class) NtMaybe<Integer> x) {
     if (x.has()) {
       return new NtMaybe<>(Math.abs(x.get()));
     }
@@ -995,8 +1049,8 @@ public class LibMath {
   }
 
   @Extension
-  @UseName(name="abs")
-  public static @HiddenType(clazz=Long.class) NtMaybe<Long> abs_l(final @HiddenType(clazz=Long.class) NtMaybe<Long> x) {
+  @UseName(name = "abs")
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> abs_l(final @HiddenType(clazz = Long.class) NtMaybe<Long> x) {
     if (x.has()) {
       return new NtMaybe<>(Math.abs(x.get()));
     }
@@ -1009,23 +1063,10 @@ public class LibMath {
   }
 
   @Extension
-  @UseName(name="abs")
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> abs_d(final @HiddenType(clazz=Double.class) NtMaybe<Double> x) {
+  @UseName(name = "abs")
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> abs_d(final @HiddenType(clazz = Double.class) NtMaybe<Double> x) {
     if (x.has()) {
       return new NtMaybe<>(Math.abs(x.get()));
-    }
-    return new NtMaybe<>();
-  }
-
-  @Extension
-  public static double length(final NtComplex x) {
-    return Math.sqrt(x.real * x.real + x.imaginary * x.imaginary);
-  }
-
-  @Extension
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> length(final @HiddenType(clazz=NtComplex.class) NtMaybe<NtComplex> x) {
-    if (x.has()) {
-      return new NtMaybe<>(length(x.get()));
     }
     return new NtMaybe<>();
   }
@@ -1036,9 +1077,22 @@ public class LibMath {
   }
 
   @Extension
-  @UseName(name="abs")
-  public static @HiddenType(clazz=Double.class) NtMaybe<Double> abs_c(final @HiddenType(clazz=NtComplex.class) NtMaybe<NtComplex> x) {
+  public static double length(final NtComplex x) {
+    return Math.sqrt(x.real * x.real + x.imaginary * x.imaginary);
+  }
+
+  @Extension
+  @UseName(name = "abs")
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> abs_c(final @HiddenType(clazz = NtComplex.class) NtMaybe<NtComplex> x) {
     return length(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> length(final @HiddenType(clazz = NtComplex.class) NtMaybe<NtComplex> x) {
+    if (x.has()) {
+      return new NtMaybe<>(length(x.get()));
+    }
+    return new NtMaybe<>();
   }
 
   public static boolean intersects(int a, int b, int c, int d) {

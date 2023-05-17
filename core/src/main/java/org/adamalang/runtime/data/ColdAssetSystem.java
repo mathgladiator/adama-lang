@@ -16,8 +16,8 @@ import java.util.List;
 public interface ColdAssetSystem {
 
   /** list all the asset ids for a given key */
-  public void listAssetsOf(Key key, Callback<List<String>> callback);
+  void listAssetsOf(Key key, Callback<List<String>> callback);
 
   /** delete the asset for a given document */
-  public void deleteAsset(Key key, String assetId, Callback<Void> callback);
+  void deleteAsset(Key key, String assetId, Callback<Void> callback);
 }

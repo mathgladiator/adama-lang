@@ -15,11 +15,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /** a service registry maps service names to services */
 public class ServiceRegistry {
-  private static TreeMap<String, Class<?>> INCLUDED_SERVICES = new TreeMap<>();
   public static TreeMap<String, BiFunction<String, HashMap<String, Object>, Service>> REGISTRY = new TreeMap<>();
   public static ServiceRegistry NOT_READY = new ServiceRegistry() {
     @Override
@@ -31,19 +29,11 @@ public class ServiceRegistry {
     public void resolve(String space, HashMap<String, HashMap<String, Object>> servicesConfig) {
     }
   };
+  private static final TreeMap<String, Class<?>> INCLUDED_SERVICES = new TreeMap<>();
   private final TreeMap<String, Service> services;
 
   public ServiceRegistry() {
     this.services = new TreeMap<>();
-  }
-
-  /** find a service */
-  public Service find(String name) {
-    Service local = services.get(name);
-    if (local == null) {
-      return Service.FAILURE;
-    }
-    return local;
   }
 
   public static void add(String name, Class<?> clazz, BiFunction<String, HashMap<String, Object>, Service> cons) {
@@ -64,6 +54,15 @@ public class ServiceRegistry {
     } catch (Exception ex) {
     }
     return null;
+  }
+
+  /** find a service */
+  public Service find(String name) {
+    Service local = services.get(name);
+    if (local == null) {
+      return Service.FAILURE;
+    }
+    return local;
   }
 
   public boolean contains(String name) {

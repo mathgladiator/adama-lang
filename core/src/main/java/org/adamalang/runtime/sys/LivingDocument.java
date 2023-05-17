@@ -63,7 +63,8 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final RxLazy<NtDate> __today;
   protected final RxCache __cache;
   protected final RxString __timezone;
-  private ZoneId __timezoneCachedZoneId;
+  protected final RxInt32 __webTaskId;
+  protected final WebQueue __webQueue;
   private final TreeMap<NtPrincipal, Integer> __clients;
   private final HashMap<NtPrincipal, ArrayList<PrivateView>> __trackedViews;
   private final HashMap<Integer, PrivateView> __viewsById;
@@ -74,18 +75,17 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected int __code_cost;
   protected int __goodwillBudget;
   protected int __goodwillLimitOfBudget;
-  private int __currentViewId;
   protected Random __random;
   protected ArrayList<Integer> __trace;
+  protected RxCache __currentWebCache;
+  private ZoneId __timezoneCachedZoneId;
+  private int __currentViewId;
   private String __preemptedStateOnNextComputeBlocked = null;
   private String __space;
   private String __key;
   private Deliverer __deliverer;
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
-  protected final RxInt32 __webTaskId;
-  protected final WebQueue __webQueue;
-  protected RxCache __currentWebCache;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -137,6 +137,32 @@ public abstract class LivingDocument implements RxParent, Caller {
     __currentWebCache = null;
   }
 
+  /** exposed: get the document's timestamp as a date */
+  protected NtDate __dateOfToday() {
+    ZonedDateTime dt = __datetimeNow().dateTime;
+    return new NtDate(dt.getYear(), dt.getMonthValue(), dt.getDayOfMonth());
+  }
+
+  /** exposed: get the document's timestamp as a datetime */
+  protected NtDateTime __datetimeNow() {
+    if (__timezoneCachedZoneId == null) {
+      __timezoneCachedZoneId = ZoneId.of(__timeZone());
+    }
+    // create a system instance
+    Instant instant = Instant.ofEpochMilli(__time.get().longValue());
+    ZonedDateTime pdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+    // convert to the document
+    return new NtDateTime(pdt.withZoneSameInstant(__timezoneCachedZoneId));
+  }
+
+  /** exposed: get the document's time zone */
+  protected String __timeZone() {
+    if ("".equals(__timezone.get())) {
+      return "UTC";
+    }
+    return __timezone.get();
+  }
+
   public void __removed() {
     __webQueue.cancel();
   }
@@ -184,32 +210,6 @@ public abstract class LivingDocument implements RxParent, Caller {
     } catch (Exception nope) {
     }
     return false;
-  }
-
-  /** exposed: get the document's time zone */
-  protected String __timeZone() {
-    if ("".equals(__timezone.get())) {
-      return "UTC";
-    }
-    return __timezone.get();
-  }
-
-  /** exposed: get the document's timestamp as a date */
-  protected NtDate __dateOfToday() {
-    ZonedDateTime dt = __datetimeNow().dateTime;
-    return new NtDate(dt.getYear(), dt.getMonthValue(), dt.getDayOfMonth());
-  }
-
-  /** exposed: get the document's timestamp as a datetime */
-  protected NtDateTime __datetimeNow() {
-    if (__timezoneCachedZoneId == null) {
-      __timezoneCachedZoneId = ZoneId.of(__timeZone());
-    }
-    // create a system instance
-    Instant instant = Instant.ofEpochMilli(__time.get().longValue());
-    ZonedDateTime pdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-    // convert to the document
-    return new NtDateTime(pdt.withZoneSameInstant(__timezoneCachedZoneId));
   }
 
   /** is the given route id in-flight */
@@ -454,7 +454,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   protected void __dumpTimeouts(final JsonStreamWriter writer) {
-      __timeouts.dump(writer);
+    __timeouts.dump(writer);
   }
 
   protected void __dumpWebQueue(final JsonStreamWriter writer) {
@@ -658,6 +658,9 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
+  /** parse the message for the channel, and cache the result */
+  protected abstract Object __parse_message(String channel, JsonStreamReader reader);
+
   public void __hydrateTimeouts(final JsonStreamReader reader) {
     __timeouts.hydrate(reader);
   }
@@ -665,9 +668,6 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected void __hydrateWebQueue(final JsonStreamReader reader) {
     __webQueue.hydrate(reader, this);
   }
-
-  /** parse the message for the channel, and cache the result */
-  protected abstract Object __parse_message(String channel, JsonStreamReader reader);
 
   /** does the channel have code associated to it */
   protected abstract boolean __is_direct_channel(String channel);
@@ -703,15 +703,15 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** is the channel open */
   public abstract boolean __open_channel(String name);
 
-  /** authenticate a user; return null to indicate forbidden, return an agent to sign for the document */
-  public abstract String __auth(CoreRequestContext context, String username, String password);
-
   public String __authorize(CoreRequestContext __context, String username, String password) {
     __time.set(System.currentTimeMillis());
     String result = __auth(__context, username, password);
     __revert();
     return result;
-  };
+  }
+
+  /** authenticate a user; return null to indicate forbidden, return an agent to sign for the document */
+  public abstract String __auth(CoreRequestContext context, String username, String password);
 
   public abstract void __password(CoreRequestContext context, String password);
 
@@ -892,7 +892,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   protected void __forward(double time) {
-    __time.set(__time.get() + (long)(time * 1000));
+    __time.set(__time.get() + (long) (time * 1000));
     __commit(null, new JsonStreamWriter(), new JsonStreamWriter());
   }
 

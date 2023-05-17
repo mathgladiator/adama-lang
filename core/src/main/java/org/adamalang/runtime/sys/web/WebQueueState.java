@@ -10,8 +10,5 @@ package org.adamalang.runtime.sys.web;
 
 /** the state of an item within the queue */
 public enum WebQueueState {
-  Created,
-  Steady,
-  Dirty,
-  Remove
+  Created, Steady, Dirty, Remove
 }

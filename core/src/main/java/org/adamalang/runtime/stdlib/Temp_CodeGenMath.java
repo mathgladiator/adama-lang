@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 
 public class Temp_CodeGenMath {
   public static void main(String[] args) throws Exception {
-    String[] copy = new String[] {"min", "max", "sin", "cos", "tan", "asin", "acos", "atan", "sinh", "cosh", "tanh", "atan2", "hypot", "exp", "log", "log10", "pow", "cbrt", "floorDiv", "floorMod", "IEEEremainder", "expm1", "log1p", "signum", "ulp", "fma", "copySign", "getExponent", "powerOfTwo"};
+    String[] copy = new String[]{"min", "max", "sin", "cos", "tan", "asin", "acos", "atan", "sinh", "cosh", "tanh", "atan2", "hypot", "exp", "log", "log10", "pow", "cbrt", "floorDiv", "floorMod", "IEEEremainder", "expm1", "log1p", "signum", "ulp", "fma", "copySign", "getExponent", "powerOfTwo"};
     for (String version : copy) {
       try {
         Method m = Math.class.getMethod(version, int.class, int.class);
@@ -138,7 +138,8 @@ public class Temp_CodeGenMath {
           System.out.println();
           */
         }
-      } catch (Exception ex) {}
+      } catch (Exception ex) {
+      }
     }
   }
 }

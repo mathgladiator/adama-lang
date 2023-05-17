@@ -21,16 +21,6 @@ public class Timeout {
     this.timeoutSeconds = timeoutSeconds;
   }
 
-  /** write out a timeout object */
-  public void write(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("timestamp");
-    writer.writeLong(timestamp);
-    writer.writeObjectFieldIntro("timeout");
-    writer.writeDouble(timeoutSeconds);
-    writer.endObject();
-  }
-
   /** read a timeout object */
   public static Timeout readFrom(JsonStreamReader reader) {
     if (reader.startObject()) {
@@ -54,5 +44,15 @@ public class Timeout {
       reader.skipValue();
     }
     return null;
+  }
+
+  /** write out a timeout object */
+  public void write(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("timestamp");
+    writer.writeLong(timestamp);
+    writer.writeObjectFieldIntro("timeout");
+    writer.writeDouble(timeoutSeconds);
+    writer.endObject();
   }
 }

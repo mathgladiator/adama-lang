@@ -29,16 +29,16 @@ public class DelayParent implements RxParent {
     }
   }
 
+  @Override
+  public boolean __isAlive() {
+    return true;
+  }
+
   public void bind(Runnable runnable) {
     this.runnable = runnable;
     if (dirty) {
       this.runnable.run();
       this.dirty = false;
     }
-  }
-
-  @Override
-  public boolean __isAlive() {
-    return true;
   }
 }

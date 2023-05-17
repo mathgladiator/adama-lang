@@ -8,8 +8,8 @@
  */
 package org.adamalang.runtime.async;
 
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMaybe;
+import org.adamalang.runtime.natives.NtPrincipal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +42,17 @@ public class Sink<T> {
     return new SimpleFuture<>(channel, who, value);
   }
 
+  /** get the queue for the particular user */
+  private ClientChannelQueue queueFor(final NtPrincipal value) {
+    var queue = queues.get(value);
+    if (queue == null) {
+      /** create on-demand */
+      queue = new ClientChannelQueue();
+      queues.put(value, queue);
+    }
+    return queue;
+  }
+
   /** dequeue a message for a particular user against a timestamp limit; the future may not have a value */
   public SimpleFuture<T> dequeueIf(final NtPrincipal who, long timestampLimit) {
     final var queue = queueFor(who);
@@ -54,17 +65,6 @@ public class Sink<T> {
       }
     }
     return new SimpleFuture<>(channel, who, value);
-  }
-
-  /** get the queue for the particular user */
-  private ClientChannelQueue queueFor(final NtPrincipal value) {
-    var queue = queues.get(value);
-    if (queue == null) {
-      /** create on-demand */
-      queue = new ClientChannelQueue();
-      queues.put(value, queue);
-    }
-    return queue;
   }
 
   /** dequeue a message for a particular user; the future may not have a value */

@@ -26,7 +26,6 @@ import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
-import org.adamalang.translator.tree.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -311,7 +310,7 @@ public class CoreService implements Deliverer, Queryable {
           return;
         }
         // let's make sure we block any additional creation/load attempts
-        if (enqueueForLaterWhileInExecutorReturnAbort(base, key, () -> createInternal(context, key, arg, entropy,  callback))) {
+        if (enqueueForLaterWhileInExecutorReturnAbort(base, key, () -> createInternal(context, key, arg, entropy, callback))) {
           return;
         }
         Runnable afterExecuted = () -> drain(base, key);

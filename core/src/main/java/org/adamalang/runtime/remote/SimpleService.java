@@ -11,8 +11,8 @@ package org.adamalang.runtime.remote;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtResult;
 
 import java.util.function.Function;

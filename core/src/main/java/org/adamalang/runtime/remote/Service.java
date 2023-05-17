@@ -9,8 +9,8 @@
 package org.adamalang.runtime.remote;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtResult;
 
 import java.util.function.Function;

@@ -64,6 +64,11 @@ public class EphemeralFuture<T> {
     }
   }
 
+  /** internal: send the failure out */
+  private void kill() {
+    callback.failure(new ErrorCodeException(ErrorCodes.TASK_CANCELLED));
+  }
+
   /** cancel the future */
   public void cancel() {
     boolean kill;
@@ -73,12 +78,7 @@ public class EphemeralFuture<T> {
       cancel = true;
     }
     if (kill) {
-      kill();;
+      kill();
     }
-  }
-
-  /** internal: send the failure out */
-  private void kill() {
-    callback.failure(new ErrorCodeException(ErrorCodes.TASK_CANCELLED));
   }
 }

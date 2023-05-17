@@ -61,19 +61,19 @@ public class Utility {
     return value;
   }
 
+  public static <T> NtMaybe<T> lookup(final T[] arr, final NtMaybe<Integer> k) {
+    if (k.has()) {
+      return lookup(arr, k.get());
+    }
+    return new NtMaybe<>();
+  }
+
   public static <T> NtMaybe<T> lookup(final T[] arr, final int k) {
     final var maybe = new NtMaybe<T>();
     if (0 <= k && k < arr.length) {
       maybe.set(arr[k]);
     }
     return maybe;
-  }
-
-  public static <T> NtMaybe<T> lookup(final T[] arr, final NtMaybe<Integer> k) {
-    if (k.has()) {
-      return lookup(arr, k.get());
-    }
-    return new NtMaybe<>();
   }
 
   public static <T> T[] readArray(JsonStreamReader reader, Function<JsonStreamReader, T> transform, Function<Integer, T[]> makeArray) {

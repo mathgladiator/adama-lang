@@ -210,9 +210,9 @@ public class LibDynamic {
       if (value instanceof Double) {
         return new NtMaybe<>((Double) value);
       } else if (value instanceof Integer) {
-        return new NtMaybe<>((double)((Integer) value));
+        return new NtMaybe<>((double) ((Integer) value));
       } else if (value instanceof Long) {
-        return new NtMaybe<>((double)((Long) value));
+        return new NtMaybe<>((double) ((Long) value));
       }
     }
     return new NtMaybe<>();
@@ -249,8 +249,7 @@ public class LibDynamic {
   }
 
   @Extension
-  public static @HiddenType(clazz = NtDynamic.class)
-  NtMaybe<NtDynamic> toDynamic(String json) {
+  public static @HiddenType(clazz = NtDynamic.class) NtMaybe<NtDynamic> toDynamic(String json) {
     try {
       return new NtMaybe<>(new JsonStreamReader(json).readNtDynamic());
     } catch (Exception ex) {

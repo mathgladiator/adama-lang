@@ -83,6 +83,7 @@ public class HashBuilder {
   public void hashNtTimeSpan(NtTimeSpan d) {
     digest.update(d.toString().getBytes(StandardCharsets.UTF_8));
   }
+
   public String finish() {
     return Hashing.finishAndEncode(digest);
   }

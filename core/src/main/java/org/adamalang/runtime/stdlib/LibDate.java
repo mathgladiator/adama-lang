@@ -27,7 +27,7 @@ public class LibDate {
     // get the first of the given month
     LocalDate first = LocalDate.of(day.year, day.month, 1);
     // Monday -> 1, Sunday -> 7; transform this to days prior to the start of the month
-    int offset = (first.getDayOfWeek().getValue() + 0) % 7;
+    int offset = (first.getDayOfWeek().getValue()) % 7;
     { // add the days prior to the month
       for (int k = offset; k > 0; k--) {
         LocalDate at = first.plusDays(-k);

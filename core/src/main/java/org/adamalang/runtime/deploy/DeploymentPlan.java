@@ -81,7 +81,8 @@ public class DeploymentPlan {
                           } else {
                             throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_PLAN_KEYS_MUST_BE_ARRAY);
                           }
-                        } break;
+                        }
+                        break;
                         case "prefix":
                           _prefix = reader.readString();
                           break;
