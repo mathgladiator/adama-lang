@@ -81,6 +81,18 @@ public class JsonStreamReaderTests {
   }
 
   @Test
+  public void coverage_mustSkipArray() {
+    JsonStreamReader reader = new JsonStreamReader("[1, 2, 3]");
+    reader.mustSkipArray();;
+  }
+
+  @Test
+  public void coverage_mustSkipObject() {
+    JsonStreamReader reader = new JsonStreamReader("{\"x\":123}");
+    reader.mustSkipObject();
+  }
+
+  @Test
   public void dupes() {
     JsonStreamReader reader = new JsonStreamReader("{}");
     HashSet<String> dupes = new HashSet<>();
@@ -568,11 +580,29 @@ public class JsonStreamReaderTests {
   }
 
   @Test
+  public void readDateBad() {
+    JsonStreamReader reader = new JsonStreamReader("\"x/11\"");
+    NtDate date = reader.readNtDate();
+    Assert.assertEquals(1, date.year);
+    Assert.assertEquals(1, date.month);
+    Assert.assertEquals(1, date.day);
+  }
+
+  @Test
   public void readTime() {
     JsonStreamReader reader = new JsonStreamReader("\"14:37\"");
     NtTime time = reader.readNtTime();
     Assert.assertEquals(37, time.minute);
     Assert.assertEquals(14, time.hour);
+  }
+
+
+  @Test
+  public void readTimeBad() {
+    JsonStreamReader reader = new JsonStreamReader("\"x:37\"");
+    NtTime time = reader.readNtTime();
+    Assert.assertEquals(0, time.minute);
+    Assert.assertEquals(0, time.hour);
   }
 
   @Test

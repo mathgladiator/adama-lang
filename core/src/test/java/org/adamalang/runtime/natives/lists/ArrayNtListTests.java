@@ -11,6 +11,8 @@ package org.adamalang.runtime.natives.lists;
 import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.mocks.MockRecord;
+import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtMaybe;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,6 +35,20 @@ public class ArrayNtListTests {
     list.transform(String::length);
     list.__delete();
     Assert.assertFalse(list.iterator().hasNext());
+    Assert.assertFalse(list.lookup(134).has());
+    Assert.assertFalse(list.lookup(new NtMaybe<>()).has());
+    Assert.assertFalse(list.lookup(new NtMaybe<>(42)).has());
+  }
+
+  @Test
+  public void map() {
+    final var s = new ArrayList<String>();
+    s.add("x");
+    s.add("yx");
+    s.add("zxx");
+    final var list = new ArrayNtList<>(s);
+    NtList<Integer> mapped = list.mapFunction((x) -> x.length());
+    Assert.assertEquals(2, (int) mapped.lookup(1).get());
   }
 
   @Test

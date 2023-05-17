@@ -10,6 +10,7 @@ package org.adamalang.edhtml;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.File;
 
@@ -20,7 +21,7 @@ public class EdHtmlState {
   public final File output;
   public final File includes_path;
   public final File gen_path;
-  public final Document document;
+  public final Element document;
   public final StringBuilder output_rx;
 
   public EdHtmlState(String[] args) throws Exception {
@@ -46,7 +47,7 @@ public class EdHtmlState {
     }
     this.output_rx = new StringBuilder();
     this.output_rx.append("<forest>\n");
-    this.document = Jsoup.parse(input);
+    this.document = Jsoup.parse(input).getElementsByTag("build").first();
   }
 
   public String finish() {

@@ -1,0 +1,12 @@
+<build default-from="sample.json">
+    <generate
+            from="sample.json"
+            mode="create"
+            channel="create_blog_post"
+            factory="simplex"
+            name="blog-create"
+            define:title="Create a new blog entry"
+            define:instance="{id}"
+            define:action="Post New Entry"
+    />
+</build>

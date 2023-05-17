@@ -73,7 +73,9 @@ public class FieldList implements Iterable<Field> {
     for (Field a : as.fields) {
       Field b = bs.fieldsIndexed.get(a.name);
       if (b != null) {
-        fields.add(Field.union(a, b));
+        if (a.type.equals(b.type)) {
+          fields.add(Field.union(a, b));
+        }
       }
     }
     return new FieldList(fields);

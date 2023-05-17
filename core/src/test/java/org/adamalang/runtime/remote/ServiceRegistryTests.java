@@ -26,4 +26,10 @@ public class ServiceRegistryTests {
     Assert.assertFalse(ServiceRegistry.NOT_READY.contains("x"));
     ServiceRegistry.NOT_READY.resolve("x", null);
   }
+
+  @Test
+  public void static_reg() {
+    ServiceRegistry.add("xyx", ServiceRegistryTests.class, null);
+    Assert.assertNull(ServiceRegistry.getLinkDefinition("xyz", 12, null, null, null));
+  }
 }

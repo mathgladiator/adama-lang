@@ -15,6 +15,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.mocks.MockLivingDocument;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.ops.SilentDocumentMonitor;
 import org.adamalang.runtime.reactives.RxLazy;
 import org.adamalang.runtime.reactives.RxTable;
@@ -139,6 +140,26 @@ public class SelectoRxTObjectListTests {
     Assert.assertEquals(5, list.lookup(0).get().__id());
     Assert.assertEquals(6, list.lookup(1).get().__id());
     Assert.assertEquals(4, list.lookup(2).get().__id());
+    Assert.assertFalse(list.lookup(134).has());
+    Assert.assertFalse(list.lookup(new NtMaybe<>()).has());
+    Assert.assertFalse(list.lookup(new NtMaybe<>(42)).has());
+    Assert.assertTrue(list.mapFunction((mr) -> mr.index).lookup(1).has());
+  }
+
+  @Test
+  public void table_lookup() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    table.__insert(
+        new JsonStreamReader("{\"4\":{\"index\":13},\"5\":{\"index\":12},\"6\":{\"index\":13}}"));
+    final var list = table.iterate(false);
+    Assert.assertEquals(4, list.lookup(0).get().__id());
+    Assert.assertEquals(5, list.lookup(1).get().__id());
+    Assert.assertEquals(6, list.lookup(2).get().__id());
+    Assert.assertFalse(list.lookup(134).has());
+    Assert.assertFalse(list.lookup(new NtMaybe<>()).has());
+    Assert.assertFalse(list.lookup(new NtMaybe<>(42)).has());
+    Assert.assertTrue(list.mapFunction((mr) -> mr.index).lookup(1).has());
   }
 
   @Test

@@ -64,4 +64,11 @@ public class RemoteSiteTests {
       Assert.assertFalse(site.equals("X"));
     }
   }
+
+  @Test
+  public void patch_junk() {
+    RemoteSite site = new RemoteSite(42, new RemoteInvocation("service", "method", NtPrincipal.NO_ONE, "{\"new\":\"hope\"}"));
+    site.patch(new JsonStreamReader("{\"junk\":123}"));
+    site.patch(new JsonStreamReader("123"));
+  }
 }

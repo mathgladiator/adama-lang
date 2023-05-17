@@ -28,9 +28,21 @@ public class NtDateTests {
   }
 
   @Test
-  public void compare() {
+  public void compare_year() {
     Assert.assertEquals(0, new NtDate(2010, 11, 22).compareTo(new NtDate(2010, 11, 22)));
     Assert.assertEquals(-1, new NtDate(2010, 11, 22).compareTo(new NtDate(2011, 11, 22)));
     Assert.assertEquals(1, new NtDate(2011, 11, 22).compareTo(new NtDate(2010, 11, 22)));
+  }
+
+  @Test
+  public void compare_month() {
+    Assert.assertEquals(-1, new NtDate(2010, 10, 22).compareTo(new NtDate(2010, 11, 22)));
+    Assert.assertEquals(1, new NtDate(2010, 12, 22).compareTo(new NtDate(2010, 11, 22)));
+  }
+
+  @Test
+  public void compare_day() {
+    Assert.assertEquals(-1, new NtDate(2010, 11, 21).compareTo(new NtDate(2010, 11, 22)));
+    Assert.assertEquals(1, new NtDate(2010, 11, 23).compareTo(new NtDate(2010, 11, 22)));
   }
 }

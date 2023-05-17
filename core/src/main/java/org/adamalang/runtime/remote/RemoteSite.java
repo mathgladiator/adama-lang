@@ -47,6 +47,8 @@ public class RemoteSite {
           case "result":
             value = new RemoteResult(reader);
             break;
+          default:
+            reader.skipValue();
         }
       }
     } else {

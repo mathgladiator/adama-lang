@@ -27,6 +27,19 @@ public class NtResultTests {
   }
 
   @Test
+  public void copy_cons() {
+    NtResult<Integer> result = new NtResult<>(new NtResult<>(123, false, 0, null));
+    Assert.assertEquals(123, (int) result.get());
+    Assert.assertEquals(123, (int) result.as_maybe().get());
+    Assert.assertTrue(result.finished());
+    Assert.assertTrue(result.has());
+    Assert.assertFalse(result.failed());
+    Assert.assertEquals("OK", result.message());
+    Assert.assertEquals(0, result.code());
+    Assert.assertEquals(123, (int) result.await().get());
+  }
+
+  @Test
   public void inprogress() {
     NtResult<Integer> result = new NtResult<>(null, false, 0, null);
     Assert.assertFalse(result.as_maybe().has());
