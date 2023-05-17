@@ -11,7 +11,10 @@ package org.adamalang.mysql.model;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.Domain;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 public class Domains {
@@ -73,16 +76,6 @@ public class Domains {
     }
   }
 
-  private static Domain domainOf(ResultSet rs) throws Exception {
-    String cert = rs.getString(5);
-    if (cert.equals("")) {
-      cert = null;
-    }
-    String key = rs.getString(4);
-    // TODO: look into this
-    return new Domain(rs.getString(1), rs.getInt(2), rs.getString(3), key, cert, rs.getDate(6), rs.getLong(7));
-  }
-
   public static Domain get(DataBase dataBase, String domain) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = "SELECT `domain`, `owner`, `space`, `key`, `certificate`,`updated`, `automatic_timestamp`  FROM `" + dataBase.databaseName + "`.`domains` WHERE `domain`=?";
@@ -96,6 +89,16 @@ public class Domains {
       }
     }
     return null;
+  }
+
+  private static Domain domainOf(ResultSet rs) throws Exception {
+    String cert = rs.getString(5);
+    if (cert.equals("")) {
+      cert = null;
+    }
+    String key = rs.getString(4);
+    // TODO: look into this
+    return new Domain(rs.getString(1), rs.getInt(2), rs.getString(3), key, cert, rs.getDate(6), rs.getLong(7));
   }
 
   public static ArrayList<Domain> list(DataBase dataBase, int owner) throws Exception {

@@ -63,8 +63,7 @@ public class MeteringSpaceSummary {
     if (node.has("third_party_service_calls")) {
       third_party_service_calls += node.get("third_party_service_calls").asLong();
     }
-    byTarget.include(
-        node.has("count_p95") ? node.get("count_p95").asLong() : 0, //
+    byTarget.include(node.has("count_p95") ? node.get("count_p95").asLong() : 0, //
         node.has("memory_p95") ? node.get("memory_p95").asLong() : 0, //
         node.has("connections_p95") ? node.get("connections_p95").asLong() : 0);
   }
@@ -138,11 +137,7 @@ public class MeteringSpaceSummary {
     int firstPartyPennies = (int) (totalFirstPartyCalls / rates.first_party_service_calls);
     int thirdPartyPennies = (int) (totalThirdPartyCalls / rates.third_party_service_calls);
     int pennies = brickPennies + storagePennies + bandwidthPennies + firstPartyPennies + thirdPartyPennies;
-    UnbilledResources change = new UnbilledResources(
-        (totalStorageByteHours % rates.storage) - unbilledResources.storage,
-        (totalBandwidth % rates.bandwidth) - unbilledResources.bandwidth,
-        (totalFirstPartyCalls % rates.first_party_service_calls) - unbilledResources.first_party_service_calls,
-        (totalThirdPartyCalls % rates.third_party_service_calls) - unbilledResources.third_party_service_calls);
+    UnbilledResources change = new UnbilledResources((totalStorageByteHours % rates.storage) - unbilledResources.storage, (totalBandwidth % rates.bandwidth) - unbilledResources.bandwidth, (totalFirstPartyCalls % rates.first_party_service_calls) - unbilledResources.first_party_service_calls, (totalThirdPartyCalls % rates.third_party_service_calls) - unbilledResources.third_party_service_calls);
     return new MeteredWindowSummary(writer.toString(), pennies, storageBytes, change);
   }
 

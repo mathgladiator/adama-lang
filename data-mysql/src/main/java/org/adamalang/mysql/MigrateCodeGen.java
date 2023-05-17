@@ -23,12 +23,43 @@ import java.util.concurrent.atomic.AtomicInteger;
 /** This a useful tool to replicate database (which is not operational nor financial) */
 public class MigrateCodeGen {
 
-  private static HashMap<String, String> lookups(String... kvps) {
-    HashMap<String, String> map = new HashMap<>();
-    for (int k = 0; k + 1 < kvps.length; k++) {
-      map.put(kvps[k], kvps[k + 1]);
+  public static void main(String[] args) throws Exception {
+    String path = "data-mysql/src/main/java/org/adamalang/mysql/Migrate.java";
+    DataBaseConfig config = new DataBaseConfig(new ConfigObject(Json.parseJsonObject(Files.readString(new File("data-mysql/test.mysql.json").toPath()))));
+    DataBase dataBase = new DataBase(config, new DataBaseMetrics(new NoOpMetricsFactory()));
+    Installer installer = new Installer(dataBase);
+    try {
+      installer.install();
+      StringBuilder java = new StringBuilder();
+      java.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
+      java.append("package org.adamalang.mysql;\n\n");
+      java.append("import org.adamalang.mysql.contracts.MigrationStatus;\n\n");
+      java.append("import java.sql.Connection;\n");
+      java.append("import java.sql.PreparedStatement;\n");
+      java.append("import java.sql.Statement;\n");
+      java.append("import java.util.HashMap;\n\n");
+      java.append("public class Migrate {\n");
+      java.append("  public static void copy(DataBase from, DataBase to, MigrationStatus status) throws Exception {\n");
+      java.append("    try (Connection _from = from.pool.getConnection()) {\n");
+      java.append("      try (Connection _to = to.pool.getConnection()) {\n");
+      makeCopy(dataBase, "directory", java, false, lookups());
+      makeCopy(dataBase, "emails", java, true, lookups());
+      makeCopy(dataBase, "initiations", java, false, lookups("user", "emails"));
+      makeCopy(dataBase, "email_keys", java, false, lookups("user", "emails"));
+      makeCopy(dataBase, "spaces", java, true, lookups("owner", "emails"));
+      makeCopy(dataBase, "grants", java, false, lookups("user", "emails", "space", "spaces"));
+      makeCopy(dataBase, "authorities", java, false, lookups("owner", "emails"));
+      makeCopy(dataBase, "secrets", java, true, lookups());
+      makeCopy(dataBase, "domains", java, false, lookups("owner", "emails"));
+      java.append("      }\n");
+      java.append("    }\n");
+      java.append("  }\n");
+      java.append("}\n");
+      Files.writeString(new File(path).toPath(), java);
+    } finally {
+      installer.uninstall();
+      dataBase.close();
     }
-    return map;
   }
 
   private static void makeCopy(DataBase dataBase, String tableName, StringBuilder java, boolean index, HashMap<String, String> translations) throws Exception {
@@ -48,7 +79,7 @@ public class MigrateCodeGen {
         if ("id".equals(rs.getString(1))) {
           hasId.set(true);
           if (index) {
-            fieldId.set(fieldIdRead.get());;
+            fieldId.set(fieldIdRead.get());
           }
         } else {
           fieldIdWrite.incrementAndGet();
@@ -90,7 +121,7 @@ public class MigrateCodeGen {
         // 2 type
       }, sql);
       String sqlWalk = "\"SELECT " + String.join(", ", fieldsRead) + " FROM `\" + from.databaseName + \"`.`" + tableName + "`" + (hasId.get() ? " ORDER BY `id`" : "") + "\"";
-      String sqlInsert = "\"INSERT INTO `\" + to.databaseName + \"`.`" + tableName + "` (" +  String.join(", ", fieldsInsert) + ") VALUES ("+String.join(", ", questionMarks)+")\"";
+      String sqlInsert = "\"INSERT INTO `\" + to.databaseName + \"`.`" + tableName + "` (" + String.join(", ", fieldsInsert) + ") VALUES (" + String.join(", ", questionMarks) + ")\"";
 
       String tab = "      ";
       if (index) {
@@ -119,42 +150,12 @@ public class MigrateCodeGen {
       return null;
     });
   }
-  public static void main(String[] args) throws Exception {
-    String path = "data-mysql/src/main/java/org/adamalang/mysql/Migrate.java";
-    DataBaseConfig config = new DataBaseConfig(new ConfigObject(Json.parseJsonObject(Files.readString(new File("data-mysql/test.mysql.json").toPath()))));
-    DataBase dataBase = new DataBase(config, new DataBaseMetrics(new NoOpMetricsFactory()));
-    Installer installer = new Installer(dataBase);
-    try {
-      installer.install();
-      StringBuilder java = new StringBuilder();
-      java.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
-      java.append("package org.adamalang.mysql;\n\n");
-      java.append("import org.adamalang.mysql.contracts.MigrationStatus;\n\n");
-      java.append("import java.sql.Connection;\n");
-      java.append("import java.sql.PreparedStatement;\n");
-      java.append("import java.sql.Statement;\n");
-      java.append("import java.util.HashMap;\n\n");
-      java.append("public class Migrate {\n");
-      java.append("  public static void copy(DataBase from, DataBase to, MigrationStatus status) throws Exception {\n");
-      java.append("    try (Connection _from = from.pool.getConnection()) {\n");
-      java.append("      try (Connection _to = to.pool.getConnection()) {\n");
-      makeCopy(dataBase, "directory", java, false, lookups());
-      makeCopy(dataBase, "emails", java, true, lookups());
-      makeCopy(dataBase, "initiations", java, false, lookups("user", "emails"));
-      makeCopy(dataBase, "email_keys", java, false, lookups("user", "emails"));
-      makeCopy(dataBase, "spaces", java, true, lookups("owner", "emails"));
-      makeCopy(dataBase, "grants", java, false, lookups("user", "emails", "space", "spaces"));
-      makeCopy(dataBase, "authorities", java, false, lookups("owner", "emails"));
-      makeCopy(dataBase, "secrets", java, true, lookups());
-      makeCopy(dataBase, "domains", java, false, lookups("owner", "emails"));
-      java.append("      }\n");
-      java.append("    }\n");
-      java.append("  }\n");
-      java.append("}\n");
-      Files.writeString(new File(path).toPath(), java);
-    } finally {
-      installer.uninstall();
-      dataBase.close();
+
+  private static HashMap<String, String> lookups(String... kvps) {
+    HashMap<String, String> map = new HashMap<>();
+    for (int k = 0; k + 1 < kvps.length; k++) {
+      map.put(kvps[k], kvps[k + 1]);
     }
+    return map;
   }
 }

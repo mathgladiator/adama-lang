@@ -11,7 +11,10 @@ package org.adamalang.mysql.model;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.CapacityInstance;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
