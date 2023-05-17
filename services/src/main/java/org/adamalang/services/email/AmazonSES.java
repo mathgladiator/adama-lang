@@ -52,6 +52,12 @@ public class AmazonSES extends SimpleService {
     sb.append("service amazonses {\n");
     sb.append("  class=\"amazonses\";\n");
     sb.append("  ").append(params).append("\n");
+    if (!names.contains("access_id")) {
+      error.accept("amazonses requires an 'access_id' field (and it should be encrypted)");
+    }
+    if (!names.contains("secret_key")) {
+      error.accept("amazonses requires an 'secret_key' field (and it should be encrypted)");
+    }
     sb.append("  method<AWSSES_SendRequest_").append(uniqueId).append(", AWSSES_SendResponse_").append(uniqueId).append("> send;\n");
     sb.append("}\n");
     return sb.toString();
@@ -71,7 +77,6 @@ public class AmazonSES extends SimpleService {
 
   private void send(ObjectNode requestNode, Callback<String> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.amazon_ses_send.start();
-
     String from = Json.readString(requestNode, "from");
     String replyTo = Json.readString(requestNode, "replyTo");
     String to = Json.readString(requestNode, "to");
@@ -79,8 +84,7 @@ public class AmazonSES extends SimpleService {
     String text = Json.readString(requestNode, "text");
     String html = Json.readString(requestNode, "html");
 
-
-    if (from == null || replyTo == null || to == null || subject == null || text == null) {
+    if (from == null || replyTo == null || to == null || subject == null || text == null || html == null) {
       instance.failure(ErrorCodes.FIRST_PARTY_AMAZON_SES_MISSING_ARGS);
       callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_AMAZON_SES_MISSING_ARGS));
       return;
