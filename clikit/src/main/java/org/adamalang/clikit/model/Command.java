@@ -15,14 +15,18 @@ public class Command {
     public String name;
     public String method;
     public String documentation;
+    public String endpoint;
+    public boolean danger;
 
-    public Command(String name, String documentation, String method, String output, Argument[] argList) {
+    public Command(String name, String documentation, String method, String output, String endpoint, boolean danger, Argument[] argList) {
         this.name = name;
         this.capName = Common.camelize(name);
         this.documentation = documentation;
+        this.endpoint = endpoint;
         this.method = method;
         this.argList = argList;
         this.output = output;
+        this.danger = danger;
     }
 
     public static Command[] createCommandList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgDefinition> arguments) throws Exception{
@@ -34,6 +38,7 @@ public class Command {
             if (commandName == null || commandName.trim().isEmpty())
                 givenException.addToExceptionStack("Command name \"" + commandName + "\"can not be empty.");
             Argument[] argumentList = Argument.createArgumentList(commandElem.getElementsByTagName("arg"), givenException, arguments);
+            boolean danger = commandElem.getAttribute("warn").equals("") ? false : true;
             String groupDocumentation = Common.getDocumentation(commandElem, givenException);
             String methodType = commandElem.getAttribute("method");
             if ( methodType == null || "".equals(methodType.trim()))
@@ -44,8 +49,9 @@ public class Command {
             } else {
                 outputArg = null;
             }
+            String endpoint = commandElem.getAttribute("endpoint");
 
-            Command command = new Command(commandName, groupDocumentation, methodType, outputArg, argumentList);
+            Command command = new Command(commandName, groupDocumentation, methodType, outputArg, endpoint, danger, argumentList);
             commandArray.add(command);
         }
         return commandArray.toArray(new Command[commandArray.size()]);
