@@ -10,6 +10,7 @@ package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
+import org.adamalang.runtime.async.EphemeralFuture;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.Queryable;
@@ -386,7 +387,9 @@ public class DurableLivingDocument implements Queryable {
   }
 
   public void cleanupWhileInExecutor() {
-    if (base.map.remove(key) != null) {
+    DurableLivingDocument removed = base.map.remove(key);
+    if (removed != null) {
+      removed.document.__removed();
       base.metrics.inflight_documents.down();
       if (getCurrentFactory().delete_on_close) {
         base.service.delete(key, Callback.DONT_CARE_VOID);
@@ -849,13 +852,17 @@ public class DurableLivingDocument implements Queryable {
 
   public void webPut(WebPut put, Callback<WebResponse> callback) {
     final var writer = forge_web("web_put", put.context);
-    put.write(writer);
+    put.injectWrite(writer);
     writer.endObject();
     ingest(put.context.who, writer.toString(), base.metrics.document_web_put.wrap(new Callback<LivingDocumentChange>() {
       @Override
       public void success(LivingDocumentChange value) {
         if (value.response != null) {
-          callback.success((WebResponse) value.response);
+          if (value.response instanceof WebResponse) {
+            callback.success((WebResponse) value.response);
+          } else {
+            ((EphemeralFuture<WebResponse>) value.response).attach(callback);
+          }
         } else {
           callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_PUT_NOT_FOUND));
         }

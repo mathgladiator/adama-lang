@@ -12,6 +12,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.async.AsyncTask;
+import org.adamalang.runtime.async.EphemeralFuture;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.async.TimeoutTracker;
 import org.adamalang.runtime.contracts.DocumentMonitor;
@@ -82,6 +83,9 @@ public abstract class LivingDocument implements RxParent, Caller {
   private Deliverer __deliverer;
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
+  protected final RxInt32 __webTaskId;
+  protected final WebQueue __webQueue;
+  protected RxCache __currentWebCache;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -128,6 +132,13 @@ public abstract class LivingDocument implements RxParent, Caller {
     __timezone = new RxString(this, "UTC");
     __timezoneCachedZoneId = ZoneId.of(__timezone.get());
     __nextViewId = 0;
+    __webTaskId = new RxInt32(this, 0);
+    __webQueue = new WebQueue(__webTaskId);
+    __currentWebCache = null;
+  }
+
+  public void __removed() {
+    __webQueue.cancel();
   }
 
   /** generate a view id */
@@ -270,9 +281,10 @@ public abstract class LivingDocument implements RxParent, Caller {
     __auto_cache_id.__commit("__auto_cache_id", forward, reverse);
     __auto_gen.__commit("__auto_gen", forward, reverse);
     __timeouts.commit(forward, reverse);
+    __webQueue.commit(forward, reverse);
   }
 
-  private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request) {
+  private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again) {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     forward.beginObject();
@@ -294,7 +306,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts, (int) (__next_time.get() - __time.get()), 0L, UpdateType.Invalidate);
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts || again, (int) (__next_time.get() - __time.get()), 0L, UpdateType.Invalidate);
     return new LivingDocumentChange(update, broadcasts, null);
   }
 
@@ -443,6 +455,10 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   protected void __dumpTimeouts(final JsonStreamWriter writer) {
       __timeouts.dump(writer);
+  }
+
+  protected void __dumpWebQueue(final JsonStreamWriter writer) {
+    __webQueue.dump(writer);
   }
 
   /** garbage collect the views for the given client; return the number of views for that user */
@@ -644,6 +660,10 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   public void __hydrateTimeouts(final JsonStreamReader reader) {
     __timeouts.hydrate(reader);
+  }
+
+  protected void __hydrateWebQueue(final JsonStreamReader reader) {
+    __webQueue.hydrate(reader, this);
   }
 
   /** parse the message for the channel, and cache the result */
@@ -999,7 +1019,7 @@ public abstract class LivingDocument implements RxParent, Caller {
           } else {
             return __transaction_invalidate_body(who, requestJson);
           }
-        case "construct": // TODO: context
+        case "construct":
           if (__constructed.get()) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED);
           }
@@ -1164,9 +1184,20 @@ public abstract class LivingDocument implements RxParent, Caller {
     try {
       __seq.bumpUpPre();
       __randomizeOutOfBand();
-      WebResponse response = __put_internal(put);
-      exception = false;
-      return __simple_commit(put.context.who, request, response, 0L);
+      DelayParent delay = new DelayParent();
+      RxCache cache = new RxCache(this, delay);
+      try {
+        __currentWebCache = cache;
+        WebResponse response = __put_internal(put);
+        exception = false;
+        return __simple_commit(put.context.who, request, response, 0L);
+      } catch (ComputeBlockedException cbe) {
+        __revert();
+        exception = false;
+        EphemeralFuture<WebResponse> future = new EphemeralFuture<>();
+        __webQueue.queue(put.context, put, future, cache, delay);
+        return __simple_commit(put.context.who, request, future, 0L);
+      }
     } finally {
       if (exception) {
         __revert();
@@ -1429,6 +1460,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     final var seedUsed = Long.parseLong(__entropy.get());
     try {
       __random = new Random(seedUsed);
+      boolean workDone = false;
       for (final AsyncTask task : __queue) {
         __route(task);
       }
@@ -1436,6 +1468,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       for (final AsyncTask task : __queue) {
         __time.set(task.timestamp);
         task.execute();
+        workDone = true;
       }
       __time.set(timeBackup);
       // execute the state
@@ -1443,14 +1476,40 @@ public abstract class LivingDocument implements RxParent, Caller {
         final var stateToExecute = __state.get();
         __state.set("");
         __invoke_label(stateToExecute);
+        workDone = true;
       }
-      return __invalidate_trailer(who, request);
+      int dirtyLeft = 0;
+      if (!workDone) {
+        dirtyLeft = __webQueue.size();
+        Iterator<Map.Entry<Integer, WebQueueItem>> it = __webQueue.iterator();
+        while (it.hasNext()) {
+          WebQueueItem item = it.next().getValue();
+          dirtyLeft--;
+          try {
+            // TODO: reset random
+            if (item.item instanceof WebPut) {
+              __currentWebCache = item.cache;
+              WebResponse response = __put_internal((WebPut) item.item);
+              if (item.future != null) {
+                item.future.send(response);
+              }
+            }
+            item.state = WebQueueState.Remove;
+            __webQueue.dirty();
+            break;
+          } catch (ComputeBlockedException cbe) {
+            __revert();
+            __time.set(timeBackup);
+          }
+        }
+      }
+      return __invalidate_trailer(who, request, dirtyLeft > 0);
     } catch (final ComputeBlockedException blockedOn) {
       if (__preemptedStateOnNextComputeBlocked != null) {
         __state.set(__preemptedStateOnNextComputeBlocked);
         __next_time.set(__time.get());
         __preemptedStateOnNextComputeBlocked = null;
-        return __invalidate_trailer(who, request);
+        return __invalidate_trailer(who, request, false);
       } else {
         List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
         __revert();

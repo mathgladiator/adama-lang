@@ -24,8 +24,14 @@ public class TimeoutTests {
 
   @Test
   public void readFrom() {
-    Timeout x = Timeout.readFrom(new JsonStreamReader("{\"timestamp\":\"123\",\"timeout\":4.2}"));
+    Timeout x = Timeout.readFrom(new JsonStreamReader("{\"timestamp\":\"123\",\"timeout\":4.2,\"junk\":true}"));
     Assert.assertEquals(123, x.timestamp);
     Assert.assertEquals(4.2, x.timeoutSeconds, 0.1);
+  }
+
+  @Test
+  public void junk() {
+    Timeout x = Timeout.readFrom(new JsonStreamReader("\"timeout\""));
+    Assert.assertNull(x);
   }
 }

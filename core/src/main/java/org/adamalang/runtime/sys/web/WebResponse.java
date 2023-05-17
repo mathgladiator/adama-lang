@@ -8,6 +8,7 @@
  */
 package org.adamalang.runtime.sys.web;
 
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtMessageBase;
@@ -20,6 +21,69 @@ public class WebResponse {
   public boolean cors = false;
   public int cache_ttl_seconds = 0;
   public String asset_transform = "";
+
+  public void writeAsObject(JsonStreamWriter writer) {
+    writer.beginObject();
+    if (contentType != null) {
+      writer.writeObjectFieldIntro("content-type");
+      writer.writeString(contentType);
+    }
+    if (body != null) {
+      writer.writeObjectFieldIntro("body");
+      writer.writeString(body);
+    }
+    if (asset != null) {
+      writer.writeObjectFieldIntro("asset");
+      writer.writeNtAsset(asset);
+    }
+    if (asset_transform != null && asset_transform.length() > 0) {
+      writer.writeObjectFieldIntro("asset-transform");
+      writer.writeString(asset_transform);
+    }
+    if (cors) {
+      writer.writeObjectFieldIntro("cors");
+      writer.writeBoolean(cors);
+    }
+    if (cache_ttl_seconds > 0) {
+      writer.writeObjectFieldIntro("cache-ttl-seconds");
+      writer.writeInteger(cache_ttl_seconds);
+    }
+    writer.endObject();
+  }
+
+  public static WebResponse readFromObject(JsonStreamReader reader) {
+    if (reader.startObject()) {
+      WebResponse response = new WebResponse();
+      while (reader.notEndOfObject()) {
+        switch (reader.fieldName()) {
+          case "content-type":
+            response.contentType = reader.readString();
+            break;
+          case "body":
+            response.body = reader.readString();
+            break;
+          case "asset":
+            response.asset = reader.readNtAsset();
+            break;
+          case "asset-transform":
+            response.asset_transform = reader.readString();
+            break;
+          case "cors":
+            response.cors = reader.readBoolean();
+            break;
+          case "cache-ttl-seconds":
+            response.cache_ttl_seconds = reader.readInteger();
+            break;
+          default:
+            reader.skipValue();
+        }
+      }
+      return response;
+    } else {
+      reader.skipValue();
+    }
+    return null;
+  }
 
   public WebResponse html(String body) {
     this.contentType = "text/html; charset=utf-8";
@@ -94,4 +158,5 @@ public class WebResponse {
       inventory.bandwidth(this.asset.size);
     }
   }
+
 }

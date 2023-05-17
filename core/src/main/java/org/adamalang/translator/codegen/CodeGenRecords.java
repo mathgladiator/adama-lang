@@ -372,6 +372,9 @@ public class CodeGenRecords {
       sb.append("case \"__messages\":").tabUp().writeNewline();
       sb.append("__hydrateMessages(__reader);").writeNewline();
       sb.append("break;").tabDown().writeNewline();
+      sb.append("case \"__webqueue\":").tabUp().writeNewline();
+      sb.append("__hydrateWebQueue(__reader);").writeNewline();
+      sb.append("break;").tabDown().writeNewline();
       sb.append("case \"__timeouts\":").tabUp().writeNewline();
       sb.append("__hydrateTimeouts(__reader);").writeNewline();
       sb.append("break;").tabDown().writeNewline();
@@ -417,6 +420,9 @@ public class CodeGenRecords {
       sb.append("break;").tabDown().writeNewline();
       sb.append("case \"__messages\":").tabUp().writeNewline();
       sb.append("__hydrateMessages(__reader);").writeNewline();
+      sb.append("break;").tabDown().writeNewline();
+      sb.append("case \"__webqueue\":").tabUp().writeNewline();
+      sb.append("__hydrateWebQueue(__reader);").writeNewline();
       sb.append("break;").tabDown().writeNewline();
       sb.append("case \"__timeouts\":").tabUp().writeNewline();
       sb.append("__hydrateTimeouts(__reader);").writeNewline();
@@ -482,6 +488,7 @@ public class CodeGenRecords {
       sb.append("__dumpClients(__writer);").writeNewline();
       sb.append("__dumpMessages(__writer);").writeNewline();
       sb.append("__dumpTimeouts(__writer);").writeNewline();
+      sb.append("__dumpWebQueue(__writer);").writeNewline();
     }
     sb.append("__writer.endObject();").tabDown().writeNewline();
     sb.append("}").writeNewline();
@@ -512,7 +519,7 @@ public class CodeGenRecords {
     sb.append("__goodwillBudget = ").append(environment.state.options.goodwillBudget + ";").writeNewline();
     sb.append("__goodwillLimitOfBudget = ").append(environment.state.options.goodwillBudget + ";").tabDown().writeNewline();
     sb.append("}").writeNewline();
-    writeCommitAndRevert(storage, sb, environment, true, "__state", "__constructed", "__next_time", "__last_expire_time", "__blocked", "__seq", "__entropy", "__auto_future_id", "__connection_id", "__message_id", "__time", "__timezone", "__auto_table_row_id", "__auto_gen", "__auto_cache_id", "__cache");
+    writeCommitAndRevert(storage, sb, environment, true, "__state", "__constructed", "__next_time", "__last_expire_time", "__blocked", "__seq", "__entropy", "__auto_future_id", "__connection_id", "__message_id", "__time", "__timezone", "__auto_table_row_id", "__auto_gen", "__auto_cache_id", "__cache", "__webTaskId");
     CodeGenDeltaClass.writeRecordDeltaClass(storage, sb, environment, environment.document.getClassName(), true);
     sb.append("@Override").writeNewline();
     sb.append("public Set<String> __get_intern_strings() {").tabUp().writeNewline();

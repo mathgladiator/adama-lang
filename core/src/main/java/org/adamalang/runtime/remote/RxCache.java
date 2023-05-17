@@ -105,6 +105,9 @@ public class RxCache extends RxBase implements RxKillable {
   /** deliver a result to the cache */
   public boolean deliver(int id, RemoteResult result) {
     RemoteSite site = sites.get(id);
+    if (site == null) {
+      site = additions.get(id);
+    }
     if (site != null) {
       root.__removeRoute(id);
       site.deliver(result);

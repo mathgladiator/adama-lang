@@ -25,7 +25,7 @@ public class WebPutTests {
     headers.put("x", "abc");
     WebPut put = new WebPut(context, "/uri", headers, new NtDynamic("{\"p\":123}"), "{}");
     JsonStreamWriter writer = new JsonStreamWriter();
-    put.write(writer);
+    put.injectWrite(writer);
     Assert.assertEquals("\"put\":{\"uri\":\"/uri\",\"headers\":{\"x\":\"abc\"},\"parameters\":{\"p\":123},\"bodyJson\":{}}", writer.toString());
     JsonStreamReader reader = new JsonStreamReader(writer.toString());
     Assert.assertEquals("put", reader.fieldName());
@@ -35,5 +35,16 @@ public class WebPutTests {
     Assert.assertEquals("{}", clone.bodyJson);
     Assert.assertEquals("abc", clone.headers.storage.get("x"));
     Assert.assertNull(WebPut.read(context, new JsonStreamReader("{}")));
+  }
+
+  @Test
+  public void route() {
+    WebContext context = new WebContext(NtPrincipal.NO_ONE, "origin", "ip");
+    JsonStreamReader reader = new JsonStreamReader("{\"put\":{\"uri\":\"/uri\",\"headers\":{\"x\":\"abc\"},\"parameters\":{\"p\":123},\"bodyJson\":{}}}");
+    WebPut put = (WebPut) WebItem.read(context, reader);
+    Assert.assertEquals("/uri", put.uri);
+    Assert.assertEquals("{\"p\":123}", put.parameters.json);
+    Assert.assertEquals("{}", put.bodyJson);
+    Assert.assertEquals("abc", put.headers.storage.get("x"));
   }
 }

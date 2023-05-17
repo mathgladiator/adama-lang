@@ -302,6 +302,8 @@ public class ErrorTable {
     descriptions.put(148477, "no description of error (yet)");
     names.put(120048, "FRONTEND_FAILED_RXHTML_LOOKUP");
     descriptions.put(120048, "no description of error (yet)");
+    names.put(114384, "TASK_CANCELLED");
+    descriptions.put(114384, "no description of error (yet)");
     names.put(684039, "USER_NOT_FOUND_GET_PASSWORD");
     descriptions.put(684039, "no description of error (yet)");
     names.put(605208, "USER_NOT_FOUND_GET_BALANCE");

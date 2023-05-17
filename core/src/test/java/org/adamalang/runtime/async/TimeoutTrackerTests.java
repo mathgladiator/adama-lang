@@ -54,7 +54,9 @@ public class TimeoutTrackerTests {
     RxInt64 time = new RxInt64(null, 0);
     TimeoutTracker tracker = new TimeoutTracker(time);
     {
-      tracker.create(42, 3.13);
+      Timeout a = tracker.create(42, 3.13);
+      Timeout b = tracker.create(42, 3.13);
+      Assert.assertTrue(a == b); // dedupes
       JsonStreamWriter forward = new JsonStreamWriter();
       JsonStreamWriter reverse = new JsonStreamWriter();
       tracker.commit(forward, reverse);
@@ -105,5 +107,12 @@ public class TimeoutTrackerTests {
     tracker.create(102, 1.25);
     Assert.assertTrue(tracker.needsInvalidationAndUpdateNext(next));
     Assert.assertEquals(2250L, next.get().longValue());
+  }
+
+  @Test
+  public void clearNull() {
+    RxInt64 time = new RxInt64(null, 1000);
+    TimeoutTracker tracker = new TimeoutTracker(time);
+    tracker.hydrate(new JsonStreamReader("null"));
   }
 }

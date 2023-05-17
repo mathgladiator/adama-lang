@@ -35,11 +35,12 @@ public class DelayAdamaStreamTests {
     delay.update("UPDATE!");
     delay.send("channel", "marker", "message", Callback.DONT_CARE_INTEGER);
     delay.send("failure", "marker", "message", Callback.DONT_CARE_INTEGER);
+    delay.password("p", Callback.DONT_CARE_INTEGER);
     delay.close();
     MockAdamaStream stream = new MockAdamaStream();
     delay.ready(stream);
     delay.unready();
-    Assert.assertEquals("ATTACH:id/name/type/1000/md5/sha\n" + "CANATTACH\n" + "UPDATE:UPDATE!\n" + "SEND:channel/marker/message\n" + "SEND:failure/marker/message\n" + "CLOSE\n", stream.toString());
+    Assert.assertEquals("ATTACH:id/name/type/1000/md5/sha\n" + "CANATTACH\n" + "UPDATE:UPDATE!\n" + "SEND:channel/marker/message\n" + "SEND:failure/marker/message\n" + "PASSWORD!\n" + "CLOSE\n", stream.toString());
   }
 
   @Test

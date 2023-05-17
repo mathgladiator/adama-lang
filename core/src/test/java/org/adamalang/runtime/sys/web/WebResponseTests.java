@@ -8,6 +8,8 @@
  */
 package org.adamalang.runtime.sys.web;
 
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.mocks.MockMessage;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.PredictiveInventory;
@@ -60,4 +62,40 @@ public class WebResponseTests {
     response.account(inventory);
     Assert.assertEquals(42, inventory.sample().bandwidth);
   }
+
+  @Test
+  public void save_empty() {
+    WebResponse response = new WebResponse();
+    JsonStreamWriter writer = new JsonStreamWriter();
+    response.writeAsObject(writer);
+    Assert.assertEquals("{}", writer.toString());
+  }
+
+  @Test
+  public void save_many() {
+    WebResponse response = new WebResponse();
+    response.cors = true;
+    response.asset = NtAsset.NOTHING;
+    response.asset_transform = "transform";
+    response.body = "body";
+    response.contentType = "type";
+    response.cache_ttl_seconds = 42;
+    JsonStreamWriter writer = new JsonStreamWriter();
+    response.writeAsObject(writer);
+    Assert.assertEquals("{\"content-type\":\"type\",\"body\":\"body\",\"asset\":{\"id\":\"\",\"size\":\"0\",\"name\":\"\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"@gc\":\"@yes\"},\"asset-transform\":\"transform\",\"cors\":true,\"cache-ttl-seconds\":42}", writer.toString());
+  }
+
+  @Test
+  public void load_many() {
+    JsonStreamReader reader = new JsonStreamReader("{\"content-type\":\"type\",\"body\":\"body\",\"asset\":{\"id\":\"\",\"size\":\"0\",\"name\":\"\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"@gc\":\"@yes\"},\"asset-transform\":\"transform\",\"cors\":true,\"cache-ttl-seconds\":42}");
+    WebResponse response = WebResponse.readFromObject(reader);
+    Assert.assertEquals("transform", response.asset_transform);
+    Assert.assertEquals("body", response.body);
+    Assert.assertEquals("type", response.contentType);
+    Assert.assertEquals(42, response.cache_ttl_seconds);
+    Assert.assertEquals(NtAsset.NOTHING, response.asset);
+    Assert.assertTrue(response.cors);
+  }
+
+
 }
