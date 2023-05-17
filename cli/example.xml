@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<cli output-path="./FAKEPATH" test-output-path="./cli/src/test/java/org/adamalang/cli/commands" package="org.adamalang.cli" docs="./reference/src/reference/cli.md">
+    <arg-definition name="file" type="file">
+        <documentation>
+            A file containing the plan
+        </documentation>
+    </arg-definition>
+    <arg-definition name="space" type="string">
+        <documentation>
+            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
+            denote the name of that collection.
+        </documentation>
+    </arg-definition>
+    <arg-definition name="limit" type="int">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+    <arg-definition name="email" type="string">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+    <arg-definition name="marker" type="string">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+    <arg-definition name="role" type="string">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+    <arg-definition name="output" type="file">
+        <documentation>
+            The file that you would like to have as output.
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="key" type="string">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+<!--    <arg-definition name="archive">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="agent" type="string">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="validate">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="authority" type="string">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="keystore">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="private">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="email">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="pennies">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="plan">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="dump-to">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="arg">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="entropy">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="name">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="type">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="marker">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="auto">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="domain">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="certificate">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="gc">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="root">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+<!--    <arg-definition name="limit">-->
+<!--        <documentation>-->
+<!--        </documentation>-->
+<!--    </arg-definition>-->
+
+    <!--    Possible Methods-->
+    <method name="connection" />
+    <method name="connection-stream" />
+
+    <group name="space">
+        <documentation>
+            Manage a space
+        </documentation>
+        <command name="usage">
+            <documentation>
+                Iterates the billed usage
+            </documentation>
+        </command>
+        <command name="create">
+            <arg name="space" />
+            <documentation>
+                Creates a new space
+            </documentation>
+        </command>
+
+        <command name="delete" method="connection">
+            <arg name="space" />
+            <documentation>
+                Deletes an empty space
+            </documentation>
+        </command>
+        <command name="deploy">
+            <arg name="space" />
+            <arg name="file" />
+            <documentation>
+                Deploy a plan to a space
+            </documentation>
+        </command>
+        <command name="download">
+            <arg name="space" />
+            <documentation>
+                Download a space's plan
+            </documentation>
+        </command>
+        <command name="list" method="stream">
+            <arg name="marker" optional="true" default="null" />
+            <arg name="limit" optional="true" default="100" />
+            <documentation>
+                List spaces available to your account
+            </documentation>
+        </command>
+        <command name="set-role">
+            <arg name="space" />
+            <arg name="email" optional="true" default=""/>
+            <arg name="role" optional="true" default=""/>
+            <documentation>
+                Share/unshare a space with another developer
+            </documentation>
+        </command>
+        <command name="generate-key">
+            <arg name="space" />
+            <documentation>
+                Generate a server-side key to use for storing secrets
+            </documentation>
+        </command>
+        <command name="encrypt-secret">
+            <arg name="space" />
+            <documentation>
+                Encrypt a secret to store within code
+            </documentation>
+        </command>
+        <command name="set-rxhtml">
+            <arg name="space" />
+            <arg name="file" optional="true" default=""/>
+            <documentation>
+                Set the frontend RxHTML forest
+            </documentation>
+        </command>
+        <command name="get-rxhtml">
+            <arg name="space" />
+            <documentation>
+                Get the frontend RxHTML forest
+            </documentation>
+        </command>
+
+        <command name="reflect" method="connection" output="output">
+            <arg name="space" />
+            <arg name="key" optional="true" default=""/>
+            <arg name="output" />
+            <documentation>
+                Reflect a space
+            </documentation>
+        </command>
+
+        <command name="help">
+            <documentation>
+                Displays this screen
+            </documentation>
+        </command>
+    </group>
+
+
+</cli>
