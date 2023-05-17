@@ -8,8 +8,8 @@
  */
 package org.adamalang.edhtml.phases;
 
-import org.adamalang.edhtml.EdHtmlState;
 import org.adamalang.common.StringHelper;
+import org.adamalang.edhtml.EdHtmlState;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

@@ -10,6 +10,6 @@ package org.adamalang.edhtml.phases.generate;
 
 /** how should the given rule affect the destination variable */
 public enum DestinationType {
-  Set,
-  Append
+  Set, // set the output of the rule to the variable
+  Append // append the output of the rule to the variable
 }
