@@ -140,4 +140,37 @@ public class LibDateTests {
     NtDateTime next = LibDate.past(present, new NtTimeSpan(60 * 60 * 15 * 7));
     Assert.assertEquals("2023-04-20T08:57:19.802528800-05:00[America/Chicago]", next.toString());
   }
+
+  @Test
+  public void offset_month_small_pos() {
+    NtDate x = new NtDate(2000, 7, 31);
+    Assert.assertEquals("2000-07-31", LibDate.offsetMonth(x, 0).toString());
+    Assert.assertEquals("2000-08-31", LibDate.offsetMonth(x, 1).toString());
+    Assert.assertEquals("2000-09-30", LibDate.offsetMonth(x, 2).toString());
+  }
+
+  @Test
+  public void offset_month_large_pos() {
+    NtDate x = new NtDate(2000, 7, 31);
+    Assert.assertEquals("2001-06-30", LibDate.offsetMonth(x, 11).toString());
+    Assert.assertEquals("2001-07-31", LibDate.offsetMonth(x, 12).toString());
+    Assert.assertEquals("2002-06-30", LibDate.offsetMonth(x, 23).toString());
+    Assert.assertEquals("2002-08-31", LibDate.offsetMonth(x, 25).toString());
+  }
+
+  @Test
+  public void offset_month_small_neg() {
+    NtDate x = new NtDate(2000, 7, 31);
+    Assert.assertEquals("2000-06-30", LibDate.offsetMonth(x, -1).toString());
+    Assert.assertEquals("2000-05-31", LibDate.offsetMonth(x, -2).toString());
+  }
+
+  @Test
+  public void offset_month_large_neg() {
+    NtDate x = new NtDate(2000, 7, 31);
+    Assert.assertEquals("2001-06-30", LibDate.offsetMonth(x, 11).toString());
+    Assert.assertEquals("2001-07-31", LibDate.offsetMonth(x, 12).toString());
+    Assert.assertEquals("2002-06-30", LibDate.offsetMonth(x, 23).toString());
+    Assert.assertEquals("2002-08-31", LibDate.offsetMonth(x, 25).toString());
+  }
 }

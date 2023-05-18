@@ -125,4 +125,10 @@ public class LibDate {
   public static NtDateTime past(NtDateTime present, NtTimeSpan span) {
     return new NtDateTime(present.dateTime.minusSeconds((long) span.seconds));
   }
+
+  @Extension
+  public static NtDate offsetMonth(NtDate day, int offset) {
+    LocalDate d = day.toLocalDate().plusMonths(offset);
+    return new NtDate(d.getYear(), d.getMonthValue(), d.getDayOfMonth());
+  }
 }
