@@ -122,7 +122,7 @@ public class LibDate {
   }
 
   @Extension
-  public static NtDateTime futureMinutes(NtDateTime present, int minutes) {
-    return new NtDateTime(present.dateTime.plusMinutes(minutes));
+  public static NtDateTime past(NtDateTime present, NtTimeSpan span) {
+    return new NtDateTime(present.dateTime.minusSeconds((long) span.seconds));
   }
 }

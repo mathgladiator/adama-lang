@@ -9,7 +9,9 @@
 package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.natives.NtDate;
+import org.adamalang.runtime.natives.NtDateTime;
 import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtTimeSpan;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -123,5 +125,19 @@ public class LibDateTests {
     System.err.println(ZoneId.of("America/Chicago"));
     System.err.println(zid);
     System.err.println(ZoneId.getAvailableZoneIds());
+  }
+
+  @Test
+  public void future() {
+    NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
+    NtDateTime next = LibDate.future(present, new NtTimeSpan(60 * 60 * 15 * 7));
+    Assert.assertEquals("2023-04-29T02:57:19.802528800-05:00[America/Chicago]", next.toString());
+  }
+
+  @Test
+  public void past() {
+    NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
+    NtDateTime next = LibDate.past(present, new NtTimeSpan(60 * 60 * 15 * 7));
+    Assert.assertEquals("2023-04-20T08:57:19.802528800-05:00[America/Chicago]", next.toString());
   }
 }

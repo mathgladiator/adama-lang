@@ -1,11 +1,13 @@
 public datetime deepnow;
 public datetime expiry;
+public datetime thepast;
 public bool b1;
 public bool b2;
 
 @construct {
   deepnow = Time.datetime();
   expiry = deepnow.future(@timespan 10 min);
+  thepast = deepnow.past(@timespan 10 min);
   b1 = expiry > deepnow;
   b2 = expiry < deepnow;
 }
