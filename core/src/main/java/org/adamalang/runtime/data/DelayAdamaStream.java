@@ -50,6 +50,11 @@ public class DelayAdamaStream implements AdamaStream {
     });
   }
 
+  @Override
+  public void update(String newViewerState) {
+    buffer((stream) -> stream.update(newViewerState), Callback.DONT_CARE_VOID);
+  }
+
   public void buffer(Consumer<AdamaStream> consumer, Callback<?> callback) {
     ItemActionMonitor.ItemActionMonitorInstance instance = monitor.start();
     executor.execute(new NamedRunnable("adama-stream-delay") {
@@ -68,11 +73,6 @@ public class DelayAdamaStream implements AdamaStream {
         });
       }
     });
-  }
-
-  @Override
-  public void update(String newViewerState) {
-    buffer((stream) -> stream.update(newViewerState), Callback.DONT_CARE_VOID);
   }
 
   @Override

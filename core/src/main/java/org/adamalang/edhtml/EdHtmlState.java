@@ -9,7 +9,7 @@
 package org.adamalang.edhtml;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.File;
 
@@ -20,45 +20,40 @@ public class EdHtmlState {
   public final File output;
   public final File includes_path;
   public final File gen_path;
-  public final Document document;
+  public final Element document;
   public final StringBuilder output_rx;
 
   public EdHtmlState(String[] args) throws Exception {
     this.base = baseOf(args);
     if (!(this.base.exists() && this.base.isDirectory())) {
-      throw new Exception("The --base path does not exist:" + base.toString());
+      throw new Exception("The --base path does not exist:" + base);
     }
     this.input = childOf(this.base, "input", "build.ed.html", args);
     if (!this.input.exists() || this.input.isDirectory()) {
-      throw new Exception("The --input path doesn't exist or is a directory than a file:" + input.toString());
+      throw new Exception("The --input path doesn't exist or is a directory than a file:" + input);
     }
     this.output = childOf(this.base, "output", "output.rx.html", args);
     if (this.output.exists() && this.output.isDirectory()) {
-      throw new Exception("The --output path is a directory rather than a file:" + output.toString());
+      throw new Exception("The --output path is a directory rather than a file:" + output);
     }
     this.includes_path = childOf(this.base, "includes", "includes", args);
     this.gen_path = childOf(this.base, "gen", "gen", args);
     if (!(this.includes_path.exists() && this.includes_path.isDirectory())) {
-      throw new Exception("The --includes path does not exist:" + includes_path.toString());
+      throw new Exception("The --includes path does not exist:" + includes_path);
     }
     if (!(this.gen_path.exists() && this.gen_path.isDirectory())) {
-      throw new Exception("The --gen path does not exist:" + includes_path.toString());
+      throw new Exception("The --gen path does not exist:" + includes_path);
     }
     this.output_rx = new StringBuilder();
     this.output_rx.append("<forest>\n");
-    this.document = Jsoup.parse(input);
-  }
-
-  public String finish() {
-    this.output_rx.append("</forest>\n");
-    return this.output_rx.toString();
+    this.document = Jsoup.parse(input).getElementsByTag("build").first();
   }
 
   /** helper: find the base path */
   private static File baseOf(String[] args) {
     for (int k = 0; k + 1 < args.length; k++) {
       if ("--base".equals(args[k])) {
-        return new File(args[k+1]);
+        return new File(args[k + 1]);
       }
     }
     return new File(".");
@@ -68,9 +63,14 @@ public class EdHtmlState {
   private static File childOf(File base, String key, String defaultValue, String[] args) {
     for (int k = 0; k + 1 < args.length; k++) {
       if (("--" + key).equals(args[k])) {
-        return new File(base, args[k+1]);
+        return new File(base, args[k + 1]);
       }
     }
     return new File(base, defaultValue);
+  }
+
+  public String finish() {
+    this.output_rx.append("</forest>\n");
+    return this.output_rx.toString();
   }
 }

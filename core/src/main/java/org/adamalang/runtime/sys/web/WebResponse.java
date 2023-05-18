@@ -22,35 +22,6 @@ public class WebResponse {
   public int cache_ttl_seconds = 0;
   public String asset_transform = "";
 
-  public void writeAsObject(JsonStreamWriter writer) {
-    writer.beginObject();
-    if (contentType != null) {
-      writer.writeObjectFieldIntro("content-type");
-      writer.writeString(contentType);
-    }
-    if (body != null) {
-      writer.writeObjectFieldIntro("body");
-      writer.writeString(body);
-    }
-    if (asset != null) {
-      writer.writeObjectFieldIntro("asset");
-      writer.writeNtAsset(asset);
-    }
-    if (asset_transform != null && asset_transform.length() > 0) {
-      writer.writeObjectFieldIntro("asset-transform");
-      writer.writeString(asset_transform);
-    }
-    if (cors) {
-      writer.writeObjectFieldIntro("cors");
-      writer.writeBoolean(cors);
-    }
-    if (cache_ttl_seconds > 0) {
-      writer.writeObjectFieldIntro("cache-ttl-seconds");
-      writer.writeInteger(cache_ttl_seconds);
-    }
-    writer.endObject();
-  }
-
   public static WebResponse readFromObject(JsonStreamReader reader) {
     if (reader.startObject()) {
       WebResponse response = new WebResponse();
@@ -83,6 +54,35 @@ public class WebResponse {
       reader.skipValue();
     }
     return null;
+  }
+
+  public void writeAsObject(JsonStreamWriter writer) {
+    writer.beginObject();
+    if (contentType != null) {
+      writer.writeObjectFieldIntro("content-type");
+      writer.writeString(contentType);
+    }
+    if (body != null) {
+      writer.writeObjectFieldIntro("body");
+      writer.writeString(body);
+    }
+    if (asset != null) {
+      writer.writeObjectFieldIntro("asset");
+      writer.writeNtAsset(asset);
+    }
+    if (asset_transform != null && asset_transform.length() > 0) {
+      writer.writeObjectFieldIntro("asset-transform");
+      writer.writeString(asset_transform);
+    }
+    if (cors) {
+      writer.writeObjectFieldIntro("cors");
+      writer.writeBoolean(cors);
+    }
+    if (cache_ttl_seconds > 0) {
+      writer.writeObjectFieldIntro("cache-ttl-seconds");
+      writer.writeInteger(cache_ttl_seconds);
+    }
+    writer.endObject();
   }
 
   public WebResponse html(String body) {

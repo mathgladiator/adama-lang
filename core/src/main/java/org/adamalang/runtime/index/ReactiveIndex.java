@@ -139,7 +139,7 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
   public long memory() {
     long sum = 64;
     for (Map.Entry<Integer, TreeSet<Ty>> entry : index.entrySet()) {
-      sum += entry.getValue().size() * 20 + 20;
+      sum += entry.getValue().size() * 20L + 20;
     }
     return sum;
   }

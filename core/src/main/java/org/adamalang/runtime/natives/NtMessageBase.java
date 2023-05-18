@@ -16,8 +16,7 @@ import org.adamalang.runtime.natives.algo.HashBuilder;
 public abstract class NtMessageBase {
   public final static NtMessageBase NULL = new NtMessageBase() {
     @Override
-    public void __ingest(JsonStreamReader reader) {
-      reader.skipValue();
+    public void __hash(HashBuilder __hash) {
     }
 
     @Override
@@ -27,7 +26,8 @@ public abstract class NtMessageBase {
     }
 
     @Override
-    public void __hash(HashBuilder __hash) {
+    public void __ingest(JsonStreamReader reader) {
+      reader.skipValue();
     }
   };
 

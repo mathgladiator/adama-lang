@@ -11,6 +11,7 @@ package org.adamalang.services;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Secrets;
@@ -24,11 +25,13 @@ public class ServiceConfig {
   private final DataBase dataBase;
   private final String space;
   private final Map<String, Object> config;
+  private final String masterKey;
 
-  public ServiceConfig(DataBase dataBase, String space, Map<String, Object> config) {
+  public ServiceConfig(DataBase dataBase, String space, Map<String, Object> config, String masterKey) {
     this.dataBase = dataBase;
     this.config = config;
     this.space = space;
+    this.masterKey = masterKey;
   }
 
   public int getInteger(String key, int defaultValue) throws ErrorCodeException {
@@ -65,6 +68,7 @@ public class ServiceConfig {
   }
 
   public String getDecryptedSecret(String key) throws ErrorCodeException {
+
     Object objVal = config.get(key);
     if (objVal == null || !(objVal instanceof String)) {
       throw new ErrorCodeException(ErrorCodes.SERVICE_CONFIG_BAD_ENCRYPT_STRING_NOT_PRESENT_OR_WRONG_TYPE);
@@ -83,7 +87,7 @@ public class ServiceConfig {
     String publicKey = parts[1];
     String privateKey;
     try {
-      privateKey = Secrets.getPrivateKey(dataBase, space, keyId);
+      privateKey = MasterKey.decrypt(masterKey, Secrets.getPrivateKey(dataBase, space, keyId));
     } catch (Exception ex) {
       throw ErrorCodeException.detectOrWrap(ErrorCodes.SERVICE_CONFIG_BAD_ENCRYPT_STRING_FAILED_SECRET_KEY_LOOKUP, ex, EXLOGGER);
     }

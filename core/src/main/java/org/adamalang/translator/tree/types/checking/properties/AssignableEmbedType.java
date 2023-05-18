@@ -14,5 +14,6 @@ public enum AssignableEmbedType {
   List, //
   Maybe, //
   None, //
-  Ptr
+  Ptr, //
+  Result, //
 }

@@ -15,7 +15,6 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.MeteringSpaceSummary;
 import org.adamalang.mysql.model.metrics.MeteringMetrics;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;

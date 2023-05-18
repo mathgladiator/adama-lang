@@ -77,8 +77,6 @@ public class Backend {
       });
     });
 
-    // TODO: promote the concept of the multi-region client
-    FirstPartyServices.install(init.database, init.webBase);
     File billingRoot = new File(billingRootPath);
     billingRoot.mkdir();
     DiskMeteringBatchMaker billingBatchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot, 10 * 60000L);

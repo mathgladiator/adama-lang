@@ -1,11 +1,11 @@
 <factory>
-    <rule type="string" annotation-present:large annotation-absent:hidden>
+    <rule type="string" annotation-present:large annotation-absent:hidden set="big">
         <tr>
             <td><label for="%%instance%%_%%name%%">%%annotation:label%%</label></td>
             <td><textarea id="%%instance%%_%%name%%" name="%%name%%"></textarea></td>
         </tr>
     </rule>
-    <rule type="string" annotation-absent:large annotation-absent:hidden>
+    <rule type="string" annotation-absent:large annotation-absent:hidden append="children">
         <tr>
             <td><label for="%%instance%%_%%name%%">%%annotation:label%%</label></td>
             <td><input type="text" name="%%name%%" /></td>
@@ -22,6 +22,7 @@
             <h1>%%title%%</h1>
             <table>
                 %%children%%
+                %%big%%
                 <tr>
                     <td></td>
                     <td>

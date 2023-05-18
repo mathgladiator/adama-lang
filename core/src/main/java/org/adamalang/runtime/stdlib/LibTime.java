@@ -20,7 +20,7 @@ public class LibTime {
 
   @Extension
   public static NtTime extendWithinDay(NtTime t, NtTimeSpan s) {
-    int end = ((int) (t.toInt() * 60 + s.seconds))/60;
+    int end = ((int) (t.toInt() * 60 + s.seconds)) / 60;
     if (end >= 1440) end = 1439;
     if (end < 0) end = 0;
     return new NtTime(end / 60, end % 60);

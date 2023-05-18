@@ -18,34 +18,31 @@ public interface Operand {
     JsonStreamReader reader = new JsonStreamReader(changes);
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
-        switch (reader.fieldName()) {
-          case "changes": {
-            if (reader.startArray()) {
-              Join next = new Join();
-              int at = 0;
-              while (reader.notEndOfArray()) {
-                if (reader.startArray()) {
-                  at += reader.readInteger();
-                  boolean notFirst = false;
-                  while (reader.notEndOfArray()) {
-                    if (notFirst) {
-                      next.children.add(new Raw("\n"));
-                    }
-                    next.children.add(new Raw(reader.readString()));
-                    notFirst = true;
+        if ("changes".equals(reader.fieldName())) {
+          if (reader.startArray()) {
+            Join next = new Join();
+            int at = 0;
+            while (reader.notEndOfArray()) {
+              if (reader.startArray()) {
+                at += reader.readInteger();
+                boolean notFirst = false;
+                while (reader.notEndOfArray()) {
+                  if (notFirst) {
+                    next.children.add(new Raw("\n"));
                   }
-                } else {
-                  int copy = reader.readInteger();
-                  result.transposeRangeIntoJoin(at, copy, next);
-                  at += copy;
+                  next.children.add(new Raw(reader.readString()));
+                  notFirst = true;
                 }
+              } else {
+                int copy = reader.readInteger();
+                result.transposeRangeIntoJoin(at, copy, next);
+                at += copy;
               }
-              result = next;
             }
+            result = next;
           }
-          break;
-          default:
-            reader.skipValue();
+        } else {
+          reader.skipValue();
         }
       }
     } else {

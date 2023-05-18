@@ -137,6 +137,28 @@ public class RxMapTests {
   }
 
   @Test
+  public void map_min() {
+    final var m = map();
+    m.getOrCreate(1).set(10);
+    m.getOrCreate(2).set(15);
+    m.getOrCreate(3).set(20);
+    m.getOrCreate(4).set(30);
+    Assert.assertEquals(1, (int) m.min().get().key);
+    Assert.assertEquals(10, (int) m.min().get().value.get());
+  }
+
+  @Test
+  public void map_max() {
+    final var m = map();
+    m.getOrCreate(1).set(10);
+    m.getOrCreate(2).set(15);
+    m.getOrCreate(3).set(20);
+    m.getOrCreate(4).set(30);
+    Assert.assertEquals(4, (int) m.max().get().key);
+    Assert.assertEquals(30, (int) m.max().get().value.get());
+  }
+
+  @Test
   public void commit_seq() {
     final var m = map();
     m.getOrCreate(42).set(52);

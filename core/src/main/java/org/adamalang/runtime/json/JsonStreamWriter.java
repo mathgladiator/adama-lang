@@ -130,15 +130,6 @@ public class JsonStreamWriter {
     writeString(d.toString());
   }
 
-  public void writeToken(final Token token) {
-    if (token.isStringLiteral() || token.isNumberLiteral()) {
-      maybe_comma();
-      sb.append(token.text);
-    } else {
-      writeString(token.text);
-    }
-  }
-
   public void writeString(final String s) {
     maybe_comma();
     if (s == null) {
@@ -197,6 +188,15 @@ public class JsonStreamWriter {
       return "0" + x;
     }
     return x;
+  }
+
+  public void writeToken(final Token token) {
+    if (token.isStringLiteral() || token.isNumberLiteral()) {
+      maybe_comma();
+      sb.append(token.text);
+    } else {
+      writeString(token.text);
+    }
   }
 
   public void writeNtDateTime(final NtDateTime d) {

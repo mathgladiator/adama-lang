@@ -9,9 +9,7 @@
 package org.adamalang.mysql.model;
 
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.data.DocumentIndex;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;

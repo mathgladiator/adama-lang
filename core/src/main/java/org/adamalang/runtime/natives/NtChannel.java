@@ -8,8 +8,10 @@
  */
 package org.adamalang.runtime.natives;
 
-import org.adamalang.runtime.async.*;
-import org.adamalang.runtime.exceptions.ComputeBlockedException;
+import org.adamalang.runtime.async.OutstandingFutureTracker;
+import org.adamalang.runtime.async.SimpleFuture;
+import org.adamalang.runtime.async.Sink;
+import org.adamalang.runtime.async.Timeout;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a channel */
@@ -93,6 +95,11 @@ public class NtChannel<T> {
     return future;
   }
 
+  /** ask the user for one item, blocks entire universe */
+  public SimpleFuture<T> fetchItem(final NtPrincipal who) {
+    return fetch(who, false);
+  }
+
   /** ask the user for item/items */
   public SimpleFuture<T> fetch(final NtPrincipal who, boolean array) {
     final var oldFuture = tracker.make(sink.channel, who);
@@ -113,14 +120,13 @@ public class NtChannel<T> {
     return future;
   }
 
-  /** ask the user for one item, blocks entire universe */
-  public SimpleFuture<T> fetchItem(final NtPrincipal who) {
-    return fetch(who, false);
-  }
-
   /** ask the user for one array of items, blocks entire universe */
   public SimpleFuture<T> fetchArray(final NtPrincipal who) {
     return fetch(who, true);
+  }
+
+  public SimpleFuture<NtMaybe<T>> fetchTimeoutItem(final NtPrincipal who, double timeout) {
+    return fetchTimeout(who, false, timeout);
   }
 
   public SimpleFuture<NtMaybe<T>> fetchTimeout(final NtPrincipal who, boolean array, double timeout) {
@@ -167,10 +173,6 @@ public class NtChannel<T> {
       // otherwise, let null indicates a future compute blocked
       return new SimpleFuture<>(future.channel, future.who, null);
     }
-  }
-
-  public SimpleFuture<NtMaybe<T>> fetchTimeoutItem(final NtPrincipal who, double timeout) {
-    return fetchTimeout(who, false, timeout);
   }
 
   public SimpleFuture<NtMaybe<T>> fetchTimeoutArray(final NtPrincipal who, double timeout) {

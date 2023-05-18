@@ -12,8 +12,8 @@ import org.adamalang.runtime.contracts.AsyncAction;
 import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.exceptions.RetryProgressException;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
 
 /**

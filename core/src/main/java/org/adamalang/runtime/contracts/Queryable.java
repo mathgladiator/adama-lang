@@ -16,5 +16,5 @@ import java.util.TreeMap;
 public interface Queryable {
 
   /** the result is assumed to primed within an object already */
-  public void query(TreeMap<String, String> query, Callback<String> callback);
+  void query(TreeMap<String, String> query, Callback<String> callback);
 }

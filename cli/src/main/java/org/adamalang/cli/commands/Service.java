@@ -27,6 +27,7 @@ import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.sys.CoreMetrics;
+import org.adamalang.services.FirstPartyMetrics;
 import org.adamalang.web.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,6 +136,8 @@ public class Service {
     new NetMetrics(metricsFactory);
     metricsFactory.page("aws", "AWS");
     new AWSMetrics(metricsFactory);
+    metricsFactory.page("fp", "First Party");
+    new FirstPartyMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));
   }
 }

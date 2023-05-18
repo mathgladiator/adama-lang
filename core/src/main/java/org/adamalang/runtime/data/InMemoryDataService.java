@@ -17,6 +17,7 @@ import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.natives.NtPrincipal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.concurrent.Executor;
@@ -83,9 +84,7 @@ public class InMemoryDataService implements DataService {
         return;
       }
       document.seq = patches[patches.length - 1].seqEnd;
-      for (RemoteDocumentUpdate patch : patches) {
-        document.updates.add(patch);
-      }
+      Collections.addAll(document.updates, patches);
       if (patches[patches.length - 1].requiresFutureInvalidation) {
         document.active = true;
         document.timeToWake = patches[patches.length - 1].whenToInvalidateMilliseconds + time.nowMilliseconds();
@@ -155,7 +154,6 @@ public class InMemoryDataService implements DataService {
       InMemoryDocument document = datum.remove(key);
       if (document == null) {
         callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_DELETE_CANT_FIND_DOCUMENT));
-        return;
       } else {
         callback.success(null);
       }

@@ -13,7 +13,7 @@ import org.junit.Test;
 
 public class JsonTests {
   @Test
-  public void coverage() {
+  public void coverage() throws Exception {
     Json.newJsonObject();
     Json.parseJsonObject("{}");
     boolean failure = true;
@@ -38,6 +38,18 @@ public class JsonTests {
       Json.parseJsonObject("[]");
       failure = false;
     } catch (RuntimeException ex) {
+    }
+    Json.parseJsonArray("[]");
+    try {
+      Json.parseJsonArray("{}");
+      failure = false;
+    } catch (Exception ex) {
+
+    }
+    try {
+      Json.parseJsonArray("x");
+      failure = false;
+    } catch (Exception ex) {
 
     }
     Assert.assertTrue(failure);

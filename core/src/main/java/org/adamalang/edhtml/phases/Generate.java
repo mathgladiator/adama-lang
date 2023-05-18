@@ -63,7 +63,7 @@ public class Generate {
     };
 
     Elements generates = state.document.getElementsByTag("generate");
-    for(Element generate : generates) {
+    for (Element generate : generates) {
       final ObjectNode from;
       if (generate.hasAttr("from")) {
         from = getReflection.apply(generate.attr("from"));

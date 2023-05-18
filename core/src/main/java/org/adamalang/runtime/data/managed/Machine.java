@@ -297,7 +297,6 @@ public class Machine {
       case OnMachine:
         action.action.run();
         scheduleArchiveWhileInExecutor(false);
-        return;
     }
   }
 
@@ -319,7 +318,6 @@ public class Machine {
         return;
       case OnMachine:
         action.action.run();
-        return;
     }
   }
 

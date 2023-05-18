@@ -15,7 +15,6 @@ import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.remote.Deliverer;
-import org.adamalang.rxhtml.RxHtmlToAdama;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -38,8 +37,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DeploymentFactory implements LivingDocumentFactoryFactory {
   public final String name;
   public final DeploymentPlan plan;
-  private final HashMap<String, LivingDocumentFactory> factories;
   public final long memoryUsed;
+  private final HashMap<String, LivingDocumentFactory> factories;
 
   /**
    * @param spacePrefix - used for debugging by generating a relevant class name
@@ -71,7 +70,8 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
     this.memoryUsed = _memoryUsed;
   }
 
-  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer) throws ErrorCodeException {    try {
+  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer) throws ErrorCodeException {
+    try {
       final var options = CompilerOptions.start().make();
       final var globals = GlobalObjectPool.createPoolWithStdLib();
       final var state = new EnvironmentState(globals, options);

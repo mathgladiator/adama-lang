@@ -39,6 +39,7 @@ import org.adamalang.net.client.TargetsQuorum;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.routing.finder.MachinePicker;
+import org.adamalang.services.FirstPartyServices;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.contracts.CertificateFinder;
@@ -157,6 +158,8 @@ public class CommonServiceInit {
       }
     }, 5000);
     engine = netBase.startGossiping();
+    // TODO: promote the concept of the multi-region client as "everyone needs a client"
+    FirstPartyServices.install(metricsFactory, database, webBase, masterKey);
 
     System.out.println("[Setup]");
     System.out.println("         role:" + role.name);

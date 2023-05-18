@@ -1,14 +1,36 @@
-<build>
+<build default-from="sample.json">
     <use file="root.rx.html" />
     <use file="single.page.rx.html" />
     <generate
-        from="sample.json"
-        mode="create"
-        channel="create_blog_post"
-        factory="simple"
-        name="blog-create"
-        define:title="Create a new blog entry"
-        define:instance="{id}"
-        define:action="Post New Entry"
+            from="sample.json"
+            channel="create_blog_post"
+            factory="simple"
+            name="blog-create"
+            define:title="Create a new blog entry"
+            define:instance="{id}"
+            define:action="Post New Entry"
+    />
+
+    <generate
+            channel="create_blog_post"
+            factory="simple"
+            name="blog-create-again"
+            define:title="Create a new blog entry"
+            define:instance="{id}"
+            define:action="Post New Entry"
+    />
+
+    <generate
+            type="__Root"
+            factory="simple"
+            name="blog-root"
+    />
+
+
+    <generate
+            type="__Root"
+            factory="simple"
+            channel="create_blog_post"
+            name="blog-root-intersect"
     />
 </build>

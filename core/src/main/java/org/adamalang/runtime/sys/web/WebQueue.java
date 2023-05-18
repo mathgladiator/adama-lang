@@ -16,14 +16,16 @@ import org.adamalang.runtime.remote.DelayParent;
 import org.adamalang.runtime.remote.RxCache;
 import org.adamalang.runtime.sys.LivingDocument;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /** the web queue represents inflight web actions. */
 public class WebQueue implements Iterable<Map.Entry<Integer, WebQueueItem>> {
   // for generating ids for the web tasks
   private final RxInt32 webTaskId;
   // the items in the "queue"
-  private LinkedHashMap<Integer, WebQueueItem> items;
+  private final LinkedHashMap<Integer, WebQueueItem> items;
   // whether or not something in the queue is dirty
   private boolean dirty;
 

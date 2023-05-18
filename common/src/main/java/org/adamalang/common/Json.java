@@ -10,6 +10,7 @@ package org.adamalang.common;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** helpful toolss for Jackson JSON library */
@@ -34,6 +35,22 @@ public class Json {
       return (ObjectNode) node;
     }
     throw new Exception("given json is not an ObjectNode at root");
+  }
+
+  public static ArrayNode parseJsonArray(final String json) {
+    try {
+      return parseJsonArrayThrows(json);
+    } catch (final Exception jpe) {
+      throw new RuntimeException(jpe);
+    }
+  }
+
+  public static ArrayNode parseJsonArrayThrows(final String json) throws Exception {
+    final var node = MAPPER.readTree(json);
+    if (node instanceof ArrayNode) {
+      return (ArrayNode) node;
+    }
+    throw new Exception("given json is not an ArrayNode at root");
   }
 
   public static String readString(ObjectNode tree, String field) {

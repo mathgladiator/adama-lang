@@ -11,6 +11,7 @@ package org.adamalang.services;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
+import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
@@ -40,11 +41,13 @@ public class ServiceConfigTests {
       try {
         installer.install();
         HashMap<String, Object> configMap1 = new HashMap<>();
+        String masterKey = MasterKey.generateMasterKey();
+
         {
           KeyPair serverKey = PublicPrivateKeyPartnership.genKeyPair();
           KeyPair clientKey = PublicPrivateKeyPartnership.genKeyPair();
 
-          int keyId = Secrets.insertSecretKey(dataBase, "space", PublicPrivateKeyPartnership.privateKeyOf(serverKey));
+          int keyId = Secrets.insertSecretKey(dataBase, "space", MasterKey.encrypt(masterKey, PublicPrivateKeyPartnership.privateKeyOf(serverKey)));
           String publicKeyForClient = PublicPrivateKeyPartnership.publicKeyOf(serverKey);
 
           byte[] clientSecret = PublicPrivateKeyPartnership.secretFrom(PublicPrivateKeyPartnership.keyPairFrom(publicKeyForClient, PublicPrivateKeyPartnership.privateKeyOf(clientKey)));
@@ -58,7 +61,7 @@ public class ServiceConfigTests {
         configMap1.put("secret_fail4", "100;z;z");
 
         configMap1.put("int", 3);
-        ServiceConfig config1 = new ServiceConfig(dataBase, "space", configMap1);
+        ServiceConfig config1 = new ServiceConfig(dataBase, "space", configMap1, masterKey);
         Assert.assertEquals("plain-text-secret", config1.getDecryptedSecret("secret"));
 
         try {

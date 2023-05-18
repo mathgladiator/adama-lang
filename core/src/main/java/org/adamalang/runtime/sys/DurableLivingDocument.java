@@ -9,7 +9,10 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.*;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.runtime.async.EphemeralFuture;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
@@ -69,7 +72,7 @@ public class DurableLivingDocument implements Queryable {
   private boolean inflightCompact;
   private int trackingSeq;
   private long lastActivityMS;
-  private ArrayList<DataObserver> observers;
+  private final ArrayList<DataObserver> observers;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
@@ -399,6 +402,10 @@ public class DurableLivingDocument implements Queryable {
     }
   }
 
+  public LivingDocumentFactory getCurrentFactory() {
+    return currentFactory;
+  }
+
   /** watch the underlying data stream */
   public void watch(DataObserver observer) {
     base.executor.execute(new NamedRunnable("attachobserver") {
@@ -424,10 +431,6 @@ public class DurableLivingDocument implements Queryable {
         observers.remove(observer);
       }
     });
-  }
-
-  public LivingDocumentFactory getCurrentFactory() {
-    return currentFactory;
   }
 
   private void catastrophicFailureWhileInExecutor(int code) {

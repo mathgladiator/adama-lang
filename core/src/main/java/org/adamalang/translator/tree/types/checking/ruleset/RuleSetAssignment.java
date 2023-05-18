@@ -246,6 +246,9 @@ public class RuleSetAssignment {
     if (type instanceof TyNativeReactiveRecordPtr) {
       return AssignableEmbedType.Ptr;
     }
+    if (type instanceof TyNativeResult) {
+      return AssignableEmbedType.Result;
+    }
     return AssignableEmbedType.None;
   }
 

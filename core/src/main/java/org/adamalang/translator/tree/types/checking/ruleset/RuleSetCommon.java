@@ -434,7 +434,7 @@ public class RuleSetCommon {
     }
   }
 
-  static boolean IsDate(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsDate(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeDate || tyType instanceof TyReactiveDate) {
@@ -445,7 +445,7 @@ public class RuleSetCommon {
     return false;
   }
 
-  static boolean IsTime(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsTime(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeTime || tyType instanceof TyReactiveTime) {
@@ -456,7 +456,7 @@ public class RuleSetCommon {
     return false;
   }
 
-  static boolean IsTimeSpan(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsTimeSpan(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeTimeSpan || tyType instanceof TyReactiveTimeSpan) {
@@ -467,7 +467,7 @@ public class RuleSetCommon {
     return false;
   }
 
-  static boolean IsDateTime(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsDateTime(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeDateTime || tyType instanceof TyReactiveDateTime) {
@@ -477,6 +477,18 @@ public class RuleSetCommon {
     }
     return false;
   }
+
+  public static boolean IsResult(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    final var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType != null) {
+      if (tyType instanceof TyNativeResult) {
+        return true;
+      }
+      SignalTypeFailure(environment, new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+    }
+    return false;
+  }
+
 
   static boolean TestReactive(final TyType tyType) {
     return tyType instanceof IsReactiveValue || tyType instanceof TyReactiveRecord || tyType instanceof TyReactiveTable || tyType instanceof TyReactiveMaybe || tyType instanceof TyReactiveLazy;

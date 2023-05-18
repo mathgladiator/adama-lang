@@ -13,11 +13,11 @@ import org.adamalang.common.ErrorCodeException;
 /** Observe data changes at a lower level */
 public interface DataObserver {
   /** an initial payload representing a snapshot */
-  public void start(String snapshot);
+  void start(String snapshot);
 
   /** a rollback happened */
-  public void change(String delta);
+  void change(String delta);
 
   /** a failure occurred */
-  public void failure(ErrorCodeException exception);
+  void failure(ErrorCodeException exception);
 }

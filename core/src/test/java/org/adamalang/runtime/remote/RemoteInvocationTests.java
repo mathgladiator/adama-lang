@@ -37,6 +37,15 @@ public class RemoteInvocationTests {
     Assert.assertEquals(1, invocation.compareTo(new RemoteInvocation("service", "method", new NtPrincipal("", ""), "")));
     Assert.assertEquals(6, invocation.compareTo(new RemoteInvocation("service", "", new NtPrincipal("", ""), "")));
     Assert.assertEquals(7, invocation.compareTo(new RemoteInvocation("", "", new NtPrincipal("", ""), "")));
+  }
 
+  @Test
+  public void redundant() {
+    RemoteInvocation copy = new RemoteInvocation(new JsonStreamReader("{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"a\",\"authority\":\"b\"},\"parameter\":{\"x\":1000},\"junk\":123}"));
+    Assert.assertEquals("service", copy.service);
+    Assert.assertEquals("method", copy.method);
+    Assert.assertEquals("a", copy.who.agent);
+    Assert.assertEquals("b", copy.who.authority);
+    Assert.assertEquals("{\"x\":1000}", copy.parameter);
   }
 }

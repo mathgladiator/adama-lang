@@ -10,6 +10,7 @@ package org.adamalang.services;
 
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedThreadFactory;
+import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
@@ -25,7 +26,8 @@ import java.util.concurrent.Executors;
 public class FirstPartyServices {
   private static final Logger LOGGER = LoggerFactory.getLogger(FirstPartyServices.class);
 
-  public static void install(DataBase dataBase, WebClientBase webClientBase) {
+  public static void install(MetricsFactory factory, DataBase dataBase, WebClientBase webClientBase, String masterKey) {
+    FirstPartyMetrics metrics = new FirstPartyMetrics(factory);
     ExecutorService executor = Executors.newCachedThreadPool(new NamedThreadFactory("first-party"));
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
@@ -34,27 +36,27 @@ public class FirstPartyServices {
       }
     }));
     ServiceRegistry.add("adama", Adama.class, (space, configRaw) -> {
-      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw);
+      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
-        return new Adama(config, executor);
+        return new Adama(metrics, config, executor);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-adama", ex);
         return Service.FAILURE;
       }
     });
     ServiceRegistry.add("twilio", Twilio.class, (space, configRaw) -> {
-      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw);
+      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
-        return new Twilio(config, executor);
+        return new Twilio(metrics, config, executor);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-twilio", ex);
         return Service.FAILURE;
       }
     });
     ServiceRegistry.add("amazonses", AmazonSES.class, (space, configRaw) -> {
-      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw);
+      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
-        return new AmazonSES(config, executor);
+        return new AmazonSES(metrics, config, executor, webClientBase);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-amazonses", ex);
         return Service.FAILURE;

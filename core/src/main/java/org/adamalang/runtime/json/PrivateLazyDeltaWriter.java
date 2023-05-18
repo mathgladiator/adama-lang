@@ -100,6 +100,7 @@ public class PrivateLazyDeltaWriter {
     manifest();
     writer.writeNtTime(d);
   }
+
   public void writeNtTimeSpan(final NtTimeSpan d) {
     manifest();
     writer.writeNtTimeSpan(d);

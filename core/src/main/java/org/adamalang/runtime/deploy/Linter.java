@@ -30,6 +30,12 @@ public class Linter {
     this.diagnostics = new ArrayList<>();
   }
 
+  public static ArrayList<String> compare(String reflectionFrom, String reflectionTo) {
+    Linter linter = new Linter(reflectionFrom, reflectionTo);
+    linter.start();
+    return linter.diagnostics;
+  }
+
   private void pumpFieldCompare(String what, HashMap<String, Object> fieldTypeFrom, HashMap<String, Object> fieldTypeTo) {
     if ("reactive_record".equals(fieldTypeFrom.get("nature"))) {
       if ("reactive_record".equals(fieldTypeTo.get("nature"))) {
@@ -82,9 +88,9 @@ public class Linter {
         } else if ("long".equals(fromType) && "complex".equals(toType)) {
           diagnostics.add(what + " is being compacted from long to complex and may result in data precision.");
         } else if ("int".equals(fromType) && ("long".equals(toType) || "double".equals(toType) || "complex".equals(toType))) {
-          return; // OK
+          // OK
         } else if ("double".equals(fromType) && "complex".equals(toType)) {
-          return; // OK
+          // OK
         } else if (fromType != null && !fromType.equals(toType)) {
           diagnostics.add(what + " is change from a " + fromType + " to a " + toType + " which will lose data.");
         }
@@ -137,10 +143,5 @@ public class Linter {
         }
       }
     }
-  }
-  public static ArrayList<String> compare(String reflectionFrom, String reflectionTo) {
-    Linter linter = new Linter(reflectionFrom, reflectionTo);
-    linter.start();
-    return linter.diagnostics;
   }
 }

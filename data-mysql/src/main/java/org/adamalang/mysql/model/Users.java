@@ -64,7 +64,7 @@ public class Users {
     });
   }
 
-  public static boolean setPaymentInfo(DataBase dataBase, int userId, String paymentInfo) throws Exception{
+  public static boolean setPaymentInfo(DataBase dataBase, int userId, String paymentInfo) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "UPDATE `" + dataBase.databaseName + "`.`emails` SET `payment_info_json`=? WHERE `id`=" + userId;
       try (PreparedStatement statement = connection.prepareStatement(sql)) {

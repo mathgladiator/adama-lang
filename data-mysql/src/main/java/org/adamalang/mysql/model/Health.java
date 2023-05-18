@@ -10,7 +10,6 @@ package org.adamalang.mysql.model;
 
 import org.adamalang.mysql.DataBase;
 
-import java.sql.Connection;
 import java.sql.Statement;
 
 public class Health {

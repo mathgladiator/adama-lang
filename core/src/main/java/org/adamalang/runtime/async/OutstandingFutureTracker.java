@@ -22,8 +22,8 @@ import java.util.HashSet;
  */
 public class OutstandingFutureTracker {
   public final ArrayList<OutstandingFuture> created;
-  private final RxInt32 source;
   public final TimeoutTracker timeouts;
+  private final RxInt32 source;
   private int maxId;
 
   public OutstandingFutureTracker(final RxInt32 source, TimeoutTracker timeouts) {

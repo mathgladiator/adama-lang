@@ -71,6 +71,13 @@ public class WebPut implements WebItem {
     return null;
   }
 
+  @Override
+  public void writeAsObject(JsonStreamWriter writer) {
+    writer.beginObject();
+    injectWrite(writer);
+    writer.endObject();
+  }
+
   public void injectWrite(JsonStreamWriter writer) {
     writer.writeObjectFieldIntro("put");
     writer.beginObject();
@@ -87,13 +94,6 @@ public class WebPut implements WebItem {
     writer.writeNtDynamic(parameters);
     writer.writeObjectFieldIntro("bodyJson");
     writer.writeNtDynamic(new NtDynamic(bodyJson));
-    writer.endObject();
-  }
-
-  @Override
-  public void writeAsObject(JsonStreamWriter writer) {
-    writer.beginObject();
-    injectWrite(writer);
     writer.endObject();
   }
 

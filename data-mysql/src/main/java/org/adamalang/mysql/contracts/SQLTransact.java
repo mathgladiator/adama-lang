@@ -8,10 +8,7 @@
  */
 package org.adamalang.mysql.contracts;
 
-import org.adamalang.common.ErrorCodeException;
-
 import java.sql.Connection;
-import java.sql.SQLException;
 
 /** for executing a transaction */
 @FunctionalInterface

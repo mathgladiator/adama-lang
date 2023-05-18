@@ -50,6 +50,15 @@ public class RxMaybeTests {
     commitCheck(mi, "\"v\":50", "\"v\":null");
     mi.make().set(5000);
     commitCheck(mi, "\"v\":5000", "\"v\":50");
+    mi.__link();
+  }
+
+  @Test
+  public void link_maybe() {
+    final var parent = new MockRxParent();
+    final var mi = new RxMaybe<>(parent, p -> new MockRecord(parent));
+    mi.make();
+    mi.__link();
   }
 
   private static void commitCheck(

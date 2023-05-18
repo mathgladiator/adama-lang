@@ -1,0 +1,12 @@
+<build>
+    <generate
+            from="bad.json"
+            mode="create"
+            channel="create_blog_post"
+            factory="simple"
+            name="blog-create-again"
+            define:title="Create a new blog entry"
+            define:instance="{id}"
+            define:action="Post New Entry"
+    />
+</build>

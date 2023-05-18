@@ -25,6 +25,13 @@ public class NtResult<T> {
     this.message = failed ? message : (value != null ? "OK" : "waiting...");
   }
 
+  public NtResult(NtResult<T> other) {
+    this.value = other.value;
+    this.failed = other.failed;
+    this.failureCode = other.failureCode;
+    this.message = other.message;
+  }
+
   /** get the value; note; this returns null and is not appropriate for the runtime */
   public T get() {
     return this.value;

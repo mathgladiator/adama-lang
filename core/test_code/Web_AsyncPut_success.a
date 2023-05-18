@@ -1,0 +1,15 @@
+@link sample{}
+
+public string msg = "Hi";
+
+@connected { return true; }
+
+message M { string name; }
+
+@web put /data (M m) {
+  var res = sample.echo(@who, {message: "Hello " + m.name});
+  if (res.await() as result) {
+    return { html: result.message};
+  }
+  return { html: "NOPE" };
+}

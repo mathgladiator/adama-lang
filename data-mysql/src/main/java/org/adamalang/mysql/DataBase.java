@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 
 /** the connection pool and helpers for interacting with MySQL */
 public class DataBase implements AutoCloseable {
-  private static Logger LOG = LoggerFactory.getLogger(DataBase.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DataBase.class);
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LOG);
   public final String databaseName;
   public final HikariDataSource pool;
@@ -78,7 +78,7 @@ public class DataBase implements AutoCloseable {
 
   public <R> void transact(SQLTransact<R> transaction, Callback<R> callback, int failureReason) {
     int backoff = (int) (25 + Math.random() * 25);
-    while(true) {
+    while (true) {
       RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.transaction.start();
       try {
         Connection connection = pool.getConnection();
@@ -130,7 +130,7 @@ public class DataBase implements AutoCloseable {
 
   public <R> R transactSimple(SQLTransact<R> transaction) throws Exception {
     int backoff = (int) (25 + Math.random() * 25);
-    while(true) {
+    while (true) {
       RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.transaction_simple.start();
       try {
         Connection connection = pool.getConnection();

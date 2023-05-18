@@ -24,17 +24,6 @@ public class WebContext {
     this.ip = ip;
   }
 
-  public void writeAsObject(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("who");
-    writer.writeNtPrincipal(who);
-    writer.writeObjectFieldIntro("origin");
-    writer.writeString(origin);
-    writer.writeObjectFieldIntro("ip");
-    writer.writeString(ip);
-    writer.endObject();
-  }
-
   public static WebContext readFromObject(JsonStreamReader reader) {
     if (reader.startObject()) {
       NtPrincipal _who = null;
@@ -60,5 +49,16 @@ public class WebContext {
       reader.skipValue();
     }
     return null;
+  }
+
+  public void writeAsObject(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("who");
+    writer.writeNtPrincipal(who);
+    writer.writeObjectFieldIntro("origin");
+    writer.writeString(origin);
+    writer.writeObjectFieldIntro("ip");
+    writer.writeString(ip);
+    writer.endObject();
   }
 }

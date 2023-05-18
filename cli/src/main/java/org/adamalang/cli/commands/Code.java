@@ -15,8 +15,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.Json;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.lsp.LanguageServer;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.services.FirstPartyServices;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -205,6 +207,7 @@ public class Code {
       final var globals = GlobalObjectPool.createPoolWithStdLib();
       final var state = new EnvironmentState(globals, options);
       final var document = new Document();
+      FirstPartyServices.install(new NoOpMetricsFactory(), null, null, null);
       document.setClassName("TempClass");
       final var tokenEngine = new TokenEngine(filename, code.codePoints().iterator());
       final var parser = new Parser(tokenEngine);

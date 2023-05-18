@@ -26,6 +26,15 @@ public class Annotations implements Iterable<Map.Entry<String, String>> {
     this.pairs = new HashMap<>();
   }
 
+  public static Annotations union(Annotations a, Annotations b) {
+    Annotations result = new Annotations();
+    result.tags.addAll(b.tags);
+    result.tags.addAll(a.tags);
+    result.pairs.putAll(b.pairs);
+    result.pairs.putAll(a.pairs);
+    return result;
+  }
+
   public boolean has(String annotation) {
     return tags.contains(annotation.toLowerCase()) || pairs.containsKey(annotation.toLowerCase());
   }
@@ -45,7 +54,7 @@ public class Annotations implements Iterable<Map.Entry<String, String>> {
       for (int k = 0; k < an.size(); k++) {
         JsonNode element = an.get(k);
         if (element.isObject()) {
-          Iterator<Map.Entry<String, JsonNode>> it = ((ObjectNode) element).fields();
+          Iterator<Map.Entry<String, JsonNode>> it = element.fields();
           while (it.hasNext()) {
             Map.Entry<String, JsonNode> val = it.next();
             next.pairs.put(val.getKey().toLowerCase(), val.getValue().textValue());
@@ -56,15 +65,6 @@ public class Annotations implements Iterable<Map.Entry<String, String>> {
       }
     }
     return next;
-  }
-
-  public static Annotations union(Annotations a, Annotations b) {
-    Annotations result = new Annotations();
-    result.tags.addAll(b.tags);
-    result.tags.addAll(a.tags);
-    result.pairs.putAll(b.pairs);
-    result.pairs.putAll(a.pairs);
-    return result;
   }
 
   @Override
