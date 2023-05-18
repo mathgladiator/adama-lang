@@ -352,6 +352,22 @@ public class BinaryOperatorTable {
       insert(tyTime, "!=", tyTime, tyBoolean, "!((%s).equals(%s))", false);
       insert(tyTimeSpan, "==", tyTimeSpan, tyBoolean, "(%s).equals(%s)", false);
       insert(tyTimeSpan, "!=", tyTimeSpan, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tyDateTime, "<", tyDateTime, tyBoolean, "(%s).compareTo(%s) < 0", false);
+      insert(tyDateTime, "<=", tyDateTime, tyBoolean, "(%s).compareTo(%s) <= 0", false);
+      insert(tyDateTime, ">=", tyDateTime, tyBoolean, "(%s).compareTo(%s) >= 0", false);
+      insert(tyDateTime, ">", tyDateTime, tyBoolean, "(%s).compareTo(%s) > 0", false);
+      insert(tyDate, "<", tyDate, tyBoolean, "(%s).compareTo(%s) < 0", false);
+      insert(tyDate, "<=", tyDate, tyBoolean, "(%s).compareTo(%s) <= 0", false);
+      insert(tyDate, ">=", tyDate, tyBoolean, "(%s).compareTo(%s) >= 0", false);
+      insert(tyDate, ">", tyDate, tyBoolean, "(%s).compareTo(%s) > 0", false);
+      insert(tyTimeSpan, "<", tyTimeSpan, tyBoolean, "(%s).compareTo(%s) < 0", false);
+      insert(tyTimeSpan, "<=", tyTimeSpan, tyBoolean, "(%s).compareTo(%s) <= 0", false);
+      insert(tyTimeSpan, ">=", tyTimeSpan, tyBoolean, "(%s).compareTo(%s) >= 0", false);
+      insert(tyTimeSpan, ">", tyTimeSpan, tyBoolean, "(%s).compareTo(%s) > 0", false);
+      insert(tyTime, "<", tyTime, tyBoolean, "(%s).compareTo(%s) < 0", false);
+      insert(tyTime, "<=", tyTime, tyBoolean, "(%s).compareTo(%s) <= 0", false);
+      insert(tyTime, ">=", tyTime, tyBoolean, "(%s).compareTo(%s) >= 0", false);
+      insert(tyTime, ">", tyTime, tyBoolean, "(%s).compareTo(%s) > 0", false);
     }
     // LOGIC
     {

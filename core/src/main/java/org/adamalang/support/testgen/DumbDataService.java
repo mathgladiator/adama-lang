@@ -10,6 +10,7 @@ package org.adamalang.support.testgen;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -90,6 +91,8 @@ public class DumbDataService implements DataService {
       return;
     }
     for (RemoteDocumentUpdate patch : patches) {
+      Json.parseJsonObject(patch.redo);
+      Json.parseJsonObject(patch.undo);
       updates.accept(patch);
       JsonStreamReader reader = new JsonStreamReader(patch.redo);
       tree = JsonAlgebra.merge(tree, reader.readJavaTree(), false);

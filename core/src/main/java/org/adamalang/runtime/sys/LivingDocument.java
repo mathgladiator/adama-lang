@@ -1183,6 +1183,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
     try {
       __seq.bumpUpPre();
+      __time.set(System.currentTimeMillis());
       __randomizeOutOfBand();
       DelayParent delay = new DelayParent();
       RxCache cache = new RxCache(this, delay);
