@@ -324,6 +324,19 @@ public class Attributes {
     }, "email", "password", "code");
   }
 
+  private void convertFailureVariableToEvents(Element element, String defaultVar) {
+    String failureVariable = defaultVar;
+    if (element.hasAttr("rx:failure-variable")) {
+      failureVariable = element.attr("rx:failure-variable");
+    }
+    if (!element.hasAttr("rx:failure")) {
+      element.attr("rx:failure", "set:" + failureVariable + "=true");
+    }
+    if (!element.hasAttr("rx:success")) {
+      element.attr("rx:success", "set:" + failureVariable + "=false");
+    }
+  }
+
   public void _action() {
     String action = env.element.attr("rx:action").trim();
     if ("document:sign-in".equalsIgnoreCase(action)) { // sign in as an Adama user
@@ -331,11 +344,11 @@ public class Attributes {
       if (!env.element.hasAttr("rx:forward")) {
         env.element.attr("rx:forward", "/");
       }
+      convertFailureVariableToEvents(env.element, "sign_in_failed");
       RxObject obj = new RxObject(env, "rx:forward");
       env.writer.tab().append("$.aDSO(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(env.val("rx:identity", "default")) //
-          .append("','").append(env.val("rx:failure", "sign_in_failed")) //
           .append("',").append(obj.rxObj) //
           .append(");").newline();
     } else if ("document:put".equalsIgnoreCase(action)) { // sign in as an Adama user
@@ -352,49 +365,50 @@ public class Attributes {
       if (!env.element.hasAttr("rx:forward")) {
         env.element.attr("rx:forward", "/");
       }
+      convertFailureVariableToEvents(env.element, "sign_in_failed");
       RxObject obj = new RxObject(env, "rx:forward");
       check_action_sign_in();
       env.writer.tab().append("$.aSO(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(env.val("rx:identity", "default")) //
-          .append("','").append(env.val("rx:failure", "sign_in_failed")) //
           .append("',").append(obj.rxObj) //
           .append(");").newline();
     } else if (action.startsWith("custom:")) { // execute custom logic
+      convertFailureVariableToEvents(env.element, "sign_in_failed");
       String customCommandName = action.substring(7).trim();
       env.writer.tab().append("$.aCC(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(customCommandName) //
-          .append("','").append(env.val("rx:status", "custom_status")) //
           .append("');").newline();
     } else if ("adama:upload-asset".equalsIgnoreCase(action)) { // upload an asset
+      convertFailureVariableToEvents(env.element, "asset_upload_failed");
       check_action_upload();
+      RxObject obj = new RxObject(env, "rx:forward");
       env.writer.tab().append("$.aUP(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(env.val("rx:identity", "default")) //
-          .append("','").append(env.val("rx:failure", "sign_in_failed")) //
-          .append("','").append(env.val("rx:forward", "/")) //
-          .append("');").newline();
+          .append("',").append(obj.rxObj) //
+          .append(");").newline();
     } else if ("adama:sign-up".equalsIgnoreCase(action)) { // sign up as an Adama user
+      convertFailureVariableToEvents(env.element, "sign_up_failed");
       check_action_sign_up();
       env.writer.tab().append("$.aSU(").append(eVar) //
           .append(",").append(env.stateVar) //
-          .append(",'").append(env.val("rx:failure", "sign_up_failed")) //
-          .append("','").append(env.val("rx:forward", "/")) //
+          .append(",'").append(env.val("rx:forward", "/")) //
           .append("');").newline();
     } else if ("adama:set-password".equalsIgnoreCase(action)) { // set the password for the connection
+      convertFailureVariableToEvents(env.element, "set_password_failed");
       check_set_password();
       env.writer.tab().append("$.aSP(").append(eVar) //
           .append(",").append(env.stateVar) //
-          .append(",'").append(env.val("rx:failure", "set_password_failed")) //
-          .append("','").append(env.val("rx:forward", "/")) //
+          .append(",'").append(env.val("rx:forward", "/")) //
           .append("'").append(");").newline();
     } else if (action.startsWith("send:")) { // Send a message on the given channel
+      convertFailureVariableToEvents(env.element, "send_failed");
       String channel = action.substring(5);
       env.writer.tab().append("$.aSD(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(channel) //
-          .append("','").append(env.val("rx:failure", "send_failed")) //
           .append("');").newline();
     } else if (action.startsWith("copy:")) { // Copy the form object into the view
       String path = action.substring(5);

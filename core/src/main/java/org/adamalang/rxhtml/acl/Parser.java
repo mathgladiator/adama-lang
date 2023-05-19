@@ -98,6 +98,10 @@ public class Parser {
             }
             break;
           }
+          case "te": {
+            commands.add(new TransferError(body));
+            break;
+          }
           case "force-auth": {
             int kEq = body.indexOf('=');
             if (kEq > 0) {
