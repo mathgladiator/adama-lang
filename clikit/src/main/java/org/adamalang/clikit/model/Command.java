@@ -13,17 +13,13 @@ public class Command {
     public String output;
     public String capName;
     public String name;
-    public String method;
     public String documentation;
-    public String endpoint;
     public boolean danger;
 
-    public Command(String name, String documentation, String method, String output, String endpoint, boolean danger, Argument[] argList) {
+    public Command(String name, String documentation, String output, boolean danger, Argument[] argList) {
         this.name = name;
         this.capName = Common.camelize(name);
         this.documentation = documentation;
-        this.endpoint = endpoint;
-        this.method = method;
         this.argList = argList;
         this.output = output;
         this.danger = danger;
@@ -49,9 +45,8 @@ public class Command {
             } else {
                 outputArg = null;
             }
-            String endpoint = commandElem.getAttribute("endpoint");
 
-            Command command = new Command(commandName, groupDocumentation, methodType, outputArg, endpoint, danger, argumentList);
+            Command command = new Command(commandName, groupDocumentation, outputArg, danger, argumentList);
             commandArray.add(command);
         }
         return commandArray.toArray(new Command[commandArray.size()]);

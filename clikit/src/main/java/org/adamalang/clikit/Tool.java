@@ -1,7 +1,9 @@
 package org.adamalang.clikit;
 
-import org.adamalang.clikit.codegen.GroupClassGen;
-import org.adamalang.clikit.codegen.MainGen;
+import org.adamalang.clikit.codegen.ArgumentGen;
+import org.adamalang.clikit.codegen.HandlerGen;
+import org.adamalang.clikit.codegen.MainRouterGen;
+import org.adamalang.clikit.codegen.RouterGen;
 import org.adamalang.clikit.exceptions.XMLFormatException;
 import org.adamalang.clikit.model.ArgDefinition;
 import org.adamalang.clikit.model.Common;
@@ -40,9 +42,8 @@ public class Tool {
         NodeList cliList = doc.getElementsByTagName("cli");
         Node cliNode = Common.getFirstNode(cliList);
         Element cliElem = (Element) cliNode;
-        String outputPath = cliElem.getAttribute("test-output-path");
+        String outputPath = cliElem.getAttribute("output-path");
         String packageName = cliElem.getAttribute("package");
-
 
         XMLFormatException exceptionTrack = new XMLFormatException();
 
@@ -62,25 +63,27 @@ public class Tool {
         for (Group group : groupList) {
             helpString.append(group.name + " ").append(group.documentation).append("\n");
         }
+        String mainGen = MainRouterGen.generate(groupList, packageName);
+        String argumentGen = ArgumentGen.generate(arguments, groupList, packageName);
+        Map<String, String> handlerGens = HandlerGen.generate(groupList, packageName);
+        Map<String, String> routerGens = RouterGen.generate(groupList, packageName);
+        Map<String, String> stringMap = new TreeMap<>();
 
-        String mainGen = MainGen.generate(groupList, packageName);
-        Map<String, String> groupGens = GroupClassGen.generate(groupList, packageName);
+        stringMap.put("MainRouter.java", mainGen);
+        stringMap.put("ArgumentObj.java", argumentGen);
+        stringMap.putAll(handlerGens);
+        stringMap.putAll(routerGens);
 
-        File mainJava = new File(outputPath, "Main.java");
+
         Map<File, String> fileStringMap = new TreeMap<>();
-
-        fileStringMap.put(mainJava, mainGen);
-        for (Map.Entry<String, String> entry: groupGens.entrySet()) {
-            File file = new File(outputPath, Common.camelize(entry.getKey())+ ".java");
+        for (Map.Entry<String, String> entry: stringMap.entrySet()) {
+            File file = new File(outputPath, entry.getKey());
             fileStringMap.put(file, entry.getValue());
         }
+        boolean mkdir = new File(outputPath).mkdir();
         for (Map.Entry<File, String> entry: fileStringMap.entrySet()) {
             File file = entry.getKey();
-            if (file.exists()) {
-                System.out.println("File \"" + file.getName() + "\" exists, skipping...");
-                continue;
-            }
-            Files.writeString(entry.getKey().toPath(), entry.getValue());
+            Files.writeString(file.toPath(), entry.getValue());
         }
         System.out.println("Done.");
 

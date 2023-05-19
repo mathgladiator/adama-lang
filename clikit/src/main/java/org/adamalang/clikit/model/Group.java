@@ -13,12 +13,10 @@ public class Group {
     public String name;
     public String capName;
     public Command[] commandList;
-    public String endpoint;
 
-    public Group(String name,String documentation, String endpoint, Command[] commandList) {
+    public Group(String name,String documentation, Command[] commandList) {
         this.name = name;
         this.capName = Common.camelize(name);
-        this.endpoint = endpoint;
         this.documentation = documentation;
         this.commandList = commandList;
 
@@ -29,12 +27,11 @@ public class Group {
             Node groupNode = nodeList.item(i);
             Element groupElem = (Element) groupNode;
             String groupName = groupElem.getAttribute("name");
-            String endpoint = groupElem.getAttribute("endpoint");
             if (groupName == null || groupName.trim().length() == 0)
                 givenException.addToExceptionStack("Group name \"" + groupName + "\"can not be empty.");
             Command[] commandList = Command.createCommandList(groupElem.getElementsByTagName("command"), givenException, arguments);
             String groupDocumentation = Common.getDocumentation(groupElem, givenException);
-            Group group = new Group(groupName, groupDocumentation, endpoint ,commandList);
+            Group group = new Group(groupName, groupDocumentation ,commandList);
             groupArray.add(group);
         }
         return groupArray.toArray(new Group[groupArray.size()]);
