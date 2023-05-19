@@ -656,12 +656,19 @@ var RxHTML = (function () {
     form.dispatchEvent(e);
   };
 
-  self.aCC = function (form, state, customCommandName, statusVar) {
+  self.aCC = function (form, state, customCommandName) {
+    var signal = function(msg) {
+      if (signal == null) {
+        fire_success(form);
+      } else {
+        fire_failure(form, msg);
+      }
+    };
     form.onsubmit = function (evt) {
       if (customCommandName in customs) {
         evt.preventDefault();
         var obj = get_form(form, false);
-        customs[customCommandName](obj, state, function(success) {}, self);
+        customs[customCommandName](obj, state, signal, self);
         fire_success(form);
       } else {
         fire_failure(form, "Failed to find '" + customCommandName + "'");
