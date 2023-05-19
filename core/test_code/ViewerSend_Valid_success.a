@@ -1,0 +1,9 @@
+message M {
+  int x;
+}
+
+public bool sent;
+
+channel foo(M m) {
+  sent = ViewState.merge({error:true, invalid_x:true}.to_dynamic());
+}
