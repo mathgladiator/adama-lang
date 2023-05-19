@@ -234,9 +234,6 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         if ("__time".equals(name) || "__today".equals(name)) {
           return;
         }
-        if (environment.document.root.storage.has(name)) {
-          return;
-        }
         if (!closureTypes.containsKey(name) && ty != null) {
           closureTyTypes.put(name, ty);
           closureTypes.put(name, ty.getJavaConcreteType(environment));

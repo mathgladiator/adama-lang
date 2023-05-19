@@ -86,10 +86,10 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  private final RxGuard ___your_family_1;");
     gold.append("\n  private final RxGuard ___your_family_2;");
     gold.append("\n  public NtMaybe<RTxFamily> __COMPUTE_your_family_1(NtPrincipal __who, RTx__ViewerType __viewer) {");
-    gold.append("\n    return (_families.iterate(false).where(true, new __CLOSURE_WhereClause1(__who))).lookup(0);");
+    gold.append("\n    return (_families.iterate(false).where(true, new __CLOSURE_WhereClause1(__who, _people))).lookup(0);");
     gold.append("\n  }");
     gold.append("\n  public NtMaybe<RTxFamily> __COMPUTE_your_family_2(NtPrincipal __who, RTx__ViewerType __viewer) {");
-    gold.append("\n    return (_families.iterate(false).where(true, new __CLOSURE_WhereClause2(__who))).lookup(0);");
+    gold.append("\n    return (_families.iterate(false).where(true, new __CLOSURE_WhereClause2(__who, _people))).lookup(0);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -1007,6 +1007,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxFamily> {");
     gold.append("\n    private NtPrincipal __who;");
+    gold.append("\n    private RxTable<RTxPerson> _people;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
     gold.append("\n      return new int[] {};");
@@ -1017,8 +1018,9 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return __FUNC_0_your_family_id_or_zero(__who);");
     gold.append("\n    }");
-    gold.append("\n    private __CLOSURE_WhereClause1(NtPrincipal __who) {");
+    gold.append("\n    private __CLOSURE_WhereClause1(NtPrincipal __who, RxTable<RTxPerson> _people) {");
     gold.append("\n      this.__who = __who;");
+    gold.append("\n      this._people = _people;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public boolean test(RTxFamily __obj) {");
@@ -1029,6 +1031,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxFamily> {");
     gold.append("\n    private NtPrincipal __who;");
+    gold.append("\n    private RxTable<RTxPerson> _people;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
     gold.append("\n      return new int[] {};");
@@ -1039,8 +1042,9 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return LibMath.forceId((_people.iterate(false).where(true, new __CLOSURE_WhereClause3(__who))).lookup(0).unpack((item) -> ((RTxPerson) item).family_id.get()));");
     gold.append("\n    }");
-    gold.append("\n    private __CLOSURE_WhereClause2(NtPrincipal __who) {");
+    gold.append("\n    private __CLOSURE_WhereClause2(NtPrincipal __who, RxTable<RTxPerson> _people) {");
     gold.append("\n      this.__who = __who;");
+    gold.append("\n      this._people = _people;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public boolean test(RTxFamily __obj) {");

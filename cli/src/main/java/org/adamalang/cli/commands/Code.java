@@ -18,10 +18,12 @@ import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.lsp.LanguageServer;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.services.FirstPartyServices;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
@@ -198,6 +200,11 @@ public class Code {
     public CompileResult(String code, String reflection) {
       this.code = code;
       this.reflection = reflection;
+      try {
+        new LivingDocumentFactory("space", "TempClass", code, reflection.toString(), Deliverer.FAILURE);
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
     }
   }
 
