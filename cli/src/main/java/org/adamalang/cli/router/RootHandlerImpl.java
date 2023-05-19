@@ -7,7 +7,7 @@ public class RootHandlerImpl extends RootHandler {
     public SpaceRouter spaceRouter = new SpaceRouter() {
         @Override
         public int createSpace(String argPlaceHolder, String outputPlaceHolder) {
-            System.out.println("NICEE!")
+            System.out.println("NICEE!");
             return 0;
         }
 
