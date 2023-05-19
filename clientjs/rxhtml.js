@@ -1479,6 +1479,9 @@ var RxHTML = (function () {
           if ("outstanding" in payload.delta) {
             co.ondecide(payload.delta.outstanding);
           }
+          if ('viewstate' in payload.delta) {
+            state.view.tree.update(payload.delta.viewstate);
+          }
         },
         complete: function() {
           co.set_connected(false);
