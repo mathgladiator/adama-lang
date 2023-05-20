@@ -172,6 +172,7 @@ public class Attributes {
 
   private void writeDomSetter(String var, String key, String expr) {
     boolean hasValue = env.element.tagName().equalsIgnoreCase("textarea") || env.element.tagName().equalsIgnoreCase("input") || env.element.tagName().equalsIgnoreCase("select");
+    boolean hasChecked = env.element.tagName().equalsIgnoreCase("input") && ("checkbox".equals(env.element.attr("type")) || "radio".equals(env.element.attr("type")));
     if (key.equalsIgnoreCase("href")) {
       env.writer.tab().append("$.HREF(").append(var).append(",").append(expr).append(");").newline();
     } else if (key.equalsIgnoreCase("class")) {
@@ -180,6 +181,8 @@ public class Attributes {
       env.writer.tab().append("$.ASRC(").append(var).append(",").append(expr).append(");").newline();
     } else if (hasValue && key.equalsIgnoreCase("value")) {
       env.writer.tab().append(var).append(".value=").append(expr).append(";").newline();
+    } else if (hasChecked && key.equalsIgnoreCase("checked")) {
+      env.writer.tab().append(var).append(".checked=").append(expr).append(";").newline();
     } else {
       env.writer.tab().append(var).append(".setAttribute('").append(key).append("',").append(expr).append(");").newline();
     }
