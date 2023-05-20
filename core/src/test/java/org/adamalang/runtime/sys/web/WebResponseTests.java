@@ -54,13 +54,30 @@ public class WebResponseTests {
   public void flow_asset() {
     WebResponse response = new WebResponse();
     response.asset(new NtAsset("id", "name", "contentType", 42, "md5", "sha384"));
-    response.asset_transform("transform");
+    response.asset_transform("transform").cache_ttl_seconds(100);
     Assert.assertEquals("id", response.asset.id);
     Assert.assertEquals("contentType", response.contentType);
     Assert.assertEquals("transform", response.asset_transform);
+    Assert.assertEquals(100, response.cache_ttl_seconds);
     PredictiveInventory inventory = new PredictiveInventory();
     response.account(inventory);
     Assert.assertEquals(42, inventory.sample().bandwidth);
+  }
+
+  @Test
+  public void flow_error() {
+    WebResponse response = new WebResponse();
+    response.error("message");
+    Assert.assertEquals("message", response.body);
+    Assert.assertEquals("text/error", response.contentType);
+  }
+
+  @Test
+  public void flow_sign() {
+    WebResponse response = new WebResponse();
+    response.sign("agent");
+    Assert.assertEquals("agent", response.body);
+    Assert.assertEquals("text/agent", response.contentType);
   }
 
   @Test
@@ -87,7 +104,7 @@ public class WebResponseTests {
 
   @Test
   public void load_many() {
-    JsonStreamReader reader = new JsonStreamReader("{\"content-type\":\"type\",\"body\":\"body\",\"asset\":{\"id\":\"\",\"size\":\"0\",\"name\":\"\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"@gc\":\"@yes\"},\"asset-transform\":\"transform\",\"cors\":true,\"cache-ttl-seconds\":42}");
+    JsonStreamReader reader = new JsonStreamReader("{\"content-type\":\"type\",\"body\":\"body\",\"asset\":{\"id\":\"\",\"size\":\"0\",\"name\":\"\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"@gc\":\"@yes\"},\"asset-transform\":\"transform\",\"cors\":true,\"cache-ttl-seconds\":42,\"junk\":1}");
     WebResponse response = WebResponse.readFromObject(reader);
     Assert.assertEquals("transform", response.asset_transform);
     Assert.assertEquals("body", response.body);
@@ -97,5 +114,11 @@ public class WebResponseTests {
     Assert.assertTrue(response.cors);
   }
 
+  @Test
+  public void skip() {
+    JsonStreamReader reader = new JsonStreamReader("\"123\"");
+    WebResponse response = WebResponse.readFromObject(reader);
+    Assert.assertNull(response);
+  }
 
 }

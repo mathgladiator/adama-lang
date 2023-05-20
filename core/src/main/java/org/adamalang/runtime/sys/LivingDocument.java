@@ -397,6 +397,23 @@ public abstract class LivingDocument implements RxParent, Caller {
     return new LivingDocumentChange.Broadcast(pv, writer.toString());
   }
 
+  /** exposed: gossip view state to the client (if possible) */
+  public boolean __mergeViewState(NtDynamic vs) {
+    if (__currentViewId >= 0) {
+      PrivateView pv = __viewsById.get(__currentViewId);
+      if (pv != null) {
+        final var writer = new JsonStreamWriter();
+        writer.beginObject();
+        writer.writeObjectFieldIntro("viewstate");
+        writer.writeNtDynamic(vs);
+        writer.endObject();
+        pv.deliver(writer.toString());
+        return true;
+      }
+    }
+    return false;
+  }
+
   /** internal: we compute per client */
   private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastList() {
     ArrayList<LivingDocumentChange.Broadcast> broadcasts = new ArrayList<>(__trackedViews.size());
@@ -865,6 +882,7 @@ public abstract class LivingDocument implements RxParent, Caller {
           __currentViewId = -1;
         }
         task.execute();
+        __currentViewId = -1;
       }
       __time.set(timeBackup);
       final var stateToExecute = __state.get();
@@ -1183,6 +1201,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
     try {
       __seq.bumpUpPre();
+      __time.set(System.currentTimeMillis());
       __randomizeOutOfBand();
       DelayParent delay = new DelayParent();
       RxCache cache = new RxCache(this, delay);
@@ -1467,7 +1486,13 @@ public abstract class LivingDocument implements RxParent, Caller {
       final long timeBackup = __time.get();
       for (final AsyncTask task : __queue) {
         __time.set(task.timestamp);
+        if (task.viewId != null) {
+          __currentViewId = task.viewId;
+        } else {
+          __currentViewId = -1;
+        }
         task.execute();
+        __currentViewId = -1;
         workDone = true;
       }
       __time.set(timeBackup);
@@ -1555,6 +1580,8 @@ public abstract class LivingDocument implements RxParent, Caller {
       forward.endObject();
       reverse.endObject();
       return new LivingDocumentChange(new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.Internal), null, null);
+    } finally {
+      __currentViewId = -1;
     }
   }
 
@@ -1739,6 +1766,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       exception = false;
       return change;
     } finally {
+      __currentViewId = -1;
       if (exception) {
         __revert();
       }

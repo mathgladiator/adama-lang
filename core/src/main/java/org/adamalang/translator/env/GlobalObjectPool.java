@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.env;
 
+import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.stdlib.*;
 import org.adamalang.translator.reflect.GlobalFactory;
 import org.adamalang.translator.tree.types.TyType;
@@ -37,6 +38,8 @@ public class GlobalObjectPool {
     final TyNativeLong tyLng = new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null);
     final TyNativeBoolean tyBool = new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null);
     final TyNativePrincipal tyPrincipal = new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, null);
+    final TyNativeVoid tyVoid = new TyNativeVoid();
+    final TyNativeDynamic tyDyn = new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, null);
 
     final var pool = new GlobalObjectPool();
     pool.add(GlobalFactory.makeGlobal("String", LibString.class, pool.extensions));
@@ -53,12 +56,17 @@ public class GlobalObjectPool {
 
     pool.add(GlobalFactory.makeGlobal("Dynamic", LibDynamic.class, pool.extensions));
     final var document = new TyNativeGlobalObject("Document", null, false);
-    document.functions.put("destroy", generateInternalDocumentFunction("__destroyDocument", new TyNativeVoid()));
-    document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", tyInt, new TyNativeVoid(), null, null));
+    document.functions.put("destroy", generateInternalDocumentFunction("__destroyDocument", tyVoid));
+    document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", tyInt, tyVoid, null, null));
     document.functions.put("key", generateInternalDocumentFunction("__getKey", tyStr));
     document.functions.put("space", generateInternalDocumentFunction("__getSpace", tyStr));
     document.functions.put("seq", generateInternalDocumentFunction("__getSeq", tyInt));
     pool.add(document);
+
+    final var viewer = new TyNativeGlobalObject("ViewState", null, false);
+    viewer.functions.put("merge", generateInternalDocumentFunction("__mergeViewState", tyDyn, tyBool, null, null));
+    pool.add(viewer);
+
     final var random = new TyNativeGlobalObject("Random", null, false);
     random.functions.put("genBoundInt", generateInternalDocumentFunction("__randomBoundInt", tyInt, tyInt, null, null));
     random.functions.put("genInt", generateInternalDocumentFunction("__randomInt", tyInt));

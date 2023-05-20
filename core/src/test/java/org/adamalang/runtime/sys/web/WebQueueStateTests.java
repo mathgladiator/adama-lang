@@ -8,10 +8,12 @@
  */
 package org.adamalang.runtime.sys.web;
 
-/** the state of an item within the queue */
-public enum WebQueueState {
-  Created, // the item has been created
-  Steady, // nothing new has happened
-  Dirty, // the item has experienced a change
-  Remove // the item needs to be removed
+import org.junit.Assert;
+import org.junit.Test;
+
+public class WebQueueStateTests {
+  @Test
+  public void trivial() {
+    Assert.assertTrue(WebQueueState.Steady.toString().equals("Steady"));
+  }
 }

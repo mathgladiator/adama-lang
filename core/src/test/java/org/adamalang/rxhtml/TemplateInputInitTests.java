@@ -62,7 +62,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('input');");
     gold.append("\n    c.setAttribute('type','checkbox');");
-    gold.append("\n    c.setAttribute('checked',true);");
+    gold.append("\n    c.checked=true;");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 public class Base {
-  private static final String[] EVENTS = new String[]{"click", "mouseenter", "mouseleave", "load", "success", "failed"};
+  private static final String[] EVENTS = new String[]{"click", "mouseenter", "mouseleave", "load", "success", "failure"};
 
   private static String xmlnsOf(Environment env) {
     String xmlns = env.element.hasAttr("xmlns") ? env.element.attr("xmlns") : null;
@@ -51,13 +51,13 @@ public class Base {
     env.writer.tab().append("var ").append(eVar).append(" = $.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append(");").newline();
     Attributes rx = new Attributes(env, eVar);
     rx._base();
+    if (env.element.tagName().equals("form") && env.element.hasAttr("rx:action")) {
+      rx._action();
+    }
     for (String event : EVENTS) {
       if (env.element.hasAttr("rx:" + event)) {
         rx._event(event);
       }
-    }
-    if (env.element.tagName().equals("form") && env.element.hasAttr("rx:action")) {
-      rx._action();
     }
     if (env.element.hasAttr("rx:link")) {
       env.writer.tab().append(eVar).append(".link(").append(env.stateVar).append(",'").append(env.element.attr("rx:link")).append("',$);").newline();

@@ -92,6 +92,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
           this.written = 0;
         } else {
           failed = true;
+          LOGGER.error("failed-request: {} -> {}", header.status, header.headers.toString());
           stream.failure(ErrorCodes.STREAM_ASSET_NOT_200);
           instance.failure(ErrorCodes.STREAM_ASSET_NOT_200);
         }

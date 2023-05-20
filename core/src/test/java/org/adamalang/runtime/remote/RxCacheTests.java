@@ -36,14 +36,9 @@ public class RxCacheTests {
     MockRxParent parent = new MockRxParent();
     RxCache cache = new RxCache(doc, parent);
     ArrayList<Runnable> tasks = new ArrayList<>();
-    BiConsumer<Integer, String> service = new BiConsumer<Integer, String>() {
-      @Override
-      public void accept(Integer id, String s) {
-        tasks.add(() -> {
-          deliverer.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
-        });
-      }
-    };
+    BiConsumer<Integer, String> service = (id, s) -> tasks.add(() -> {
+      deliverer.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
+    });
     AtomicInteger x = new AtomicInteger(100);
     Supplier<String> func = cache.wrap(() -> {
       NtResult<MockMessage> result1 = cache.answer("service", "method", NtPrincipal.NO_ONE, new MockMessage(x.get(), 42), (str) -> new MockMessage(new JsonStreamReader(str)), service);

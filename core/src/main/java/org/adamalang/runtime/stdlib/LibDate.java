@@ -9,13 +9,16 @@
 package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.natives.NtDate;
+import org.adamalang.runtime.natives.NtDateTime;
 import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtTimeSpan;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.adamalang.translator.reflect.Extension;
 import org.adamalang.translator.reflect.HiddenType;
 
 import java.time.LocalDate;
 import java.time.format.TextStyle;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -111,5 +114,21 @@ public class LibDate {
   @Extension
   public static String monthNameEnglish(NtDate day) {
     return day.toLocalDate().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+  }
+
+  @Extension
+  public static NtDateTime future(NtDateTime present, NtTimeSpan span) {
+    return new NtDateTime(present.dateTime.plusSeconds((long) span.seconds));
+  }
+
+  @Extension
+  public static NtDateTime past(NtDateTime present, NtTimeSpan span) {
+    return new NtDateTime(present.dateTime.minusSeconds((long) span.seconds));
+  }
+
+  @Extension
+  public static NtDate offsetMonth(NtDate day, int offset) {
+    LocalDate d = day.toLocalDate().plusMonths(offset);
+    return new NtDate(d.getYear(), d.getMonthValue(), d.getDayOfMonth());
   }
 }

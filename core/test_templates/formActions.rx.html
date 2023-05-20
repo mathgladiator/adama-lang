@@ -1,13 +1,13 @@
 <forest>
     <page uri="/">
         Simple Page
-        <form rx:action="adama:sign-in" rx:failure="faied_to_signin" rx:forward="/yes">
+        <form rx:action="adama:sign-in" rx:failure-variable="faied_to_signin" rx:forward="/yes">
             <input name="email" type="email" />
             <input name="password" type="password" />
             <input name="remember" type="checkbox" />
             <input type="submit" />
         </form>
-        <form rx:action="document:sign-in" rx:failure="docnope" rx:forward="/w00t">
+        <form rx:action="document:sign-in" rx:failure-variable="docnope" rx:forward="/w00t">
             <input type="hidden" name="space" value="s "/>
             <input type="hidden" name="key" value="k" />
             <input name="username" type="username" />
@@ -15,7 +15,7 @@
             <input name="remember" type="checkbox" />
             <input type="submit" />
         </form>
-        <form rx:action="document:put">
+        <form rx:action="document:put" rx:failure="raise:fail te:msg">
             <input type="submit" />
         </form>
         <form rx:action="custom:foo">

@@ -57,11 +57,11 @@ Data can be pulled into HTML via a connection to an Adama document given the doc
 The connection is ultimately providing an object, and various elements and attributes will utilize a value as a path.
 This path may be a simple field within the current object, or it can be a complex expression to navigate the object structure.
 
-| rule | what | example |
-| --- | --- | --- |
-| /$ | navigate to the document's root | &gt;lookup path="/title" /&gt; |
-| ../$ | navigate up to the parent's (if it exists) | &gt;lookup path="../name" /&gt; |
-| child/$ | navigate within a child object | &gt;lookup path="info/name" /&gt; |
+| rule    | what                                       | example                           |
+|---------|--------------------------------------------|-----------------------------------|
+| /$      | navigate to the document's root            | &gt;lookup path="/title" /&gt;    |
+| ../$    | navigate up to the parent's (if it exists) | &gt;lookup path="../name" /&gt;   |
+| child/$ | navigate within a child object             | &gt;lookup path="info/name" /&gt; |
 
 ### Viewstate versus Data
 
@@ -90,12 +90,16 @@ You can prefix a path with "view:" or "data:" to pull either source, and in most
 ### Using data: connecting data to attributes
 
 Attributes have a mini-language for building up attribute values using variables pulled from the document or conditions which control the output.
-| syntax | what |
-| --- | --- |
-| {var} | embed the text behind the variable into the string |
-| [b]other[/b] | embed the stuff between the brackets if the evaluation of the variable b is true |
-| [b]true branch[#b]false branch[/b] | embed the stuff between the brackets based of the evaluation of b |
 
+| syntax                              | what                                                                                       |
+|-------------------------------------|--------------------------------------------------------------------------------------------|
+| {var}                               | embed the text behind the variable into the string                                         |
+| [b]other[/b]                        | embed the stuff between the brackets if the evaluation of the variable b is true           |
+| [b]true branch[#b]false branch[/b]  | embed the stuff between the brackets based of the evaluation of b                          |
+| [v=$val]other[/v=$val]              | embed the stuff between the brackets if the evaluation of the value v is the given $val    |
+| [v=$val]true[$v=$val]false[/v=$val] | embed the stuff between the brackets if the evaluation of the value v being the given $val |
+
+```
 <forest>
     <page uri="/">
         <connection space="my-space" key="my-key">
@@ -135,6 +139,8 @@ The ```rx:if``` will test a path for true or the presence of an object. If there
 </div>
 ```
 
+Note: this only renders anything if the value active is present
+
 ### &lt;tag ... rx:ifnot="$path" ... &gt;
 
 Similar to ```rx:if```, ```rx:ifnot``` will test the absense of an object or if the value is false.
@@ -143,6 +149,8 @@ Similar to ```rx:if```, ```rx:ifnot``` will test the absense of an object or if 
     Show this if not active.
 </div>
 ```
+
+Note: this only renders anything if the value active is present
 
 ### &lt;tag ... rx:else ... &gt;
 
@@ -170,6 +178,8 @@ Children the element are selected based on their ```rx:case``` attribute.
 </div>
 ```
 
+Note: this only renders anything if the value is present
+
 ### &lt;tag ... rx:case="$value" ... &gt;
 
 Part of ```rx:switch```, this attribute identifies the case that the element belongs too. See ```rx::switch``` for an example.
@@ -195,41 +205,52 @@ The children of the element with ```rx:template``` are stored as a fragment and 
 
 ### &lt;tag ... rx:scope="$path" ... &gt;
 
-Enter an object assuming it is present. This is a much more efficient, yet risky, ```rx:if```
+Enter an object assuming it is present. This is a much more efficient version of ```rx:if``` where the value is present by force.
 
 ### &lt;form ... rx:action="$action" ... &gt;
 
 Forms that talk to Adama can use a variety of built-in actions like
 
-| rx:action          | behavior                             |
-|--------------------|--------------------------------------|
-| adama:sign-in      | sign in as an adama developer        |
-| adama:sign-up      | sign up as an adama developer        |
-| adama:set-password | change your adama developer password | 
-| send:$channel      | send a message                       |
-| copy:$path         | merge the form into the viewstate    |
-| custom:$verb       | run custom logic                     | 
+| rx:action          | behavior                              | requirements                                             |
+|--------------------|---------------------------------------|----------------------------------------------------------|
+| adama:sign-in      | sign in as an adama developer         | form inputs: email, password, remember                   |
+| adama:sign-up      | sign up as an adama developer         | form inputs: email                                       |
+| adama:set-password | change your adama developer password  | form inputs: email, password                             | 
+| document:sign-in   | sign in to the document               | form inputs: username, password, space, key, remember    |
+| document:put       | execute a @web put against a document | form element has: path, space, key                       |
+| send:$channel      | send a message                        | form inputs should confirm to the channel's message type |
+| custom:$verb       | run custom logic                      | - |
 
 ### &lt;form ... rx:$event="$commands" ... &gt;
 
-| command         | behavior                                                                             |
-|-----------------|--------------------------------------------------------------------------------------|
-| toggle:$path    | toggle a boolean within the viewstate at the given path                              |
-| inc:$path       | increase a numeric value within the viewstate at the given path                      |
-| dec:$path       | decrease a numeric value within the viewstate at the given path                      |
-| custom:$verb    | run a custom verb                                                                    |
-| set:$path=value | set a string to a value within the viewstate at the given path                       |
-| raise:$path     | set a boolean to true within the viewstate at the given path                         |
-| lower:$path     | set a boolean to true within the viewstate at the given path                         |
-| decide:channel  | response with a decision on the given channel pulling (see [decisions](#decisions))  |
+| command                  | behavior                                                                            |
+|--------------------------|-------------------------------------------------------------------------------------|
+| toggle:$path             | toggle a boolean within the viewstate at the given path                             |
+| inc:$path                | increase a numeric value within the viewstate at the given path                     |
+| dec:$path                | decrease a numeric value within the viewstate at the given path                     |
+| custom:$verb             | run a custom verb                                                                   |
+| set:$path=value          | set a string to a value within the viewstate at the given path                      |
+| raise:$path              | set a boolean to true within the viewstate at the given path                        |
+| lower:$path              | set a boolean to true within the viewstate at the given path                        |
+| decide:channel           | response with a decision on the given channel pulling (see [decisions](#decisions)) |
+| goto:$uri                | redirect to a given uri                                                             |
+| decide:channel           | respond to a decision for a given (TODO)                                            |
+| choose:channel           | add a decision aspect for a given channel (TODO)                                    |
+| finalize                 | if there are multiple things to choose, then finalize will commit to a selection    |
+| force-auth:identity=key  | inject an identity token into the system                                            |
 
 ### &lt;custom- ... rx:link="$value" ... &gt;
 
+TODO
+
 ### &lt;tag ... rx:wrap="$value" ... &gt;
+
+TODO
 
 ### &lt;input ... rx:sync="$path" ... &gt;, &lt;textarea ... rx:sync="$path" ... &gt;, &lt;select ... rx:sync="$path" ... &gt;, oh my
 
 Synchronize the input's value to the view state at the given path.
+This will propagate to the server such that filters, searches, auto completes happen.
 
 ```html
 <input type="text" rx:sync="search_filter" />

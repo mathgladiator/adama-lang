@@ -649,12 +649,21 @@ var RxHTML = (function () {
   };
 
   // custom event on forms; rx:failed="..."
-  var fire_failure = function(form) {
-    form.dispatchEvent(new Event("failed"));
+  var fire_failure = function(form, msg) {
+    var e = new Event("failure");
+    e.message = msg;
+    console.log("FAILURE:" + msg);
+    form.dispatchEvent(e);
   };
 
-  self.aCC = function (form, state, customCommandName, statusVar) {
-    var signal = make_failure_signal(state, statusVar);
+  self.aCC = function (form, state, customCommandName) {
+    var signal = function(msg) {
+      if (signal == null) {
+        fire_success(form);
+      } else {
+        fire_failure(form, msg);
+      }
+    };
     form.onsubmit = function (evt) {
       if (customCommandName in customs) {
         evt.preventDefault();
@@ -662,7 +671,7 @@ var RxHTML = (function () {
         customs[customCommandName](obj, state, signal, self);
         fire_success(form);
       } else {
-        fire_failure(form);
+        fire_failure(form, "Failed to find '" + customCommandName + "'");
       }
     };
   };
@@ -813,6 +822,17 @@ var RxHTML = (function () {
     } else {
       dom.addEventListener(type, runnable);
     }
+  };
+
+  // RUNTIME: <tag .. rx:event="... te:name ...">
+  self.onTE = function (dom, type, state, name,) {
+    var runnable = function (event) {
+      var obj = {};
+      obj[name] = event.message;
+      var delta = path_to(state[state.current], obj);
+      state[state.current].tree.update(delta);
+    };
+    dom.addEventListener(type, runnable);
   };
 
   // RUNTIME: <tag .. rx:event="... goto:uri ...">
@@ -1123,16 +1143,6 @@ var RxHTML = (function () {
     return null;
   };
 
-  // HELPER | create a signal for when things fail; this will write into the the view
-  var make_failure_signal = function (state, failureVar) {
-    return function (fail) {
-      var obj = {};
-      obj[failureVar] = fail;
-      var delta = path_to(state.view, obj);
-      state.view.tree.update(delta);
-    };
-  };
-
   var wrappers = {};
   var wrappers_onload = {};
   self.PRWP = function(name, foo) {
@@ -1160,16 +1170,6 @@ var RxHTML = (function () {
       }
     }
   };
-  /**
-   /$$$$$$$$ /$$$$$$  /$$$$$$$   /$$$$$$
-   |__  $$__//$$__  $$| $$__  $$ /$$__  $$
-   | $$  | $$  \ $$| $$  \ $$| $$  \ $$
-   | $$  | $$  | $$| $$  | $$| $$  | $$
-   | $$  | $$  | $$| $$  | $$| $$  | $$
-   | $$  | $$  | $$| $$  | $$| $$  | $$
-   | $$  |  $$$$$$/| $$$$$$$/|  $$$$$$/
-   |__/   \______/ |_______/  \______/
-   */
 
   // RUNTIME | register the page for the uri to the given foo().
   self.PG = function (uri, foo) {
@@ -1486,6 +1486,9 @@ var RxHTML = (function () {
           if ("outstanding" in payload.delta) {
             co.ondecide(payload.delta.outstanding);
           }
+          if ('viewstate' in payload.delta) {
+            state.view.tree.update(payload.delta.viewstate);
+          }
         },
         complete: function() {
           co.set_connected(false);
@@ -1535,8 +1538,8 @@ var RxHTML = (function () {
     }
   };
 
-  self.aUP = function (form, state, identityName, failureVar, redirectTo) {
-    var idLookup = self.ID(identityName, function() { return redirectTo; }); // TODO: make rxvar
+  self.aUP = function (form, state, identityName, rxobj) {
+    var idLookup = self.ID(identityName, function() { return rxobj.rx_forward; }); // TODO: make rxvar
     if (idLookup.abort) {
       return;
     }
@@ -1558,25 +1561,20 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | rx:action=document:sign-in
-  self.aDSO = function (form, state, identityName, failureVar, rxobj) {
+  self.aDSO = function (form, state, identityName, rxobj) {
     rxobj.__ = function() {};
-    var signal = make_failure_signal(state, failureVar);
     form.onsubmit = function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
       connection.DocumentAuthorize(req.space, req.key, req.username, req.password, {
         success: function (payload) {
-          signal(false);
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
           self.goto(state.view, rxobj.rx_forward);
           fire_success(form);
         },
-        failure: function (code) {
-          signal(true);
-          // TODO: sort out console logging
-          console.log("Sign in failure:" + code);
-          fire_failure(form);
+        failure: function (reason) {
+          fire_failure(form, "Failed signing into document:" + reason);
         }
       });
     };
@@ -1593,23 +1591,25 @@ var RxHTML = (function () {
       var pws = get_password(form);
 
       var next = function() {
-        console.log(req);
         var url = "https://" + connection.host + "/" + rxobj.space + "/" + rxobj.key + "/" + rxobj.path;
-
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4) {
             if (this.status == 200) {
-              var payload = JSON.parse(this.responseText);
-              if ('identity' in payload) {
-                identities[identityName] = payload.identity;
-                localStorage.setItem("identity_" + identityName, payload.identity);
+              var type = this.getResponseHeader("Content-Type");
+              if (type == "text/error") {
+                fire_failure(form, this.responseText);
+              } else if (type == "application/json") {
+                var payload = JSON.parse(this.responseText);
+                if ('identity' in payload) {
+                  identities[identityName] = payload.identity;
+                  localStorage.setItem("identity_" + identityName, payload.identity);
+                }
+                self.goto(state.view, rxobj.rx_forward);
+                fire_success(form);
               }
-              self.goto(state.view, rxobj.rx_forward);
-              fire_success(form);
             } else {
-              console.log("Failed document-put");
-              fire_failure(form);
+              fire_failure(form, "Failed to communicate to server");
             }
           }
         };
@@ -1625,8 +1625,7 @@ var RxHTML = (function () {
             next();
           },
           failed: function() {
-            console.log("Failed document put");
-            fire_failure(form);
+            fire_failure(form, "Failed to hash password");
           }
         });
       } else {
@@ -1636,12 +1635,12 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | rx:action=adama:sign-in
-  self.aSO = function (form, state, identityName, failureVar, rxobj) {
+  self.aSO = function (form, state, identityName, rxobj) {
     rxobj.__ = function() {};
-    var signal = make_failure_signal(state, failureVar);
     window.setTimeout(function () {
       recall_email(form);
     }, 1);
+    // TODO: pull email out of thin air
     form.onsubmit = function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
@@ -1652,47 +1651,38 @@ var RxHTML = (function () {
       }
       connection.AccountLogin(req.email, req.password, {
         success: function (payload) {
-          signal(false);
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
           self.goto(state.view, rxobj.rx_forward);
           fire_success(form);
         },
-        failure: function (code) {
-          signal(true);
-          // TODO: sort out console logging
-          console.log("Sign in failure:" + code);
-          fire_failure(form);
+        failure: function (reason) {
+         fire_failure(form, "AccountLogin Failed:" + reason);
         }
       });
     };
   };
 
   // RUNTIME | rx:action=adama:sign-up
-  self.aSU = function (form, state, failureVar, forwardTo) {
-    var signal = make_failure_signal(state, failureVar);
+  self.aSU = function (form, state, forwardTo) {
     form.onsubmit = function (evt) {
       evt.preventDefault();
       var req = get_form(form);
       connection.InitSetupAccount(req.email, {
-        success: function (payload) {
-          signal(false);
+        success: function (/* payload */) {
           localStorage.setItem("email", req.email);
           self.goto(state.view, forwardTo);
           fire_success(form);
         },
-        failure: function (code) {
-          signal(true);
-          console.log("Sign up failure:");
-          fire_failure(form);
+        failure: function (reason) {
+          fire_failure(form, "InitSetupAccount Failed:" + reason);
         }
       });
     };
   };
 
   // RUNTIME | rx:action=adama:set-password
-  self.aSP = function (form, state, failureVar, forwardTo) {
-    var signal = make_failure_signal(state, failureVar);
+  self.aSP = function (form, state, forwardTo) {
     form.onsubmit = function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
@@ -1704,41 +1694,32 @@ var RxHTML = (function () {
           var identity = init.identity;
           connection.AccountSetPassword(init.identity, req.password, {
             success: function () {
-              signal(false);
               localStorage.setItem("identity_default", identity);
               self.goto(state.view, forwardTo);
               fire_success(form);
             },
             failure: function (reason) {
-              signal(true);
-              fire_failure(form);
+              fire_failure(form, "Failed AccountSetPassword:" + reason);
             }
           });
         },
         failure: function (reason) {
-          signal(true);
-          fire_failure(form);
+          fire_failure(form, "Failed InitCompleteAccount:" + reason);
         }
       });
     };
   };
 
   // RUNTIME | rx:action=send:$channel
-  self.aSD = function (form, state, channel, failureVar) {
-    var signal = make_failure_signal(state, failureVar);
+  self.aSD = function (form, state, channel) {
     form.onsubmit = function (evt) {
       evt.preventDefault();
-      var start = performance.now();
       state.data.connection.ptr.send(channel, get_form(form, false), {
-        success: function (payload) {
-          signal(false);
+        success: function (/* payload */) {
           fire_success(form);
-          console.log("Success|" + payload.seq + ";latency=" + (performance.now() - start)); // TODO: graph it
         },
         failure: function (reason) {
-          signal(true);
-          console.log("Send failure:" + reason); // TODO: log it
-          fire_failure(form);
+          fire_failure(form, "Send failed:" + reason);
         }
       });
     };
