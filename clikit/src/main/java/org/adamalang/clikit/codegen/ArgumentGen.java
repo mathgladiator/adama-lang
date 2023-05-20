@@ -28,11 +28,12 @@ public class ArgumentGen {
         sb.append("import java.util.HashMap;\n\n");
 
         sb.append("public class ArgumentObj {\n");
-        sb.append("  public static Map<String, Argument> fullArgumentMap = createMap();\n");
-        sb.append("  public static Map<String, Argument> currentMap = new HashMap<String, Argument>();\n");
+        sb.append("  public static Map<String, Argument> fullArgumentMap = argumentMap();\n");
+        sb.append("  public Map<String, Argument> currentMap = new HashMap<String, Argument>();\n");
 
 
         sb.append("  public String group;\n");
+        sb.append("  public String command;\n");
 
 
 
@@ -42,44 +43,68 @@ public class ArgumentGen {
         * TODO: If another interface/class requires hashmaps, then we will have to change ideas...
         */
 
+
         sb.append("  public ArgumentObj(String[] args) {\n");
         sb.append("    if (args.length >= 1) {\n");
-        // Check if it is part of a group, otherwise immediately halt!
         sb.append("      group = args[0];\n");
+        sb.append("    } else {\n");
+        sb.append("      Help.displayHelp();\n");
         sb.append("    }\n");
-        // Go through args, if arg is available from the top, then set in the map
-        sb.append("    for (int i = 1; i < args.length ; i+=2 ) {\n");
+        sb.append("    if (args.length >= 2) {\n");
+        sb.append("      command = args[1];\n");
+        sb.append("    } else {\n");
+        sb.append("      Help.displayHelp(group);\n");
+        sb.append("    }\n");
+
+        //Make sure both the group and command are valid.
+
+        // Second element should be the command, if it is empty, show the help for that group.
+
+        // If the second element is there, and there is help then display help for THAT COMMAND.
+        sb.append("    for (int i = 2; i < args.length ; i+=2 ) {\n");
         // Make changes so it also allows the shortened version
         // Obvious way is to make another map to the real strings.
         // TODO: Could have a flag instead of variable, may need to adjust for that.
         sb.append("      Argument givenArg = fullArgumentMap.getOrDefault(args[i], null);\n");
-        //TODO Replace get with a custom function to use both short or long name!
         sb.append("      if (givenArg != null) {\n");
-        sb.append("        Argument copyArg = new Argument(givenArg);");
+        sb.append("        Argument copyArg = new Argument(givenArg);\n");
+        // Could not exist, so adjust for that...
         sb.append("        copyArg.value = args[i+1];\n");
+        sb.append("        currentMap.put(copyArg.name, copyArg);\n");
         sb.append("      } else {\n");
         sb.append("        //addException;\n");
         sb.append("      }\n");
         sb.append("      \n");
         sb.append("    }\n");
         sb.append("  }\n");
+        // After it is done, check if it is asking for help, and activate help.
 
         sb.append("  private static Map<String, Argument> createMap() {\n");
         sb.append("    Map<String, Argument> returnMap = new HashMap<String, Argument>();\n");
         for (Map.Entry<String, ArgDefinition> entry: argDefinitions.entrySet()) {
             ArgDefinition argDef = entry.getValue();
-            //TODO: Make sure to escape characters that need to be escaped!
-            sb.append("    returnMap.put(\"").append(entry.getKey()).append("\", ").append("new Argument(\"").append(escape(argDef.documentation)).append("\"));\n");
+            sb.append("    Argument ").append(entry.getKey()).append(" = new Argument(\"").append(entry.getKey()).append("\" , \"").append(escape(argDef.documentation)).append("\");\n");
+            sb.append("    returnMap.put(\"--").append(entry.getKey()).append("\", ").append(entry.getKey()).append(");\n");
+            if (!argDef.shortField.equals("")) {
+                sb.append("    returnMap.put(\"-").append(argDef.shortField).append("\", ").append(entry.getKey()).append(");\n");
+            }
+
         }
+
         sb.append("    return returnMap;\n");
         sb.append("  }\n\n");
 
         sb.append("  private static class Argument {\n");
         sb.append("    public String value;\n");
-        sb.append("    public String documentation;\n");
+        sb.append("    public String name;\n");
+        sb.append("    public String documentation;\n\n");
         sb.append("    public Argument(String documentation) {\n");
         sb.append("      this.documentation = documentation;\n");
-        sb.append("    }\n");
+        sb.append("    }\n\n");
+        sb.append("    public Argument(String name, String documentation) {\n");
+        sb.append("      this.name = name;\n");
+        sb.append("      this.documentation = documentation;\n");
+        sb.append("    }\n\n");
         sb.append("    public Argument(Argument copy) {\n");
         sb.append("      this.value = copy.value;\n");
         sb.append("      this.documentation = copy.documentation;\n");
@@ -98,7 +123,7 @@ public class ArgumentGen {
         // If it is a required field, then make sure it is there, otherwise add to exception stack.
         for (Group group : groups) {
             for (Command command : group.commandList) {
-                sb.append("  public static class ").append(command.name + group.capName + "Args").append("{\n");
+                sb.append("  public static class ").append(command.name + group.capName + "Args").append(" {\n");
                 for (Argument argument : command.argList) {
                     sb.append("    public String ").append(argument.name).append(";\n");
                 }

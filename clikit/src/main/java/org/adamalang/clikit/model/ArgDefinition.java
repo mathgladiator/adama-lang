@@ -10,9 +10,11 @@ import java.util.HashMap;
 public class ArgDefinition {
     public String type;
     public String documentation;
-    public ArgDefinition(String type, String docs) {
+    public String shortField;
+    public ArgDefinition(String type, String docs, String shortField) {
         this.documentation = docs;
         this.type = type;
+        this.shortField = shortField;
     }
     public static HashMap<String, ArgDefinition> createMap(Document doc) throws Exception{
         HashMap<String, ArgDefinition> returnMap = new HashMap<>();
@@ -29,7 +31,8 @@ public class ArgDefinition {
             if ("".equals(elementName.trim())) {
                 throw new Exception("Empty name attribute");
             }
-            returnMap.put(elementName, new ArgDefinition(type, docs));
+            String shortField = elementNode.getAttribute("short");
+            returnMap.put(elementName, new ArgDefinition(type, docs, shortField));
         }
         return returnMap;
     }

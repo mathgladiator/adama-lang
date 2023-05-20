@@ -14,28 +14,31 @@ public class RouterGen {
         //import the correct handler
         for (Group group: groupList) {
             StringBuilder router = new StringBuilder();
-            String upperHandler = group.capName+"Handler";
             String upperRouter = group.capName+"Router";
-            String lowerHandler = group.name+"Handler";
 
             router.append("package ").append(packageName).append(";\n\n");
-            router.append("import ").append(packageName).append(".handler." + upperHandler + ";\n");
-            router.append("public class " + upperRouter + " {\n");
-            router.append("  private "+upperHandler+ " " + lowerHandler+ ";\n");
-            router.append("  public static void route(ArgumentObj args) {\n");
+            router.append("public interface " + upperRouter + " {\n");
+            router.append("  default int route(String[] args) {\n");
             // Using switch to route, could use a hashmap to route
-            router.append("    switch (args.group) {\n");
+
+            //TODO: Use custom args
+            router.append("    switch (args[1]) {\n");
             for (Command command: group.commandList) {
                 router.append("      case \"").append(command.name).append("\":\n");
-                router.append("        ArgumentObj.").append(command.name + group.capName + "Args").append(" newArgs = new ArgumentObj.").append(command.name + group.capName + "Args(args);\n");
+
+                // router.append("        ArgumentObj.").append(command.name + group.capName + "Args").append(" newArgs = new ArgumentObj.").append(command.name + group.capName + "Args(args);\n");
                 // TODO: Figure out how to get output.
-                router.append("        ").append(lowerHandler + "." + command.name + group.capName + "(newArgs, output);\n");
-                router.append("        break;\n");
+                router.append("        return ").append(command.name + group.capName + "(\"BRUH\", \"BRUH\");\n");
             }
             //Create args from argument class
             router.append("      default:\n");
+            router.append("        return 0;\n");
             router.append("    }\n");
             router.append("  }\n");
+
+            for (Command command : group.commandList) {
+                router.append("  int ").append(command.name).append(group.capName).append("(String arguments, String output);\n");
+            }
             router.append("}");
             returnMap.put(upperRouter+".java",router.toString());
         }
