@@ -18,6 +18,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Secrets {
+  /** This is fundamentally unsafe as it puts both the public and private key (granted, encrypted) in the datbase. Instead, we should only put the public key in, store private keys in memory, and then index the keys so public keys can be looked up by id */
+  @Deprecated
   public static SigningKeyPair getOrCreateDocumentSigningKey(DataBase dataBase, String masterKey, String space, String key) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String resultSecret = null;
