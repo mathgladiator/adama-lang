@@ -79,8 +79,8 @@ public class ArgumentGen {
         sb.append("  }\n");
         // After it is done, check if it is asking for help, and activate help.
 
-        sb.append("  private static Map<String, Argument> createMap() {\n");
-        sb.append("    Map<String, Argument> returnMap = new HashMap<String, Argument>();\n");
+        sb.append("  private static Map<String, Argument> argumentMap() {\n");
+        sb.append("    Map<String, Argument> returnMap = new HashMap<>();\n");
         for (Map.Entry<String, ArgDefinition> entry: argDefinitions.entrySet()) {
             ArgDefinition argDef = entry.getValue();
             sb.append("    Argument ").append(entry.getKey()).append(" = new Argument(\"").append(entry.getKey()).append("\" , \"").append(escape(argDef.documentation)).append("\");\n");
@@ -129,7 +129,7 @@ public class ArgumentGen {
                 }
                 sb.append("    public ").append(command.name + group.capName+"Args(ArgumentObj argObj) {\n");
                 for (Argument argument : command.argList) {
-                    sb.append("      String tempVal = ArgumentObj.currentMap.get(\"").append(argument.name).append("\").value;\n");
+                    sb.append("      String tempVal = argObj.currentMap.get(\"").append(argument.name).append("\").value;\n");
                     sb.append("      if (tempVal.equals(\"\")) {\n");
                     if (argument.optional) {
                         sb.append("        ").append(argument.name).append(" = ").append(argument.defaultValue).append(";\n");
