@@ -2,12 +2,15 @@ package org.adamalang.cli.router;
 
 public interface RootHandler {
   default int route(String[] args) {
-
-    // Should catch all inconsistencies here
     Argument arguments = new Argument(args);
-    // Everything from here is validated.
+    if (!arguments.valid) {
+      return 0;
+    }
+    if (arguments.group == null) {
+      return Help.displayHelp();
+    }
 
-    switch (arguments.group) {
+    switch (arguments.group.name) {
       case "space":
         SpaceRouter spaceRouter = createRouter();
         return spaceRouter.route(arguments);

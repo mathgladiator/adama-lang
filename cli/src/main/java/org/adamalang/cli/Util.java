@@ -56,7 +56,15 @@ public class Util {
     return false;
   }
 
-
+ // If string is any of the following
+  public static boolean equalsMultiple(String str, String... tests) {
+    for (String testStr : tests) {
+      if (str.equals(testStr)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
 
 

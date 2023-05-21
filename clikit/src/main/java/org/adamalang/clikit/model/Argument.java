@@ -33,7 +33,7 @@ public class Argument {
     }
 
 
-    public static Argument[] createArgumentList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgDefinition> arguments){
+    public static Argument[] createArgumentList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgDefinition> arguments) {
         ArrayList<Argument> argumentArray = new ArrayList<>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node argNode = nodeList.item(i);

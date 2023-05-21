@@ -13,11 +13,19 @@ public class MainRouterGen {
         /* Given args, we should create an Arg object and get the correct command to run */
         // sb.append("    ArgumentObj argObj = new ArgumentObj(args);\n");
         /* For now, we will just use a switch statement */
-        sb.append("    switch (args[1]) {\n");
+        sb.append("    Argument arguments = new Argument(args);\n");
+        sb.append("    if (!arguments.valid) {\n");
+        sb.append("      return 0;\n");
+        sb.append("    }\n");
+        sb.append("    if (arguments.group == null) {\n");
+        sb.append("      return Help.displayHelp();\n");
+        sb.append("    }\n\n");
+        sb.append("    switch (arguments.group.name) {\n");
+
         for (Group group : groupList) {
             sb.append("      case \"").append(group.name).append("\":\n");
             sb.append("        ").append(group.capName).append("Router ").append(group.name).append("Router = createRouter();\n");
-            sb.append("        return ").append(group.name).append("Router.route(args);\n");
+            sb.append("        return ").append(group.name).append("Router.route(arguments);\n");
         }
 
         sb.append("      default:\n");
@@ -25,7 +33,6 @@ public class MainRouterGen {
         sb.append("        return displayHelp();\n");
         sb.append("    }\n");
         sb.append("  }\n");
-
 
         for (Group group : groupList) {
             //TODO: add for commands in main.
@@ -35,7 +42,6 @@ public class MainRouterGen {
         sb.append("  default int displayHelp() {\n");
         sb.append("    return 0;\n");
         sb.append("  }\n");
-
         sb.append("}");
 
 

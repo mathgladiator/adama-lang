@@ -1,14 +1,20 @@
 package org.adamalang.cli.router;
 
+import org.adamalang.cli.router.ArgumentType.*;
+
 public interface SpaceRouter {
   default int route(Argument args) {
-    switch (args.command) {
+  if (args.command == null) {
+    return Help.displayHelp("space");
+  }
+    switch (args.command.name) {
       case "create":
-        return createSpace("BRUH", "BRUH");
+        CreateSpaceArgs arguments = new CreateSpaceArgs(args);
+        return createSpace(arguments, "Output");
       default:
         Help.displayHelp("space");
         return 0;
     }
   }
-  int createSpace(String arguments, String output);
+  int createSpace(CreateSpaceArgs args, String output);
 }
