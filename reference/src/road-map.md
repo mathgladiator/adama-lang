@@ -100,11 +100,12 @@ The language is going to big with many features!
 | sum types              |     | a sum type is going to be a special type of message                                                                                                                 |
 
 ## Infrastructure - Protocols
+For integration across different ecosystems, there are more protocols to bridge gaps.
+
 | project   | IP  | milestones/description                                                                                    |
 |-----------|-----|-----------------------------------------------------------------------------------------------------------|
 | mqtt      |     | (1) Write design document how to adapt Adama to MQTT, (2) Build it with TLS, (3) Built it with plain-text |
 | sse       |     | (1) Write design document how to adapt Adama to Server-Sent Events, (2) Build it with TLS                 |                             
-| web async |     | Allow all web operations operations to become asynchronous                                                |
 
 ## Infrastructure - Enterprise data
 | project        | IP  | milestones/description                                                                                                                                                                                                                          |
