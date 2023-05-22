@@ -9,6 +9,7 @@
 package org.adamalang.edhtml;
 
 import org.adamalang.edhtml.phases.Generate;
+import org.adamalang.edhtml.phases.Stamp;
 import org.adamalang.edhtml.phases.Use;
 
 import java.nio.file.Files;
@@ -22,6 +23,7 @@ public class EdHtmlTool {
   public static String phases(EdHtmlState state) throws Exception {
     Use.execute(state);
     Generate.execute(state);
+    Stamp.execute(state);
     return state.finish();
   }
 }

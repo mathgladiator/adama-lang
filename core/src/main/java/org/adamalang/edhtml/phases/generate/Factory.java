@@ -43,6 +43,6 @@ public class Factory {
     for (Map.Entry<String, String> entry : defines.entrySet()) {
       next = next.replaceAll(Pattern.quote("%%" + entry.getKey()) + "%%", Matcher.quoteReplacement(entry.getValue()));
     }
-    return Jsoup.parse("<template name=\"" + name + "\">" + next + "</template>").getElementsByTag("template").outerHtml();
+    return Jsoup.parse("<template name=\"" + name + "\">\n" + next + "</template>\n").getElementsByTag("template").outerHtml() + "\n";
   }
 }

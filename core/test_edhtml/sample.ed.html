@@ -33,4 +33,12 @@
             channel="create_blog_post"
             name="blog-root-intersect"
     />
+    <stamp name="blog-nav">
+        <meat>
+            <a href="%%href%%">%%name%%</a>
+        </meat>
+        <instance define:href="/" define:name="root" />
+        <instance define:href="/about" define:name="About" />
+        <instance define:href="/food" define:name="Menu" />
+    </stamp>
 </build>
