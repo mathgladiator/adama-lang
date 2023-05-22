@@ -142,13 +142,15 @@ function AdamaTree() {
       }
     } else if (typeof (s) == "object") { // otherwise, iterate over the keys
       for (var key in s) {
-        var ch = s[key];
-        if (key == "@e") { // we have events, so let's send those events...
-          for (var j = 0; j < ch.length; j++) {
-            ch[j](null); // a null to indicate deletion
+        if (!(key == '+' || key == '-')) {
+          var ch = s[key];
+          if (key == "@e") { // we have events, so let's send those events...
+            for (var j = 0; j < ch.length; j++) {
+              ch[j](null); // a null to indicate deletion
+            }
+          } else { // recurse into the child field
+            del(ch);
           }
-        } else { // recurse into the child field
-          del(ch);
         }
       }
     }

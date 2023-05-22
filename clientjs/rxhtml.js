@@ -575,6 +575,15 @@ var RxHTML = (function () {
     var it_state = self.pIE(state, name, expandView);
     var domByKey = {};
     var viewUnSubByKey = {};
+    var kill = function() {
+      for (var key in viewUnSubByKey) {
+        fire_unsub(viewUnSubByKey[key]);
+        delete viewUnSubByKey[key];
+      }
+      for (var key in domByKey) {
+        delete domByKey[key];
+      }
+    };
 
     var sub = {
       "+": function (key) {
@@ -606,6 +615,10 @@ var RxHTML = (function () {
       },
       "~": function (ord) {
         nuke(parentDom);
+        if (ord == null) {
+          kill();
+          return;
+        }
         for (var k = 0; k < ord.length; k++) {
           parentDom.append(domByKey[ord[k]]);
         }
@@ -1718,6 +1731,7 @@ var RxHTML = (function () {
       evt.preventDefault();
       state.data.connection.ptr.send(channel, get_form(form, false), {
         success: function (/* payload */) {
+          form.reset();
           fire_success(form);
         },
         failure: function (reason) {
