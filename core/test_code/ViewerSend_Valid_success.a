@@ -3,7 +3,12 @@ message M {
 }
 
 public bool sent;
+public bool went;
 
 channel foo(M m) {
   sent = ViewState.merge({error:true, invalid_x:true}.to_dynamic());
+}
+
+channel go(M m) {
+  went = ViewState.goto("/");
 }

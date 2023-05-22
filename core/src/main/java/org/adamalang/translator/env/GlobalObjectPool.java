@@ -65,6 +65,7 @@ public class GlobalObjectPool {
 
     final var viewer = new TyNativeGlobalObject("ViewState", null, false);
     viewer.functions.put("merge", generateInternalDocumentFunction("__mergeViewState", tyDyn, tyBool, null, null));
+    viewer.functions.put("goto", generateInternalDocumentFunction("__gotoViewState", tyStr, tyBool, null, null));
     pool.add(viewer);
 
     final var random = new TyNativeGlobalObject("Random", null, false);
