@@ -5697,7 +5697,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __track(6);");
     gold.append("\n    int y = (x + 1) * x;");
     gold.append("\n    __track(7);");
-    gold.append("\n    if (x == y) {");
+    gold.append("\n    if (((int) x) == ((int) y)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(8);");
     gold.append("\n      y++;");
@@ -5985,7 +5985,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  public void __onLoad__0() {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(33);");
-    gold.append("\n    if (deck.size() == 52) {");
+    gold.append("\n    if (((int) deck.size()) == ((int) 52)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(34);");
     gold.append("\n      {");
@@ -6443,7 +6443,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    players_connected = new RxLazy<Integer>(this, () -> ((players.iterate(false).where(true, new __CLOSURE_WhereClause4())).size()));");
     gold.append("\n    observers_connected = new RxLazy<Integer>(this, () -> ((players.iterate(false).where(true, new __CLOSURE_WhereClause5())).size()));");
     gold.append("\n    players_ordered = new RxLazy<NtList<RTxPlayer>>(this, () -> (players.iterate(false).where(false, new __CLOSURE_WhereClause6()).orderBy(true, __ORDER_Player_play_order_a)));");
-    gold.append("\n    ready = new RxLazy<Boolean>(this, () -> (players_connected.get() == 4));");
+    gold.append("\n    ready = new RxLazy<Boolean>(this, () -> (((int) players_connected.get()) == ((int) 4)));");
     gold.append("\n    in_play = new RxLazy<NtList<RTxCard>>(this, () -> (deck.iterate(false).where(false, new __CLOSURE_WhereClause33()).orderBy(true, __ORDER_Card_rank_d)));");
     gold.append("\n    ___my_take =  new RxGuard();");
     gold.append("\n    deck.__subscribe(___my_take);");
@@ -7238,7 +7238,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      owner = new RxPrincipal(this, NtPrincipal.NO_ONE);");
     gold.append("\n      ordering = new RxInt32(this, 0);");
     gold.append("\n      place = new RxEnumInt32(this, 1, (__v) -> __EnumFix_Place(__v));");
-    gold.append("\n      points = new RxLazy<Integer>(this, () -> ((suit.get() == 2 ? 1 : (suit.get() == 3 && rank.get() == 12 ? 13 : 0))));");
+    gold.append("\n      points = new RxLazy<Integer>(this, () -> ((((int) suit.get()) == ((int) 2) ? 1 : (((int) suit.get()) == ((int) 3) && ((int) rank.get()) == ((int) 12) ? 13 : 0))));");
     gold.append("\n      points.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -7249,13 +7249,13 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean __POLICY_p(NtPrincipal __who){");
     gold.append("\n      __code_cost += 4;");
     gold.append("\n      __track(0);");
-    gold.append("\n      if (place.get() == 2 || place.get() == 4) {");
+    gold.append("\n      if (((int) place.get()) == ((int) 2) || ((int) place.get()) == ((int) 4)) {");
     gold.append("\n        __code_cost += 2;");
     gold.append("\n        __track(1);");
     gold.append("\n        return (__who).equals(owner.get());");
     gold.append("\n      }");
     gold.append("\n      __track(2);");
-    gold.append("\n      if (place.get() == 3) {");
+    gold.append("\n      if (((int) place.get()) == ((int) 3)) {");
     gold.append("\n        __code_cost += 2;");
     gold.append("\n        __track(3);");
     gold.append("\n        return true;");
@@ -8313,7 +8313,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __track(5);");
     gold.append("\n    final RTxLeaderActionMessage decision = leader.fetchItem(owner.get()).await();");
     gold.append("\n    __track(6);");
-    gold.append("\n    if (decision.action == 1 && !ready.get()) {");
+    gold.append("\n    if (((int) decision.action) == ((int) 1) && !ready.get()) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(7);");
     gold.append("\n      NtList<RxBoolean> _auto_28 = (players.iterate(false).where(true, new __CLOSURE_WhereClause7(decision))).transform((item) -> item.playing);");
@@ -8321,7 +8321,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        _auto_29.set(true);");
     gold.append("\n      }");
     gold.append("\n");
-    gold.append("\n    } else if (decision.action == 2) {");
+    gold.append("\n    } else if (((int) decision.action) == ((int) 2)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(8);");
     gold.append("\n      NtList<RxBoolean> _auto_30 = (players.iterate(false).where(true, new __CLOSURE_WhereClause8(decision))).transform((item) -> item.playing);");
@@ -8329,7 +8329,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        _auto_31.set(false);");
     gold.append("\n      }");
     gold.append("\n");
-    gold.append("\n    } else if (decision.action == 3) {");
+    gold.append("\n    } else if (((int) decision.action) == ((int) 3)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(9);");
     gold.append("\n      NtList<RxInt32> _auto_32 = (players.iterate(false).where(true, new __CLOSURE_WhereClause9())).transform((item) -> item.play_order);");
@@ -8337,12 +8337,12 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        _auto_33.set(__randomInt());");
     gold.append("\n      }");
     gold.append("\n");
-    gold.append("\n    } else if (decision.action == 10) {");
+    gold.append("\n    } else if (((int) decision.action) == ((int) 10)) {");
     gold.append("\n      __code_cost += 3;");
     gold.append("\n      __track(10);");
     gold.append("\n      playing.set(true);");
     gold.append("\n      __track(11);");
-    gold.append("\n      if ((players.iterate(false).where(true, new __CLOSURE_WhereClause10())).size() == 4) {");
+    gold.append("\n      if (((int) (players.iterate(false).where(true, new __CLOSURE_WhereClause10())).size()) == ((int) 4)) {");
     gold.append("\n        __code_cost += 2;");
     gold.append("\n        __track(12);");
     gold.append("\n        __transitionStateMachine(\"setup\", 0);");
@@ -8435,7 +8435,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private void __step_pass() {");
     gold.append("\n    __code_cost += 13;");
     gold.append("\n    __track(29);");
-    gold.append("\n    if (passing_mode.get() == 3) {");
+    gold.append("\n    if (((int) passing_mode.get()) == ((int) 3)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(30);");
     gold.append("\n      __transitionStateMachine(\"start_play\", 0);");
@@ -8503,7 +8503,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n            RTxCardDecision[] decision4 = _AutoConditiondecision4_57.get();");
     gold.append("\n            __code_cost += 2;");
     gold.append("\n            __track(48);");
-    gold.append("\n            if (passing_mode.get() == 2) {");
+    gold.append("\n            if (((int) passing_mode.get()) == ((int) 2)) {");
     gold.append("\n              __code_cost += 5;");
     gold.append("\n              __track(49);");
     gold.append("\n              for(RTxCardDecision dec : decision1) {");
@@ -8545,7 +8545,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n                }");
     gold.append("\n");
     gold.append("\n              }");
-    gold.append("\n            } else if (passing_mode.get() == 1) {");
+    gold.append("\n            } else if (((int) passing_mode.get()) == ((int) 1)) {");
     gold.append("\n              __code_cost += 5;");
     gold.append("\n              __track(57);");
     gold.append("\n              for(RTxCardDecision dec : decision1) {");
@@ -8587,7 +8587,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n                }");
     gold.append("\n");
     gold.append("\n              }");
-    gold.append("\n            } else if (passing_mode.get() == 0) {");
+    gold.append("\n            } else if (((int) passing_mode.get()) == ((int) 0)) {");
     gold.append("\n              __code_cost += 5;");
     gold.append("\n              __track(65);");
     gold.append("\n              for(RTxCardDecision dec : decision1) {");
@@ -8659,7 +8659,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __track(79);");
     gold.append("\n    NtList<RTxCard> choices = deck.iterate(false).where(true, new __CLOSURE_WhereClause34(current, played, points_played, suit_in_play));");
     gold.append("\n    __track(80);");
-    gold.append("\n    if (choices.get().size() == 0) {");
+    gold.append("\n    if (((int) choices.get().size()) == ((int) 0)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(81);");
     gold.append("\n      choices = deck.iterate(false).where(true, new __CLOSURE_WhereClause35(current));");
@@ -8692,7 +8692,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n            points_played.set(true);");
     gold.append("\n          }");
     gold.append("\n          __track(89);");
-    gold.append("\n          if (played.get() == 0) {");
+    gold.append("\n          if (((int) played.get()) == ((int) 0)) {");
     gold.append("\n            __code_cost += 2;");
     gold.append("\n            __track(90);");
     gold.append("\n            suit_in_play.set(cardPlayed.suit.get());");
@@ -8719,7 +8719,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      current.set(player1.get());");
     gold.append("\n    }");
     gold.append("\n    __track(96);");
-    gold.append("\n    if (played.get() == 3) {");
+    gold.append("\n    if (((int) played.get()) == ((int) 3)) {");
     gold.append("\n      __code_cost += 6;");
     gold.append("\n      __track(97);");
     gold.append("\n      NtMaybe<RTxCard> _AutoConditionwinner_87;");
@@ -8746,7 +8746,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      __track(102);");
     gold.append("\n      current.set(last_winner.get());");
     gold.append("\n      __track(103);");
-    gold.append("\n      if ((deck.iterate(false).where(true, new __CLOSURE_WhereClause41(current))).size() == 0) {");
+    gold.append("\n      if (((int) (deck.iterate(false).where(true, new __CLOSURE_WhereClause41(current))).size()) == ((int) 0)) {");
     gold.append("\n        __code_cost += 2;");
     gold.append("\n        __track(104);");
     gold.append("\n        __transitionStateMachine(\"score\", 0);");
@@ -8773,7 +8773,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        local_points += c.points.get();");
     gold.append("\n      }");
     gold.append("\n      __track(111);");
-    gold.append("\n      if (local_points == 26) {");
+    gold.append("\n      if (((int) local_points) == ((int) 26)) {");
     gold.append("\n        __code_cost += 2;");
     gold.append("\n        __track(112);");
     gold.append("\n        for(RTxPlayer p2 : players.iterate(false).where(true, new __CLOSURE_WhereClause44(p))) {");
@@ -8792,19 +8792,19 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    __track(117);");
-    gold.append("\n    if (passing_mode.get() == 0) {");
+    gold.append("\n    if (((int) passing_mode.get()) == ((int) 0)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(118);");
     gold.append("\n      passing_mode.set(2);");
-    gold.append("\n    } else if (passing_mode.get() == 2) {");
+    gold.append("\n    } else if (((int) passing_mode.get()) == ((int) 2)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(119);");
     gold.append("\n      passing_mode.set(1);");
-    gold.append("\n    } else if (passing_mode.get() == 1) {");
+    gold.append("\n    } else if (((int) passing_mode.get()) == ((int) 1)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(120);");
     gold.append("\n      passing_mode.set(3);");
-    gold.append("\n    } else if (passing_mode.get() == 3) {");
+    gold.append("\n    } else if (((int) passing_mode.get()) == ((int) 3)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(121);");
     gold.append("\n      passing_mode.set(0);");
@@ -8867,7 +8867,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    __track(129);");
-    gold.append("\n    if ((players.iterate(false).where(true, new __CLOSURE_WhereClause2(__who))).size() == 0) {");
+    gold.append("\n    if (((int) (players.iterate(false).where(true, new __CLOSURE_WhereClause2(__who))).size()) == ((int) 0)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(130);");
     gold.append("\n      {");
@@ -8953,7 +8953,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return place == 2;");
+    gold.append("\n      return ((int) place) == ((int) 2);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxCard> {");
@@ -8976,7 +8976,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      NtPrincipal owner = __obj.owner.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return place == 4 && (owner).equals(__who);");
+    gold.append("\n      return ((int) place) == ((int) 4) && (owner).equals(__who);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxPlayer> {");
@@ -9097,7 +9097,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxPlayer __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == decision.id;");
+    gold.append("\n      return ((int) id) == ((int) decision.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause8 implements WhereClause<RTxPlayer> {");
@@ -9119,7 +9119,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxPlayer __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == decision.id;");
+    gold.append("\n      return ((int) id) == ((int) decision.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause9 implements WhereClause<RTxPlayer> {");
@@ -9355,7 +9355,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause21 implements WhereClause<RTxCard> {");
@@ -9377,7 +9377,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause22 implements WhereClause<RTxCard> {");
@@ -9399,7 +9399,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause23 implements WhereClause<RTxCard> {");
@@ -9421,7 +9421,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause24 implements WhereClause<RTxCard> {");
@@ -9443,7 +9443,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause25 implements WhereClause<RTxCard> {");
@@ -9465,7 +9465,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause26 implements WhereClause<RTxCard> {");
@@ -9487,7 +9487,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause27 implements WhereClause<RTxCard> {");
@@ -9509,7 +9509,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause28 implements WhereClause<RTxCard> {");
@@ -9531,7 +9531,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause29 implements WhereClause<RTxCard> {");
@@ -9553,7 +9553,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause30 implements WhereClause<RTxCard> {");
@@ -9575,7 +9575,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause31 implements WhereClause<RTxCard> {");
@@ -9597,7 +9597,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause32 implements WhereClause<RTxCard> {");
@@ -9616,7 +9616,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      int rank = __obj.rank.get();");
     gold.append("\n      int suit = __obj.suit.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return rank == 2 && suit == 1;");
+    gold.append("\n      return ((int) rank) == ((int) 2) && ((int) suit) == ((int) 1);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause33 implements WhereClause<RTxCard> {");
@@ -9634,7 +9634,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return place == 3;");
+    gold.append("\n      return ((int) place) == ((int) 3);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause34 implements WhereClause<RTxCard> {");
@@ -9665,7 +9665,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      int points = __obj.points.get();");
     gold.append("\n      int suit = __obj.suit.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner).equals(current.get()) && place == 2 && (played.get() == 0 && (points_played.get() || points == 0) || played.get() > 0 && suit_in_play.get() == suit);");
+    gold.append("\n      return (owner).equals(current.get()) && ((int) place) == ((int) 2) && (((int) played.get()) == ((int) 0) && (points_played.get() || ((int) points) == ((int) 0)) || played.get() > 0 && ((int) suit_in_play.get()) == ((int) suit));");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause35 implements WhereClause<RTxCard> {");
@@ -9688,7 +9688,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      NtPrincipal owner = __obj.owner.get();");
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner).equals(current.get()) && place == 2;");
+    gold.append("\n      return (owner).equals(current.get()) && ((int) place) == ((int) 2);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause36 implements WhereClause<RTxCard> {");
@@ -9710,7 +9710,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause37 implements WhereClause<RTxCard> {");
@@ -9732,7 +9732,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == dec.id;");
+    gold.append("\n      return ((int) id) == ((int) dec.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause38 implements WhereClause<RTxCard> {");
@@ -9755,7 +9755,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      int suit = __obj.suit.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return place == 3 && suit == suit_in_play.get();");
+    gold.append("\n      return ((int) place) == ((int) 3) && ((int) suit) == ((int) suit_in_play.get());");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause39 implements WhereClause<RTxCard> {");
@@ -9773,7 +9773,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return place == 3;");
+    gold.append("\n      return ((int) place) == ((int) 3);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause40 implements WhereClause<RTxCard> {");
@@ -9791,7 +9791,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return place == 3;");
+    gold.append("\n      return ((int) place) == ((int) 3);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause41 implements WhereClause<RTxCard> {");
@@ -9814,7 +9814,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      NtPrincipal owner = __obj.owner.get();");
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner).equals(current.get()) && place == 2;");
+    gold.append("\n      return (owner).equals(current.get()) && ((int) place) == ((int) 2);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause42 implements WhereClause<RTxPlayer> {");
@@ -9855,7 +9855,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      NtPrincipal owner = __obj.owner.get();");
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner).equals(p.link.get()) && place == 4;");
+    gold.append("\n      return (owner).equals(p.link.get()) && ((int) place) == ((int) 4);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause44 implements WhereClause<RTxPlayer> {");
@@ -9878,7 +9878,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      boolean playing = __obj.playing.get();");
     gold.append("\n      NtPrincipal link = __obj.link.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return playing && !(link).equals(p.link.get());");
+    gold.append("\n      return playing && !((link).equals(p.link.get()));");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private final static Comparator<RTxCard> __ORDER_Card_ordering_a = new Comparator<RTxCard>() {");
@@ -16186,7 +16186,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __track(6);");
     gold.append("\n    NtList<RTxSquare> open = _squares.iterate(false).where(true, new __CLOSURE_WhereClause0());");
     gold.append("\n    __track(7);");
-    gold.append("\n    if (open.get().size() == 0) {");
+    gold.append("\n    if (((int) open.get().size()) == ((int) 0)) {");
     gold.append("\n      __code_cost += 4;");
     gold.append("\n      __track(8);");
     gold.append("\n      stalemates.bumpUpPost();");
@@ -16217,7 +16217,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        for (;__goodwill(88, 20, 88, 25) && (k < 3);k++) {");
     gold.append("\n          __code_cost += 3;");
     gold.append("\n          __track(16);");
-    gold.append("\n          if ((_squares.iterate(false).where(true, new __CLOSURE_WhereClause2(k, placed))).size() == 3) {");
+    gold.append("\n          if (((int) (_squares.iterate(false).where(true, new __CLOSURE_WhereClause2(k, placed))).size()) == ((int) 3)) {");
     gold.append("\n            __code_cost += 3;");
     gold.append("\n            __track(17);");
     gold.append("\n            __FUNC_0_current_wins();");
@@ -16225,7 +16225,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n            return;");
     gold.append("\n          }");
     gold.append("\n          __track(19);");
-    gold.append("\n          if ((_squares.iterate(false).where(true, new __CLOSURE_WhereClause3(k, placed))).size() == 3) {");
+    gold.append("\n          if (((int) (_squares.iterate(false).where(true, new __CLOSURE_WhereClause3(k, placed))).size()) == ((int) 3)) {");
     gold.append("\n            __code_cost += 3;");
     gold.append("\n            __track(20);");
     gold.append("\n            __FUNC_0_current_wins();");
@@ -16235,7 +16235,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        }");
     gold.append("\n      }");
     gold.append("\n      __track(22);");
-    gold.append("\n      if ((_squares.iterate(false).where(true, new __CLOSURE_WhereClause4(placed))).size() == 3 || (_squares.iterate(false).where(true, new __CLOSURE_WhereClause5(placed))).size() == 3) {");
+    gold.append("\n      if (((int) (_squares.iterate(false).where(true, new __CLOSURE_WhereClause4(placed))).size()) == ((int) 3) || ((int) (_squares.iterate(false).where(true, new __CLOSURE_WhereClause5(placed))).size()) == ((int) 3)) {");
     gold.append("\n        __code_cost += 3;");
     gold.append("\n        __track(23);");
     gold.append("\n        __FUNC_0_current_wins();");
@@ -16287,7 +16287,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      __track(30);");
     gold.append("\n      playerX.set(__who);");
     gold.append("\n      __track(31);");
-    gold.append("\n      if (!(playerO.get()).equals(NtPrincipal.NO_ONE)) {");
+    gold.append("\n      if (!((playerO.get()).equals(NtPrincipal.NO_ONE))) {");
     gold.append("\n        __code_cost += 2;");
     gold.append("\n        __track(32);");
     gold.append("\n        __transitionStateMachine(\"initiate\", 0);");
@@ -16297,7 +16297,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      __track(33);");
     gold.append("\n      playerO.set(__who);");
     gold.append("\n      __track(34);");
-    gold.append("\n      if (!(playerX.get()).equals(NtPrincipal.NO_ONE)) {");
+    gold.append("\n      if (!((playerX.get()).equals(NtPrincipal.NO_ONE))) {");
     gold.append("\n        __code_cost += 2;");
     gold.append("\n        __track(35);");
     gold.append("\n        __transitionStateMachine(\"initiate\", 0);");
@@ -16416,7 +16416,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxSquare __obj) {");
     gold.append("\n      int state = __obj.state.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return state == 0;");
+    gold.append("\n      return ((int) state) == ((int) 0);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxSquare> {");
@@ -16438,7 +16438,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxSquare __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == pick.id;");
+    gold.append("\n      return ((int) id) == ((int) pick.id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxSquare> {");
@@ -16463,7 +16463,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      int state = __obj.state.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x == k && state == placed;");
+    gold.append("\n      return ((int) x) == ((int) k) && ((int) state) == ((int) placed);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause3 implements WhereClause<RTxSquare> {");
@@ -16488,7 +16488,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      int y = __obj.y.get();");
     gold.append("\n      int state = __obj.state.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return y == k && state == placed;");
+    gold.append("\n      return ((int) y) == ((int) k) && ((int) state) == ((int) placed);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause4 implements WhereClause<RTxSquare> {");
@@ -16512,7 +16512,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      int state = __obj.state.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return y == x && state == placed;");
+    gold.append("\n      return ((int) y) == ((int) x) && ((int) state) == ((int) placed);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause5 implements WhereClause<RTxSquare> {");
@@ -16536,7 +16536,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      int state = __obj.state.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return y == 2 - x && state == placed;");
+    gold.append("\n      return ((int) y) == ((int) 2 - x) && ((int) state) == ((int) placed);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");

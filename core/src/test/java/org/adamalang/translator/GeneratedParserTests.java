@@ -13078,7 +13078,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(0);");
-    gold.append("\n      __assert_truth((__A0_X).length == 3, 5, 2, 5, 29);");
+    gold.append("\n      __assert_truth(((int) (__A0_X).length) == ((int) 3), 5, 2, 5, 29);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
@@ -21620,9 +21620,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __track(4);");
     gold.append("\n    final boolean v = false || false;");
     gold.append("\n    __track(5);");
-    gold.append("\n    final boolean eq = 1 == 2;");
+    gold.append("\n    final boolean eq = ((int) 1) == ((int) 2);");
     gold.append("\n    __track(6);");
-    gold.append("\n    final boolean ne = 1 != 2;");
+    gold.append("\n    final boolean ne = ((int) 1) != ((int) 2);");
     gold.append("\n    __track(7);");
     gold.append("\n    final boolean lt = 1 < 2;");
     gold.append("\n    __track(8);");
@@ -30130,7 +30130,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      __track(4);");
     gold.append("\n      __test_progress();");
     gold.append("\n      __track(5);");
-    gold.append("\n      __assert_truth(x.get() == 2, 17, 2, 17, 16);");
+    gold.append("\n      __assert_truth(((int) x.get()) == ((int) 2), 17, 2, 17, 16);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
@@ -30141,7 +30141,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      __track(6);");
     gold.append("\n      __assert_truth(true, 21, 2, 21, 14);");
     gold.append("\n      __track(7);");
-    gold.append("\n      __assert_truth(x.get() == 1, 22, 2, 22, 16);");
+    gold.append("\n      __assert_truth(((int) x.get()) == ((int) 1), 22, 2, 22, 16);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
@@ -30154,7 +30154,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      __track(9);");
     gold.append("\n      __test_progress();");
     gold.append("\n      __track(10);");
-    gold.append("\n      __assert_truth(x.get() == 2, 28, 2, 28, 16);");
+    gold.append("\n      __assert_truth(((int) x.get()) == ((int) 2), 28, 2, 28, 16);");
     gold.append("\n      __track(11);");
     gold.append("\n      __assert_truth(!false, 29, 2, 29, 16);");
     gold.append("\n    }");

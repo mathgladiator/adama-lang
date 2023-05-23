@@ -1430,7 +1430,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n      __track(2);");
     gold.append("\n      __assert_truth(!(!true), 22, 2, 22, 18);");
     gold.append("\n      __track(3);");
-    gold.append("\n      __assert_truth(-(1 + 4) == -5, 23, 2, 23, 24);");
+    gold.append("\n      __assert_truth(((int) -(1 + 4)) == ((int) -5), 23, 2, 23, 24);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");

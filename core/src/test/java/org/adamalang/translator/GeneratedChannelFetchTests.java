@@ -1446,7 +1446,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n      __track(10);");
     gold.append("\n      __assert_truth(!(__blocked.get()), 32, 2, 32, 21);");
     gold.append("\n      __track(11);");
-    gold.append("\n      __assert_truth(z.get() == 12, 33, 2, 33, 17);");
+    gold.append("\n      __assert_truth(((int) z.get()) == ((int) 12), 33, 2, 33, 17);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
@@ -2209,7 +2209,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n      __track(12);");
     gold.append("\n      __assert_truth(!(__blocked.get()), 34, 2, 34, 21);");
     gold.append("\n      __track(13);");
-    gold.append("\n      __assert_truth(z.get() == -1, 35, 2, 35, 17);");
+    gold.append("\n      __assert_truth(((int) z.get()) == ((int) -1), 35, 2, 35, 17);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");

@@ -2497,7 +2497,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      int y = __obj.y.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x == y;");
+    gold.append("\n      return ((int) x) == ((int) y);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxIssues> {");
@@ -2517,7 +2517,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxIssues __obj) {");
     gold.append("\n      int z = __obj.z.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return z == 123;");
+    gold.append("\n      return ((int) z) == ((int) 123);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxIssues> {");
@@ -2539,7 +2539,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      int z = __obj.z.get();");
     gold.append("\n      int u = __obj.u.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return z == 42 && u == 13;");
+    gold.append("\n      return ((int) z) == ((int) 42) && ((int) u) == ((int) 13);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
@@ -4769,7 +4769,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int y = __obj.y.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return y == 2;");
+    gold.append("\n      return ((int) y) == ((int) 2);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxX> {");
@@ -4787,7 +4787,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int y = __obj.y.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return y == 2;");
+    gold.append("\n      return ((int) y) == ((int) 2);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxX> {");
@@ -4805,7 +4805,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int y = __obj.y.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return y == 2;");
+    gold.append("\n      return ((int) y) == ((int) 2);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause3 implements WhereClause<RTxX> {");
@@ -4823,7 +4823,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x == 1;");
+    gold.append("\n      return ((int) x) == ((int) 1);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause4 implements WhereClause<RTxX> {");
@@ -4859,7 +4859,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x == 5;");
+    gold.append("\n      return ((int) x) == ((int) 5);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private final static Comparator<RTxX> __ORDER_X_x_a = new Comparator<RTxX>() {");
@@ -6305,7 +6305,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxAssoc __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x == r.x.get();");
+    gold.append("\n      return ((int) x) == ((int) r.x.get());");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxAssoc> {");
@@ -6326,7 +6326,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public boolean test(RTxAssoc it) {");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return z.x.get() == it.x.get();");
+    gold.append("\n      return ((int) z.x.get()) == ((int) it.x.get());");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxAssoc> {");
@@ -6348,7 +6348,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxAssoc __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return zz.x.get() == x;");
+    gold.append("\n      return ((int) zz.x.get()) == ((int) x);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_Lambda3 implements Function<RTxR, Integer> {");
@@ -8541,7 +8541,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x == x0;");
+    gold.append("\n      return ((int) x) == ((int) x0);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxX> {");
@@ -8565,7 +8565,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x == x0 || x == x1;");
+    gold.append("\n      return ((int) x) == ((int) x0) || ((int) x) == ((int) x1);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
@@ -9407,7 +9407,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x == 1 || x == 2;");
+    gold.append("\n      return ((int) x) == ((int) 1) || ((int) x) == ((int) 2);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
@@ -10435,7 +10435,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int z = __obj.z.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return z == 50;");
+    gold.append("\n      return ((int) z) == ((int) 50);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause3 implements WhereClause<RTxX> {");
@@ -11257,7 +11257,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == 42;");
+    gold.append("\n      return ((int) id) == ((int) 42);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxX> {");
@@ -11275,7 +11275,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return 42 == id;");
+    gold.append("\n      return ((int) 42) == ((int) id);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxX> {");
@@ -11292,7 +11292,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public boolean test(RTxX x) {");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return 42 == x.id.get();");
+    gold.append("\n      return ((int) 42) == ((int) x.id.get());");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause3 implements WhereClause<RTxX> {");
@@ -11309,7 +11309,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public boolean test(RTxX x) {");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x.id.get() == 42;");
+    gold.append("\n      return ((int) x.id.get()) == ((int) 42);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause4 implements WhereClause<RTxX> {");
@@ -11326,7 +11326,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public boolean test(RTxX x) {");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (x.id.get()) == 42;");
+    gold.append("\n      return ((int) (x.id.get())) == ((int) 42);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause5 implements WhereClause<RTxX> {");
@@ -11343,7 +11343,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public boolean test(RTxX x) {");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x.id.get() == (42);");
+    gold.append("\n      return ((int) x.id.get()) == ((int) (42));");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause6 implements WhereClause<RTxX> {");
@@ -11360,7 +11360,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public boolean test(RTxX x) {");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (x.id.get() == 42);");
+    gold.append("\n      return (((int) x.id.get()) == ((int) 42));");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause7 implements WhereClause<RTxX> {");
@@ -11377,7 +11377,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public boolean test(RTxX x) {");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (x.id.get() == 42 && x.z.get() == 50);");
+    gold.append("\n      return (((int) x.id.get()) == ((int) 42) && ((int) x.z.get()) == ((int) 50));");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause8 implements WhereClause<RTxX> {");
@@ -11394,7 +11394,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public boolean test(RTxX x) {");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (x.z.get() == 50 && x.id.get() == 42);");
+    gold.append("\n      return (((int) x.z.get()) == ((int) 50) && ((int) x.id.get()) == ((int) 42));");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause9 implements WhereClause<RTxX> {");
@@ -11413,7 +11413,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      int z = __obj.z.get();");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return z == 50 && id == 42;");
+    gold.append("\n      return ((int) z) == ((int) 50) && ((int) id) == ((int) 42);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause10 implements WhereClause<RTxX> {");
@@ -11432,7 +11432,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      int z = __obj.z.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return id == 42 && z == 50 && z == 50 && z == 50 && z == 50;");
+    gold.append("\n      return ((int) id) == ((int) 42) && ((int) z) == ((int) 50) && ((int) z) == ((int) 50) && ((int) z) == ((int) 50) && ((int) z) == ((int) 50);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause11 implements WhereClause<RTxX> {");
@@ -11451,7 +11451,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      int z = __obj.z.get();");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return z == 50 && z == 50 && z == 50 && z == 50 && id == 42;");
+    gold.append("\n      return ((int) z) == ((int) 50) && ((int) z) == ((int) 50) && ((int) z) == ((int) 50) && ((int) z) == ((int) 50) && ((int) id) == ((int) 42);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");

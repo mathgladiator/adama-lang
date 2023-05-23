@@ -1691,7 +1691,7 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n    __track(0);");
     gold.append("\n    __invoke(\"change_x\");");
     gold.append("\n    __track(1);");
-    gold.append("\n    __assert_truth(x.get() == 42, 5, 2, 5, 15);");
+    gold.append("\n    __assert_truth(((int) x.get()) == ((int) 42), 5, 2, 5, 15);");
     gold.append("\n  }");
     gold.append("\n  private void __step_change_x() {");
     gold.append("\n    __code_cost += 2;");

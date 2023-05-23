@@ -1567,8 +1567,8 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n    f219 = new RxLazy<String>(this, () -> (\"x\" + (LibArithmetic.Multiply.CI(new NtComplex(0.0, 1.0), 0))));");
     gold.append("\n    f220 = new RxLazy<String>(this, () -> (\"x\" + (LibArithmetic.Divide.CD(new NtComplex(0.0, 1.0), 0.0))));");
     gold.append("\n    f221 = new RxLazy<String>(this, () -> (\"x\" + \"x\"));");
-    gold.append("\n    f222 = new RxLazy<String>(this, () -> (\"x\" + new NtMaybe<String>(\"x\")));");
-    gold.append("\n    f223 = new RxLazy<String>(this, () -> (\"x\" + new NtMaybe<String>()));");
+    gold.append("\n    f222 = new RxLazy<String>(this, () -> (\"x\" + (new NtMaybe<String>(\"x\")).toString()));");
+    gold.append("\n    f223 = new RxLazy<String>(this, () -> (\"x\" + (new NtMaybe<String>()).toString()));");
     gold.append("\n    f224 = new RxLazy<String>(this, () -> ((new NtMaybe<String>(\"x\")).toString() + 1));");
     gold.append("\n    f225 = new RxLazy<String>(this, () -> ((new NtMaybe<String>(\"x\")).toString() + 1L));");
     gold.append("\n    f226 = new RxLazy<String>(this, () -> ((new NtMaybe<String>(\"x\")).toString() + 0.5));");
@@ -1582,9 +1582,9 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n    f234 = new RxLazy<String>(this, () -> ((new NtMaybe<String>(\"x\")).toString() + 0.0));");
     gold.append("\n    f235 = new RxLazy<String>(this, () -> ((new NtMaybe<String>(\"x\")).toString() + (LibArithmetic.Multiply.CI(new NtComplex(0.0, 1.0), 0))));");
     gold.append("\n    f236 = new RxLazy<String>(this, () -> ((new NtMaybe<String>(\"x\")).toString() + (LibArithmetic.Divide.CD(new NtComplex(0.0, 1.0), 0.0))));");
-    gold.append("\n    f237 = new RxLazy<String>(this, () -> (new NtMaybe<String>(\"x\") + \"x\"));");
-    gold.append("\n    f238 = new RxLazy<String>(this, () -> ((new NtMaybe<String>(\"x\")).toString() + new NtMaybe<String>(\"x\")));");
-    gold.append("\n    f239 = new RxLazy<String>(this, () -> ((new NtMaybe<String>(\"x\")).toString() + new NtMaybe<String>()));");
+    gold.append("\n    f237 = new RxLazy<String>(this, () -> ((new NtMaybe<String>(\"x\")).toString() + \"x\"));");
+    gold.append("\n    f238 = new RxLazy<String>(this, () -> ((new NtMaybe<String>(\"x\")).toString() + (new NtMaybe<String>(\"x\")).toString()));");
+    gold.append("\n    f239 = new RxLazy<String>(this, () -> ((new NtMaybe<String>(\"x\")).toString() + (new NtMaybe<String>()).toString()));");
     gold.append("\n    f240 = new RxLazy<String>(this, () -> ((new NtMaybe<String>()).toString() + 1));");
     gold.append("\n    f241 = new RxLazy<String>(this, () -> ((new NtMaybe<String>()).toString() + 1L));");
     gold.append("\n    f242 = new RxLazy<String>(this, () -> ((new NtMaybe<String>()).toString() + 0.5));");
@@ -1598,9 +1598,9 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n    f250 = new RxLazy<String>(this, () -> ((new NtMaybe<String>()).toString() + 0.0));");
     gold.append("\n    f251 = new RxLazy<String>(this, () -> ((new NtMaybe<String>()).toString() + (LibArithmetic.Multiply.CI(new NtComplex(0.0, 1.0), 0))));");
     gold.append("\n    f252 = new RxLazy<String>(this, () -> ((new NtMaybe<String>()).toString() + (LibArithmetic.Divide.CD(new NtComplex(0.0, 1.0), 0.0))));");
-    gold.append("\n    f253 = new RxLazy<String>(this, () -> (new NtMaybe<String>() + \"x\"));");
-    gold.append("\n    f254 = new RxLazy<String>(this, () -> ((new NtMaybe<String>()).toString() + new NtMaybe<String>(\"x\")));");
-    gold.append("\n    f255 = new RxLazy<String>(this, () -> ((new NtMaybe<String>()).toString() + new NtMaybe<String>()));");
+    gold.append("\n    f253 = new RxLazy<String>(this, () -> ((new NtMaybe<String>()).toString() + \"x\"));");
+    gold.append("\n    f254 = new RxLazy<String>(this, () -> ((new NtMaybe<String>()).toString() + (new NtMaybe<String>(\"x\")).toString()));");
+    gold.append("\n    f255 = new RxLazy<String>(this, () -> ((new NtMaybe<String>()).toString() + (new NtMaybe<String>()).toString()));");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

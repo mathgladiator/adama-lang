@@ -595,9 +595,9 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 3;");
     gold.append("\n      __track(0);");
-    gold.append("\n      __assert_truth(x.get() == 3, 16, 2, 16, 16);");
+    gold.append("\n      __assert_truth(((int) x.get()) == ((int) 3), 16, 2, 16, 16);");
     gold.append("\n      __track(1);");
-    gold.append("\n      __assert_truth(y.get() == 6, 17, 2, 17, 16);");
+    gold.append("\n      __assert_truth(((int) y.get()) == ((int) 6), 17, 2, 17, 16);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");

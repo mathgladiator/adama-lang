@@ -7550,7 +7550,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __track(1);");
     gold.append("\n      final String y = LibString.reverse(x);");
     gold.append("\n      __track(2);");
-    gold.append("\n      __assert_truth(x.length() == 3, 7, 2, 7, 25);");
+    gold.append("\n      __assert_truth(((int) x.length()) == ((int) 3), 7, 2, 7, 25);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
@@ -7563,13 +7563,13 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __track(4);");
     gold.append("\n      final String z = LibString.reverse(y.get());");
     gold.append("\n      __track(5);");
-    gold.append("\n      __assert_truth(y.get().length() == 3, 21, 2, 21, 25);");
+    gold.append("\n      __assert_truth(((int) y.get().length()) == ((int) 3), 21, 2, 21, 25);");
     gold.append("\n      __track(6);");
     gold.append("\n      mi.make().set(123);");
     gold.append("\n      __track(7);");
     gold.append("\n      mi.get().delete();");
     gold.append("\n      __track(8);");
-    gold.append("\n      __assert_truth(t.size() == 0, 24, 2, 24, 23);");
+    gold.append("\n      __assert_truth(((int) t.size()) == ((int) 0), 24, 2, 24, 23);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
