@@ -15,9 +15,11 @@ public class Command {
     public String name;
     public String documentation;
     public boolean danger;
+    public String camel;
 
     public Command(String name, String documentation, String output, boolean danger, Argument[] argList) {
         this.name = name;
+        this.camel = Common.camelize(name, true);
         this.capName = Common.camelize(name);
         this.documentation = documentation;
         this.argList = argList;

@@ -5,6 +5,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Common {
 
     public static Node getFirstNode(NodeList nodeList) {
@@ -19,9 +22,7 @@ public class Common {
         return "";
 
     }
-    public static String lJust(String string, int spacing) {
-        return String.format("%-" + spacing + "s", string);
-    }
+
     public static String camelize(String name) {
         String returnString = "";
         String[] splitString = name.split("-");
@@ -29,6 +30,36 @@ public class Common {
             returnString += capitalize(word);
         }
         return returnString;
+    }
+
+    public static String escape(String s){
+        Pattern pattern = Pattern.compile("\\s{2,}");
+
+        String returnString = s.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", " ");
+
+        Matcher matcher = pattern.matcher(returnString);
+        returnString = matcher.replaceAll(" ");
+        return returnString;
+    }
+    public static String camelize(String name, boolean firstLower) {
+        if (firstLower) {
+            String returnString = "";
+            String[] splitString = name.split("-");
+            boolean first = true;
+            for (String word : splitString) {
+                if (first) {
+                    returnString += word;
+                    first = false;
+                    continue;
+                }
+                returnString += capitalize(word);
+            }
+            return returnString;
+        } else {
+            return camelize(name);
+        }
     }
     public static String getDocumentation(Node itemNode, XMLFormatException givenException) throws Exception {
 

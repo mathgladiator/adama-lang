@@ -47,20 +47,16 @@ public class Argument {
                 givenException.addToExceptionStack("Argument \"" + argName + "\" is not a defined argument");
             else
                 argDef = arguments.get(argName);
-            String argOptional = argElem.getAttribute("optional");
-
             boolean optional = false;
-            if (argOptional.equals("true")) {
+            if (argElem.hasAttribute("default")) {
                 optional = true;
-            } else if (argOptional.equals("false") || argOptional == null || argOptional.trim().isEmpty()) {
-                optional = false;
-            } else {
-                givenException.addToExceptionStack("Argument \"" + argName +  "\" optional value should be either true, false, or empty. Got \""+
-                        argOptional + "\"");
             }
+
             String defaultValue = argElem.getAttribute("default");
             String headerType = argElem.getAttribute("type");
+
             Argument argument;
+
             if (argDef != null)
                 argument = new Argument(argName, optional, defaultValue, argDef);
             else

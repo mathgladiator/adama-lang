@@ -8,6 +8,92 @@
         </documentation>
     </arg-definition>
 
+    <!-- May have to represent the actual representation-->
+    <arg-definition name="file" type="string" short="f">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="plan" type="string" short="p">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="gc" type="boolean" short="g">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="limit" type="int" short="l">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="key" type="string" short="k">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="marker" type="string" short="m">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="output" type="file" short="o">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="email" type="string" short="e">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="role" type="string" short="r">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="validate" type="file" short="v">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="authority" type="string" short="a">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="agent" type="string" short="ag">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="keystore" type="file" short="k">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="priv" type="file" short="p">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+
     <!-- groups collect commands -->
     <group name="space">
         <documentation>
@@ -19,5 +105,165 @@
                 Create a space
             </documentation>
         </command>
+
+        <command name="delete">
+            <arg name="space" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="deploy">
+            <arg name="space" />
+            <arg name="plan" />
+            <arg name="file" default="null" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="set-rxhtml">
+            <arg name="space" />
+            <arg name="file" default="null" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="upload">
+            <arg name="space" />
+            <arg name="gc" default="no" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="download">
+            <arg name="space" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="list">
+            <arg name="marker" default="" />
+            <arg name="limit" default="100" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="usage">
+            <arg name="space" />
+            <arg name="limit" default="336" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="reflect">
+            <arg name="space" />
+            <arg name="marker" />
+            <arg name="output" />
+            <arg name="limit" default="336" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="set-role">
+            <arg name="space" />
+            <arg name="marker" />
+            <arg name="email" default="" />
+            <arg name="role" default="none" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="generate-key">
+            <arg name="space" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="encrypt-secret">
+            <arg name="space" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
     </group>
+    <group name="authority">
+        <documentation>
+            Placeholder
+        </documentation>
+
+        <command name="create">
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="set">
+            <arg name="authority" />
+            <arg name="keystore" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="get">
+            <arg name="authority" />
+            <arg name="keystore" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="destroy">
+            <arg name="authority" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="list">
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="create-local">
+            <arg name="authority" />
+            <arg name="keystore" />
+            <arg name="priv" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="append-local">
+            <arg name="authority" />
+            <arg name="keystore" />
+            <arg name="priv" />
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="sign">
+            <arg name="key" />
+            <arg name="agent" />
+            <arg name="validate" default="null" />
+
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+    </group>
+
+
 </cli>

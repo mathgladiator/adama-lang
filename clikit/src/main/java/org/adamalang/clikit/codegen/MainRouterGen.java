@@ -24,24 +24,20 @@ public class MainRouterGen {
 
         for (Group group : groupList) {
             sb.append("      case \"").append(group.name).append("\":\n");
-            sb.append("        ").append(group.capName).append("Router ").append(group.name).append("Router = createRouter();\n");
-            sb.append("        return ").append(group.name).append("Router.route(arguments);\n");
+            sb.append("        ").append(group.capName).append("Handler ").append(group.name).append("Handler = create").append(group.capName).append("Handler();\n");
+            sb.append("        return ").append(group.name).append("Handler.route(arguments);\n");
         }
 
         sb.append("      default:\n");
         // Can just get all the groups and stuff... yea
-        sb.append("        return displayHelp();\n");
+        sb.append("        return Help.displayHelp();\n");
         sb.append("    }\n");
         sb.append("  }\n");
 
         for (Group group : groupList) {
             //TODO: add for commands in main.
-            sb.append("  ").append(group.capName).append("Router createRouter();\n");
+            sb.append("  ").append(group.capName).append("Handler create").append(group.capName).append("Handler();\n");
         }
-
-        sb.append("  default int displayHelp() {\n");
-        sb.append("    return 0;\n");
-        sb.append("  }\n");
         sb.append("}");
 
 

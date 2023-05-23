@@ -54,11 +54,17 @@ public class Argument {
                         command = thisCommand;
                         argStart = 2;
                     } else {
-                        System.out.println("Command '" + args[1] + "' is not a valid command of '" + group + "'. See 'adama.jar " + group + " --help'");
+                        System.out.println("Command '" + args[1] + "' is not a valid command of '" + group.name + "'. See 'adama.jar " + group.name + " --help'");
                         valid = false;
                     }
                 }
             }
+        }
+
+        if (argStart == 2 && argStart < args.length && Util.equalsMultiple(args[argStart], "--help", "-h")) {
+            Help.displayHelp(group.name, command.name);
+            valid = false;
+            return;
         }
 
         Map<String, ArgumentItem> loop;
@@ -67,20 +73,8 @@ public class Argument {
         } else {
             loop = group.Arguments;
         }
-//
-//
-//        // This only confirms if the arguments are in the hashmap.
-//        for (int i = 2; i < args.length; i++) {
-//            ArgumentItem current = loop.get(args[i]);
-//            if (current != null) {
-//                // If it is a flag, then go next , if it is type, then skip two.
-//                arguments.put(args[i], current);
-//            } else {
-//                anyInvalid = true;
-//                System.out.println("Argument '" + args[i] + "' is not a valid argument.");
-//            }
-//
-//        }
+
+
 
         boolean anyInvalid = false;
         // Does not check for arguments that are not available...
@@ -110,19 +104,20 @@ public class Argument {
                 System.out.println("Expected string for argument '" + val.name + "'.");
             } else {
                 if (val.optional) {
-                    val.value = val.defaultArg;
+                    if (val.defaultArg.equals("null")) {
+                        val.value = null;
+                    } else {
+                        val.value = val.defaultArg;
+                    }
                 } else {
                     anyInvalid = true;
                     System.out.println("Expected argument '" + val.name + "'");
                 }
             }
-
-
         }
-
         if (anyInvalid) {
             valid = false;
-            System.out.println("See 'adama.jar " + (group != null ? group + " " : "") + (command != null ? command + " " : "") + "--help'");
+            System.out.println("See 'adama.jar " + (group != null ? group.name + " " : "") + (command != null ? command.name + " " : "") + "--help'");
         }
     }
 }

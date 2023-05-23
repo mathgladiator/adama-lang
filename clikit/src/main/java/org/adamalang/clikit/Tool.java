@@ -3,7 +3,7 @@ package org.adamalang.clikit;
 import org.adamalang.clikit.codegen.ArgumentTypeGen;
 import org.adamalang.clikit.codegen.CliElementGen;
 import org.adamalang.clikit.codegen.MainRouterGen;
-import org.adamalang.clikit.codegen.RouterGen;
+import org.adamalang.clikit.codegen.HandlerGen;
 import org.adamalang.clikit.exceptions.XMLFormatException;
 import org.adamalang.clikit.model.ArgDefinition;
 import org.adamalang.clikit.model.Common;
@@ -66,7 +66,7 @@ public class Tool {
         String mainGen = MainRouterGen.generate(groupList, packageName);
         String cliGen = CliElementGen.generate(arguments, groupList, packageName);
         String argumentTypeGen = ArgumentTypeGen.generate(groupList, packageName);
-        Map<String, String> routerGens = RouterGen.generate(groupList, packageName);
+        Map<String, String> routerGens = HandlerGen.generate(groupList, packageName);
         Map<String, String> stringMap = new TreeMap<>();
 
         stringMap.put("RootHandler.java", mainGen);

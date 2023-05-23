@@ -19,7 +19,7 @@ public class ArgumentTypeGen {
                 }
                 sb.append("    public ").append(command.capName).append(group.capName).append("Args(Argument arg) {\n");
                 for (Argument argument : command.argList) {
-                    sb.append("      this.").append(argument.name).append(" = ").append(" arg.arguments.get(\"--").append(argument.name).append("\").value;\n");
+                    sb.append("      this.").append(argument.name).append(" = ").append("arg.arguments.get(\"--").append(argument.name).append("\").value;\n");
                 }
                 sb.append("    }\n");
                 sb.append("  }\n\n");

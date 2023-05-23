@@ -66,6 +66,10 @@ public class Util {
     return false;
   }
 
+  public static String lJust(String string, int spacing) {
+    return String.format("%-" + spacing + "s", string);
+  }
+  public static String rJust(String string, int spacing) { return String.format("%" + spacing + "s", string); }
 
 
   public enum ANSI {

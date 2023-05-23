@@ -12,14 +12,15 @@ public interface RootHandler {
 
     switch (arguments.group.name) {
       case "space":
-        SpaceRouter spaceRouter = createRouter();
-        return spaceRouter.route(arguments);
+        SpaceHandler spaceHandler = createSpaceHandler();
+        return spaceHandler.route(arguments);
+      case "authority":
+        AuthorityHandler authorityHandler = createAuthorityHandler();
+        return authorityHandler.route(arguments);
       default:
-        return displayHelp();
+        return Help.displayHelp();
     }
   }
-  SpaceRouter createRouter();
-  default int displayHelp() {
-    return 0;
-  }
+  SpaceHandler createSpaceHandler();
+  AuthorityHandler createAuthorityHandler();
 }
