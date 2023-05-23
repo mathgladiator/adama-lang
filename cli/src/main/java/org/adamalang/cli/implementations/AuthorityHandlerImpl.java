@@ -3,9 +3,10 @@ package org.adamalang.cli.implementations;
 import org.adamalang.cli.router.ArgumentType;
 import org.adamalang.cli.router.AuthorityHandler;
 
-public class AuthorityHandlerImpl implements AuthorityHandler {
+public class AuthorityHandlerImpl implements  AuthorityHandler{
+
     @Override
-    public int createAuthority(ArgumentType.CreateAuthorityArgs args, String output) {
+    public int createAuthority(String output) {
         return 0;
     }
 
@@ -25,7 +26,7 @@ public class AuthorityHandlerImpl implements AuthorityHandler {
     }
 
     @Override
-    public int listAuthority(ArgumentType.ListAuthorityArgs args, String output) {
+    public int listAuthority(String output) {
         return 0;
     }
 

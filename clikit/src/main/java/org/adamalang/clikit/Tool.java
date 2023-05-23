@@ -6,6 +6,7 @@ import org.adamalang.clikit.codegen.MainRouterGen;
 import org.adamalang.clikit.codegen.HandlerGen;
 import org.adamalang.clikit.exceptions.XMLFormatException;
 import org.adamalang.clikit.model.ArgDefinition;
+import org.adamalang.clikit.model.Command;
 import org.adamalang.clikit.model.Common;
 import org.adamalang.clikit.model.Group;
 import org.w3c.dom.Document;
@@ -51,9 +52,16 @@ public class Tool {
         Map<String, ArgDefinition> arguments = ArgDefinition.createMap(doc);
 
         NodeList groupNodes = doc.getElementsByTagName("group");
-
+        NodeList commandNodes = doc.getElementsByTagName("command");
         // Create all the groups.
         Group[] groupList = Group.createGroupList(groupNodes, exceptionTrack, arguments);
+
+        // Main commands in main group
+
+        Command[] mainCommandList = Command.createCommandList(commandNodes, exceptionTrack, arguments, "cli");
+
+
+
 
         if (exceptionTrack.isActive) {
             throw exceptionTrack;
@@ -63,7 +71,7 @@ public class Tool {
         for (Group group : groupList) {
             helpString.append(group.name + " ").append(group.documentation).append("\n");
         }
-        String mainGen = MainRouterGen.generate(groupList, packageName);
+        String mainGen = MainRouterGen.generate(groupList, mainCommandList ,packageName);
         String cliGen = CliElementGen.generate(arguments, groupList, packageName);
         String argumentTypeGen = ArgumentTypeGen.generate(groupList, packageName);
         Map<String, String> routerGens = HandlerGen.generate(groupList, packageName);

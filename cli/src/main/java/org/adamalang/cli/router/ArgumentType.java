@@ -109,11 +109,6 @@ public class ArgumentType {
     }
   }
 
-  public static class CreateAuthorityArgs {
-    public CreateAuthorityArgs(Argument arg) {
-    }
-  }
-
   public static class SetAuthorityArgs {
     public String authority;
     public String keystore;
@@ -136,11 +131,6 @@ public class ArgumentType {
     public String authority;
     public DestroyAuthorityArgs(Argument arg) {
       this.authority = arg.arguments.get("--authority").value;
-    }
-  }
-
-  public static class ListAuthorityArgs {
-    public ListAuthorityArgs(Argument arg) {
     }
   }
 

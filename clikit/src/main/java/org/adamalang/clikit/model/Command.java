@@ -53,4 +53,36 @@ public class Command {
         }
         return commandArray.toArray(new Command[commandArray.size()]);
     }
+    public static Command[] createCommandList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgDefinition> arguments, String parent) throws Exception{
+        ArrayList<Command> commandArray = new ArrayList<>();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node commandNode = nodeList.item(i);
+            Element commandElem = (Element) commandNode;
+            // Will always have parent
+            Node parentNode = commandElem.getParentNode();
+            if (!parentNode.getNodeName().equals(parent)) {
+                continue;
+            }
+
+            String commandName = commandElem.getAttribute("name");
+            if (commandName == null || commandName.trim().isEmpty())
+                givenException.addToExceptionStack("Command name \"" + commandName + "\"can not be empty.");
+            Argument[] argumentList = Argument.createArgumentList(commandElem.getElementsByTagName("arg"), givenException, arguments);
+            boolean danger = commandElem.getAttribute("warn").equals("") ? false : true;
+            String groupDocumentation = Common.getDocumentation(commandElem, givenException);
+            String methodType = commandElem.getAttribute("method");
+            if ( methodType == null || "".equals(methodType.trim()))
+                methodType = "self";
+            String outputArg = "";
+            if (commandElem.hasAttribute("output")) {
+                outputArg = commandElem.getAttribute("output");
+            } else {
+                outputArg = null;
+            }
+
+            Command command = new Command(commandName, groupDocumentation, outputArg, danger, argumentList);
+            commandArray.add(command);
+        }
+        return commandArray.toArray(new Command[commandArray.size()]);
+    }
 }

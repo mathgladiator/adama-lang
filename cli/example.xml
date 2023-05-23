@@ -9,7 +9,7 @@
     </arg-definition>
 
     <!-- May have to represent the actual representation-->
-    <arg-definition name="file" type="string" short="f">
+    <arg-definition name="file" type="file" short="f">
         <documentation>
             Placeholder
         </documentation>
@@ -102,14 +102,14 @@
         <command name="create">
             <arg name="space" />
             <documentation>
-                Create a space
+                Creates a new space
             </documentation>
         </command>
 
         <command name="delete">
             <arg name="space" />
             <documentation>
-                Placeholder
+                Deletes an empty space
             </documentation>
         </command>
 
@@ -118,7 +118,7 @@
             <arg name="plan" />
             <arg name="file" default="null" />
             <documentation>
-                Placeholder
+                Deploy a plan to a space
             </documentation>
         </command>
 
@@ -126,7 +126,7 @@
             <arg name="space" />
             <arg name="file" default="null" />
             <documentation>
-                Placeholder
+                Set the frontend RxHTML forest
             </documentation>
         </command>
 
@@ -141,7 +141,7 @@
         <command name="download">
             <arg name="space" />
             <documentation>
-                Placeholder
+                Download a space's plan
             </documentation>
         </command>
 
@@ -149,7 +149,7 @@
             <arg name="marker" default="" />
             <arg name="limit" default="100" />
             <documentation>
-                Placeholder
+                List spaces available to your account
             </documentation>
         </command>
 
@@ -157,7 +157,7 @@
             <arg name="space" />
             <arg name="limit" default="336" />
             <documentation>
-                Placeholder
+                Iterate the billed usage
             </documentation>
         </command>
 
@@ -167,7 +167,7 @@
             <arg name="output" />
             <arg name="limit" default="336" />
             <documentation>
-                Placeholder
+                Get a file of the reflection of a space
             </documentation>
         </command>
 
@@ -177,32 +177,31 @@
             <arg name="email" default="" />
             <arg name="role" default="none" />
             <documentation>
-                Placeholder
+                Share/unshare a space with another developer
             </documentation>
         </command>
 
         <command name="generate-key">
             <arg name="space" />
             <documentation>
-                Placeholder
+                Generate a server-side key to use for storing secrets
             </documentation>
         </command>
 
         <command name="encrypt-secret">
             <arg name="space" />
             <documentation>
-                Placeholder
+                Encrypt a secret to store within code
             </documentation>
         </command>
     </group>
     <group name="authority">
         <documentation>
-            Placeholder
+            Manage authorities
         </documentation>
-
         <command name="create">
             <documentation>
-                Placeholder
+                Creates a new authority
             </documentation>
         </command>
 
@@ -210,7 +209,7 @@
             <arg name="authority" />
             <arg name="keystore" />
             <documentation>
-                Placeholder
+                Set public keys to an authority
             </documentation>
         </command>
 
@@ -218,20 +217,20 @@
             <arg name="authority" />
             <arg name="keystore" />
             <documentation>
-                Placeholder
+                Get released public keys for an authority
             </documentation>
         </command>
 
         <command name="destroy">
             <arg name="authority" />
             <documentation>
-                Placeholder
+                Destroy an authority
             </documentation>
         </command>
 
         <command name="list">
             <documentation>
-                Placeholder
+                List authorities this developer owns
             </documentation>
         </command>
 
@@ -240,7 +239,7 @@
             <arg name="keystore" />
             <arg name="priv" />
             <documentation>
-                Placeholder
+                Make a new set of public keys
             </documentation>
         </command>
 
@@ -249,7 +248,7 @@
             <arg name="keystore" />
             <arg name="priv" />
             <documentation>
-                Placeholder
+                Append a new public key to the public key file
             </documentation>
         </command>
 
@@ -257,13 +256,18 @@
             <arg name="key" />
             <arg name="agent" />
             <arg name="validate" default="null" />
-
             <documentation>
-                Placeholder
+                Sign an agent with a local private key
             </documentation>
         </command>
-
     </group>
+
+
+    <command name="init">
+        <documentation>
+            Initializes the config with a valid token
+        </documentation>
+    </command>
 
 
 </cli>

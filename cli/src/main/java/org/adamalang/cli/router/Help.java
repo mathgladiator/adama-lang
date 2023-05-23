@@ -6,9 +6,9 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Help {
+    // The Help may need to have a different format
     public static int displayHelp() {
         // Show all groups and the documentation for the groups.
-
         System.out.println(Util.prefix("Interacts with the Adama Platform.\n", Util.ANSI.Green));
         System.out.println(Util.prefix("USAGE: ", Util.ANSI.Yellow));
         System.out.println(Util.prefix("    adama ", Util.ANSI.Green) + Util.prefix("[SUBCOMMAND]\n", Util.ANSI.Magenta));
@@ -48,13 +48,11 @@ public class Help {
         System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
         System.out.println("    " + Util.prefix(Util.lJust("--config",15), Util.ANSI.Green) + "Supplies a config file path other than the default (~/.adama)");
         for (Map.Entry<String, ArgumentItem> entry : commandElem.Arguments.entrySet()) {
-            //TODO: Show the alternative as well...
             //TODO: Specify if it is optional.
             ArgumentItem item = entry.getValue();
-            System.out.println("    " + Util.prefix(Util.lJust(entry.getKey(), 15), Util.ANSI.Green) + item.documentation);
+            System.out.println("    " + Util.prefix(Util.lJust(item.shortField + ", " + entry.getKey(), 15), Util.ANSI.Green) + item.documentation);
         }
         return 0;
     }
-
 
 }

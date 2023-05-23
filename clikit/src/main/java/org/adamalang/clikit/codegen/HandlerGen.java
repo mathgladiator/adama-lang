@@ -26,9 +26,13 @@ public class HandlerGen {
             // Using switch to route, could use a hashmap to route
             handler.append("    switch (args.command.name) {\n");
             for (Command command: group.commandList) {
+                String argObjName = "";
+                if (command.argList.length > 0) {
+                    argObjName = "new " + command.capName + group.capName + "Args(args), ";
+                }
                 handler.append("      case \"").append(command.name).append("\":\n");
                 // TODO: Figure out how to get output.
-                handler.append("        return ").append(command.camel + group.capName).append("(new ").append(command.capName + group.capName + "Args(args), \"Output\");\n");
+                handler.append("        return ").append(command.camel + group.capName).append("(").append(argObjName).append("\"Output\");\n");
             }
             //Create args from argument class
             handler.append("      default:\n");
@@ -38,8 +42,11 @@ public class HandlerGen {
             handler.append("  }\n");
 
             for (Command command : group.commandList) {
-                handler.append("  int ").append(command.camel).append(group.capName).append("(").append(command.capName).append(group.capName);
-                handler.append("Args args, String output);\n");
+                String argObjName = "";
+                if (command.argList.length > 0) {
+                    argObjName = command.capName + group.capName + "Args args, ";
+                }
+                handler.append("  int ").append(command.camel).append(group.capName).append("(").append(argObjName).append("String output);\n");
             }
             handler.append("}");
             returnMap.put(upperHandler+".java",handler.toString());

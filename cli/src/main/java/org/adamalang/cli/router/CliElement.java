@@ -30,22 +30,22 @@ public class CliElement {
     HashMap<String, CliElement> spaceCommands = new HashMap<>();
     HashMap<String, ArgumentItem> createSpaceArgs = new HashMap<>();
     createSpaceArgs.put("--space", fullArgumentList.get("--space"));
-    spaceCommands.put("create", new CliElement(createSpaceArgs, "create", "Create a space"));
+    spaceCommands.put("create", new CliElement(createSpaceArgs, "create", "Creates a new space"));
 
     HashMap<String, ArgumentItem> deleteSpaceArgs = new HashMap<>();
     deleteSpaceArgs.put("--space", fullArgumentList.get("--space"));
-    spaceCommands.put("delete", new CliElement(deleteSpaceArgs, "delete", "Placeholder"));
+    spaceCommands.put("delete", new CliElement(deleteSpaceArgs, "delete", "Deletes an empty space"));
 
     HashMap<String, ArgumentItem> deploySpaceArgs = new HashMap<>();
     deploySpaceArgs.put("--space", fullArgumentList.get("--space"));
     deploySpaceArgs.put("--plan", fullArgumentList.get("--plan"));
     deploySpaceArgs.put("--file", fullArgumentList.get("--file"));
-    spaceCommands.put("deploy", new CliElement(deploySpaceArgs, "deploy", "Placeholder"));
+    spaceCommands.put("deploy", new CliElement(deploySpaceArgs, "deploy", "Deploy a plan to a space"));
 
     HashMap<String, ArgumentItem> setRxhtmlSpaceArgs = new HashMap<>();
     setRxhtmlSpaceArgs.put("--space", fullArgumentList.get("--space"));
     setRxhtmlSpaceArgs.put("--file", fullArgumentList.get("--file"));
-    spaceCommands.put("set-rxhtml", new CliElement(setRxhtmlSpaceArgs, "set-rxhtml", "Placeholder"));
+    spaceCommands.put("set-rxhtml", new CliElement(setRxhtmlSpaceArgs, "set-rxhtml", "Set the frontend RxHTML forest"));
 
     HashMap<String, ArgumentItem> uploadSpaceArgs = new HashMap<>();
     uploadSpaceArgs.put("--space", fullArgumentList.get("--space"));
@@ -54,82 +54,82 @@ public class CliElement {
 
     HashMap<String, ArgumentItem> downloadSpaceArgs = new HashMap<>();
     downloadSpaceArgs.put("--space", fullArgumentList.get("--space"));
-    spaceCommands.put("download", new CliElement(downloadSpaceArgs, "download", "Placeholder"));
+    spaceCommands.put("download", new CliElement(downloadSpaceArgs, "download", "Download a space's plan"));
 
     HashMap<String, ArgumentItem> listSpaceArgs = new HashMap<>();
     listSpaceArgs.put("--marker", fullArgumentList.get("--marker"));
     listSpaceArgs.put("--limit", fullArgumentList.get("--limit"));
-    spaceCommands.put("list", new CliElement(listSpaceArgs, "list", "Placeholder"));
+    spaceCommands.put("list", new CliElement(listSpaceArgs, "list", "List spaces available to your account"));
 
     HashMap<String, ArgumentItem> usageSpaceArgs = new HashMap<>();
     usageSpaceArgs.put("--space", fullArgumentList.get("--space"));
     usageSpaceArgs.put("--limit", fullArgumentList.get("--limit"));
-    spaceCommands.put("usage", new CliElement(usageSpaceArgs, "usage", "Placeholder"));
+    spaceCommands.put("usage", new CliElement(usageSpaceArgs, "usage", "Iterate the billed usage"));
 
     HashMap<String, ArgumentItem> reflectSpaceArgs = new HashMap<>();
     reflectSpaceArgs.put("--space", fullArgumentList.get("--space"));
     reflectSpaceArgs.put("--marker", fullArgumentList.get("--marker"));
     reflectSpaceArgs.put("--output", fullArgumentList.get("--output"));
     reflectSpaceArgs.put("--limit", fullArgumentList.get("--limit"));
-    spaceCommands.put("reflect", new CliElement(reflectSpaceArgs, "reflect", "Placeholder"));
+    spaceCommands.put("reflect", new CliElement(reflectSpaceArgs, "reflect", "Get a file of the reflection of a space"));
 
     HashMap<String, ArgumentItem> setRoleSpaceArgs = new HashMap<>();
     setRoleSpaceArgs.put("--space", fullArgumentList.get("--space"));
     setRoleSpaceArgs.put("--marker", fullArgumentList.get("--marker"));
     setRoleSpaceArgs.put("--email", fullArgumentList.get("--email"));
     setRoleSpaceArgs.put("--role", fullArgumentList.get("--role"));
-    spaceCommands.put("set-role", new CliElement(setRoleSpaceArgs, "set-role", "Placeholder"));
+    spaceCommands.put("set-role", new CliElement(setRoleSpaceArgs, "set-role", "Share/unshare a space with another developer"));
 
     HashMap<String, ArgumentItem> generateKeySpaceArgs = new HashMap<>();
     generateKeySpaceArgs.put("--space", fullArgumentList.get("--space"));
-    spaceCommands.put("generate-key", new CliElement(generateKeySpaceArgs, "generate-key", "Placeholder"));
+    spaceCommands.put("generate-key", new CliElement(generateKeySpaceArgs, "generate-key", "Generate a server-side key to use for storing secrets"));
 
     HashMap<String, ArgumentItem> encryptSecretSpaceArgs = new HashMap<>();
     encryptSecretSpaceArgs.put("--space", fullArgumentList.get("--space"));
-    spaceCommands.put("encrypt-secret", new CliElement(encryptSecretSpaceArgs, "encrypt-secret", "Placeholder"));
+    spaceCommands.put("encrypt-secret", new CliElement(encryptSecretSpaceArgs, "encrypt-secret", "Encrypt a secret to store within code"));
 
     returnMap.put("space", new CliElement(spaceCommands, "space", "group", "Provides command related to working with space collections..."));
 
     HashMap<String, CliElement> authorityCommands = new HashMap<>();
     HashMap<String, ArgumentItem> createAuthorityArgs = new HashMap<>();
-    authorityCommands.put("create", new CliElement(createAuthorityArgs, "create", "Placeholder"));
+    authorityCommands.put("create", new CliElement(createAuthorityArgs, "create", "Creates a new authority"));
 
     HashMap<String, ArgumentItem> setAuthorityArgs = new HashMap<>();
     setAuthorityArgs.put("--authority", fullArgumentList.get("--authority"));
     setAuthorityArgs.put("--keystore", fullArgumentList.get("--keystore"));
-    authorityCommands.put("set", new CliElement(setAuthorityArgs, "set", "Placeholder"));
+    authorityCommands.put("set", new CliElement(setAuthorityArgs, "set", "Set public keys to an authority"));
 
     HashMap<String, ArgumentItem> getAuthorityArgs = new HashMap<>();
     getAuthorityArgs.put("--authority", fullArgumentList.get("--authority"));
     getAuthorityArgs.put("--keystore", fullArgumentList.get("--keystore"));
-    authorityCommands.put("get", new CliElement(getAuthorityArgs, "get", "Placeholder"));
+    authorityCommands.put("get", new CliElement(getAuthorityArgs, "get", "Get released public keys for an authority"));
 
     HashMap<String, ArgumentItem> destroyAuthorityArgs = new HashMap<>();
     destroyAuthorityArgs.put("--authority", fullArgumentList.get("--authority"));
-    authorityCommands.put("destroy", new CliElement(destroyAuthorityArgs, "destroy", "Placeholder"));
+    authorityCommands.put("destroy", new CliElement(destroyAuthorityArgs, "destroy", "Destroy an authority"));
 
     HashMap<String, ArgumentItem> listAuthorityArgs = new HashMap<>();
-    authorityCommands.put("list", new CliElement(listAuthorityArgs, "list", "Placeholder"));
+    authorityCommands.put("list", new CliElement(listAuthorityArgs, "list", "List authorities this developer owns"));
 
     HashMap<String, ArgumentItem> createLocalAuthorityArgs = new HashMap<>();
     createLocalAuthorityArgs.put("--authority", fullArgumentList.get("--authority"));
     createLocalAuthorityArgs.put("--keystore", fullArgumentList.get("--keystore"));
     createLocalAuthorityArgs.put("--priv", fullArgumentList.get("--priv"));
-    authorityCommands.put("create-local", new CliElement(createLocalAuthorityArgs, "create-local", "Placeholder"));
+    authorityCommands.put("create-local", new CliElement(createLocalAuthorityArgs, "create-local", "Make a new set of public keys"));
 
     HashMap<String, ArgumentItem> appendLocalAuthorityArgs = new HashMap<>();
     appendLocalAuthorityArgs.put("--authority", fullArgumentList.get("--authority"));
     appendLocalAuthorityArgs.put("--keystore", fullArgumentList.get("--keystore"));
     appendLocalAuthorityArgs.put("--priv", fullArgumentList.get("--priv"));
-    authorityCommands.put("append-local", new CliElement(appendLocalAuthorityArgs, "append-local", "Placeholder"));
+    authorityCommands.put("append-local", new CliElement(appendLocalAuthorityArgs, "append-local", "Append a new public key to the public key file"));
 
     HashMap<String, ArgumentItem> signAuthorityArgs = new HashMap<>();
     signAuthorityArgs.put("--key", fullArgumentList.get("--key"));
     signAuthorityArgs.put("--agent", fullArgumentList.get("--agent"));
     signAuthorityArgs.put("--validate", fullArgumentList.get("--validate"));
-    authorityCommands.put("sign", new CliElement(signAuthorityArgs, "sign", "Placeholder"));
+    authorityCommands.put("sign", new CliElement(signAuthorityArgs, "sign", "Sign an agent with a local private key"));
 
-    returnMap.put("authority", new CliElement(authorityCommands, "authority", "group", "Placeholder"));
+    returnMap.put("authority", new CliElement(authorityCommands, "authority", "group", "Manage authorities"));
 
     return returnMap;
   }

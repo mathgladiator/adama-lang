@@ -17,10 +17,13 @@ public interface RootHandler {
       case "authority":
         AuthorityHandler authorityHandler = createAuthorityHandler();
         return authorityHandler.route(arguments);
+      case "init":
+        return init("Output");
       default:
         return Help.displayHelp();
     }
   }
   SpaceHandler createSpaceHandler();
   AuthorityHandler createAuthorityHandler();
+  int init(String output);
 }

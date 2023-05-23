@@ -11,7 +11,8 @@ public class ArgumentTypeGen {
         sb.append("public class ArgumentType {\n");
         for (Group group: groups) {
             for (Command command : group.commandList) {
-                //TODO: If command does not have arguments, can skip, but for now, ALL OF THEM DO
+                if (command.argList.length == 0)
+                    continue;
                 sb.append("  public static class ").append(command.capName).append(group.capName).append("Args {\n");
                 for (Argument argument : command.argList) {
                     //Argument could be a dash type, so be careful of that...

@@ -4,7 +4,7 @@ import org.adamalang.clikit.model.Command;
 import org.adamalang.clikit.model.Group;
 
 public class MainRouterGen {
-    public static String generate(Group[] groupList, String packageName) {
+    public static String generate(Group[] groupList, Command[] commandList, String packageName) {
         StringBuilder sb = new StringBuilder();
         sb.append("package " + packageName + ";\n\n");
         sb.append("public interface RootHandler {\n");
@@ -27,16 +27,29 @@ public class MainRouterGen {
             sb.append("        ").append(group.capName).append("Handler ").append(group.name).append("Handler = create").append(group.capName).append("Handler();\n");
             sb.append("        return ").append(group.name).append("Handler.route(arguments);\n");
         }
+        for (Command command : commandList) {
+            String argObjName = "";
+            if (command.argList.length > 0) {
+                argObjName = "new " + command.capName + "Args(arguments), ";
+            }
+            sb.append("      case \"").append(command.name).append("\":\n");
+            sb.append("        return ").append(command.camel).append("(").append(argObjName).append("\"Output\");\n");
+        }
 
         sb.append("      default:\n");
-        // Can just get all the groups and stuff... yea
         sb.append("        return Help.displayHelp();\n");
         sb.append("    }\n");
         sb.append("  }\n");
 
         for (Group group : groupList) {
-            //TODO: add for commands in main.
             sb.append("  ").append(group.capName).append("Handler create").append(group.capName).append("Handler();\n");
+        }
+        for (Command command : commandList) {
+            String argObjName = "";
+            if (command.argList.length > 0) {
+                argObjName = command.capName + "Args, ";
+            }
+            sb.append("  int ").append(command.camel).append("(").append(argObjName).append("String output);\n");
         }
         sb.append("}");
 
