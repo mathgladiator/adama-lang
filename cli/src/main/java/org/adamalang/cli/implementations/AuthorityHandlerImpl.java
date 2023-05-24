@@ -2,46 +2,47 @@ package org.adamalang.cli.implementations;
 
 import org.adamalang.cli.router.ArgumentType;
 import org.adamalang.cli.router.AuthorityHandler;
+import org.adamalang.cli.router.Output;
 
-public class AuthorityHandlerImpl implements  AuthorityHandler{
+public class AuthorityHandlerImpl implements AuthorityHandler{
 
     @Override
-    public int createAuthority(String output) {
+    public int createAuthority(Output.AnsiOutput output) {
         return 0;
     }
 
     @Override
-    public int setAuthority(ArgumentType.SetAuthorityArgs args, String output) {
+    public int setAuthority(ArgumentType.SetAuthorityArgs args, Output.AnsiOutput output) {
         return 0;
     }
 
     @Override
-    public int getAuthority(ArgumentType.GetAuthorityArgs args, String output) {
+    public int getAuthority(ArgumentType.GetAuthorityArgs args, Output.AnsiOutput output) {
         return 0;
     }
 
     @Override
-    public int destroyAuthority(ArgumentType.DestroyAuthorityArgs args, String output) {
+    public int destroyAuthority(ArgumentType.DestroyAuthorityArgs args, Output.AnsiOutput output) {
         return 0;
     }
 
     @Override
-    public int listAuthority(String output) {
+    public int listAuthority(Output.AnsiOutput output) {
         return 0;
     }
 
     @Override
-    public int createLocalAuthority(ArgumentType.CreateLocalAuthorityArgs args, String output) {
+    public int createLocalAuthority(ArgumentType.CreateLocalAuthorityArgs args, Output.AnsiOutput output) {
         return 0;
     }
 
     @Override
-    public int appendLocalAuthority(ArgumentType.AppendLocalAuthorityArgs args, String output) {
+    public int appendLocalAuthority(ArgumentType.AppendLocalAuthorityArgs args, Output.AnsiOutput output) {
         return 0;
     }
 
     @Override
-    public int signAuthority(ArgumentType.SignAuthorityArgs args, String output) {
+    public int signAuthority(ArgumentType.SignAuthorityArgs args, Output.AnsiOutput output) {
         return 0;
     }
 }

@@ -1,9 +1,6 @@
 package org.adamalang.clikit;
 
-import org.adamalang.clikit.codegen.ArgumentTypeGen;
-import org.adamalang.clikit.codegen.CliElementGen;
-import org.adamalang.clikit.codegen.MainRouterGen;
-import org.adamalang.clikit.codegen.HandlerGen;
+import org.adamalang.clikit.codegen.*;
 import org.adamalang.clikit.exceptions.XMLFormatException;
 import org.adamalang.clikit.model.ArgDefinition;
 import org.adamalang.clikit.model.Command;
@@ -44,6 +41,7 @@ public class Tool {
         Node cliNode = Common.getFirstNode(cliList);
         Element cliElem = (Element) cliNode;
         String outputPath = cliElem.getAttribute("output-path");
+        String testOutputPath = cliElem.getAttribute("test-output-path");
         String packageName = cliElem.getAttribute("package");
 
         XMLFormatException exceptionTrack = new XMLFormatException();
@@ -77,6 +75,8 @@ public class Tool {
         Map<String, String> routerGens = HandlerGen.generate(groupList, packageName);
         Map<String, String> stringMap = new TreeMap<>();
 
+        Map<String, String> testGens = TestGen.generate(groupList, mainCommandList, packageName);
+
         stringMap.put("RootHandler.java", mainGen);
         stringMap.put("CliElement.java", cliGen);
         stringMap.put("ArgumentType.java", argumentTypeGen);
@@ -88,7 +88,9 @@ public class Tool {
             File file = new File(outputPath, entry.getKey());
             fileStringMap.put(file, entry.getValue());
         }
+
         boolean mkdir = new File(outputPath).mkdir();
+        boolean mkTestDir = new File(testOutputPath).mkdir();
         for (Map.Entry<File, String> entry: fileStringMap.entrySet()) {
             File file = entry.getKey();
             Files.writeString(file.toPath(), entry.getValue());

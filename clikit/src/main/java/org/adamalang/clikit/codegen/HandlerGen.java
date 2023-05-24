@@ -17,6 +17,7 @@ public class HandlerGen {
             String upperHandler = group.capName+"Handler";
 
             handler.append("package ").append(packageName).append(";\n\n");
+            handler.append("import ").append(packageName).append(".Output.*;\n");
             handler.append("import ").append(packageName).append(".ArgumentType.*;\n\n");
             handler.append("public interface " + upperHandler + " {\n");
             handler.append("  default int route(Argument args) {\n");
@@ -30,9 +31,12 @@ public class HandlerGen {
                 if (command.argList.length > 0) {
                     argObjName = "new " + command.capName + group.capName + "Args(args), ";
                 }
+                String outputName = "Ansi";
+                if (command.output != null) {
+                    outputName = command.output;
+                }
                 handler.append("      case \"").append(command.name).append("\":\n");
-                // TODO: Figure out how to get output.
-                handler.append("        return ").append(command.camel + group.capName).append("(").append(argObjName).append("\"Output\");\n");
+                handler.append("        return ").append(command.camel + group.capName).append("(").append(argObjName).append("new ").append(outputName).append("Output());\n");
             }
             //Create args from argument class
             handler.append("      default:\n");
@@ -46,7 +50,11 @@ public class HandlerGen {
                 if (command.argList.length > 0) {
                     argObjName = command.capName + group.capName + "Args args, ";
                 }
-                handler.append("  int ").append(command.camel).append(group.capName).append("(").append(argObjName).append("String output);\n");
+                String outputName = "Ansi";
+                if (command.output != null) {
+                    outputName = command.output;
+                }
+                handler.append("  int ").append(command.camel).append(group.capName).append("(").append(argObjName).append(outputName).append("Output output);\n");
             }
             handler.append("}");
             returnMap.put(upperHandler+".java",handler.toString());

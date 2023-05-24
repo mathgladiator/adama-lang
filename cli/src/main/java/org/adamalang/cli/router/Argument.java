@@ -17,6 +17,8 @@ public class Argument {
     public HashMap<String, ArgumentItem> arguments = new HashMap<>();
 
     public Argument(String[] args) {
+        //TODO: Add for config argument
+
         // Validate everything here...
         if (args.length  == 0) {
             group = null;

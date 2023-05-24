@@ -1,5 +1,6 @@
 package org.adamalang.cli.router;
 
+import org.adamalang.cli.router.Output.*;
 import org.adamalang.cli.router.ArgumentType.*;
 
 public interface AuthorityHandler {
@@ -9,32 +10,32 @@ public interface AuthorityHandler {
     }
     switch (args.command.name) {
       case "create":
-        return createAuthority("Output");
+        return createAuthority(new AnsiOutput());
       case "set":
-        return setAuthority(new SetAuthorityArgs(args), "Output");
+        return setAuthority(new SetAuthorityArgs(args), new AnsiOutput());
       case "get":
-        return getAuthority(new GetAuthorityArgs(args), "Output");
+        return getAuthority(new GetAuthorityArgs(args), new AnsiOutput());
       case "destroy":
-        return destroyAuthority(new DestroyAuthorityArgs(args), "Output");
+        return destroyAuthority(new DestroyAuthorityArgs(args), new AnsiOutput());
       case "list":
-        return listAuthority("Output");
+        return listAuthority(new AnsiOutput());
       case "create-local":
-        return createLocalAuthority(new CreateLocalAuthorityArgs(args), "Output");
+        return createLocalAuthority(new CreateLocalAuthorityArgs(args), new AnsiOutput());
       case "append-local":
-        return appendLocalAuthority(new AppendLocalAuthorityArgs(args), "Output");
+        return appendLocalAuthority(new AppendLocalAuthorityArgs(args), new AnsiOutput());
       case "sign":
-        return signAuthority(new SignAuthorityArgs(args), "Output");
+        return signAuthority(new SignAuthorityArgs(args), new AnsiOutput());
       default:
         Help.displayHelp("authority");
         return 0;
     }
   }
-  int createAuthority(String output);
-  int setAuthority(SetAuthorityArgs args, String output);
-  int getAuthority(GetAuthorityArgs args, String output);
-  int destroyAuthority(DestroyAuthorityArgs args, String output);
-  int listAuthority(String output);
-  int createLocalAuthority(CreateLocalAuthorityArgs args, String output);
-  int appendLocalAuthority(AppendLocalAuthorityArgs args, String output);
-  int signAuthority(SignAuthorityArgs args, String output);
+  int createAuthority(AnsiOutput output);
+  int setAuthority(SetAuthorityArgs args, AnsiOutput output);
+  int getAuthority(GetAuthorityArgs args, AnsiOutput output);
+  int destroyAuthority(DestroyAuthorityArgs args, AnsiOutput output);
+  int listAuthority(AnsiOutput output);
+  int createLocalAuthority(CreateLocalAuthorityArgs args, AnsiOutput output);
+  int appendLocalAuthority(AppendLocalAuthorityArgs args, AnsiOutput output);
+  int signAuthority(SignAuthorityArgs args, AnsiOutput output);
 }

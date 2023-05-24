@@ -23,6 +23,10 @@ public class Output {
                 System.err.println("Error " + (creating ? "creating" : "writing") + " file " + fileOut);
             }
         }
+
+        public void err(String string) {
+            System.err.println(string);
+        }
     }
 
     public static class JsonOutput {
