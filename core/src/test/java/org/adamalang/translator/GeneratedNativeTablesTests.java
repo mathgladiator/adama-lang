@@ -899,7 +899,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxM __obj) {");
     gold.append("\n      int y = __obj.y;");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return y == 2;");
+    gold.append("\n      return ((int) y) == ((int) 2);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");

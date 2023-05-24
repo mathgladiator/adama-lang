@@ -4,6 +4,12 @@ This diagram relates the critical components at 10,000 foot altitude.
 
 ![How this all fits together](i/concepts.png)
 
+## Authentication
+
+Users have to present an identity token to talk to Adama. The common case is the identity token is a [JWT token](https://jwt.io/) signed by Adama or your private key. There are special tokens prefixed by "anonymous:" (for example, "anonymous:AgentSmith") to allow random internet visitors into a document.
+
+For more information, see [the authorization guide](reference/auth.md).
+
 ## Router and the API space
 The router's primary function is to locate documents and proxy connections between the user and the document, and Adama acts as a document store that can handle an infinite number of documents.
 Each document is identified by a key and a space.

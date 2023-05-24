@@ -2127,11 +2127,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 28;");
     gold.append("\n      __track(0);");
-    gold.append("\n      __assert_truth(1 == 1, 1, 2, 1, 16);");
+    gold.append("\n      __assert_truth(((int) 1) == ((int) 1), 1, 2, 1, 16);");
     gold.append("\n      __track(1);");
-    gold.append("\n      __assert_truth((1 != 2), 2, 2, 2, 18);");
+    gold.append("\n      __assert_truth((((int) 1) != ((int) 2)), 2, 2, 2, 18);");
     gold.append("\n      __track(2);");
-    gold.append("\n      __assert_truth(!(1 == 2), 3, 2, 3, 19);");
+    gold.append("\n      __assert_truth(!(((int) 1) == ((int) 2)), 3, 2, 3, 19);");
     gold.append("\n      __track(3);");
     gold.append("\n      __assert_truth(1 < 2, 4, 2, 4, 15);");
     gold.append("\n      __track(4);");
@@ -2802,7 +2802,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n      __track(6);");
     gold.append("\n      __assert_truth((\"3.14x\").equals(3.14 + \"x\"), 7, 2, 7, 31);");
     gold.append("\n      __track(7);");
-    gold.append("\n      __assert_truth(3 == 1 + 2, 8, 2, 8, 20);");
+    gold.append("\n      __assert_truth(((int) 3) == ((int) 1 + 2), 8, 2, 8, 20);");
     gold.append("\n      __track(8);");
     gold.append("\n      __assert_truth(LibMath.near(3, 2.0 + 1), 9, 2, 9, 22);");
     gold.append("\n      __track(9);");
@@ -2817,7 +2817,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 5;");
     gold.append("\n      __track(11);");
-    gold.append("\n      __assert_truth(5 == 10 - 5, 15, 2, 15, 21);");
+    gold.append("\n      __assert_truth(((int) 5) == ((int) 10 - 5), 15, 2, 15, 21);");
     gold.append("\n      __track(12);");
     gold.append("\n      __assert_truth(LibMath.near(3.0, 6 - 3), 16, 2, 16, 22);");
     gold.append("\n      __track(13);");
@@ -2834,7 +2834,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n      __track(15);");
     gold.append("\n      __assert_truth((\"xxx\").equals(LibString.multiply(\"x\", 3)), 22, 2, 22, 26);");
     gold.append("\n      __track(16);");
-    gold.append("\n      __assert_truth(6 == 2 * 3, 23, 2, 23, 20);");
+    gold.append("\n      __assert_truth(((int) 6) == ((int) 2 * 3), 23, 2, 23, 20);");
     gold.append("\n      __track(17);");
     gold.append("\n      __assert_truth(LibMath.near(10, 2.0 * 5.0), 24, 2, 24, 25);");
     gold.append("\n      __track(18);");
@@ -2864,7 +2864,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(24);");
-    gold.append("\n      __assert_truth(2 == (LibArithmetic.Mod.O(7, 5)).getOrDefaultTo(-100), 37, 2, 37, 43);");
+    gold.append("\n      __assert_truth(((int) 2) == ((int) (LibArithmetic.Mod.O(7, 5)).getOrDefaultTo(-100)), 37, 2, 37, 43);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
@@ -2884,9 +2884,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 11;");
     gold.append("\n      __track(27);");
-    gold.append("\n      __assert_truth(true == true, 46, 2, 46, 22);");
+    gold.append("\n      __assert_truth(((boolean) true) == ((boolean) true), 46, 2, 46, 22);");
     gold.append("\n      __track(28);");
-    gold.append("\n      __assert_truth(false != true, 47, 2, 47, 23);");
+    gold.append("\n      __assert_truth(((boolean) false) != ((boolean) true), 47, 2, 47, 23);");
     gold.append("\n      __track(29);");
     gold.append("\n      __assert_truth(true && true, 48, 2, 48, 22);");
     gold.append("\n      __track(30);");
@@ -2917,7 +2917,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n      __track(39);");
     gold.append("\n      __assert_truth((other.get()).equals(NtPrincipal.NO_ONE), 64, 2, 64, 26);");
     gold.append("\n      __track(40);");
-    gold.append("\n      __assert_truth(!(!(NtPrincipal.NO_ONE).equals(NtPrincipal.NO_ONE)), 65, 2, 65, 31);");
+    gold.append("\n      __assert_truth(!(!((NtPrincipal.NO_ONE).equals(NtPrincipal.NO_ONE))), 65, 2, 65, 31);");
     gold.append("\n      __track(41);");
     gold.append("\n      __assert_truth((s.get()).equals(\"\"), 66, 2, 66, 17);");
     gold.append("\n      __track(42);");
@@ -2929,7 +2929,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n      __track(45);");
     gold.append("\n      long y = 123;");
     gold.append("\n      __track(46);");
-    gold.append("\n      __assert_truth(x == y, 71, 2, 71, 16);");
+    gold.append("\n      __assert_truth(((long) x) == ((long) y), 71, 2, 71, 16);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
@@ -3542,7 +3542,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n      __track(0);");
     gold.append("\n      __assert_truth((\"x\").equals(\"x\"), 1, 2, 1, 20);");
     gold.append("\n      __track(1);");
-    gold.append("\n      __assert_truth((!(\"x\").equals(\"y\")), 2, 2, 2, 22);");
+    gold.append("\n      __assert_truth((!((\"x\").equals(\"y\"))), 2, 2, 2, 22);");
     gold.append("\n      __track(2);");
     gold.append("\n      __assert_truth(!((\"x\").equals(\"y\")), 3, 2, 3, 23);");
     gold.append("\n      __track(3);");

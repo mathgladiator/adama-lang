@@ -575,6 +575,15 @@ var RxHTML = (function () {
     var it_state = self.pIE(state, name, expandView);
     var domByKey = {};
     var viewUnSubByKey = {};
+    var kill = function() {
+      for (var key in viewUnSubByKey) {
+        fire_unsub(viewUnSubByKey[key]);
+        delete viewUnSubByKey[key];
+      }
+      for (var key in domByKey) {
+        delete domByKey[key];
+      }
+    };
 
     var sub = {
       "+": function (key) {
@@ -606,6 +615,10 @@ var RxHTML = (function () {
       },
       "~": function (ord) {
         nuke(parentDom);
+        if (ord == null) {
+          kill();
+          return;
+        }
         for (var k = 0; k < ord.length; k++) {
           parentDom.append(domByKey[ord[k]]);
         }
@@ -839,7 +852,7 @@ var RxHTML = (function () {
   self.onGO = function (dom, type, state, value) {
     var runnable = function () {
       var uri = (typeof (value) == "function") ? value() : value;
-      self.goto(state.view.tree, uri);
+      self.goto(uri);
     };
     if (type == "load") {
       window.setTimeout(runnable, 1);
@@ -1231,8 +1244,7 @@ var RxHTML = (function () {
     }
   };
 
-  self.goto = function (viewState, uri) {
-    // TODO: figure out a better model.
+  self.goto = function (uri) {
     window.setTimeout(function () {
       if (uri.startsWith("/")) {
         self.run(document.body, uri, true);
@@ -1294,7 +1306,7 @@ var RxHTML = (function () {
       delete connections[axe[k]];
     }
 
-    self.goto(null, "/");
+    self.goto("/");
   };
 
   self.GOOGLE_SIGN_ON = function (accessToken) {
@@ -1302,7 +1314,7 @@ var RxHTML = (function () {
       success: function (payload) {
         identities["default"] = payload.identity;
         localStorage.setItem("identity_default", payload.identity);
-        self.goto(null, "/");
+        self.goto("/");
       },
       failure: function (reason) {
         console.log("Google failure: " + reason);
@@ -1348,13 +1360,13 @@ var RxHTML = (function () {
       cleanup = function () {
         delete identities[identityName];
         localStorage.removeItem("identity_" + identityName);
-        self.goto(null, redirectToFunc());
+        self.goto(redirectToFunc());
       };
     } else {
       // whatever page we are, needs to die which means we need to nuke everything!
       window.setTimeout(function () {
         // TODO: this assumes a full app goes to the window
-        self.goto(null, redirectToFunc());
+        self.goto(redirectToFunc());
       }, 10);
       return {abort: true};
     }
@@ -1489,6 +1501,9 @@ var RxHTML = (function () {
           if ('viewstate' in payload.delta) {
             state.view.tree.update(payload.delta.viewstate);
           }
+          if ('goto' in payload.delta) {
+            self.goto(payload.delta.goto);
+          }
         },
         complete: function() {
           co.set_connected(false);
@@ -1570,7 +1585,7 @@ var RxHTML = (function () {
         success: function (payload) {
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
-          self.goto(state.view, rxobj.rx_forward);
+          self.goto(rxobj.rx_forward);
           fire_success(form);
         },
         failure: function (reason) {
@@ -1605,7 +1620,7 @@ var RxHTML = (function () {
                   identities[identityName] = payload.identity;
                   localStorage.setItem("identity_" + identityName, payload.identity);
                 }
-                self.goto(state.view, rxobj.rx_forward);
+                self.goto(rxobj.rx_forward);
                 fire_success(form);
               }
             } else {
@@ -1653,7 +1668,7 @@ var RxHTML = (function () {
         success: function (payload) {
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
-          self.goto(state.view, rxobj.rx_forward);
+          self.goto(rxobj.rx_forward);
           fire_success(form);
         },
         failure: function (reason) {
@@ -1671,7 +1686,7 @@ var RxHTML = (function () {
       connection.InitSetupAccount(req.email, {
         success: function (/* payload */) {
           localStorage.setItem("email", req.email);
-          self.goto(state.view, forwardTo);
+          self.goto(forwardTo);
           fire_success(form);
         },
         failure: function (reason) {
@@ -1695,7 +1710,7 @@ var RxHTML = (function () {
           connection.AccountSetPassword(init.identity, req.password, {
             success: function () {
               localStorage.setItem("identity_default", identity);
-              self.goto(state.view, forwardTo);
+              self.goto(forwardTo);
               fire_success(form);
             },
             failure: function (reason) {
@@ -1716,6 +1731,7 @@ var RxHTML = (function () {
       evt.preventDefault();
       state.data.connection.ptr.send(channel, get_form(form, false), {
         success: function (/* payload */) {
+          form.reset();
           fire_success(form);
         },
         failure: function (reason) {

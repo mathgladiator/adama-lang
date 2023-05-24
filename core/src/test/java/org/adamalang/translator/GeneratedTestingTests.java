@@ -1731,7 +1731,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n      __track(3);");
     gold.append("\n      __test_progress();");
     gold.append("\n      __track(4);");
-    gold.append("\n      __assert_truth(out.get() == 12, 15, 2, 15, 19);");
+    gold.append("\n      __assert_truth(((int) out.get()) == ((int) 12), 15, 2, 15, 19);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");

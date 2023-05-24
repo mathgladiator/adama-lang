@@ -63,8 +63,10 @@ public class DList<dTy extends DeltaNode> implements DeltaNode {
   /** rectify the size */
   public void rectify(final int size, final PrivateLazyDeltaWriter writer) {
     // Note; this is called after the iteration to null out items
-    for (var k = size; k < cachedDeltas.size(); k++) {
+    int oldSize = cachedDeltas.size();
+    for (var k = size; k < oldSize; k++) {
       writer.planField("" + k).writeNull();
+      cachedDeltas.remove(cachedDeltas.size() - 1);
     }
     if (emittedSize != cachedDeltas.size()) {
       writer.planField("@s").writeInt(size);

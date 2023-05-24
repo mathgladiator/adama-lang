@@ -414,6 +414,22 @@ public abstract class LivingDocument implements RxParent, Caller {
     return false;
   }
 
+  public boolean __gotoViewState(String uri) {
+    if (__currentViewId >= 0) {
+      PrivateView pv = __viewsById.get(__currentViewId);
+      if (pv != null) {
+        final var writer = new JsonStreamWriter();
+        writer.beginObject();
+        writer.writeObjectFieldIntro("goto");
+        writer.writeString(uri);
+        writer.endObject();
+        pv.deliver(writer.toString());
+        return true;
+      }
+    }
+    return false;
+  }
+
   /** internal: we compute per client */
   private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastList() {
     ArrayList<LivingDocumentChange.Broadcast> broadcasts = new ArrayList<>(__trackedViews.size());

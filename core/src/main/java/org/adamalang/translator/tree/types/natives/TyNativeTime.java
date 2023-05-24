@@ -56,7 +56,7 @@ public class TyNativeTime extends TySimpleNative implements //
 
   @Override
   public String getAdamaType() {
-    return "datetime";
+    return "time";
   }
 
   @Override

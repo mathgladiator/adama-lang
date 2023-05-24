@@ -2391,7 +2391,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxR __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (LibArithmetic.Mod.O(x, 2)).getOrDefaultTo(-100) == 0;");
+    gold.append("\n      return ((int) (LibArithmetic.Mod.O(x, 2)).getOrDefaultTo(-100)) == ((int) 0);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxR> {");
@@ -2409,7 +2409,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxR __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (LibArithmetic.Mod.O(x, 3)).getOrDefaultTo(-100) == 0;");
+    gold.append("\n      return ((int) (LibArithmetic.Mod.O(x, 3)).getOrDefaultTo(-100)) == ((int) 0);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxR> {");
@@ -2427,7 +2427,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxR __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (LibArithmetic.Mod.O(x, 8)).getOrDefaultTo(-100) == 0;");
+    gold.append("\n      return ((int) (LibArithmetic.Mod.O(x, 8)).getOrDefaultTo(-100)) == ((int) 0);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
@@ -3641,11 +3641,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      __track(1);");
     gold.append("\n      x.y.set(2);");
     gold.append("\n      __track(2);");
-    gold.append("\n      __assert_truth(x.z.get() == 3, 18, 2, 18, 18);");
+    gold.append("\n      __assert_truth(((int) x.z.get()) == ((int) 3), 18, 2, 18, 18);");
     gold.append("\n      __track(3);");
     gold.append("\n      x.w.u.set(4);");
     gold.append("\n      __track(4);");
-    gold.append("\n      __assert_truth(x.w.v.get() == 16, 20, 2, 20, 21);");
+    gold.append("\n      __assert_truth(((int) x.w.v.get()) == ((int) 16), 20, 2, 20, 21);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
@@ -11205,7 +11205,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x == 1;");
+    gold.append("\n      return ((int) x) == ((int) 1);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");

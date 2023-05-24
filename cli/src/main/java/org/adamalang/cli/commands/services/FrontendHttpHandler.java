@@ -85,7 +85,7 @@ public class FrontendHttpHandler implements HttpHandler {
               String identity = keyPair.signDocument(skr.space, skr.key, response.body);
               ObjectNode json = Json.newJsonObject();
               json.put("identity", identity);
-              callback.success(new HttpResult("text/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
+              callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
             } catch (Exception ex) {
               callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_SECRETS_SIGNING_EXCEPTION, ex, EXLOGGER));
             }

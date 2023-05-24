@@ -53,8 +53,8 @@ public class DListTests {
       list.getPrior(1, DBoolean::new).show(true, delta.planField(1));
       list.rectify(2, delta);
       delta.end();
-      Assert.assertEquals("{\"1\":true,\"2\":null}", stream.toString());
-      Assert.assertEquals(248, list.__memory());
+      Assert.assertEquals("{\"1\":true,\"2\":null,\"@s\":2}", stream.toString());
+      Assert.assertEquals(208, list.__memory());
     }
     {
       final var stream = new JsonStreamWriter();

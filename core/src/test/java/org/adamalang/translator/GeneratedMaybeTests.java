@@ -2126,7 +2126,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxR __obj) {");
     gold.append("\n      NtMaybe<Integer> val = __obj.val.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return LibMath.equality(val, 42, (__x, __y) -> __x.intValue() == __y);");
+    gold.append("\n      return LibMath.equality(val, 42, (__x, __y) -> __x.intValue() == (int) __y);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxR> {");
@@ -2144,7 +2144,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxR __obj) {");
     gold.append("\n      NtMaybe<Integer> val = __obj.val.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return LibMath.equality(val, 42, (__x, __y) -> __x.intValue() == __y);");
+    gold.append("\n      return LibMath.equality(val, 42, (__x, __y) -> __x.intValue() == (int) __y);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");

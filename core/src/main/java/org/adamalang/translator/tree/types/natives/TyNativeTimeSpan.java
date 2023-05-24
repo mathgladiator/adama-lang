@@ -56,7 +56,7 @@ public class TyNativeTimeSpan extends TySimpleNative implements //
 
   @Override
   public String getAdamaType() {
-    return "datetime";
+    return "timespan";
   }
 
   @Override
