@@ -17,15 +17,15 @@ public class TestGen {
             sb.append("import org.junit.Test;\n\n");
             sb.append("public class HelpCoverageTests {\n");
             sb.append("  @Test\n");
-            sb.append("  public void coverage {\n");
+            sb.append("  public void coverage() {\n");
             for (Group group : groups) {
-                sb.append("    NewMain.main(\"").append(group.name).append("\", \"--help\");\n");
+                sb.append("    NewMain.main(new String[]{\"").append(group.name).append("\", \"--help\"});\n");
                 for (Command command : group.commandList) {
-                    sb.append("    NewMain.main(\"").append(command.name).append("\", \"--help\");\n");
+                    sb.append("    NewMain.main(new String[]{\"").append(group.name).append("\", \"").append(command.name).append("\", \"--help\"});\n");
                 }
             }
             for (Command command : mainCommands) {
-                sb.append("    NewMain.main(\"").append(command.name).append("\", \"--help\");\n");
+                sb.append("    NewMain.main(new String[]{\"").append(command.name).append("\", \"--help\"});\n");
             }
 
             sb.append("  }\n");

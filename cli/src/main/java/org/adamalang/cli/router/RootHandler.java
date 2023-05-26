@@ -1,6 +1,8 @@
 package org.adamalang.cli.router;
 
-import org.adamalang.cli.router.Output.*;
+import org.adamalang.cli.runtime.Argument;
+import org.adamalang.cli.runtime.Help;
+import org.adamalang.cli.runtime.Output;
 
 public interface RootHandler {
   default int route(String[] args) {
@@ -20,12 +22,12 @@ public interface RootHandler {
         AuthorityHandler authorityHandler = createAuthorityHandler();
         return authorityHandler.route(arguments);
       case "init":
-        return init(new AnsiOutput());
+        return init(new Output(arguments));
       default:
         return Help.displayHelp();
     }
   }
   SpaceHandler createSpaceHandler();
   AuthorityHandler createAuthorityHandler();
-  int init(AnsiOutput output);
+  int init(Output output);
 }

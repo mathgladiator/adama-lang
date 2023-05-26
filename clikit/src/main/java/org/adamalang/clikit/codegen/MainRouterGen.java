@@ -7,7 +7,9 @@ public class MainRouterGen {
     public static String generate(Group[] groupList, Command[] commandList, String packageName) {
         StringBuilder sb = new StringBuilder();
         sb.append("package " + packageName + ";\n\n");
-        sb.append("import ").append(packageName).append(".Output.*;\n\n");
+        sb.append("import org.adamalang.cli.runtime.Argument;\n");
+        sb.append("import org.adamalang.cli.runtime.Help;\n");
+        sb.append("import org.adamalang.cli.runtime.Output;\n\n");
         sb.append("public interface RootHandler {\n");
         //Create a way to route to correct group.
         sb.append("  default int route(String[] args) {\n");
@@ -32,12 +34,12 @@ public class MainRouterGen {
             if (command.argList.length > 0) {
                 argObjName = "new " + command.capName + "Args(arguments), ";
             }
-            String outputName = "Ansi";
+            String outputName = "";
             if (command.output != null) {
                 outputName = command.output;
             }
             sb.append("      case \"").append(command.name).append("\":\n");
-            sb.append("        return ").append(command.camel).append("(").append(argObjName).append("new ").append(outputName).append("Output());\n");
+            sb.append("        return ").append(command.camel).append("(").append(argObjName).append("new ").append(outputName).append("Output(arguments));\n");
         }
 
         sb.append("      default:\n");
@@ -53,7 +55,7 @@ public class MainRouterGen {
             if (command.argList.length > 0) {
                 argObjName = command.capName + "Args, ";
             }
-            String outputName = "Ansi";
+            String outputName = "";
             if (command.output != null) {
                 outputName = command.output;
             }

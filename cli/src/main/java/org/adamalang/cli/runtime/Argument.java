@@ -1,9 +1,9 @@
-package org.adamalang.cli.router;
+package org.adamalang.cli.runtime;
 
 
 import org.adamalang.cli.Util;
+import org.adamalang.cli.router.CliElement;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +47,11 @@ public class Argument {
         if (args.length >= 2) {
             if (Util.equalsMultiple(args[1], "help", "--help", "-h")) {
                 command = null;
+                // If the group is a command.
+                if (group.Commands.isEmpty()) {
+                    Help.displayHelp(group.name);
+                    valid = false;
+                }
                 return;
             } else {
                 // If group is command
@@ -111,11 +116,13 @@ public class Argument {
                     } else {
                         val.value = val.defaultArg;
                     }
+                    arguments.put(val.name, val);
                 } else {
                     anyInvalid = true;
                     System.out.println("Expected argument '" + val.name + "'");
                 }
             }
+
         }
         if (anyInvalid) {
             valid = false;

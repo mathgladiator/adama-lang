@@ -1,5 +1,6 @@
 package org.adamalang.cli.router;
 
+import org.adamalang.cli.runtime.ArgumentItem;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,9 @@ public class CliElement {
   public static HashMap<String, CliElement> populateGroups() {
     HashMap<String, CliElement> returnMap = new HashMap<>();
 
+    HashMap<String, ArgumentItem> initArgs = new HashMap<>();
+    returnMap.put("init", new CliElement(initArgs, "init", "Initializes the config with a valid token"));
+
     HashMap<String, CliElement> spaceCommands = new HashMap<>();
     HashMap<String, ArgumentItem> createSpaceArgs = new HashMap<>();
     createSpaceArgs.put("--space", fullArgumentList.get("--space"));
@@ -39,17 +43,17 @@ public class CliElement {
     HashMap<String, ArgumentItem> deploySpaceArgs = new HashMap<>();
     deploySpaceArgs.put("--space", fullArgumentList.get("--space"));
     deploySpaceArgs.put("--plan", fullArgumentList.get("--plan"));
-    deploySpaceArgs.put("--file", fullArgumentList.get("--file"));
+    deploySpaceArgs.put("--file", ArgumentItem.setOptionalFromMap(fullArgumentList, "--file", "null"));
     spaceCommands.put("deploy", new CliElement(deploySpaceArgs, "deploy", "Deploy a plan to a space"));
 
     HashMap<String, ArgumentItem> setRxhtmlSpaceArgs = new HashMap<>();
     setRxhtmlSpaceArgs.put("--space", fullArgumentList.get("--space"));
-    setRxhtmlSpaceArgs.put("--file", fullArgumentList.get("--file"));
+    setRxhtmlSpaceArgs.put("--file", ArgumentItem.setOptionalFromMap(fullArgumentList, "--file", "null"));
     spaceCommands.put("set-rxhtml", new CliElement(setRxhtmlSpaceArgs, "set-rxhtml", "Set the frontend RxHTML forest"));
 
     HashMap<String, ArgumentItem> uploadSpaceArgs = new HashMap<>();
     uploadSpaceArgs.put("--space", fullArgumentList.get("--space"));
-    uploadSpaceArgs.put("--gc", fullArgumentList.get("--gc"));
+    uploadSpaceArgs.put("--gc", ArgumentItem.setOptionalFromMap(fullArgumentList, "--gc", "no"));
     spaceCommands.put("upload", new CliElement(uploadSpaceArgs, "upload", "Placeholder"));
 
     HashMap<String, ArgumentItem> downloadSpaceArgs = new HashMap<>();
@@ -57,27 +61,27 @@ public class CliElement {
     spaceCommands.put("download", new CliElement(downloadSpaceArgs, "download", "Download a space's plan"));
 
     HashMap<String, ArgumentItem> listSpaceArgs = new HashMap<>();
-    listSpaceArgs.put("--marker", fullArgumentList.get("--marker"));
-    listSpaceArgs.put("--limit", fullArgumentList.get("--limit"));
+    listSpaceArgs.put("--marker", ArgumentItem.setOptionalFromMap(fullArgumentList, "--marker", ""));
+    listSpaceArgs.put("--limit", ArgumentItem.setOptionalFromMap(fullArgumentList, "--limit", "100"));
     spaceCommands.put("list", new CliElement(listSpaceArgs, "list", "List spaces available to your account"));
 
     HashMap<String, ArgumentItem> usageSpaceArgs = new HashMap<>();
     usageSpaceArgs.put("--space", fullArgumentList.get("--space"));
-    usageSpaceArgs.put("--limit", fullArgumentList.get("--limit"));
+    usageSpaceArgs.put("--limit", ArgumentItem.setOptionalFromMap(fullArgumentList, "--limit", "336"));
     spaceCommands.put("usage", new CliElement(usageSpaceArgs, "usage", "Iterate the billed usage"));
 
     HashMap<String, ArgumentItem> reflectSpaceArgs = new HashMap<>();
     reflectSpaceArgs.put("--space", fullArgumentList.get("--space"));
     reflectSpaceArgs.put("--marker", fullArgumentList.get("--marker"));
     reflectSpaceArgs.put("--output", fullArgumentList.get("--output"));
-    reflectSpaceArgs.put("--limit", fullArgumentList.get("--limit"));
+    reflectSpaceArgs.put("--limit", ArgumentItem.setOptionalFromMap(fullArgumentList, "--limit", "336"));
     spaceCommands.put("reflect", new CliElement(reflectSpaceArgs, "reflect", "Get a file of the reflection of a space"));
 
     HashMap<String, ArgumentItem> setRoleSpaceArgs = new HashMap<>();
     setRoleSpaceArgs.put("--space", fullArgumentList.get("--space"));
     setRoleSpaceArgs.put("--marker", fullArgumentList.get("--marker"));
-    setRoleSpaceArgs.put("--email", fullArgumentList.get("--email"));
-    setRoleSpaceArgs.put("--role", fullArgumentList.get("--role"));
+    setRoleSpaceArgs.put("--email", ArgumentItem.setOptionalFromMap(fullArgumentList, "--email", ""));
+    setRoleSpaceArgs.put("--role", ArgumentItem.setOptionalFromMap(fullArgumentList, "--role", "none"));
     spaceCommands.put("set-role", new CliElement(setRoleSpaceArgs, "set-role", "Share/unshare a space with another developer"));
 
     HashMap<String, ArgumentItem> generateKeySpaceArgs = new HashMap<>();
@@ -126,7 +130,7 @@ public class CliElement {
     HashMap<String, ArgumentItem> signAuthorityArgs = new HashMap<>();
     signAuthorityArgs.put("--key", fullArgumentList.get("--key"));
     signAuthorityArgs.put("--agent", fullArgumentList.get("--agent"));
-    signAuthorityArgs.put("--validate", fullArgumentList.get("--validate"));
+    signAuthorityArgs.put("--validate", ArgumentItem.setOptionalFromMap(fullArgumentList, "--validate", "null"));
     authorityCommands.put("sign", new CliElement(signAuthorityArgs, "sign", "Sign an agent with a local private key"));
 
     returnMap.put("authority", new CliElement(authorityCommands, "authority", "group", "Manage authorities"));
@@ -138,35 +142,20 @@ public class CliElement {
     HashMap<String, ArgumentItem> argList = new HashMap<>();
 
     argList.put("--agent",new ArgumentItem("--agent", "-ag", "Placeholder"));
-
     argList.put("--role",new ArgumentItem("--role", "-r", "Placeholder"));
-
     argList.put("--space",new ArgumentItem("--space", "-s", "A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to denote the name of that collection."));
-
     argList.put("--output",new ArgumentItem("--output", "-o", "Placeholder"));
-
     argList.put("--file",new ArgumentItem("--file", "-f", "Placeholder"));
-
     argList.put("--marker",new ArgumentItem("--marker", "-m", "Placeholder"));
-
     argList.put("--authority",new ArgumentItem("--authority", "-a", "Placeholder"));
-
     argList.put("--limit",new ArgumentItem("--limit", "-l", "Placeholder"));
-
     argList.put("--keystore",new ArgumentItem("--keystore", "-k", "Placeholder"));
-
     argList.put("--priv",new ArgumentItem("--priv", "-p", "Placeholder"));
-
     argList.put("--gc",new ArgumentItem("--gc", "-g", "Placeholder"));
-
     argList.put("--plan",new ArgumentItem("--plan", "-p", "Placeholder"));
-
     argList.put("--key",new ArgumentItem("--key", "-k", "Placeholder"));
-
     argList.put("--email",new ArgumentItem("--email", "-e", "Placeholder"));
-
     argList.put("--validate",new ArgumentItem("--validate", "-v", "Placeholder"));
-
     return argList;
   }
 }

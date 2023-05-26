@@ -1,6 +1,7 @@
-package org.adamalang.cli.router;
+package org.adamalang.cli.runtime;
 
 import org.adamalang.cli.Util;
+import org.adamalang.cli.router.CliElement;
 
 import java.util.Locale;
 import java.util.Map;
@@ -13,11 +14,11 @@ public class Help {
         System.out.println(Util.prefix("USAGE: ", Util.ANSI.Yellow));
         System.out.println(Util.prefix("    adama ", Util.ANSI.Green) + Util.prefix("[SUBCOMMAND]\n", Util.ANSI.Magenta));
         System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-        System.out.println("    " + Util.prefix(Util.lJust("--config",15), Util.ANSI.Green) + "Supplies a config file path other than the default (~/.adama)");
+        System.out.println("    " + Util.prefix(Util.lJust("--config",14), Util.ANSI.Green) + " Supplies a config file path other than the default (~/.adama)");
         System.out.println(Util.prefix("\nSUBCOMMAND:", Util.ANSI.Yellow));
         for (Map.Entry<String, CliElement> entry : CliElement.Groups.entrySet()) {
             CliElement element = entry.getValue();
-            System.out.println("    " + Util.prefix(Util.lJust(element.name,15), Util.ANSI.Green) + element.doc);
+            System.out.println("    " + Util.prefix(Util.lJust(element.name,14), Util.ANSI.Green) +" "+ element.doc);
         }
 
        return 0;
@@ -31,10 +32,12 @@ public class Help {
         System.out.println(Util.prefix("    adama " + group.toLowerCase(Locale.ROOT), Util.ANSI.Green) + Util.prefix(" [" + group.toUpperCase(Locale.ROOT) + "SUBCOMMAND]\n", Util.ANSI.Magenta));
         System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
         System.out.println("    " + Util.prefix(Util.lJust("--config",15), Util.ANSI.Green) + "Supplies a config file path other than the default (~/.adama)");
-        System.out.println(Util.prefix("\n" + group.toUpperCase(Locale.ROOT) + "SUBCOMMAND:", Util.ANSI.Yellow));
+        if (!groupElem.Commands.isEmpty()) {
+            System.out.println(Util.prefix("\n" + group.toUpperCase(Locale.ROOT) + "SUBCOMMAND:", Util.ANSI.Yellow));
+        }
         for (Map.Entry<String, CliElement> entry : groupElem.Commands.entrySet()) {
             CliElement element = entry.getValue();
-            System.out.println("    " + Util.prefix(Util.lJust(element.name,15), Util.ANSI.Green) + element.doc);
+            System.out.println("    " + Util.prefix(Util.lJust(element.name,15), Util.ANSI.Green) +  element.doc);
         }
         return 0;
     }

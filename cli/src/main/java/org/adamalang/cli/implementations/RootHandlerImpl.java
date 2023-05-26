@@ -1,12 +1,12 @@
 package org.adamalang.cli.implementations;
 
-import org.adamalang.cli.router.ArgumentType.*;
 import org.adamalang.cli.router.AuthorityHandler;
-import org.adamalang.cli.router.Output;
+import org.adamalang.cli.runtime.Output;
 import org.adamalang.cli.router.RootHandler;
 import org.adamalang.cli.router.SpaceHandler;
 
 public class RootHandlerImpl implements RootHandler {
+
 
     @Override
     public SpaceHandler createSpaceHandler() {
@@ -19,7 +19,7 @@ public class RootHandlerImpl implements RootHandler {
     }
 
     @Override
-    public int init(Output.AnsiOutput output) {
+    public int init(Output output) {
         return 0;
     }
 }

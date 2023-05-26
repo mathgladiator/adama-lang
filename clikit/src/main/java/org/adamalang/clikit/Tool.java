@@ -70,24 +70,26 @@ public class Tool {
             helpString.append(group.name + " ").append(group.documentation).append("\n");
         }
         String mainGen = MainRouterGen.generate(groupList, mainCommandList ,packageName);
-        String cliGen = CliElementGen.generate(arguments, groupList, packageName);
-        String argumentTypeGen = ArgumentTypeGen.generate(groupList, packageName);
+        String cliGen = CliElementGen.generate(arguments, groupList, mainCommandList, packageName);
+        String argumentTypeGen = ArgumentTypeGen.generate(groupList, mainCommandList ,packageName);
         Map<String, String> routerGens = HandlerGen.generate(groupList, packageName);
         Map<String, String> stringMap = new TreeMap<>();
-
         Map<String, String> testGens = TestGen.generate(groupList, mainCommandList, packageName);
-
         stringMap.put("RootHandler.java", mainGen);
         stringMap.put("CliElement.java", cliGen);
         stringMap.put("ArgumentType.java", argumentTypeGen);
         stringMap.putAll(routerGens);
-
 
         Map<File, String> fileStringMap = new TreeMap<>();
         for (Map.Entry<String, String> entry: stringMap.entrySet()) {
             File file = new File(outputPath, entry.getKey());
             fileStringMap.put(file, entry.getValue());
         }
+        for (Map.Entry<String, String> entry : testGens.entrySet()) {
+            File file = new File(testOutputPath, entry.getKey());
+            fileStringMap.put(file, entry.getValue());
+        }
+
 
         boolean mkdir = new File(outputPath).mkdir();
         boolean mkTestDir = new File(testOutputPath).mkdir();

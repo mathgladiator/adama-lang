@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
 
 public class CliElementGen {
 
-    public static String generate(Map<String, ArgDefinition> argDefinitions, Group[] groups, String packageName) {
+    public static String generate(Map<String, ArgDefinition> argDefinitions, Group[] groups, Command[] mainCommands, String packageName) {
         StringBuilder sb = new StringBuilder();
         sb.append("package ").append(packageName).append(";\n\n");
-        // TODO: A lot of static code, may call for seperate class, could have seperate class just for Node informations
+        sb.append("import org.adamalang.cli.runtime.ArgumentItem;\n");
         sb.append("import java.util.HashMap;\n");
         sb.append("import java.util.Map;\n\n");
         sb.append("public class CliElement {\n");
@@ -36,13 +36,29 @@ public class CliElementGen {
         sb.append("  }\n");
         sb.append("  public static HashMap<String, CliElement> populateGroups() {\n");
         sb.append("    HashMap<String, CliElement> returnMap = new HashMap<>();\n\n");
+        for (Command command : mainCommands) {
+            sb.append("    HashMap<String, ArgumentItem> ").append(command.camel).append("Args = new HashMap<>();\n");
+            for (Argument argument : command.argList) {
+                sb.append("    ").append(command.camel).append("Args.put(\"--").append(argument.name);
+                if (argument.optional)
+                    sb.append("\", ArgumentItem.setOptionalFromMap(fullArgumentList, \"--").append(argument.name).append("\", \"").append(argument.defaultValue).append("\"));\n");
+                else
+                    sb.append("\", fullArgumentList.get(\"--").append(argument.name).append("\"));\n");
+            }
+            sb.append("    returnMap.put(\"").append(command.name).append("\", new CliElement(").append(command.camel).append("Args, \"")
+                    .append(command.name).append("\", \"").append(Common.escape(command.documentation)).append("\"));\n\n");
+
+        }
         for (Group group : groups) {
             sb.append("    HashMap<String, CliElement> ").append(group.name).append("Commands = new HashMap<>();\n");
             for (Command command : group.commandList) {
                 sb.append("    HashMap<String, ArgumentItem> ").append(command.camel).append(group.capName).append("Args = new HashMap<>();\n");
                 for (Argument argument : command.argList) {
                     sb.append("    ").append(command.camel).append(group.capName).append("Args.put(\"--").append(argument.name);
-                    sb.append("\", fullArgumentList.get(\"--").append(argument.name).append("\"));\n");
+                    if (argument.optional)
+                        sb.append("\", ArgumentItem.setOptionalFromMap(fullArgumentList, \"--").append(argument.name).append("\", \"").append(argument.defaultValue).append("\"));\n");
+                    else
+                        sb.append("\", fullArgumentList.get(\"--").append(argument.name).append("\"));\n");
                 }
                 sb.append("    ").append(group.name).append( "Commands.put(\"").append(command.name).append("\", ");
                 sb.append("new CliElement(").append(command.camel).append(group.capName).append("Args, \"").append(command.name).append("\", \"").append(Common.escape(command.documentation)).append("\"));\n\n");
@@ -60,7 +76,7 @@ public class CliElementGen {
             ArgDefinition argDef = entry.getValue();
             String argName = entry.getKey();
             sb.append("    argList.put(\"--").append(argName).append("\",new ArgumentItem(\"--").append(argName).append("\", \"-").append(argDef.shortField);
-            sb.append("\", \"").append(Common.escape(argDef.documentation)).append("\"));\n\n");
+            sb.append("\", \"").append(Common.escape(argDef.documentation)).append("\"));\n");
         }
         sb.append("    return argList;\n");
         sb.append("  }\n");

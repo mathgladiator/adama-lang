@@ -8,4 +8,9 @@ public class NewMain {
         RootHandler handler = new RootHandlerImpl();
         System.exit(handler.route(args));
     }
+
+    public static void testMain(String[] args) {
+        RootHandler handler = new RootHandlerImpl();
+        handler.route(args);
+    }
 }

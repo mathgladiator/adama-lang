@@ -1,4 +1,6 @@
-package org.adamalang.cli.router;
+package org.adamalang.cli.runtime;
+
+import java.util.Map;
 
 public class ArgumentItem {
     public String value;
@@ -18,8 +20,6 @@ public class ArgumentItem {
         this.name = name;
         this.shortField = shortField;
         this.documentation = documentation;
-        this.optional = true;
-        this.defaultArg = defaultArg;
     }
 
     public ArgumentItem copy() {
@@ -29,4 +29,10 @@ public class ArgumentItem {
         return returnArg;
     }
 
+    public static ArgumentItem setOptionalFromMap(Map<String, ArgumentItem> map, String name, String defaultArg) {
+        ArgumentItem returnArgItem = map.get(name);
+        returnArgItem.defaultArg = defaultArg;
+        returnArgItem.optional = true;
+        return returnArgItem;
+    }
 }

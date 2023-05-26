@@ -14,21 +14,25 @@ public class Argument {
     public String shortName;
     public String defaultValue = "";
     public ArgDefinition definition;
+    public String camel;
 
     public Argument(String name, boolean optional, String defaultValue, ArgDefinition definition) {
         this.optional = optional;
         this.name = name;
+        this.camel = Common.camelize(name, true);
         this.defaultValue = defaultValue;
         this.definition = definition;
     }
     public Argument(String name, boolean optional) {
         this.optional = optional;
+        this.camel = Common.camelize(name, true);
         this.name = name;
     }
 
 
     public Argument(String name) {
         this.optional = false;
+        this.camel = Common.camelize(name, true);
         this.name = name;
     }
 

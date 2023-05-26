@@ -1,6 +1,8 @@
 package org.adamalang.cli.router;
 
-import org.adamalang.cli.router.Output.*;
+import org.adamalang.cli.runtime.Argument;
+import org.adamalang.cli.runtime.Help;
+import org.adamalang.cli.runtime.Output;
 import org.adamalang.cli.router.ArgumentType.*;
 
 public interface SpaceHandler {
@@ -10,44 +12,44 @@ public interface SpaceHandler {
     }
     switch (args.command.name) {
       case "create":
-        return createSpace(new CreateSpaceArgs(args), new AnsiOutput());
+        return createSpace(new CreateSpaceArgs(args), new Output(args));
       case "delete":
-        return deleteSpace(new DeleteSpaceArgs(args), new AnsiOutput());
+        return deleteSpace(new DeleteSpaceArgs(args), new Output(args));
       case "deploy":
-        return deploySpace(new DeploySpaceArgs(args), new AnsiOutput());
+        return deploySpace(new DeploySpaceArgs(args), new Output(args));
       case "set-rxhtml":
-        return setRxhtmlSpace(new SetRxhtmlSpaceArgs(args), new AnsiOutput());
+        return setRxhtmlSpace(new SetRxhtmlSpaceArgs(args), new Output(args));
       case "upload":
-        return uploadSpace(new UploadSpaceArgs(args), new AnsiOutput());
+        return uploadSpace(new UploadSpaceArgs(args), new Output(args));
       case "download":
-        return downloadSpace(new DownloadSpaceArgs(args), new AnsiOutput());
+        return downloadSpace(new DownloadSpaceArgs(args), new Output(args));
       case "list":
-        return listSpace(new ListSpaceArgs(args), new AnsiOutput());
+        return listSpace(new ListSpaceArgs(args), new Output(args));
       case "usage":
-        return usageSpace(new UsageSpaceArgs(args), new AnsiOutput());
+        return usageSpace(new UsageSpaceArgs(args), new Output(args));
       case "reflect":
-        return reflectSpace(new ReflectSpaceArgs(args), new AnsiOutput());
+        return reflectSpace(new ReflectSpaceArgs(args), new Output(args));
       case "set-role":
-        return setRoleSpace(new SetRoleSpaceArgs(args), new AnsiOutput());
+        return setRoleSpace(new SetRoleSpaceArgs(args), new Output(args));
       case "generate-key":
-        return generateKeySpace(new GenerateKeySpaceArgs(args), new AnsiOutput());
+        return generateKeySpace(new GenerateKeySpaceArgs(args), new Output(args));
       case "encrypt-secret":
-        return encryptSecretSpace(new EncryptSecretSpaceArgs(args), new AnsiOutput());
+        return encryptSecretSpace(new EncryptSecretSpaceArgs(args), new Output(args));
       default:
         Help.displayHelp("space");
         return 0;
     }
   }
-  int createSpace(CreateSpaceArgs args, AnsiOutput output);
-  int deleteSpace(DeleteSpaceArgs args, AnsiOutput output);
-  int deploySpace(DeploySpaceArgs args, AnsiOutput output);
-  int setRxhtmlSpace(SetRxhtmlSpaceArgs args, AnsiOutput output);
-  int uploadSpace(UploadSpaceArgs args, AnsiOutput output);
-  int downloadSpace(DownloadSpaceArgs args, AnsiOutput output);
-  int listSpace(ListSpaceArgs args, AnsiOutput output);
-  int usageSpace(UsageSpaceArgs args, AnsiOutput output);
-  int reflectSpace(ReflectSpaceArgs args, AnsiOutput output);
-  int setRoleSpace(SetRoleSpaceArgs args, AnsiOutput output);
-  int generateKeySpace(GenerateKeySpaceArgs args, AnsiOutput output);
-  int encryptSecretSpace(EncryptSecretSpaceArgs args, AnsiOutput output);
+  int createSpace(CreateSpaceArgs args, Output output);
+  int deleteSpace(DeleteSpaceArgs args, Output output);
+  int deploySpace(DeploySpaceArgs args, Output output);
+  int setRxhtmlSpace(SetRxhtmlSpaceArgs args, Output output);
+  int uploadSpace(UploadSpaceArgs args, Output output);
+  int downloadSpace(DownloadSpaceArgs args, Output output);
+  int listSpace(ListSpaceArgs args, Output output);
+  int usageSpace(UsageSpaceArgs args, Output output);
+  int reflectSpace(ReflectSpaceArgs args, Output output);
+  int setRoleSpace(SetRoleSpaceArgs args, Output output);
+  int generateKeySpace(GenerateKeySpaceArgs args, Output output);
+  int encryptSecretSpace(EncryptSecretSpaceArgs args, Output output);
 }
