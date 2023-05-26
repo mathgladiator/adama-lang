@@ -6,7 +6,7 @@ import org.adamalang.cli.runtime.Output;
 import org.adamalang.cli.router.ArgumentType.*;
 
 public interface SpaceHandler {
-  default int route(Argument args) {
+  default int route(Argument args) throws Exception {
     if (args.command == null) {
       return Help.displayHelp("space");
     }
@@ -19,6 +19,8 @@ public interface SpaceHandler {
         return deploySpace(new DeploySpaceArgs(args), new Output(args));
       case "set-rxhtml":
         return setRxhtmlSpace(new SetRxhtmlSpaceArgs(args), new Output(args));
+      case "get-rxhtml":
+        return getRxhtmlSpace(new GetRxhtmlSpaceArgs(args), new Output(args));
       case "upload":
         return uploadSpace(new UploadSpaceArgs(args), new Output(args));
       case "download":
@@ -40,16 +42,17 @@ public interface SpaceHandler {
         return 0;
     }
   }
-  int createSpace(CreateSpaceArgs args, Output output);
-  int deleteSpace(DeleteSpaceArgs args, Output output);
-  int deploySpace(DeploySpaceArgs args, Output output);
-  int setRxhtmlSpace(SetRxhtmlSpaceArgs args, Output output);
-  int uploadSpace(UploadSpaceArgs args, Output output);
-  int downloadSpace(DownloadSpaceArgs args, Output output);
-  int listSpace(ListSpaceArgs args, Output output);
-  int usageSpace(UsageSpaceArgs args, Output output);
-  int reflectSpace(ReflectSpaceArgs args, Output output);
-  int setRoleSpace(SetRoleSpaceArgs args, Output output);
-  int generateKeySpace(GenerateKeySpaceArgs args, Output output);
-  int encryptSecretSpace(EncryptSecretSpaceArgs args, Output output);
+  int createSpace(CreateSpaceArgs args, Output output) throws Exception;
+  int deleteSpace(DeleteSpaceArgs args, Output output) throws Exception;
+  int deploySpace(DeploySpaceArgs args, Output output) throws Exception;
+  int setRxhtmlSpace(SetRxhtmlSpaceArgs args, Output output) throws Exception;
+  int getRxhtmlSpace(GetRxhtmlSpaceArgs args, Output output) throws Exception;
+  int uploadSpace(UploadSpaceArgs args, Output output) throws Exception;
+  int downloadSpace(DownloadSpaceArgs args, Output output) throws Exception;
+  int listSpace(ListSpaceArgs args, Output output) throws Exception;
+  int usageSpace(UsageSpaceArgs args, Output output) throws Exception;
+  int reflectSpace(ReflectSpaceArgs args, Output output) throws Exception;
+  int setRoleSpace(SetRoleSpaceArgs args, Output output) throws Exception;
+  int generateKeySpace(GenerateKeySpaceArgs args, Output output) throws Exception;
+  int encryptSecretSpace(EncryptSecretSpaceArgs args, Output output) throws Exception;
 }

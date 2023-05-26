@@ -3,6 +3,7 @@ package org.adamalang.cli.runtime;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.cli.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,30 @@ public class Output {
         outputArray.add(json);
     }
     public void out() {
+        // In the case of json only
+        if (json) {
+            System.out.println("[");
+            for (int i = 0; i < outputArray.size(); i++) {
+                ObjectNode json = outputArray.get(i);
+                String[] lines = json.toPrettyString().split("\n");
+                for (int j = 0; j < lines.length ; j++) {
+                    String outputStr = "  " + lines[j];
+                    if (i < outputArray.size() - 1 && j == lines.length - 1) {
+                        outputStr += ",";
+                    }
+                    System.out.println(outputStr);
+                }
+            }
+            System.out.println("]");
+            return;
+        }
+        Util.ANSI headingColor = Util.ANSI.Reset;
+        Util.ANSI valueColor = Util.ANSI.Reset;
+        if (color) {
+            headingColor = Util.ANSI.Yellow;
+            valueColor = Util.ANSI.Green;
+        }
+
         ArrayList<StringBuilder> table = new ArrayList<>();
         for (int i = 0; i < 3 + (2*outputArray.size()); i++) {
             table.add(new StringBuilder());
@@ -36,11 +61,9 @@ public class Output {
         if (outputArray.size() > 0) {
             fields = outputArray.get(0).size();
         }
-
         int[] longestEach = new int[fields];
         String[] headers = new String[fields];
         String[][] values = new String[outputArray.size()][fields];
-
         // Populate the longest for Each
         for (int i = 0; i < outputArray.size() ; i++) {
             ObjectNode json = outputArray.get(i);
@@ -76,10 +99,9 @@ public class Output {
             if ((spaces) % 2 == 1) {
                 rightPad++;
             }
-            table.get(1).append(" ".repeat(leftPad)).append(headers[i]).append(" ".repeat(rightPad)).append("\u2502");
 
+            table.get(1).append(" ".repeat(leftPad)).append(Util.prefixBold(headers[i], headingColor)).append(" ".repeat(rightPad)).append("\u2502");
         }
-
         for (int i = 0; i < values.length ; i++) {
             for (int j = 0; j < values[i].length ; j++) {
                 String value = values[i][j];
@@ -98,85 +120,18 @@ public class Output {
                     table.get(i*2 + 2).append("\u253C");
                 }
                 table.get(i*2 + 3).append("\u2502");
-                table.get(i*2 + 3).append(" ".repeat(leftPad)).append(value).append(" ".repeat(rightPad));
+                table.get(i*2 + 3).append(" ".repeat(leftPad)).append(Util.prefixBold(value, valueColor)).append(" ".repeat(rightPad));
                 if (j == longestEach.length - 1) {
                     table.get(i*2 + 3).append("\u2502");
                 }
-
             }
-
         }
-
-
-
         table.get(0).append("\u2510");
         table.get(table.size()-1).append("\u2518");
-
-
-
-        // Create values
-//        for (int i = 0; i < outputArray.size() ; i++) {
-//            ObjectNode json = outputArray.get(i);
-//            Iterator<Map.Entry<String, JsonNode>> iterator = json.fields();
-//
-//            for (int j = 2; j < table.size(); j++) {
-//
-//            }
-//            table.get(2).append("\u251C");
-//            table.get(3).append("\u2502");
-//            table.get(4).append("\u2514");
-//            int index = 0;
-//            while (iterator.hasNext()) {
-//                Map.Entry<String, JsonNode> item = iterator.next();
-//                String header = item.getKey();
-//                JsonNode value = item.getValue();
-//                String textValue = value.toString();
-//                int cellLength = textValue.length() > header.length() ? textValue.length() : header.length();
-//
-//                if (index != 0) {
-//                    table.get(0).append("\u252C");
-//                    table.get(1).append("\u2502");
-//                    table.get(2).append("\u253C");
-//                    table.get(3).append("\u2502");
-//                    table.get(4).append("\u2534");
-//
-//                    ;           }
-//                table.get(0).append("\u2500".repeat(cellLength+2));
-//                // Center it
-//                int leftPad = (cellLength - header.length() + 2)/2;
-//                int rightPad = leftPad;
-//                if ((cellLength - header.length()) % 2 == 1) {
-//                    leftPad += 1;
-//                }
-//
-//                table.get(1).append(" ".repeat(leftPad)).append(header).append(" ".repeat(rightPad));
-//                table.get(2).append(" ".repeat(cellLength+2));
-//
-//                leftPad = (cellLength - textValue.length() + 2)/2;
-//                rightPad = leftPad;
-//                if ((cellLength - textValue.length()) % 2 == 1) {
-//                    rightPad += 1;
-//                }
-//                table.get(3).append(" ".repeat(leftPad)).append(textValue).append(" ".repeat(rightPad));
-//                table.get(4).append(" ".repeat(cellLength+2));
-//                index++;
-//            }
-//            table.get(0).append("\u2510");
-//            table.get(1).append("\u2502");
-//            table.get(2).append("\u2524");
-//            table.get(3).append("\u2502");
-//            table.get(4).append("\u2518");
-//
-//
-            for (StringBuilder sb : table) {
-                System.out.println(sb);
-            }
-
-
+        for (StringBuilder sb : table) {
+            System.out.println(sb);
         }
-
-
-    public static void main(String[] args) {
-
     }
+
+
 }

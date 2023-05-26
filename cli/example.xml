@@ -81,6 +81,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="root" type="string" short="r">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="keystore" type="file" short="k">
         <documentation>
             Placeholder
@@ -88,6 +94,12 @@
     </arg-definition>
 
     <arg-definition name="priv" type="file" short="p">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="dump-to" type="file" short="d">
         <documentation>
             Placeholder
         </documentation>
@@ -115,6 +127,7 @@
 
         <command name="deploy">
             <arg name="space" />
+            <arg name="dump-to" default="null" />
             <arg name="plan" />
             <arg name="file" default="null" />
             <documentation>
@@ -130,9 +143,18 @@
             </documentation>
         </command>
 
+        <command name="get-rxhtml">
+            <arg name="space" />
+            <documentation>
+                Set the frontend RxHTML forest
+            </documentation>
+        </command>
+
         <command name="upload">
             <arg name="space" />
             <arg name="gc" default="no" />
+            <arg name="root" default="null" />
+            <arg name="file" />
             <documentation>
                 Placeholder
             </documentation>
@@ -165,6 +187,7 @@
             <arg name="space" />
             <arg name="marker" />
             <arg name="output" />
+            <arg name="key" />
             <arg name="limit" default="336" />
             <documentation>
                 Get a file of the reflection of a space

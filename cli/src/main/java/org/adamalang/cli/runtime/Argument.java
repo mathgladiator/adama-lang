@@ -1,6 +1,7 @@
 package org.adamalang.cli.runtime;
 
 
+import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.router.CliElement;
 
@@ -15,9 +16,27 @@ public class Argument {
     private int argStart;
 
     public HashMap<String, ArgumentItem> arguments = new HashMap<>();
+    public Config config;
 
     public Argument(String[] args) {
-        //TODO: Add for config argument
+        // Config
+        try {
+            config = new Config(args);
+        } catch (Exception e) {
+            System.out.println("Error occured while creating config file.");
+            valid = false;
+            return;
+        }
+
+        //Global arguments.
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            if (arg.equals("--no-color")) {
+                arguments.put("--no-color", new ArgumentItem("--no-color", "", "Determines if the output should have color"));
+            } else if (arg.equals("--json")) {
+                arguments.put("--json", new ArgumentItem("--json", "", "Determines if the output should be in json format"));
+            }
+        }
 
         // Validate everything here...
         if (args.length  == 0) {

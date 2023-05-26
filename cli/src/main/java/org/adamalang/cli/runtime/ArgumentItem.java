@@ -16,12 +16,6 @@ public class ArgumentItem {
         this.documentation = documentation;
     }
 
-    public ArgumentItem(String name, String shortField, String documentation, String defaultArg) {
-        this.name = name;
-        this.shortField = shortField;
-        this.documentation = documentation;
-    }
-
     public ArgumentItem copy() {
         ArgumentItem returnArg = new ArgumentItem(name, shortField, documentation);
         returnArg.defaultArg = defaultArg;

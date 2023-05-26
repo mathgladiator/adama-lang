@@ -51,9 +51,15 @@ public class CliElement {
     setRxhtmlSpaceArgs.put("--file", ArgumentItem.setOptionalFromMap(fullArgumentList, "--file", "null"));
     spaceCommands.put("set-rxhtml", new CliElement(setRxhtmlSpaceArgs, "set-rxhtml", "Set the frontend RxHTML forest"));
 
+    HashMap<String, ArgumentItem> getRxhtmlSpaceArgs = new HashMap<>();
+    getRxhtmlSpaceArgs.put("--space", fullArgumentList.get("--space"));
+    spaceCommands.put("get-rxhtml", new CliElement(getRxhtmlSpaceArgs, "get-rxhtml", "Set the frontend RxHTML forest"));
+
     HashMap<String, ArgumentItem> uploadSpaceArgs = new HashMap<>();
     uploadSpaceArgs.put("--space", fullArgumentList.get("--space"));
     uploadSpaceArgs.put("--gc", ArgumentItem.setOptionalFromMap(fullArgumentList, "--gc", "no"));
+    uploadSpaceArgs.put("--root", ArgumentItem.setOptionalFromMap(fullArgumentList, "--root", "null"));
+    uploadSpaceArgs.put("--file", fullArgumentList.get("--file"));
     spaceCommands.put("upload", new CliElement(uploadSpaceArgs, "upload", "Placeholder"));
 
     HashMap<String, ArgumentItem> downloadSpaceArgs = new HashMap<>();
@@ -74,6 +80,7 @@ public class CliElement {
     reflectSpaceArgs.put("--space", fullArgumentList.get("--space"));
     reflectSpaceArgs.put("--marker", fullArgumentList.get("--marker"));
     reflectSpaceArgs.put("--output", fullArgumentList.get("--output"));
+    reflectSpaceArgs.put("--key", fullArgumentList.get("--key"));
     reflectSpaceArgs.put("--limit", ArgumentItem.setOptionalFromMap(fullArgumentList, "--limit", "336"));
     spaceCommands.put("reflect", new CliElement(reflectSpaceArgs, "reflect", "Get a file of the reflection of a space"));
 
@@ -148,6 +155,7 @@ public class CliElement {
     argList.put("--file",new ArgumentItem("--file", "-f", "Placeholder"));
     argList.put("--marker",new ArgumentItem("--marker", "-m", "Placeholder"));
     argList.put("--authority",new ArgumentItem("--authority", "-a", "Placeholder"));
+    argList.put("--root",new ArgumentItem("--root", "-r", "Placeholder"));
     argList.put("--limit",new ArgumentItem("--limit", "-l", "Placeholder"));
     argList.put("--keystore",new ArgumentItem("--keystore", "-k", "Placeholder"));
     argList.put("--priv",new ArgumentItem("--priv", "-p", "Placeholder"));
