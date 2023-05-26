@@ -30,6 +30,7 @@ import org.adamalang.translator.tree.Document;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -48,6 +49,9 @@ public class Code {
       case "validate-plan":
         validatePlan(config, next);
         return;
+      case "bundle-plan":
+        bundlePlan(config, next);
+        return;
       case "compile-file":
         compileFile(config, next);
         return;
@@ -58,6 +62,35 @@ public class Code {
         codeHelp();
         return;
     }
+  }
+
+
+  private static HashMap<String, String> getImports(String[] args) throws Exception {
+    HashMap<String, String> map = new HashMap<>();
+    String imports = Util.extractWithDefault("--imports", "-i", "imports", args);
+    File fileImports = new File(imports);
+    if (fileImports.exists() && fileImports.isDirectory()) {
+      for (File f : fileImports.listFiles((dir, name) -> name.endsWith(".adama"))) {
+        String name = f.getName().substring(0, f.getName().length() - 6);
+        map.put(name, Files.readString(f.toPath()));
+      }
+    }
+    return map;
+  }
+
+  public static void bundlePlan(Config config, String[] args) throws Exception {
+    String output = Util.extractOrCrash("--output", "-o", args);
+    String main = Util.extractOrCrash("--main", "-m", args);
+    ObjectNode plan = Json.newJsonObject();
+    ObjectNode version = plan.putObject("versions").putObject("file");
+    version.put("main", Files.readString(new File(main).toPath()));
+    ObjectNode includes = version.putObject("includes");
+    for (Map.Entry<String, String> entry : getImports(args).entrySet()) {
+      includes.put(entry.getKey(), entry.getValue());
+    }
+    plan.put("default", "file");
+    plan.putArray("plan");
+    Files.writeString(new File(output).toPath(), plan.toPrettyString());
   }
 
   public static boolean validatePlan(Config config, String[] args) throws Exception {
@@ -80,19 +113,23 @@ public class Code {
     }
   }
 
-  public static boolean compileFile(Config config, String[] args) throws Exception {
+  private static CompileResult sharedSetup(Config config, String[] args) throws Exception {
     String codeFilename = Util.extractOrCrash("--file", "-f", args);
-    String dumpTo = Util.extractWithDefault("--dump-to", "-d", null, args);
     File codeFile = new File(codeFilename);
     if (!codeFile.exists()) {
       System.err.println(Util.prefix("File does not exist; stopping", Util.ANSI.Red));
-      return false;
+      return null;
     }
     if (codeFile.isDirectory()) {
       System.err.println(Util.prefix("File is a directory; stopping", Util.ANSI.Red));
-      return false;
+      return null;
     }
-    CompileResult result = sharedCompileCode(codeFilename, Files.readString(codeFile.toPath()));
+    return sharedCompileCode(codeFilename, Files.readString(codeFile.toPath()), getImports(args));
+  }
+
+  public static boolean compileFile(Config config, String[] args) throws Exception {
+    String dumpTo = Util.extractWithDefault("--dump-to", "-d", null, args);
+    CompileResult result = sharedSetup(config, args);
     if (result != null) {
       System.out.println(Util.prefix("Compiled!", Util.ANSI.Green));
       if (dumpTo != null) {
@@ -107,18 +144,8 @@ public class Code {
   }
 
   public static void reflectDump(Config config, String[] args) throws Exception {
-    String codeFilename = Util.extractOrCrash("--file", "-f", args);
     String dumpTo = Util.extractWithDefault("--dump-to", "-d", null, args);
-    File codeFile = new File(codeFilename);
-    if (!codeFile.exists()) {
-      System.err.println(Util.prefix("File does not exist; stopping", Util.ANSI.Red));
-      return;
-    }
-    if (codeFile.isDirectory()) {
-      System.err.println(Util.prefix("File is a directory; stopping", Util.ANSI.Red));
-      return;
-    }
-    CompileResult result = sharedCompileCode(codeFilename, Files.readString(codeFile.toPath()));
+    CompileResult result = sharedSetup(config, args);
     if (result != null) {
       System.out.println(Util.prefix("Compiled!", Util.ANSI.Green));
       if (dumpTo != null) {
@@ -150,13 +177,42 @@ public class Code {
       Iterator<Map.Entry<String, JsonNode>> it = ((ObjectNode) versionsNode).fields();
       while (it.hasNext()) {
         Map.Entry<String, JsonNode> entry = it.next();
-        if (entry.getValue() == null || !entry.getValue().isTextual()) {
+        if (entry.getValue() == null) {
           System.err.println("version '"+entry.getKey()+"' didn't exist or wasn't text");
           success = false;
-        } else {
-          if (sharedCompileCode(entry.getKey(), entry.getValue().textValue()) == null) {
+        } else if(entry.getValue().isTextual()) {
+          if (sharedCompileCode(entry.getKey(), entry.getValue().textValue(), new HashMap<>()) == null) {
             System.err.println("version '"+entry.getValue()+"' failed to validate");
             success = false;
+          }
+        } else if(entry.getValue().isObject()) {
+          ObjectNode bundle = (ObjectNode) entry.getValue();
+          JsonNode main = bundle.get("main");
+          if (main == null || !main.isTextual()) {
+            System.err.println("bundle '"+bundle.toPrettyString() + "' doesn't have a main or if it wasn't text");
+            success = false;
+          } else {
+            JsonNode includesNode = bundle.get("includes");
+            HashMap<String, String> includes = new HashMap<>();
+            if (includesNode == null || !includesNode.isObject()) {
+              System.err.println("bundle '"+bundle.toPrettyString() + "' doesn't have an includes that is an object");
+              success = false;
+            } else {
+              Iterator<Map.Entry<String, JsonNode>> inf = includesNode.fields();
+              while (inf.hasNext()) {
+                Map.Entry<String, JsonNode> infe = inf.next();
+                if (infe.getValue() == null | !infe.getValue().isTextual()) {
+                  System.err.println("bundle '"+ infe.getKey() + "' was either null or not text when it should be text");
+                  success = false;
+                } else {
+                  includes.put(infe.getKey(), infe.getValue().textValue());
+                }
+              }
+            }
+            if (sharedCompileCode(entry.getKey(), main.textValue(), includes) == null) {
+              System.err.println("version '" + entry.getKey() + "' failed to validate");
+              success = false;
+            }
           }
         }
       }
@@ -208,7 +264,7 @@ public class Code {
     }
   }
 
-  public static CompileResult sharedCompileCode(String filename, String code) {
+  public static CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) {
     try {
       final var options = CompilerOptions.start().make();
       final var globals = GlobalObjectPool.createPoolWithStdLib();
@@ -218,6 +274,7 @@ public class Code {
       document.setClassName("TempClass");
       final var tokenEngine = new TokenEngine(filename, code.codePoints().iterator());
       final var parser = new Parser(tokenEngine);
+      document.setIncludes(includes);
       parser.document().accept(document);
       boolean result = document.check(state);
       if (result) {
