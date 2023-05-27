@@ -18,6 +18,7 @@ import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
@@ -83,25 +84,25 @@ public class TyNativeAsset extends TySimpleNative implements //
   @Override
   public TyNativeFunctional lookupMethod(String name, Environment environment) {
     if ("name".equals(name)) {
-      return new TyNativeFunctional("name", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("name", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("name", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("name", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("type".equals(name)) {
-      return new TyNativeFunctional("type", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("type", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("type", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("type", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("valid".equals(name)) {
-      return new TyNativeFunctional("valid", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("valid", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("valid", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("valid", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("md5".equals(name)) {
-      return new TyNativeFunctional("md5", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("md5", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("md5", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("md5", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("sha384".equals(name)) {
-      return new TyNativeFunctional("sha384", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("sha384", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("sha384", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("sha384", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("id".equals(name)) {
-      return new TyNativeFunctional("id", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("id", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("id", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("id", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
   }

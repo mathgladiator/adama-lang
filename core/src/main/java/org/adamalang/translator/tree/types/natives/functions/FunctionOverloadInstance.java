@@ -31,13 +31,13 @@ public class FunctionOverloadInstance extends DocumentPosition {
   public final boolean castArgs;
   public final boolean aborts;
 
-  public FunctionOverloadInstance(final String javaFunction, final TyType returnType, final ArrayList<TyType> types, final boolean pure, final boolean castArgs, final boolean aborts) {
+  public FunctionOverloadInstance(final String javaFunction, final TyType returnType, final ArrayList<TyType> types, FunctionPaint paint) {
     this.javaFunction = javaFunction;
     this.returnType = returnType;
     this.types = types;
-    this.pure = pure;
-    this.castArgs = castArgs;
-    this.aborts = aborts;
+    this.pure = paint.pure;
+    this.castArgs = paint.castArgs;
+    this.aborts = paint.aborts;
     this.hiddenSuffixArgs = new ArrayList<>();
     this.dependencies = new LinkedHashSet<>();
   }

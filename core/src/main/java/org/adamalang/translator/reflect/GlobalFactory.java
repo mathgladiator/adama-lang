@@ -12,6 +12,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 
 import java.lang.annotation.Annotation;
@@ -87,7 +88,7 @@ public class GlobalFactory {
         newOverloads = new ArrayList<>();
         byFirstParameterType.put(key, newOverloads);
       }
-      newOverloads.add(new FunctionOverloadInstance(fo.javaFunction, fo.returnType, affix, fo.pure, false, false));
+      newOverloads.add(new FunctionOverloadInstance(fo.javaFunction, fo.returnType, affix, new FunctionPaint(fo.pure, false, false)));
     }
   }
 
@@ -123,7 +124,7 @@ public class GlobalFactory {
       } else {
         try {
           final var fld = clazz.getField(entry.getKey());
-          overloads.add(new FunctionOverloadInstance(clazz.getSimpleName() + "." + entry.getKey(), TypeBridge.getAdamaType(fld.getType(), null), new ArrayList<>(), true, false, false));
+          overloads.add(new FunctionOverloadInstance(clazz.getSimpleName() + "." + entry.getKey(), TypeBridge.getAdamaType(fld.getType(), null), new ArrayList<>(), FunctionPaint.READONLY_NORMAL));
           object.functions.put(entry.getKey(), new TyNativeFunctional(entry.getKey(), overloads, FunctionStyleJava.InjectName));
         } catch (final NoSuchFieldException nsfe) {
         }
@@ -161,7 +162,7 @@ public class GlobalFactory {
       }
       args.add(TypeBridge.getAdamaType(params[k], extractHiddenTypes(method.getParameterAnnotations()[k])));
     }
-    return new FunctionOverloadInstance(clazz.getSimpleName() + "." + method.getName(), TypeBridge.getAdamaType(method.getReturnType(), extractHiddenTypes(method.getAnnotations())), args, true, false, false);
+    return new FunctionOverloadInstance(clazz.getSimpleName() + "." + method.getName(), TypeBridge.getAdamaType(method.getReturnType(), extractHiddenTypes(method.getAnnotations())), args, FunctionPaint.READONLY_NORMAL);
   }
 
   private static boolean isExtension(final Method method) {

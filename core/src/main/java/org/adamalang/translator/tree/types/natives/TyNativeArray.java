@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.expressions.InjectExpression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
@@ -130,7 +131,7 @@ public class TyNativeArray extends TyType implements //
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("length", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, arrayToken).withPosition(this), new ArrayList<>(), false, false, false)), FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("length", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, arrayToken).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.None);
     }
     return environment.state.globals.findExtension(this, name);
   }

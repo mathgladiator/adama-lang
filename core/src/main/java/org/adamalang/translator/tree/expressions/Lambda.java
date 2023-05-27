@@ -19,6 +19,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 
@@ -113,7 +114,7 @@ public class Lambda extends Expression implements LatentCodeSnippet {
 
       exprType = environment.rules.Resolve(expr.typing(next, null), false);
       if (exprType != null && variableType != null) {
-        FunctionOverloadInstance created = new FunctionOverloadInstance("apply", exprType, instance.types, true, false, false);
+        FunctionOverloadInstance created = new FunctionOverloadInstance("apply", exprType, instance.types, FunctionPaint.READONLY_NORMAL);
         return new TyNativeFunctional("apply", FunctionOverloadInstance.WRAP(created), FunctionStyleJava.ExpressionThenArgs);
       }
     }

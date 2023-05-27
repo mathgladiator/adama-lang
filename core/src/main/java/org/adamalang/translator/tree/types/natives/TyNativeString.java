@@ -18,6 +18,7 @@ import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
@@ -88,7 +89,7 @@ public class TyNativeString extends TySimpleNative implements //
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("length".equals(name)) {
-      return new TyNativeFunctional("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
   }

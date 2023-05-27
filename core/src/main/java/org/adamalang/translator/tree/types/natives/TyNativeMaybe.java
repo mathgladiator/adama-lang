@@ -18,6 +18,7 @@ import org.adamalang.translator.tree.expressions.InjectExpression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaSetter;
 import org.adamalang.translator.tree.types.traits.details.*;
@@ -131,15 +132,14 @@ public class TyNativeMaybe extends TyType implements //
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("delete".equals(name)) {
-      return new TyNativeFunctional("delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", null, new ArrayList<>(), false, false, false)), FunctionStyleJava.ExpressionThenArgs);
-    }
+      return new TyNativeFunctional("delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", null, new ArrayList<>(), FunctionPaint.NORMAL)), FunctionStyleJava.ExpressionThenArgs);    }
     if ("has".equals(name)) {
-      return new TyNativeFunctional("has", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("has", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), false, false, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("has", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("has", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("getOrDefaultTo".equals(name)) {
       ArrayList<TyType> args = new ArrayList<>();
       args.add(tokenElementType.item);
-      return new TyNativeFunctional("getOrDefaultTo", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, true, true, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("getOrDefaultTo", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, new FunctionPaint(true, true, false))), FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
   }
