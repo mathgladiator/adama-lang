@@ -223,6 +223,11 @@ public class Environment {
     return new Environment(document, state.scopeMessageHandler(), this);
   }
 
+  /** create a new environment that has access to the viewer */
+  public Environment scopeWithViewer() {
+    return new Environment(document, state.scopeViewer(), this);
+  }
+
   /** create a new environment just for constructor */
   public Environment scopeAsConstructor() {
     return new Environment(document, state.scopeConstructor(), this);

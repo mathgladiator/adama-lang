@@ -19,18 +19,21 @@ public class FunctionPaint {
   public final boolean pure;
   public final boolean castArgs;
   public final boolean aborts;
+  public final boolean viewer;
 
   public FunctionPaint(final boolean pure, final boolean castArgs, final boolean aborts) {
     this.tokens = EMPTY_TOKENS;
     this.pure = pure;
     this.castArgs = castArgs;
     this.aborts = aborts;
+    this.viewer = false;
   }
 
   public FunctionPaint(Token... tokens) {
     this.tokens = tokens;
     boolean _pure = false;
     boolean _aborts = false;
+    boolean _viewer = false;
     for (Token token : tokens) {
       if (token.text.equals("readonly")) {
         _pure = true;
@@ -38,10 +41,14 @@ public class FunctionPaint {
       if (token.text.equals("aborts")) {
         _aborts = true;
       }
+      if (token.text.equals("viewer")) {
+        _viewer = true;
+      }
     }
     this.pure = _pure;
     this.castArgs = false;
     this.aborts = _aborts;
+    this.viewer = _viewer;
   }
 
   public void emit(Consumer<Token> yielder) {

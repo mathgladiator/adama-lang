@@ -30,6 +30,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
   public final ArrayList<TyType> types;
   public final boolean castArgs;
   public final boolean aborts;
+  public final boolean viewer;
 
   public FunctionOverloadInstance(final String javaFunction, final TyType returnType, final ArrayList<TyType> types, FunctionPaint paint) {
     this.javaFunction = javaFunction;
@@ -38,8 +39,12 @@ public class FunctionOverloadInstance extends DocumentPosition {
     this.pure = paint.pure;
     this.castArgs = paint.castArgs;
     this.aborts = paint.aborts;
+    this.viewer = paint.viewer;
     this.hiddenSuffixArgs = new ArrayList<>();
     this.dependencies = new LinkedHashSet<>();
+    if (this.viewer) {
+      hiddenSuffixArgs.add("__viewer");
+    }
   }
 
   public void dependOn(Collection<String> depends) {

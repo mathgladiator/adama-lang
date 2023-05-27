@@ -115,6 +115,9 @@ public class DefineMethod extends StructureComponent {
     if (paint.aborts) {
       toUse = toUse.scopeAsAbortable();
     }
+    if (paint.viewer) {
+      toUse = toUse.scopeWithViewer();
+    }
     for (final FunctionArg arg : args) {
       toUse.define(arg.argName, arg.type, true, arg.type);
     }
@@ -139,6 +142,12 @@ public class DefineMethod extends StructureComponent {
         sb.append(", ");
       }
       sb.append(arg.type.getJavaConcreteType(environment)).append(" ").append(arg.argName);
+    }
+    if (paint.viewer) {
+      if (!first) {
+        sb.append(", ");
+      }
+      sb.append("__ViewerType __viewer");
     }
     sb.append(") ");
     if (paint.aborts) {

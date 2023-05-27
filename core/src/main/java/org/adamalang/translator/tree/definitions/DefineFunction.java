@@ -137,6 +137,9 @@ public class DefineFunction extends Definition {
     if (paint.aborts) {
       toUse = toUse.scopeAsAbortable();
     }
+    if (paint.viewer) {
+      toUse = toUse.scopeWithViewer();
+    }
     toUse = toUse.watch((escName, type) -> {
       TyType resolved = environment.rules.Resolve(type, true);
       if (resolved instanceof TyNativeGlobalObject) return;
@@ -185,6 +188,12 @@ public class DefineFunction extends Definition {
         sb.append(", ");
       }
       sb.append(arg.type.getJavaConcreteType(environment)).append(" ").append(arg.argName);
+    }
+    if (paint.viewer) {
+      if (!first) {
+        sb.append(", ");
+      }
+      sb.append("__ViewerType __viewer");
     }
     sb.append(") ");
     if (paint.aborts) {
