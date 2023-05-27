@@ -99,20 +99,19 @@ public class Lambda extends Expression implements LatentCodeSnippet {
         }
       }).captureSpecials();
       HashMap<String, TyType> specialsUsed = watch.specials();
-      if (specialsUsed != null) {
-        for (Map.Entry<String, TyType> entry : specialsUsed.entrySet()) {
-          closureTyTypes.put(entry.getKey(), entry.getValue());
-          closureTypes.put(entry.getKey(), entry.getValue().getJavaConcreteType(environment));
-        }
-      }
       Environment next = watch.scopeAsReadOnlyBoundary();
       variableType = environment.rules.Resolve(instance.types.get(0), false);
       next.define(variable.text, variableType, true, this);
       if (variableType == null) {
         environment.document.createError(this, "Failed to infer the variable type of the lambda", "Lambda");
       }
-
       exprType = environment.rules.Resolve(expr.typing(next, null), false);
+      if (specialsUsed != null) {
+        for (Map.Entry<String, TyType> entry : specialsUsed.entrySet()) {
+          closureTyTypes.put(entry.getKey(), entry.getValue());
+          closureTypes.put(entry.getKey(), entry.getValue().getJavaConcreteType(environment));
+        }
+      }
       if (exprType != null && variableType != null) {
         FunctionOverloadInstance created = new FunctionOverloadInstance("apply", exprType, instance.types, FunctionPaint.READONLY_NORMAL);
         return new TyNativeFunctional("apply", FunctionOverloadInstance.WRAP(created), FunctionStyleJava.ExpressionThenArgs);

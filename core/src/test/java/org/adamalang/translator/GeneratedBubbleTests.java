@@ -1931,7 +1931,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    return tbl.iterate(false).where(true, new __CLOSURE_WhereClause0(__viewer));");
     gold.append("\n  }");
     gold.append("\n  public NtList<RTxDayReport> __COMPUTE_todo(NtPrincipal __who, RTx__ViewerType __viewer) {");
-    gold.append("\n    return LibDate.calendarViewOf((LibDate.offsetMonth(__dateOfToday(), __viewer.offset_month))).mapFunction(new __CLOSURE_Lambda1());");
+    gold.append("\n    return LibDate.calendarViewOf((LibDate.offsetMonth(__dateOfToday(), __viewer.offset_month))).mapFunction(new __CLOSURE_Lambda1(__viewer));");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -2763,10 +2763,14 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_Lambda1 implements Function<NtDate, RTxDayReport> {");
+    gold.append("\n    private RTx__ViewerType __viewer;");
+    gold.append("\n    private __CLOSURE_Lambda1(RTx__ViewerType __viewer) {");
+    gold.append("\n      this.__viewer = __viewer;");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxDayReport apply(NtDate x) {");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return __FUNC_0_show_day(x, __dateOfToday());");
+    gold.append("\n      return __FUNC_0_show_day(x, LibDate.offsetMonth(__dateOfToday(), __viewer.offset_month));");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");

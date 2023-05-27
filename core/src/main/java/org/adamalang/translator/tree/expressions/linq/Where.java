@@ -56,7 +56,6 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
   private int generatedClassId;
   private String iterType;
   private StructureStorage structureStorage;
-  private HashMap<String, TyType> specialsUsed;
   private boolean writtenDependentExpressionsForClosure;
 
   public Where(final Expression sql, final Token tokenWhere, final Token aliasToken, final Token colonToken, final Expression expression) {
@@ -77,7 +76,6 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     indexKeysExpr = new StringBuilder();
     applyQuerySetStatements = new ArrayList<>();
     closureTyTypes = new TreeMap<>();
-    specialsUsed = null;
     writtenDependentExpressionsForClosure = false;
   }
 
@@ -207,16 +205,6 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     expression.emit(yielder);
   }
 
-  /** convert the specials found within the environment to closure variables */
-  private void convertSpecials(Environment environment) {
-    if (specialsUsed != null) {
-      for (Map.Entry<String, TyType> entry : specialsUsed.entrySet()) {
-        closureTyTypes.put(entry.getKey(), entry.getValue());
-        closureTypes.put(entry.getKey(), entry.getValue().getJavaConcreteType(environment));
-      }
-    }
-  }
-
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     generatedClassId = environment.document.inventClassId();
@@ -237,7 +225,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
           closureTypes.put(name, ty.getJavaConcreteType(environment));
         }
       }).captureSpecials();
-      this.specialsUsed = watch.specials();
+      HashMap<String, TyType> specialsUsed = watch.specials();
       final var next = watch.scopeWithComputeContext(ComputeContext.Computation);
       iterType = "RTx" + storageType.name();
       var toUse = next;
@@ -269,7 +257,11 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         });
       }
       final var expressionType = expression.typing(toUse, null);
-      convertSpecials(environment);
+      System.err.println(specialsUsed);
+      for (Map.Entry<String, TyType> entry : specialsUsed.entrySet()) {
+        closureTyTypes.put(entry.getKey(), entry.getValue());
+        closureTypes.put(entry.getKey(), entry.getValue().getJavaConcreteType(environment));
+      }
       environment.rules.IsBoolean(expressionType, false);
       return typeFrom.makeCopyWithNewPosition(this, typeFrom.behavior);
     }
