@@ -835,23 +835,18 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
     if (cached_Sad_2 != null) {
       return cached_Sad_2;
     }
-    cached_Sad_2 = generateTestOutput(true, "Sad_2", "./test_code/FunctionsViewer_Sad_success.a");
+    cached_Sad_2 = generateTestOutput(false, "Sad_2", "./test_code/FunctionsViewer_Sad_failure.a");
     return cached_Sad_2;
   }
 
   @Test
-  public void testSadEmission() {
-    assertEmissionGood(get_Sad_2());
+  public void testSadFailure() {
+    assertLiveFail(get_Sad_2());
   }
 
   @Test
-  public void testSadSuccess() {
-    assertLivePass(get_Sad_2());
-  }
-
-  @Test
-  public void testSadGoodWillHappy() {
-    assertGoodWillHappy(get_Sad_2());
+  public void testSadNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_Sad_2());
   }
 
   @Test
@@ -868,9 +863,7 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
   public void stable_Sad_2() {
     String live = get_Sad_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:FunctionsViewer_Sad_success.a");
-    gold.append("\n--EMISSION-----------------------------------------");
-    gold.append("\nEmission Success, Yay");
+    gold.append("Path:FunctionsViewer_Sad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":9,\"byte\":135},\"end\":{\"line\":7,\"character\":20,\"byte\":146}},\"severity\":1,\"source\":\"error\",\"message\":\"Functions with viewer can only be used from viewer states (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");

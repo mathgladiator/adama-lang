@@ -227,6 +227,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Enums_DispatchManyMissing_failure.a,0,0,2,1,"Enum 'E' has a dispatcher 'x' which is incomplete and lacks: X, Z. (EnumStorage)"
 ./test_code/FunctionsAbortable_Sad_failure.a,13,2,13,12,"Abortable functions can only be called from another abortable function or within a message handler (FunctionInvoke)"
 ./test_code/FunctionsAbortable_Sad_failure.a,14,2,14,5,"Abortable functions can only be called from another abortable function or within a message handler (FunctionInvoke)"
+./test_code/FunctionsViewer_Sad_failure.a,7,9,7,20,"Functions with viewer can only be used from viewer states (FunctionInvoke)"
 ./test_code/Functions_ApplyOnNotAFunction_failure.a,2,11,2,14,"Type check failure: The given type was expected to be a function: 'int' (RuleSetFunctions)"
 ./test_code/Functions_ApplyOnNotAFunction_failure.a,2,11,2,14,"Expression is not a function (FunctionInvoke)"
 ./test_code/Functions_ArityMismatch_failure.a,5,11,5,22,"Function invoked with wrong number of arguments. Expected 1, got 0 (FunctionInvoke)"
