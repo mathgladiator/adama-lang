@@ -975,6 +975,11 @@ public class Parser {
         arr.add(abortsToken);
         again = true;
       }
+      final var viewerToken = tokens.popIf(t -> t.isIdentifier("viewer"));
+      if (viewerToken != null) {
+        arr.add(viewerToken);
+        again = true;
+      }
     }
     return new FunctionPaint(arr.toArray(new Token[arr.size()]));
   }

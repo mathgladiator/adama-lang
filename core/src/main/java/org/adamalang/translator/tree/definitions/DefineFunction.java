@@ -165,7 +165,7 @@ public class DefineFunction extends Definition {
     for (final FunctionArg arg : args) {
       argTypes.add(arg.type);
     }
-    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, new FunctionPaint(specialization == FunctionSpecialization.Pure || paint.pure, paint.castArgs, paint.aborts));
+    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, paint);
     foi.ingest(this);
     producedInstance = foi;
     return foi;
@@ -193,7 +193,7 @@ public class DefineFunction extends Definition {
       if (!first) {
         sb.append(", ");
       }
-      sb.append("__ViewerType __viewer");
+      sb.append("RTx__ViewerType __viewer");
     }
     sb.append(") ");
     if (paint.aborts) {

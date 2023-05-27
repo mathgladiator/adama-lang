@@ -1,0 +1,11 @@
+view int x;
+
+procedure fake_viewer() -> int viewer readonly {
+  return @viewer.x;
+}
+
+procedure gap() -> int readonly {
+  return fake_viewer();
+}
+
+bubble fv = gap();

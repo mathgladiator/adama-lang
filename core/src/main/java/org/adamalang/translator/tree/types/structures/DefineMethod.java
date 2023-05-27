@@ -147,7 +147,7 @@ public class DefineMethod extends StructureComponent {
       if (!first) {
         sb.append(", ");
       }
-      sb.append("__ViewerType __viewer");
+      sb.append("RTx__ViewerType __viewer");
     }
     sb.append(") ");
     if (paint.aborts) {
