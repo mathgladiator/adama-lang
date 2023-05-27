@@ -86,6 +86,20 @@ public class GlobalObjectPool {
     return pool;
   }
 
+  /** common policy for watch to ignore various names and types */
+  public static boolean ignoreCapture(String name, TyType ty) {
+    if (ty instanceof TyNativeGlobalObject || ty instanceof TyNativeFunctional) {
+      return true;
+    }
+    switch (name) {
+      case "__time":
+      case "__today":
+        return true;
+      default:
+        return false;
+    }
+  }
+
   private static TyNativeFunctional subscribe(String depend, TyNativeFunctional func) {
     for (FunctionOverloadInstance foi : func.overloads) {
       foi.dependencies.add(depend);

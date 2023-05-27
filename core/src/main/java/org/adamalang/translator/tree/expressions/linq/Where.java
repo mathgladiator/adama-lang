@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.expressions.linq;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
+import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
@@ -228,10 +229,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       structureStorage = storageType.storage();
       final var watch = environment.watch((name, tyUn) -> {
         TyType ty = environment.rules.Resolve(tyUn, false);
-        if (ty instanceof TyNativeGlobalObject || ty instanceof TyNativeFunctional) {
-          return;
-        }
-        if ("__time".equals(name) || "__today".equals(name)) {
+        if (GlobalObjectPool.ignoreCapture(name, ty)) {
           return;
         }
         if (!closureTypes.containsKey(name) && ty != null) {

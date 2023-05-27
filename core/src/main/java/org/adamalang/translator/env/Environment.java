@@ -15,6 +15,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.Rules;
 import org.adamalang.translator.tree.types.natives.TyNativeDate;
+import org.adamalang.translator.tree.types.natives.TyNativeLazyWrap;
 import org.adamalang.translator.tree.types.natives.TyNativeLong;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLong;
@@ -62,7 +63,7 @@ public class Environment {
       this.interns.add("\"?\"");
       this.interns.add("\"\"");
     }
-    this.specialConstants = specialConstants;
+    this.specialConstants = null;
   }
 
   /** construct an environment that is fresh */
@@ -198,7 +199,7 @@ public class Environment {
     }
 
     if ("__today".equals(name)) {
-      return lookup_return(name, new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null));
+      return lookup_return(name, new TyNativeLazyWrap(new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null)));
     }
 
     return lookup_return(name, result);
