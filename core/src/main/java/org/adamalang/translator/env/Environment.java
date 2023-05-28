@@ -36,7 +36,7 @@ public class Environment {
   private final HashSet<String> readonly;
   private final HashMap<String, TyType> variables;
   private TyType returnType;
-  private boolean returnTypeSet;
+  private TyType caseType;
   private Function<String, TyType> trap = null;
   private BiConsumer<String, TyType> watch = null;
   private HashMap<String, TyType> specialConstants = null;
@@ -47,8 +47,8 @@ public class Environment {
     variables = new HashMap<>();
     readonly = new HashSet<>();
     this.parent = parent;
-    returnTypeSet = false;
     returnType = null;
+    caseType = null;
     if (parent != null) {
       rules = parent.rules;
       codeCoverageTracker = parent.codeCoverageTracker;
@@ -132,17 +132,6 @@ public class Environment {
       readonly.add(name);
     }
     return this;
-  }
-
-  /** @return the most recent return type. */
-  public TyType getMostRecentReturnType() {
-    if (returnTypeSet) {
-      return returnType;
-    }
-    if (parent != null) {
-      return parent.getMostRecentReturnType();
-    }
-    return null;
   }
 
   private TyType lookup_return(String name, TyType result) {
@@ -298,10 +287,31 @@ public class Environment {
     return new Environment(document, state.scopeWithCache(cacheObject), this);
   }
 
+  /** @return the most recent return type. */
+  public TyType getMostRecentReturnType() {
+    if (returnType != null) {
+      return returnType;
+    }
+    if (parent != null) {
+      return parent.getMostRecentReturnType();
+    }
+    return null;
+  }
+
   /** set the return type of the given scope */
   public Environment setReturnType(final TyType returnType) {
-    returnTypeSet = true;
     this.returnType = returnType;
+    return this;
+  }
+
+
+  /** @return the case type of the current environment. */
+  public TyType getCaseType() {
+    return caseType;
+  }
+
+  public Environment setCaseType(final TyType caseType) {
+    this.caseType = caseType;
     return this;
   }
 
