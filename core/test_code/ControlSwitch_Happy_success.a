@@ -1,0 +1,17 @@
+public int sum = 0;
+
+@construct {
+  switch (sum) {
+    case 0:
+      sum = 123;
+      break;
+    case 1:
+      sum = 42;
+      break;
+    case 2:
+      sum = 1000;
+      break;
+    default:
+      sum = 50;
+  }
+}

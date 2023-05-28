@@ -310,7 +310,7 @@ public class RuleSetCommon {
     return false;
   }
 
-  static boolean IsLong(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsLong(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeLong || tyType instanceof TyReactiveLong) {

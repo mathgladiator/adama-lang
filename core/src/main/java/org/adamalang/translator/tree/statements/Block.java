@@ -12,6 +12,8 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.statements.control.Case;
+import org.adamalang.translator.tree.statements.control.DefaultCase;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -71,6 +73,7 @@ public class Block extends Statement {
   }
 
   public void specialWriteJava(final StringBuilderWithTabs sb, final Environment environment, final boolean brace, final boolean tabDownOnEnd) {
+    boolean hasCases = environment.getCaseType() != null;
     final var child = environment.scope();
     final var n = statements.size();
     if (n == 0 && brace) {
@@ -79,7 +82,7 @@ public class Block extends Statement {
     }
     if (brace) {
       sb.tabUp().append("{").writeNewline();
-      if (!environment.state.hasNoCost() && !environment.state.isStatic()) {
+      if (!environment.state.hasNoCost() && !environment.state.isStatic() && !hasCases) {
         sb.append(String.format("__code_cost += %d;", 1 + statements.size()));
         if (n == 0 && (brace || tabDownOnEnd)) {
           sb.tabDown();
@@ -90,7 +93,7 @@ public class Block extends Statement {
           sb.tabDown().append("/* empty */").writeNewline();
         }
       }
-    } else if (!environment.state.hasNoCost() && !environment.state.isStatic()) {
+    } else if (!environment.state.hasNoCost() && !environment.state.isStatic() && !hasCases) {
       sb.append(String.format("__code_cost += %d;", 1 + statements.size()));
       if (n == 0 && (brace || tabDownOnEnd)) {
         sb.tabDown();
@@ -105,11 +108,19 @@ public class Block extends Statement {
     for (var k = 0; k < n; k++) {
       final var s = statements.get(k);
       final var codeCoverageIndex = environment.codeCoverageTracker.register(s);
-      if (environment.state.options.produceCodeCoverage && !environment.state.isStatic()) {
+      if (environment.state.options.produceCodeCoverage && !environment.state.isStatic() && !hasCases) {
         sb.append(String.format("__track(%d);", codeCoverageIndex)).writeNewline();
+      }
+      boolean tabbed = hasCases && !(s instanceof Case || s instanceof DefaultCase);
+      if (tabbed) {
+        sb.tab();
+        sb.tabUp();
       }
       s.writeJava(sb, child);
       if (k == n - 1 && (brace || tabDownOnEnd)) {
+        sb.tabDown();
+      }
+      if (tabbed) {
         sb.tabDown();
       }
       sb.writeNewline();

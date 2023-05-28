@@ -56,6 +56,9 @@ public class Tables {
     keywords.add("abort");
     keywords.add("block");
     keywords.add("enum");
+    keywords.add("switch");
+    keywords.add("case");
+    keywords.add("default");
     keywords.add("@construct");
     keywords.add("@connected");
     keywords.add("@disconnected");

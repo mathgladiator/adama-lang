@@ -257,7 +257,6 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         });
       }
       final var expressionType = expression.typing(toUse, null);
-      System.err.println(specialsUsed);
       for (Map.Entry<String, TyType> entry : specialsUsed.entrySet()) {
         closureTyTypes.put(entry.getKey(), entry.getValue());
         closureTypes.put(entry.getKey(), entry.getValue().getJavaConcreteType(environment));

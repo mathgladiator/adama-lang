@@ -39,7 +39,8 @@ public class Environment {
   private TyType caseType;
   private Function<String, TyType> trap = null;
   private BiConsumer<String, TyType> watch = null;
-  private HashMap<String, TyType> specialConstants = null;
+  private HashMap<String, TyType> specialConstants;
+  private boolean hasDefaultCase;
 
   private Environment(final Document document, final EnvironmentState state, final Environment parent) {
     this.document = document;
@@ -313,6 +314,14 @@ public class Environment {
   public Environment setCaseType(final TyType caseType) {
     this.caseType = caseType;
     return this;
+  }
+
+  public boolean checkDefaultReturnTrueIfMultiple() {
+    if (hasDefaultCase) {
+      return true;
+    }
+    hasDefaultCase = true;
+    return false;
   }
 
   /** create a new environment (scoped) that will trap the given variables */

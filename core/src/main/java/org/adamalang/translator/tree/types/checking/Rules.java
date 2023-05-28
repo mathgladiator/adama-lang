@@ -110,6 +110,10 @@ public class Rules {
     return RuleSetCommon.IsInteger(environment, tyType, silent);
   }
 
+  public boolean IsLong(final TyType tyType, final boolean silent) {
+    return RuleSetCommon.IsLong(environment, tyType, silent);
+  }
+
   public boolean IsString(final TyType tyType, final boolean silent) {
     return RuleSetCommon.IsString(environment, tyType, silent);
   }

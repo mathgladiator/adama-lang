@@ -1622,7 +1622,7 @@ public class Parser {
     if (op != null) {
       return new EmptyStatement(op);
     }
-    op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump", "@forward"));
+    op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "switch", "case", "default", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump", "@forward"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("auto", "let", "var", "transition", "invoke", "assert", "preempt"));
     }
@@ -1647,6 +1647,22 @@ public class Parser {
           return for_statement_trailer(op);
         case "foreach":
           return foreach_statement_trailer(op);
+        case "switch": {
+          Token openParen = consumeExpectedSymbol("(");
+          Expression val = expression();
+          Token closeParen = consumeExpectedSymbol(")");
+          Block code = block();
+          return new Switch(op, openParen, val, closeParen, code);
+        }
+        case "case": {
+          Expression val = expression();
+          Token colon = consumeExpectedSymbol(":");
+          return new Case(op, val, colon);
+        }
+        case "default": {
+          Token colon = consumeExpectedSymbol(":");
+          return new DefaultCase(op, colon);
+        }
         case "transition": {
           final var toTransition = expression();
           final var testIn = tokens.popIf(t -> t.isIdentifier("in"));
