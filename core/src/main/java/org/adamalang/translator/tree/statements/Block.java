@@ -65,7 +65,6 @@ public class Block extends Statement {
   public ControlFlow typing(final Environment environment) {
     boolean hasCases = environment.getCaseType() != null;
     if (hasCases) {
-      boolean anyOpen = false;
       int casesThatBreak = 0;
       int casesThatReturn = 0;
       boolean inDefault = false;
