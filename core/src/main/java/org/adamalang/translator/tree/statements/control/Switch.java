@@ -18,6 +18,7 @@ import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetEnums;
 
 import java.util.function.Consumer;
 
@@ -35,6 +36,8 @@ public class Switch extends Statement {
     this.expression = expression;
     this.closeParen = closeParen;
     this.code = code;
+    ingest(token);
+    ingest(code);
   }
 
   @Override
@@ -50,6 +53,10 @@ public class Switch extends Statement {
   public ControlFlow typing(Environment environment) {
     Environment next = environment.scope();
     caseType = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+    boolean good = environment.rules.IsInteger(caseType, true) || environment.rules.IsString(caseType, true) || RuleSetEnums.IsEnum(environment, caseType, true);
+    if (!good) {
+      environment.document.createError(this, String.format("switch statements work with integer, string, or enum types"), "SwitchCase");
+    }
     next.setCaseType(caseType);
     return code.typing(next);
   }

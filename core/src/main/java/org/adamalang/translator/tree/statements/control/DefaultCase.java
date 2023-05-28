@@ -15,6 +15,7 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
+import org.adamalang.translator.tree.types.TyType;
 
 import java.util.function.Consumer;
 
@@ -37,6 +38,11 @@ public class DefaultCase extends Statement {
 
   @Override
   public ControlFlow typing(Environment environment) {
+
+    TyType caseType = environment.getCaseType();
+    if (caseType == null) {
+      environment.document.createError(this, String.format("default: requires being in a switch statement"), "SwitchCase");
+    }
     if (environment.checkDefaultReturnTrueIfMultiple()) {
       environment.document.createError(this, String.format("there can be only one default case"), "SwitchCase");
     }

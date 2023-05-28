@@ -1,0 +1,33 @@
+public int sum = 0;
+enum X { A, B };
+
+@construct {
+  switch (sum) {
+    case 0 + 1:
+      sum = 123;
+      break;
+    case "x":
+      sum = 42;
+      break;
+    case true:
+      sum = 1000;
+      break;
+    default:
+      sum = 50;
+  }
+  string x = "x";
+  switch (x) {
+    case 123:
+      sum2 = 0;
+      sum = 0;
+      break;
+    case X::A:
+      break;
+  }
+  X y = X::B;
+  switch (y) {
+    case "x":
+    case 123:
+    case 1L:
+  }
+}

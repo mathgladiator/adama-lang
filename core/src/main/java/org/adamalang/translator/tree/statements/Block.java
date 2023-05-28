@@ -12,6 +12,8 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.statements.control.AlterControlFlow;
+import org.adamalang.translator.tree.statements.control.AlterControlFlowMode;
 import org.adamalang.translator.tree.statements.control.Case;
 import org.adamalang.translator.tree.statements.control.DefaultCase;
 
@@ -52,19 +54,72 @@ public class Block extends Statement {
     }
   }
 
+  private boolean isBreak(Statement stmt ) {
+    if (stmt instanceof AlterControlFlow) {
+      return ((AlterControlFlow) stmt).how == AlterControlFlowMode.Break;
+    }
+    return false;
+  }
+
   @Override
   public ControlFlow typing(final Environment environment) {
-    var flow = ControlFlow.Open;
-    for (final Statement stmt : statements) {
-      // check that it must be Open
-      if (flow == ControlFlow.Returns) {
-        environment.document.createError(stmt, String.format("This code is unreachable."), "Block");
+    boolean hasCases = environment.getCaseType() != null;
+    if (hasCases) {
+      boolean anyOpen = false;
+      int casesThatBreak = 0;
+      int casesThatReturn = 0;
+      boolean inDefault = false;
+      boolean hasDefault = false;
+      boolean defaultReturns = false;
+      boolean detectDeadCode = false;
+      for (final Statement stmt : statements) {
+        if (stmt instanceof Case || stmt instanceof DefaultCase) {
+          inDefault = stmt instanceof DefaultCase;
+          if (inDefault) {
+            if (hasDefault) {
+              environment.document.createError(stmt, String.format("Switch has too many defaults."), "SwitchBlock");
+            }
+            hasDefault = true;
+          }
+          detectDeadCode = false;
+        }
+        if (detectDeadCode) {
+          environment.document.createError(stmt, String.format("This code is unreachable."), "SwitchBlock");
+        }
+        ControlFlow flow = stmt.typing(environment);
+        if (flow == ControlFlow.Returns) {
+          casesThatReturn++;
+          if (inDefault) {
+            defaultReturns = true;
+          }
+          detectDeadCode = true;
+        }
+        if (isBreak(stmt)) {
+          casesThatBreak++;
+        }
       }
-      if (stmt.typing(environment) == ControlFlow.Returns) {
-        flow = ControlFlow.Returns;
+      /*
+       * if any case breaks, then it is open
+       * if there are cases that return, then we really need a default that returns to indicate a returning control flow
+       */
+      if (casesThatBreak == 0 && casesThatReturn > 0 && hasDefault && defaultReturns) {
+        return ControlFlow.Returns;
+      } else {
+        return ControlFlow.Open;
       }
+    } else {
+      var flow = ControlFlow.Open;
+      for (final Statement stmt : statements) {
+        // check that it must be Open
+        if (flow == ControlFlow.Returns) {
+          environment.document.createError(stmt, String.format("This code is unreachable."), "Block");
+        }
+        if (stmt.typing(environment) == ControlFlow.Returns) {
+          flow = ControlFlow.Returns;
+        }
+      }
+      return flow;
     }
-    return flow;
   }
 
   @Override

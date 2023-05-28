@@ -1,0 +1,13 @@
+@construct {
+  long x;
+  switch (x) {
+    case "x":
+    {
+      return;
+    }
+  }
+  bool b;
+  switch (b) {
+    case true: return;
+  }
+}

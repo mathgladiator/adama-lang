@@ -56,18 +56,17 @@ public class Case extends Statement {
     if (environment.rules.IsInteger(caseType, true) && !(value instanceof IntegerConstant)) {
       environment.document.createError(this, String.format("case label should be an integer constant"), "SwitchCase");
     }
-    if (environment.rules.IsLong(caseType, true) && !(value instanceof LongConstant || value instanceof IntegerConstant)) {
-      environment.document.createError(this, String.format("case label should be an long constant"), "SwitchCase");
-    }
     if (environment.rules.IsString(caseType, true) && !(value instanceof StringConstant)) {
       environment.document.createError(this, String.format("case label should be an string constant"), "SwitchCase");
     }
     if (RuleSetEnums.IsEnum(environment, caseType, true)) {
-      if (value instanceof EnumConstant) {
-        return ControlFlow.Open;
-      } else if (value instanceof EnumValuesArray) {
+      if (value instanceof EnumValuesArray) {
         enumArray = ((EnumValuesArray) value).values(environment);
+        return ControlFlow.Open;
+      } else if (value instanceof EnumConstant) {
+        return ControlFlow.Open;
       }
+      environment.document.createError(this, String.format("case label should be an enum constant or enum array reference"), "SwitchCase");
     }
     return ControlFlow.Open;
   }

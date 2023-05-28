@@ -1,4 +1,5 @@
 public int sum = 0;
+public int sum3;
 
 @construct {
   switch (sum) {
@@ -13,5 +14,16 @@ public int sum = 0;
       break;
     default:
       sum = 50;
+  }
+  string x = "xyz";
+  switch(x) {
+    case "x":
+      sum3 = 100;
+      break;
+    case "xyz":
+      sum3 = 1000;
+      break;
+    default:
+      break;
   }
 }
