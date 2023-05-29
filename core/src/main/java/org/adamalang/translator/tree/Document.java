@@ -298,12 +298,12 @@ public class Document implements TopLevelDocumentHandler {
     handlers.add(handler);
     channelToMessageType.put(handler.channel, handler.typeName);
     if (handler.behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
-      if (functionsDefines.contains(handler.channel)) {
-        typeChecker.issueError(handler, String.format("Handler '%s' was already defined.", handler.channel), "DocumentDefine");
-      }
-      defined.add(handler.channel);
       channelsThatAreFutures.add(handler.channel);
     }
+    if (functionsDefines.contains(handler.channel) || defined.contains(handler.channel)) {
+      typeChecker.issueError(handler, String.format("Handler '%s' was already defined.", handler.channel), "DocumentDefine");
+    }
+    defined.add(handler.channel);
     handler.typing(typeChecker);
   }
 

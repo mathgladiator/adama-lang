@@ -120,6 +120,8 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/BugsApril_Issues_failure.a,4,10,4,11,"Expression expected to be computed, rather than assigned to (Environment)"
 ./test_code/BugsApril_Issues_failure.a,4,3,4,11,"Could not find a meaning for 'bool' + 'int' (OperatorTable)"
 ./test_code/BugsApril_Issues_failure.a,5,10,5,20,"Type not found: a message named 'Foo' was not found. (TypeCheckReferences)"
+./test_code/Channels_DuplicateHandlers_failure.a,3,0,4,1,"Handler 'goo' was already defined. (DocumentDefine)"
+./test_code/Channels_DuplicateHandlers_failure.a,5,0,5,15,"Handler 'goo' was already defined. (DocumentDefine)"
 ./test_code/Channels_MessageMethodsScopedStatic_failure.a,7,21,7,22,"The variable 'z' was not defined (VariableLookup)"
 ./test_code/Channels_MessageMethodsScopedStatic_failure.a,6,2,8,3,"Function 'succ_z' does not return in all cases (MethodDefine)"
 ./test_code/Channels_MessageTypeWasRecord_failure.a,3,0,3,15,"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'. (TypeCheckReferences)"
