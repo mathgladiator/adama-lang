@@ -87,15 +87,15 @@ public class Generate {
         String channelToUse = generate.attr("channel");
         defines.put("channel", channelToUse);
         String typeToUse = from.get("channels").get(channelToUse).textValue(); // TODO: validate
-        manifest = FieldList.of((ObjectNode) from.get("types").get(typeToUse));
+        manifest = FieldList.of((ObjectNode) from.get("types").get(typeToUse), (ObjectNode) from.get("types"));
       }
 
       if (generate.hasAttr("type")) {
         String typeToUse = generate.attr("type");
         if (manifest == null) {
-          manifest = FieldList.of((ObjectNode) from.get("types").get(typeToUse)); // TODO: validate
+          manifest = FieldList.of((ObjectNode) from.get("types").get(typeToUse), (ObjectNode) from.get("types")); // TODO: validate
         } else {
-          manifest = FieldList.intersect(manifest, FieldList.of((ObjectNode) from.get("types").get(typeToUse))); // TODO: validate
+          manifest = FieldList.intersect(manifest, FieldList.of((ObjectNode) from.get("types").get(typeToUse), (ObjectNode) from.get("types"))); // TODO: validate
         }
       }
 

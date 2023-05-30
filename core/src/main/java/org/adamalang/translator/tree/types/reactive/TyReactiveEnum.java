@@ -49,7 +49,7 @@ public class TyReactiveEnum extends TySimpleReactive implements //
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
-    writer.writeString("reactive_enum");
+    writer.writeString("reactive_value");
     writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     writer.writeString("enum");
