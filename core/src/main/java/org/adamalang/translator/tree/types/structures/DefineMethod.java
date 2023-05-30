@@ -111,7 +111,7 @@ public class DefineMethod extends StructureComponent {
   /** prepare the environment for execution */
   private Environment prepareEnvironment(final Environment environment) {
     var toUse = paint.pure ? environment.scopeAsReadOnlyBoundary() : environment.scopeWithCache("__cache");
-    toUse = toUse.watch(Watcher.make(toUse, depends, services));
+    toUse = toUse.watch(Watcher.make(toUse, depends, services)).scope();
     if (paint.aborts) {
       toUse = toUse.scopeAsAbortable();
     }
@@ -122,7 +122,7 @@ public class DefineMethod extends StructureComponent {
       toUse.define(arg.argName, arg.type, true, arg.type);
     }
     toUse.setReturnType(returnType);
-    return toUse.scope();
+    return toUse;
   }
 
   /** write the java for the function/procedure */
