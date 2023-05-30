@@ -122,7 +122,7 @@ public class DefineMethod extends StructureComponent {
       toUse.define(arg.argName, arg.type, true, arg.type);
     }
     toUse.setReturnType(returnType);
-    return toUse;
+    return toUse.scope();
   }
 
   /** write the java for the function/procedure */
