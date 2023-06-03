@@ -30,12 +30,13 @@ public class Argument {
             Node argNode = nodeList.item(i);
             ArgumentDefinition argDef = null;
             Element argElem = (Element) argNode;
+            String filePos = "line " + argNode.getUserData("lineNumber") + " column " + argNode.getUserData("colNumber");
             String argName = argElem.getAttribute("name");
 
             if (argName == null || "".equals(argName.trim()))
-                givenException.addToExceptionStack("Argument name can not be empty.");
+                givenException.addToExceptionStack("The 'arg' node at " + filePos + " is missing name attribute");
             if (!arguments.containsKey(argName))
-                givenException.addToExceptionStack("Argument \"" + argName + "\" is not a defined argument");
+                givenException.addToExceptionStack("The 'arg' node named \"" + argName + "\" at " + filePos + " is not a defined argument");
             else
                 argDef = arguments.get(argName);
             boolean optional = false;

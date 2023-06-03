@@ -26,10 +26,11 @@ public class Group {
         ArrayList<Group> groupArray = new ArrayList<>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node groupNode = nodeList.item(i);
+            String filePos = "line " + groupNode.getUserData("lineNumber") + " column " + groupNode.getUserData("colNumber");
             Element groupElem = (Element) groupNode;
             String groupName = groupElem.getAttribute("name");
             if (groupName.trim().length() == 0)
-                givenException.addToExceptionStack("Group name \"" + groupName + "\"can not be empty.");
+                givenException.addToExceptionStack("The 'group' node at " + filePos + " is missing name attribute");
             Command[] commandList = Command.createCommandList(groupElem.getElementsByTagName("command"), givenException, arguments);
             String groupDocumentation = Common.getDocumentation(groupElem, givenException);
             Group group = new Group(groupName, groupDocumentation ,commandList);

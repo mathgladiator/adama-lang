@@ -6,8 +6,11 @@
             A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
             denote the name of that collection.
         </documentation>
+        <documentation>
+            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
+            denote the name of that collection.
+        </documentation>
     </arg-definition>
-
     <!-- May have to represent the actual representation-->
     <arg-definition name="file" type="string" short="f">
         <documentation>

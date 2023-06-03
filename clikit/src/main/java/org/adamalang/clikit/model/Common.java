@@ -53,7 +53,6 @@ public class Common {
                     break;
             }
         }
-        System.out.println(sb);
         return sb.toString();
     }
 

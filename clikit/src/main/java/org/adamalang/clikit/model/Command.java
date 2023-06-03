@@ -32,10 +32,11 @@ public class Command {
         ArrayList<Command> commandArray = new ArrayList<>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node commandNode = nodeList.item(i);
+            String filePos = "line " + commandNode.getUserData("lineNumber") + " column " + commandNode.getUserData("colNumber");
             Element commandElem = (Element) commandNode;
             String commandName = commandElem.getAttribute("name");
             if (commandName == null || commandName.trim().isEmpty())
-                givenException.addToExceptionStack("Command name \"" + commandName + "\"can not be empty.");
+                givenException.addToExceptionStack("The 'command' node at " + filePos + " is missing name attribute");
             Argument[] argumentList = Argument.createArgumentList(commandElem.getElementsByTagName("arg"), givenException, arguments);
             boolean danger = commandElem.getAttribute("warn").equals("") ? false : true;
             String groupDocumentation = Common.getDocumentation(commandElem, givenException);
@@ -59,6 +60,7 @@ public class Command {
         ArrayList<Command> commandArray = new ArrayList<>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node commandNode = nodeList.item(i);
+            String filePos = "line " + commandNode.getUserData("lineNumber") + " column " + commandNode.getUserData("colNumber");
             Element commandElem = (Element) commandNode;
             // Will always have parent
             Node parentNode = commandElem.getParentNode();
@@ -68,7 +70,7 @@ public class Command {
 
             String commandName = commandElem.getAttribute("name");
             if (commandName == null || commandName.trim().isEmpty())
-                givenException.addToExceptionStack("Command name \"" + commandName + "\"can not be empty.");
+                givenException.addToExceptionStack("The 'command' node at " + filePos + " is missing name attribute");
             Argument[] argumentList = Argument.createArgumentList(commandElem.getElementsByTagName("arg"), givenException, arguments);
             boolean danger = commandElem.getAttribute("warn").equals("") ? false : true;
             String groupDocumentation = Common.getDocumentation(commandElem, givenException);
