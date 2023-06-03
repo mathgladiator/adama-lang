@@ -2,11 +2,10 @@ package org.adamalang.clikit.codegen;
 
 import org.adamalang.clikit.model.Command;
 import org.adamalang.clikit.model.Group;
-
 import java.util.HashMap;
 
 public class TestGen {
-
+    /** Generates the test cases for the help documentation of each group and command **/
     public static HashMap<String, String> generate(Group[] groups, Command[] mainCommands, String packageName) {
         HashMap<String, String> returnTests = new HashMap<>();
         // Adopting scope localization from apikit
@@ -27,13 +26,10 @@ public class TestGen {
             for (Command command : mainCommands) {
                 sb.append("    NewMain.main(new String[]{\"").append(command.name).append("\", \"--help\"});\n");
             }
-
             sb.append("  }\n");
             sb.append("}");
             returnTests.put("HelpCoverageTests.java", sb.toString());
         }
-
         return returnTests;
     }
-
 }

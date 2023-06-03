@@ -9,25 +9,26 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Group {
-    public String documentation;
-    public String name;
-    public String capName;
-    public Command[] commandList;
+    /** A group is a representation of a collection of commands in the XML **/
+    public final String documentation;
+    public final String name;
+    public final String capName;
+    public final Command[] commandList;
 
     public Group(String name,String documentation, Command[] commandList) {
         this.name = name;
         this.capName = Common.camelize(name);
         this.documentation = documentation;
         this.commandList = commandList;
-
     }
-    public static Group[] createGroupList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgDefinition> arguments) throws Exception {
+
+    public static Group[] createGroupList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgumentDefinition> arguments) throws Exception {
         ArrayList<Group> groupArray = new ArrayList<>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node groupNode = nodeList.item(i);
             Element groupElem = (Element) groupNode;
             String groupName = groupElem.getAttribute("name");
-            if (groupName == null || groupName.trim().length() == 0)
+            if (groupName.trim().length() == 0)
                 givenException.addToExceptionStack("Group name \"" + groupName + "\"can not be empty.");
             Command[] commandList = Command.createCommandList(groupElem.getElementsByTagName("command"), givenException, arguments);
             String groupDocumentation = Common.getDocumentation(groupElem, givenException);

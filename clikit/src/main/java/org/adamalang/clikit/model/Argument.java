@@ -9,39 +9,26 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Argument {
-    public boolean optional;
-    public String name;
-    public String shortName;
-    public String defaultValue = "";
-    public ArgDefinition definition;
-    public String camel;
+    /** Represents an argument that is used by a command **/
+    public final boolean optional;
+    public final String name;
+    public final String defaultValue;
+    public final ArgumentDefinition definition;
+    public final String camel;
 
-    public Argument(String name, boolean optional, String defaultValue, ArgDefinition definition) {
+    public Argument(String name, boolean optional, String defaultValue, ArgumentDefinition definition) {
         this.optional = optional;
         this.name = name;
         this.camel = Common.camelize(name, true);
         this.defaultValue = defaultValue;
         this.definition = definition;
     }
-    public Argument(String name, boolean optional) {
-        this.optional = optional;
-        this.camel = Common.camelize(name, true);
-        this.name = name;
-    }
 
-
-    public Argument(String name) {
-        this.optional = false;
-        this.camel = Common.camelize(name, true);
-        this.name = name;
-    }
-
-
-    public static Argument[] createArgumentList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgDefinition> arguments) {
+    public static Argument[] createArgumentList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgumentDefinition> arguments) {
         ArrayList<Argument> argumentArray = new ArrayList<>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node argNode = nodeList.item(i);
-            ArgDefinition argDef = null;
+            ArgumentDefinition argDef = null;
             Element argElem = (Element) argNode;
             String argName = argElem.getAttribute("name");
 
@@ -55,16 +42,9 @@ public class Argument {
             if (argElem.hasAttribute("default")) {
                 optional = true;
             }
-
             String defaultValue = argElem.getAttribute("default");
             String headerType = argElem.getAttribute("type");
-
-            Argument argument;
-
-            if (argDef != null)
-                argument = new Argument(argName, optional, defaultValue, argDef);
-            else
-                argument = new Argument(argName, optional);
+            Argument argument = new Argument(argName, optional, defaultValue, argDef);
             argumentArray.add(argument);
 
         }

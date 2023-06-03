@@ -9,7 +9,7 @@
     </arg-definition>
 
     <!-- May have to represent the actual representation-->
-    <arg-definition name="file" type="file" short="f">
+    <arg-definition name="file" type="string" short="f">
         <documentation>
             Placeholder
         </documentation>
@@ -45,7 +45,7 @@
         </documentation>
     </arg-definition>
 
-    <arg-definition name="output" type="file" short="o">
+    <arg-definition name="output" type="string" short="o">
         <documentation>
             Placeholder
         </documentation>
@@ -63,7 +63,7 @@
         </documentation>
     </arg-definition>
 
-    <arg-definition name="validate" type="file" short="v">
+    <arg-definition name="validate" type="string" short="v">
         <documentation>
             Placeholder
         </documentation>
@@ -87,19 +87,19 @@
         </documentation>
     </arg-definition>
 
-    <arg-definition name="keystore" type="file" short="k">
+    <arg-definition name="keystore" type="string" short="k">
         <documentation>
             Placeholder
         </documentation>
     </arg-definition>
 
-    <arg-definition name="priv" type="file" short="p">
+    <arg-definition name="priv" type="string" short="p">
         <documentation>
             Placeholder
         </documentation>
     </arg-definition>
 
-    <arg-definition name="dump-to" type="file" short="d">
+    <arg-definition name="dump-to" type="string" short="d">
         <documentation>
             Placeholder
         </documentation>
@@ -112,110 +112,114 @@
             Provides command related to working with space collections...
         </documentation>
         <command name="create">
-            <arg name="space" />
             <documentation>
                 Creates a new space
             </documentation>
+            <arg name="space" />
+
         </command>
 
         <command name="delete">
-            <arg name="space" />
             <documentation>
                 Deletes an empty space
             </documentation>
+            <arg name="space" />
         </command>
 
         <command name="deploy">
+            <documentation>
+                Deploy a plan to a space
+            </documentation>
             <arg name="space" />
             <arg name="dump-to" default="null" />
             <arg name="plan" />
             <arg name="file" default="null" />
-            <documentation>
-                Deploy a plan to a space
-            </documentation>
         </command>
 
         <command name="set-rxhtml">
-            <arg name="space" />
-            <arg name="file" default="null" />
             <documentation>
                 Set the frontend RxHTML forest
             </documentation>
+            <arg name="space" />
+            <arg name="file" default="null" />
         </command>
 
         <command name="get-rxhtml">
-            <arg name="space" />
             <documentation>
-                Set the frontend RxHTML forest
+                Get the frontend RxHTML forest
             </documentation>
+            <arg name="space" />
         </command>
 
         <command name="upload">
+            <documentation>
+                Placeholder
+            </documentation>
             <arg name="space" />
             <arg name="gc" default="no" />
             <arg name="root" default="null" />
             <arg name="file" />
-            <documentation>
-                Placeholder
-            </documentation>
         </command>
 
         <command name="download">
-            <arg name="space" />
             <documentation>
                 Download a space's plan
             </documentation>
+            <arg name="space" />
+
         </command>
 
         <command name="list">
-            <arg name="marker" default="" />
-            <arg name="limit" default="100" />
             <documentation>
                 List spaces available to your account
             </documentation>
+            <arg name="marker" default="" />
+            <arg name="limit" default="100" />
+
         </command>
 
         <command name="usage">
-            <arg name="space" />
-            <arg name="limit" default="336" />
             <documentation>
                 Iterate the billed usage
             </documentation>
+            <arg name="space" />
+            <arg name="limit" default="336" />
         </command>
 
         <command name="reflect">
+            <documentation>
+                Get a file of the reflection of a space
+            </documentation>
             <arg name="space" />
             <arg name="marker" />
             <arg name="output" />
             <arg name="key" />
             <arg name="limit" default="336" />
-            <documentation>
-                Get a file of the reflection of a space
-            </documentation>
         </command>
 
         <command name="set-role">
+            <documentation>
+                Get a file of the reflection of a space
+            </documentation>
             <arg name="space" />
             <arg name="marker" />
             <arg name="email" default="" />
             <arg name="role" default="none" />
-            <documentation>
-                Share/unshare a space with another developer
-            </documentation>
         </command>
 
         <command name="generate-key">
-            <arg name="space" />
             <documentation>
                 Generate a server-side key to use for storing secrets
             </documentation>
+            <arg name="space" />
         </command>
 
         <command name="encrypt-secret">
-            <arg name="space" />
             <documentation>
                 Encrypt a secret to store within code
             </documentation>
+            <arg name="space" />
+
         </command>
     </group>
     <group name="authority">
@@ -229,26 +233,28 @@
         </command>
 
         <command name="set">
-            <arg name="authority" />
-            <arg name="keystore" />
             <documentation>
                 Set public keys to an authority
             </documentation>
+            <arg name="authority" />
+            <arg name="keystore" />
+
         </command>
 
         <command name="get">
-            <arg name="authority" />
-            <arg name="keystore" />
             <documentation>
                 Get released public keys for an authority
             </documentation>
+            <arg name="authority" />
+            <arg name="keystore" />
+
         </command>
 
         <command name="destroy">
-            <arg name="authority" />
             <documentation>
                 Destroy an authority
             </documentation>
+            <arg name="authority" />
         </command>
 
         <command name="list">
@@ -258,30 +264,32 @@
         </command>
 
         <command name="create-local">
-            <arg name="authority" />
-            <arg name="keystore" />
-            <arg name="priv" />
             <documentation>
                 Make a new set of public keys
             </documentation>
-        </command>
-
-        <command name="append-local">
             <arg name="authority" />
             <arg name="keystore" />
             <arg name="priv" />
+        </command>
+
+        <command name="append-local">
             <documentation>
                 Append a new public key to the public key file
             </documentation>
+            <arg name="authority" />
+            <arg name="keystore" />
+            <arg name="priv" />
+
         </command>
 
         <command name="sign">
-            <arg name="key" />
-            <arg name="agent" />
-            <arg name="validate" default="null" />
             <documentation>
                 Sign an agent with a local private key
             </documentation>
+            <arg name="key" />
+            <arg name="agent" />
+            <arg name="validate" default="null" />
+
         </command>
     </group>
 

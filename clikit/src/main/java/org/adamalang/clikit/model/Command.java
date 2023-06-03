@@ -9,15 +9,16 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Command {
-    public Argument[] argList;
-    public String output;
-    public String capName;
-    public String name;
-    public String documentation;
-    public boolean danger;
-    public String camel;
+    public final Argument[] argList;
+    public final String output;
+    public final String capName;
+    public final String name;
+    public final String documentation;
+    public final boolean danger;
+    public final String camel;
 
     public Command(String name, String documentation, String output, boolean danger, Argument[] argList) {
+        /** A command is a representation of an instruction for communctation with Adama's backend **/
         this.name = name;
         this.camel = Common.camelize(name, true);
         this.capName = Common.camelize(name);
@@ -27,7 +28,7 @@ public class Command {
         this.danger = danger;
     }
 
-    public static Command[] createCommandList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgDefinition> arguments) throws Exception{
+    public static Command[] createCommandList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgumentDefinition> arguments) throws Exception{
         ArrayList<Command> commandArray = new ArrayList<>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node commandNode = nodeList.item(i);
@@ -53,7 +54,8 @@ public class Command {
         }
         return commandArray.toArray(new Command[commandArray.size()]);
     }
-    public static Command[] createCommandList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgDefinition> arguments, String parent) throws Exception{
+
+    public static Command[] createCommandList(NodeList nodeList, XMLFormatException givenException, Map<String, ArgumentDefinition> arguments, String parent) throws Exception{
         ArrayList<Command> commandArray = new ArrayList<>();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node commandNode = nodeList.item(i);

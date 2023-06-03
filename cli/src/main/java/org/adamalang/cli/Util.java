@@ -8,7 +8,6 @@
  */
 package org.adamalang.cli;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 public class Util {
@@ -70,15 +69,17 @@ public class Util {
     return false;
   }
 
-  public static String lJust(String string, int spacing) {
+  public static String justifyLeft(String string, int spacing) {
     return String.format("%-" + spacing + "s", string);
   }
-  public static String rJust(String string, int spacing) { return String.format("%" + spacing + "s", string);}
+  public static String justifyRight(String string, int spacing) {
+    return String.format("%" + spacing + "s", string);
+  }
 
 
 
   public enum ANSI {
-    Black("\u001b[30m"), Red("\u001b[31m"), Green("\u001b[32m"), Yellow("\u001b[33m"), Blue("\u001b[34m"), Magenta("\u001b[35m"), Cyan("\u001b[36m"), White("\u001b[37m"),Bold("\u001b[1m") ,Reset("\u001b[0m");
+    Black("\u001b[30m"), Red("\u001b[31m"), Green("\u001b[32m"), Yellow("\u001b[33m"), Blue("\u001b[34m"), Magenta("\u001b[35m"), Cyan("\u001b[36m"), White("\u001b[37m"), Bold("\u001b[1m"), Reset("\u001b[0m"), Normal("\u001b[39m");
     public final String ansi;
 
     ANSI(String ansi) {
