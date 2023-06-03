@@ -15,6 +15,7 @@ import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.types.natives.TyNativeVoid;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,7 +31,7 @@ public class CodeGenFunctionsTests {
             new EnvironmentState(
                 GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
     final var foi =
-        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false, false, false);
+        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), FunctionPaint.NORMAL);
     CodeGenFunctions.writeArgsJava(sb, env, false, new ArrayList<>(), foi);
     Assert.assertEquals("", sb.toString());
   }
@@ -44,7 +45,7 @@ public class CodeGenFunctionsTests {
             new EnvironmentState(
                 GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
     final var foi =
-        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false, false, false);
+        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), FunctionPaint.NORMAL);
     foi.hiddenSuffixArgs.add("X");
     CodeGenFunctions.writeArgsJava(sb, env, false, new ArrayList<>(), foi);
     Assert.assertEquals(", X", sb.toString());
@@ -59,7 +60,7 @@ public class CodeGenFunctionsTests {
             new EnvironmentState(
                 GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
     final var foi =
-        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false, false, false);
+        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), FunctionPaint.NORMAL);
     foi.hiddenSuffixArgs.add("X");
     CodeGenFunctions.writeArgsJava(sb, env, true, new ArrayList<>(), foi);
     Assert.assertEquals("X", sb.toString());

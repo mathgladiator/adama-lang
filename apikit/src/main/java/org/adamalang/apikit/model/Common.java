@@ -20,9 +20,8 @@ public class Common {
     if (name == null || name.length() == 0) {
       return name;
     }
-    String[] parts = name.replaceAll(Pattern.quote("/"), "-").split(Pattern.quote("-"));
+    String[] parts = name.split("[-/]");
     StringBuilder result = new StringBuilder();
-    boolean lower = lowerFirst;
     for (String part : parts) {
       if (lowerFirst) {
         result.append(part.toLowerCase(Locale.ROOT));

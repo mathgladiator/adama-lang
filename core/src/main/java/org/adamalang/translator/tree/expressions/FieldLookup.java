@@ -34,7 +34,7 @@ public class FieldLookup extends Expression {
   private boolean addGet;
   private TyType aggregateType;
   private boolean isGlobalObject;
-  private boolean makeReactiveList;
+  private boolean makeList;
   private boolean onlyExpression;
   private String overrideFieldName;
   private boolean requiresMaybeUnpack;
@@ -53,7 +53,7 @@ public class FieldLookup extends Expression {
     this.ingest(expression);
     this.ingest(fieldNameToken);
     addGet = false;
-    makeReactiveList = false;
+    makeList = false;
     overrideFieldName = null;
     isGlobalObject = false;
     requiresMaybeUnpack = false;
@@ -103,12 +103,12 @@ public class FieldLookup extends Expression {
       }
       if (eType instanceof TyNativeList) {
         final var elementType = environment.rules.ResolvePtr(((TyNativeList) eType).getEmbeddedType(environment), false);
-        if (elementType != null && elementType instanceof TyReactiveRecord) {
-          final var fd = ((TyReactiveRecord) elementType).storage.fields.get(fieldName);
+        if (elementType != null && elementType instanceof IsStructure) {
+          final var fd = ((IsStructure) elementType).storage().fields.get(fieldName);
           if (fd != null) {
             enforceSpecialIDReadonly(environment);
             aggregateType = fd.type;
-            makeReactiveList = true;
+            makeList = true;
             if (aggregateType instanceof DetailComputeRequiresGet && environment.state.isContextComputation()) {
               addGet = true;
               aggregateType = ((DetailComputeRequiresGet) aggregateType).typeAfterGet(environment);
@@ -186,7 +186,7 @@ public class FieldLookup extends Expression {
           sb.append(".get()");
         }
         sb.append(")");
-      } else if (makeReactiveList && aggregateType != null) {
+      } else if (makeList && aggregateType != null) {
         sb.append("transform((item) -> item.").append(fieldNameToUse);
         if (addGet) {
           sb.append(".get()");

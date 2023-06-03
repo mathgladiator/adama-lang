@@ -18,6 +18,7 @@ import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
@@ -88,7 +89,7 @@ public class TyNativeTimeSpan extends TySimpleNative implements //
   @Override
   public TyNativeFunctional lookupMethod(String name, Environment environment) {
     if ("seconds".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement("seconds", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("seconds", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), true, false, false)), FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("seconds", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("seconds", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, Token.WRAP("readonly"), null).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.None);
     }
     return environment.state.globals.findExtension(this, name);
   }

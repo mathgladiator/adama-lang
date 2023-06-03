@@ -1,0 +1,44 @@
+int x;
+
+procedure dead() {
+}
+
+#sm_1 {
+  switch (x) {
+    default:
+      return;
+  }
+
+  dead();
+}
+
+#sm_x {
+  switch (x) {
+    case 1:
+    default:
+      return;
+  }
+ dead();
+}
+
+
+#sm_y {
+  switch (x) {
+    case 1:
+      return;
+      dead();
+    default:
+      return;
+      dead();
+  }
+}
+
+#sm_2 {
+  switch (x) {
+    case 1:
+      return;
+      dead();
+    default:
+      return;
+  }
+}

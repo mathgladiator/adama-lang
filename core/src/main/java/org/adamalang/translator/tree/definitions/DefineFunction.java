@@ -15,6 +15,7 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
@@ -38,8 +39,7 @@ public class DefineFunction extends Definition {
   public final String name;
   public final Token nameToken;
   public final Token openParen;
-  public final Token readOnlyToken;
-  public final Token abortsToken;
+  public final FunctionPaint paint;
   public final FunctionSpecialization specialization;
   public Block code;
   public TyType returnType;
@@ -47,7 +47,7 @@ public class DefineFunction extends Definition {
   private int uniqueFunctionId;
   private FunctionOverloadInstance producedInstance;
 
-  public DefineFunction(final Token functionTypeToken, final FunctionSpecialization specialization, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introReturnType, final TyType returnType, final Token readOnlyToken, final Token abortsToken, final Block code) {
+  public DefineFunction(final Token functionTypeToken, final FunctionSpecialization specialization, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introReturnType, final TyType returnType, final FunctionPaint paint, final Block code) {
     this.depends = new HashSet<>();
     this.functionTypeToken = functionTypeToken;
     this.specialization = specialization;
@@ -58,8 +58,7 @@ public class DefineFunction extends Definition {
     this.closeParen = closeParen;
     this.introReturnType = introReturnType;
     this.returnType = returnType;
-    this.readOnlyToken = readOnlyToken;
-    this.abortsToken = abortsToken;
+    this.paint = paint;
     this.code = code;
     uniqueFunctionId = 0;
     beenGivenId = false;
@@ -88,12 +87,7 @@ public class DefineFunction extends Definition {
       yielder.accept(introReturnType);
       returnType.emit(yielder);
     }
-    if (readOnlyToken != null) {
-      yielder.accept(readOnlyToken);
-    }
-    if (abortsToken != null) {
-      yielder.accept(abortsToken);
-    }
+    paint.emit(yielder);
     code.emit(yielder);
   }
 
@@ -134,14 +128,17 @@ public class DefineFunction extends Definition {
     if (pure) {
       toUse = environment.scopeAsPureFunction(); // what makes at pure function pure
     } else {
-      if (readOnlyToken != null) {
+      if (paint.pure) {
         toUse = environment.scopeAsReadOnlyBoundary(); // what makes procedure so dirty
       } else {
         toUse = environment.scopeWithCache("__cache");
       }
     }
-    if (abortsToken != null) {
+    if (paint.aborts) {
       toUse = toUse.scopeAsAbortable();
+    }
+    if (paint.viewer) {
+      toUse = toUse.scopeWithViewer();
     }
     toUse = toUse.watch((escName, type) -> {
       TyType resolved = environment.rules.Resolve(type, true);
@@ -154,7 +151,7 @@ public class DefineFunction extends Definition {
       depends.add(escName);
     }).scope();
     for (final FunctionArg arg : args) {
-      toUse.define(arg.argName, arg.type, pure || readOnlyToken != null || arg.type instanceof TyNativeMessage, arg.type);
+      toUse.define(arg.argName, arg.type, pure || paint.pure || arg.type instanceof TyNativeMessage, arg.type);
     }
     toUse.setReturnType(returnType);
     return toUse;
@@ -168,7 +165,7 @@ public class DefineFunction extends Definition {
     for (final FunctionArg arg : args) {
       argTypes.add(arg.type);
     }
-    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, specialization == FunctionSpecialization.Pure || readOnlyToken != null, false, abortsToken != null);
+    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, paint);
     foi.ingest(this);
     producedInstance = foi;
     return foi;
@@ -192,8 +189,14 @@ public class DefineFunction extends Definition {
       }
       sb.append(arg.type.getJavaConcreteType(environment)).append(" ").append(arg.argName);
     }
+    if (paint.viewer) {
+      if (!first) {
+        sb.append(", ");
+      }
+      sb.append("RTx__ViewerType __viewer");
+    }
     sb.append(") ");
-    if (abortsToken != null) {
+    if (paint.aborts) {
       sb.append("throws AbortMessageException ");
     }
     code.writeJava(sb, environment);

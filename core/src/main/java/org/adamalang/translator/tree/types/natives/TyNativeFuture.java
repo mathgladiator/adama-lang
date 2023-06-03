@@ -16,6 +16,7 @@ import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
@@ -98,7 +99,7 @@ public class TyNativeFuture extends TyType implements //
     if ("await".equals(name)) {
       var returnType = environment.rules.Resolve(resultType, false);
       returnType = returnType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
-      return new TyNativeFunctional("await", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("await", returnType, new ArrayList<>(), false, false, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("await", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("await", returnType, new ArrayList<>(), FunctionPaint.NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }

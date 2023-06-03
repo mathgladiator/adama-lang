@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.expressions.linq;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
+import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
@@ -55,7 +56,6 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
   private int generatedClassId;
   private String iterType;
   private StructureStorage structureStorage;
-  private HashMap<String, TyType> specialsUsed;
   private boolean writtenDependentExpressionsForClosure;
 
   public Where(final Expression sql, final Token tokenWhere, final Token aliasToken, final Token colonToken, final Expression expression) {
@@ -76,7 +76,6 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     indexKeysExpr = new StringBuilder();
     applyQuerySetStatements = new ArrayList<>();
     closureTyTypes = new TreeMap<>();
-    specialsUsed = null;
     writtenDependentExpressionsForClosure = false;
   }
 
@@ -206,16 +205,6 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     expression.emit(yielder);
   }
 
-  /** convert the specials found within the environment to closure variables */
-  private void convertSpecials(Environment environment) {
-    if (specialsUsed != null) {
-      for (Map.Entry<String, TyType> entry : specialsUsed.entrySet()) {
-        closureTyTypes.put(entry.getKey(), entry.getValue());
-        closureTypes.put(entry.getKey(), entry.getValue().getJavaConcreteType(environment));
-      }
-    }
-  }
-
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     generatedClassId = environment.document.inventClassId();
@@ -228,10 +217,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       structureStorage = storageType.storage();
       final var watch = environment.watch((name, tyUn) -> {
         TyType ty = environment.rules.Resolve(tyUn, false);
-        if (ty instanceof TyNativeGlobalObject || ty instanceof TyNativeFunctional) {
-          return;
-        }
-        if ("__time".equals(name) || "__today".equals(name)) {
+        if (GlobalObjectPool.ignoreCapture(name, ty)) {
           return;
         }
         if (!closureTypes.containsKey(name) && ty != null) {
@@ -239,7 +225,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
           closureTypes.put(name, ty.getJavaConcreteType(environment));
         }
       }).captureSpecials();
-      this.specialsUsed = watch.specials();
+      HashMap<String, TyType> specialsUsed = watch.specials();
       final var next = watch.scopeWithComputeContext(ComputeContext.Computation);
       iterType = "RTx" + storageType.name();
       var toUse = next;
@@ -271,7 +257,10 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         });
       }
       final var expressionType = expression.typing(toUse, null);
-      convertSpecials(environment);
+      for (Map.Entry<String, TyType> entry : specialsUsed.entrySet()) {
+        closureTyTypes.put(entry.getKey(), entry.getValue());
+        closureTypes.put(entry.getKey(), entry.getValue().getJavaConcreteType(environment));
+      }
       environment.rules.IsBoolean(expressionType, false);
       return typeFrom.makeCopyWithNewPosition(this, typeFrom.behavior);
     }

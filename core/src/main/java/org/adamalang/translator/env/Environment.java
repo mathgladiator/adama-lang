@@ -15,6 +15,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.Rules;
 import org.adamalang.translator.tree.types.natives.TyNativeDate;
+import org.adamalang.translator.tree.types.natives.TyNativeLazyWrap;
 import org.adamalang.translator.tree.types.natives.TyNativeLong;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLong;
@@ -35,10 +36,11 @@ public class Environment {
   private final HashSet<String> readonly;
   private final HashMap<String, TyType> variables;
   private TyType returnType;
-  private boolean returnTypeSet;
+  private TyType caseType;
   private Function<String, TyType> trap = null;
   private BiConsumer<String, TyType> watch = null;
-  private HashMap<String, TyType> specialConstants = null;
+  private HashMap<String, TyType> specialConstants;
+  private boolean hasDefaultCase;
 
   private Environment(final Document document, final EnvironmentState state, final Environment parent) {
     this.document = document;
@@ -46,8 +48,8 @@ public class Environment {
     variables = new HashMap<>();
     readonly = new HashSet<>();
     this.parent = parent;
-    returnTypeSet = false;
     returnType = null;
+    caseType = null;
     if (parent != null) {
       rules = parent.rules;
       codeCoverageTracker = parent.codeCoverageTracker;
@@ -62,7 +64,7 @@ public class Environment {
       this.interns.add("\"?\"");
       this.interns.add("\"\"");
     }
-    this.specialConstants = specialConstants;
+    this.specialConstants = null;
   }
 
   /** construct an environment that is fresh */
@@ -133,17 +135,6 @@ public class Environment {
     return this;
   }
 
-  /** @return the most recent return type. */
-  public TyType getMostRecentReturnType() {
-    if (returnTypeSet) {
-      return returnType;
-    }
-    if (parent != null) {
-      return parent.getMostRecentReturnType();
-    }
-    return null;
-  }
-
   private TyType lookup_return(String name, TyType result) {
     if (watch != null) {
       watch.accept(name, result);
@@ -198,7 +189,7 @@ public class Environment {
     }
 
     if ("__today".equals(name)) {
-      return lookup_return(name, new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null));
+      return lookup_return(name, new TyNativeLazyWrap(new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null)));
     }
 
     return lookup_return(name, result);
@@ -220,6 +211,11 @@ public class Environment {
   /** create a new environment just for message handler */
   public Environment scopeAsMessageHandler() {
     return new Environment(document, state.scopeMessageHandler(), this);
+  }
+
+  /** create a new environment that has access to the viewer */
+  public Environment scopeWithViewer() {
+    return new Environment(document, state.scopeViewer(), this);
   }
 
   /** create a new environment just for constructor */
@@ -292,11 +288,40 @@ public class Environment {
     return new Environment(document, state.scopeWithCache(cacheObject), this);
   }
 
+  /** @return the most recent return type. */
+  public TyType getMostRecentReturnType() {
+    if (returnType != null) {
+      return returnType;
+    }
+    if (parent != null) {
+      return parent.getMostRecentReturnType();
+    }
+    return null;
+  }
+
   /** set the return type of the given scope */
   public Environment setReturnType(final TyType returnType) {
-    returnTypeSet = true;
     this.returnType = returnType;
     return this;
+  }
+
+
+  /** @return the case type of the current environment. */
+  public TyType getCaseType() {
+    return caseType;
+  }
+
+  public Environment setCaseType(final TyType caseType) {
+    this.caseType = caseType;
+    return this;
+  }
+
+  public boolean checkDefaultReturnTrueIfMultiple() {
+    if (hasDefaultCase) {
+      return true;
+    }
+    hasDefaultCase = true;
+    return false;
   }
 
   /** create a new environment (scoped) that will trap the given variables */

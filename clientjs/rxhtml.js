@@ -838,7 +838,7 @@ var RxHTML = (function () {
   };
 
   // RUNTIME: <tag .. rx:event="... te:name ...">
-  self.onTE = function (dom, type, state, name,) {
+  self.onTE = function (dom, type, state, name) {
     var runnable = function (event) {
       var obj = {};
       obj[name] = event.message;
@@ -846,6 +846,18 @@ var RxHTML = (function () {
       state[state.current].tree.update(delta);
     };
     dom.addEventListener(type, runnable);
+  };
+
+  // RUNTIME: <tag .. rx:event="... reset ...">
+  self.oRST = function (dom, type, state) {
+    var runnable = function (event) {
+      dom.reset();
+    };
+    if (type == "load") {
+      window.setTimeout(runnable, 1);
+    } else {
+      dom.addEventListener(type, runnable);
+    }
   };
 
   // RUNTIME: <tag .. rx:event="... goto:uri ...">
@@ -1731,7 +1743,6 @@ var RxHTML = (function () {
       evt.preventDefault();
       state.data.connection.ptr.send(channel, get_form(form, false), {
         success: function (/* payload */) {
-          form.reset();
           fire_success(form);
         },
         failure: function (reason) {

@@ -20,6 +20,8 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.shared.EnumStorage;
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class EnumValuesArray extends Expression implements LatentCodeSnippet {
@@ -79,6 +81,22 @@ public class EnumValuesArray extends Expression implements LatentCodeSnippet {
     } else {
       sb.append("__").append(prefixToken.text).append(prefixCachedID).append("_").append(enumTypeName);
     }
+  }
+
+  public ArrayList<Integer> values(Environment environment) {
+    final var isEnum = environment.rules.FindEnumType(enumTypeName, this, false);
+    if (isEnum != null) {
+      ArrayList<Integer> values = new ArrayList<>();
+      for (Map.Entry<String, Integer> entry : isEnum.storage().options.entrySet()) {
+        if (prefixToken == null) {
+          values.add(entry.getValue());
+        } else if (entry.getKey().startsWith(prefixToken.text)) {
+          values.add(entry.getValue());
+        }
+      }
+      return values;
+    }
+    return null;
   }
 
   @Override

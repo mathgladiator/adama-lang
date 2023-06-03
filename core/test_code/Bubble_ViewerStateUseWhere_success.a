@@ -1,0 +1,22 @@
+view string name;
+
+record R {
+  int x;
+  string name;
+}
+
+table<R> tbl;
+
+bubble cake = iterate tbl where name == @viewer.name;
+
+view int offset_month;
+
+message DayReport {
+  bool current;
+}
+
+procedure show_day(date the_day, date c) -> DayReport readonly {
+  return {current: c == the_day};
+};
+
+bubble todo = (Time.today().offsetMonth(@viewer.offset_month)).calendarViewOf() map @lambda x: show_day(x, Time.today().offsetMonth(@viewer.offset_month));

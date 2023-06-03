@@ -1,0 +1,18 @@
+
+enum X { Ax, Ay, Az, B, C }
+
+public X v = X::Ay;
+public int sum;
+
+@construct {
+  switch (v) {
+    case X::A*:
+      sum = 42;
+      break;
+    case X::B:
+      sum = 123;
+      break;
+    default:
+      sum = 50;
+  }
+}

@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.expressions;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
+import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
@@ -18,12 +19,11 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Consumer;
 
 /** a very simple single variable lambda expression */
@@ -90,7 +90,7 @@ public class Lambda extends Expression implements LatentCodeSnippet {
 
       final var watch = environment.watch((name, tyUn) -> {
         TyType ty = environment.rules.Resolve(tyUn, false);
-        if (ty instanceof TyNativeGlobalObject) {
+        if (GlobalObjectPool.ignoreCapture(name, ty)) {
           return;
         }
         if (!closureTypes.containsKey(name) && ty != null) {
@@ -99,22 +99,21 @@ public class Lambda extends Expression implements LatentCodeSnippet {
         }
       }).captureSpecials();
       HashMap<String, TyType> specialsUsed = watch.specials();
-      if (specialsUsed != null) {
-        for (Map.Entry<String, TyType> entry : specialsUsed.entrySet()) {
-          closureTyTypes.put(entry.getKey(), entry.getValue());
-          closureTypes.put(entry.getKey(), entry.getValue().getJavaConcreteType(environment));
-        }
-      }
       Environment next = watch.scopeAsReadOnlyBoundary();
       variableType = environment.rules.Resolve(instance.types.get(0), false);
       next.define(variable.text, variableType, true, this);
       if (variableType == null) {
         environment.document.createError(this, "Failed to infer the variable type of the lambda", "Lambda");
       }
-
-      exprType = expr.typing(next, null);
+      exprType = environment.rules.Resolve(expr.typing(next, null), false);
+      if (specialsUsed != null) {
+        for (Map.Entry<String, TyType> entry : specialsUsed.entrySet()) {
+          closureTyTypes.put(entry.getKey(), entry.getValue());
+          closureTypes.put(entry.getKey(), entry.getValue().getJavaConcreteType(environment));
+        }
+      }
       if (exprType != null && variableType != null) {
-        FunctionOverloadInstance created = new FunctionOverloadInstance("apply", exprType, instance.types, true, false, false);
+        FunctionOverloadInstance created = new FunctionOverloadInstance("apply", exprType, instance.types, FunctionPaint.READONLY_NORMAL);
         return new TyNativeFunctional("apply", FunctionOverloadInstance.WRAP(created), FunctionStyleJava.ExpressionThenArgs);
       }
     }

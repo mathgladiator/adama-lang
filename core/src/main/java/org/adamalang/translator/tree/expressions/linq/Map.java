@@ -20,6 +20,7 @@ import org.adamalang.translator.tree.types.checking.ruleset.RuleSetLists;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class Map extends LinqExpression {
     if (typeSql != null && RuleSetLists.IsNativeList(environment, typeSql, false)) {
       ArrayList<TyType> guessInputTypes = new ArrayList<>();
       guessInputTypes.add(RuleSetCommon.ExtractEmbeddedType(environment, typeSql, false));
-      FunctionOverloadInstance guess = new FunctionOverloadInstance("unknown", null, guessInputTypes, true, false, false);
+      FunctionOverloadInstance guess = new FunctionOverloadInstance("unknown", null, guessInputTypes, FunctionPaint.READONLY_NORMAL);
       TyType guessType = new TyNativeFunctional("unknown", FunctionOverloadInstance.WRAP(guess), FunctionStyleJava.None);
       TyType funcType = func.typing(environment, guessType);
       if (environment.rules.IsFunction(funcType, false)) {

@@ -41,6 +41,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeAnnotation;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.*;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.shared.EnumStorage;
 import org.adamalang.translator.tree.types.structures.*;
@@ -874,7 +875,8 @@ public class Parser {
     final var introReturn = consumeArrow("pure functions must have return types.");
     final var returnType = native_type();
     final var code = block();
-    final var df = new DefineFunction(functionToken, FunctionSpecialization.Pure, name, openParen, args, closeParen, introReturn, returnType, null, null, code);
+    FunctionPaint paint = new FunctionPaint(true, false, false);
+    final var df = new DefineFunction(functionToken, FunctionSpecialization.Pure, name, openParen, args, closeParen, introReturn, returnType, paint, code);
     return doc -> doc.add(df);
   }
 
@@ -958,6 +960,30 @@ public class Parser {
     return doc -> doc.add(new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, messageToken, name, storage));
   }
 
+  public FunctionPaint painting() throws AdamaLangException {
+    ArrayList<Token> arr = new ArrayList<>();
+    boolean again = true;
+    while (again) {
+      again = false;
+      final var readonlyToken = tokens.popIf(t -> t.isIdentifier("readonly"));
+      if (readonlyToken != null) {
+        arr.add(readonlyToken);
+        again = true;
+      }
+      final var abortsToken = tokens.popIf(t -> t.isIdentifier("aborts"));
+      if (abortsToken != null) {
+        arr.add(abortsToken);
+        again = true;
+      }
+      final var viewerToken = tokens.popIf(t -> t.isIdentifier("viewer"));
+      if (viewerToken != null) {
+        arr.add(viewerToken);
+        again = true;
+      }
+    }
+    return new FunctionPaint(arr.toArray(new Token[arr.size()]));
+  }
+
   public DefineMethod define_method_trailer(final Token methodToken) throws AdamaLangException {
     final var name = id();
     final var openParen = consumeExpectedSymbol("(");
@@ -968,10 +994,9 @@ public class Parser {
     if (hasReturnType != null) {
       returnType = native_type();
     }
-    final var readonlyToken = tokens.popIf(t -> t.isIdentifier("readonly"));
-    final var abortsToken = tokens.popIf(t -> t.isIdentifier("aborts"));
+    FunctionPaint fp = painting();
     final var code = block();
-    return new DefineMethod(methodToken, name, openParen, args, closeParen, hasReturnType, returnType, readonlyToken, abortsToken, code);
+    return new DefineMethod(methodToken, name, openParen, args, closeParen, hasReturnType, returnType, fp, code);
   }
 
   public DefineCustomPolicy define_policy_trailer(final Token definePolicy) throws AdamaLangException {
@@ -989,10 +1014,9 @@ public class Parser {
     if (introReturn != null) {
       returnType = native_type();
     }
-    final var readonlyToken = tokens.popIf(t -> t.isIdentifier("readonly"));
-    final var abortToken = tokens.popIf(t -> t.isIdentifier("aborts"));
+    FunctionPaint paint = painting();
     final var code = block();
-    final var df = new DefineFunction(procedureToken, FunctionSpecialization.Impure, name, openParen, args, closeParen, introReturn, returnType, readonlyToken, abortToken, code);
+    final var df = new DefineFunction(procedureToken, FunctionSpecialization.Impure, name, openParen, args, closeParen, introReturn, returnType, paint, code);
     return doc -> doc.add(df);
   }
 
@@ -1598,7 +1622,11 @@ public class Parser {
     if (op != null) {
       return new EmptyStatement(op);
     }
-    op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump", "@forward"));
+    op = tokens.peek();
+    if (op != null && op.isSymbolWithTextEq("{")) {
+      return block();
+    }
+    op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "switch", "case", "default", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump", "@forward"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("auto", "let", "var", "transition", "invoke", "assert", "preempt"));
     }
@@ -1623,6 +1651,22 @@ public class Parser {
           return for_statement_trailer(op);
         case "foreach":
           return foreach_statement_trailer(op);
+        case "switch": {
+          Token openParen = consumeExpectedSymbol("(");
+          Expression val = expression();
+          Token closeParen = consumeExpectedSymbol(")");
+          Block code = block();
+          return new Switch(op, openParen, val, closeParen, code);
+        }
+        case "case": {
+          Expression val = expression();
+          Token colon = consumeExpectedSymbol(":");
+          return new Case(op, val, colon);
+        }
+        case "default": {
+          Token colon = consumeExpectedSymbol(":");
+          return new DefaultCase(op, colon);
+        }
         case "transition": {
           final var toTransition = expression();
           final var testIn = tokens.popIf(t -> t.isIdentifier("in"));

@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,16 +34,15 @@ public class DefineMethod extends StructureComponent {
   public final String name;
   public final Token nameToken;
   public final Token openParen;
-  public final Token tokenReadonly;
-  public final Token abortsToken;
   public TyType returnType;
   private FunctionOverloadInstance cachedInstance;
   private int functionId;
   private LinkedHashSet<String> depends;
   private LinkedHashSet<String> services;
+  private final FunctionPaint paint;
 
   /** construct the function of a type with a name */
-  public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final Token tokenReadonly, final Token abortsToken, final Block code) {
+  public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final FunctionPaint paint, final Block code) {
     this.methodToken = methodToken;
     this.nameToken = nameToken;
     name = nameToken.text;
@@ -51,8 +51,7 @@ public class DefineMethod extends StructureComponent {
     this.closeParen = closeParen;
     this.introduceReturnToken = introduceReturnToken;
     this.returnType = returnType;
-    this.tokenReadonly = tokenReadonly;
-    this.abortsToken = abortsToken;
+    this.paint = paint;
     this.code = code;
     cachedInstance = null;
     ingest(methodToken);
@@ -81,12 +80,7 @@ public class DefineMethod extends StructureComponent {
       yielder.accept(introduceReturnToken);
       returnType.emit(yielder);
     }
-    if (tokenReadonly != null) {
-      yielder.accept(tokenReadonly);
-    }
-    if (abortsToken != null) {
-      yielder.accept(abortsToken);
-    }
+    paint.emit(yielder);
     code.emit(yielder);
   }
 
@@ -103,7 +97,7 @@ public class DefineMethod extends StructureComponent {
       if (returnType != null && flow == ControlFlow.Open) {
         environment.document.createError(this, String.format("Function '%s' does not return in all cases", nameToken.text), "MethodDefine");
       }
-      cachedInstance = new FunctionOverloadInstance("__METH_" + functionId + "_" + name, returnType, argTypes, tokenReadonly != null, false, abortsToken != null);
+      cachedInstance = new FunctionOverloadInstance("__METH_" + functionId + "_" + name, returnType, argTypes, paint);
       for (String depend : depends) {
         if (!local.contains(depend)) {
           cachedInstance.dependencies.add(depend);
@@ -116,10 +110,13 @@ public class DefineMethod extends StructureComponent {
 
   /** prepare the environment for execution */
   private Environment prepareEnvironment(final Environment environment) {
-    var toUse = tokenReadonly != null ? environment.scopeAsReadOnlyBoundary() : environment.scopeWithCache("__cache");
-    toUse = toUse.watch(Watcher.make(toUse, depends, services));
-    if (abortsToken != null) {
+    var toUse = paint.pure ? environment.scopeAsReadOnlyBoundary() : environment.scopeWithCache("__cache");
+    toUse = toUse.watch(Watcher.make(toUse, depends, services)).scope();
+    if (paint.aborts) {
       toUse = toUse.scopeAsAbortable();
+    }
+    if (paint.viewer) {
+      toUse = toUse.scopeWithViewer();
     }
     for (final FunctionArg arg : args) {
       toUse.define(arg.argName, arg.type, true, arg.type);
@@ -146,8 +143,14 @@ public class DefineMethod extends StructureComponent {
       }
       sb.append(arg.type.getJavaConcreteType(environment)).append(" ").append(arg.argName);
     }
+    if (paint.viewer) {
+      if (!first) {
+        sb.append(", ");
+      }
+      sb.append("RTx__ViewerType __viewer");
+    }
     sb.append(") ");
-    if (abortsToken != null) {
+    if (paint.aborts) {
       sb.append("throws AbortMessageException ");
     }
     code.writeJava(sb, prepareEnvironment(environment));

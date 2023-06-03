@@ -1,0 +1,18 @@
+view string class_filter;
+
+record Thing {
+  public int(Hidden) id;
+  public string(Title) name;
+  public string description;
+
+  method test() -> bool readonly viewer {
+    string cf = @viewer.class_filter;
+    if (cf=="") {
+      return true;
+    }
+    return name.contains(cf) || description.contains(cf);
+  }
+}
+
+table<Thing> _things;
+bubble things = iterate _things where_as x: x.test();

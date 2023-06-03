@@ -1,0 +1,7 @@
+@construct {
+  case "x":
+  default:
+  default:
+  default:
+  case "y":
+}

@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeMap;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
@@ -72,7 +73,7 @@ public class Reduce extends LinqExpression {
     if (isGoodSql && viaToken != null) {
       ArrayList<TyType> guessInputTypes = new ArrayList<>();
       guessInputTypes.add(typeSql);
-      FunctionOverloadInstance guess = new FunctionOverloadInstance("unknown", null, guessInputTypes, true, false, false);
+      FunctionOverloadInstance guess = new FunctionOverloadInstance("unknown", null, guessInputTypes, FunctionPaint.READONLY_NORMAL);
       TyType guessType = new TyNativeFunctional("unknown", FunctionOverloadInstance.WRAP(guess), FunctionStyleJava.None);
       TyType funcType = functionToReduceWith.typing(environment, guessType);
       if (environment.rules.IsFunction(funcType, false)) {

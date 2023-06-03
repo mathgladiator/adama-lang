@@ -15,6 +15,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 
 import java.util.ArrayList;
@@ -86,6 +87,20 @@ public class GlobalObjectPool {
     return pool;
   }
 
+  /** common policy for watch to ignore various names and types */
+  public static boolean ignoreCapture(String name, TyType ty) {
+    if (ty instanceof TyNativeGlobalObject || ty instanceof TyNativeFunctional) {
+      return true;
+    }
+    switch (name) {
+      case "__time":
+      case "__today":
+        return true;
+      default:
+        return false;
+    }
+  }
+
   private static TyNativeFunctional subscribe(String depend, TyNativeFunctional func) {
     for (FunctionOverloadInstance foi : func.overloads) {
       foi.dependencies.add(depend);
@@ -100,7 +115,7 @@ public class GlobalObjectPool {
   private static TyNativeFunctional generateInternalDocumentFunction(final String name, final TyType returnType) {
     final var overloads = new ArrayList<FunctionOverloadInstance>();
     final var args = new ArrayList<TyType>();
-    overloads.add(new FunctionOverloadInstance(name, returnType, args, true, false, false));
+    overloads.add(new FunctionOverloadInstance(name, returnType, args, FunctionPaint.READONLY_NORMAL));
     return new TyNativeFunctional(name, overloads, FunctionStyleJava.InjectNameThenArgs);
   }
 
@@ -108,7 +123,7 @@ public class GlobalObjectPool {
     final var overloads = new ArrayList<FunctionOverloadInstance>();
     final var args = new ArrayList<TyType>();
     args.add(arg);
-    FunctionOverloadInstance foi = new FunctionOverloadInstance(name, returnType, args, true, false, false);
+    FunctionOverloadInstance foi = new FunctionOverloadInstance(name, returnType, args, FunctionPaint.READONLY_NORMAL);
     overloads.add(foi);
     if (extensions != null) {
       HashMap<String, ArrayList<FunctionOverloadInstance>> byFirstParameterType = new HashMap<>();

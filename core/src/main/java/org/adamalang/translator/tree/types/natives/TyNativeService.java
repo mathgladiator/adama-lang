@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.definitions.DefineService;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
@@ -92,7 +93,7 @@ public class TyNativeService extends TyType implements //
       }
       outputType = outputType.withPosition(service);
       outputType = new TyNativeResult(TypeBehavior.ReadOnlyNativeValue, null, method.methodToken, new TokenizedItem<>(outputType)).withPosition(this);
-      return new TyNativeFunctional(name, FunctionOverloadInstance.WRAP(new FunctionOverloadInstance(name, outputType, argTypes, true, false, false)), FunctionStyleJava.RemoteCall);
+      return new TyNativeFunctional(name, FunctionOverloadInstance.WRAP(new FunctionOverloadInstance(name, outputType, argTypes, FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.RemoteCall);
     }
     return null;
   }
