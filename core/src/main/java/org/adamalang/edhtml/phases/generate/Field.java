@@ -17,16 +17,29 @@ public class Field {
   public final String path;
   public final String type;
   public final Annotations annotations;
+  private String options;
 
   public Field(String name, String path, String type, Annotations annotations) {
     this.name = name;
     this.path = path;
     this.type = type;
     this.annotations = annotations;
+    this.options = null;
   }
 
   public static Field union(Field a, Field b) {
-    return new Field(a.name, a.path, a.type, Annotations.union(a.annotations, b.annotations));
+    Field f = new Field(a.name, a.path, a.type, Annotations.union(a.annotations, b.annotations));
+    if (a.options != null) {
+      f.setOptions(a.options);
+    }
+    if (b.options != null) {
+      f.setOptions(b.options);
+    }
+    return f;
+  }
+
+  public void setOptions(String options) {
+    this.options = options;
   }
 
   public HashMap<String, String> map(HashMap<String, String> globalDefines) {
@@ -34,6 +47,11 @@ public class Field {
     result.put("name", this.name);
     result.put("path", this.path);
     result.put("type", this.type);
+    if (this.options != null) {
+      result.put("options", this.options);
+    }
+    result.put("annotation:label", this.name);
+    result.put("annotation:placeholder", this.name + "...");
     for (Map.Entry<String, String> annotationEntry : annotations) {
       result.put("annotation:" + annotationEntry.getKey().toLowerCase(), annotationEntry.getValue());
     }

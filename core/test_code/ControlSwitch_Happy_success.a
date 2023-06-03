@@ -1,0 +1,29 @@
+public int sum = 0;
+public int sum3;
+
+@construct {
+  switch (sum) {
+    case 0:
+      sum = 123;
+      break;
+    case 1:
+      sum = 42;
+      break;
+    case 2:
+      sum = 1000;
+      break;
+    default:
+      sum = 50;
+  }
+  string x = "xyz";
+  switch(x) {
+    case "x":
+      sum3 = 100;
+      break;
+    case "xyz":
+      sum3 = 1000;
+      break;
+    default:
+      break;
+  }
+}

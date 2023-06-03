@@ -31,7 +31,7 @@ public class ViewerConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    if (environment.state.isBubble()) {
+    if (environment.state.isBubble() || environment.state.hasViewer()) {
       environment.mustBeComputeContext(this);
       environment.useSpecial(environment.document.viewerType, "__viewer");
       return environment.document.viewerType;

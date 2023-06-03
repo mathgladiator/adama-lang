@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -211,7 +212,7 @@ public class TyReactiveRecord extends TyType implements //
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if (!environment.state.isPure()) {
       if ("delete".equals(name) && storage.specialization == StorageSpecialization.Record) {
-        return new TyNativeFunctionInternalFieldReplacement("__delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__delete", null, new ArrayList<>(), false, false, false)), FunctionStyleJava.ExpressionThenArgs);
+        return new TyNativeFunctionInternalFieldReplacement("__delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__delete", null, new ArrayList<>(), FunctionPaint.NORMAL)), FunctionStyleJava.ExpressionThenArgs);
       }
       return storage.methodTypes.get(name);
     }

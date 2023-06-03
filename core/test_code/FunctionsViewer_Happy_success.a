@@ -1,0 +1,26 @@
+view int x;
+
+procedure fake_viewer() -> int readonly viewer {
+  return @viewer.x;
+}
+
+procedure fake_viewer2(int zz) -> int readonly viewer {
+  return @viewer.x + zz;
+}
+
+bubble fv = fake_viewer() + fake_viewer2(1000);
+
+record R {
+  int z;
+  method foo(int y) -> int readonly viewer {
+    return @viewer.x + z + y;
+  }
+
+  method goo() -> int readonly viewer {
+    return @viewer.x + z;
+  }
+}
+
+R r;
+
+bubble ff = r.foo(10) + r.goo();

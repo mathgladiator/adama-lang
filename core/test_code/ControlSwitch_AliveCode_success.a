@@ -1,0 +1,15 @@
+int x;
+
+procedure alive() {
+}
+
+#sm_1 {
+  switch (x) {
+    case 1:
+      break;
+    default:
+      return;
+  }
+
+  alive();
+}

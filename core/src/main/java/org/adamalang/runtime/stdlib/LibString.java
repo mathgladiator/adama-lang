@@ -390,6 +390,11 @@ public class LibString {
     return new NtMaybe<>();
   }
 
+  @Extension
+  public static String join(@HiddenType(clazz = String.class) NtList<String> list, String delimitor) {
+    return String.join(delimitor, list);
+  }
+
   public static String of(final boolean x) {
     return String.valueOf(x);
   }

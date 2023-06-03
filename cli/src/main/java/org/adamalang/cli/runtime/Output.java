@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Output {
+    /** Represents the different types of outputs, STDOUT changes based on class **/
     private final boolean color;
     private final boolean json;
 

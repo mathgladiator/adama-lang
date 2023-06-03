@@ -46,7 +46,6 @@ public class Parser {
       if (kColon > 0) {
         String cmd = phrase.substring(0, kColon);
         String body = phrase.substring(kColon + 1).trim();
-
         switch (cmd) {
           case "toggle": {
             commands.add(new Toggle(body));
@@ -110,7 +109,11 @@ public class Parser {
           }
         }
       } else {
-
+        switch (phrase) {
+          case "reset":
+            commands.add(new Reset());
+            break;
+        }
       }
     }
     return commands;

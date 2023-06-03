@@ -34,6 +34,7 @@ public class EnvironmentState {
   private boolean readonlyEnv;
   private boolean abortion;
   private boolean authorize;
+  private boolean viewer;
 
   private EnvironmentState(final EnvironmentState prior) {
     autoId = prior.autoId;
@@ -58,6 +59,7 @@ public class EnvironmentState {
     isDocumentEvent = prior.isDocumentEvent;
     abortion = prior.abortion;
     authorize = prior.authorize;
+    viewer = prior.viewer;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -82,6 +84,7 @@ public class EnvironmentState {
     isDocumentEvent = false;
     abortion = false;
     authorize = false;
+    viewer = false;
   }
 
   public boolean hasNoCost() {
@@ -99,6 +102,8 @@ public class EnvironmentState {
   public boolean isBubble() {
     return isBubble;
   }
+
+  public boolean hasViewer() { return viewer; }
 
   public boolean isWeb() {
     return isWeb;
@@ -243,6 +248,12 @@ public class EnvironmentState {
   public EnvironmentState scopeAbortion() {
     final var next = new EnvironmentState(this);
     next.abortion = true;
+    return next;
+  }
+
+  public EnvironmentState scopeViewer() {
+    final var next = new EnvironmentState(this);
+    next.viewer = true;
     return next;
   }
 

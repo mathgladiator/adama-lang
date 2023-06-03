@@ -1,0 +1,10 @@
+int x;
+
+#sm_1 {
+  switch (x) {
+    default:
+      return;
+    default:
+      return;
+  }
+}
