@@ -7,8 +7,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import java.util.HashMap;
 
+/** Defines an argument that can be used by CLI commands **/
 public class ArgumentDefinition {
-    /** Defines an argument that can be used by CLI commands **/
+
     public final String type;
     public final String documentation;
     public final String shortField;

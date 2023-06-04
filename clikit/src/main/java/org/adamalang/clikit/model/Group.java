@@ -8,8 +8,8 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.Map;
 
+/** A group is a representation of a collection of commands in the XML **/
 public class Group {
-    /** A group is a representation of a collection of commands in the XML **/
     public final String documentation;
     public final String name;
     public final String capName;

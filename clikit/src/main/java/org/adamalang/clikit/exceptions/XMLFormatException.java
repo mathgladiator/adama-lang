@@ -2,8 +2,9 @@ package org.adamalang.clikit.exceptions;
 
 import java.util.ArrayList;
 
+/** Exception class used to identify errors with XML Formatting **/
 public class XMLFormatException extends Exception {
-    /** Exception class used to identify Errors with XML Formatting **/
+
     public ArrayList<String> exceptionStack = new ArrayList<>();
     public boolean isActive = false;
     public XMLFormatException() {

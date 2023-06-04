@@ -9,8 +9,8 @@ import java.util.PrimitiveIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/** A utility class to support the model converting from XML to Java with functions like camelize **/
 public class Common {
-    /** A utility class to support the model converting from XML to Java with functions like camelize */
     public static Node getFirstNode(NodeList nodeList) {
         if (nodeList.getLength() == 0)
             return null;

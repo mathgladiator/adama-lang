@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
 
+/** XML Reader that associates line and column position to elements **/
 public class PositionalXMLReader {
     public static Document readXML(File xmlFile) throws SAXException, ParserConfigurationException, IOException {
         final Document doc;

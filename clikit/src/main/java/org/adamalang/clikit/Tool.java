@@ -19,8 +19,8 @@ import java.nio.file.Files;
 import java.util.Map;
 import java.util.TreeMap;
 
+/** Tool to parse XML and create files according to the data **/
 public class Tool {
-    /** Tool to parse XML and create files according to the data **/
     public static String buildFileSystem(String pathToXml) throws Exception {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
@@ -77,14 +77,7 @@ public class Tool {
         return "mainGen";
 
     }
-
     public static void main(String[] args) throws Exception{
         buildFileSystem("./cli/example.xml");
     }
-
-
-
-
-
-
 }

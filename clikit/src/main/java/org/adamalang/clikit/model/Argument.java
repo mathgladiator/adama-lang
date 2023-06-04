@@ -8,8 +8,9 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.Map;
 
+/** Represents an argument that is used by a command **/
 public class Argument {
-    /** Represents an argument that is used by a command **/
+
     public final boolean optional;
     public final String name;
     public final String defaultValue;

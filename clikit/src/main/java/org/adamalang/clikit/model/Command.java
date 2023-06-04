@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.Map;
 
+/** A command is a representation of an instruction for communctation with Adama's backend **/
 public class Command {
     public final Argument[] argList;
     public final String output;
@@ -18,7 +19,6 @@ public class Command {
     public final String camel;
 
     public Command(String name, String documentation, String output, boolean danger, Argument[] argList) {
-        /** A command is a representation of an instruction for communctation with Adama's backend **/
         this.name = name;
         this.camel = Common.camelize(name, true);
         this.capName = Common.camelize(name);
