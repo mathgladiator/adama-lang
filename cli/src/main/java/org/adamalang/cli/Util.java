@@ -27,6 +27,10 @@ public class Util {
     return c.ansi + x + ANSI.Reset.ansi;
   }
 
+  public static String prefixBold(String x, ANSI c) {
+    return ANSI.Bold.ansi + c.ansi + x + ANSI.Reset.ansi;
+  }
+
   public static String extractOrCrash(String longField, String shortField, String[] args) throws Exception {
     for (int k = 0; k + 1 < args.length; k++) {
       if (longField.equals(args[k]) || shortField.equals(args[k])) {
@@ -55,8 +59,27 @@ public class Util {
     return false;
   }
 
+ // If string is any of the following
+  public static boolean equalsMultiple(String str, String... tests) {
+    for (String testStr : tests) {
+      if (str.equals(testStr)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static String justifyLeft(String string, int spacing) {
+    return String.format("%-" + spacing + "s", string);
+  }
+  public static String justifyRight(String string, int spacing) {
+    return String.format("%" + spacing + "s", string);
+  }
+
+
+
   public enum ANSI {
-    Black("\u001b[30m"), Red("\u001b[31m"), Green("\u001b[32m"), Yellow("\u001b[33m"), Blue("\u001b[34m"), Magenta("\u001b[35m"), Cyan("\u001b[36m"), White("\u001b[37m"), Reset("\u001b[0m");
+    Black("\u001b[30m"), Red("\u001b[31m"), Green("\u001b[32m"), Yellow("\u001b[33m"), Blue("\u001b[34m"), Magenta("\u001b[35m"), Cyan("\u001b[36m"), White("\u001b[37m"), Bold("\u001b[1m"), Reset("\u001b[0m"), Normal("\u001b[39m");
     public final String ansi;
 
     ANSI(String ansi) {

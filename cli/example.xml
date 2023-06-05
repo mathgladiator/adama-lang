@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+<cli output-path="./cli/src/main/java/org/adamalang/cli/router" test-output-path="./cli/src/test/java/org/adamalang/cli/router" package="org.adamalang.cli.router" docs="./reference/src/reference/cli.md">
+    <!-- define all the arguments -->
+    <arg-definition name="space" type="string" short="s">
+        <documentation>
+            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
+            denote the name of that collection.
+        </documentation>
+        <documentation>
+            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
+            denote the name of that collection.
+        </documentation>
+    </arg-definition>
+    <!-- May have to represent the actual representation-->
+    <arg-definition name="file" type="string" short="f">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="plan" type="string" short="p">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="gc" type="boolean" short="g">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="limit" type="int" short="l">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="key" type="string" short="k">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="marker" type="string" short="m">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="output" type="string" short="o">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="email" type="string" short="e">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="role" type="string" short="r">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="validate" type="string" short="v">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="authority" type="string" short="a">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="agent" type="string" short="ag">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="root" type="string" short="r">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="keystore" type="string" short="k">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="priv" type="string" short="p">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="dump-to" type="string" short="d">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+
+    <!-- groups collect commands -->
+    <group name="space">
+        <documentation>
+            Provides command related to working with space collections...
+        </documentation>
+        <command name="create">
+            <documentation>
+                Creates a new space
+            </documentation>
+            <arg name="space" />
+
+        </command>
+
+        <command name="delete">
+            <documentation>
+                Deletes an empty space
+            </documentation>
+            <arg name="space" />
+        </command>
+
+        <command name="deploy">
+            <documentation>
+                Deploy a plan to a space
+            </documentation>
+            <arg name="space" />
+            <arg name="dump-to" default="null" />
+            <arg name="plan" />
+            <arg name="file" default="null" />
+        </command>
+
+        <command name="set-rxhtml">
+            <documentation>
+                Set the frontend RxHTML forest
+            </documentation>
+            <arg name="space" />
+            <arg name="file" default="null" />
+        </command>
+
+        <command name="get-rxhtml">
+            <documentation>
+                Get the frontend RxHTML forest
+            </documentation>
+            <arg name="space" />
+        </command>
+
+        <command name="upload">
+            <documentation>
+                Placeholder
+            </documentation>
+            <arg name="space" />
+            <arg name="gc" default="no" />
+            <arg name="root" default="null" />
+            <arg name="file" />
+        </command>
+
+        <command name="download">
+            <documentation>
+                Download a space's plan
+            </documentation>
+            <arg name="space" />
+
+        </command>
+
+        <command name="list">
+            <documentation>
+                List spaces available to your account
+            </documentation>
+            <arg name="marker" default="" />
+            <arg name="limit" default="100" />
+
+        </command>
+
+        <command name="usage">
+            <documentation>
+                Iterate the billed usage
+            </documentation>
+            <arg name="space" />
+            <arg name="limit" default="336" />
+        </command>
+
+        <command name="reflect">
+            <documentation>
+                Get a file of the reflection of a space
+            </documentation>
+            <arg name="space" />
+            <arg name="marker" />
+            <arg name="output" />
+            <arg name="key" />
+            <arg name="limit" default="336" />
+        </command>
+
+        <command name="set-role">
+            <documentation>
+                Get a file of the reflection of a space
+            </documentation>
+            <arg name="space" />
+            <arg name="marker" />
+            <arg name="email" default="" />
+            <arg name="role" default="none" />
+        </command>
+
+        <command name="generate-key">
+            <documentation>
+                Generate a server-side key to use for storing secrets
+            </documentation>
+            <arg name="space" />
+        </command>
+
+        <command name="encrypt-secret">
+            <documentation>
+                Encrypt a secret to store within code
+            </documentation>
+            <arg name="space" />
+
+        </command>
+    </group>
+    <group name="authority">
+        <documentation>
+            Manage authorities
+        </documentation>
+        <command name="create">
+            <documentation>
+                Creates a new authority
+            </documentation>
+        </command>
+
+        <command name="set">
+            <documentation>
+                Set public keys to an authority
+            </documentation>
+            <arg name="authority" />
+            <arg name="keystore" />
+
+        </command>
+
+        <command name="get">
+            <documentation>
+                Get released public keys for an authority
+            </documentation>
+            <arg name="authority" />
+            <arg name="keystore" />
+
+        </command>
+
+        <command name="destroy">
+            <documentation>
+                Destroy an authority
+            </documentation>
+            <arg name="authority" />
+        </command>
+
+        <command name="list">
+            <documentation>
+                List authorities this developer owns
+            </documentation>
+        </command>
+
+        <command name="create-local">
+            <documentation>
+                Make a new set of public keys
+            </documentation>
+            <arg name="authority" />
+            <arg name="keystore" />
+            <arg name="priv" />
+        </command>
+
+        <command name="append-local">
+            <documentation>
+                Append a new public key to the public key file
+            </documentation>
+            <arg name="authority" />
+            <arg name="keystore" />
+            <arg name="priv" />
+
+        </command>
+
+        <command name="sign">
+            <documentation>
+                Sign an agent with a local private key
+            </documentation>
+            <arg name="key" />
+            <arg name="agent" />
+            <arg name="validate" default="null" />
+
+        </command>
+    </group>
+
+
+    <command name="init">
+        <documentation>
+            Initializes the config with a valid token
+        </documentation>
+    </command>
+
+
+</cli>
