@@ -18,13 +18,13 @@ public class TestGen {
             sb.append("  @Test\n");
             sb.append("  public void coverage() {\n");
             for (Group group : groups) {
-                sb.append("    NewMain.main(new String[]{\"").append(group.name).append("\", \"--help\"});\n");
+                sb.append("    NewMain.testMain(new String[]{\"").append(group.name).append("\", \"--help\"});\n");
                 for (Command command : group.commandList) {
-                    sb.append("    NewMain.main(new String[]{\"").append(group.name).append("\", \"").append(command.name).append("\", \"--help\"});\n");
+                    sb.append("    NewMain.testMain(new String[]{\"").append(group.name).append("\", \"").append(command.name).append("\", \"--help\"});\n");
                 }
             }
             for (Command command : mainCommands) {
-                sb.append("    NewMain.main(new String[]{\"").append(command.name).append("\", \"--help\"});\n");
+                sb.append("    NewMain.testMain(new String[]{\"").append(command.name).append("\", \"--help\"});\n");
             }
             sb.append("  }\n");
             sb.append("}");
