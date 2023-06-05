@@ -12,8 +12,6 @@ public class ArgumentsGen {
     public static String generate(Group[] groups, Command[] mainCommands, String packageName) {
         StringBuilder sb = new StringBuilder();
         sb.append("package ").append(packageName).append(";\n\n");
-        sb.append("import org.adamalang.cli.runtime.Argument;\n");
-        sb.append("import org.adamalang.cli.Config;\n\n");
         sb.append("public class Arguments {\n");
         // Can have a superclass that grabs the config
         for (Group group : groups) {

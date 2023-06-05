@@ -1,8 +1,5 @@
 package org.adamalang.cli.router;
 
-import org.adamalang.cli.runtime.Argument;
-import org.adamalang.cli.Config;
-
 public class Arguments {
 	public static class SpaceCreateArgs {
 		public String space;
