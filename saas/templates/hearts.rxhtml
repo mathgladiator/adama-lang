@@ -119,26 +119,26 @@
     </template>
     <page uri="/">
         <div>
-            <connection name="alice_hearts" space="$TEMPLATE_SPACE" key="demo-{view:session_id}" identity="direct:anonymous:alice">
+            <connection name="alice_hearts" space="$TEMPLATE_SPACE" key="demo-{view:__session_id}" identity="direct:anonymous:alice">
                 <div rx:template="hearts_player">Alice</div>
                 <div rx:disconnected>
                     Connecting...
                 </div>
             </connection>
 
-            <connection name="bob_hearts" space="$TEMPLATE_SPACE" key="demo-{view:session_id}" identity="direct:anonymous:bob">
+            <connection name="bob_hearts" space="$TEMPLATE_SPACE" key="demo-{view:__session_id}" identity="direct:anonymous:bob">
                 <div rx:template="hearts_player">Bob</div>
                 <div rx:disconnected>
                     Connecting...
                 </div>
             </connection>
-            <connection name="carol_hearts" space="$TEMPLATE_SPACE" key="demo-{view:session_id}" identity="direct:anonymous:carol">
+            <connection name="carol_hearts" space="$TEMPLATE_SPACE" key="demo-{view:__session_id}" identity="direct:anonymous:carol">
                 <div rx:template="hearts_player">Carol</div>
                 <div rx:disconnected>
                     Connecting...
                 </div>
             </connection>
-            <connection name="dan_hearts" space="$TEMPLATE_SPACE" key="demo-{view:session_id}" identity="direct:anonymous:dan">
+            <connection name="dan_hearts" space="$TEMPLATE_SPACE" key="demo-{view:__session_id}" identity="direct:anonymous:dan">
                 <div rx:template="hearts_player">Dan</div>
                 <div rx:disconnected>
                     Connecting...

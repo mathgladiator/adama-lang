@@ -1566,7 +1566,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Define_CantSetLazy_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":17,\"byte\":29},\"end\":{\"line\":1,\"character\":18,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'r<auto<int>>' is not applicable for assignment (=) (Assignment)\"},{\"range\":{\"start\":{\"line\":1,\"character\":17,\"byte\":29},\"end\":{\"line\":1,\"character\":18,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'r<auto<int>>' is unable to store type 'int'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":17,\"byte\":29},\"end\":{\"line\":4,\"character\":9,\"byte\":52}},\"severity\":1,\"source\":\"error\",\"message\":\"'r<auto<int>>' is unable to accept an set of 'int'. (RuleSetAssignmentSet)\"},{\"range\":{\"start\":{\"line\":1,\"character\":17,\"byte\":29},\"end\":{\"line\":1,\"character\":18,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'r<auto<int>>' is not applicable for assignment (=) (Assignment)\"},{\"range\":{\"start\":{\"line\":1,\"character\":17,\"byte\":29},\"end\":{\"line\":1,\"character\":18,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'r<auto<int>>' is unable to store type 'int'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

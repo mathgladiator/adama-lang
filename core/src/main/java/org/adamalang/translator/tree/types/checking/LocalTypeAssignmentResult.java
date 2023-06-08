@@ -10,6 +10,7 @@ package org.adamalang.translator.tree.types.checking;
 
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
@@ -47,6 +48,13 @@ public class LocalTypeAssignmentResult {
   public void set() {
     ltype = environment.rules.Resolve(ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null), false);
     rtype = environment.rules.Resolve(expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null), false);
+
+    if (ltype != null && rtype != null) {
+      if (ltype.behavior.isReadOnly) {
+        environment.document.createError(DocumentPosition.sum(ltype, rtype), String.format("'%s' is unable to accept an set of '%s'.", ltype.getAdamaType(), rtype.getAdamaType()), "RuleSetAssignmentSet");
+      }
+    }
+
     if (ltype instanceof TyReactiveComplex) {
       if (environment.rules.IsNumeric(rtype, true) || rtype instanceof TyNativeLong) {
         assignResult = CanAssignResult.YesWithSetter;

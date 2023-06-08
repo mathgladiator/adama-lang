@@ -13,6 +13,7 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.operands.AssignmentOp;
@@ -82,10 +83,15 @@ public class Assignment extends Statement {
           final var exprType = expression.getCachedType();
           boolean isArray = environment.rules.IngestionRightSideRequiresIteration(exprType);
           environment.rules.IsTable(refType, false);
-          if (isArray) {
-            environment.define(ingestionDefine.text, new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, ingestionDefine, ingestionDefine), ingestionDefine), true, this);
-          } else {
-            environment.define(ingestionDefine.text, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, ingestionDefine, ingestionDefine), true, this);
+          if (refType != null && exprType != null) {
+            if (refType.behavior.isReadOnly) {
+              environment.document.createError(DocumentPosition.sum(refType, exprType), String.format("'%s' is unable to accept an ingestion of '%s'.", refType.getAdamaType(), exprType.getAdamaType()), "RuleSetIngest");
+            }
+            if (isArray) {
+              environment.define(ingestionDefine.text, new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, ingestionDefine, ingestionDefine), ingestionDefine), true, this);
+            } else {
+              environment.define(ingestionDefine.text, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, ingestionDefine, ingestionDefine), true, this);
+            }
           }
         }
         break;

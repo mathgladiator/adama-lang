@@ -96,6 +96,12 @@ public class BinaryExpression extends Expression {
     TyType typeRight = right.typing(environment, null);
     typeRight = environment.rules.Resolve(typeRight, false);
 
+    if (typeLeft != null && typeRight != null) {
+      if (op.leftAssignment && typeLeft.behavior.isReadOnly) {
+        environment.document.createError(DocumentPosition.sum(left, right), String.format("'%s' is unable to accept an assignment of '%s'.", typeLeft.getAdamaType(), typeRight.getAdamaType()), "RuleSetAssign");
+      }
+    }
+
     if (op == BinaryOp.Equal || op == BinaryOp.NotEqual) {
       if (areBothTypesEnums(environment, typeLeft, typeRight)) {
         typeLeft = getEnumTypeToUse(environment, typeLeft);

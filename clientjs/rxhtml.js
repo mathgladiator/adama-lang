@@ -1072,14 +1072,16 @@ var RxHTML = (function () {
   var build_obj = function (el, objToInsertInto, allow_passwords) {
     var justSet = el.tagName.toUpperCase() == "TEXTAREA" || el.tagName.toUpperCase() == "SELECT";
     var isInputBox = el.tagName.toUpperCase() == "INPUT";
-
+    var isFieldSet = el.tagName.toUpperCase() == "FIELDSET";
     var hasName = "name" in el;
-    var name = "";
     var insertAt = objToInsertInto;
-    var push = false;
-    if (hasName && (justSet || isInputBox)) {
+    // the apply function is how we inject the value into the object
+    var apply = function(val) {};
+
+    if (hasName && (justSet || isInputBox || isFieldSet)) {
+      var name = "";
       name = el.name;
-      kDot = name.indexOf('.');
+      var kDot = name.indexOf('.');
       while (kDot > 0) {
         var par = name.substring(0, kDot);
         if (!(par in insertAt)) {
@@ -1089,46 +1091,52 @@ var RxHTML = (function () {
         name = name.substring(kDot + 1);
         kDot = name.indexOf('.');
       }
-      push = name.endsWith("[]");
-      if (push) {
-        name = name.substring(0, name.length - 2);
+
+      if (name.endsWith("+")) {
+        // here, we push the value into the array
+        name = name.substring(0, name.length - 1);
+        apply = function(v) {
+          if (!(name in insertAt)) {
+            insertAt[name] = [v];
+          } else {
+            insertAt[name].push(v);
+          }
+        };
+      } else {
+        // here we set the object
+        apply = function(v) {
+          insertAt[name] = v;
+        };
       }
     }
 
     if (justSet) {
-      insertAt[name] = el.value;
+      apply(el.value);
+    } else if (isFieldSet) {
+      var nextObject = {};
+      if ("children" in el) {
+        var arr = el.children;
+        var n = arr.length;
+        for (var k = 0; k < n; k++) {
+          var ch = el.children[k];
+          build_obj(ch, nextObject, allow_passwords);
+        }
+      }
+      apply(nextObject);
     } else if (isInputBox) {
       var type = ("type" in el) ? el.type.toUpperCase() : "text";
       if (type == "SUBMIT" || type == "RESET") return;
       if (type == "PASSWORD" && !allow_passwords) {
         return;
       }
-      if (hasName) {
-        if (push) {
-          if (name in insertAt) {
-            insertAt[name] = [];
-          }
-          insertAt = insertAt[name];
-          if (type == "CHECKBOX") {
-            insertAt.push(el.checked ? true : false);
-          } else if (type == "RADIO") {
-            if (el.checked) {
-              insertAt.push(el.value);
-            }
-          } else {
-            insertAt.push(el.value);
-          }
-        } else {
-          if (type == "CHECKBOX") {
-            insertAt[name] = el.checked ? true : false;
-          } else if (type == "RADIO") {
-            if (el.checked) {
-              insertAt[name] = el.value;
-            }
-          } else {
-            insertAt[name] = el.value;
-          }
+      if (type == "CHECKBOX") {
+        apply(el.checked ? true : false);
+      } else if (type == "RADIO") {
+        if (el.checked) {
+          apply(el.value);
         }
+      } else {
+        apply(el.value);
       }
     } else {
       if ("children" in el) {
@@ -1279,7 +1287,7 @@ var RxHTML = (function () {
       connections[conKey].tree.nuke();
     }
     var parts = (path.startsWith("/") ? path.substring(1) : path).split("/");
-    var init = {"session_id": "R" + Math.random()};
+    var init = {"__session_id": "R" + Math.random()};
     var foo = route(parts, 0, router, init);
     nuke(where);
     if (foo != null) {

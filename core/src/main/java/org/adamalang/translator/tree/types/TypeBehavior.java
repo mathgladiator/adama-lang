@@ -9,8 +9,14 @@
 package org.adamalang.translator.tree.types;
 
 public enum TypeBehavior {
-  ReadOnlyGetNativeValue, // the type is native, and can be used natively
-  ReadOnlyNativeValue, //
-  ReadWriteNative, // the value is native, and can only be read from
-  ReadWriteWithSetGet, // the value is native, and can only be read from
+  ReadOnlyGetNativeValue(true), // the type is native, and can be used natively
+  ReadOnlyNativeValue(true), //
+  ReadWriteNative(false), // the value is native, and can only be read from
+  ReadWriteWithSetGet(false); // the value is native, and can only be read from
+
+  public final boolean isReadOnly;
+
+  private TypeBehavior(boolean isReadOnly) {
+    this.isReadOnly = isReadOnly;
+  }
 }

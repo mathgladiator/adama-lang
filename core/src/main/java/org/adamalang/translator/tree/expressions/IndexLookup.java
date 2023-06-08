@@ -79,7 +79,7 @@ public class IndexLookup extends Expression {
       } else {
         lookupStyle = IndexLookupStyle.ExpressionLookupMethod;
         if (environment.rules.CanTypeAStoreTypeB(mapType.getDomainType(environment), typeArg, StorageTweak.None, false)) {
-          resultType = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(mapType.getRangeType(environment))).withPosition(this);
+          resultType = new TyNativeMaybe(TypeBehavior.ReadWriteWithSetGet, null, null, new TokenizedItem<>(mapType.getRangeType(environment))).withPosition(this);
         }
       }
     } else {

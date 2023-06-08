@@ -1,0 +1,16 @@
+record Z {
+  public int x;
+}
+
+record X {
+  public Z z;
+}
+
+table<X> x;
+
+@construct {
+  x <- [{z:{x:1}}];
+  (iterate x)[0].z.x = 42;
+  (iterate x)[0].z.x += 123;
+}
+

@@ -1,0 +1,18 @@
+record Z {
+  public int x;
+}
+
+record X {
+  public Z z;
+}
+
+table<X> x;
+
+public formula all = iterate x;
+
+@construct {
+  x <- [{z:{x:1}}];
+  (iterate x).z.x = 123;
+  (iterate x).z.x += 1000;
+}
+
