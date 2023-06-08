@@ -11,11 +11,8 @@ package org.adamalang.apikit.codegen;
 import org.adamalang.apikit.model.*;
 
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Pattern;
 
-public class AssembleClient {
+public class AssembleJavaScriptClient {
 
   public static String injectInvokePlainJs(String client, Method[] methods) throws Exception {
     String beginString = "/**[BEGIN-INVOKE]**/";

@@ -17,7 +17,6 @@ import org.adamalang.apikit.model.Responder;
 import org.adamalang.common.DefaultCopyright;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -54,6 +53,7 @@ public class Tool {
     Map<String, String> requestsFiles = AssembleRequestTypes.make(packageName, methods);
     Map<String, String> responderFiles = AssembleResponders.make(packageName, responders);
     Map<String, String> handlerFiles = AssembleHandlers.make(packageName, methods);
+    Map<String, String> javaClientFiles = AssembleJavaClient.make(packageName, methods);
     String router = AssembleConnectionRouter.make(packageName, methods);
     String metrics = AssembleMetrics.make(packageName, methods);
     File outputPath = new File(root, outputPathStr);
@@ -74,6 +74,7 @@ public class Tool {
     apiOutput.putAll(requestsFiles);
     apiOutput.putAll(responderFiles);
     apiOutput.putAll(handlerFiles);
+    apiOutput.putAll(javaClientFiles);
     // write out the nexus
     HashMap<File, String> diskWrites = new HashMap<>();
     for (Map.Entry<String, String> request : apiOutput.entrySet()) {
@@ -85,7 +86,7 @@ public class Tool {
 
     diskWrites.put(new File(root, docsFile), AssembleAPIDocs.docify(methods));
     String clientJs = Files.readString(new File(root, clientFileJs).toPath());
-    clientJs = AssembleClient.injectInvokePlainJs(clientJs, methods);
+    clientJs = AssembleJavaScriptClient.injectInvokePlainJs(clientJs, methods);
     diskWrites.put(new File(root, clientFileJs), clientJs);
 
     return diskWrites;
