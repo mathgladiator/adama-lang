@@ -22,7 +22,7 @@ public class Fragment {
   public Fragment(FragmentType type, String... text) {
     if (text.length == 0) {
       this.type = FragmentType.Text;
-      this.text = new String[] { "{" };
+      this.text = new String[] { "[" };
       return;
     }
     this.type = type;
@@ -71,7 +71,7 @@ public class Fragment {
               ty = FragmentType.End;
               break;
             }
-          case '}':
+          case ']':
           case '(':
           case ')':
           case '|':
@@ -85,9 +85,9 @@ public class Fragment {
               parts.add(partial);
             }
             part.setLength(0);
-            if (ecp == '}') {
-              if (!(it.hasNext() && it.next() == '}')) {
-                throw new RuntimeException("'}' encountered without additional '}' during scan");
+            if (ecp == ']') {
+              if (!(it.hasNext() && it.next() == ']')) {
+                throw new RuntimeException("']' encountered without additional ']' during scan");
               }
               return new Fragment(ty, parts.toArray(new String[parts.size()]));
             } else {
@@ -100,14 +100,14 @@ public class Fragment {
         }
         first = false;
       }
-      throw new RuntimeException("scan() failed due to missing '}'");
+      throw new RuntimeException("scan() failed due to missing ']'");
     };
     while (it.hasNext()) {
       int cp = it.next();
       switch (state) {
         case Text: {
           switch (cp) {
-            case '{':
+            case '[':
               state = State.FirstEscape;
               break;
             default:
@@ -119,12 +119,12 @@ public class Fragment {
         case FirstEscape: {
           state = State.Text;
           switch (cp) {
-            case '{':
+            case '[':
               cut.run();
               results.add(scan.get());
               break;
             default:
-              current.append('{');
+              current.append('[');
               current.append(Character.toChars(cp));
               break;
           }
@@ -133,7 +133,7 @@ public class Fragment {
       }
     }
     if (state == State.FirstEscape) {
-      current.append('{');
+      current.append('[');
     }
     cut.run();
     return results;

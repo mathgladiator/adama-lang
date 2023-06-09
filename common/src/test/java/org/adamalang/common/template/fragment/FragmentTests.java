@@ -21,7 +21,7 @@ public class FragmentTests {
 
   @Test
   public void fragmentization_simple() {
-    ArrayList<Fragment> fragments = Fragment.parse("Hi {{world}} \t\n{{person}}");
+    ArrayList<Fragment> fragments = Fragment.parse("Hi [[world]] \t\n[[person]]");
     Assert.assertEquals(4, fragments.size());
     Assert.assertEquals("Text:[Hi ]", fragments.get(0).toString());
     Assert.assertEquals("Expression:[world]", fragments.get(1).toString());
@@ -31,7 +31,7 @@ public class FragmentTests {
 
   @Test
   public void fragmentization_compound() {
-    ArrayList<Fragment> fragments = Fragment.parse("Hi {{world|dirty}}");
+    ArrayList<Fragment> fragments = Fragment.parse("Hi [[world|dirty]]");
     Assert.assertEquals(2, fragments.size());
     Assert.assertEquals("Text:[Hi ]", fragments.get(0).toString());
     Assert.assertEquals("Expression:[world, |, dirty]", fragments.get(1).toString());
@@ -39,23 +39,23 @@ public class FragmentTests {
 
   @Test
   public void fragmentization_brace_solo() {
-    ArrayList<Fragment> fragments = Fragment.parse("Hi { { {");
+    ArrayList<Fragment> fragments = Fragment.parse("Hi [ [ {");
     Assert.assertEquals(1, fragments.size());
-    Assert.assertEquals("Text:[Hi { { {]", fragments.get(0).toString());
+    Assert.assertEquals("Text:[Hi [ [ {]", fragments.get(0).toString());
   }
 
 
   @Test
   public void fragmentization_brace_empty() {
-    ArrayList<Fragment> fragments = Fragment.parse("Hi {{}}");
+    ArrayList<Fragment> fragments = Fragment.parse("Hi [[]]");
     Assert.assertEquals(2, fragments.size());
     Assert.assertEquals("Text:[Hi ]", fragments.get(0).toString());
-    Assert.assertEquals("Text:[{]", fragments.get(1).toString());
+    Assert.assertEquals("Text:[[]", fragments.get(1).toString());
   }
 
   @Test
   public void fragmentization_empty_param() {
-    ArrayList<Fragment> fragments = Fragment.parse("Hi {{thing |+-}}");
+    ArrayList<Fragment> fragments = Fragment.parse("Hi [[thing |+-]]");
     Assert.assertEquals(2, fragments.size());
     Assert.assertEquals("Text:[Hi ]", fragments.get(0).toString());
     Assert.assertEquals("Expression:[thing, |, +, -]", fragments.get(1).toString());
@@ -63,7 +63,7 @@ public class FragmentTests {
 
   @Test
   public void fragmentization_conditions() {
-    ArrayList<Fragment> fragments = Fragment.parse("Hi {{#world}} \t\n{{/world}}{{^p}}not-p{{/p}}");
+    ArrayList<Fragment> fragments = Fragment.parse("Hi [[#world]] \t\n[[/world]][[^p]]not-p[[/p]]");
     Assert.assertEquals(7, fragments.size());
     Assert.assertEquals("Text:[Hi ]", fragments.get(0).toString());
     Assert.assertEquals("If:[world]", fragments.get(1).toString());
@@ -77,30 +77,30 @@ public class FragmentTests {
   @Test
   public void incomplete() {
     try {
-      Fragment.parse("Hi {{#world}xyz");
+      Fragment.parse("Hi [[#world]xyz");
       Assert.fail();
     } catch (RuntimeException re) {
-      Assert.assertEquals("'}' encountered without additional '}' during scan", re.getMessage());
+      Assert.assertEquals("']' encountered without additional ']' during scan", re.getMessage());
     }
   }
 
   @Test
   public void eos1() {
     try {
-      Fragment.parse("Hi {{#world");
+      Fragment.parse("Hi [[#world");
       Assert.fail();
     } catch (RuntimeException re) {
-      Assert.assertEquals("scan() failed due to missing '}'", re.getMessage());
+      Assert.assertEquals("scan() failed due to missing ']'", re.getMessage());
     }
   }
 
   @Test
   public void eos2() {
     try {
-      Fragment.parse("Hi {{#world}");
+      Fragment.parse("Hi [[#world]");
       Assert.fail();
     } catch (RuntimeException re) {
-      Assert.assertEquals("'}' encountered without additional '}' during scan", re.getMessage());
+      Assert.assertEquals("']' encountered without additional ']' during scan", re.getMessage());
     }
   }
 }
