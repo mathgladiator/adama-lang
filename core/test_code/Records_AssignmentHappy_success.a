@@ -1,6 +1,6 @@
 record R {
   int x;
-}
+}(X="This is a record named R")
 
 maybe<R> r1;
 R r2;

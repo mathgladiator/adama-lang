@@ -952,12 +952,17 @@ public class Parser {
         if (equalsToken != null) {
           defaultValueOverride = expression();
         }
-        storage.add(new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, consumeExpectedSymbol(";")));
+        // Token lossy = tokens.popIf(t -> t.isIdentifier("lossy"));
+        // TODO: Think hard about a field properties for both messages and records; see #147
+        FieldDefinition fd = new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, consumeExpectedSymbol(";"));
+        storage.add(fd);
       }
       endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
     }
     storage.end(endBrace);
-    return doc -> doc.add(new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, messageToken, name, storage));
+    TyNativeMessage tyMsg = enrich(new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, messageToken, name, storage));
+
+    return doc -> doc.add(tyMsg);
   }
 
   public FunctionPaint painting() throws AdamaLangException {
@@ -1051,7 +1056,8 @@ public class Parser {
       if (op != null) {
         storage.finalizeRecord();
         storage.end(op);
-        return doc -> doc.add(new TyReactiveRecord(recordToken, name, storage));
+        TyReactiveRecord tyRec = enrich(new TyReactiveRecord(recordToken, name, storage));
+        return doc -> doc.add(tyRec);
       }
       storage.add(define_field_record());
     }
@@ -1318,7 +1324,7 @@ public class Parser {
     return subtype;
   }
 
-  private TyType enrich(TyType tyType) throws AdamaLangException {
+  private <T extends TyType> T enrich(T tyType) throws AdamaLangException {
     Token openAnnotation = tokens.popIf((t) -> t.isSymbolWithTextEq("("));
     if (openAnnotation != null) {
       ArrayList<TokenizedItem<TypeAnnotation.Annotation>> annotations = new ArrayList<>();

@@ -2,11 +2,11 @@ enum E { A, B }
 
 message X {
   E e;
-}
+}(X="This is a X")
 
 message Y {
   E e;
-}
+}(X="This is a Y")
 
 channel<X> foo;
 channel<X> goo;
