@@ -20,10 +20,12 @@ public abstract class RxBase {
   protected final RxParent __parent;
   private boolean __dirty;
   private ArrayList<RxChild> __subscribers;
+  private boolean __notifying;
 
   protected RxBase(final RxParent __parent) {
     this.__parent = __parent;
     __subscribers = null;
+    __notifying = false;
   }
 
   /** disconnect all subscriptions */
@@ -69,7 +71,8 @@ public abstract class RxBase {
 
   /** tell all subscribers that they need to recompute */
   protected void __invalidateSubscribers() {
-    if (__subscribers != null) {
+    if (__subscribers != null && !__notifying) {
+      __notifying = true;
       final var it = __subscribers.iterator();
       while (it.hasNext()) {
         if (!it.next().__raiseInvalid()) {
@@ -77,6 +80,7 @@ public abstract class RxBase {
         }
       }
     }
+    __notifying = false;
   }
 
   /** inform the object that it is dirty, which in turn will notify the parents */

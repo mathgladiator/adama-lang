@@ -1,0 +1,19 @@
+record X {
+  public int id;
+  public formula all_y = iterate _y;
+}
+
+record Y {
+  public int id;
+  public formula all_x = iterate _x;
+}
+
+table<X> _x;
+table<Y> _y;
+
+@construct {
+  _x <- {};
+  _y <- {};
+  _x <- {};
+  _y <- {};
+}
