@@ -10,6 +10,7 @@ package org.adamalang.translator.tree;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.TyNativeTuple;
@@ -36,7 +37,7 @@ public class SillyTupleCoverage {
     tuple.typing(null);
     tuple.makeCopyWithNewPosition(tuple, TypeBehavior.ReadOnlyNativeValue);
     JsonStreamWriter writer = new JsonStreamWriter();
-    tuple.writeTypeReflectionJson(writer);
+    tuple.writeTypeReflectionJson(writer, ReflectionSource.Root);
 
 
   }

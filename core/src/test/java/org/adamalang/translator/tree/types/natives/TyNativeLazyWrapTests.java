@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.types.natives;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class TyNativeLazyWrapTests {
     Assert.assertEquals("Integer", wrap.getJavaBoxType(null));
     wrap.makeCopyWithNewPositionInternal(DocumentPosition.ZERO, TypeBehavior.ReadOnlyGetNativeValue);
     wrap.typing(null);
-    wrap.writeTypeReflectionJson(new JsonStreamWriter());
+    wrap.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
     wrap.typeAfterGet(null);
   }
 }

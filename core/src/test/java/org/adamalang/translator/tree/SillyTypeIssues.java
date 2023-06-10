@@ -17,6 +17,7 @@ import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.TokenizedItem;
+import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
@@ -43,7 +44,7 @@ public class SillyTypeIssues {
   public void functional() {
     final var functional = new TyNativeFunctional("x", null, FunctionStyleJava.InjectNameThenArgs);
     functional.getAdamaType();
-    functional.writeTypeReflectionJson(new JsonStreamWriter());
+    functional.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
     try {
       functional.getJavaConcreteType(null);
       Assert.fail();
@@ -68,7 +69,7 @@ public class SillyTypeIssues {
     new TyNativeGlobalObject(null, null, true)
         .makeCopyWithNewPosition(
             new TyNativeGlobalObject(null, null, true), TypeBehavior.ReadOnlyNativeValue);
-    new TyNativeGlobalObject(null, null, true).writeTypeReflectionJson(new JsonStreamWriter());
+    new TyNativeGlobalObject(null, null, true).writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
   }
 
   @Test
@@ -111,7 +112,7 @@ public class SillyTypeIssues {
     lazy.getAdamaType();
     lazy.getJavaBoxType(null);
     lazy.makeCopyWithNewPosition(lazy, TypeBehavior.ReadOnlyNativeValue);
-    lazy.writeTypeReflectionJson(new JsonStreamWriter());
+    lazy.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
   }
 
   @Test
@@ -131,13 +132,13 @@ public class SillyTypeIssues {
             TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(Token.WRAP("FOO")));
     tnt.makeCopyWithNewPosition(tnt, TypeBehavior.ReadOnlyNativeValue);
     Assert.assertEquals(tnt.getAdamaType(), "table<FOO>");
-    tnt.writeTypeReflectionJson(new JsonStreamWriter());
+    tnt.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
   }
 
   @Test
   public void rxtable() {
     final var rxt = new TyReactiveTable(null, new TokenizedItem<>(Token.WRAP("FOO")));
-    rxt.writeTypeReflectionJson(new JsonStreamWriter());
+    rxt.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
   }
 
   @Test
@@ -159,7 +160,7 @@ public class SillyTypeIssues {
     ptr.typing(env);
     ptr.getEmbeddedType(env);
     ptr.lookupMethod("foo", env);
-    ptr.writeTypeReflectionJson(new JsonStreamWriter());
+    ptr.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
   }
 
   @Test
@@ -177,7 +178,7 @@ public class SillyTypeIssues {
     reactiveStateMachineRef.getAdamaType();
     reactiveStateMachineRef.makeCopyWithNewPosition(
         reactiveStateMachineRef, TypeBehavior.ReadOnlyNativeValue);
-    reactiveStateMachineRef.writeTypeReflectionJson(new JsonStreamWriter());
+    reactiveStateMachineRef.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
     final var reactiveMap =
         new TyReactiveMap(
             Token.WRAP("X"),
@@ -232,7 +233,7 @@ public class SillyTypeIssues {
     } catch (final UnsupportedOperationException uoe) {
     }
     ref.makeCopyWithNewPosition(ref, TypeBehavior.ReadOnlyNativeValue);
-    ref.writeTypeReflectionJson(new JsonStreamWriter());
+    ref.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
   }
 
   @Test
@@ -244,28 +245,28 @@ public class SillyTypeIssues {
     Assert.assertEquals("void", v.getJavaConcreteType(null));
     v.makeCopyWithNewPosition(null, TypeBehavior.ReadOnlyNativeValue);
     v.typing(null);
-    v.writeTypeReflectionJson(new JsonStreamWriter());
+    v.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
   }
 
   @Test
   public void ntprincipal() {
-    new TyNativePrincipal(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
+    new TyNativePrincipal(null, null, null).writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
   }
 
   @Test
   public void future() {
     new TyNativeFuture(null, null, null, new TokenizedItem<>(new TyNativeVoid()))
-        .writeTypeReflectionJson(new JsonStreamWriter());
+        .writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
   }
 
   @Test
   public void securentprincipal() {
-    new TyNativeSecurePrincipal(null, null, null, null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
+    new TyNativeSecurePrincipal(null, null, null, null, null, null).writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
   }
 
   @Test
   public void ntcomplex() {
-    new TyNativeComplex(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
+    new TyNativeComplex(null, null, null).writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
     Assert.assertEquals("complex", new TyNativeComplex(null, null, null).getAdamaType());
     Assert.assertEquals(
         "r<complex>",
@@ -316,7 +317,7 @@ public class SillyTypeIssues {
     } catch (UnsupportedOperationException uoe) {
     }
     try {
-      ity.writeTypeReflectionJson(null);
+      ity.writeTypeReflectionJson(null, ReflectionSource.Root);
     } catch (UnsupportedOperationException uoe) {
     }
     Environment env = Environment.fresh(new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));

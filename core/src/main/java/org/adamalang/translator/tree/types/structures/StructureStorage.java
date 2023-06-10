@@ -75,7 +75,7 @@ public class StructureStorage extends DocumentPosition {
       writer.beginObject();
       if (fd.type != null) {
         writer.writeObjectFieldIntro("type");
-        fd.type.writeTypeReflectionJson(writer, ReflectionSource.Root);
+        fd.type.writeTypeReflectionJson(writer, ReflectionSource.Structure);
       }
       if (fd.policy != null) {
         writer.writeObjectFieldIntro("privacy");
@@ -88,7 +88,7 @@ public class StructureStorage extends DocumentPosition {
       writer.writeObjectFieldIntro(bd.getKey());
       writer.beginObject();
       writer.writeObjectFieldIntro("type");
-      bd.getValue().expressionType.writeTypeReflectionJson(writer, ReflectionSource.Root);
+      bd.getValue().expressionType.writeTypeReflectionJson(writer, ReflectionSource.Structure);
       writer.writeObjectFieldIntro("privacy");
       writer.writeString("bubble");
       writer.endObject();

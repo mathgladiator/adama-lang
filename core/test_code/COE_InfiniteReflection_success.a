@@ -1,0 +1,10 @@
+record X {
+  public Y y;
+}
+
+record Y {
+  public X x;
+}
+
+public X x;
+public Y y;

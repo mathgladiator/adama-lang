@@ -130,7 +130,7 @@ public class Document implements TopLevelDocumentHandler {
     writer.writeObjectFieldIntro("types");
     writer.beginObject();
     writer.writeObjectFieldIntro("__Root");
-    root.writeTypeReflectionJson(writer);
+    root.writeTypeReflectionJson(writer, ReflectionSource.Root);
     for (Map.Entry<String, TyType> type : types.entrySet()) {
       writer.writeObjectFieldIntro(type.getKey());
       type.getValue().writeTypeReflectionJson(writer, ReflectionSource.Root);
