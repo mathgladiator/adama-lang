@@ -12,6 +12,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
@@ -74,8 +75,8 @@ public class TyReactiveLazy extends TyType implements //
   }
 
   @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    computedType.writeTypeReflectionJson(writer);
+  public void writeTypeReflectionJson(JsonStreamWriter writer, ReflectionSource source) {
+    computedType.writeTypeReflectionJson(writer, source);
   }
 
   @Override

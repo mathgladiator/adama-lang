@@ -13,6 +13,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.TokenizedItem;
+import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -86,7 +87,7 @@ public class TyNativeFuture extends TyType implements //
   }
 
   @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+  public void writeTypeReflectionJson(JsonStreamWriter writer, ReflectionSource source) {
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_future");

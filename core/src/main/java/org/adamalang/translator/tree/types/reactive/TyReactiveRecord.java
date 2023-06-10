@@ -15,6 +15,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
@@ -191,16 +192,26 @@ public class TyReactiveRecord extends TyType implements //
   }
 
   @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("nature");
-    writer.writeString("reactive_record");
-    writeAnnotations(writer);
-    writer.writeObjectFieldIntro("name");
-    writer.writeString(name);
-    writer.writeObjectFieldIntro("fields");
-    storage.writeTypeReflectionJson(writer);
-    writer.endObject();
+  public void writeTypeReflectionJson(JsonStreamWriter writer, ReflectionSource source) {
+    if (source == ReflectionSource.Root) {
+      writer.beginObject();
+      writer.writeObjectFieldIntro("nature");
+      writer.writeString("reactive_record");
+      writeAnnotations(writer);
+      writer.writeObjectFieldIntro("name");
+      writer.writeString(name);
+      writer.writeObjectFieldIntro("fields");
+      storage.writeTypeReflectionJson(writer);
+      writer.endObject();
+    } else {
+      writer.beginObject();
+      writer.writeObjectFieldIntro("nature");
+      writer.writeString("reactive_ref");
+      writeAnnotations(writer);
+      writer.writeObjectFieldIntro("ref");
+      writer.writeString(name);
+      writer.endObject();
+    }
   }
 
   @Override

@@ -85,7 +85,7 @@ public abstract class TyType extends DocumentPosition {
     }
   }
 
-  public abstract void writeTypeReflectionJson(JsonStreamWriter writer);
+  public abstract void writeTypeReflectionJson(JsonStreamWriter writer, ReflectionSource source);
 
   public TyType withPosition(final DocumentPosition position) {
     reset();

@@ -14,6 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.InjectExpression;
+import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -79,13 +80,13 @@ public class TyNativeArray extends TyType implements //
   }
 
   @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+  public void writeTypeReflectionJson(JsonStreamWriter writer, ReflectionSource source) {
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_array");
     writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
-    elementType.writeTypeReflectionJson(writer);
+    elementType.writeTypeReflectionJson(writer, source);
     writer.endObject();
   }
 

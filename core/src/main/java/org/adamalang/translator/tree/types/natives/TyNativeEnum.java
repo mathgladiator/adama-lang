@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineDispatcher;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.EnumConstant;
+import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -102,7 +103,7 @@ public class TyNativeEnum extends TySimpleNative implements //
   }
 
   @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+  public void writeTypeReflectionJson(JsonStreamWriter writer, ReflectionSource source) {
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_value");

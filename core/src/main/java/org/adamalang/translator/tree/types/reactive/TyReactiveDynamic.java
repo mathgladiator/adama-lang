@@ -14,6 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.DynamicNullConstant;
+import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -37,7 +38,7 @@ public class TyReactiveDynamic extends TySimpleReactive implements //
   }
 
   @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+  public void writeTypeReflectionJson(JsonStreamWriter writer, ReflectionSource source) {
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("reactive_value");

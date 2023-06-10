@@ -16,6 +16,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
+import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.topo.TypeChecker;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
@@ -74,7 +75,7 @@ public class StructureStorage extends DocumentPosition {
       writer.beginObject();
       if (fd.type != null) {
         writer.writeObjectFieldIntro("type");
-        fd.type.writeTypeReflectionJson(writer);
+        fd.type.writeTypeReflectionJson(writer, ReflectionSource.Root);
       }
       if (fd.policy != null) {
         writer.writeObjectFieldIntro("privacy");
@@ -87,7 +88,7 @@ public class StructureStorage extends DocumentPosition {
       writer.writeObjectFieldIntro(bd.getKey());
       writer.beginObject();
       writer.writeObjectFieldIntro("type");
-      bd.getValue().expressionType.writeTypeReflectionJson(writer);
+      bd.getValue().expressionType.writeTypeReflectionJson(writer, ReflectionSource.Root);
       writer.writeObjectFieldIntro("privacy");
       writer.writeString("bubble");
       writer.endObject();

@@ -30,6 +30,7 @@ import org.adamalang.translator.tree.definitions.config.DocumentConfig;
 import org.adamalang.translator.tree.definitions.web.UriTable;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
+import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
@@ -132,7 +133,7 @@ public class Document implements TopLevelDocumentHandler {
     root.writeTypeReflectionJson(writer);
     for (Map.Entry<String, TyType> type : types.entrySet()) {
       writer.writeObjectFieldIntro(type.getKey());
-      type.getValue().writeTypeReflectionJson(writer);
+      type.getValue().writeTypeReflectionJson(writer, ReflectionSource.Root);
     }
     writer.endObject();
 
