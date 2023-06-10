@@ -1,0 +1,3 @@
+public formula x = y;
+public formula y = z;
+public formula z = x;

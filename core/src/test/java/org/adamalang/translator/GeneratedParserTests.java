@@ -31516,7 +31516,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_TupleEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS2_failure.a' failed to import due (ImportIssue)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Unknown) (ImportIssue)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS2_failure.a' failed to import due 'Cannot read field \\\"text\\\" because \\\"token\\\" is null' (ImportIssue)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
