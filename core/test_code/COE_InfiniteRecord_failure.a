@@ -1,0 +1,3 @@
+record R {
+  public R r;
+}

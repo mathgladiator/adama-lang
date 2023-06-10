@@ -287,9 +287,6 @@ public class StructureStorage extends DocumentPosition {
     return !thisIt.hasNext() && !thisOther.hasNext();
   }
 
-  public void typing(Environment envParent) {
-  }
-
   public void typing(String name, TypeCheckerRoot rootChecker) {
     checker.register(Collections.emptySet(), env -> {
       for (final TyNativeFunctional functional : methodTypes.values()) {

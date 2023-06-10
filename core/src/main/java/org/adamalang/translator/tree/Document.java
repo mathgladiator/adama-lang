@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.tree;
 
+import org.adamalang.common.graph.Cycle;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.translator.codegen.*;
@@ -516,6 +517,18 @@ public class Document implements TopLevelDocumentHandler {
       typeChecker.register(Collections.emptySet(), env -> functional.typing(env));
     }
     typeChecker.check(environment);
+    {
+      TreeMap<String, Set<String>> graph = new TreeMap<>();
+      for (TyType type : types.values()) {
+        if (type instanceof TyReactiveRecord) {
+          ((TyReactiveRecord) type).transferIntoCyclicGraph(graph);
+        }
+      }
+      String cycle = Cycle.detect(graph);
+      if (cycle != null) {
+        createError(DocumentPosition.ZERO, "A cycle was detected within records: " + cycle, "Cycle");
+      }
+    }
     TyType constructorMessageType = null;
     for (final DefineConstructor dc : constructors) {
       if (dc.messageTypeToken != null) {

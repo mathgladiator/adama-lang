@@ -15,7 +15,9 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.Policy;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
-import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
+import org.adamalang.translator.tree.types.natives.TyNativeList;
+import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
+import org.adamalang.translator.tree.types.reactive.*;
 
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
@@ -134,5 +136,28 @@ public class FieldDefinition extends StructureComponent {
     if (type == null) {
       environment.document.createError(this, String.format("The field '%s' has no type", name), "StructureTyping");
     }
+  }
+
+  private static String cycleType(TyType type) {
+    if (type instanceof TyReactiveRef) {
+      return ((TyReactiveRef) type).ref;
+    } else if (type instanceof TyReactiveRecord) {
+      return ((TyReactiveRecord) type).name;
+    } else if (type instanceof TyReactiveMaybe) {
+      return cycleType(((TyReactiveMaybe) type).tokenizedElementType.item);
+    } else if (type instanceof TyNativeList) {
+      return cycleType(((TyNativeList) type).elementType);
+    } else if (type instanceof TyNativeMaybe) {
+      return cycleType(((TyNativeMaybe) type).tokenElementType.item);
+    } else if (type instanceof TyReactiveTable) {
+      return ((TyReactiveTable) type).recordName;
+    } else if (type instanceof TyReactiveLazy) {
+      return cycleType(((TyReactiveLazy) type).computedType);
+    }
+    return null;
+  }
+
+  public String getCycleType() {
+    return cycleType(type);
   }
 }

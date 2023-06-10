@@ -1,0 +1,10 @@
+record A {
+  public formula _b = b;
+}
+
+record B {
+  public formula _a = a;
+}
+
+A a;
+B b;

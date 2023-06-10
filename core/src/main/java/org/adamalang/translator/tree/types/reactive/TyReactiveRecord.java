@@ -19,23 +19,19 @@ import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
+import org.adamalang.translator.tree.types.structures.*;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
-import org.adamalang.translator.tree.types.structures.DefineMethod;
-import org.adamalang.translator.tree.types.structures.IndexDefinition;
-import org.adamalang.translator.tree.types.structures.StorageSpecialization;
-import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class TyReactiveRecord extends TyType implements //
@@ -238,5 +234,16 @@ public class TyReactiveRecord extends TyType implements //
   @Override
   public StructureStorage storage() {
     return storage;
+  }
+
+  public void transferIntoCyclicGraph(Map<String, Set<String>> graph) {
+    TreeSet<String> depends = new TreeSet<>();
+    for (FieldDefinition fd : storage().fieldsByOrder) {
+      String depend = fd.getCycleType();
+      if (depend != null) {
+        depends.add(depend);
+      }
+    }
+    graph.put(name, depends);
   }
 }
