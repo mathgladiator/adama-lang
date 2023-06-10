@@ -55,7 +55,7 @@ public class DoWhile extends Statement {
 
   @Override
   public ControlFlow typing(final Environment environment) {
-    final var flow = code.typing(environment);
+    final var flow = code.typing(environment.scope());
     final var conditionType = condition.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     environment.rules.IsBoolean(conditionType, false);
     return flow;
@@ -64,7 +64,7 @@ public class DoWhile extends Statement {
   @Override
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
     sb.append("do ");
-    code.writeJava(sb, environment);
+    code.writeJava(sb, environment.scope());
     if (environment.state.isStatic()) {
       sb.append(" while (__static_state.__goodwill(").append(condition.toArgs(true)).append(") && (");
     } else {

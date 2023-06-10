@@ -68,7 +68,7 @@ public class LivingDocumentTests {
     final var tokenEngine = new TokenEngine("<direct code>", code.codePoints().iterator());
     final var parser = new Parser(tokenEngine);
     parser.document().accept(document);
-    if (!document.check(state)) {
+    if (!document.check(state.scope())) {
       throw new Exception("Failed to check:" + document.errorsJson());
     }
     JsonStreamWriter reflection = new JsonStreamWriter();

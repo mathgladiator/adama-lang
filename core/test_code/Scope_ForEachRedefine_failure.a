@@ -1,0 +1,5 @@
+@construct {
+  int z;
+  foreach (z in [1, 2, 3]) {
+  }
+}

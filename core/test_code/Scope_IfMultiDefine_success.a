@@ -1,0 +1,28 @@
+
+
+message C {
+  bool v;
+  int c;
+}
+
+public int v;
+
+@construct (C c) {
+  if (c.v) {
+    int z = 12;
+    v = z;
+  } else {
+    int z = 24;
+    v = z;
+  }
+  if (c.c == 1) {
+    int z = 100;
+    v *= z;
+  } else if (c.c == 2) {
+    int z = 1000;
+    v *= z;
+  } else {
+    int z = 10000;
+    v *= z;
+  }
+}

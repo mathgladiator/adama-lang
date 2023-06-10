@@ -86,7 +86,7 @@ public class GeneratedBlockTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Block_DuplicateVariable_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":26},\"end\":{\"line\":2,\"character\":5,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' was already defined (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":26},\"end\":{\"line\":2,\"character\":8,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' was already defined (DefineVariable)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

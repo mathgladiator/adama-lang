@@ -114,7 +114,7 @@ public class DefineDispatcher extends Definition {
   }
 
   public Environment prepareEnvironment(final Environment environment) {
-    final var toUse = environment.scope();
+    final var toUse = environment.scopeDefine();
     final var enumType = environment.document.types.get(enumNameToken.text);
     toUse.define("self", enumType, true, this);
     for (final FunctionArg arg : args) {

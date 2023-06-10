@@ -52,7 +52,7 @@ public class While extends Statement {
   public ControlFlow typing(final Environment environment) {
     final var conditionType = condition.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     environment.rules.IsBoolean(conditionType, false);
-    code.typing(environment);
+    code.typing(environment.scope());
     return ControlFlow.Open;
   }
 
@@ -65,7 +65,7 @@ public class While extends Statement {
     }
     condition.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
     sb.append(")) ");
-    code.writeJava(sb, environment);
+    code.writeJava(sb, environment.scope());
   }
 
   @Override

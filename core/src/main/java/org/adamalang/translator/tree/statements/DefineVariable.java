@@ -115,7 +115,11 @@ public class DefineVariable extends Statement {
     }
     if (type != null) {
       type.typing(environment);
-      environment.define(name, type.makeCopyWithNewPosition(this, type.behavior), type.behavior == TypeBehavior.ReadOnlyNativeValue, type);
+      if (environment.defined(name)) {
+        environment.document.createError(this, String.format("Variable '%s' was already defined", name), "DefineVariable");
+      } else {
+        environment.define(name, type.makeCopyWithNewPosition(this, type.behavior), type.behavior == TypeBehavior.ReadOnlyNativeValue, type);
+      }
     }
     return ControlFlow.Open;
   }

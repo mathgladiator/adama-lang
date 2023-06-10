@@ -23,6 +23,7 @@ public class EnvironmentState {
   private boolean pure;
   private boolean reactiveExpression;
   private boolean readonly;
+  private boolean define;
   private boolean testing;
   private boolean isPolicy;
   private boolean isBubble;
@@ -54,6 +55,7 @@ public class EnvironmentState {
     webMethod = prior.webMethod;
     cacheObject = prior.cacheObject;
     readonly = false;
+    define = false;
     readonlyEnv = prior.readonlyEnv;
     isConstructor = prior.isConstructor;
     isDocumentEvent = prior.isDocumentEvent;
@@ -72,6 +74,7 @@ public class EnvironmentState {
     isStateMachineTransition = false;
     testing = false;
     readonly = false;
+    define = false;
     reactiveExpression = false;
     computationContext = ComputeContext.Unknown;
     isStatic = false;
@@ -180,6 +183,7 @@ public class EnvironmentState {
     final var next = new EnvironmentState(this);
     next.isMessageHandler = true;
     next.cacheObject = "__cache";
+    next.define = true;
     return next;
   }
 
@@ -192,12 +196,14 @@ public class EnvironmentState {
   public EnvironmentState scopeStatic() {
     final var next = new EnvironmentState(this);
     next.isStatic = true;
+    next.define = true;
     return next;
   }
 
   public EnvironmentState scopePolicy() {
     final var next = new EnvironmentState(this);
     next.isPolicy = true;
+    next.define = true;
     return next;
   }
 
@@ -211,18 +217,21 @@ public class EnvironmentState {
     final var next = new EnvironmentState(this);
     next.isWeb = true;
     next.webMethod = method;
+    next.define = true;
     return next;
   }
 
   public EnvironmentState scopeConstructor() {
     final var next = new EnvironmentState(this);
     next.isConstructor = true;
+    next.define = true;
     return next;
   }
 
   public EnvironmentState scopeDocumentEvent() {
     final var next = new EnvironmentState(this);
     next.isDocumentEvent = true;
+    next.define = true;
     return next;
   }
 
@@ -243,6 +252,17 @@ public class EnvironmentState {
     next.readonly = true;
     next.readonlyEnv = true;
     return next;
+  }
+
+
+  public EnvironmentState scopeDefineLimit() {
+    final var next = new EnvironmentState(this);
+    next.define = true;
+    return next;
+  }
+
+  public boolean isDefineBoundary() {
+    return define;
   }
 
   public EnvironmentState scopeAbortion() {
@@ -267,6 +287,7 @@ public class EnvironmentState {
     final var next = new EnvironmentState(this);
     next.isStateMachineTransition = true;
     next.cacheObject = "__cache";
+    next.define = true;
     return next;
   }
 
@@ -281,7 +302,12 @@ public class EnvironmentState {
     next.readonly = true;
     next.readonlyEnv = true;
     next.authorize = true;
+    next.define = true;
     return next;
+  }
+
+  public EnvironmentState scope() {
+    return new EnvironmentState(this);
   }
 
   public EnvironmentState scopeWithComputeContext(final ComputeContext newComputeContext) {

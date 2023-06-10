@@ -149,7 +149,7 @@ public class DefineFunction extends Definition {
       }
       if (resolved instanceof TyNativeService) return;
       depends.add(escName);
-    }).scope();
+    }).scopeDefine();
     for (final FunctionArg arg : args) {
       toUse.define(arg.argName, arg.type, pure || paint.pure || arg.type instanceof TyNativeMessage, arg.type);
     }

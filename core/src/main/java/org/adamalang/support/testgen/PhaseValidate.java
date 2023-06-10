@@ -32,7 +32,7 @@ public class PhaseValidate {
     document.setIncludes(inc);
     document.importFile(path.toString(), DocumentPosition.ZERO);
     document.setClassName(className);
-    document.check(state);
+    document.check(state.scope());
     JsonStreamWriter writer = new JsonStreamWriter();
     document.writeTypeReflectionJson(writer);
     String reflection = writer.toString();

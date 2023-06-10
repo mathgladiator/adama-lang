@@ -1624,7 +1624,7 @@ public class Parser {
     }
     op = tokens.peek();
     if (op != null && op.isSymbolWithTextEq("{")) {
-      return block();
+      return new ScopeWrap(block());
     }
     op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "switch", "case", "default", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump", "@forward"));
     if (op == null) {

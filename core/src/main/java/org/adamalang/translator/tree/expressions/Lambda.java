@@ -99,7 +99,7 @@ public class Lambda extends Expression implements LatentCodeSnippet {
         }
       }).captureSpecials();
       HashMap<String, TyType> specialsUsed = watch.specials();
-      Environment next = watch.scopeAsReadOnlyBoundary();
+      Environment next = watch.scopeDefine().scopeAsReadOnlyBoundary();
       variableType = environment.rules.Resolve(instance.types.get(0), false);
       next.define(variable.text, variableType, true, this);
       if (variableType == null) {

@@ -71,7 +71,7 @@ public class MegaIf extends Statement {
         } else {
           branch.condition.maybeType = null;
         }
-        if (branch.code.typing(compute) == ControlFlow.Open) {
+        if (branch.code.typing(compute.scope()) == ControlFlow.Open) {
           flow = ControlFlow.Open;
         }
       } else {
@@ -84,13 +84,13 @@ public class MegaIf extends Statement {
         } else {
           environment.rules.IsBoolean(expressionType, false);
         }
-        if (branch.code.typing(environment) == ControlFlow.Open) {
+        if (branch.code.typing(environment.scope()) == ControlFlow.Open) {
           flow = ControlFlow.Open;
         }
       }
     }
     if (elseBranch != null) {
-      if (elseBranch.typing(environment) == ControlFlow.Open) {
+      if (elseBranch.typing(environment.scope()) == ControlFlow.Open) {
         flow = ControlFlow.Open;
       }
     } else {
@@ -128,16 +128,16 @@ public class MegaIf extends Statement {
         sb.append("LibMath.isTrue(");
         branch.condition.expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
         sb.append(")) ");
-        branch.code.writeJava(sb, environment);
+        branch.code.writeJava(sb, environment.scope());
       } else {
         branch.condition.expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
         sb.append(") ");
-        branch.code.writeJava(sb, environment);
+        branch.code.writeJava(sb, environment.scope());
       }
     }
     if (elseBranch != null) {
       sb.append(" else ");
-      elseBranch.writeJava(sb, environment);
+      elseBranch.writeJava(sb, environment.scope());
     }
   }
 

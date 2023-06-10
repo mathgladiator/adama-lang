@@ -81,7 +81,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
       final var tokenEngine = new TokenEngine(spaceName, code.codePoints().iterator());
       final var parser = new Parser(tokenEngine);
       parser.document().accept(document);
-      if (!document.check(state)) {
+      if (!document.check(state.scope())) {
         throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_TYPE_LANGUAGE, document.errorsJson());
       }
       final var java = document.compileJava(state);

@@ -1,0 +1,6 @@
+@construct {
+  int z;
+  if (true) {
+    int z;
+  }
+}

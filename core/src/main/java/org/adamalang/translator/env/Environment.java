@@ -16,7 +16,6 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.Rules;
 import org.adamalang.translator.tree.types.natives.TyNativeDate;
 import org.adamalang.translator.tree.types.natives.TyNativeLazyWrap;
-import org.adamalang.translator.tree.types.natives.TyNativeLong;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLong;
 
@@ -135,6 +134,20 @@ public class Environment {
     return this;
   }
 
+  /** is the variable defined period */
+  public boolean defined(String name) {
+    if (variables.containsKey(name)) {
+      return true;
+    }
+    if (state.isDefineBoundary()) {
+      return false;
+    }
+    if (parent != null) {
+      return parent.defined(name);
+    }
+    return false;
+  }
+
   private TyType lookup_return(String name, TyType result) {
     if (watch != null) {
       watch.accept(name, result);
@@ -216,6 +229,12 @@ public class Environment {
   /** create a new environment that has access to the viewer */
   public Environment scopeWithViewer() {
     return new Environment(document, state.scopeViewer(), this);
+  }
+
+
+  /** create a new environment that has access to the viewer */
+  public Environment scopeDefine() {
+    return new Environment(document, state.scopeDefineLimit(), this);
   }
 
   /** create a new environment just for constructor */
@@ -333,7 +352,7 @@ public class Environment {
 
   /** create a new environment which allows new variables to override previous variables */
   public Environment scope() {
-    return new Environment(document, state, this);
+    return new Environment(document, state.scope(), this);
   }
 
   /** create a new environment (scoped) that will watch for variables that escape */
