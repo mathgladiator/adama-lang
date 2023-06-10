@@ -31,12 +31,23 @@ public class Linter {
   }
 
   public static ArrayList<String> compare(String reflectionFrom, String reflectionTo) {
+    System.err.println(reflectionFrom);
+    System.err.println(reflectionTo);
     Linter linter = new Linter(reflectionFrom, reflectionTo);
     linter.start();
     return linter.diagnostics;
   }
 
-  private void pumpFieldCompare(String what, HashMap<String, Object> fieldTypeFrom, HashMap<String, Object> fieldTypeTo) {
+  private void pumpFieldCompare(String what, HashMap<String, Object> fieldTypeFromRaw, HashMap<String, Object> fieldTypeToRaw) {
+    HashMap<String, Object> fieldTypeFrom = fieldTypeFromRaw;
+    HashMap<String, Object> fieldTypeTo = fieldTypeToRaw;
+    if ("reactive_ref".equals(fieldTypeFrom.get("nature"))) {
+      fieldTypeFrom = (HashMap<String, Object>) typesFrom.get((String) fieldTypeFrom.get("ref"));
+    }
+    if ("reactive_ref".equals(fieldTypeTo.get("nature"))) {
+      fieldTypeTo = (HashMap<String, Object>) typesTo.get((String) fieldTypeTo.get("ref"));
+    }
+
     if ("reactive_record".equals(fieldTypeFrom.get("nature"))) {
       if ("reactive_record".equals(fieldTypeTo.get("nature"))) {
         pumpCompareIssuesStructure("record at " + what, (HashMap<String, Object>) fieldTypeFrom.get("fields"), (HashMap<String, Object>) fieldTypeTo.get("fields"));
