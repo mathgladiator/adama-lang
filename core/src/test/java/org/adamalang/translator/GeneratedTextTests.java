@@ -581,7 +581,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    __code_cost += 6;");
     gold.append("\n    __track(0);");
     gold.append("\n    NtMaybe<NtDynamic> _AutoConditiona_0;");
-    gold.append("\n    if ((_AutoConditiona_0 = LibDynamic.toDynamic((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}]\"))).has()) {");
+    gold.append("\n    if ((_AutoConditiona_0 = LibDynamic.to_dyn((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}]\"))).has()) {");
     gold.append("\n      NtDynamic a = _AutoConditiona_0.get();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(1);");
@@ -589,7 +589,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    __track(2);");
     gold.append("\n    NtMaybe<NtDynamic> _AutoConditiona_1;");
-    gold.append("\n    if ((_AutoConditiona_1 = LibDynamic.toDynamic((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}]\"))).has()) {");
+    gold.append("\n    if ((_AutoConditiona_1 = LibDynamic.to_dyn((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}]\"))).has()) {");
     gold.append("\n      NtDynamic a = _AutoConditiona_1.get();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(3);");
@@ -597,7 +597,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    __track(4);");
     gold.append("\n    NtMaybe<NtDynamic> _AutoConditiona_2;");
-    gold.append("\n    if ((_AutoConditiona_2 = LibDynamic.toDynamic((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}]\"))).has()) {");
+    gold.append("\n    if ((_AutoConditiona_2 = LibDynamic.to_dyn((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}]\"))).has()) {");
     gold.append("\n      NtDynamic a = _AutoConditiona_2.get();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(5);");
@@ -605,7 +605,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    __track(6);");
     gold.append("\n    NtMaybe<NtDynamic> _AutoConditiona_3;");
-    gold.append("\n    if ((_AutoConditiona_3 = LibDynamic.toDynamic((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}]\"))).has()) {");
+    gold.append("\n    if ((_AutoConditiona_3 = LibDynamic.to_dyn((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}]\"))).has()) {");
     gold.append("\n      NtDynamic a = _AutoConditiona_3.get();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(7);");
@@ -613,7 +613,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    __track(8);");
     gold.append("\n    NtMaybe<NtDynamic> _AutoConditiona_4;");
-    gold.append("\n    if ((_AutoConditiona_4 = LibDynamic.toDynamic((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}]\"))).has()) {");
+    gold.append("\n    if ((_AutoConditiona_4 = LibDynamic.to_dyn((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}]\"))).has()) {");
     gold.append("\n      NtDynamic a = _AutoConditiona_4.get();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(9);");
@@ -1264,7 +1264,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    NtMaybe<NtDynamic> _AutoConditiona_0;");
-    gold.append("\n    if ((_AutoConditiona_0 = LibDynamic.toDynamic((\"[{\\\"clientID\\\":\\\"zzztop\\\",\\\"changes\\\":[[0,\\\"public string x = 123;\\\"]]}]\"))).has()) {");
+    gold.append("\n    if ((_AutoConditiona_0 = LibDynamic.to_dyn((\"[{\\\"clientID\\\":\\\"zzztop\\\",\\\"changes\\\":[[0,\\\"public string x = 123;\\\"]]}]\"))).has()) {");
     gold.append("\n      NtDynamic a = _AutoConditiona_0.get();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(1);");

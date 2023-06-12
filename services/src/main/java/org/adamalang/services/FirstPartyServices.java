@@ -54,7 +54,7 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
-    ServiceRegistry.add("stripe", Twilio.class, (space, configRaw) -> {
+    ServiceRegistry.add("stripe", Stripe.class, (space, configRaw) -> {
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
         return new Stripe(metrics, config, webClientBase, executor);

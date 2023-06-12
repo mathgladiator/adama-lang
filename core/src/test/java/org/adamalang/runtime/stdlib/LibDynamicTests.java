@@ -28,70 +28,70 @@ public class LibDynamicTests {
   public void coverage_raw_str() {
     Assert.assertFalse(LibDynamic.str(new NtMaybe<>()).has());
     Assert.assertFalse(LibDynamic.str(new NtDynamic("{}")).has());
-    Assert.assertEquals("xyz", LibDynamic.str(LibDynamic.toDynamic("\"xyz\"")).get());
-    Assert.assertEquals("123", LibDynamic.str(LibDynamic.toDynamic("123")).get());
-    Assert.assertEquals("3.14", LibDynamic.str(LibDynamic.toDynamic("3.14")).get());
-    Assert.assertEquals("true", LibDynamic.str(LibDynamic.toDynamic("true")).get());
-    Assert.assertEquals("xyz", LibDynamic.str(new NtMaybe<>(LibDynamic.toDynamic("\"xyz\""))).get());
-    Assert.assertEquals("123", LibDynamic.str(new NtMaybe<>(LibDynamic.toDynamic("123"))).get());
-    Assert.assertEquals("3.14", LibDynamic.str(new NtMaybe<>(LibDynamic.toDynamic("3.14"))).get());
+    Assert.assertEquals("xyz", LibDynamic.str(LibDynamic.to_dyn("\"xyz\"")).get());
+    Assert.assertEquals("123", LibDynamic.str(LibDynamic.to_dyn("123")).get());
+    Assert.assertEquals("3.14", LibDynamic.str(LibDynamic.to_dyn("3.14")).get());
+    Assert.assertEquals("true", LibDynamic.str(LibDynamic.to_dyn("true")).get());
+    Assert.assertEquals("xyz", LibDynamic.str(new NtMaybe<>(LibDynamic.to_dyn("\"xyz\""))).get());
+    Assert.assertEquals("123", LibDynamic.str(new NtMaybe<>(LibDynamic.to_dyn("123"))).get());
+    Assert.assertEquals("3.14", LibDynamic.str(new NtMaybe<>(LibDynamic.to_dyn("3.14"))).get());
   }
 
   @Test
   public void coverage_raw_d() {
     Assert.assertFalse(LibDynamic.d(new NtMaybe<>()).has());
-    Assert.assertFalse(LibDynamic.d(LibDynamic.toDynamic("\"xyz\"")).has());
-    Assert.assertEquals(123, LibDynamic.d(LibDynamic.toDynamic("123")).get(), 0.01);
-    Assert.assertEquals(3.14, LibDynamic.d(LibDynamic.toDynamic("3.14")).get(), 0.01);
-    Assert.assertEquals(42424242424242.0, LibDynamic.d(LibDynamic.toDynamic("42424242424242")).get(), 0.01);
-    Assert.assertFalse(LibDynamic.d(LibDynamic.toDynamic("false")).has());
-    Assert.assertFalse(LibDynamic.d(new NtMaybe<>(LibDynamic.toDynamic("\"xyz\""))).has());
-    Assert.assertEquals(123, LibDynamic.d(new NtMaybe<>(LibDynamic.toDynamic("123"))).get(), 0.01);
-    Assert.assertEquals(3.14, LibDynamic.d(new NtMaybe<>(LibDynamic.toDynamic("3.14"))).get(), 0.01);
-    Assert.assertFalse(LibDynamic.d(new NtMaybe<>(LibDynamic.toDynamic("false"))).has());
+    Assert.assertFalse(LibDynamic.d(LibDynamic.to_dyn("\"xyz\"")).has());
+    Assert.assertEquals(123, LibDynamic.d(LibDynamic.to_dyn("123")).get(), 0.01);
+    Assert.assertEquals(3.14, LibDynamic.d(LibDynamic.to_dyn("3.14")).get(), 0.01);
+    Assert.assertEquals(42424242424242.0, LibDynamic.d(LibDynamic.to_dyn("42424242424242")).get(), 0.01);
+    Assert.assertFalse(LibDynamic.d(LibDynamic.to_dyn("false")).has());
+    Assert.assertFalse(LibDynamic.d(new NtMaybe<>(LibDynamic.to_dyn("\"xyz\""))).has());
+    Assert.assertEquals(123, LibDynamic.d(new NtMaybe<>(LibDynamic.to_dyn("123"))).get(), 0.01);
+    Assert.assertEquals(3.14, LibDynamic.d(new NtMaybe<>(LibDynamic.to_dyn("3.14"))).get(), 0.01);
+    Assert.assertFalse(LibDynamic.d(new NtMaybe<>(LibDynamic.to_dyn("false"))).has());
   }
 
   @Test
   public void coverage_raw_l() {
     Assert.assertFalse(LibDynamic.l(new NtMaybe<>()).has());
-    Assert.assertFalse(LibDynamic.l(LibDynamic.toDynamic("\"xyz\"")).has());
-    Assert.assertEquals(123, LibDynamic.l(LibDynamic.toDynamic("123")).get(), 0.01);
-    Assert.assertFalse(LibDynamic.l(LibDynamic.toDynamic("3.14")).has());
-    Assert.assertFalse(LibDynamic.l(LibDynamic.toDynamic("false")).has());
-    Assert.assertFalse(LibDynamic.l(new NtMaybe<>(LibDynamic.toDynamic("\"xyz\""))).has());
-    Assert.assertEquals(123, LibDynamic.l(new NtMaybe<>(LibDynamic.toDynamic("123"))).get(), 0.01);
-    Assert.assertEquals(42424242424242L, LibDynamic.l(new NtMaybe<>(LibDynamic.toDynamic("42424242424242"))).get(), 0.01);
-    Assert.assertFalse(LibDynamic.l(new NtMaybe<>(LibDynamic.toDynamic("3.14"))).has());
-    Assert.assertFalse(LibDynamic.l(new NtMaybe<>(LibDynamic.toDynamic("false"))).has());
+    Assert.assertFalse(LibDynamic.l(LibDynamic.to_dyn("\"xyz\"")).has());
+    Assert.assertEquals(123, LibDynamic.l(LibDynamic.to_dyn("123")).get(), 0.01);
+    Assert.assertFalse(LibDynamic.l(LibDynamic.to_dyn("3.14")).has());
+    Assert.assertFalse(LibDynamic.l(LibDynamic.to_dyn("false")).has());
+    Assert.assertFalse(LibDynamic.l(new NtMaybe<>(LibDynamic.to_dyn("\"xyz\""))).has());
+    Assert.assertEquals(123, LibDynamic.l(new NtMaybe<>(LibDynamic.to_dyn("123"))).get(), 0.01);
+    Assert.assertEquals(42424242424242L, LibDynamic.l(new NtMaybe<>(LibDynamic.to_dyn("42424242424242"))).get(), 0.01);
+    Assert.assertFalse(LibDynamic.l(new NtMaybe<>(LibDynamic.to_dyn("3.14"))).has());
+    Assert.assertFalse(LibDynamic.l(new NtMaybe<>(LibDynamic.to_dyn("false"))).has());
   }
 
   @Test
   public void coverage_raw_i() {
     Assert.assertFalse(LibDynamic.i(new NtMaybe<>()).has());
-    Assert.assertFalse(LibDynamic.i(LibDynamic.toDynamic("\"xyz\"")).has());
-    Assert.assertEquals(123, LibDynamic.i(LibDynamic.toDynamic("123")).get(), 0.01);
-    Assert.assertFalse(LibDynamic.i(LibDynamic.toDynamic("3.14")).has());
-    Assert.assertFalse(LibDynamic.i(LibDynamic.toDynamic("false")).has());
-    Assert.assertFalse(LibDynamic.i(new NtMaybe<>(LibDynamic.toDynamic("\"xyz\""))).has());
-    Assert.assertEquals(123, LibDynamic.i(new NtMaybe<>(LibDynamic.toDynamic("123"))).get(), 0.01);
-    Assert.assertFalse(LibDynamic.i(new NtMaybe<>(LibDynamic.toDynamic("3.14"))).has());
-    Assert.assertFalse(LibDynamic.i(new NtMaybe<>(LibDynamic.toDynamic("false"))).has());
+    Assert.assertFalse(LibDynamic.i(LibDynamic.to_dyn("\"xyz\"")).has());
+    Assert.assertEquals(123, LibDynamic.i(LibDynamic.to_dyn("123")).get(), 0.01);
+    Assert.assertFalse(LibDynamic.i(LibDynamic.to_dyn("3.14")).has());
+    Assert.assertFalse(LibDynamic.i(LibDynamic.to_dyn("false")).has());
+    Assert.assertFalse(LibDynamic.i(new NtMaybe<>(LibDynamic.to_dyn("\"xyz\""))).has());
+    Assert.assertEquals(123, LibDynamic.i(new NtMaybe<>(LibDynamic.to_dyn("123"))).get(), 0.01);
+    Assert.assertFalse(LibDynamic.i(new NtMaybe<>(LibDynamic.to_dyn("3.14"))).has());
+    Assert.assertFalse(LibDynamic.i(new NtMaybe<>(LibDynamic.to_dyn("false"))).has());
   }
 
   @Test
   public void coverage_raw_b() {
     Assert.assertFalse(LibDynamic.b(new NtMaybe<>()).has());
-    Assert.assertFalse(LibDynamic.b(LibDynamic.toDynamic("\"xyz\"")).has());
-    Assert.assertTrue(LibDynamic.b(new NtMaybe<>(LibDynamic.toDynamic("true"))).get());
-    Assert.assertFalse(LibDynamic.b(new NtMaybe<>(LibDynamic.toDynamic("false"))).get());
-    Assert.assertTrue(LibDynamic.b(new NtMaybe<>(LibDynamic.toDynamic("\"true\""))).get());
-    Assert.assertFalse(LibDynamic.b(new NtMaybe<>(LibDynamic.toDynamic("\"false\""))).get());
+    Assert.assertFalse(LibDynamic.b(LibDynamic.to_dyn("\"xyz\"")).has());
+    Assert.assertTrue(LibDynamic.b(new NtMaybe<>(LibDynamic.to_dyn("true"))).get());
+    Assert.assertFalse(LibDynamic.b(new NtMaybe<>(LibDynamic.to_dyn("false"))).get());
+    Assert.assertTrue(LibDynamic.b(new NtMaybe<>(LibDynamic.to_dyn("\"true\""))).get());
+    Assert.assertFalse(LibDynamic.b(new NtMaybe<>(LibDynamic.to_dyn("\"false\""))).get());
   }
 
   @Test
   public void coverage_str() {
-    Assert.assertEquals("{}", LibDynamic.toDynamic("{}").get().json);
-    Assert.assertFalse(LibDynamic.toDynamic("x").has());
+    Assert.assertEquals("{}", LibDynamic.to_dyn("{}").get().json);
+    Assert.assertFalse(LibDynamic.to_dyn("x").has());
     Assert.assertEquals("here", LibDynamic.str(new NtDynamic("{\"x\":\"here\"}"), "x").get());
     Assert.assertEquals("123", LibDynamic.str(new NtDynamic("{\"x\":123}"), "x").get());
     Assert.assertEquals("123.4", LibDynamic.str(new NtDynamic("{\"x\":123.4}"), "x").get());

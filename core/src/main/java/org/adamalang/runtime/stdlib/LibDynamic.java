@@ -249,11 +249,16 @@ public class LibDynamic {
   }
 
   @Extension
-  public static @HiddenType(clazz = NtDynamic.class) NtMaybe<NtDynamic> toDynamic(String json) {
+  public static @HiddenType(clazz = NtDynamic.class) NtMaybe<NtDynamic> to_dyn(String json) {
     try {
       return new NtMaybe<>(new JsonStreamReader(json).readNtDynamic());
     } catch (Exception ex) {
       return new NtMaybe<>();
     }
+  }
+
+  @Extension
+  public static String to_str(NtDynamic d) {
+    return d.json;
   }
 }
