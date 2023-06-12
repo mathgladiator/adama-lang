@@ -25,7 +25,7 @@ public class TemplateShellClassesTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html class=\"oh\">");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body class=\"my\"></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script><script src=\"oh-hi.js\"></script></head><body class=\"my\"></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override
@@ -33,6 +33,7 @@ public class TemplateShellClassesTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <shell html-class=\"oh\" body-class=\"my\">");
+    source.append("\n        <script src=\"oh-hi.js\"></script>");
     source.append("\n    </shell>");
     source.append("\n    <page uri=\"/\">");
     source.append("\n    </page>");
