@@ -14,6 +14,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtResult;
+import org.adamalang.runtime.natives.NtToDynamic;
 
 import java.util.function.Function;
 
@@ -30,7 +31,7 @@ public abstract class SimpleService implements Service {
   }
 
   @Override
-  public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtPrincipal who, NtMessageBase request, Function<String, T> parser) {
+  public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtPrincipal who, NtToDynamic request, Function<String, T> parser) {
     return cache.answer(name, method, who, request, parser, (id, json) -> {
       request(method, json, new Callback<String>() {
         @Override

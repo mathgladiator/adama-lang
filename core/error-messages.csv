@@ -648,6 +648,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Service_AlreadyExists_failure.a,8,0,15,1,"'internal' was already defined as an aspect within the service. (ServiceDefine)"
 ./test_code/Service_AlreadyExists_failure.a,8,0,15,1,"'send' was already defined as a method within the service. (ServiceDefine)"
 ./test_code/Service_AlreadyExists_failure.a,16,0,18,1,"The service 'sms' was already defined. (DocumentDefine)"
+./test_code/Service_CantDefineArrayDynamic_failure.a,8,2,8,38,"service method returns dynamic, and can't be an array (Service)"
 ./test_code/Service_CantDoInPolicy_failure.a,16,2,16,10,"Remote invocation not available in this scope (FunctionInvoke)"
 ./test_code/Service_LinkSampleHasError_failure.a,0,0,2,1,"has an error param which is an error (DocumentDefine)"
 ./test_code/Service_LinkSampleNotFound_failure.a,0,0,0,27,"The link 'oops_i_did_it_again' was not found. (DocumentDefine)"

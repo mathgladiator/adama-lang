@@ -9,6 +9,7 @@
 package org.adamalang.translator.tree.types.natives;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -74,21 +75,27 @@ public class TyNativeService extends TyType implements //
     writer.endObject();
   }
 
+  private TyType lookupType(String name, Environment environment) {
+    if ("dynamic".equals(name)) {
+      return new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, null);
+    }
+    return environment.rules.FindMessageStructure(name, this, true).withPosition(service);
+  }
+
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     DefineService.ServiceMethod method = service.methodsMap.get(name);
     if (method != null) {
       ArrayList<TyType> argTypes = new ArrayList<>();
       {
-        TyType inputType = environment.rules.FindMessageStructure(method.inputTypeName.text, this, true).withPosition(service);
         if (method.requiresSecureCaller()) {
           argTypes.add(new TyNativeSecurePrincipal(TypeBehavior.ReadWriteNative, null, null, null, null, null).withPosition(service));
         } else {
           argTypes.add(new TyNativePrincipal(TypeBehavior.ReadWriteNative, null, null).withPosition(service));
         }
-        argTypes.add(inputType);
+        argTypes.add(lookupType(method.inputTypeName.text, environment));
       }
-      TyType outputType = environment.rules.FindMessageStructure(method.outputTypeName.text, this, true);
+      TyType outputType = lookupType(method.outputTypeName.text, environment);
       if (method.outputArrayExt != null) {
         outputType = new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, outputType, method.outputArrayExt);
       }

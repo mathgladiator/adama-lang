@@ -1,0 +1,10 @@
+message SendRequest {
+  string phone;
+  string message;
+}
+
+service sms {
+  internal = "twilio.com";
+
+  method<SendRequest, dynamic[]> send;
+}

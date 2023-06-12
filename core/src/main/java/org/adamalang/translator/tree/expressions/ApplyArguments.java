@@ -159,13 +159,18 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
           sb.append(temp);
           TyNativeResult resultType = (TyNativeResult) (functionInstance.returnType);
           if (resultType.tokenElementType.item instanceof TyNativeArray) {
+            // array not allowed for dynamic
             TyNativeMessage msgType = (TyNativeMessage) (((TyNativeArray) resultType.tokenElementType.item).elementType);
             sb.append(", (__json) -> Utility.readArray(new JsonStreamReader(__json), (__reader) -> new RTx")
                 .append(msgType.name).append("(__reader), (__n) -> new RTx")
                 .append(msgType.name).append("[__n]))");
           } else {
-            TyNativeMessage msgType = (TyNativeMessage) (resultType.tokenElementType.item);
-            sb.append(", (__json) -> new RTx").append(msgType.name).append("(new JsonStreamReader(__json)))");
+            if (resultType.tokenElementType.item instanceof TyNativeDynamic) {
+              sb.append(", (__json) -> new NtDynamic(__json))");
+            } else {
+              TyNativeMessage msgType = (TyNativeMessage) (resultType.tokenElementType.item);
+              sb.append(", (__json) -> new RTx").append(msgType.name).append("(new JsonStreamReader(__json)))");
+            }
           }
         } break;
         case ExpressionThenNameWithArgs:

@@ -15,6 +15,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtResult;
+import org.adamalang.runtime.natives.NtToDynamic;
 import org.adamalang.runtime.reactives.RxBase;
 import org.adamalang.runtime.sys.LivingDocument;
 
@@ -67,11 +68,9 @@ public class RxCache extends RxBase implements RxKillable {
   }
 
   /** try to answer a service request against the cache, and emit an execution if we need to do some work */
-  public <Tx> NtResult<Tx> answer(String service, String method, NtPrincipal who, NtMessageBase request, Function<String, Tx> parser, BiConsumer<Integer, String> execute) {
+  public <Tx> NtResult<Tx> answer(String service, String method, NtPrincipal who, NtToDynamic request, Function<String, Tx> parser, BiConsumer<Integer, String> execute) {
     // create the invocation
-    JsonStreamWriter writer = new JsonStreamWriter();
-    request.__writeOut(writer);
-    String parameters = writer.toString();
+    String parameters = request.to_dynamic().json;
     RemoteInvocation invocation = new RemoteInvocation(service, method, who, parameters);
 
     // see if we have the invocation available

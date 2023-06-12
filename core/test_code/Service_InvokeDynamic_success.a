@@ -1,0 +1,7 @@
+service sms {
+  internal = "twilio.com";
+  method<dynamic, dynamic> send;
+}
+
+public string m = "Hello World";
+public formula x = sms.send(@no_one, {phone:"123", message:m}.to_dynamic());

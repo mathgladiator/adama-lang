@@ -13,7 +13,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.algo.HashBuilder;
 
 /** the base contract which messages must obey */
-public abstract class NtMessageBase {
+public abstract class NtMessageBase implements NtToDynamic {
   public final static NtMessageBase NULL = new NtMessageBase() {
     @Override
     public void __hash(HashBuilder __hash) {
@@ -33,6 +33,7 @@ public abstract class NtMessageBase {
 
   public abstract void __hash(HashBuilder __hash);
 
+  @Override
   public NtDynamic to_dynamic() {
     JsonStreamWriter writer = new JsonStreamWriter();
     __writeOut(writer);

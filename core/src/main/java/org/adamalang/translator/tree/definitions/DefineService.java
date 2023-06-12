@@ -99,9 +99,19 @@ public class DefineService extends Definition {
       yielder.accept(semicolon);
     }
 
+    private void typing(String name, Environment environment) {
+      if ("dynamic".equals(name)) {
+        return;
+      }
+      environment.rules.FindMessageStructure(name, this, false);
+    }
+
     public void typing(Environment environment) {
-      environment.rules.FindMessageStructure(inputTypeName.text, this, false);
-      environment.rules.FindMessageStructure(outputTypeName.text, this, false);
+      typing(inputTypeName.text, environment);
+      typing(outputTypeName.text, environment);
+      if ("dynamic".equals(outputTypeName.text) && outputArrayExt != null) {
+       environment.document.createError(this, "service method returns dynamic, and can't be an array", "Service");
+      }
     }
   }
 
