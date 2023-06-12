@@ -14,6 +14,7 @@ import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
+import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.sms.Twilio;
 import org.adamalang.web.client.WebClientBase;
@@ -35,7 +36,7 @@ public class FirstPartyServices {
         executor.shutdown();
       }
     }));
-    ServiceRegistry.add("adama", Adama.class, (space, configRaw) -> {
+    ServiceRegistry.add("adama", Adama.class, (space, configRaw) -> { // TODO
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
         return new Adama(metrics, config, executor);
@@ -47,16 +48,25 @@ public class FirstPartyServices {
     ServiceRegistry.add("twilio", Twilio.class, (space, configRaw) -> {
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
-        return new Twilio(metrics, config, executor);
+        return new Twilio(metrics, config, webClientBase, executor);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-twilio", ex);
+        return Service.FAILURE;
+      }
+    });
+    ServiceRegistry.add("stripe", Twilio.class, (space, configRaw) -> {
+      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
+      try {
+        return new Stripe(metrics, config, webClientBase, executor);
+      } catch (ErrorCodeException ex) {
+        LOGGER.error("failed-stripe", ex);
         return Service.FAILURE;
       }
     });
     ServiceRegistry.add("amazonses", AmazonSES.class, (space, configRaw) -> {
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
-        return new AmazonSES(metrics, config, executor, webClientBase);
+        return new AmazonSES(metrics, config, webClientBase, executor);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-amazonses", ex);
         return Service.FAILURE;

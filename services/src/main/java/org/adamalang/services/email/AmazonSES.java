@@ -36,7 +36,7 @@ public class AmazonSES extends SimpleService {
   private final String region;
   private final Credential credential;
 
-  public AmazonSES(FirstPartyMetrics metrics, ServiceConfig config, ExecutorService executor, WebClientBase base) throws ErrorCodeException {
+  public AmazonSES(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base, ExecutorService executor) throws ErrorCodeException {
     super("amazonses", new NtPrincipal("amazonses", "service"), true);
     this.metrics = metrics;
     this.executor = executor;
