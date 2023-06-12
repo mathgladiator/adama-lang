@@ -8,7 +8,6 @@
  */
 package org.adamalang.runtime.json;
 
-import org.adamalang.common.Json;
 import org.adamalang.runtime.natives.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,6 +27,46 @@ public class JsonStreamReaderTests {
       Assert.assertEquals(
           "unexpected token: JsonToken{data='null', type=EndObject}", re.getMessage());
     }
+  }
+
+  public void obj_to_empty_str() {
+    JsonStreamReader reader = new JsonStreamReader("{\"x\":123},\"xyz\"");
+    Assert.assertEquals("", reader.readString());
+    Assert.assertEquals("xyz", reader.readString());
+  }
+
+  public void arr_to_empty_str() {
+    JsonStreamReader reader = new JsonStreamReader("[123,\"\"],\"xyz\"");
+    Assert.assertEquals("", reader.readString());
+    Assert.assertEquals("xyz", reader.readString());
+  }
+
+
+  public void obj_to_zero_int() {
+    JsonStreamReader reader = new JsonStreamReader("{\"x\":123},42");
+    Assert.assertEquals(0, reader.readInteger());
+    Assert.assertEquals(42, reader.readInteger());
+  }
+
+  public void arr_to_zero_int() {
+    JsonStreamReader reader = new JsonStreamReader("[123,\"\"],42");
+    Assert.assertEquals(0, reader.readInteger());
+    Assert.assertEquals(42, reader.readInteger());
+  }
+
+  public void complex_downpromote() {
+    JsonStreamReader reader = new JsonStreamReader("\"x\"");
+    Assert.assertEquals(0, (int) reader.readNtComplex().real);
+  }
+
+  public void principal_downpromote() {
+    JsonStreamReader reader = new JsonStreamReader("\"x\"");
+    Assert.assertEquals("?", reader.readNtPrincipal().authority);
+  }
+
+  public void assert_downpromote() {
+    JsonStreamReader reader = new JsonStreamReader("\"x\"");
+    Assert.assertEquals("", reader.readNtAsset().id);
   }
 
   @Test

@@ -11,6 +11,7 @@ package org.adamalang.runtime.json;
 import org.adamalang.runtime.json.token.JsonToken;
 import org.adamalang.runtime.json.token.JsonTokenType;
 import org.adamalang.runtime.natives.*;
+import org.adamalang.translator.parser.token.Token;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -90,8 +91,8 @@ public class JsonStreamReader {
   }
 
   private String readValueWithDefaultZeros() {
-    JsonToken token = tokens.removeFirst();
-    if (token.type == JsonTokenType.Null || token.data.equals("")) {
+    JsonToken token = readValueToken();
+    if (token == null || token.type == JsonTokenType.Null || token.data.equals("")) {
       return "0";
     }
     return token.data;
@@ -133,6 +134,9 @@ public class JsonStreamReader {
             break;
         }
       }
+    } else {
+      skipValue();
+      return NtPrincipal.NO_ONE;
     }
 
     NtPrincipal lookup = new NtPrincipal(agent, authority);
@@ -188,6 +192,8 @@ public class JsonStreamReader {
             break;
         }
       }
+    } else {
+      skipValue();
     }
     return new NtComplex(re, im);
   }
@@ -225,13 +231,37 @@ public class JsonStreamReader {
             break;
         }
       }
+    } else {
+      skipValue();
     }
     return new NtAsset(id, name, contentType, size, md5, sha384);
   }
 
+  private JsonToken readValueToken() {
+    if (startObject()) {
+      while (notEndOfObject()) {
+        fieldName();
+        skipValue();
+      }
+      return null;
+    } else if (startArray()) {
+      while (notEndOfArray()) {
+        skipValue();
+      }
+      return null;
+    } else {
+      ensureQueueHappy(1);
+      return tokens.removeFirst();
+    }
+  }
+
   public String readString() {
     ensureQueueHappy(1);
-    String lookup = tokens.removeFirst().data;
+    JsonToken next = readValueToken();
+    if (next == null) {
+      return "";
+    }
+    String lookup = next.data;
     String test = dedupeStrings.get(lookup);
     if (test == null) {
       dedupeStrings.put(lookup, lookup);

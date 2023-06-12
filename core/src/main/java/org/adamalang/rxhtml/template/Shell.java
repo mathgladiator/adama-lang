@@ -35,6 +35,7 @@ public class Shell {
 
   public String makeShell(RxHtmlResult result, boolean inline) {
     StringBuilder sb = new StringBuilder();
+    StringBuilder scripts = new StringBuilder();
 
     if (shell != null) {
       inline = shell.hasAttr("inline");
@@ -57,6 +58,9 @@ public class Shell {
       for (Element element : shell.getElementsByTag("link")) {
         sb.append(element.toString());
       }
+      for (Element element : shell.getElementsByTag("script")) {
+        scripts.append(element.toString());
+      }
     } else {
       sb.append("<!DOCTYPE html>\n<html>\n<head>");
     }
@@ -68,6 +72,7 @@ public class Shell {
       sb.append("<link rel=\"stylesheet\" href=\"/template.css\">");
       sb.append("<script src=\"/template.js\"></script>");
     }
+    sb.append(scripts);
     sb.append("</head>");
     if (shell != null) {
       sb.append("<body");
