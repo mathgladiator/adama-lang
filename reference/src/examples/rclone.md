@@ -1,0 +1,263 @@
+# Reddit-like clone
+
+## Backend
+
+```adama
+@static {
+  create {
+    return true; // anyone can create it
+  }
+  invent {
+    return true; // anyone can invent
+  }
+}
+
+@connected {
+  return true;
+}
+
+record Comment {
+  public int id;
+  public principal author;
+  public string comment;
+  public datetime when;
+}
+
+record Submission {
+  public int id;
+  public string title;
+  public string description;
+  public string url;
+  public string category;
+  public principal submitter;
+  public datetime when;
+
+  table<Comment> _comments;
+  public formula comments = iterate _comments;
+  public formula num_comments = _comments.size();
+}
+
+table<Submission> _submissions;
+
+message SubmissionMsg {
+  string title;
+  string description;
+  string url;
+  string category;
+}
+
+channel submit_post(SubmissionMsg s) {
+  _submissions <- {
+    title: s.title,
+    description: s.description,
+    url: s.url,
+    category: s.category,
+    when: Time.datetime(),
+    submitter: @who
+  };
+}
+
+view string current_category;
+bubble posts = iterate _submissions where @viewer.current_category == category || @viewer.current_category == "" limit 20;
+
+// public formula posts = iterate _submissions limit 20;
+
+message CategoryReport {
+  string category;
+  int count;
+}
+
+procedure make_categories() -> list<CategoryReport> readonly {
+  var m = iterate _submissions reduce category via @lambda x: x.size();
+  table<CategoryReport> report;
+  foreach (kvp in m) {
+    report <- {category: kvp.key, count:kvp.value};
+  }
+  return iterate report;
+}
+
+public formula categories = make_categories();
+
+view int current_post_id;
+bubble current_post = (iterate _submissions where id == @viewer.current_post_id)[0];
+
+message WriteComment {
+  int id;
+  string comment;
+}
+
+channel write_comment(WriteComment wc) {
+  if( (iterate _submissions where id == wc.id)[0] as sub) {
+    sub._comments <- {
+        author: @who,
+        comment: wc.comment, 
+        when: Time.datetime()
+    };
+  }
+}
+```
+
+## Frontend (RxHTML)
+
+```html
+<forest>
+    <template name="nav">
+        <header class="bg-white py-4 shadow">
+            <div class="container mx-auto px-4">
+                <nav class="flex items-center justify-between">
+                    <a href="/" class="text-2xl font-bold text-gray-800">Clone</a>
+                    <div>
+                        <a href="/" class="mr-4 text-gray-600 hover:text-gray-800">Home</a>
+                        <a href="/post" class="mr-4 text-gray-600 hover:text-gray-800">Post</a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <connection identity="direct:anonymous:anony" space="rclone" key="somekey">
+            <fragment />
+        </connection>
+        <footer class="bg-gray-200 py-4">
+            <div class="container mx-auto px-4 text-center">
+                <span class="text-gray-600">© 2023 Clone. All rights reserved.</span>
+            </div>
+        </footer>
+    </template>
+    <template name="post">
+        <div class="bg-white p-4 shadow mb-4">
+            <h2 class="text-xl font-bold mb-2"><a href="/v/{category}/{id}">
+                    <lookup path="category" />/
+                    <lookup path="title" />
+                </a></h2>
+            <p class="text-gray-600 mb-4">
+                <lookup path="description" />
+            </p>
+            <div class="flex items-center text-gray-600">
+                <span class="mr-2">Posted by
+                    <lookup path="submitter" transform="principal.agent" />
+                </span>
+                <span class="mr-2">
+                    <lookup path="when">
+                </span>
+                <span class="mr-2">
+                    <lookup path="num_comments"> comments:
+                </span>
+            </div>
+        </div>
+    </template>
+    <page uri="/">
+        <div rx:template="nav" rx:load="set:current_category=">
+            <main class="container mx-auto px-4 py-8">
+                <div class="flex">
+                    <div class="w-2/3 mr-4" rx:iterate="posts">
+                        <div rx:template="post"></div>
+                    </div>
+                    <div class="w-1/3">
+                        <!-- Sidebar -->
+                        <div class="bg-white p-4 shadow">
+                            <h2 class="text-xl font-bold mb-4">Sidebar</h2>
+                            <ul class="text-gray-600" rx:iterate="categories">
+                                <li class="mb-2"><a href="/c/{category}" class="hover:text-gray-800">
+                                        <lookup path="category" /> (
+                                        <lookup path="count" />)
+                                    </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </page>
+    <page uri="/c/$current_category:text">
+        <div rx:template="nav">
+            <main class="container mx-auto px-4 py-8">
+                <div class="flex">
+                    <div class="w-full mr-4" rx:iterate="posts">
+                        <div rx:template="post"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </page>
+    <page uri="/v/$dummy:text/$current_post_id:number">
+        <div rx:template="nav">
+            <main class="container mx-auto px-4 py-8" rx:scope="current_post">
+                <div class="max-w-lg mx-auto bg-white p-6 shadow">
+                    <h2 class="text-2xl font-bold mb-4">
+                        <lookup path="title" />
+                    </h2>
+                    <p class="text-gray-600 mb-4">
+                        <lookup path="description" />
+                    </p>
+                    <div class="mb-4">
+                        <h3 class="text-xl font-bold mb-2">Comments</h3>
+                        <div class="bg-gray-200 rounded-lg p-4" rx:iterate="comments">
+                            <div class="mb-4">
+                                <div class="flex items-start">
+                                    <div class="w-10 h-10 rounded-full bg-gray-400"></div>
+                                    <div class="ml-2">
+                                        <span class="font-bold">
+                                            <lookup path="author" transform="principal.agent" />
+                                        </span>
+                                        <span class="text-gray-600">
+                                            <lookup path="when">
+                                        </span>
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-gray-800">
+                                    <lookup path="comment">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold mb-2">Post a Comment</h3>
+                    <form rx:action="send:write_comment" rx:success="reset">
+                        <input type="hidden" name="id" value="{view:current_post_id}" />
+                        <div class="mb-4">
+                            <label for="comment" class="block text-gray-700 font-bold mb-2">Comment</label>
+                            <textarea id="comment" name="comment" class="w-full border border-gray-400 p-2 rounded focus:outline-none focus:border-indigo-500" required></textarea>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="px-4 py-2 bg-indigo-500 text-white font-semibold rounded hover:bg-indigo-600">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </page>
+    <page uri="/post">
+        <main rx:template="nav" class="container mx-auto px-4 py-8">
+            <div class="max-w-lg mx-auto bg-white p-6 shadow">
+                <h2 class="text-2xl font-bold mb-4">Submit a Post</h2>
+                <form rx:action="send:submit_post" rx:success="reset goto:/">
+                    <div class="mb-4">
+                        <label for="title" class="block text-gray-700 font-bold mb-2">Title</label>
+                        <input type="text" id="title" name="title" class="w-full border border-gray-400 p-2 rounded focus:outline-none focus:border-indigo-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="description" class="block text-gray-700 font-bold mb-2">Description</label>
+                        <textarea id="description" name="description" class="w-full border border-gray-400 p-2 rounded focus:outline-none focus:border-indigo-500"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="url" class="block text-gray-700 font-bold mb-2">URL</label>
+                        <input type="url" id="url" name="url" class="w-full border border-gray-400 p-2 rounded focus:outline-none focus:border-indigo-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="category" class="block text-gray-700 font-bold mb-2">Category</label>
+                        <input type="category" id="category" name="category" class="w-full border border-gray-400 p-2 rounded focus:outline-none focus:border-indigo-500" required>
+                    </div>
+                    <div class="text-right">
+                        <button type="submit" class="px-4 py-2 bg-indigo-500 text-white font-semibold rounded hover:bg-indigo-600">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </page>
+    <shell inline=true body-class="bg-gray-100">
+        <link rel="stylesheet" href="/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+    </shell>
+</forest>
+```
