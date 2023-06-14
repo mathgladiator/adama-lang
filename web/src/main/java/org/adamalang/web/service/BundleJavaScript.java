@@ -17,21 +17,23 @@ import java.util.Base64;
 
 public class BundleJavaScript {
   public static void main(String[] args) throws Exception {
-    {
-      String str = Files.readString(new File("./release/libadama.js").toPath());
-      StringBuilder sb = new StringBuilder();
-      sb.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
-      sb.append("package org.adamalang.web.service;\n\n");
-      sb.append("import java.util.Base64;\n\n");
-      sb.append("public class JavaScriptClient {\n");
-      sb.append("  public static final byte[] ADAMA_JS_CLIENT_BYTES = ");
-      appendStringInChunks(sb, new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8))));
-      sb.append("}");
-      Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptClient.java").toPath(), sb.toString());
-    }
+    Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptClient.java").toPath(), bundle("./release/libadama.js"));
   }
 
-  private static void appendStringInChunks(StringBuilder sb, String str) {
+  public static String bundle(String file) throws Exception {
+    String str = Files.readString(new File(file).toPath());
+    StringBuilder sb = new StringBuilder();
+    sb.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
+    sb.append("package org.adamalang.web.service;\n\n");
+    sb.append("import java.util.Base64;\n\n");
+    sb.append("public class JavaScriptClient {\n");
+    sb.append("  public static final byte[] ADAMA_JS_CLIENT_BYTES = ");
+    appendStringInChunks(sb, new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8))));
+    sb.append("}");
+    return sb.toString();
+  }
+
+  public static void appendStringInChunks(StringBuilder sb, String str) {
     sb.append("Base64.getDecoder().decode(make());\n");
     sb.append("  private static String make() {\n");
     sb.append("    StringBuilder sb = new StringBuilder();\n");

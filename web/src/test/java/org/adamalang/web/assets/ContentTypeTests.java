@@ -147,4 +147,9 @@ public class ContentTypeTests {
     Assert.assertEquals("video/3gpp2", ContentType.of("filename.blah.3g2"));
     Assert.assertEquals("application/x-7z-compressed", ContentType.of("filename.blah.7z"));
   }
+  @Test
+  public void not_found() {
+    Assert.assertNull(ContentType.of("bad-filename"));
+    Assert.assertNull(ContentType.of("bad-filename.noext"));
+  }
 }

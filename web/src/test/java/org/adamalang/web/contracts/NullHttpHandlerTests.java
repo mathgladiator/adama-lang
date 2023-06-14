@@ -20,10 +20,43 @@ import java.util.concurrent.TimeUnit;
 public class NullHttpHandlerTests {
   @Test
   public void coverage() throws Exception {
-    CountDownLatch latch = new CountDownLatch(2);
+    CountDownLatch latch = new CountDownLatch(5);
     HttpHandler.NULL.handleGet("", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    HttpHandler.NULL.handleOptions("", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+      @Override
+      public void success(HttpHandler.HttpResult value) {
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    HttpHandler.NULL.handleDelete("", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+      @Override
+      public void success(HttpHandler.HttpResult value) {
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    HttpHandler.NULL.handleDeepHealth(new Callback<String>() {
+      @Override
+      public void success(String value) {
         latch.countDown();
       }
 
