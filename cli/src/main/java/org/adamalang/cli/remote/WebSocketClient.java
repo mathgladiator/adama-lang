@@ -11,7 +11,7 @@ package org.adamalang.cli.remote;
 import org.adamalang.cli.Config;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.web.client.WebClientBase;
-import org.adamalang.web.client.WebClientConnection;
+import org.adamalang.web.client.socket.WebClientConnection;
 import org.adamalang.web.contracts.WebLifecycle;
 import org.adamalang.web.service.WebConfig;
 

@@ -11,6 +11,7 @@ package org.adamalang.web.client;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.web.client.socket.WebClientConnection;
 import org.adamalang.web.contracts.WebJsonStream;
 import org.adamalang.web.contracts.WebLifecycle;
 import org.adamalang.web.service.ServiceRunnable;

@@ -8,7 +8,6 @@
  */
 package org.adamalang.web.client;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -17,7 +16,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientProtocolHandler;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
@@ -32,13 +30,12 @@ import org.adamalang.web.client.pool.EventLoopGroundSimpleExecutor;
 import org.adamalang.web.client.pool.WebClientSharedConnection;
 import org.adamalang.web.client.pool.WebClientSharedConnectionActions;
 import org.adamalang.web.client.pool.WebEndpoint;
-import org.adamalang.web.contracts.WebJsonStream;
+import org.adamalang.web.client.socket.WebClientConnectionInboundHandler;
 import org.adamalang.web.contracts.WebLifecycle;
 import org.adamalang.web.service.WebConfig;
 
 import java.net.URI;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -268,91 +265,13 @@ public class WebClientBase {
             true, //
             new DefaultHttpHeaders(), //
             50000));
-        ch.pipeline().addLast(new SimpleChannelInboundHandler<TextWebSocketFrame>() {
-          final ConcurrentHashMap<Integer, WebJsonStream> streams = new ConcurrentHashMap<>();
-          WebClientConnection connection;
-          private boolean closed = false;
-
-          @Override
-          protected void channelRead0(final ChannelHandlerContext ctx, final TextWebSocketFrame frame) throws Exception {
-            ObjectNode node = Json.parseJsonObject(frame.text());
-            if (node.has("ping")) {
-              int latency = node.get("latency").asInt();
-              if (latency > 0) {
-                lifecycle.ping(latency);
-              }
-              node.put("pong", true);
-              ch.writeAndFlush(new TextWebSocketFrame(node.toString()));
-              return;
-            }
-
-            if (node.has("status")) {
-              if ("connected".equals(node.get("status").textValue())) {
-                lifecycle.connected(connection);
-              }
-              return;
-            }
-
-            if (node.has("failure")) {
-              int id = node.get("failure").asInt();
-              int reason = node.get("reason").asInt();
-              WebJsonStream streamback = streams.remove(id);
-              if (streamback != null) {
-                streamback.failure(reason);
-              }
-            } else if (node.has("deliver")) {
-              int id = node.get("deliver").asInt();
-              boolean done = node.get("done").asBoolean();
-              WebJsonStream streamback = done ? streams.remove(id) : streams.get(id);
-              if (streamback != null) {
-                ObjectNode response = (ObjectNode) node.get("response");
-                if (response != null && !response.isEmpty()) {
-                  streamback.data(id, response);
-                }
-                if (done) {
-                  streamback.complete();
-                }
-              }
-            }
-          }
-
-          @Override
-          public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            connection = new WebClientConnection(ctx, streams, () -> {
-              end(ctx);
-            });
-          }
-
-          @Override
-          public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-            end(ctx);
-          }
-
-          @Override
-          public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
-            lifecycle.failure(cause);
-            end(ctx);
-          }
-
-          private boolean end(ChannelHandlerContext ctx) {
-            if (closed) {
-              return false;
-            }
-            lifecycle.disconnected();
-            closed = true;
-            ctx.close();
-            return true;
-          }
-        });
+        ch.pipeline().addLast(new WebClientConnectionInboundHandler(lifecycle));
       }
     });
-    b.connect(host, port).addListeners(new ChannelFutureListener() {
-      @Override
-      public void operationComplete(ChannelFuture channelFuture) throws Exception {
-        if (!channelFuture.isSuccess()) {
-          lifecycle.failure(new Exception("Failed to connect to " + host + ":" + port));
-          lifecycle.disconnected();
-        }
+    b.connect(host, port).addListeners((ChannelFutureListener) channelFuture -> {
+      if (!channelFuture.isSuccess()) {
+        lifecycle.failure(new Exception("Failed to connect to " + host + ":" + port));
+        lifecycle.disconnected();
       }
     });
   }

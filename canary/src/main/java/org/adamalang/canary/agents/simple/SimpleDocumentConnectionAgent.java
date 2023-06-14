@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.web.client.WebClientConnection;
+import org.adamalang.web.client.socket.WebClientConnection;
 import org.adamalang.web.contracts.WebJsonStream;
 
 import java.util.Random;

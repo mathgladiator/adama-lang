@@ -11,7 +11,7 @@ package org.adamalang.canary.agents.simple;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.web.client.WebClientBase;
-import org.adamalang.web.client.WebClientConnection;
+import org.adamalang.web.client.socket.WebClientConnection;
 import org.adamalang.web.contracts.WebLifecycle;
 
 import java.util.concurrent.atomic.AtomicBoolean;

@@ -8,7 +8,7 @@
  */
 package org.adamalang.web.contracts;
 
-import org.adamalang.web.client.WebClientConnection;
+import org.adamalang.web.client.socket.WebClientConnection;
 
 /** lifecycle of a connection */
 public interface WebLifecycle {

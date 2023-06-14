@@ -47,7 +47,6 @@ public class WebMetrics {
   public final Runnable websockets_start;
   public final Runnable websockets_end;
 
-
   public WebMetrics(MetricsFactory factory) {
     this.websockets_active = factory.inflight("websockets_active");
     this.websockets_active_child_connections = factory.inflight("websockets_active_child_connections");

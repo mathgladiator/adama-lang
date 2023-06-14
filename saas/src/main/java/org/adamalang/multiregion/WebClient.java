@@ -16,7 +16,7 @@ import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.web.client.WebClientBase;
-import org.adamalang.web.client.WebClientConnection;
+import org.adamalang.web.client.socket.WebClientConnection;
 import org.adamalang.web.contracts.WebJsonStream;
 import org.adamalang.web.contracts.WebLifecycle;
 import org.slf4j.Logger;

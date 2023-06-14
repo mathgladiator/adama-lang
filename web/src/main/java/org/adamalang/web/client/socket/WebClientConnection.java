@@ -6,35 +6,37 @@
  *
  * (c) 2020 - 2023 by Jeffrey M. Barber ( http://jeffrey.io )
  */
-package org.adamalang.web.client;
+package org.adamalang.web.client.socket;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.adamalang.web.contracts.WebJsonStream;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /** a single WebSocket connection */
 public class WebClientConnection {
   private final ChannelHandlerContext ctx;
   private final AtomicInteger idgen;
-  private final ConcurrentHashMap<Integer, WebJsonStream> streams;
+  private final WebClientConnectionInboundHandler handler;
   private final Runnable close;
 
-  WebClientConnection(final ChannelHandlerContext ctx, ConcurrentHashMap<Integer, WebJsonStream> streams, Runnable close) {
+  WebClientConnection(final ChannelHandlerContext ctx, WebClientConnectionInboundHandler handler, Runnable close) {
     this.ctx = ctx;
     this.idgen = new AtomicInteger(0);
-    this.streams = streams;
+    this.handler = handler;
     this.close = close;
   }
 
   public int execute(ObjectNode request, WebJsonStream streamback) {
     int id = idgen.incrementAndGet();
-    request.put("id", id);
-    streams.put(id, streamback);
-    ctx.writeAndFlush(new TextWebSocketFrame(request.toString()));
+    ctx.executor().execute(() -> {
+      request.put("id", id);
+      if (handler.registerWhileInExecutor(id, streamback)) {
+        ctx.writeAndFlush(new TextWebSocketFrame(request.toString()));
+      }
+    });
     return id;
   }
 
