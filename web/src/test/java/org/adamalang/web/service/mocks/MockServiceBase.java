@@ -66,6 +66,9 @@ public class MockServiceBase implements ServiceBase {
                 responder.error(new ErrorCodeException(1234));
                 return;
               }
+            case "open":
+              responder.stream("{\"hold\":1}");
+              return;
           }
 
         } catch (ErrorCodeException ex) {

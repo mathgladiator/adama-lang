@@ -79,7 +79,7 @@ public class MultiWebClientRetryPool {
           metrics.disconnected.run();
           WebLifecycle self = this;
           if (alive.get()) {
-            backoff = Math.min(config.maxBackoff, rng.nextInt(backoff) + backoff + 1);
+            backoff = Math.min(config.maxBackoff, backoff > 0 ? (rng.nextInt(backoff) + backoff + 1) : 1);
             executor.execute(new NamedRunnable("disconnected") {
               @Override
               public void execute() throws Exception {
