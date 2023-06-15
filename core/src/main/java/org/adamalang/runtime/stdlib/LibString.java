@@ -18,6 +18,7 @@ import org.adamalang.translator.reflect.HiddenTypes2;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.PrimitiveIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -430,6 +431,79 @@ public class LibString {
     }
   }
 
+  @Extension
+  public static @HiddenType(clazz = Integer.class) NtList<Integer> codepoints(String str) {
+    ArrayList<Integer> codepoints = new ArrayList<>();
+    PrimitiveIterator.OfInt it = str.codePoints().iterator();
+    while (it.hasNext()) {
+      codepoints.add(it.next());
+    }
+    return new ArrayNtList<>(codepoints);
+  }
+
+  private static class RomanStage {
+    public final int value;
+    public final String label;
+    public RomanStage(int value, String label) {
+      this.value = value;
+      this.label = label;
+    }
+  }
+
+  private static RomanStage[] ROMAN_HUNDREDS = new RomanStage[] {
+      new RomanStage(900, "CM"),
+      new RomanStage(800, "DCCC"),
+      new RomanStage(700, "DCC"),
+      new RomanStage(600, "DC"),
+      new RomanStage(500, "D"),
+      new RomanStage(400, "CD"),
+      new RomanStage(300, "CCC"),
+      new RomanStage(200, "CC"),
+      new RomanStage(100, "C")
+  };
+  private static RomanStage[] ROMAN_TENS = new RomanStage[] {
+      new RomanStage(90, "XC"),
+      new RomanStage(80, "LXXX"),
+      new RomanStage(70, "LXX"),
+      new RomanStage(60, "LX"),
+      new RomanStage(50, "L"),
+      new RomanStage(40, "XL"),
+      new RomanStage(30, "XXX"),
+      new RomanStage(20, "XX"),
+      new RomanStage(10, "X")
+  };
+
+  private static RomanStage[] ROMAN_ONES = new RomanStage[] {
+      new RomanStage(9, "IX"),
+      new RomanStage(8, "VIII"),
+      new RomanStage(7, "VII"),
+      new RomanStage(6, "VI"),
+      new RomanStage(5, "V"),
+      new RomanStage(4, "IV"),
+      new RomanStage(3, "III"),
+      new RomanStage(2, "II"),
+      new RomanStage(1, "I")
+  };
+
+  private static RomanStage[][] ROMAN_STAGES = new RomanStage[][] { ROMAN_HUNDREDS, ROMAN_TENS, ROMAN_ONES };
+
+  @Extension
+  public static String to_roman(int x) {
+    StringBuilder sb = new StringBuilder();
+    while (x >= 1000) {
+      sb.append("M");
+      x -= 1000;
+    }
+    for (RomanStage[] s : ROMAN_STAGES) {
+      for (RomanStage rs : s) {
+        if (x >= rs.value) {
+          x -= rs.value;
+          sb.append(rs.label);
+        }
+      }
+    }
+    return sb.toString();
+  }
 
   public static String of(final boolean x) {
     return String.valueOf(x);

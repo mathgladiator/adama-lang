@@ -17,6 +17,8 @@ public string y1;
 public string y2;
 public string y3;
 public string y4;
+public formula y4_cp = y4.codepoints();
+public formula = 2023.to_roman();
 
 @construct {
   x1 = "123".reverse();
