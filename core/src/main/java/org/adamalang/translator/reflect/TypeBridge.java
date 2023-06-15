@@ -40,6 +40,8 @@ public class TypeBridge {
       return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (String.class == x) {
       return new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null);
+    } else if (String[].class == x) {
+      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), null);
     } else if (NtPrincipal.class == x) {
       return new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (NtComplex.class == x) {

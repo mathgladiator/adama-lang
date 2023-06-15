@@ -11,6 +11,12 @@ public string x10;
 
 public bool checkF;
 public bool checkT;
+public int cp;
+
+public string y1;
+public string y2;
+public string y3;
+public string y4;
 
 @construct {
   x1 = "123".reverse();
@@ -26,4 +32,9 @@ public bool checkT;
   string x11 = "secret".passwordHash();
   checkF = x11.passwordCheck("nope");
   checkT = x11.passwordCheck("secret");
+  cp = "猿も木から落ちる".codepointAt(0).getOrDefaultTo(-1);
+  y1 = "ABCDEFABCDEFABCDEF".removeAll("DEF");
+  y2 = "ABCDEFABCDEFABCDEF".replaceAll("DEF", "XYZ");
+  y3 = ["X", "Y"].concat();
+  y4 = ["X", "Y"].join(", ");
 }

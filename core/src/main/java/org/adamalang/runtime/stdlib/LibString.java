@@ -18,6 +18,7 @@ import org.adamalang.translator.reflect.HiddenTypes2;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** a basic string library */
@@ -394,6 +395,41 @@ public class LibString {
   public static String join(@HiddenType(clazz = String.class) NtList<String> list, String delimitor) {
     return String.join(delimitor, list);
   }
+
+  @Extension
+  public static String concat(@HiddenType(clazz = String.class) NtList<String> list) {
+    return String.join("", list);
+  }
+
+  @Extension
+  public static String join(String[] list, String delimitor) {
+    return String.join(delimitor, list);
+  }
+
+  @Extension
+  public static String concat(String[] list) {
+    return String.join("", list);
+  }
+
+  @Extension
+  public static String replaceAll(String haystack, String oldNeedle, String newNeedle) {
+    return haystack.replaceAll(Pattern.quote(oldNeedle), Matcher.quoteReplacement(newNeedle));
+  }
+
+  @Extension
+  public static String removeAll(String haystack, String needle) {
+    return haystack.replaceAll(Pattern.quote(needle), "");
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> codepointAt(String str, int index) {
+    try {
+      return new NtMaybe<>(str.codePointAt(index));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
+
 
   public static String of(final boolean x) {
     return String.valueOf(x);
