@@ -54,4 +54,46 @@ public class JsonTests {
     }
     Assert.assertTrue(failure);
   }
+
+  @Test
+  public void subfield_bool() {
+    Assert.assertNull(Json.readBool(Json.parseJsonObject("{\"x\":\"1234\"}"), "x"));
+    Assert.assertNull(Json.readBool(Json.parseJsonObject("{\"x\":123}"), "x"));
+    Assert.assertNull(Json.readBool(Json.parseJsonObject("{}"), "x"));
+    Assert.assertFalse(Json.readBool(Json.parseJsonObject("{\"x\":false}"), "x"));
+    Assert.assertTrue(Json.readBool(Json.parseJsonObject("{\"x\":true}"), "x"));
+  }
+
+  @Test
+  public void subfield_str() {
+    Assert.assertEquals("1234", Json.readString(Json.parseJsonObject("{\"x\":\"1234\"}"), "x"));
+    Assert.assertEquals("123", Json.readString(Json.parseJsonObject("{\"x\":123}"), "x"));
+    Assert.assertNull(Json.readString(Json.parseJsonObject("{}"), "x"));
+  }
+
+  @Test
+  public void subfield_lng() {
+    Assert.assertEquals(1234, (long) Json.readLong(Json.parseJsonObject("{\"x\":\"1234\"}"), "x"));
+    Assert.assertEquals(123L, (long) Json.readLong(Json.parseJsonObject("{\"x\":123}"), "x"));
+    Assert.assertNull(Json.readLong(Json.parseJsonObject("{}"), "x"));
+    Assert.assertNull(Json.readLong(Json.parseJsonObject("{\"x\":null}"), "x"));
+    Assert.assertNull(Json.readLong(Json.parseJsonObject("{\"x\":true}"), "x"));
+    Assert.assertNull(Json.readLong(Json.parseJsonObject("{\"x\":\"zep\"}"), "x"));
+  }
+
+  @Test
+  public void subfield_int() {
+    Assert.assertEquals(1234, (int) Json.readInteger(Json.parseJsonObject("{\"x\":\"1234\"}"), "x"));
+    Assert.assertEquals(123, (int) Json.readInteger(Json.parseJsonObject("{\"x\":123}"), "x"));
+    Assert.assertNull(Json.readInteger(Json.parseJsonObject("{}"), "x"));
+    Assert.assertNull(Json.readInteger(Json.parseJsonObject("{\"x\":null}"), "x"));
+    Assert.assertNull(Json.readInteger(Json.parseJsonObject("{\"x\":\"zep\"}"), "x"));
+  }
+
+  @Test
+  public void subfield_objs() {
+    Assert.assertNotNull(Json.readObject(Json.parseJsonObject("{\"x\":{}}"), "x"));
+    Assert.assertNull(Json.readObject(Json.parseJsonObject("{}"), "x"));
+    Assert.assertNotNull(Json.readJsonNode(Json.parseJsonObject("{\"x\":{}}"), "x"));
+  }
 }

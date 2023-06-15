@@ -1,19 +1,20 @@
 package org.adamalang.web.client.socket;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.NamedRunnable;
-import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.*;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.contracts.WebJsonStream;
 import org.adamalang.web.contracts.WebLifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /** a pool of clients connected to one endpoint; this manages the lifecycle of the connection and does retry */
 public class MultiWebClientRetryPool {
@@ -111,6 +112,80 @@ public class MultiWebClientRetryPool {
       @Override
       protected void failure(int code) {
         callback.failure(new ErrorCodeException(code));
+      }
+    });
+  }
+
+  public <T> void requestResponse(ObjectNode request, Function<ObjectNode, T> transform, Callback<T> callback) {
+    get(new Callback<WebClientConnection>() {
+      @Override
+      public void success(WebClientConnection connection) {
+        connection.requestResponse(request, transform, callback);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
+  public <C, T> void requestStream(ObjectNode request, BiFunction<WebClientConnection, Integer, C> shared, Function<ObjectNode, T> transform, Callback<C> created, Stream<T> streamback) {
+    get(new Callback<WebClientConnection>() {
+      @Override
+      public void success(WebClientConnection connection) {
+        int id = connection.execute(request, new WebJsonStream() {
+          @Override
+          public void data(int connection, ObjectNode node) {
+            streamback.next(transform.apply(node));
+          }
+
+          @Override
+          public void complete() {
+            streamback.complete();
+          }
+
+          @Override
+          public void failure(int code) {
+            streamback.failure(new ErrorCodeException(code));
+          }
+        });
+        created.success(shared.apply(connection, id));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        created.failure(ex);
+        streamback.failure(ex);
+      }
+    });
+  }
+
+  public <C, T> void requestStream(ObjectNode request,  Function<ObjectNode, T> transform, Stream<T> streamback) {
+    get(new Callback<WebClientConnection>() {
+      @Override
+      public void success(WebClientConnection connection) {
+        int id = connection.execute(request, new WebJsonStream() {
+          @Override
+          public void data(int connection, ObjectNode node) {
+            streamback.next(transform.apply(node));
+          }
+
+          @Override
+          public void complete() {
+            streamback.complete();
+          }
+
+          @Override
+          public void failure(int code) {
+            streamback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        streamback.failure(ex);
       }
     });
   }

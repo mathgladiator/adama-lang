@@ -58,6 +58,55 @@ public class Json {
     if (node == null || node.isNull()) {
       return null;
     }
-    return node.textValue();
+    if (node.isTextual()) {
+      return node.textValue();
+    }
+    return node.toString();
+  }
+
+  public static Boolean readBool(ObjectNode tree, String field) {
+    JsonNode node = tree.get(field);
+    if (node == null || node.isNull() || !node.isBoolean()) {
+      return null;
+    }
+    return node.booleanValue();
+  }
+
+  public static Long readLong(ObjectNode tree, String field) {
+    JsonNode node = tree.get(field);
+    if (node == null || node.isNull()) {
+      return null;
+    }
+    if (node.isIntegralNumber()) {
+      return node.longValue();
+    }
+    if (node.isTextual()) {
+      try {
+        return Long.parseLong(node.textValue());
+      } catch (NumberFormatException nfe) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  public static Integer readInteger(ObjectNode tree, String field) {
+    Long lng = readLong(tree, field);
+    if (lng != null) {
+      return lng.intValue();
+    }
+    return null;
+  }
+
+  public static ObjectNode readObject(ObjectNode tree, String field) {
+    JsonNode node = tree.get(field);
+    if (node == null || node.isNull() || !node.isObject()) {
+      return null;
+    }
+    return (ObjectNode) node;
+  }
+
+  public static JsonNode readJsonNode(ObjectNode tree, String field) {
+    return tree.get(field);
   }
 }

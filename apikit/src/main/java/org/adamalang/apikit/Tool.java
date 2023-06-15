@@ -43,8 +43,8 @@ public class Tool {
     String outputPathStr = DocumentHelper.attribute(api, "output-path");
     String testOutputPathStr = DocumentHelper.attribute(api, "test-output-path");
     String packageName = DocumentHelper.attribute(api, "package");
-    String docsFile = DocumentHelper.attribute(api, "docs");
-    String clientFileJs = DocumentHelper.attribute(api, "clientjs");
+    String docsFile = api.getAttribute("docs");
+    String clientFileJs = api.getAttribute("clientjs");
     Map<String, ParameterDefinition> parameters = ParameterDefinition.buildMap(doc);
     Map<String, FieldDefinition> fields = FieldDefinition.buildMap(doc);
     Map<String, Responder> responders = Responder.respondersOf(doc, fields);
@@ -53,7 +53,7 @@ public class Tool {
     Map<String, String> requestsFiles = AssembleRequestTypes.make(packageName, methods);
     Map<String, String> responderFiles = AssembleResponders.make(packageName, responders);
     Map<String, String> handlerFiles = AssembleHandlers.make(packageName, methods);
-    Map<String, String> javaClientFiles = AssembleJavaClient.make(packageName, methods);
+    Map<String, String> javaClientFiles = AssembleJavaClient.make(packageName, responders, methods);
     String router = AssembleConnectionRouter.make(packageName, methods);
     String metrics = AssembleMetrics.make(packageName, methods);
     File outputPath = new File(root, outputPathStr);
@@ -83,17 +83,20 @@ public class Tool {
     for (Map.Entry<String, String> request : AssembleTests.make(packageName, methods, responders).entrySet()) {
       diskWrites.put(new File(testOutputPath, request.getKey()), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
     }
-
-    diskWrites.put(new File(root, docsFile), AssembleAPIDocs.docify(methods));
-    String clientJs = Files.readString(new File(root, clientFileJs).toPath());
-    clientJs = AssembleJavaScriptClient.injectInvokePlainJs(clientJs, methods);
-    diskWrites.put(new File(root, clientFileJs), clientJs);
-
+    if (docsFile != null) {
+      diskWrites.put(new File(root, docsFile), AssembleAPIDocs.docify(methods));
+    }
+    if (clientFileJs != null) {
+      String clientJs = Files.readString(new File(root, clientFileJs).toPath());
+      clientJs = AssembleJavaScriptClient.injectInvokePlainJs(clientJs, methods);
+      diskWrites.put(new File(root, clientFileJs), clientJs);
+    }
     return diskWrites;
   }
 
   public static void main(String[] args) throws Exception {
     build("saas/api.xml", new File("."));
+    build("saas/control.xml", new File("."));
   }
 
 }

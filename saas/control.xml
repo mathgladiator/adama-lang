@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<api output-path="./saas/src/main/java/org/adamalang/control" test-output-path="./saas/src/test/java/org/adamalang/control" package="org.adamalang.control">
+    <parameter-definition name="machine-identity" type="string" missing-error="9001">
+        <documentation>
+            A machine identity
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="role" type="string" missing-error="9002">
+        <documentation>
+            The role of the machine booting up
+        </documentation>
+    </parameter-definition>
+
+    <field-definition name="master-key" type="string">
+        <documentation>
+            The master key for the service
+        </documentation>
+    </field-definition>
+
+    <field-definition name="host-key" type="string">
+        <documentation>
+            A private key for the host
+        </documentation>
+    </field-definition>
+
+    <field-definition name="role" type="string">
+        <documentation>
+            The role of a host
+        </documentation>
+    </field-definition>
+
+    <responder name="machine-start">
+        <field name="master-key"/>
+        <field name="host-key"/>
+    </responder>
+
+    <method name="machine/start" responder="machine-start">
+        <parameter name="machine-identity"/>
+        <parameter name="role"/>
+        <documentation>
+            Start the service up
+        </documentation>
+    </method>
+</api>

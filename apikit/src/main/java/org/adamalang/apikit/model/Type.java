@@ -8,6 +8,8 @@
  */
 package org.adamalang.apikit.model;
 
+import java.util.Set;
+
 public enum Type {
   String, Boolean, Long, Integer, JsonObject, JsonObjectOrArray;
 
@@ -33,6 +35,17 @@ public enum Type {
     }
   }
 
+  public void dumpImports(Set<String> imports) {
+    switch (this) {
+      case JsonObject:
+        imports.add("com.fasterxml.jackson.databind.node.ObjectNode");
+        return;
+      case JsonObjectOrArray:
+        imports.add("com.fasterxml.jackson.databind.JsonNode");
+        return;
+    }
+  }
+
   public String javaType() {
     switch (this) {
       case Boolean:
@@ -49,6 +62,33 @@ public enum Type {
         return "JsonNode";
     }
     throw new RuntimeException("bug");
+  }
+
+  public String readerMethod() {
+    switch (this) {
+      case Boolean:
+        return "readBool";
+      case String:
+        return "readString";
+      case Long:
+        return "readLong";
+      case Integer:
+        return "readInteger";
+      case JsonObject:
+        return "readObject";
+      case JsonObjectOrArray:
+        return "readJsonNode";
+    }
+    throw new RuntimeException("bug");
+  }
+
+  public String putMethod() {
+    switch (this) {
+      case JsonObject:
+      case JsonObjectOrArray:
+        return "set";
+    }
+    return "put";
   }
 
   public String typescriptType() {

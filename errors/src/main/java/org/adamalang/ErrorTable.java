@@ -1,11 +1,3 @@
-/*
- * This file is subject to the terms and conditions outlined in the
- * file 'LICENSE' (hint: it's MIT-based) located in the root directory
- * near the README.md which you should also read. For more information
- * about the project which owns this file, see https://www.adama-platform.com/ .
- *
- * (c) 2020 - 2023 by Jeffrey M. Barber ( http://jeffrey.io )
- */
 package org.adamalang;
 
 import java.util.HashMap;
@@ -798,6 +790,14 @@ public class ErrorTable {
     descriptions.put(791691, "no description of error (yet)");
     names.put(786620, "MANAGED_STORAGE_DELETED");
     descriptions.put(786620, "no description of error (yet)");
+    names.put(787632, "WEBBASE_LOST_CONNECTION");
+    descriptions.put(787632, "no description of error (yet)");
+    names.put(770224, "WEBBASE_CONNECTION_CLOSE");
+    descriptions.put(770224, "no description of error (yet)");
+    names.put(772272, "WEBBASE_CONNECT_TIMEOUT");
+    descriptions.put(772272, "no description of error (yet)");
+    names.put(721095, "WEBBASE_CONNECT_REJECTED");
+    descriptions.put(721095, "no description of error (yet)");
     names.put(707675, "CARAVAN_KEY_NOT_LOADED_PATCH");
     descriptions.put(707675, "no description of error (yet)");
     names.put(790622, "CARAVAN_KEY_NOT_LOADED_COMPUTE");
