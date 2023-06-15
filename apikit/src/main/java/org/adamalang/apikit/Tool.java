@@ -83,10 +83,10 @@ public class Tool {
     for (Map.Entry<String, String> request : AssembleTests.make(packageName, methods, responders).entrySet()) {
       diskWrites.put(new File(testOutputPath, request.getKey()), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
     }
-    if (docsFile != null) {
+    if (docsFile != null && !docsFile.equals("")) {
       diskWrites.put(new File(root, docsFile), AssembleAPIDocs.docify(methods));
     }
-    if (clientFileJs != null) {
+    if (clientFileJs != null && !clientFileJs.equals("")) {
       String clientJs = Files.readString(new File(root, clientFileJs).toPath());
       clientJs = AssembleJavaScriptClient.injectInvokePlainJs(clientJs, methods);
       diskWrites.put(new File(root, clientFileJs), clientJs);

@@ -29,28 +29,31 @@ public class AssembleTests {
       sb.append("import org.junit.Test;\n\n");
       sb.append("import java.util.Iterator;\n\n");
       sb.append("public class GeneratedMissingParameterTest {\n");
-      sb.append("  @Test\n");
-      sb.append("  public void missing() throws Exception {\n");
-      sb.append("    try (TestFrontEnd fe = new TestFrontEnd()) {\n");
-      sb.append("      ObjectNode node;\n");
-      sb.append("      String _identity = fe.setupDevIdentity();\n");
-      int rId = 1;
-      for (Method method : methods) {
-        sb.append("      //").append(method.camelName).append("\n");
-        sb.append("      node = Json.newJsonObject();\n");
-        sb.append("      node.put(\"id\", ").append(rId).append(");\n");
-        sb.append("      node.put(\"method\", \"").append(method.name).append("\");\n");
-        for (ParameterDefinition pd : method.parameters) {
-          if (!pd.optional) {
-            rId++;
-            sb.append("      Iterator<String> c").append(rId).append(" = fe.execute(node.toString());\n");
-            sb.append("      Assert.assertEquals(\"ERROR:").append(pd.errorCodeIfMissing).append("\", c").append(rId).append(".next());\n");
-            sb.append("      node.put(\"").append(pd.name).append("\", ").append(pd.invent()).append(");\n");
+      if ("org.adamalang.api".equals(packageName)) { // TODO: this is super lame, but need to sort out split APIs
+        sb.append("  @Test\n");
+        sb.append("  public void missing() throws Exception {\n");
+        sb.append("    try (TestFrontEnd fe = new TestFrontEnd()) {\n");
+        sb.append("      ObjectNode node;\n");
+        sb.append("      String _identity = fe.setupDevIdentity();\n");
+        int rId = 1;
+        for (Method method : methods) {
+          sb.append("      //").append(method.camelName).append("\n");
+          sb.append("      node = Json.newJsonObject();\n");
+          sb.append("      node.put(\"id\", ").append(rId).append(");\n");
+          sb.append("      node.put(\"method\", \"").append(method.name).append("\");\n");
+          for (ParameterDefinition pd : method.parameters) {
+            if (!pd.optional) {
+              rId++;
+              sb.append("      Iterator<String> c").append(rId).append(" = fe.execute(node.toString());\n");
+              sb.append("      Assert.assertEquals(\"ERROR:").append(pd.errorCodeIfMissing).append("\", c").append(rId).append(".next());\n");
+              sb.append("      node.put(\"").append(pd.name).append("\", ").append(pd.invent()).append(");\n");
+            }
           }
         }
+        sb.append("    }\n");
+        sb.append("  }\n");
       }
-      sb.append("    }\n");
-      sb.append("  }\n");
+
       sb.append("}\n");
       tests.put("GeneratedMissingParameterTest.java", sb.toString());
     }
