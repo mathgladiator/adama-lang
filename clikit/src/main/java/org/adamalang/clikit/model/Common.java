@@ -72,30 +72,21 @@ public class Common {
         Element item = (Element) itemNode;
         NodeList documentations = item.getElementsByTagName("documentation");
         Node docNode = Common.getFirstNode(documentations);
+        String filePos = "line " + itemNode.getUserData("lineNumber") + " column " + itemNode.getUserData("colNumber");
+        String documentation = null;
         if (docNode == null)
-            givenException.addToExceptionStack(item.getTagName() + " element \"" + item.getAttribute("name")
-            + "\" is missing documentation.");
-        String documentation = docNode.getTextContent().trim();
-        if (documentation.length() == 0) {
-            givenException.addToExceptionStack((item.getTagName() + " element \"" + item.getAttribute("name")
-                    + "\" documentation is empty."));
+            givenException.addToExceptionStack("The " + item.getTagName() + " element \"" + item.getAttribute("name")
+                    + "\""  + " at " + filePos + " " + "is missing documentation");
+        else
+            documentation = docNode.getTextContent().trim();
+
+
+        if (documentation != null && documentation.length() == 0) {
+            givenException.addToExceptionStack("The " + item.getTagName() + " element \"" + item.getAttribute("name")
+                    + "\""  + " at " + filePos + " " + "has empty documentation");
         }
         return documentation;
     }
 
-    public static String getDocumentation(Node itemNode) throws Exception {
-        Element item = (Element) itemNode;
-        NodeList documentations = item.getElementsByTagName("documentation");
-        Node docNode = Common.getFirstNode(documentations);
-        if (docNode == null)
-            throw new Exception(item.getTagName() + " element \"" + item.getAttribute("name")
-                    + "\" is missing documentation.");
-        String documentation = docNode.getTextContent().trim();
-        if (documentation.length() == 0) {
-            throw new Exception((item.getTagName() + " element \"" + item.getAttribute("name")
-                    + "\" documentation is empty."));
-        }
-        return documentation;
-    }
 
 }

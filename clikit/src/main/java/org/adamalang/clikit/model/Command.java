@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 
 /** A command is a representation of an instruction for communctation with Adama's backend **/
@@ -19,6 +20,8 @@ public class Command {
     public final String camel;
 
     public Command(String name, String documentation, String output, boolean danger, Argument[] argList) {
+        name = name.toLowerCase(Locale.ROOT);
+        output = (output == null) ? null : output.toLowerCase(Locale.ROOT);
         this.name = name;
         this.camel = Common.camelize(name, true);
         this.capName = Common.camelize(name);
@@ -45,9 +48,9 @@ public class Command {
                 methodType = "self";
             String outputArg = "";
             if (commandElem.hasAttribute("output")) {
-                outputArg = commandElem.getAttribute("output");
+                outputArg = commandElem.getAttribute("output").toLowerCase();
             } else {
-                outputArg = null;
+                outputArg = "yes";
             }
 
             Command command = new Command(commandName, groupDocumentation, outputArg, danger, argumentList);
@@ -79,9 +82,9 @@ public class Command {
                 methodType = "self";
             String outputArg = "";
             if (commandElem.hasAttribute("output")) {
-                outputArg = commandElem.getAttribute("output");
+                outputArg = commandElem.getAttribute("output").toLowerCase();
             } else {
-                outputArg = null;
+                outputArg = "yes";
             }
 
             Command command = new Command(commandName, groupDocumentation, outputArg, danger, argumentList);

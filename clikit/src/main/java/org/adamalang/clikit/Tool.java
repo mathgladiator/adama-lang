@@ -1,3 +1,11 @@
+/*
+ * This file is subject to the terms and conditions outlined in the
+ * file 'LICENSE' (hint: it's MIT-based) located in the root directory
+ * near the README.md which you should also read. For more information
+ * about the project which owns this file, see https://www.adama-platform.com/ .
+ *
+ * (c) 2020 - 2023 by Jeffrey M. Barber ( http://jeffrey.io )
+ */
 package org.adamalang.clikit;
 
 import org.adamalang.clikit.codegen.*;
@@ -6,6 +14,7 @@ import org.adamalang.clikit.model.ArgumentDefinition;
 import org.adamalang.clikit.model.Command;
 import org.adamalang.clikit.model.Common;
 import org.adamalang.clikit.model.Group;
+import org.adamalang.common.DefaultCopyright;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
@@ -60,12 +69,14 @@ public class Tool {
 
         Map<File, String> fileStringMap = new TreeMap<>();
         for (Map.Entry<String, String> entry: stringMap.entrySet()) {
+            String newValue = DefaultCopyright.COPYRIGHT_FILE_PREFIX + entry.getValue();
             File file = new File(outputPath, entry.getKey());
-            fileStringMap.put(file, entry.getValue());
+            fileStringMap.put(file, newValue);
         }
         for (Map.Entry<String, String> entry : testGens.entrySet()) {
+            String newValue = DefaultCopyright.COPYRIGHT_FILE_PREFIX + entry.getValue();
             File file = new File(testOutputPath, entry.getKey());
-            fileStringMap.put(file, entry.getValue());
+            fileStringMap.put(file, newValue);
         }
         boolean mkdir = new File(outputPath).mkdir();
         boolean mkTestDir = new File(testOutputPath).mkdir();
@@ -78,6 +89,6 @@ public class Tool {
 
     }
     public static void main(String[] args) throws Exception{
-        buildFileSystem("./cli/example.xml");
+        buildFileSystem("./cli/commands.xml");
     }
 }

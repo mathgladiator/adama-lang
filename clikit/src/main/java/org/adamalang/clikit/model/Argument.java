@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 
 /** Represents an argument that is used by a command **/
@@ -18,6 +19,7 @@ public class Argument {
     public final String camel;
 
     public Argument(String name, boolean optional, String defaultValue, ArgumentDefinition definition) {
+        name = name.toLowerCase(Locale.ROOT);
         this.optional = optional;
         this.name = name;
         this.camel = Common.camelize(name, true);

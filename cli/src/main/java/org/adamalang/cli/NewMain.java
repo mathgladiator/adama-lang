@@ -1,9 +1,9 @@
 package org.adamalang.cli;
 
-import org.adamalang.cli.implementations.RootHandlerImpl;
 import org.adamalang.cli.router.RootHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.cli.router.MainRouter;
+import org.adamalang.cli.implementations.RootHandlerImpl;
 
 public class NewMain {
     public static void main(String[] args) {

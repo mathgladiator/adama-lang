@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 
 /** A group is a representation of a collection of commands in the XML **/
@@ -16,6 +17,7 @@ public class Group {
     public final Command[] commandList;
 
     public Group(String name,String documentation, Command[] commandList) {
+        name = name.toLowerCase(Locale.ROOT);
         this.name = name;
         this.capName = Common.camelize(name);
         this.documentation = documentation;
@@ -36,6 +38,6 @@ public class Group {
             Group group = new Group(groupName, groupDocumentation ,commandList);
             groupArray.add(group);
         }
-        return groupArray.toArray(new Group[groupArray.size()]);
+        return groupArray.toArray(new Group[0]);
     }
 }
