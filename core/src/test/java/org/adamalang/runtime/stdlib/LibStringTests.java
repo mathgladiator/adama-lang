@@ -452,13 +452,6 @@ public class LibStringTests {
     Assert.assertEquals("CDLXIV", LibString.to_roman(464));
     Assert.assertEquals("XCVIII", LibString.to_roman(98));
     Assert.assertEquals("MLXXXI", LibString.to_roman(1081));
-
-    Random rng = new Random();
-    for (int k = 1; k < 99; k++) {
-      int val = rng.nextInt(1000) + k;
-      System.err.println("Assert.assertEquals(\"" + LibString.to_roman(k) + "\", LibString.to_roman("+k+"));");
-      System.err.println("Assert.assertEquals(\"" + LibString.to_roman(val) + "\", LibString.to_roman("+val+"));");
-    }
   }
 
   @Test
