@@ -6,6 +6,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import java.util.HashMap;
+import java.util.Locale;
 
 /** Defines an argument that can be used by CLI commands **/
 public class ArgumentDefinition {
@@ -14,6 +15,7 @@ public class ArgumentDefinition {
     public final String documentation;
     public final String shortField;
     public ArgumentDefinition(String type, String docs, String shortField) {
+        type = type.toLowerCase(Locale.ROOT);
         this.documentation = docs;
         this.type = type;
         this.shortField = shortField;
@@ -26,7 +28,7 @@ public class ArgumentDefinition {
             Node argNode = nodeList.item(i);
             String filePos = "line " + argNode.getUserData("lineNumber") + " column " + argNode.getUserData("colNumber");
             Element elementNode = (Element) argNode;
-            String docs = Common.getDocumentation(elementNode);
+            String docs = Common.getDocumentation(elementNode, givenException);
             String type = elementNode.getAttribute("type");
             //TODO: Validate if it is one of the types soon, assume always has type for now
             String elementName = elementNode.getAttribute("name");

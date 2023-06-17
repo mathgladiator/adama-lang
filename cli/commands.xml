@@ -1,10 +1,208 @@
 <?xml version="1.0"?>
 <cli output-path="./cli/src/main/java/org/adamalang/cli/router" test-output-path="./cli/src/test/java/org/adamalang/cli/router" package="org.adamalang.cli.router" docs="./reference/src/reference/cli.md">
     <!-- define all the arguments -->
-    <arg-definition name="space" type="string">
+    <arg-definition name="space" type="string" short="s">
         <documentation>
             A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
             denote the name of that collection.
+        </documentation>
+        <documentation>
+            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
+            denote the name of that collection.
+        </documentation>
+    </arg-definition>
+    <!-- May have to represent the actual representation-->
+    <arg-definition name="file" type="string" short="f">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="plan" type="string" short="p">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="gc" type="boolean" short="g">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="limit" type="int" short="l">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="key" type="string" short="k">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="marker" type="string" short="m">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="output" type="string" short="o">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="email" type="string" short="e">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="role" type="string" short="r">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="validate" type="string" short="v">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="authority" type="string" short="a">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="agent" type="string" short="ag">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="root" type="string" short="r">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="keystore" type="string" short="k">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="priv" type="string" short="p">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="dump-to" type="string" short="d">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="archive" type="string" short="a">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="pennies" type="string" short="p">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="port" type="string" short="p">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="main" type="string" short="m">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="input" type="string" short="i">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+
+    <arg-definition name="arg" type="string" short="aa">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="entropy" type="string" short="e">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="name" type="string"  short="n">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="domain" type="string" short="d">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="cert" type="string" short="c">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="auto" type="string" short="a">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+
+    <arg-definition name="scenario" type="string" short="s" >
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="type" type="string" short="t" >
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="entropy" type="string" short="e">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="errors" type="string" short="e">
+        <documentation>
+            Placeholder
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="imports" type="string" short="i">
+        <documentation>
+            Placeholder
         </documentation>
     </arg-definition>
 
@@ -14,10 +212,551 @@
             Provides command related to working with space collections...
         </documentation>
         <command name="create">
-            <arg name="space" />
             <documentation>
-                Create a space
+                Creates a new space
+            </documentation>
+            <arg name="space" />
+
+        </command>
+
+        <command name="delete">
+            <documentation>
+                Deletes an empty space
+            </documentation>
+            <arg name="space" />
+        </command>
+
+        <command name="deploy">
+            <documentation>
+                Deploy a plan to a space
+            </documentation>
+            <arg name="space" />
+            <arg name="dump-to" default="null" />
+            <arg name="plan" />
+            <arg name="file" default="null" />
+        </command>
+
+        <command name="set-rxhtml">
+            <documentation>
+                Set the frontend RxHTML forest
+            </documentation>
+            <arg name="space" />
+            <arg name="file" default="null" />
+        </command>
+
+        <command name="get-rxhtml">
+            <documentation>
+                Get the frontend RxHTML forest
+            </documentation>
+            <arg name="space" />
+        </command>
+
+        <command name="upload">
+            <documentation>
+                Placeholder
+            </documentation>
+            <arg name="space" />
+            <arg name="gc" default="no" />
+            <arg name="root" default="null" />
+            <arg name="file" />
+        </command>
+
+        <command name="download">
+            <documentation>
+                Download a space's plan
+            </documentation>
+            <arg name="space" />
+
+        </command>
+
+        <command name="list">
+            <documentation>
+                List spaces available to your account
+            </documentation>
+            <arg name="marker" default="" />
+            <arg name="limit" default="100" />
+
+        </command>
+
+        <command name="usage">
+            <documentation>
+                Iterate the billed usage
+            </documentation>
+            <arg name="space" />
+            <arg name="limit" default="336" />
+        </command>
+
+        <command name="reflect">
+            <documentation>
+                Get a file of the reflection of a space
+            </documentation>
+            <arg name="space" />
+            <arg name="marker" />
+            <arg name="output" />
+            <arg name="key" />
+            <arg name="limit" default="336" />
+        </command>
+
+        <command name="set-role">
+            <documentation>
+                Get a file of the reflection of a space
+            </documentation>
+            <arg name="space" />
+            <arg name="marker" />
+            <arg name="email" default="" />
+            <arg name="role" default="none" />
+        </command>
+
+        <command name="generate-key">
+            <documentation>
+                Generate a server-side key to use for storing secrets
+            </documentation>
+            <arg name="space" />
+        </command>
+
+        <command name="encrypt-secret">
+            <documentation>
+                Encrypt a secret to store within code
+            </documentation>
+            <arg name="space" />
+
+        </command>
+    </group>
+
+    <group name="authority">
+        <documentation>
+            Manage authorities
+        </documentation>
+        <command name="create">
+            <documentation>
+                Creates a new authority
+            </documentation>
+        </command>
+
+        <command name="set">
+            <documentation>
+                Set public keys to an authority
+            </documentation>
+            <arg name="authority" />
+            <arg name="keystore" />
+        </command>
+
+        <command name="get">
+            <documentation>
+                Get released public keys for an authority
+            </documentation>
+            <arg name="authority" />
+            <arg name="keystore" />
+        </command>
+
+        <command name="destroy">
+            <documentation type="warn">
+                Destroy an authority
+            </documentation>
+            <arg name="authority" />
+        </command>
+
+        <command name="list" output="json">
+            <documentation>
+                List authorities this developer owns
+            </documentation>
+        </command>
+
+        <command name="create-local">
+            <documentation type="warn">
+                Make a new set of public keys
+            </documentation>
+            <arg name="authority" />
+            <arg name="keystore" />
+            <arg name="priv" />
+        </command>
+
+        <command name="append-local">
+            <documentation type="warn">
+                Append a new public key to the public key file
+            </documentation>
+            <arg name="authority" />
+            <arg name="keystore" />
+            <arg name="priv" />
+        </command>
+
+        <command name="sign">
+            <documentation>
+                Sign an agent with a local private key
+            </documentation>
+            <arg name="key" />
+            <arg name="agent" />
+            <arg name="validate" default="null" />
+        </command>
+    </group>
+
+    <group name="account">
+        <documentation>
+            Manage your account
+        </documentation>
+        <command name="set-password">
+            <documentation>
+                Create a password to be used on web
+            </documentation>
+        </command>
+        <command name="test-gtoken">
+            <documentation>
+                Test a Google token converts to an email
             </documentation>
         </command>
     </group>
+
+    <group name="aws">
+        <documentation>
+            Tools for working with AWS
+        </documentation>
+
+        <command name="setup">
+            <documentation>
+                Interactive setup for the config
+            </documentation>
+        </command>
+
+        <command name="test-email">
+            <documentation>
+                Test Email via AWS
+            </documentation>
+        </command>
+
+        <command name="test-asset-listing">
+            <documentation>
+                Placeholder
+            </documentation>
+            <arg name="space" />
+            <arg name="key" />
+        </command>
+
+        <command name="test-enqueue">
+            <documentation>
+                Placeholder
+            </documentation>
+        </command>
+
+        <command name="download-archive">
+            <documentation>
+                Download (and validate) an archive
+            </documentation>
+            <arg name="archive" />
+            <arg name="space" />
+            <arg name="key" />
+        </command>
+        <command name="memory-test">
+            <documentation>
+                Crash by allocating memory
+            </documentation>
+        </command>
+    </group>
+
+    <group name="business">
+        <documentation>
+            Business tools to support developers
+        </documentation>
+        <command name="add-balance">
+            <documentation>
+                Interactive setup for the config
+            </documentation>
+            <arg name="email" />
+            <arg name="pennies" />
+        </command>
+    </group>
+
+    <group name="code">
+        <documentation>
+            Local developer tools
+        </documentation>
+
+        <command name="lsp">
+            <documentation>
+                Spin up a single threaded language service protocol server
+            </documentation>
+            <arg name="port" default="2423"/>
+        </command>
+
+        <command name="validate-plan">
+            <documentation>
+                Validates a deployment plan (locally) for speed
+            </documentation>
+            <arg name="plan" />
+        </command>
+
+        <command name="bundle-plan">
+            <documentation>
+                Placeholder
+            </documentation>
+            <arg name="output" />
+            <arg name="main" />
+            <arg name="imports" />
+        </command>
+
+        <command name="compile-file">
+            <documentation>
+                Compiles the adama file and shows any problems
+            </documentation>
+            <arg name="file" />
+            <arg name="dump-to" default="null" />
+        </command>
+
+        <command name="reflect-dump">
+            <documentation>
+                Compiles the adama file and dumps the reflection json
+            </documentation>
+            <arg name="file" />
+            <arg name="dump-to" default="null" />
+        </command>
+
+    </group>
+
+    <group name="contrib">
+        <documentation>
+            Open source contributor tools
+        </documentation>
+
+        <command name="tests-adama">
+            <documentation>
+                Generate tests for Adama Language.
+            </documentation>
+            <arg name="input" default="./test_code"/>
+            <arg name="output" default="./src/test/java/org/adamalang/translator" />
+            <arg name="errors" default="./error-messages.csv" />
+        </command>
+
+        <command name="tests-rxhtml">
+            <documentation>
+                Generate tests for RxHTML.
+            </documentation>
+            <arg name="input" default="./test_templates"/>
+            <arg name="output" default="./src/test/java/org/adamalang/rxhtml" />
+        </command>
+
+        <command name="make-codec">
+            <documentation>
+                Generates the networking codec
+            </documentation>
+        </command>
+        <command name="make-api">
+            <documentation>
+                Produces api files for SaaS and documentation for the WebSocket low level API.
+            </documentation>
+        </command>
+        <command name="bundle-js">
+            <documentation>
+                Bundles the libadama.js into the webserver
+            </documentation>
+        </command>
+        <command name="make-et">
+            <documentation>
+                Generates the error table which provides useful insight to issues
+            </documentation>
+        </command>
+        <command name="copyright">
+            <documentation>
+                Sprinkle Jeff's name everywhere.
+            </documentation>
+        </command>
+    </group>
+
+    <group name="database">
+        <documentation>
+            Prepare database for usage
+        </documentation>
+        <command name="configure">
+            <documentation>
+                Update the configuration
+            </documentation>
+        </command>
+        <command name="install">
+            <documentation>
+                Install the tables on a monolithic database
+            </documentation>
+        </command>
+        <command name="migrate">
+            <documentation>
+                Migrate data from 'db' to 'nextdb'
+            </documentation>
+        </command>
+    </group>
+
+    <group name="debug">
+        <documentation>
+            Debug tool for production
+        </documentation>
+        <command name="archive">
+            <documentation>
+                Explain the data within an archive
+            </documentation>
+            <arg name="space" />
+            <arg name="archive" />
+        </command>
+    </group>
+
+    <group name="document">
+        <documentation>
+            Interact with documents
+        </documentation>
+
+        <command name="connect">
+            <documentation>
+                Connect to a document
+            </documentation>
+            <arg name="space" />
+            <arg name="key" />
+        </command>
+
+        <command name="create">
+            <documentation>
+                Create a document
+            </documentation>
+            <arg name="space" />
+            <arg name="key" />
+            <arg name="arg" />
+            <arg name="entropy" default="null"/>
+        </command>
+
+        <command name="delete">
+            <documentation>
+                Delete a document
+            </documentation>
+            <arg name="space" />
+            <arg name="key" />
+        </command>
+
+        <command name="list" output="json">
+            <documentation>
+                List documents
+            </documentation>
+            <arg name="space" />
+            <arg name="marker" default="null" />
+            <arg name="limit" default="1000" />
+        </command>
+
+        <command name="attach">
+            <documentation>
+                Attach an asset to a document
+            </documentation>
+            <arg name="space" />
+            <arg name="key" />
+            <arg name="file" />
+            <arg name="name" default="null" />
+            <arg name="type" default="null" />
+        </command>
+
+    </group>
+
+    <group name="domain">
+        <documentation>
+            Manage Domains
+        </documentation>
+        <command name="map">
+            <documentation>
+                Map a domain to a space
+            </documentation>
+            <arg name="domain" />
+            <arg name="space" />
+            <arg name="cert" />
+            <arg name="key" default="null" />
+            <arg name="auto" default="true" />
+        </command>
+
+        <command name="list" output="json">
+            <documentation>
+                List domains
+            </documentation>
+        </command>
+        <command name="unmap">
+            <documentation>
+                Unmap a domain from a space
+            </documentation>
+            <arg name="domain" />
+
+        </command>
+
+    </group>
+
+    <group name="frontend">
+        <documentation>
+            Frontend tools (rxhtml)
+        </documentation>
+        <command name="rxhtml">
+            <documentation>
+                Compile an rxhtml template set
+            </documentation>
+            <arg name="output" />
+        </command>
+        <command name="edhtml">
+            <documentation>
+                Compile an edhtml build instruction file
+            </documentation>
+<!--            <arg name="base" default ="." />-->
+<!--            <arg name="input" default="build.ed.html" />-->
+<!--            <arg name="output" default="output.rx.html"/>-->
+<!--            <arg name="includes" default="includes"/>-->
+<!--            <arg name="gen" default="gen" />-->
+        </command>
+        <command name="dev-server">
+            <documentation>
+               Host the working directory as a webserver
+            </documentation>
+        </command>
+    </group>
+
+    <command name="init">
+        <documentation>
+            Initializes the config with a valid token
+        </documentation>
+    </command>
+
+    <group name="services">
+        <documentation>
+            Launch a service
+        </documentation>
+        <command name="auto">
+            <documentation>
+                The config will decide the role
+            </documentation>
+        </command>
+        <command name="backend">
+            <documentation>
+                Spin up a gRPC back-end node
+            </documentation>
+        </command>
+        <command name="frontend">
+            <documentation>
+                Spin up a WebSocket front-end node
+            </documentation>
+        </command>
+        <command name="overlord">
+            <documentation>
+                Spin up the cluster overlord
+            </documentation>
+        </command>
+        <command name="solo">
+            <documentation>
+                Spin up a solo machine
+            </documentation>
+        </command>
+        <command name="dashboards">
+            <documentation>
+                Produce dashboards for prometheus.
+            </documentation>
+        </command>
+    </group>
+
+    <command name="stress">
+        <documentation>
+            Stress test using the canary tool
+        </documentation>
+        <arg name="scenario" />
+    </command>
+
+    <command name="dumpenv">
+        <documentation>
+            Dump your environment variables
+        </documentation>
+    </command>
+
 </cli>

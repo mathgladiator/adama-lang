@@ -1,3 +1,11 @@
+/*
+ * This file is subject to the terms and conditions outlined in the
+ * file 'LICENSE' (hint: it's MIT-based) located in the root directory
+ * near the README.md which you should also read. For more information
+ * about the project which owns this file, see https://www.adama-platform.com/ .
+ *
+ * (c) 2020 - 2023 by Jeffrey M. Barber ( http://jeffrey.io )
+ */
 package org.adamalang.clikit.codegen;
 
 import org.adamalang.clikit.model.Command;
@@ -42,18 +50,33 @@ public class MainRouterGen {
                 sb.append("                ").append(argsClass).append(".help();\n");
                 sb.append("                return 1;\n");
                 sb.append("               }\n");
-                //TODO: Output should be grabbed from XML
-                sb.append("               YesOrError out = output.makeYesOrError();\n");
+                String outputType;
+                switch(command.output) {
+                    case "json":
+                        outputType = "JsonOrError";
+                        break;
+                    default:
+                        outputType = "YesOrError";
+                }
+                sb.append("               ").append(outputType).append(" out = output.make").append(outputType).append("();\n");
                 sb.append("               ").append(group.name).append("Handler.").append(command.camel).append("(").append(argsObj).append(", out);\n");
                 sb.append("               return 0;\n");
                 sb.append("            }\n");
             }
+            sb.append("            case \"--help\":\n");
+            sb.append("            case \"-h\":\n");
+            sb.append("            case \"help\": {\n");
+            sb.append("              display").append(group.capName).append("Help();\n");
+            sb.append("              return 1;\n");
+            sb.append("            }\n");
             sb.append("            default:\n");
             sb.append("              System.err.println(\"Invalid subcommand '\" + args[1] + \"' of command '").append(group.name).append("'\");\n");
             sb.append("              System.err.println(\"See 'adama ").append(group.name).append(" help' for a list of subcommands.\");\n");
             sb.append("              return 1;\n");
             sb.append("          }\n");
         }
+
+
         for (Command command : commandList) {
             String argsClass = command.capName + "Args";
             sb.append("          case \"").append(command.name).append("\": {\n");
@@ -63,11 +86,20 @@ public class MainRouterGen {
             sb.append("              return 1;\n");
             sb.append("             }\n");
             //TODO: Output should be grabbed from XML
-            sb.append("             YesOrError out = output.makeYesOrError();\n");
+            String outputType;
+            switch(command.output) {
+                case "json":
+                    outputType = "JsonOrError";
+                    break;
+                default:
+                    outputType = "YesOrError";
+            }
+            sb.append("             ").append(outputType).append(" out = output.make").append(outputType).append("();\n");
             sb.append("             handler.").append(command.camel).append("(mainArgs , out);\n");
             sb.append("             return 0;\n");
             sb.append("          }\n");
         }
+
         sb.append("          default:\n");
         sb.append("            System.err.println(\"Invalid command '\" + args[0] + \"'\");\n");
         sb.append("            System.err.println(\"See 'adama help' for a list of commands.\");\n");

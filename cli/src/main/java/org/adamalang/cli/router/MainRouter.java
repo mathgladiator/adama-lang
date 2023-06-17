@@ -1,3 +1,11 @@
+/*
+ * This file is subject to the terms and conditions outlined in the
+ * file 'LICENSE' (hint: it's MIT-based) located in the root directory
+ * near the README.md which you should also read. For more information
+ * about the project which owns this file, see https://www.adama-platform.com/ .
+ *
+ * (c) 2020 - 2023 by Jeffrey M. Barber ( http://jeffrey.io )
+ */
 package org.adamalang.cli.router;
 
 import org.adamalang.ErrorTable;
@@ -153,6 +161,12 @@ public class MainRouter {
                spaceHandler.encryptSecret(spaceArgs, out);
                return 0;
             }
+            case "--help":
+            case "-h":
+            case "help": {
+              displaySpaceHelp();
+              return 1;
+            }
             default:
               System.err.println("Invalid subcommand '" + args[1] + "' of command 'space'");
               System.err.println("See 'adama space help' for a list of subcommands.");
@@ -211,7 +225,7 @@ public class MainRouter {
                 AuthorityListArgs.help();
                 return 1;
                }
-               YesOrError out = output.makeYesOrError();
+               JsonOrError out = output.makeJsonOrError();
                authorityHandler.list(authorityArgs, out);
                return 0;
             }
@@ -245,9 +259,633 @@ public class MainRouter {
                authorityHandler.sign(authorityArgs, out);
                return 0;
             }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayAuthorityHelp();
+              return 1;
+            }
             default:
               System.err.println("Invalid subcommand '" + args[1] + "' of command 'authority'");
               System.err.println("See 'adama authority help' for a list of subcommands.");
+              return 1;
+          }
+        case "account":
+          AccountHandler accountHandler = handler.makeAccountHandler();
+          if (args.length == 1) {
+            displayAccountHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "set-password": {
+              AccountSetPasswordArgs accountArgs = AccountSetPasswordArgs.from(args, 2);
+              if (accountArgs == null) {
+                AccountSetPasswordArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               accountHandler.setPassword(accountArgs, out);
+               return 0;
+            }
+            case "test-gtoken": {
+              AccountTestGtokenArgs accountArgs = AccountTestGtokenArgs.from(args, 2);
+              if (accountArgs == null) {
+                AccountTestGtokenArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               accountHandler.testGtoken(accountArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayAccountHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'account'");
+              System.err.println("See 'adama account help' for a list of subcommands.");
+              return 1;
+          }
+        case "aws":
+          AwsHandler awsHandler = handler.makeAwsHandler();
+          if (args.length == 1) {
+            displayAwsHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "setup": {
+              AwsSetupArgs awsArgs = AwsSetupArgs.from(args, 2);
+              if (awsArgs == null) {
+                AwsSetupArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               awsHandler.setup(awsArgs, out);
+               return 0;
+            }
+            case "test-email": {
+              AwsTestEmailArgs awsArgs = AwsTestEmailArgs.from(args, 2);
+              if (awsArgs == null) {
+                AwsTestEmailArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               awsHandler.testEmail(awsArgs, out);
+               return 0;
+            }
+            case "test-asset-listing": {
+              AwsTestAssetListingArgs awsArgs = AwsTestAssetListingArgs.from(args, 2);
+              if (awsArgs == null) {
+                AwsTestAssetListingArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               awsHandler.testAssetListing(awsArgs, out);
+               return 0;
+            }
+            case "test-enqueue": {
+              AwsTestEnqueueArgs awsArgs = AwsTestEnqueueArgs.from(args, 2);
+              if (awsArgs == null) {
+                AwsTestEnqueueArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               awsHandler.testEnqueue(awsArgs, out);
+               return 0;
+            }
+            case "download-archive": {
+              AwsDownloadArchiveArgs awsArgs = AwsDownloadArchiveArgs.from(args, 2);
+              if (awsArgs == null) {
+                AwsDownloadArchiveArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               awsHandler.downloadArchive(awsArgs, out);
+               return 0;
+            }
+            case "memory-test": {
+              AwsMemoryTestArgs awsArgs = AwsMemoryTestArgs.from(args, 2);
+              if (awsArgs == null) {
+                AwsMemoryTestArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               awsHandler.memoryTest(awsArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayAwsHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'aws'");
+              System.err.println("See 'adama aws help' for a list of subcommands.");
+              return 1;
+          }
+        case "business":
+          BusinessHandler businessHandler = handler.makeBusinessHandler();
+          if (args.length == 1) {
+            displayBusinessHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "add-balance": {
+              BusinessAddBalanceArgs businessArgs = BusinessAddBalanceArgs.from(args, 2);
+              if (businessArgs == null) {
+                BusinessAddBalanceArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               businessHandler.addBalance(businessArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayBusinessHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'business'");
+              System.err.println("See 'adama business help' for a list of subcommands.");
+              return 1;
+          }
+        case "code":
+          CodeHandler codeHandler = handler.makeCodeHandler();
+          if (args.length == 1) {
+            displayCodeHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "lsp": {
+              CodeLspArgs codeArgs = CodeLspArgs.from(args, 2);
+              if (codeArgs == null) {
+                CodeLspArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               codeHandler.lsp(codeArgs, out);
+               return 0;
+            }
+            case "validate-plan": {
+              CodeValidatePlanArgs codeArgs = CodeValidatePlanArgs.from(args, 2);
+              if (codeArgs == null) {
+                CodeValidatePlanArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               codeHandler.validatePlan(codeArgs, out);
+               return 0;
+            }
+            case "bundle-plan": {
+              CodeBundlePlanArgs codeArgs = CodeBundlePlanArgs.from(args, 2);
+              if (codeArgs == null) {
+                CodeBundlePlanArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               codeHandler.bundlePlan(codeArgs, out);
+               return 0;
+            }
+            case "compile-file": {
+              CodeCompileFileArgs codeArgs = CodeCompileFileArgs.from(args, 2);
+              if (codeArgs == null) {
+                CodeCompileFileArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               codeHandler.compileFile(codeArgs, out);
+               return 0;
+            }
+            case "reflect-dump": {
+              CodeReflectDumpArgs codeArgs = CodeReflectDumpArgs.from(args, 2);
+              if (codeArgs == null) {
+                CodeReflectDumpArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               codeHandler.reflectDump(codeArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayCodeHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'code'");
+              System.err.println("See 'adama code help' for a list of subcommands.");
+              return 1;
+          }
+        case "contrib":
+          ContribHandler contribHandler = handler.makeContribHandler();
+          if (args.length == 1) {
+            displayContribHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "tests-adama": {
+              ContribTestsAdamaArgs contribArgs = ContribTestsAdamaArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribTestsAdamaArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.testsAdama(contribArgs, out);
+               return 0;
+            }
+            case "tests-rxhtml": {
+              ContribTestsRxhtmlArgs contribArgs = ContribTestsRxhtmlArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribTestsRxhtmlArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.testsRxhtml(contribArgs, out);
+               return 0;
+            }
+            case "make-codec": {
+              ContribMakeCodecArgs contribArgs = ContribMakeCodecArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribMakeCodecArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.makeCodec(contribArgs, out);
+               return 0;
+            }
+            case "make-api": {
+              ContribMakeApiArgs contribArgs = ContribMakeApiArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribMakeApiArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.makeApi(contribArgs, out);
+               return 0;
+            }
+            case "bundle-js": {
+              ContribBundleJsArgs contribArgs = ContribBundleJsArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribBundleJsArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.bundleJs(contribArgs, out);
+               return 0;
+            }
+            case "make-et": {
+              ContribMakeEtArgs contribArgs = ContribMakeEtArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribMakeEtArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.makeEt(contribArgs, out);
+               return 0;
+            }
+            case "copyright": {
+              ContribCopyrightArgs contribArgs = ContribCopyrightArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribCopyrightArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.copyright(contribArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayContribHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'contrib'");
+              System.err.println("See 'adama contrib help' for a list of subcommands.");
+              return 1;
+          }
+        case "database":
+          DatabaseHandler databaseHandler = handler.makeDatabaseHandler();
+          if (args.length == 1) {
+            displayDatabaseHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "configure": {
+              DatabaseConfigureArgs databaseArgs = DatabaseConfigureArgs.from(args, 2);
+              if (databaseArgs == null) {
+                DatabaseConfigureArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               databaseHandler.configure(databaseArgs, out);
+               return 0;
+            }
+            case "install": {
+              DatabaseInstallArgs databaseArgs = DatabaseInstallArgs.from(args, 2);
+              if (databaseArgs == null) {
+                DatabaseInstallArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               databaseHandler.install(databaseArgs, out);
+               return 0;
+            }
+            case "migrate": {
+              DatabaseMigrateArgs databaseArgs = DatabaseMigrateArgs.from(args, 2);
+              if (databaseArgs == null) {
+                DatabaseMigrateArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               databaseHandler.migrate(databaseArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayDatabaseHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'database'");
+              System.err.println("See 'adama database help' for a list of subcommands.");
+              return 1;
+          }
+        case "debug":
+          DebugHandler debugHandler = handler.makeDebugHandler();
+          if (args.length == 1) {
+            displayDebugHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "archive": {
+              DebugArchiveArgs debugArgs = DebugArchiveArgs.from(args, 2);
+              if (debugArgs == null) {
+                DebugArchiveArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               debugHandler.archive(debugArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayDebugHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'debug'");
+              System.err.println("See 'adama debug help' for a list of subcommands.");
+              return 1;
+          }
+        case "document":
+          DocumentHandler documentHandler = handler.makeDocumentHandler();
+          if (args.length == 1) {
+            displayDocumentHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "connect": {
+              DocumentConnectArgs documentArgs = DocumentConnectArgs.from(args, 2);
+              if (documentArgs == null) {
+                DocumentConnectArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               documentHandler.connect(documentArgs, out);
+               return 0;
+            }
+            case "create": {
+              DocumentCreateArgs documentArgs = DocumentCreateArgs.from(args, 2);
+              if (documentArgs == null) {
+                DocumentCreateArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               documentHandler.create(documentArgs, out);
+               return 0;
+            }
+            case "delete": {
+              DocumentDeleteArgs documentArgs = DocumentDeleteArgs.from(args, 2);
+              if (documentArgs == null) {
+                DocumentDeleteArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               documentHandler.delete(documentArgs, out);
+               return 0;
+            }
+            case "list": {
+              DocumentListArgs documentArgs = DocumentListArgs.from(args, 2);
+              if (documentArgs == null) {
+                DocumentListArgs.help();
+                return 1;
+               }
+               JsonOrError out = output.makeJsonOrError();
+               documentHandler.list(documentArgs, out);
+               return 0;
+            }
+            case "attach": {
+              DocumentAttachArgs documentArgs = DocumentAttachArgs.from(args, 2);
+              if (documentArgs == null) {
+                DocumentAttachArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               documentHandler.attach(documentArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayDocumentHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'document'");
+              System.err.println("See 'adama document help' for a list of subcommands.");
+              return 1;
+          }
+        case "domain":
+          DomainHandler domainHandler = handler.makeDomainHandler();
+          if (args.length == 1) {
+            displayDomainHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "map": {
+              DomainMapArgs domainArgs = DomainMapArgs.from(args, 2);
+              if (domainArgs == null) {
+                DomainMapArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               domainHandler.map(domainArgs, out);
+               return 0;
+            }
+            case "list": {
+              DomainListArgs domainArgs = DomainListArgs.from(args, 2);
+              if (domainArgs == null) {
+                DomainListArgs.help();
+                return 1;
+               }
+               JsonOrError out = output.makeJsonOrError();
+               domainHandler.list(domainArgs, out);
+               return 0;
+            }
+            case "unmap": {
+              DomainUnmapArgs domainArgs = DomainUnmapArgs.from(args, 2);
+              if (domainArgs == null) {
+                DomainUnmapArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               domainHandler.unmap(domainArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayDomainHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'domain'");
+              System.err.println("See 'adama domain help' for a list of subcommands.");
+              return 1;
+          }
+        case "frontend":
+          FrontendHandler frontendHandler = handler.makeFrontendHandler();
+          if (args.length == 1) {
+            displayFrontendHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "rxhtml": {
+              FrontendRxhtmlArgs frontendArgs = FrontendRxhtmlArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendRxhtmlArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.rxhtml(frontendArgs, out);
+               return 0;
+            }
+            case "edhtml": {
+              FrontendEdhtmlArgs frontendArgs = FrontendEdhtmlArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendEdhtmlArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.edhtml(frontendArgs, out);
+               return 0;
+            }
+            case "dev-server": {
+              FrontendDevServerArgs frontendArgs = FrontendDevServerArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendDevServerArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.devServer(frontendArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayFrontendHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'frontend'");
+              System.err.println("See 'adama frontend help' for a list of subcommands.");
+              return 1;
+          }
+        case "services":
+          ServicesHandler servicesHandler = handler.makeServicesHandler();
+          if (args.length == 1) {
+            displayServicesHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "auto": {
+              ServicesAutoArgs servicesArgs = ServicesAutoArgs.from(args, 2);
+              if (servicesArgs == null) {
+                ServicesAutoArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               servicesHandler.auto(servicesArgs, out);
+               return 0;
+            }
+            case "backend": {
+              ServicesBackendArgs servicesArgs = ServicesBackendArgs.from(args, 2);
+              if (servicesArgs == null) {
+                ServicesBackendArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               servicesHandler.backend(servicesArgs, out);
+               return 0;
+            }
+            case "frontend": {
+              ServicesFrontendArgs servicesArgs = ServicesFrontendArgs.from(args, 2);
+              if (servicesArgs == null) {
+                ServicesFrontendArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               servicesHandler.frontend(servicesArgs, out);
+               return 0;
+            }
+            case "overlord": {
+              ServicesOverlordArgs servicesArgs = ServicesOverlordArgs.from(args, 2);
+              if (servicesArgs == null) {
+                ServicesOverlordArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               servicesHandler.overlord(servicesArgs, out);
+               return 0;
+            }
+            case "solo": {
+              ServicesSoloArgs servicesArgs = ServicesSoloArgs.from(args, 2);
+              if (servicesArgs == null) {
+                ServicesSoloArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               servicesHandler.solo(servicesArgs, out);
+               return 0;
+            }
+            case "dashboards": {
+              ServicesDashboardsArgs servicesArgs = ServicesDashboardsArgs.from(args, 2);
+              if (servicesArgs == null) {
+                ServicesDashboardsArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               servicesHandler.dashboards(servicesArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayServicesHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'services'");
+              System.err.println("See 'adama services help' for a list of subcommands.");
               return 1;
           }
           case "init": {
@@ -258,6 +896,26 @@ public class MainRouter {
              }
              YesOrError out = output.makeYesOrError();
              handler.init(mainArgs , out);
+             return 0;
+          }
+          case "stress": {
+            StressArgs mainArgs = StressArgs.from(args, 1);
+            if (mainArgs == null) {
+              StressArgs.help();
+              return 1;
+             }
+             YesOrError out = output.makeYesOrError();
+             handler.stress(mainArgs , out);
+             return 0;
+          }
+          case "dumpenv": {
+            DumpenvArgs mainArgs = DumpenvArgs.from(args, 1);
+            if (mainArgs == null) {
+              DumpenvArgs.help();
+              return 1;
+             }
+             YesOrError out = output.makeYesOrError();
+             handler.dumpenv(mainArgs , out);
              return 0;
           }
           default:
