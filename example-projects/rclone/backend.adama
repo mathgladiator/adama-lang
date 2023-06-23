@@ -1,0 +1,92 @@
+@static {
+  create {
+    return true; // anyone can create it
+  }
+  invent {
+    return true; // anyone can invent
+  }
+}
+
+@connected {
+  return true;
+}
+
+record Comment {
+  public int id;
+  public principal author;
+  public string comment;
+  public datetime when;
+}
+
+record Submission {
+  public int id;
+  public string title;
+  public string description;
+  public string url;
+  public string category;
+  public principal submitter;
+  public datetime when;
+
+  table<Comment> _comments;
+  public formula comments = iterate _comments;
+  public formula num_comments = _comments.size();
+}
+
+table<Submission> _submissions;
+
+message SubmissionMsg {
+  string title;
+  string description;
+  string url;
+  string category;
+}
+
+channel submit_post(SubmissionMsg s) {
+  _submissions <- {
+    title: s.title,
+    description: s.description,
+    url: s.url,
+    category: s.category,
+    when: Time.datetime(),
+    submitter: @who
+  };
+}
+
+view string current_category;
+bubble posts = iterate _submissions where @viewer.current_category == category || @viewer.current_category == "" limit 20;
+
+// public formula posts = iterate _submissions limit 20;
+
+message CategoryReport {
+  string category;
+  int count;
+}
+
+procedure make_categories() -> list<CategoryReport> readonly {
+  var m = iterate _submissions reduce category via @lambda x: x.size();
+  table<CategoryReport> report;
+  foreach (kvp in m) {
+    report <- {category: kvp.key, count:kvp.value};
+  }
+  return iterate report;
+}
+
+public formula categories = make_categories();
+
+view int current_post_id;
+bubble current_post = (iterate _submissions where id == @viewer.current_post_id)[0];
+
+message WriteComment {
+  int id;
+  string comment;
+}
+
+channel write_comment(WriteComment wc) {
+  if( (iterate _submissions where id == wc.id)[0] as sub) {
+    sub._comments <- {
+        author: @who,
+        comment: wc.comment, 
+        when: Time.datetime()
+    };
+  }
+}
