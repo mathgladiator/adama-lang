@@ -18,9 +18,11 @@ message SyncDevelopers {
 }
 
 channel set_developers_from_frontend(SyncDevelopers sd) open {
-  (iterate _developers).delete();
-  foreach(d in sd.developers) {
-    _developers <- {who:d};
+  if (@who == owner) {
+    (iterate _developers).delete();
+    foreach(d in sd.developers) {
+      _developers <- {who:d};
+    }
   }
 }
 
