@@ -2351,6 +2351,40 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama contrib make-api", Util.ANSI.Green));
 		}
 	}
+	public static class ContribMakeCliArgs {
+		public Config config;
+		public static ContribMakeCliArgs from(String[] args, int start) {
+			ContribMakeCliArgs returnArgs = new ContribMakeCliArgs();
+			try {
+				returnArgs.config = new Config(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			return returnArgs;
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Generate the command line router", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama contrib make-cli", Util.ANSI.Green));
+		}
+	}
 	public static class ContribMakeCodecArgs {
 		public Config config;
 		public static ContribMakeCodecArgs from(String[] args, int start) {

@@ -106,6 +106,15 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public final CapacityAgent capacityAgent;
   public final File caravanPath;
   public final MockPostDocumentDelete delete;
+
+  private static String getIDE() throws Exception {
+    File file = new File("../internal/ide.adama");
+    if (!file.exists()) {
+      file = new File("internal/ide.adama");
+    }
+    return Files.readString(file.toPath());
+  }
+
   public TestFrontEnd() throws Exception {
     int port = 10000;
     codesSentToEmail = new ConcurrentHashMap<>();
@@ -119,7 +128,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     int spaceId = Spaces.createSpace(dataBase, 0, "ide");
     {
       ObjectNode plan = Json.newJsonObject();
-      plan.putObject("versions").put("file", "@static { create { return true; } }");
+      plan.putObject("versions").put("file", getIDE());
       plan.put("default", "file");
       plan.putArray("plan");
       String planJson = plan.toString();

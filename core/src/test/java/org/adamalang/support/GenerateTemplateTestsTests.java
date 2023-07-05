@@ -21,11 +21,7 @@ public class GenerateTemplateTestsTests {
     testdataCode.mkdir();
     final var javaOut = new File("./test_data/java-out1");
     javaOut.mkdir();
-    GenerateTemplateTests.generate(
-        0,
-        new String[] {
-            "--input", "./test_data/code1", "--output", "./test_data/java-out1", "--what", "ok", "--errors", "./test_data/errors.csv"
-        });
+    GenerateTemplateTests.generate("./test_data/code1", "./test_data/java-out1");
     javaOut.delete();
     testdataCode.delete();
   }

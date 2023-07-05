@@ -42,9 +42,6 @@ public class Main {
         case "code":
           Code.execute(config, next);
           return;
-        case "contrib":
-          Contrib.execute(config, next);
-          return;
         case "database":
           Database.execute(config, next);
           return;

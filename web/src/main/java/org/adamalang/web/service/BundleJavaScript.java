@@ -16,10 +16,6 @@ import java.nio.file.Files;
 import java.util.Base64;
 
 public class BundleJavaScript {
-  public static void main(String[] args) throws Exception {
-    Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptClient.java").toPath(), bundle("./release/libadama.js"));
-  }
-
   public static String bundle(String file) throws Exception {
     String str = Files.readString(new File(file).toPath());
     StringBuilder sb = new StringBuilder();

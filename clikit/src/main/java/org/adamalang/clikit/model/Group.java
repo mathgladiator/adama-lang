@@ -21,12 +21,13 @@ import java.util.Map;
 public class Group {
     public final String documentation;
     public final String name;
+    public final String altName;
     public final String capName;
     public final Command[] commandList;
 
-    public Group(String name,String documentation, Command[] commandList) {
-        name = name.toLowerCase(Locale.ROOT);
-        this.name = name;
+    public Group(String name, String altName, String documentation, Command[] commandList) {
+        this.name = name.toLowerCase(Locale.ROOT);
+        this.altName = altName != null ? altName.toLowerCase(Locale.ROOT) : null;
         this.capName = Common.camelize(name);
         this.documentation = documentation;
         this.commandList = commandList;
@@ -39,11 +40,15 @@ public class Group {
             String filePos = "line " + groupNode.getUserData("lineNumber") + " column " + groupNode.getUserData("colNumber");
             Element groupElem = (Element) groupNode;
             String groupName = groupElem.getAttribute("name");
+            String altName = null;
+            if (groupElem.hasAttribute("alt-name")) {
+                altName = groupElem.getAttribute("alt-name");
+            }
             if (groupName.trim().length() == 0)
                 givenException.addToExceptionStack("The 'group' node at " + filePos + " is missing name attribute");
             Command[] commandList = Command.createCommandList(groupElem.getElementsByTagName("command"), givenException, arguments);
             String groupDocumentation = Common.getDocumentation(groupElem, givenException);
-            Group group = new Group(groupName, groupDocumentation ,commandList);
+            Group group = new Group(groupName, altName, groupDocumentation ,commandList);
             groupArray.add(group);
         }
         return groupArray.toArray(new Group[0]);

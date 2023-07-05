@@ -38,6 +38,9 @@ public class MainRouterGen {
             String handlerClass = group.capName + "Handler";
             String handlerObj = group.name + "Handler";
             String argsObj = group.name + "Args";
+            if (group.altName != null) {
+                sb.append("        case \"").append(group.altName).append("\":\n");
+            }
             sb.append("        case \"").append(group.name).append("\":\n");
             sb.append("          ").append(handlerClass).append(" ").append(handlerObj).append(" = handler.make").append(handlerClass).append("();\n");
             sb.append("          if (args.length == 1) {\n");

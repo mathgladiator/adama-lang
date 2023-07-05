@@ -83,7 +83,7 @@ if args.generate:
     cor_path = os.path.join(ROOT_PATH, "core")
     contribs = {
         cor_path: ('tests-adama', 'tests-rxhtml'),
-        ROOT_PATH: ('make-api', 'make-et', 'make-codec', 'bundle-js', 'copyright'),
+        ROOT_PATH: ('make-cli', 'make-api', 'make-et', 'make-codec', 'bundle-js', 'copyright'),
     }
     adama_jar = os.path.join(ROOT_PATH, 'release', 'adama.jar')
     for cwd, contrib in contribs.items():

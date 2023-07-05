@@ -207,7 +207,7 @@
     </arg-definition>
 
     <!-- groups collect commands -->
-    <group name="space">
+    <group name="space" alt-name="spaces">
         <documentation>
             Provides command related to working with space collections...
         </documentation>
@@ -533,6 +533,12 @@
             <arg name="output" default="./src/test/java/org/adamalang/rxhtml" />
         </command>
 
+        <command name="make-cli">
+            <documentation>
+                Generate the command line router
+            </documentation>
+        </command>
+
         <command name="make-codec">
             <documentation>
                 Generates the networking codec
@@ -594,7 +600,7 @@
         </command>
     </group>
 
-    <group name="document">
+    <group name="document" alt-name="documents">
         <documentation>
             Interact with documents
         </documentation>
@@ -647,7 +653,7 @@
 
     </group>
 
-    <group name="domain">
+    <group name="domain" alt-name="domains">
         <documentation>
             Manage Domains
         </documentation>

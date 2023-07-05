@@ -23,21 +23,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class GenerateTemplateTests {
-  public static void generate(int argOffset, final String[] args) throws Exception {
-    String inputRootPath = "./test_templates";
-    String outputJavaPath = "./src/test/java/org/adamalang/rxhtml";
-    for (var k = argOffset; k + 1 < args.length; k += 2) {
-      switch (args[k]) {
-        case "--input":
-          inputRootPath = args[k + 1];
-          break;
-        case "--output":
-          outputJavaPath = args[k + 1];
-          break;
-        default:
-          System.err.println("unknown option:" + args[k]);
-      }
-    }
+  public static void generate(String inputRootPath, String outputJavaPath) throws Exception {
     if (isValid(inputRootPath) && isValid(outputJavaPath)) {
       final var root = new File(inputRootPath);
       final var outRoot = new File(outputJavaPath);

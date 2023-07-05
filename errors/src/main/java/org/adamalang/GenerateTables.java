@@ -8,9 +8,7 @@
  */
 package org.adamalang;
 
-import java.io.File;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
 
 public class GenerateTables {
   public static String generate() throws Exception {
@@ -57,10 +55,5 @@ public class GenerateTables {
     sb.append("  }\n");
     sb.append("}\n");
     return sb.toString();
-  }
-
-  // TODO: remove and make part of the primary code generator
-  public static void main(String[] args) throws Exception {
-    Files.writeString(new File("errors/src/main/java/org/adamalang/ErrorTable.java").toPath(), generate());
   }
 }

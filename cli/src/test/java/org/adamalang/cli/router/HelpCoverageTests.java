@@ -59,6 +59,7 @@ public class HelpCoverageTests {
     NewMain.testMain(new String[]{"contrib", "bundle-js", "--help"});
     NewMain.testMain(new String[]{"contrib", "copyright", "--help"});
     NewMain.testMain(new String[]{"contrib", "make-api", "--help"});
+    NewMain.testMain(new String[]{"contrib", "make-cli", "--help"});
     NewMain.testMain(new String[]{"contrib", "make-codec", "--help"});
     NewMain.testMain(new String[]{"contrib", "make-et", "--help"});
     NewMain.testMain(new String[]{"contrib", "tests-adama", "--help"});

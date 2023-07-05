@@ -27,6 +27,7 @@ public class MainRouter {
         case "help":
           Help.displayRootHelp();
           return 1;
+        case "spaces":
         case "space":
           SpaceHandler spaceHandler = handler.makeSpaceHandler();
           if (args.length == 1) {
@@ -522,6 +523,16 @@ public class MainRouter {
                contribHandler.makeApi(contribArgs, out);
                return 0;
             }
+            case "make-cli": {
+              ContribMakeCliArgs contribArgs = ContribMakeCliArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribMakeCliArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.makeCli(contribArgs, out);
+               return 0;
+            }
             case "make-codec": {
               ContribMakeCodecArgs contribArgs = ContribMakeCodecArgs.from(args, 2);
               if (contribArgs == null) {
@@ -649,6 +660,7 @@ public class MainRouter {
               System.err.println("See 'adama debug help' for a list of subcommands.");
               return 1;
           }
+        case "documents":
         case "document":
           DocumentHandler documentHandler = handler.makeDocumentHandler();
           if (args.length == 1) {
@@ -717,6 +729,7 @@ public class MainRouter {
               System.err.println("See 'adama document help' for a list of subcommands.");
               return 1;
           }
+        case "domains":
         case "domain":
           DomainHandler domainHandler = handler.makeDomainHandler();
           if (args.length == 1) {

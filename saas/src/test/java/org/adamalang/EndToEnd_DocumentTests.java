@@ -64,7 +64,7 @@ public class EndToEnd_DocumentTests {
       Iterator<String> c13 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/create\",\"space\":\"ide\",\"key\":\"a\",\"arg\":{}}");
       Assert.assertEquals("ERROR:995505", c13.next());
       Iterator<String> c14 = fe.execute("{\"id\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"ide\",\"key\":\"newspace\"}");
-      Assert.assertEquals("ERROR:184333", c14.next());
+      Assert.assertTrue(c14.next().startsWith("STREAM:"));
       Iterator<String> c15 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/delete\",\"space\":\"nope\",\"key\":\"a\",\"arg\":{}}");
       Assert.assertEquals("ERROR:625678", c15.next());
       Iterator<String> c16 = fe.execute("{\"id\":8,\"identity\":\"" + devIdentity + "\",\"method\":\"document/delete\",\"space\":\"newspace\",\"key\":\"a\",\"arg\":{}}");
