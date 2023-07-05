@@ -14,8 +14,8 @@ import org.adamalang.cli.runtime.Output.*;
 public interface ServicesHandler {
   void auto(ServicesAutoArgs args, YesOrError output) throws Exception;
   void backend(ServicesBackendArgs args, YesOrError output) throws Exception;
+  void dashboards(ServicesDashboardsArgs args, YesOrError output) throws Exception;
   void frontend(ServicesFrontendArgs args, YesOrError output) throws Exception;
   void overlord(ServicesOverlordArgs args, YesOrError output) throws Exception;
   void solo(ServicesSoloArgs args, YesOrError output) throws Exception;
-  void dashboards(ServicesDashboardsArgs args, YesOrError output) throws Exception;
 }

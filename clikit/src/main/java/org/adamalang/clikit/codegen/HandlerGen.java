@@ -36,7 +36,7 @@ public class HandlerGen {
                 }
                 handler.append("  void ").append(command.camel).append("(").append(group.capName).append(command.capName).append("Args args, ").append(outputType).append(" output) throws Exception;\n");
             }
-            handler.append("}");
+            handler.append("}\n");
             returnMap.put(upperHandler+".java",handler.toString());
         }
         return returnMap;

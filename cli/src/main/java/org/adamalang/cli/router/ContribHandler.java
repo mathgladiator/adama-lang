@@ -12,11 +12,11 @@ import org.adamalang.cli.router.Arguments.*;
 import org.adamalang.cli.runtime.Output.*;
 
 public interface ContribHandler {
+  void bundleJs(ContribBundleJsArgs args, YesOrError output) throws Exception;
+  void copyright(ContribCopyrightArgs args, YesOrError output) throws Exception;
+  void makeApi(ContribMakeApiArgs args, YesOrError output) throws Exception;
+  void makeCodec(ContribMakeCodecArgs args, YesOrError output) throws Exception;
+  void makeEt(ContribMakeEtArgs args, YesOrError output) throws Exception;
   void testsAdama(ContribTestsAdamaArgs args, YesOrError output) throws Exception;
   void testsRxhtml(ContribTestsRxhtmlArgs args, YesOrError output) throws Exception;
-  void makeCodec(ContribMakeCodecArgs args, YesOrError output) throws Exception;
-  void makeApi(ContribMakeApiArgs args, YesOrError output) throws Exception;
-  void bundleJs(ContribBundleJsArgs args, YesOrError output) throws Exception;
-  void makeEt(ContribMakeEtArgs args, YesOrError output) throws Exception;
-  void copyright(ContribCopyrightArgs args, YesOrError output) throws Exception;
 }

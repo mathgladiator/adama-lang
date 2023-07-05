@@ -12,9 +12,9 @@ import org.adamalang.cli.router.Arguments.*;
 import org.adamalang.cli.runtime.Output.*;
 
 public interface CodeHandler {
-  void lsp(CodeLspArgs args, YesOrError output) throws Exception;
-  void validatePlan(CodeValidatePlanArgs args, YesOrError output) throws Exception;
   void bundlePlan(CodeBundlePlanArgs args, YesOrError output) throws Exception;
   void compileFile(CodeCompileFileArgs args, YesOrError output) throws Exception;
+  void lsp(CodeLspArgs args, YesOrError output) throws Exception;
   void reflectDump(CodeReflectDumpArgs args, YesOrError output) throws Exception;
+  void validatePlan(CodeValidatePlanArgs args, YesOrError output) throws Exception;
 }

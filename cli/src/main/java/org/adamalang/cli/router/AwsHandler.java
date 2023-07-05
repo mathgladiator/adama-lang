@@ -12,10 +12,10 @@ import org.adamalang.cli.router.Arguments.*;
 import org.adamalang.cli.runtime.Output.*;
 
 public interface AwsHandler {
-  void setup(AwsSetupArgs args, YesOrError output) throws Exception;
-  void testEmail(AwsTestEmailArgs args, YesOrError output) throws Exception;
-  void testAssetListing(AwsTestAssetListingArgs args, YesOrError output) throws Exception;
-  void testEnqueue(AwsTestEnqueueArgs args, YesOrError output) throws Exception;
   void downloadArchive(AwsDownloadArchiveArgs args, YesOrError output) throws Exception;
   void memoryTest(AwsMemoryTestArgs args, YesOrError output) throws Exception;
+  void setup(AwsSetupArgs args, YesOrError output) throws Exception;
+  void testAssetListing(AwsTestAssetListingArgs args, YesOrError output) throws Exception;
+  void testEmail(AwsTestEmailArgs args, YesOrError output) throws Exception;
+  void testEnqueue(AwsTestEnqueueArgs args, YesOrError output) throws Exception;
 }

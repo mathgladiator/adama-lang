@@ -57,7 +57,7 @@ public class Tool {
         String handlerGen = RootHandlerGen.generate(groupList, mainCommandList ,packageName);
         String argumentTypeGen = ArgumentsGen.generate(groupList, mainCommandList ,packageName);
         String routerGen = MainRouterGen.generate(groupList, mainCommandList, packageName);
-        String helpGen = HelpGen.generate(groupList, packageName);
+        String helpGen = HelpGen.generate(groupList, mainCommandList, packageName);
         Map<String, String> routerGens = HandlerGen.generate(groupList, packageName);
         Map<String, String> stringMap = new TreeMap<>();
         Map<String, String> testGens = TestGen.generate(groupList, mainCommandList, packageName);

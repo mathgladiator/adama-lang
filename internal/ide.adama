@@ -7,8 +7,36 @@
 
 public principal owner;
 
+record Developer {
+  principal who;
+}
+
+table<Developer> _developers;
+
+message SyncDevelopers {
+  principal[] developers;
+}
+
+channel set_developers_from_frontend(SyncDevelopers sd) open {
+  (iterate _developers).delete();
+  foreach(d in sd.developers) {
+    _developers <- {who:d};
+  }
+}
+
+procedure security_check(principal other) -> bool readonly {
+  if (other == owner) {
+    return true;
+  }
+  return (iterate _developers where who == other).size() > 0;
+}
+
 @connected {
-  return @who == owner;
+  return security_check(@who);
+}
+
+@can_attach {
+  return security_check(@who);
 }
 
 record Document {
@@ -62,6 +90,7 @@ view string current_document;
 bubble document_adama = (iterate _documents where name == "main.adama")[0];
 bubble document_rxhtml = (iterate _documents where name == "forest.rxhtml")[0];
 
+
 message JustId {
   int id;  
 }
@@ -79,10 +108,6 @@ channel delete_debug_identity(JustId jid) {
 }
 
 public formula identities = iterate _debug_identities;
-
-@can_attach {
-  return @who == owner;
-}
 
 record Resource {
   public int id;

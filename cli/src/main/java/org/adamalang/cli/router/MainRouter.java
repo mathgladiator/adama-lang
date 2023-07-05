@@ -24,6 +24,9 @@ public class MainRouter {
         return 1;
       }
       switch (args[0]) {
+        case "help":
+          Help.displayRootHelp();
+          return 1;
         case "space":
           SpaceHandler spaceHandler = handler.makeSpaceHandler();
           if (args.length == 1) {
@@ -61,14 +64,34 @@ public class MainRouter {
                spaceHandler.deploy(spaceArgs, out);
                return 0;
             }
-            case "set-rxhtml": {
-              SpaceSetRxhtmlArgs spaceArgs = SpaceSetRxhtmlArgs.from(args, 2);
+            case "download": {
+              SpaceDownloadArgs spaceArgs = SpaceDownloadArgs.from(args, 2);
               if (spaceArgs == null) {
-                SpaceSetRxhtmlArgs.help();
+                SpaceDownloadArgs.help();
                 return 1;
                }
                YesOrError out = output.makeYesOrError();
-               spaceHandler.setRxhtml(spaceArgs, out);
+               spaceHandler.download(spaceArgs, out);
+               return 0;
+            }
+            case "encrypt-secret": {
+              SpaceEncryptSecretArgs spaceArgs = SpaceEncryptSecretArgs.from(args, 2);
+              if (spaceArgs == null) {
+                SpaceEncryptSecretArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               spaceHandler.encryptSecret(spaceArgs, out);
+               return 0;
+            }
+            case "generate-key": {
+              SpaceGenerateKeyArgs spaceArgs = SpaceGenerateKeyArgs.from(args, 2);
+              if (spaceArgs == null) {
+                SpaceGenerateKeyArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               spaceHandler.generateKey(spaceArgs, out);
                return 0;
             }
             case "get-rxhtml": {
@@ -81,26 +104,6 @@ public class MainRouter {
                spaceHandler.getRxhtml(spaceArgs, out);
                return 0;
             }
-            case "upload": {
-              SpaceUploadArgs spaceArgs = SpaceUploadArgs.from(args, 2);
-              if (spaceArgs == null) {
-                SpaceUploadArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               spaceHandler.upload(spaceArgs, out);
-               return 0;
-            }
-            case "download": {
-              SpaceDownloadArgs spaceArgs = SpaceDownloadArgs.from(args, 2);
-              if (spaceArgs == null) {
-                SpaceDownloadArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               spaceHandler.download(spaceArgs, out);
-               return 0;
-            }
             case "list": {
               SpaceListArgs spaceArgs = SpaceListArgs.from(args, 2);
               if (spaceArgs == null) {
@@ -109,16 +112,6 @@ public class MainRouter {
                }
                YesOrError out = output.makeYesOrError();
                spaceHandler.list(spaceArgs, out);
-               return 0;
-            }
-            case "usage": {
-              SpaceUsageArgs spaceArgs = SpaceUsageArgs.from(args, 2);
-              if (spaceArgs == null) {
-                SpaceUsageArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               spaceHandler.usage(spaceArgs, out);
                return 0;
             }
             case "reflect": {
@@ -141,24 +134,34 @@ public class MainRouter {
                spaceHandler.setRole(spaceArgs, out);
                return 0;
             }
-            case "generate-key": {
-              SpaceGenerateKeyArgs spaceArgs = SpaceGenerateKeyArgs.from(args, 2);
+            case "set-rxhtml": {
+              SpaceSetRxhtmlArgs spaceArgs = SpaceSetRxhtmlArgs.from(args, 2);
               if (spaceArgs == null) {
-                SpaceGenerateKeyArgs.help();
+                SpaceSetRxhtmlArgs.help();
                 return 1;
                }
                YesOrError out = output.makeYesOrError();
-               spaceHandler.generateKey(spaceArgs, out);
+               spaceHandler.setRxhtml(spaceArgs, out);
                return 0;
             }
-            case "encrypt-secret": {
-              SpaceEncryptSecretArgs spaceArgs = SpaceEncryptSecretArgs.from(args, 2);
+            case "upload": {
+              SpaceUploadArgs spaceArgs = SpaceUploadArgs.from(args, 2);
               if (spaceArgs == null) {
-                SpaceEncryptSecretArgs.help();
+                SpaceUploadArgs.help();
                 return 1;
                }
                YesOrError out = output.makeYesOrError();
-               spaceHandler.encryptSecret(spaceArgs, out);
+               spaceHandler.upload(spaceArgs, out);
+               return 0;
+            }
+            case "usage": {
+              SpaceUsageArgs spaceArgs = SpaceUsageArgs.from(args, 2);
+              if (spaceArgs == null) {
+                SpaceUsageArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               spaceHandler.usage(spaceArgs, out);
                return 0;
             }
             case "--help":
@@ -179,6 +182,16 @@ public class MainRouter {
             return 1;
           }
           switch (args[1]) {
+            case "append-local": {
+              AuthorityAppendLocalArgs authorityArgs = AuthorityAppendLocalArgs.from(args, 2);
+              if (authorityArgs == null) {
+                AuthorityAppendLocalArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               authorityHandler.appendLocal(authorityArgs, out);
+               return 0;
+            }
             case "create": {
               AuthorityCreateArgs authorityArgs = AuthorityCreateArgs.from(args, 2);
               if (authorityArgs == null) {
@@ -187,46 +200,6 @@ public class MainRouter {
                }
                YesOrError out = output.makeYesOrError();
                authorityHandler.create(authorityArgs, out);
-               return 0;
-            }
-            case "set": {
-              AuthoritySetArgs authorityArgs = AuthoritySetArgs.from(args, 2);
-              if (authorityArgs == null) {
-                AuthoritySetArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               authorityHandler.set(authorityArgs, out);
-               return 0;
-            }
-            case "get": {
-              AuthorityGetArgs authorityArgs = AuthorityGetArgs.from(args, 2);
-              if (authorityArgs == null) {
-                AuthorityGetArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               authorityHandler.get(authorityArgs, out);
-               return 0;
-            }
-            case "destroy": {
-              AuthorityDestroyArgs authorityArgs = AuthorityDestroyArgs.from(args, 2);
-              if (authorityArgs == null) {
-                AuthorityDestroyArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               authorityHandler.destroy(authorityArgs, out);
-               return 0;
-            }
-            case "list": {
-              AuthorityListArgs authorityArgs = AuthorityListArgs.from(args, 2);
-              if (authorityArgs == null) {
-                AuthorityListArgs.help();
-                return 1;
-               }
-               JsonOrError out = output.makeJsonOrError();
-               authorityHandler.list(authorityArgs, out);
                return 0;
             }
             case "create-local": {
@@ -239,14 +212,44 @@ public class MainRouter {
                authorityHandler.createLocal(authorityArgs, out);
                return 0;
             }
-            case "append-local": {
-              AuthorityAppendLocalArgs authorityArgs = AuthorityAppendLocalArgs.from(args, 2);
+            case "destroy": {
+              AuthorityDestroyArgs authorityArgs = AuthorityDestroyArgs.from(args, 2);
               if (authorityArgs == null) {
-                AuthorityAppendLocalArgs.help();
+                AuthorityDestroyArgs.help();
                 return 1;
                }
                YesOrError out = output.makeYesOrError();
-               authorityHandler.appendLocal(authorityArgs, out);
+               authorityHandler.destroy(authorityArgs, out);
+               return 0;
+            }
+            case "get": {
+              AuthorityGetArgs authorityArgs = AuthorityGetArgs.from(args, 2);
+              if (authorityArgs == null) {
+                AuthorityGetArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               authorityHandler.get(authorityArgs, out);
+               return 0;
+            }
+            case "list": {
+              AuthorityListArgs authorityArgs = AuthorityListArgs.from(args, 2);
+              if (authorityArgs == null) {
+                AuthorityListArgs.help();
+                return 1;
+               }
+               JsonOrError out = output.makeJsonOrError();
+               authorityHandler.list(authorityArgs, out);
+               return 0;
+            }
+            case "set": {
+              AuthoritySetArgs authorityArgs = AuthoritySetArgs.from(args, 2);
+              if (authorityArgs == null) {
+                AuthoritySetArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               authorityHandler.set(authorityArgs, out);
                return 0;
             }
             case "sign": {
@@ -315,46 +318,6 @@ public class MainRouter {
             return 1;
           }
           switch (args[1]) {
-            case "setup": {
-              AwsSetupArgs awsArgs = AwsSetupArgs.from(args, 2);
-              if (awsArgs == null) {
-                AwsSetupArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               awsHandler.setup(awsArgs, out);
-               return 0;
-            }
-            case "test-email": {
-              AwsTestEmailArgs awsArgs = AwsTestEmailArgs.from(args, 2);
-              if (awsArgs == null) {
-                AwsTestEmailArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               awsHandler.testEmail(awsArgs, out);
-               return 0;
-            }
-            case "test-asset-listing": {
-              AwsTestAssetListingArgs awsArgs = AwsTestAssetListingArgs.from(args, 2);
-              if (awsArgs == null) {
-                AwsTestAssetListingArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               awsHandler.testAssetListing(awsArgs, out);
-               return 0;
-            }
-            case "test-enqueue": {
-              AwsTestEnqueueArgs awsArgs = AwsTestEnqueueArgs.from(args, 2);
-              if (awsArgs == null) {
-                AwsTestEnqueueArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               awsHandler.testEnqueue(awsArgs, out);
-               return 0;
-            }
             case "download-archive": {
               AwsDownloadArchiveArgs awsArgs = AwsDownloadArchiveArgs.from(args, 2);
               if (awsArgs == null) {
@@ -373,6 +336,46 @@ public class MainRouter {
                }
                YesOrError out = output.makeYesOrError();
                awsHandler.memoryTest(awsArgs, out);
+               return 0;
+            }
+            case "setup": {
+              AwsSetupArgs awsArgs = AwsSetupArgs.from(args, 2);
+              if (awsArgs == null) {
+                AwsSetupArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               awsHandler.setup(awsArgs, out);
+               return 0;
+            }
+            case "test-asset-listing": {
+              AwsTestAssetListingArgs awsArgs = AwsTestAssetListingArgs.from(args, 2);
+              if (awsArgs == null) {
+                AwsTestAssetListingArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               awsHandler.testAssetListing(awsArgs, out);
+               return 0;
+            }
+            case "test-email": {
+              AwsTestEmailArgs awsArgs = AwsTestEmailArgs.from(args, 2);
+              if (awsArgs == null) {
+                AwsTestEmailArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               awsHandler.testEmail(awsArgs, out);
+               return 0;
+            }
+            case "test-enqueue": {
+              AwsTestEnqueueArgs awsArgs = AwsTestEnqueueArgs.from(args, 2);
+              if (awsArgs == null) {
+                AwsTestEnqueueArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               awsHandler.testEnqueue(awsArgs, out);
                return 0;
             }
             case "--help":
@@ -421,26 +424,6 @@ public class MainRouter {
             return 1;
           }
           switch (args[1]) {
-            case "lsp": {
-              CodeLspArgs codeArgs = CodeLspArgs.from(args, 2);
-              if (codeArgs == null) {
-                CodeLspArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               codeHandler.lsp(codeArgs, out);
-               return 0;
-            }
-            case "validate-plan": {
-              CodeValidatePlanArgs codeArgs = CodeValidatePlanArgs.from(args, 2);
-              if (codeArgs == null) {
-                CodeValidatePlanArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               codeHandler.validatePlan(codeArgs, out);
-               return 0;
-            }
             case "bundle-plan": {
               CodeBundlePlanArgs codeArgs = CodeBundlePlanArgs.from(args, 2);
               if (codeArgs == null) {
@@ -461,6 +444,16 @@ public class MainRouter {
                codeHandler.compileFile(codeArgs, out);
                return 0;
             }
+            case "lsp": {
+              CodeLspArgs codeArgs = CodeLspArgs.from(args, 2);
+              if (codeArgs == null) {
+                CodeLspArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               codeHandler.lsp(codeArgs, out);
+               return 0;
+            }
             case "reflect-dump": {
               CodeReflectDumpArgs codeArgs = CodeReflectDumpArgs.from(args, 2);
               if (codeArgs == null) {
@@ -469,6 +462,16 @@ public class MainRouter {
                }
                YesOrError out = output.makeYesOrError();
                codeHandler.reflectDump(codeArgs, out);
+               return 0;
+            }
+            case "validate-plan": {
+              CodeValidatePlanArgs codeArgs = CodeValidatePlanArgs.from(args, 2);
+              if (codeArgs == null) {
+                CodeValidatePlanArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               codeHandler.validatePlan(codeArgs, out);
                return 0;
             }
             case "--help":
@@ -489,6 +492,56 @@ public class MainRouter {
             return 1;
           }
           switch (args[1]) {
+            case "bundle-js": {
+              ContribBundleJsArgs contribArgs = ContribBundleJsArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribBundleJsArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.bundleJs(contribArgs, out);
+               return 0;
+            }
+            case "copyright": {
+              ContribCopyrightArgs contribArgs = ContribCopyrightArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribCopyrightArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.copyright(contribArgs, out);
+               return 0;
+            }
+            case "make-api": {
+              ContribMakeApiArgs contribArgs = ContribMakeApiArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribMakeApiArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.makeApi(contribArgs, out);
+               return 0;
+            }
+            case "make-codec": {
+              ContribMakeCodecArgs contribArgs = ContribMakeCodecArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribMakeCodecArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.makeCodec(contribArgs, out);
+               return 0;
+            }
+            case "make-et": {
+              ContribMakeEtArgs contribArgs = ContribMakeEtArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribMakeEtArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.makeEt(contribArgs, out);
+               return 0;
+            }
             case "tests-adama": {
               ContribTestsAdamaArgs contribArgs = ContribTestsAdamaArgs.from(args, 2);
               if (contribArgs == null) {
@@ -507,56 +560,6 @@ public class MainRouter {
                }
                YesOrError out = output.makeYesOrError();
                contribHandler.testsRxhtml(contribArgs, out);
-               return 0;
-            }
-            case "make-codec": {
-              ContribMakeCodecArgs contribArgs = ContribMakeCodecArgs.from(args, 2);
-              if (contribArgs == null) {
-                ContribMakeCodecArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               contribHandler.makeCodec(contribArgs, out);
-               return 0;
-            }
-            case "make-api": {
-              ContribMakeApiArgs contribArgs = ContribMakeApiArgs.from(args, 2);
-              if (contribArgs == null) {
-                ContribMakeApiArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               contribHandler.makeApi(contribArgs, out);
-               return 0;
-            }
-            case "bundle-js": {
-              ContribBundleJsArgs contribArgs = ContribBundleJsArgs.from(args, 2);
-              if (contribArgs == null) {
-                ContribBundleJsArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               contribHandler.bundleJs(contribArgs, out);
-               return 0;
-            }
-            case "make-et": {
-              ContribMakeEtArgs contribArgs = ContribMakeEtArgs.from(args, 2);
-              if (contribArgs == null) {
-                ContribMakeEtArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               contribHandler.makeEt(contribArgs, out);
-               return 0;
-            }
-            case "copyright": {
-              ContribCopyrightArgs contribArgs = ContribCopyrightArgs.from(args, 2);
-              if (contribArgs == null) {
-                ContribCopyrightArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               contribHandler.copyright(contribArgs, out);
                return 0;
             }
             case "--help":
@@ -653,6 +656,16 @@ public class MainRouter {
             return 1;
           }
           switch (args[1]) {
+            case "attach": {
+              DocumentAttachArgs documentArgs = DocumentAttachArgs.from(args, 2);
+              if (documentArgs == null) {
+                DocumentAttachArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               documentHandler.attach(documentArgs, out);
+               return 0;
+            }
             case "connect": {
               DocumentConnectArgs documentArgs = DocumentConnectArgs.from(args, 2);
               if (documentArgs == null) {
@@ -693,16 +706,6 @@ public class MainRouter {
                documentHandler.list(documentArgs, out);
                return 0;
             }
-            case "attach": {
-              DocumentAttachArgs documentArgs = DocumentAttachArgs.from(args, 2);
-              if (documentArgs == null) {
-                DocumentAttachArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               documentHandler.attach(documentArgs, out);
-               return 0;
-            }
             case "--help":
             case "-h":
             case "help": {
@@ -721,16 +724,6 @@ public class MainRouter {
             return 1;
           }
           switch (args[1]) {
-            case "map": {
-              DomainMapArgs domainArgs = DomainMapArgs.from(args, 2);
-              if (domainArgs == null) {
-                DomainMapArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               domainHandler.map(domainArgs, out);
-               return 0;
-            }
             case "list": {
               DomainListArgs domainArgs = DomainListArgs.from(args, 2);
               if (domainArgs == null) {
@@ -739,6 +732,16 @@ public class MainRouter {
                }
                JsonOrError out = output.makeJsonOrError();
                domainHandler.list(domainArgs, out);
+               return 0;
+            }
+            case "map": {
+              DomainMapArgs domainArgs = DomainMapArgs.from(args, 2);
+              if (domainArgs == null) {
+                DomainMapArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               domainHandler.map(domainArgs, out);
                return 0;
             }
             case "unmap": {
@@ -769,14 +772,14 @@ public class MainRouter {
             return 1;
           }
           switch (args[1]) {
-            case "rxhtml": {
-              FrontendRxhtmlArgs frontendArgs = FrontendRxhtmlArgs.from(args, 2);
+            case "dev-server": {
+              FrontendDevServerArgs frontendArgs = FrontendDevServerArgs.from(args, 2);
               if (frontendArgs == null) {
-                FrontendRxhtmlArgs.help();
+                FrontendDevServerArgs.help();
                 return 1;
                }
                YesOrError out = output.makeYesOrError();
-               frontendHandler.rxhtml(frontendArgs, out);
+               frontendHandler.devServer(frontendArgs, out);
                return 0;
             }
             case "edhtml": {
@@ -789,14 +792,14 @@ public class MainRouter {
                frontendHandler.edhtml(frontendArgs, out);
                return 0;
             }
-            case "dev-server": {
-              FrontendDevServerArgs frontendArgs = FrontendDevServerArgs.from(args, 2);
+            case "rxhtml": {
+              FrontendRxhtmlArgs frontendArgs = FrontendRxhtmlArgs.from(args, 2);
               if (frontendArgs == null) {
-                FrontendDevServerArgs.help();
+                FrontendRxhtmlArgs.help();
                 return 1;
                }
                YesOrError out = output.makeYesOrError();
-               frontendHandler.devServer(frontendArgs, out);
+               frontendHandler.rxhtml(frontendArgs, out);
                return 0;
             }
             case "--help":
@@ -837,6 +840,16 @@ public class MainRouter {
                servicesHandler.backend(servicesArgs, out);
                return 0;
             }
+            case "dashboards": {
+              ServicesDashboardsArgs servicesArgs = ServicesDashboardsArgs.from(args, 2);
+              if (servicesArgs == null) {
+                ServicesDashboardsArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               servicesHandler.dashboards(servicesArgs, out);
+               return 0;
+            }
             case "frontend": {
               ServicesFrontendArgs servicesArgs = ServicesFrontendArgs.from(args, 2);
               if (servicesArgs == null) {
@@ -867,16 +880,6 @@ public class MainRouter {
                servicesHandler.solo(servicesArgs, out);
                return 0;
             }
-            case "dashboards": {
-              ServicesDashboardsArgs servicesArgs = ServicesDashboardsArgs.from(args, 2);
-              if (servicesArgs == null) {
-                ServicesDashboardsArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               servicesHandler.dashboards(servicesArgs, out);
-               return 0;
-            }
             case "--help":
             case "-h":
             case "help": {
@@ -887,6 +890,16 @@ public class MainRouter {
               System.err.println("Invalid subcommand '" + args[1] + "' of command 'services'");
               System.err.println("See 'adama services help' for a list of subcommands.");
               return 1;
+          }
+          case "dumpenv": {
+            DumpenvArgs mainArgs = DumpenvArgs.from(args, 1);
+            if (mainArgs == null) {
+              DumpenvArgs.help();
+              return 1;
+             }
+             YesOrError out = output.makeYesOrError();
+             handler.dumpenv(mainArgs , out);
+             return 0;
           }
           case "init": {
             InitArgs mainArgs = InitArgs.from(args, 1);
@@ -906,16 +919,6 @@ public class MainRouter {
              }
              YesOrError out = output.makeYesOrError();
              handler.stress(mainArgs , out);
-             return 0;
-          }
-          case "dumpenv": {
-            DumpenvArgs mainArgs = DumpenvArgs.from(args, 1);
-            if (mainArgs == null) {
-              DumpenvArgs.help();
-              return 1;
-             }
-             YesOrError out = output.makeYesOrError();
-             handler.dumpenv(mainArgs , out);
              return 0;
           }
           default:

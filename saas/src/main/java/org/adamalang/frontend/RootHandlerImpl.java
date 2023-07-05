@@ -27,6 +27,7 @@ import org.adamalang.mysql.model.*;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.transforms.SpacePolicyLocator;
@@ -575,7 +576,27 @@ public class RootHandlerImpl implements RootHandler {
       Role role = Role.from(request.role);
       if (request.policy.canUserSetRole(request.who)) {
         Spaces.setRole(nexus.database, request.policy.id, request.userId, role);
-        responder.complete();
+        SpaceInfo updatedSpaceInfo = Spaces.getSpaceInfo(nexus.database, request.space);
+        JsonStreamWriter syncDevelopers = new JsonStreamWriter();
+        syncDevelopers.beginObject();
+        syncDevelopers.writeObjectFieldIntro("developers");
+        syncDevelopers.beginArray();
+        for (Integer devId : updatedSpaceInfo.developers) {
+          syncDevelopers.writeNtPrincipal(new NtPrincipal("" + devId, "adama"));
+        }
+        syncDevelopers.endArray();
+        syncDevelopers.endObject();
+        nexus.adama.directSend(request.who, "ide", request.space, null, "set_developers_from_frontend", syncDevelopers.toString(), new Callback<Integer>() {
+          @Override
+          public void success(Integer value) {
+            responder.complete();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            responder.error(ex);
+          }
+        });
       } else {
         throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_ROLE_NO_PERMISSION_TO_EXECUTE);
       }

@@ -12,7 +12,7 @@ import org.adamalang.cli.router.Arguments.*;
 import org.adamalang.cli.runtime.Output.*;
 
 public interface FrontendHandler {
-  void rxhtml(FrontendRxhtmlArgs args, YesOrError output) throws Exception;
-  void edhtml(FrontendEdhtmlArgs args, YesOrError output) throws Exception;
   void devServer(FrontendDevServerArgs args, YesOrError output) throws Exception;
+  void edhtml(FrontendEdhtmlArgs args, YesOrError output) throws Exception;
+  void rxhtml(FrontendRxhtmlArgs args, YesOrError output) throws Exception;
 }

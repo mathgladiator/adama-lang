@@ -12,7 +12,7 @@ import org.adamalang.cli.router.Arguments.*;
 import org.adamalang.cli.runtime.Output.*;
 
 public interface DomainHandler {
-  void map(DomainMapArgs args, YesOrError output) throws Exception;
   void list(DomainListArgs args, JsonOrError output) throws Exception;
+  void map(DomainMapArgs args, YesOrError output) throws Exception;
   void unmap(DomainUnmapArgs args, YesOrError output) throws Exception;
 }

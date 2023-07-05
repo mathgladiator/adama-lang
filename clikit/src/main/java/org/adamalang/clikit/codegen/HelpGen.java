@@ -8,6 +8,7 @@
  */
 package org.adamalang.clikit.codegen;
 
+import jdk.jshell.execution.Util;
 import org.adamalang.clikit.model.Command;
 import org.adamalang.clikit.model.Common;
 import org.adamalang.clikit.model.Group;
@@ -16,7 +17,7 @@ import java.util.Locale;
 
 public class HelpGen {
     /** Generates the help for each command and group **/
-    public static String generate(Group[] groups, String packageName) {
+    public static String generate(Group[] groups, Command[] commands, String packageName) {
         StringBuilder sb = new StringBuilder();
         sb.append("package ").append(packageName).append(";\n");
         sb.append("import org.adamalang.cli.Util;\n");
@@ -30,8 +31,12 @@ public class HelpGen {
         sb.append("    System.out.println();\n");
         sb.append("    System.out.println(Util.prefix(\"SUBCOMMANDS:\", Util.ANSI.Yellow));\n");
         for (Group group : groups) {
-            sb.append("    System.out.println(\"    \" + Util.prefix(Util.justifyLeft(\"").append(group.name).append("\", 15), Util.ANSI.Green) + \"").append(Common.escape(group.documentation)).append("\");\n");
+            sb.append("    System.out.println(\"    \" + Util.prefix(Util.justifyLeft(\"").append(group.name).append("\", 15), Util.ANSI.Cyan) + \"").append(Common.escape(group.documentation)).append("\");\n");
         }
+        for (Command command : commands) {
+            sb.append("    System.out.println(\"    \" + Util.prefix(Util.justifyLeft(\"").append(command.name).append("\", 15), Util.ANSI.Green) + ").append("\"").append(Common.escape(command.documentation)).append("\");\n");
+        }
+
         sb.append("  }\n");
         for (Group group : groups) {
             sb.append("  public static void display").append(group.capName).append("Help() {\n");

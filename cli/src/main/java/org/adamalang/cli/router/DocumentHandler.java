@@ -12,9 +12,9 @@ import org.adamalang.cli.router.Arguments.*;
 import org.adamalang.cli.runtime.Output.*;
 
 public interface DocumentHandler {
+  void attach(DocumentAttachArgs args, YesOrError output) throws Exception;
   void connect(DocumentConnectArgs args, YesOrError output) throws Exception;
   void create(DocumentCreateArgs args, YesOrError output) throws Exception;
   void delete(DocumentDeleteArgs args, YesOrError output) throws Exception;
   void list(DocumentListArgs args, JsonOrError output) throws Exception;
-  void attach(DocumentAttachArgs args, YesOrError output) throws Exception;
 }

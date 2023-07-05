@@ -189,6 +189,7 @@ public class FrontendHttpHandler implements HttpHandler {
         }
         return;
       } catch (Exception ex) {
+        LOGGER.error("failed-find-domain: " + host, ex);
         callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_UNKNOWN_EXCEPTION_DOMAIN_LOOKUP, ex, EXLOGGER));
       }
     }

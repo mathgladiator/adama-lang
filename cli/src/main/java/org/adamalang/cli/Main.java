@@ -20,7 +20,7 @@ public class Main {
     try {
       Config config = new Config(preFilteredArgs);
       if (preFilteredArgs.length == 0) {
-        rootHelp();
+        NewMain.main(preFilteredArgs);
         return;
       }
       String[] args = config.argsForTool;
@@ -80,10 +80,8 @@ public class Main {
             System.err.println(entry.getKey() + "=" + entry.getValue());
           }
           return;
-        case "help":
-          rootHelp();
-          return;
       }
+      NewMain.main(args);
     } catch (Exception ex) {
       if (ex instanceof ErrorCodeException) {
         System.err.println(Util.prefix("[ERROR]", Util.ANSI.Red));
@@ -94,33 +92,5 @@ public class Main {
         ex.printStackTrace();
       }
     }
-  }
-
-  public static void rootHelp() {
-    System.out.println(Util.prefix("Interacts with the Adama Platform", Util.ANSI.Green));
-    System.out.println();
-    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("adama", Util.ANSI.Green) + " " + Util.prefix("[SUBCOMMAND]", Util.ANSI.Magenta));
-    System.out.println();
-    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
-    System.out.println();
-    System.out.println(Util.prefix("SUBCOMMANDS:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("account", Util.ANSI.Green) + "           Manage your account");
-    System.out.println("    " + Util.prefix("authority", Util.ANSI.Green) + "         Manage authorities");
-    System.out.println("    " + Util.prefix("aws", Util.ANSI.Green) + "               Tools for working with AWS");
-    System.out.println("    " + Util.prefix("business", Util.ANSI.Green) + "          Business tools to support developers");
-    System.out.println("    " + Util.prefix("code", Util.ANSI.Green) + "              Local developer tools");
-    System.out.println("    " + Util.prefix("contrib", Util.ANSI.Green) + "           Open source contributor tools");
-    System.out.println("    " + Util.prefix("database", Util.ANSI.Green) + "          Prepare database for usage");
-    System.out.println("    " + Util.prefix("debug", Util.ANSI.Green) + "             Debug tool for production");
-    System.out.println("    " + Util.prefix("document", Util.ANSI.Green) + "          Interact with documents");
-    System.out.println("    " + Util.prefix("domains", Util.ANSI.Green) + "           Manage Domains");
-    System.out.println("    " + Util.prefix("frontend", Util.ANSI.Green) + "          Frontend tools (rxhtml)");
-    System.out.println("    " + Util.prefix("init", Util.ANSI.Green) + "              Initializes the config with a valid token");
-    System.out.println("    " + Util.prefix("service", Util.ANSI.Green) + "           Launch a service");
-    System.out.println("    " + Util.prefix("space", Util.ANSI.Green) + "             Manages spaces");
-    System.out.println("    " + Util.prefix("stress", Util.ANSI.Green) + "            Stress test using the canary tool");
-    System.out.println("    " + Util.prefix("dumpenv", Util.ANSI.Yellow) + "          Dump your environment variables");
   }
 }

@@ -14,6 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -64,6 +65,7 @@ public class Command {
             Command command = new Command(commandName, groupDocumentation, outputArg, danger, argumentList);
             commandArray.add(command);
         }
+        commandArray.sort(Comparator.comparing(a -> a.name));
         return commandArray.toArray(new Command[commandArray.size()]);
     }
 
@@ -98,6 +100,7 @@ public class Command {
             Command command = new Command(commandName, groupDocumentation, outputArg, danger, argumentList);
             commandArray.add(command);
         }
+        commandArray.sort(Comparator.comparing(a -> a.name));
         return commandArray.toArray(new Command[commandArray.size()]);
     }
 }

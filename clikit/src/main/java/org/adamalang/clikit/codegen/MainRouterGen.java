@@ -31,6 +31,9 @@ public class MainRouterGen {
         sb.append("        return 1;\n");
         sb.append("      }\n");
         sb.append("      switch (args[0]) {\n");
+        sb.append("        case \"help\":\n");
+        sb.append("          Help.displayRootHelp();\n");
+        sb.append("          return 1;\n");
         for (Group group : groupList) {
             String handlerClass = group.capName + "Handler";
             String handlerObj = group.name + "Handler";
