@@ -51,13 +51,121 @@ public class ConnectionRouter {
         public void execute() throws Exception {
           session.activity();
           switch (method) {
-            case "machine/start": {
-              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_MachineStart.start();
-              MachineStartRequest.resolve(session, nexus, request, new Callback<>() {
+            case "global/machine/start": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalMachineStart.start();
+              GlobalMachineStartRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
-                public void success(MachineStartRequest resolved) {
+                public void success(GlobalMachineStartRequest resolved) {
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new MachineStartResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/finder/find": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalFinderFind.start();
+              GlobalFinderFindRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalFinderFindRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new FoundResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/finder/findbind": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalFinderFindbind.start();
+              GlobalFinderFindbindRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalFinderFindbindRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new FoundResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/finder/free": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalFinderFree.start();
+              GlobalFinderFreeRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalFinderFreeRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new VoidResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/finder/delete": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalFinderDelete.start();
+              GlobalFinderDeleteRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalFinderDeleteRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new VoidResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/finder/back-up": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalFinderBackUp.start();
+              GlobalFinderBackUpRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalFinderBackUpRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new VoidResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/finder/list": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalFinderList.start();
+              GlobalFinderListRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalFinderListRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new KeyidResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {

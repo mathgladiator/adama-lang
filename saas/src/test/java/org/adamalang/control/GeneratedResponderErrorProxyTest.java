@@ -36,7 +36,10 @@ public class GeneratedResponderErrorProxyTest {
         errorCount.addAndGet(ex.code);
       }
     };
-    new MachineStartResponder(responder).error(new ErrorCodeException(1));
-    Assert.assertEquals(1, errorCount.get());
+    new FoundResponder(responder).error(new ErrorCodeException(1));
+    new KeyidResponder(responder).error(new ErrorCodeException(2));
+    new MachineStartResponder(responder).error(new ErrorCodeException(3));
+    new VoidResponder(responder).error(new ErrorCodeException(4));
+    Assert.assertEquals(10, errorCount.get());
   }
 }

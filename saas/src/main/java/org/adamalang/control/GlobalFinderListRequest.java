@@ -15,28 +15,28 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
-/** Start the service up */
-public class MachineStartRequest {
-  public final String machineIdentity;
-  public final String role;
+/** List the keys on the given machine */
+public class GlobalFinderListRequest {
+  public final String region;
+  public final String machine;
 
-  public MachineStartRequest(final String machineIdentity, final String role) {
-    this.machineIdentity = machineIdentity;
-    this.role = role;
+  public GlobalFinderListRequest(final String region, final String machine) {
+    this.region = region;
+    this.machine = machine;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<MachineStartRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<GlobalFinderListRequest> callback) {
     try {
-      final String machineIdentity = request.getString("machine-identity", true, 9001);
-      final String role = request.getString("role", true, 9002);
-      nexus.executor.execute(new NamedRunnable("machinestart-success") {
+      final String region = request.getString("region", true, 9006);
+      final String machine = request.getString("machine", true, 9005);
+      nexus.executor.execute(new NamedRunnable("globalfinderlist-success") {
         @Override
         public void execute() throws Exception {
-           callback.success(new MachineStartRequest(machineIdentity, role));
+           callback.success(new GlobalFinderListRequest(region, machine));
         }
       });
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(new NamedRunnable("machinestart-error") {
+      nexus.executor.execute(new NamedRunnable("globalfinderlist-error") {
         @Override
         public void execute() throws Exception {
           callback.failure(ece);
@@ -46,5 +46,7 @@ public class MachineStartRequest {
   }
 
   public void logInto(ObjectNode _node) {
+    _node.put("region", region);
+    _node.put("machine", machine);
   }
 }

@@ -8,8 +8,10 @@
  */
 package org.adamalang.control;
 
-/** generated request type for machine/start */
-public class ClientMachineStartRequest {
-  public String machineIdentity;
-  public String role;
+/** generated request type for global/finder/free */
+public class ClientGlobalFinderFreeRequest {
+  public String space;
+  public String key;
+  public String region;
+  public String machine;
 }

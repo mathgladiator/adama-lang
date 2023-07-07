@@ -35,11 +35,166 @@
         <field name="host-key"/>
     </responder>
 
-    <method name="machine/start" responder="machine-start">
+    <method name="global/machine/start" responder="machine-start">
         <parameter name="machine-identity"/>
         <parameter name="role"/>
         <documentation>
             Start the service up
         </documentation>
     </method>
+
+    <parameter-definition name="space" type="string" missing-error="9003" logged="true" normalize="true">
+        <documentation>
+            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
+            denote the name of that collection.
+
+            Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--'
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="key" type="string" missing-error="9004" logged="true">
+        <documentation>
+            Within a space, documents are organized within a map and the 'key' parameter will uniquely identify
+            documents.
+
+            Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="machine" type="string" missing-error="9005" logged="true">
+        <documentation>
+            The machine to bind too
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="region" type="string" missing-error="9006" logged="true">
+        <documentation>
+            The region to bind too
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="archive-key" type="string" missing-error="9007" logged="true">
+        <documentation>
+            The archive key to bind too
+        </documentation>
+    </parameter-definition>
+
+
+    <field-definition name="id" type="long">
+        <documentation>
+            a long id
+        </documentation>
+    </field-definition>
+
+    <field-definition name="location-type" type="int">
+        <documentation>
+            Information about the found results
+        </documentation>
+    </field-definition>
+
+    <field-definition name="archive" type="string">
+        <documentation>
+            The archive containing the backup of the document
+        </documentation>
+    </field-definition>
+
+    <field-definition name="region" type="string">
+        <documentation>
+            The region where the document exists
+        </documentation>
+    </field-definition>
+
+    <field-definition name="machine" type="string">
+        <documentation>
+            The machine the document is located on
+        </documentation>
+    </field-definition>
+
+    <field-definition name="space" type="string">
+        <documentation>
+
+        </documentation>
+    </field-definition>
+
+    <field-definition name="key" type="string">
+        <documentation>
+
+        </documentation>
+    </field-definition>
+
+    <responder name="void">
+    </responder>
+
+    <responder name="found">
+        <field name="id" />
+        <field name="location-type" />
+        <field name="archive" />
+        <field name="region" />
+        <field name="machine" />
+    </responder>
+
+    <responder name="keyid" stream="true">
+        <field name="id" />
+        <field name="space" />
+        <field name="key" />
+    </responder>
+
+    <method name="global/finder/find" responder="found">
+        <documentation>
+            Find the host for a given document
+        </documentation>
+        <parameter name="space" />
+        <parameter name="key" />
+    </method>
+
+    <method name="global/finder/findbind" responder="found">
+        <documentation>
+            Find the host, and if not bound then take possession
+        </documentation>
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="region" />
+        <parameter name="machine" />
+    </method>
+
+    <method name="global/finder/free" responder="void">
+        <documentation>
+            Free the binding from the given machine and region
+        </documentation>
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="region" />
+        <parameter name="machine" />
+    </method>
+
+    <method name="global/finder/delete" responder="void">
+        <documentation>
+            Delete the document from the finder
+        </documentation>
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="region" />
+        <parameter name="machine" />
+    </method>
+
+    <method name="global/finder/back-up" responder="void">
+        <documentation>
+            Set the archive key
+        </documentation>
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="region" />
+        <parameter name="machine" />
+        <parameter name="archive-key" />
+    </method>
+
+    <method name="global/finder/list" responder="keyid">
+        <documentation>
+            List the keys on the given machine
+        </documentation>
+        <parameter name="region" />
+        <parameter name="machine" />
+    </method>
+
+
 </api>

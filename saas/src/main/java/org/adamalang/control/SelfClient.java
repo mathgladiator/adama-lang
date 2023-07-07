@@ -22,12 +22,75 @@ private final MultiWebClientRetryPool pool;
     this.pool = pool;
   }
 
-  /** machine/start */
-  public void machineStart(ClientMachineStartRequest request, Callback<ClientMachineStartResponse> callback) {
+  /** global/machine/start */
+  public void globalMachineStart(ClientGlobalMachineStartRequest request, Callback<ClientMachineStartResponse> callback) {
     ObjectNode node = Json.newJsonObject();
-    node.put("method", "machine/start");
+    node.put("method", "global/machine/start");
     node.put("machine-identity", request.machineIdentity);
     node.put("role", request.role);
     pool.requestResponse(node, (obj) -> new ClientMachineStartResponse(obj), callback);
+  }
+
+  /** global/finder/find */
+  public void globalFinderFind(ClientGlobalFinderFindRequest request, Callback<ClientFoundResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/finder/find");
+    node.put("space", request.space);
+    node.put("key", request.key);
+    pool.requestResponse(node, (obj) -> new ClientFoundResponse(obj), callback);
+  }
+
+  /** global/finder/findbind */
+  public void globalFinderFindbind(ClientGlobalFinderFindbindRequest request, Callback<ClientFoundResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/finder/findbind");
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestResponse(node, (obj) -> new ClientFoundResponse(obj), callback);
+  }
+
+  /** global/finder/free */
+  public void globalFinderFree(ClientGlobalFinderFreeRequest request, Callback<ClientVoidResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/finder/free");
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestResponse(node, (obj) -> new ClientVoidResponse(obj), callback);
+  }
+
+  /** global/finder/delete */
+  public void globalFinderDelete(ClientGlobalFinderDeleteRequest request, Callback<ClientVoidResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/finder/delete");
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestResponse(node, (obj) -> new ClientVoidResponse(obj), callback);
+  }
+
+  /** global/finder/back-up */
+  public void globalFinderBackUp(ClientGlobalFinderBackUpRequest request, Callback<ClientVoidResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/finder/back-up");
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    node.put("archive-key", request.archiveKey);
+    pool.requestResponse(node, (obj) -> new ClientVoidResponse(obj), callback);
+  }
+
+  /** global/finder/list */
+  public void globalFinderList(ClientGlobalFinderListRequest request, Stream<ClientKeyidResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/finder/list");
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestStream(node, (obj) -> new ClientKeyidResponse(obj), streamback);
   }
 }

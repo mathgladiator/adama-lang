@@ -11,7 +11,19 @@ package org.adamalang.control;
 import org.adamalang.connection.Session;
 
 public interface RootHandler {
-  public void handle(Session session, MachineStartRequest request, MachineStartResponder responder);
+  public void handle(Session session, GlobalMachineStartRequest request, MachineStartResponder responder);
+
+  public void handle(Session session, GlobalFinderFindRequest request, FoundResponder responder);
+
+  public void handle(Session session, GlobalFinderFindbindRequest request, FoundResponder responder);
+
+  public void handle(Session session, GlobalFinderFreeRequest request, VoidResponder responder);
+
+  public void handle(Session session, GlobalFinderDeleteRequest request, VoidResponder responder);
+
+  public void handle(Session session, GlobalFinderBackUpRequest request, VoidResponder responder);
+
+  public void handle(Session session, GlobalFinderListRequest request, KeyidResponder responder);
 
   public void disconnect();
 
