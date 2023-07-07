@@ -120,7 +120,7 @@ public class Environment {
       return selfType;
     }
     if (parent != null) {
-      return parent.selfType;
+      return parent.getSelfType();
     }
     return null;
   }

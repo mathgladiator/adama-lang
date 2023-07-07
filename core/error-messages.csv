@@ -645,6 +645,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Return_ShouldReturnButDoesnt_failure.a,1,2,1,9,"The return statement expected an expression of type `int` (ReturnFlow)"
 ./test_code/Scope_CantRedefineChildScope_failure.a,3,4,3,10,"Variable 'z' was already defined (DefineVariable)"
 ./test_code/Scope_ForEachRedefine_failure.a,2,2,3,3,"The variable 'z' is already defined (ForEach)"
+./test_code/Self_Outside_failure.a,1,10,1,15,"@self requires being inside a record (SELF)"
 ./test_code/Service_AlreadyExists_failure.a,8,0,15,1,"'internal' was already defined as an aspect within the service. (ServiceDefine)"
 ./test_code/Service_AlreadyExists_failure.a,8,0,15,1,"'send' was already defined as a method within the service. (ServiceDefine)"
 ./test_code/Service_AlreadyExists_failure.a,16,0,18,1,"The service 'sms' was already defined. (DocumentDefine)"

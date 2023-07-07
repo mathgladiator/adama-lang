@@ -35,9 +35,9 @@ public class SelfConstant extends Expression {
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     TyType selfType = environment.getSelfType();
     if (selfType != null) {
-      environment.mustBeComputeContext(this);
-      environment.useSpecial(selfType, "__this");
-      return selfType;
+      TyType resolvedType = environment.rules.Resolve(selfType, false);
+      environment.useSpecial(resolvedType, "__this");
+      return resolvedType;
     } else {
       environment.document.createError(this, "@self requires being inside a record", "SELF");
       return null;

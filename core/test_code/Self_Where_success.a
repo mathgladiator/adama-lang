@@ -1,0 +1,10 @@
+record Other {
+  int c;
+}
+
+table<Other> others;
+
+record R {
+  int x;
+  bubble b = iterate others where c == @self.x;
+}

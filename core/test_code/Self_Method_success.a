@@ -1,0 +1,27 @@
+record R {
+  int x;
+
+  method double_x() {
+    @self.x *= 2;
+  }
+}
+
+message M {
+  int x;
+
+  method double_of_x() -> int {
+    return @self.x * 2;
+  }
+}
+
+public R r;
+public int mx;
+
+@construct {
+  r.x = 100;
+  r.double_x();
+
+  M m;
+  m.x = 100;
+  mx = m.double_of_x();
+}

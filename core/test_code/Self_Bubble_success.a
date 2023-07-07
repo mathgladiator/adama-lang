@@ -1,0 +1,17 @@
+
+procedure double_x(R rr) -> int readonly {
+  return rr.x * 2;
+}
+
+record R {
+  int x;
+
+  bubble dx = double_x(@self);
+  public formula dx2 = double_x(@self);
+}
+
+public R r;
+
+@construct {
+  r.x = 100;
+}
