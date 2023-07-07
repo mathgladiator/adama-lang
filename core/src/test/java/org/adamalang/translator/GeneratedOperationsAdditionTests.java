@@ -482,10 +482,12 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -498,7 +500,7 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -5095,10 +5097,12 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -5111,7 +5115,7 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -5675,10 +5679,12 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -5691,7 +5697,7 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -5723,6 +5729,7 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static String[] __INDEX_COLUMNS_R = new String[] {\"r0\"};");
     gold.append("\n  private class RTxR extends RxRecordBase<RTxR> {");
+    gold.append("\n    private final RTxR __this;");
     gold.append("\n    private final RxInt32 r0;");
     gold.append("\n    private final RxInt64 r1;");
     gold.append("\n    private final RxDouble r2;");
@@ -5731,6 +5738,7 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n    private final RxInt32 id;");
     gold.append("\n    private RTxR(RxParent __owner) {");
     gold.append("\n      super(__owner);");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      r0 = new RxInt32(this, 0);");
     gold.append("\n      r1 = new RxInt64(this, 0L);");
     gold.append("\n      r2 = new RxDouble(this, 0.0);");
@@ -5955,6 +5963,7 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTx_AnonObjConvert_0 extends NtMessageBase {");
+    gold.append("\n    private final RTx_AnonObjConvert_0 __this;");
     gold.append("\n    private int r0 = 0;");
     gold.append("\n    private long r1 = 0L;");
     gold.append("\n    private double r2 = 0.0;");
@@ -5974,6 +5983,7 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_0(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -6017,8 +6027,9 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(rS);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx_AnonObjConvert_0() {}");
+    gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_0(int r0, long r1, double r2, NtComplex r3, String rS) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.r0 = r0;");
     gold.append("\n      this.r1 = r1;");
     gold.append("\n      this.r2 = r2;");

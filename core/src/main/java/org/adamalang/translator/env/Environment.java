@@ -36,6 +36,7 @@ public class Environment {
   private final HashMap<String, TyType> variables;
   private TyType returnType;
   private TyType caseType;
+  private TyType selfType;
   private Function<String, TyType> trap = null;
   private BiConsumer<String, TyType> watch = null;
   private HashMap<String, TyType> specialConstants;
@@ -49,6 +50,7 @@ public class Environment {
     this.parent = parent;
     returnType = null;
     caseType = null;
+    selfType = null;
     if (parent != null) {
       rules = parent.rules;
       codeCoverageTracker = parent.codeCoverageTracker;
@@ -111,6 +113,20 @@ public class Environment {
     if (parent != null) {
       parent.useSpecial(type, name);
     }
+  }
+
+  public TyType getSelfType() {
+    if (selfType != null) {
+      return selfType;
+    }
+    if (parent != null) {
+      return parent.selfType;
+    }
+    return null;
+  }
+
+  public void setSelfType(TyType selfType) {
+    this.selfType = selfType;
   }
 
   /** when we need to create a variable, let's make it globally unique */

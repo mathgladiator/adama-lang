@@ -52,10 +52,6 @@ public class Main {
         case "document":
           Documents.execute(config, next);
           return;
-        case "domain":
-        case "domains":
-          Domains.execute(config, next);
-          return;
         case "frontend":
           Frontend.execute(config, next);
           return;

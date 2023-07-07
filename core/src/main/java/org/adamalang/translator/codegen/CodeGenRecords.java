@@ -192,6 +192,7 @@ public class CodeGenRecords {
   public static void writeCommonBetweenRecordAndRoot(final StructureStorage storage, final StringBuilderWithTabs classConstructorX, final StringBuilderWithTabs classLinker, final StringBuilderWithTabs classFields, final Environment environment, final boolean injectRootObject) {
     if (injectRootObject) {
       classConstructorX.append("super(__owner);").writeNewline();
+      classConstructorX.append("this.__this = this;").writeNewline();
     }
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;

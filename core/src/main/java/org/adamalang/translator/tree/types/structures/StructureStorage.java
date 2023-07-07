@@ -17,7 +17,9 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.ReflectionSource;
+import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.Watcher;
+import org.adamalang.translator.tree.types.natives.TyNativeRef;
 import org.adamalang.translator.tree.types.topo.TypeChecker;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
@@ -68,6 +70,12 @@ public class StructureStorage extends DocumentPosition {
     ingest(openBraceToken);
   }
 
+  public void setSelf(TyType ty) {
+    checker.define(Token.WRAP("__this"), Collections.emptySet(), (env) -> {
+      env.setSelfType(ty);
+    });
+  }
+
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
     writer.beginObject();
     for (FieldDefinition fd : fieldsByOrder) {
@@ -96,8 +104,6 @@ public class StructureStorage extends DocumentPosition {
 
     writer.endObject();
   }
-
-
 
   public void add(final BubbleDefinition bd) {
     addCommon(bd, FreeEnvironment.root(), checker);

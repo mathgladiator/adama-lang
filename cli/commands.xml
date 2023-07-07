@@ -269,13 +269,12 @@
 
         </command>
 
-        <command name="list">
+        <command name="list" output="json">
             <documentation>
                 List spaces available to your account
             </documentation>
             <arg name="marker" default="" />
             <arg name="limit" default="100" />
-
         </command>
 
         <command name="usage">

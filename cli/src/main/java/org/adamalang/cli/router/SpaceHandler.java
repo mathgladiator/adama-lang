@@ -19,7 +19,7 @@ public interface SpaceHandler {
   void encryptSecret(SpaceEncryptSecretArgs args, YesOrError output) throws Exception;
   void generateKey(SpaceGenerateKeyArgs args, YesOrError output) throws Exception;
   void getRxhtml(SpaceGetRxhtmlArgs args, YesOrError output) throws Exception;
-  void list(SpaceListArgs args, YesOrError output) throws Exception;
+  void list(SpaceListArgs args, JsonOrError output) throws Exception;
   void reflect(SpaceReflectArgs args, YesOrError output) throws Exception;
   void setRole(SpaceSetRoleArgs args, YesOrError output) throws Exception;
   void setRxhtml(SpaceSetRxhtmlArgs args, YesOrError output) throws Exception;

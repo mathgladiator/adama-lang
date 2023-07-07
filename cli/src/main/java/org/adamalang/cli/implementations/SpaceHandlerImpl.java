@@ -126,11 +126,10 @@ public class SpaceHandlerImpl implements SpaceHandler {
     }
 
     @Override
-    public void list(Arguments.SpaceListArgs args, Output.YesOrError output) throws Exception {
+    public void list(Arguments.SpaceListArgs args, Output.JsonOrError output) throws Exception {
         Config config = args.config;
         String identity = config.get_string("identity", null);
         int limit = Integer.parseInt(args.limit);
-
         try (WebSocketClient client = new WebSocketClient(config)) {
             try (Connection connection = client.open()) {
                 ObjectNode request = Json.newJsonObject();
@@ -141,7 +140,7 @@ public class SpaceHandlerImpl implements SpaceHandler {
                 }
                 request.put("limit", limit);
                 connection.stream(request, (cId, response) -> {
-
+                    output.add(response);
                 });
             }
         }

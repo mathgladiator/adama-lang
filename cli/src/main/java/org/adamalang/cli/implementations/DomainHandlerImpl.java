@@ -46,8 +46,8 @@ public class DomainHandlerImpl implements DomainHandler {
                 if (cert != null) {
                     request.put("certificate", cert);
                 }
-                ObjectNode response = connection.execute(request);
-                System.err.println(response.toPrettyString());
+                connection.execute(request);
+                output.out();
             }
         }
     }
@@ -61,8 +61,9 @@ public class DomainHandlerImpl implements DomainHandler {
                 request.put("method", "domain/list");
                 request.put("identity", identity);
                 connection.stream(request, (_k, item) -> {
-                    System.err.println(item.toPrettyString());
+                    output.add(item);
                 });
+                output.out();
             }
         }
     }
@@ -76,8 +77,8 @@ public class DomainHandlerImpl implements DomainHandler {
                 request.put("method", "domain/unmap");
                 request.put("identity", identity);
                 request.put("domain", args.domain);
-                ObjectNode response = connection.execute(request);
-                System.err.println(response.toPrettyString());
+                connection.execute(request);
+                output.out();
             }
         }
     }

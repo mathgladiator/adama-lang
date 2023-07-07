@@ -567,10 +567,12 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -583,7 +585,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -614,6 +616,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTx_AnonObjConvert_0 extends NtMessageBase {");
+    gold.append("\n    private final RTx_AnonObjConvert_0 __this;");
     gold.append("\n    private String message = \"\";");
     gold.append("\n    private String phone = \"\";");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -624,6 +627,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_0(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -652,8 +656,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(phone);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx_AnonObjConvert_0() {}");
+    gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_0(String message, String phone) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.message = message;");
     gold.append("\n      this.phone = phone;");
     gold.append("\n    }");
@@ -1281,10 +1286,12 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -1297,7 +1304,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -1328,6 +1335,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxSendRequest extends NtMessageBase {");
+    gold.append("\n    private final RTxSendRequest __this;");
     gold.append("\n    private String message = \"\";");
     gold.append("\n    private String phone = \"\";");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -1338,6 +1346,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"SendRequest\");");
     gold.append("\n    }");
     gold.append("\n    private RTxSendRequest(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1366,8 +1375,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(phone);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxSendRequest() {}");
+    gold.append("\n    private RTxSendRequest() { __this = this; }");
     gold.append("\n    private RTxSendRequest(String message, String phone) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.message = message;");
     gold.append("\n      this.phone = phone;");
     gold.append("\n    }");
@@ -1412,10 +1422,12 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxSendResponse extends NtMessageBase {");
+    gold.append("\n    private final RTxSendResponse __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"SendResponse\");");
     gold.append("\n    }");
     gold.append("\n    private RTxSendResponse(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1427,7 +1439,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxSendResponse() {}");
+    gold.append("\n    private RTxSendResponse() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTxSendResponse implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -1985,10 +1997,12 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -2001,7 +2015,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -2032,6 +2046,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxEchoRequestAndResponse_0 extends NtMessageBase {");
+    gold.append("\n    private final RTxEchoRequestAndResponse_0 __this;");
     gold.append("\n    private String message = \"\";");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"message\");");
@@ -2039,6 +2054,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"EchoRequestAndResponse_0\");");
     gold.append("\n    }");
     gold.append("\n    private RTxEchoRequestAndResponse_0(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2062,8 +2078,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(message);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxEchoRequestAndResponse_0() {}");
+    gold.append("\n    private RTxEchoRequestAndResponse_0() { __this = this; }");
     gold.append("\n    private RTxEchoRequestAndResponse_0(String message) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.message = message;");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -2750,10 +2767,12 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -2766,7 +2785,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -2797,6 +2816,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxSendRequest extends NtMessageBase {");
+    gold.append("\n    private final RTxSendRequest __this;");
     gold.append("\n    private String message = \"\";");
     gold.append("\n    private String phone = \"\";");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -2807,6 +2827,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"SendRequest\");");
     gold.append("\n    }");
     gold.append("\n    private RTxSendRequest(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2835,8 +2856,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(phone);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxSendRequest() {}");
+    gold.append("\n    private RTxSendRequest() { __this = this; }");
     gold.append("\n    private RTxSendRequest(String message, String phone) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.message = message;");
     gold.append("\n      this.phone = phone;");
     gold.append("\n    }");
@@ -2881,10 +2903,12 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxSendResponse extends NtMessageBase {");
+    gold.append("\n    private final RTxSendResponse __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"SendResponse\");");
     gold.append("\n    }");
     gold.append("\n    private RTxSendResponse(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2896,7 +2920,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxSendResponse() {}");
+    gold.append("\n    private RTxSendResponse() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTxSendResponse implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -3580,10 +3604,12 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -3596,7 +3622,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -3627,6 +3653,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxSendRequest extends NtMessageBase {");
+    gold.append("\n    private final RTxSendRequest __this;");
     gold.append("\n    private String message = \"\";");
     gold.append("\n    private String phone = \"\";");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -3637,6 +3664,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"SendRequest\");");
     gold.append("\n    }");
     gold.append("\n    private RTxSendRequest(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -3665,8 +3693,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(phone);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxSendRequest() {}");
+    gold.append("\n    private RTxSendRequest() { __this = this; }");
     gold.append("\n    private RTxSendRequest(String message, String phone) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.message = message;");
     gold.append("\n      this.phone = phone;");
     gold.append("\n    }");
@@ -3711,10 +3740,12 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxSendResponse extends NtMessageBase {");
+    gold.append("\n    private final RTxSendResponse __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"SendResponse\");");
     gold.append("\n    }");
     gold.append("\n    private RTxSendResponse(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -3726,7 +3757,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxSendResponse() {}");
+    gold.append("\n    private RTxSendResponse() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTxSendResponse implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");

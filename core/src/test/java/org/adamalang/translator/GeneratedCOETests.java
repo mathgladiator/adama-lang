@@ -630,10 +630,12 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -646,7 +648,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -678,10 +680,12 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static String[] __INDEX_COLUMNS_Family = new String[] {};");
     gold.append("\n  private class RTxFamily extends RxRecordBase<RTxFamily> {");
+    gold.append("\n    private final RTxFamily __this;");
     gold.append("\n    private final RxInt32 id;");
     gold.append("\n    private final RxString name;");
     gold.append("\n    private RTxFamily(RxParent __owner) {");
     gold.append("\n      super(__owner);");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      name = new RxString(this, \"\");");
     gold.append("\n      if (__owner instanceof RxTable) {");
@@ -844,11 +848,13 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static String[] __INDEX_COLUMNS_Person = new String[] {\"account\", \"family_id\"};");
     gold.append("\n  private class RTxPerson extends RxRecordBase<RTxPerson> {");
+    gold.append("\n    private final RTxPerson __this;");
     gold.append("\n    private final RxInt32 id;");
     gold.append("\n    private final RxPrincipal account;");
     gold.append("\n    private final RxInt32 family_id;");
     gold.append("\n    private RTxPerson(RxParent __owner) {");
     gold.append("\n      super(__owner);");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      account = new RxPrincipal(this, NtPrincipal.NO_ONE);");
     gold.append("\n      family_id = new RxInt32(this, 0);");

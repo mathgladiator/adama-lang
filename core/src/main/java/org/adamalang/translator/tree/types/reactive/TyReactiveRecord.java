@@ -94,6 +94,7 @@ public class TyReactiveRecord extends TyType implements //
     classConstructor.append("}").writeNewline();
     CodeGenRecords.writeIndexConstant(name, storage, sb, environment);
     sb.append("private class RTx" + name + " extends RxRecordBase<RTx").append(name).append("> {").tabUp().writeNewline();
+    sb.append("private final RTx" + name + " __this;").writeNewline();
     sb.append(classFields.toString());
     sb.append("private RTx" + name + "(RxParent __owner) {");
     final var classConstructorStripped = classConstructor.toString().stripTrailing();

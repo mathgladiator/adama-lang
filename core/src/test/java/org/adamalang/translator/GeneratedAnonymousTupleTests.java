@@ -391,10 +391,12 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -407,7 +409,7 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -438,6 +440,7 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTx_AnonObjConvert_0 extends NtMessageBase {");
+    gold.append("\n    private final RTx_AnonObjConvert_0 __this;");
     gold.append("\n    private int first = 0;");
     gold.append("\n    private int second = 0;");
     gold.append("\n    private int third = 0;");
@@ -451,6 +454,7 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_0(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -484,8 +488,9 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(third);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx_AnonObjConvert_0() {}");
+    gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_0(int first, int second, int third) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.first = first;");
     gold.append("\n      this.second = second;");
     gold.append("\n      this.third = third;");
@@ -536,6 +541,7 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTx_AnonObjConvert_1 extends NtMessageBase {");
+    gold.append("\n    private final RTx_AnonObjConvert_1 __this;");
     gold.append("\n    private String first = \"\";");
     gold.append("\n    private boolean second = false;");
     gold.append("\n    private double third = 0.0;");
@@ -549,6 +555,7 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_1(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -582,8 +589,9 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n      __writer.writeDouble(third);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx_AnonObjConvert_1() {}");
+    gold.append("\n    private RTx_AnonObjConvert_1() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_1(String first, boolean second, double third) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.first = first;");
     gold.append("\n      this.second = second;");
     gold.append("\n      this.third = third;");
@@ -634,6 +642,7 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTx_AnonObjConvert_2 extends NtMessageBase {");
+    gold.append("\n    private final RTx_AnonObjConvert_2 __this;");
     gold.append("\n    private int[] first = new int[]{};");
     gold.append("\n    private boolean second = false;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -646,6 +655,7 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_2(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -687,8 +697,9 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n      __writer.writeBoolean(second);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx_AnonObjConvert_2() {}");
+    gold.append("\n    private RTx_AnonObjConvert_2() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_2(int[] first, boolean second) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.first = first;");
     gold.append("\n      this.second = second;");
     gold.append("\n    }");

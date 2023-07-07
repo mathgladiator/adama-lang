@@ -111,7 +111,7 @@ public class MainRouter {
                 SpaceListArgs.help();
                 return 1;
                }
-               YesOrError out = output.makeYesOrError();
+               JsonOrError out = output.makeJsonOrError();
                spaceHandler.list(spaceArgs, out);
                return 0;
             }

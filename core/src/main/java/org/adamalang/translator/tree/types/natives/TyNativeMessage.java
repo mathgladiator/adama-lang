@@ -70,6 +70,7 @@ public class TyNativeMessage extends TyType implements //
       fields.add(e.getValue());
     }
     sb.append("private static class RTx" + name + " extends NtMessageBase {").tabUp().writeNewline();
+    sb.append("private final RTx" + name + " __this;").writeNewline();
     for (final FieldDefinition fd : fields) {
       sb.append("private ").append(fd.type.getJavaConcreteType(environment)).append(" ").append(fd.name);
       final var fieldType = environment.rules.Resolve(fd.type, false);
@@ -96,7 +97,7 @@ public class TyNativeMessage extends TyType implements //
       dm.writeFunctionJava(sb, environment.scopeStatic());
     }
     { // CLOSE UP THE MESSAGE WITH A CONSTRUCTOR FOR ANONYMOUS OBJECTS
-      sb.append("private RTx" + name + "() {}");
+      sb.append("private RTx" + name + "() { __this = this; }");
       if (storage.fields.size() == 0) {
         sb.tabDown().writeNewline();
       } else {
@@ -111,6 +112,7 @@ public class TyNativeMessage extends TyType implements //
           sb.append(e.getValue().type.getJavaConcreteType(environment)).append(" ").append(e.getKey());
         }
         sb.append(") {").tabUp().writeNewline();
+        sb.append("this.__this = this;").writeNewline();
         var countDownUntilTab = storage.fields.size();
         for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
           sb.append("this.").append(e.getKey()).append(" = ").append(e.getKey()).append(";");

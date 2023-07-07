@@ -404,10 +404,12 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -420,7 +422,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -452,12 +454,14 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static String[] __INDEX_COLUMNS_Thing = new String[] {\"x\", \"y\"};");
     gold.append("\n  private class RTxThing extends RxRecordBase<RTxThing> {");
+    gold.append("\n    private final RTxThing __this;");
     gold.append("\n    private final RxInt32 x;");
     gold.append("\n    private final RxInt32 y;");
     gold.append("\n    private final RxDouble z;");
     gold.append("\n    private final RxInt32 id;");
     gold.append("\n    private RTxThing(RxParent __owner) {");
     gold.append("\n      super(__owner);");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      x = new RxInt32(this, 0);");
     gold.append("\n      y = new RxInt32(this, 0);");
     gold.append("\n      z = new RxDouble(this, 0.0);");
@@ -648,6 +652,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTx_AnonObjConvert_0 extends NtMessageBase {");
+    gold.append("\n    private final RTx_AnonObjConvert_0 __this;");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -658,6 +663,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_0(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -686,8 +692,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx_AnonObjConvert_0() {}");
+    gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_0(int x, int y) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n      this.y = y;");
     gold.append("\n    }");
@@ -732,6 +739,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord6 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord6 __this;");
     gold.append("\n    private int z = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"z\");");
@@ -739,6 +747,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord6(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -762,8 +771,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(z);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord6() {}");
+    gold.append("\n    private RTxAutoMaxRecord6() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord6(int z) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.z = z;");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -796,6 +806,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord16 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord16 __this;");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
     gold.append("\n    private double z = 0.0;");
@@ -809,6 +820,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord16(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -842,8 +854,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeDouble(z);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord16() {}");
+    gold.append("\n    private RTxAutoMaxRecord16() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord16(int x, int y, double z) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n      this.y = y;");
     gold.append("\n      this.z = z;");
@@ -1463,10 +1476,12 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -1479,7 +1494,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -1510,6 +1525,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord4 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord4 __this;");
     gold.append("\n    private int x = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"x\");");
@@ -1517,6 +1533,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord4(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1540,8 +1557,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(x);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord4() {}");
+    gold.append("\n    private RTxAutoMaxRecord4() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord4(int x) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -1574,6 +1592,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord9 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord9 __this;");
     gold.append("\n    private NtMaybe<Integer> x = new NtMaybe<Integer>();");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"x\");");
@@ -1583,6 +1602,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord9(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1614,8 +1634,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord9() {}");
+    gold.append("\n    private RTxAutoMaxRecord9() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord9(NtMaybe<Integer> x) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -1648,6 +1669,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord24 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord24 __this;");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -1658,6 +1680,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord24(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1686,8 +1709,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord24() {}");
+    gold.append("\n    private RTxAutoMaxRecord24() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord24(int x, int y) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n      this.y = y;");
     gold.append("\n    }");
@@ -1721,6 +1745,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord25 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord25 __this;");
     gold.append("\n    private RTxAutoMaxRecord24 x = new RTxAutoMaxRecord24();");
     gold.append("\n    private int y = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -1731,6 +1756,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord25(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1760,8 +1786,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord25() {}");
+    gold.append("\n    private RTxAutoMaxRecord25() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord25(RTxAutoMaxRecord24 x, int y) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n      this.y = y;");
     gold.append("\n    }");
@@ -1795,6 +1822,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord34 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord34 __this;");
     gold.append("\n    private NtMaybe<Integer> x = new NtMaybe<Integer>();");
     gold.append("\n    private int[] y = new int[]{};");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -1809,6 +1837,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord34(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1858,8 +1887,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }__writer.endArray();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord34() {}");
+    gold.append("\n    private RTxAutoMaxRecord34() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord34(NtMaybe<Integer> x, int[] y) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n      this.y = y;");
     gold.append("\n    }");
@@ -1893,6 +1923,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTx_AnonObjConvert_35 extends NtMessageBase {");
+    gold.append("\n    private final RTx_AnonObjConvert_35 __this;");
     gold.append("\n    private int z1 = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"z1\");");
@@ -1900,6 +1931,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_35(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1923,8 +1955,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(z1);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx_AnonObjConvert_35() {}");
+    gold.append("\n    private RTx_AnonObjConvert_35() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_35(int z1) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.z1 = z1;");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -1963,6 +1996,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord42 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord42 __this;");
     gold.append("\n    private NtMaybe<RTx_AnonObjConvert_35> x = new NtMaybe<RTx_AnonObjConvert_35>();");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"x\");");
@@ -1972,6 +2006,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord42(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2004,8 +2039,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord42() {}");
+    gold.append("\n    private RTxAutoMaxRecord42() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord42(NtMaybe<RTx_AnonObjConvert_35> x) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -2038,6 +2074,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord58 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord58 __this;");
     gold.append("\n    private int z1 = 0;");
     gold.append("\n    private int z2 = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -2048,6 +2085,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord58(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2076,8 +2114,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(z2);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord58() {}");
+    gold.append("\n    private RTxAutoMaxRecord58() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord58(int z1, int z2) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.z1 = z1;");
     gold.append("\n      this.z2 = z2;");
     gold.append("\n    }");
@@ -2111,6 +2150,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord59 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord59 __this;");
     gold.append("\n    private RTxAutoMaxRecord58[] x = new RTxAutoMaxRecord58[]{};");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"x\");");
@@ -2120,6 +2160,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord59(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2157,8 +2198,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }__writer.endArray();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord59() {}");
+    gold.append("\n    private RTxAutoMaxRecord59() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord59(RTxAutoMaxRecord58[] x) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -2728,10 +2770,12 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -2744,7 +2788,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -2800,6 +2844,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord4 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord4 __this;");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -2810,6 +2855,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord4(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2838,8 +2884,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord4() {}");
+    gold.append("\n    private RTxAutoMaxRecord4() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord4(int x, int y) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n      this.y = y;");
     gold.append("\n    }");
@@ -2873,6 +2920,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord17 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord17 __this;");
     gold.append("\n    private boolean b = false;");
     gold.append("\n    private double d = 0.0;");
     gold.append("\n    private int e = 0;");
@@ -2895,6 +2943,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord17(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2943,8 +2992,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(v);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord17() {}");
+    gold.append("\n    private RTxAutoMaxRecord17() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord17(boolean b, double d, int e, String s, long u, int v) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.b = b;");
     gold.append("\n      this.d = d;");
     gold.append("\n      this.e = e;");

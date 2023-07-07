@@ -122,6 +122,8 @@ public class Parser {
           return new NoOneClientConstant(token);
         case "@who":
           return new WhoClientConstant(token);
+        case "@self":
+          return new SelfConstant(token);
         case "@context":
           return new ContextConstant(token);
         case "@headers":
@@ -939,6 +941,7 @@ public class Parser {
     policy.ingest(messageToken);
     final var name = id();
     final var storage = new StructureStorage(StorageSpecialization.Message, false, consumeExpectedSymbol("{"));
+    storage.setSelf(new TyNativeRef(TypeBehavior.ReadOnlyNativeValue, null, name));
     var endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
     while (endBrace == null) {
       Token methodToken = tokens.popIf((t) -> t.isIdentifier("method"));
@@ -1028,6 +1031,7 @@ public class Parser {
   public Consumer<TopLevelDocumentHandler> define_record_trailer(final Token recordToken) throws AdamaLangException {
     final var name = id();
     final var storage = new StructureStorage(StorageSpecialization.Record, false, consumeExpectedSymbol("{"));
+    storage.setSelf(new TyReactiveRef(name));
     while (true) {
       var op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index"));
       while (op != null) {

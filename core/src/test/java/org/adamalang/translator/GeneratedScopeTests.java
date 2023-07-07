@@ -490,10 +490,12 @@ public class GeneratedScopeTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -506,7 +508,7 @@ public class GeneratedScopeTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -537,6 +539,7 @@ public class GeneratedScopeTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxC extends NtMessageBase {");
+    gold.append("\n    private final RTxC __this;");
     gold.append("\n    private int c = 0;");
     gold.append("\n    private boolean v = false;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -547,6 +550,7 @@ public class GeneratedScopeTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"C\");");
     gold.append("\n    }");
     gold.append("\n    private RTxC(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -575,8 +579,9 @@ public class GeneratedScopeTests extends GeneratedBase {
     gold.append("\n      __writer.writeBoolean(v);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxC() {}");
+    gold.append("\n    private RTxC() { __this = this; }");
     gold.append("\n    private RTxC(int c, boolean v) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.c = c;");
     gold.append("\n      this.v = v;");
     gold.append("\n    }");

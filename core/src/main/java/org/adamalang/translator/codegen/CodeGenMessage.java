@@ -78,6 +78,7 @@ public class CodeGenMessage {
     final var localVar = new AtomicInteger();
     { // READ FROM STREAM
       sb.append("private RTx" + name + "(JsonStreamReader __reader) {").tabUp().writeNewline(); // UP
+      sb.append("__this = this;").writeNewline();
       sb.append("__ingest(__reader);").tabDown().writeNewline();
       sb.append("}").writeNewline();
       boolean isViewerType = name.equals("__ViewerType");

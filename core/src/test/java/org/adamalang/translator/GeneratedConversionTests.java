@@ -578,10 +578,12 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -594,7 +596,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -625,6 +627,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxX extends NtMessageBase {");
+    gold.append("\n    private final RTxX __this;");
     gold.append("\n    private int a = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"a\");");
@@ -632,6 +635,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"X\");");
     gold.append("\n    }");
     gold.append("\n    private RTxX(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -655,8 +659,9 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(a);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxX() {}");
+    gold.append("\n    private RTxX() { __this = this; }");
     gold.append("\n    private RTxX(int a) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.a = a;");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -695,6 +700,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxY extends NtMessageBase {");
+    gold.append("\n    private final RTxY __this;");
     gold.append("\n    private int a = 0;");
     gold.append("\n    private int b = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -705,6 +711,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"Y\");");
     gold.append("\n    }");
     gold.append("\n    private RTxY(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -733,8 +740,9 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(b);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxY() {}");
+    gold.append("\n    private RTxY() { __this = this; }");
     gold.append("\n    private RTxY(int a, int b) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.a = a;");
     gold.append("\n      this.b = b;");
     gold.append("\n    }");
@@ -780,12 +788,14 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static String[] __INDEX_COLUMNS_Z = new String[] {\"a\", \"b\", \"c\"};");
     gold.append("\n  private class RTxZ extends RxRecordBase<RTxZ> {");
+    gold.append("\n    private final RTxZ __this;");
     gold.append("\n    private final RxInt32 a;");
     gold.append("\n    private final RxInt32 b;");
     gold.append("\n    private final RxInt32 c;");
     gold.append("\n    private final RxInt32 id;");
     gold.append("\n    private RTxZ(RxParent __owner) {");
     gold.append("\n      super(__owner);");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      a = new RxInt32(this, 0);");
     gold.append("\n      b = new RxInt32(this, 0);");
     gold.append("\n      c = new RxInt32(this, 0);");
@@ -960,6 +970,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxAutoMaxRecord2 extends NtMessageBase {");
+    gold.append("\n    private final RTxAutoMaxRecord2 __this;");
     gold.append("\n    private int a = 0;");
     gold.append("\n    private int b = 0;");
     gold.append("\n    private int c = 0;");
@@ -973,6 +984,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTxAutoMaxRecord2(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1006,8 +1018,9 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(c);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord2() {}");
+    gold.append("\n    private RTxAutoMaxRecord2() { __this = this; }");
     gold.append("\n    private RTxAutoMaxRecord2(int a, int b, int c) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.a = a;");
     gold.append("\n      this.b = b;");
     gold.append("\n      this.c = c;");
@@ -1617,10 +1630,12 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    };");
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
+    gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    public int __DATA_GENERATION = 1;");
@@ -1633,7 +1648,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -1665,11 +1680,13 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static String[] __INDEX_COLUMNS_R = new String[] {\"x\", \"y\"};");
     gold.append("\n  private class RTxR extends RxRecordBase<RTxR> {");
+    gold.append("\n    private final RTxR __this;");
     gold.append("\n    private final RxInt32 x;");
     gold.append("\n    private final RxInt32 y;");
     gold.append("\n    private final RxInt32 id;");
     gold.append("\n    private RTxR(RxParent __owner) {");
     gold.append("\n      super(__owner);");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      x = new RxInt32(this, 0);");
     gold.append("\n      y = new RxInt32(this, 0);");
     gold.append("\n      id = new RxInt32(this, 0);");
@@ -1832,6 +1849,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxM extends NtMessageBase {");
+    gold.append("\n    private final RTxM __this;");
     gold.append("\n    private int x = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"x\");");
@@ -1839,6 +1857,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"M\");");
     gold.append("\n    }");
     gold.append("\n    private RTxM(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1862,8 +1881,9 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(x);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxM() {}");
+    gold.append("\n    private RTxM() { __this = this; }");
     gold.append("\n    private RTxM(int x) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -1902,6 +1922,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static class RTxM2 extends NtMessageBase {");
+    gold.append("\n    private final RTxM2 __this;");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -1912,6 +1933,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __hash.hashString(\"M2\");");
     gold.append("\n    }");
     gold.append("\n    private RTxM2(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1940,8 +1962,9 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxM2() {}");
+    gold.append("\n    private RTxM2() { __this = this; }");
     gold.append("\n    private RTxM2(int x, int y) {");
+    gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n      this.y = y;");
     gold.append("\n    }");
