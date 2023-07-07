@@ -662,7 +662,7 @@
             </documentation>
             <arg name="domain" />
             <arg name="space" />
-            <arg name="cert" />
+            <arg name="cert" default="null" />
             <arg name="key" default="null" />
             <arg name="auto" default="true" />
         </command>

@@ -95,7 +95,7 @@ public class Output {
                     String header = item.getKey();
                     headers[index] = header;
                     JsonNode value = item.getValue();
-                    String textValue = value.toString();
+                    String textValue = value.isTextual() ? value.textValue() : value.toString();
                     values[i][index] = textValue;
                     int cellLength = textValue.length() > header.length() ? textValue.length() : header.length();
                     if (longestEach[index] < cellLength)

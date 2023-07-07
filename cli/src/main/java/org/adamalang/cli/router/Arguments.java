@@ -3236,7 +3236,7 @@ public class Arguments {
 		public Config config;
 		public String domain;
 		public String space;
-		public String cert;
+		public String cert = null;
 		public String key = null;
 		public String auto = "true";
 		public static DomainMapArgs from(String[] args, int start) {
@@ -3246,7 +3246,7 @@ public class Arguments {
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
-			String[] missing = new String[]{"--domain", "--space", "--cert", };
+			String[] missing = new String[]{"--domain", "--space", };
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
 					case "-d":
@@ -3278,7 +3278,6 @@ public class Arguments {
 						if (k+1 < args.length) {
 							returnArgs.cert = args[k+1];
 							k++;
-							missing[2] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -3338,8 +3337,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-d, --domain", Util.ANSI.Green) + " " + Util.prefix("<domain>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-c, --cert", Util.ANSI.Green) + " " + Util.prefix("<cert>", Util.ANSI.White));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-c, --cert", Util.ANSI.Green) + " " + Util.prefix("<cert>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-a, --auto", Util.ANSI.Green) + " " + Util.prefix("<auto>", Util.ANSI.White));
 		}

@@ -24,7 +24,7 @@ public class DomainHandlerImpl implements DomainHandler {
     public void map(Arguments.DomainMapArgs args, Output.YesOrError output) throws Exception {
         String identity = args.config.get_string("identity", null);
         String autoStr = args.auto.toLowerCase();
-        boolean automatic = "true".equals(autoStr) || "yes".equals(autoStr);
+        boolean automatic = "true".equals(autoStr) || "yes".equals(autoStr) || args.cert == null;
         final String cert;
         if (!automatic) {
             cert = Files.readString(new File(args.cert).toPath());
