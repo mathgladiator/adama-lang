@@ -16,7 +16,7 @@ public principal owner;
 }
 
 message NewBill {
-  int hour; // year-mo-da-hr
+  datetime when;
   long cpu_ticks;
   long memory_bytes_p95;
   long storage_bytes;
@@ -29,7 +29,7 @@ message NewBill {
 }
 
 record Bill {
-  public int hour; // year-mo-da-hr
+  public datetime when;
   public long cpu_ticks;
   public long memory_bytes_p95;
   public long storage_bytes;
@@ -43,10 +43,14 @@ record Bill {
 
 table<Bill> _bills;
 
-channel record_bill(NewBill bill) {
-  if((iterate _bills where hour == bill.hour)[0] as old_bill) {
-     old_bill <- bill;
+channel record_bill(NewBill bill) open {
+  if (@who.isOverlord()) {
+    if((iterate _bills where hour == bill.hour)[0] as old_bill) {
+      old_bill <- bill;
+    } else {
+      _bills <- bill;
+    }
   } else {
-    _bills <- bill;
+    abort;
   }
 }
