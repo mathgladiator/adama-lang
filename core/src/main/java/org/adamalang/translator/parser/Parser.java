@@ -651,12 +651,13 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block());
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@link", "@load"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service"));
     }
     if (op != null) {
       switch (op.text) {
+        case "@import":
         case "@include":
           return execute_include(op);
         case "@link":

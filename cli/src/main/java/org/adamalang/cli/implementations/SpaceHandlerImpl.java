@@ -11,6 +11,8 @@ package org.adamalang.cli.implementations;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.cli.implementations.space.Deployer;
+import org.adamalang.cli.implementations.space.Uploader;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.cli.router.Arguments;
@@ -40,8 +42,8 @@ public class SpaceHandlerImpl implements SpaceHandler {
                 request.put("method", "space/create");
                 request.put("identity", identity);
                 request.put("space", args.space);
-                ObjectNode response = connection.execute(request);
-                System.err.println(response.toPrettyString());
+                connection.execute(request);
+                output.out();
             }
         }
     }
@@ -56,16 +58,15 @@ public class SpaceHandlerImpl implements SpaceHandler {
                 request.put("method", "space/delete");
                 request.put("identity", identity);
                 request.put("space", args.space);
-                ObjectNode response = connection.execute(request);
-                System.err.println(response.toPrettyString());
+                connection.execute(request);
+                output.out();
             }
         }
     }
 
     @Override
     public void deploy(Arguments.SpaceDeployArgs args, Output.YesOrError output) throws Exception {
-        Config config = args.config;
-        //TODO
+        Deployer.deploy(args, output);
     }
 
     @Override
@@ -80,8 +81,8 @@ public class SpaceHandlerImpl implements SpaceHandler {
                 request.put("identity", identity);
                 request.put("space", args.space);
                 request.put("rxhtml", source);
-                ObjectNode response = connection.execute(request);
-                System.err.println(response.toPrettyString());
+                connection.execute(request);
+                output.out();
             }
         }
     }
@@ -97,20 +98,19 @@ public class SpaceHandlerImpl implements SpaceHandler {
                 request.put("identity", identity);
                 request.put("space", args.space);
                 ObjectNode response = connection.execute(request);
-                System.err.println(response.toPrettyString());
+                Files.writeString(new File(args.output).toPath(), response.get("rxhtml").textValue());
+                output.out();
             }
         }
     }
 
     @Override
-    public void upload(Arguments.SpaceUploadArgs args, Output.YesOrError output) throws Exception {
-        Config config = args.config;
-        //TODO
-
+    public void upload(Arguments.SpaceUploadArgs args, Output.JsonOrError output) throws Exception {
+        Uploader.upload(args, output);
     }
 
     @Override
-    public void download(Arguments.SpaceDownloadArgs args, Output.YesOrError output) throws Exception {
+    public void get(Arguments.SpaceGetArgs args, Output.YesOrError output) throws Exception {
         Config config = args.config;
         String identity = config.get_string("identity", null);
         try (WebSocketClient client = new WebSocketClient(config)) {
@@ -120,7 +120,8 @@ public class SpaceHandlerImpl implements SpaceHandler {
                 request.put("identity", identity);
                 request.put("space", args.space);
                 ObjectNode response = connection.execute(request);
-                System.err.println(response.toPrettyString());
+                Files.writeString(new File(args.output).toPath(), response.get("plan").toPrettyString());
+                output.out();
             }
         }
     }
@@ -148,7 +149,7 @@ public class SpaceHandlerImpl implements SpaceHandler {
     }
 
     @Override
-    public void usage(Arguments.SpaceUsageArgs args, Output.YesOrError output) throws Exception {
+    public void usage(Arguments.SpaceUsageArgs args, Output.JsonOrError output) throws Exception {
         Config config = args.config;
         String identity = config.get_string("identity", null);
         int limit = Integer.parseInt(args.limit);
@@ -161,11 +162,11 @@ public class SpaceHandlerImpl implements SpaceHandler {
                 request.put("space", args.space);
                 request.put("limit", limit);
                 connection.stream(request, (cId, response) -> {
-                    System.err.println(response.toPrettyString());
+                    output.add(response);
                 });
+                output.out();
             }
         }
-
     }
 
     @Override
@@ -178,9 +179,10 @@ public class SpaceHandlerImpl implements SpaceHandler {
                 request.put("method", "space/reflect");
                 request.put("identity", identity);
                 request.put("space", args.space);
-                request.put("key", args.key);
+                request.put("key", args.key == null ? "default" : args.key);
                 ObjectNode response = connection.execute(request);
-                Files.writeString(new File(args.output).toPath(), response.toPrettyString());
+                Files.writeString(new File(args.output).toPath(), response.get("reflection").toPrettyString());
+                output.out();
             }
         }
     }
@@ -197,8 +199,8 @@ public class SpaceHandlerImpl implements SpaceHandler {
                 request.put("space", args.space);
                 request.put("email", args.email);
                 request.put("role", args.role);
-                ObjectNode response = connection.execute(request);
-                System.err.println(response.toPrettyString());
+                connection.execute(request);
+                output.out();
             }
         }
 
@@ -224,7 +226,7 @@ public class SpaceHandlerImpl implements SpaceHandler {
                     }
                     keys.set(args.space, response);
                 });
-                System.err.println("Server Key Created");
+                output.out();
             }
         }
     }
@@ -254,6 +256,7 @@ public class SpaceHandlerImpl implements SpaceHandler {
         System.out.println("------------------");
         System.out.println(encrypted);
         System.out.println("------------------");
+        output.out();
     }
 
 }

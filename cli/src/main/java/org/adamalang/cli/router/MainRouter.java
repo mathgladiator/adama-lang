@@ -65,16 +65,6 @@ public class MainRouter {
                spaceHandler.deploy(spaceArgs, out);
                return 0;
             }
-            case "download": {
-              SpaceDownloadArgs spaceArgs = SpaceDownloadArgs.from(args, 2);
-              if (spaceArgs == null) {
-                SpaceDownloadArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               spaceHandler.download(spaceArgs, out);
-               return 0;
-            }
             case "encrypt-secret": {
               SpaceEncryptSecretArgs spaceArgs = SpaceEncryptSecretArgs.from(args, 2);
               if (spaceArgs == null) {
@@ -93,6 +83,16 @@ public class MainRouter {
                }
                YesOrError out = output.makeYesOrError();
                spaceHandler.generateKey(spaceArgs, out);
+               return 0;
+            }
+            case "get": {
+              SpaceGetArgs spaceArgs = SpaceGetArgs.from(args, 2);
+              if (spaceArgs == null) {
+                SpaceGetArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               spaceHandler.get(spaceArgs, out);
                return 0;
             }
             case "get-rxhtml": {
@@ -151,7 +151,7 @@ public class MainRouter {
                 SpaceUploadArgs.help();
                 return 1;
                }
-               YesOrError out = output.makeYesOrError();
+               JsonOrError out = output.makeJsonOrError();
                spaceHandler.upload(spaceArgs, out);
                return 0;
             }
@@ -161,7 +161,7 @@ public class MainRouter {
                 SpaceUsageArgs.help();
                 return 1;
                }
-               YesOrError out = output.makeYesOrError();
+               JsonOrError out = output.makeJsonOrError();
                spaceHandler.usage(spaceArgs, out);
                return 0;
             }
@@ -922,16 +922,6 @@ public class MainRouter {
              }
              YesOrError out = output.makeYesOrError();
              handler.init(mainArgs , out);
-             return 0;
-          }
-          case "stress": {
-            StressArgs mainArgs = StressArgs.from(args, 1);
-            if (mainArgs == null) {
-              StressArgs.help();
-              return 1;
-             }
-             YesOrError out = output.makeYesOrError();
-             handler.stress(mainArgs , out);
              return 0;
           }
           default:

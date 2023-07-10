@@ -32,7 +32,6 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("services", 15), Util.ANSI.Cyan) + "Launch a service");
     System.out.println("    " + Util.prefix(Util.justifyLeft("dumpenv", 15), Util.ANSI.Green) + "Dump your environment variables");
     System.out.println("    " + Util.prefix(Util.justifyLeft("init", 15), Util.ANSI.Green) + "Initializes the config with a valid token");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("stress", 15), Util.ANSI.Green) + "Stress test using the canary tool");
   }
   public static void displaySpaceHelp() {
     System.out.println(Util.prefix("Provides command related to working with space collections...", Util.ANSI.Green));
@@ -46,13 +45,13 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("create", 15), Util.ANSI.Green) + "Creates a new space");
     System.out.println("    " + Util.prefix(Util.justifyLeft("delete", 15), Util.ANSI.Green) + "Deletes an empty space");
     System.out.println("    " + Util.prefix(Util.justifyLeft("deploy", 15), Util.ANSI.Green) + "Deploy a plan to a space");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("download", 15), Util.ANSI.Green) + "Download a space's plan");
     System.out.println("    " + Util.prefix(Util.justifyLeft("encrypt-secret", 15), Util.ANSI.Green) + "Encrypt a secret to store within code");
     System.out.println("    " + Util.prefix(Util.justifyLeft("generate-key", 15), Util.ANSI.Green) + "Generate a server-side key to use for storing secrets");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("get", 15), Util.ANSI.Green) + "Get a space's plan");
     System.out.println("    " + Util.prefix(Util.justifyLeft("get-rxhtml", 15), Util.ANSI.Green) + "Get the frontend RxHTML forest");
     System.out.println("    " + Util.prefix(Util.justifyLeft("list", 15), Util.ANSI.Green) + "List spaces available to your account");
     System.out.println("    " + Util.prefix(Util.justifyLeft("reflect", 15), Util.ANSI.Green) + "Get a file of the reflection of a space");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("set-role", 15), Util.ANSI.Green) + "Get a file of the reflection of a space");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("set-role", 15), Util.ANSI.Green) + "Set the role of another developer");
     System.out.println("    " + Util.prefix(Util.justifyLeft("set-rxhtml", 15), Util.ANSI.Green) + "Set the frontend RxHTML forest");
     System.out.println("    " + Util.prefix(Util.justifyLeft("upload", 15), Util.ANSI.Green) + "Placeholder");
     System.out.println("    " + Util.prefix(Util.justifyLeft("usage", 15), Util.ANSI.Green) + "Iterate the billed usage");

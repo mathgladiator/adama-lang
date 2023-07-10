@@ -42,39 +42,34 @@ public class CodeHandlerImpl implements CodeHandler {
         LanguageServer.singleThread(port);
     }
 
-    public static Code.CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) {
-        try {
-            final var options = CompilerOptions.start().make();
-            final var globals = GlobalObjectPool.createPoolWithStdLib();
-            final var state = new EnvironmentState(globals, options);
-            final var document = new Document();
-            FirstPartyServices.install(new NoOpMetricsFactory(), null, null, null);
-            document.setClassName("TempClass");
-            final var tokenEngine = new TokenEngine(filename, code.codePoints().iterator());
-            final var parser = new Parser(tokenEngine);
-            document.setIncludes(includes);
-            parser.document().accept(document);
-            boolean result = document.check(state);
-            if (result) {
-                String javaCode = document.compileJava(state);
-                JsonStreamWriter reflect = new JsonStreamWriter();
-                document.writeTypeReflectionJson(reflect);
-                return new Code.CompileResult(javaCode, reflect.toString());
-            }
-            ArrayNode parsed = (ArrayNode) (new JsonMapper().readTree(document.errorsJson()));
-            for (int k = 0; k < parsed.size(); k++) {
-                ObjectNode errorItem = (ObjectNode) parsed.get(k);
-                int startLine = errorItem.get("range").get("start").get("line").intValue();
-                int endLine = errorItem.get("range").get("end").get("line").intValue();
-                int startCharacter = errorItem.get("range").get("start").get("character").intValue();
-                int endCharacter = errorItem.get("range").get("end").get("character").intValue();
-                System.err.println(Util.prefix("[start=" + startLine + ":" + startCharacter + ", end=" + endLine + ":" + endCharacter + "]", Util.ANSI.Red) + " :" + errorItem.get("message").textValue());
-            }
-            return null;
-        } catch (Exception ex) {
-            System.err.println(Util.prefix("Parsing exception:" + ex.getMessage(), Util.ANSI.Red));
-            return null;
+    public static Code.CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) throws Exception {
+        final var options = CompilerOptions.start().make();
+        final var globals = GlobalObjectPool.createPoolWithStdLib();
+        final var state = new EnvironmentState(globals, options);
+        final var document = new Document();
+        FirstPartyServices.install(new NoOpMetricsFactory(), null, null, null);
+        document.setClassName("TempClass");
+        final var tokenEngine = new TokenEngine(filename, code.codePoints().iterator());
+        final var parser = new Parser(tokenEngine);
+        document.setIncludes(includes);
+        parser.document().accept(document);
+        boolean result = document.check(state);
+        if (result) {
+            String javaCode = document.compileJava(state);
+            JsonStreamWriter reflect = new JsonStreamWriter();
+            document.writeTypeReflectionJson(reflect);
+            return new Code.CompileResult(javaCode, reflect.toString());
         }
+        ArrayNode parsed = (ArrayNode) (new JsonMapper().readTree(document.errorsJson()));
+        for (int k = 0; k < parsed.size(); k++) {
+            ObjectNode errorItem = (ObjectNode) parsed.get(k);
+            int startLine = errorItem.get("range").get("start").get("line").intValue();
+            int endLine = errorItem.get("range").get("end").get("line").intValue();
+            int startCharacter = errorItem.get("range").get("start").get("character").intValue();
+            int endCharacter = errorItem.get("range").get("end").get("character").intValue();
+            System.err.println(Util.prefix("[start=" + startLine + ":" + startCharacter + ", end=" + endLine + ":" + endCharacter + "]", Util.ANSI.Red) + " :" + errorItem.get("message").textValue());
+        }
+        throw new Exception("failed to compile: " + filename);
     }
 
     public static boolean sharedValidatePlan(File file) {
@@ -101,7 +96,9 @@ public class CodeHandlerImpl implements CodeHandler {
                     System.err.println("version '"+entry.getKey()+"' didn't exist or wasn't text");
                     success = false;
                 } else if(entry.getValue().isTextual()) {
-                    if (sharedCompileCode(entry.getKey(), entry.getValue().textValue(), new HashMap<>()) == null) {
+                    try {
+                        sharedCompileCode(entry.getKey(), entry.getValue().textValue(), new HashMap<>());
+                    } catch (Exception e) {
                         System.err.println("version '"+entry.getValue()+"' failed to validate");
                         success = false;
                     }
@@ -129,7 +126,9 @@ public class CodeHandlerImpl implements CodeHandler {
                                 }
                             }
                         }
-                        if (sharedCompileCode(entry.getKey(), main.textValue(), includes) == null) {
+                        try {
+                            sharedCompileCode(entry.getKey(), main.textValue(), includes);
+                        } catch (Exception e) {
                             System.err.println("version '" + entry.getKey() + "' failed to validate");
                             success = false;
                         }
@@ -168,22 +167,20 @@ public class CodeHandlerImpl implements CodeHandler {
         }
         return success;
     }
+
     @Override
     public void validatePlan(Arguments.CodeValidatePlanArgs args, Output.YesOrError output) throws Exception {
         File planFile = new File(args.plan);
         if (!planFile.exists()) {
-            System.err.println(Util.prefix("Plan file does not exist; stopping", Util.ANSI.Red));
-            return;
+            throw new Exception("Plan file does not exist; stopping");
         }
         if (planFile.isDirectory()) {
-            System.err.println(Util.prefix("Plan file is a directory; stopping", Util.ANSI.Red));
-            return;
+            throw new Exception("Plan file is a directory; stopping");
         }
-        if (sharedValidatePlan(planFile)) {
-            System.out.println(Util.prefix("Validated!", Util.ANSI.Green));
-        } else {
-            System.err.println(Util.prefix("Plan file failed to validate", Util.ANSI.Red));
+        if (!sharedValidatePlan(planFile)) {
+            throw new Exception("Plan file failed to validate");
         }
+        output.out();
     }
 
     private static HashMap<String, String> getImports(String imports) throws Exception {
@@ -197,6 +194,7 @@ public class CodeHandlerImpl implements CodeHandler {
         }
         return map;
     }
+
     @Override
     public void bundlePlan(Arguments.CodeBundlePlanArgs args, Output.YesOrError output) throws Exception {
         ObjectNode plan = Json.newJsonObject();
@@ -209,39 +207,24 @@ public class CodeHandlerImpl implements CodeHandler {
         plan.put("default", "file");
         plan.putArray("plan");
         Files.writeString(new File(args.output).toPath(), plan.toPrettyString());
+        output.out();
     }
 
     @Override
     public void compileFile(Arguments.CodeCompileFileArgs args, Output.YesOrError output) throws Exception {
-        String dumpTo = args.dumpTo;
-        //TODO
-//        Code.CompileResult result = sharedSetup(config, args);
-//        if (result != null) {
-//            System.out.println(Util.prefix("Compiled!", Util.ANSI.Green));
-//            if (dumpTo != null) {
-//                System.out.println("Dumped: " + dumpTo);
-//                Files.writeString(new File(dumpTo).toPath(), result.code);
-//            }
-//            return true;
-//        } else {
-//            System.err.println(Util.prefix("File failed to compile", Util.ANSI.Red));
-//            return false;
-//        }
+        Code.CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
+        if (args.dumpTo != null) {
+            Files.writeString(new File(args.dumpTo).toPath(), result.code);
+        }
+        output.out();
     }
 
     @Override
     public void reflectDump(Arguments.CodeReflectDumpArgs args, Output.YesOrError output) throws Exception {
-        //TODO
-        String dumpTo = args.dumpTo;
-//        Code.CompileResult result = sharedSetup(config, args);
-//        if (result != null) {
-//            System.out.println(Util.prefix("Compiled!", Util.ANSI.Green));
-//            if (dumpTo != null) {
-//                System.out.println("Dumped: " + dumpTo);
-//                Files.writeString(new File(dumpTo).toPath(), result.reflection);
-//            }
-//        } else {
-//            System.err.println(Util.prefix("File failed to compile", Util.ANSI.Red));
-//        }
+        Code.CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
+        if (args.dumpTo != null) {
+            Files.writeString(new File(args.dumpTo).toPath(), result.reflection);
+        }
+        output.out();
     }
 }

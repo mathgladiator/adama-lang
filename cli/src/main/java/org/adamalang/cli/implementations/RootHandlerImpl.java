@@ -159,14 +159,6 @@ public class RootHandlerImpl implements RootHandler {
     }
 
     @Override
-    public void stress(Arguments.StressArgs args, Output.YesOrError output) throws Exception {
-        String scenarioJson = Files.readString(new File(args.scenario).toPath());
-        ObjectNode scenarioObject = Json.parseJsonObject(scenarioJson);
-        ConfigObject scenario = new ConfigObject(scenarioObject);
-        DriveTraffic.execute(scenario);
-    }
-
-    @Override
     public void dumpenv(Arguments.DumpenvArgs args, Output.YesOrError output) throws Exception {
         for (Map.Entry<String, String> entry : System.getenv().entrySet()) {
             System.err.println(entry.getKey() + "=" + entry.getValue());

@@ -129,8 +129,7 @@ public class Arguments {
 	public static class SpaceDeployArgs {
 		public Config config;
 		public String space;
-		public String dumpTo = null;
-		public String plan;
+		public String plan = null;
 		public String file = null;
 		public static SpaceDeployArgs from(String[] args, int start) {
 			SpaceDeployArgs returnArgs = new SpaceDeployArgs();
@@ -139,7 +138,7 @@ public class Arguments {
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
-			String[] missing = new String[]{"--space", "--plan", };
+			String[] missing = new String[]{"--space", };
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
 					case "-s":
@@ -154,23 +153,11 @@ public class Arguments {
 						}
 						break;
 					}
-					case "-d":
-					case "--dump-to": {
-						if (k+1 < args.length) {
-							returnArgs.dumpTo = args[k+1];
-							k++;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
 					case "-p":
 					case "--plan": {
 						if (k+1 < args.length) {
 							returnArgs.plan = args[k+1];
 							k++;
-							missing[1] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -218,67 +205,9 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama space deploy", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-p, --plan", Util.ANSI.Green) + " " + Util.prefix("<plan>", Util.ANSI.White));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-d, --dump-to", Util.ANSI.Green) + " " + Util.prefix("<dump-to>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-p, --plan", Util.ANSI.Green) + " " + Util.prefix("<plan>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
-		}
-	}
-	public static class SpaceDownloadArgs {
-		public Config config;
-		public String space;
-		public static SpaceDownloadArgs from(String[] args, int start) {
-			SpaceDownloadArgs returnArgs = new SpaceDownloadArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			String[] missing = new String[]{"--space", };
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-					case "-s":
-					case "--space": {
-						if (k+1 < args.length) {
-							returnArgs.space = args[k+1];
-							k++;
-							missing[0] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			boolean invalid = false;
-			for (String misArg : missing) {
-				if (misArg != null) {
-					System.err.println("Expected argument '" + misArg + "'");
-					invalid = true;
-				}
-			}
-			return (invalid ? null : returnArgs);
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Download a space's plan", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama space download", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
-			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
 		}
 	}
 	public static class SpaceEncryptSecretArgs {
@@ -395,17 +324,18 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
 		}
 	}
-	public static class SpaceGetRxhtmlArgs {
+	public static class SpaceGetArgs {
 		public Config config;
 		public String space;
-		public static SpaceGetRxhtmlArgs from(String[] args, int start) {
-			SpaceGetRxhtmlArgs returnArgs = new SpaceGetRxhtmlArgs();
+		public String output;
+		public static SpaceGetArgs from(String[] args, int start) {
+			SpaceGetArgs returnArgs = new SpaceGetArgs();
 			try {
 				returnArgs.config = new Config(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
-			String[] missing = new String[]{"--space", };
+			String[] missing = new String[]{"--space", "--output", };
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
 					case "-s":
@@ -414,6 +344,89 @@ public class Arguments {
 							returnArgs.space = args[k+1];
 							k++;
 							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-o":
+					case "--output": {
+						if (k+1 < args.length) {
+							returnArgs.output = args[k+1];
+							k++;
+							missing[1] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Get a space's plan", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama space get", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
+		}
+	}
+	public static class SpaceGetRxhtmlArgs {
+		public Config config;
+		public String space;
+		public String output;
+		public static SpaceGetRxhtmlArgs from(String[] args, int start) {
+			SpaceGetRxhtmlArgs returnArgs = new SpaceGetRxhtmlArgs();
+			try {
+				returnArgs.config = new Config(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			String[] missing = new String[]{"--space", "--output", };
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-s":
+					case "--space": {
+						if (k+1 < args.length) {
+							returnArgs.space = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-o":
+					case "--output": {
+						if (k+1 < args.length) {
+							returnArgs.output = args[k+1];
+							k++;
+							missing[1] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -450,6 +463,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama space get-rxhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
 		}
 	}
 	public static class SpaceListArgs {
@@ -516,10 +530,8 @@ public class Arguments {
 	public static class SpaceReflectArgs {
 		public Config config;
 		public String space;
-		public String marker;
+		public String key = null;
 		public String output;
-		public String key;
-		public String limit = "336";
 		public static SpaceReflectArgs from(String[] args, int start) {
 			SpaceReflectArgs returnArgs = new SpaceReflectArgs();
 			try {
@@ -527,7 +539,7 @@ public class Arguments {
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
-			String[] missing = new String[]{"--space", "--marker", "--output", "--key", };
+			String[] missing = new String[]{"--space", "--output", };
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
 					case "-s":
@@ -542,12 +554,11 @@ public class Arguments {
 						}
 						break;
 					}
-					case "-m":
-					case "--marker": {
+					case "-k":
+					case "--key": {
 						if (k+1 < args.length) {
-							returnArgs.marker = args[k+1];
+							returnArgs.key = args[k+1];
 							k++;
-							missing[1] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -559,30 +570,7 @@ public class Arguments {
 						if (k+1 < args.length) {
 							returnArgs.output = args[k+1];
 							k++;
-							missing[2] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-					case "-k":
-					case "--key": {
-						if (k+1 < args.length) {
-							returnArgs.key = args[k+1];
-							k++;
-							missing[3] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-					case "-l":
-					case "--limit": {
-						if (k+1 < args.length) {
-							returnArgs.limit = args[k+1];
-							k++;
+							missing[1] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -619,18 +607,15 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama space reflect", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-m, --marker", Util.ANSI.Green) + " " + Util.prefix("<marker>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-l, --limit", Util.ANSI.Green) + " " + Util.prefix("<limit>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
 		}
 	}
 	public static class SpaceSetRoleArgs {
 		public Config config;
 		public String space;
-		public String marker;
-		public String email = "";
+		public String email;
 		public String role = "none";
 		public static SpaceSetRoleArgs from(String[] args, int start) {
 			SpaceSetRoleArgs returnArgs = new SpaceSetRoleArgs();
@@ -639,7 +624,7 @@ public class Arguments {
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
-			String[] missing = new String[]{"--space", "--marker", };
+			String[] missing = new String[]{"--space", "--email", };
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
 					case "-s":
@@ -654,23 +639,12 @@ public class Arguments {
 						}
 						break;
 					}
-					case "-m":
-					case "--marker": {
-						if (k+1 < args.length) {
-							returnArgs.marker = args[k+1];
-							k++;
-							missing[1] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
 					case "-e":
 					case "--email": {
 						if (k+1 < args.length) {
 							returnArgs.email = args[k+1];
 							k++;
+							missing[1] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -713,96 +687,22 @@ public class Arguments {
 			return (invalid ? null : returnArgs);
 		}
 		public static void help() {
-			System.out.println(Util.prefix("Get a file of the reflection of a space", Util.ANSI.Green));
+			System.out.println(Util.prefix("Set the role of another developer", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space set-role", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-m, --marker", Util.ANSI.Green) + " " + Util.prefix("<marker>", Util.ANSI.White));
-			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-e, --email", Util.ANSI.Green) + " " + Util.prefix("<email>", Util.ANSI.White));
+			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-r, --role", Util.ANSI.Green) + " " + Util.prefix("<role>", Util.ANSI.White));
 		}
 	}
 	public static class SpaceSetRxhtmlArgs {
 		public Config config;
 		public String space;
-		public String file = null;
+		public String file;
 		public static SpaceSetRxhtmlArgs from(String[] args, int start) {
 			SpaceSetRxhtmlArgs returnArgs = new SpaceSetRxhtmlArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			String[] missing = new String[]{"--space", };
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-					case "-s":
-					case "--space": {
-						if (k+1 < args.length) {
-							returnArgs.space = args[k+1];
-							k++;
-							missing[0] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-					case "-f":
-					case "--file": {
-						if (k+1 < args.length) {
-							returnArgs.file = args[k+1];
-							k++;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			boolean invalid = false;
-			for (String misArg : missing) {
-				if (misArg != null) {
-					System.err.println("Expected argument '" + misArg + "'");
-					invalid = true;
-				}
-			}
-			return (invalid ? null : returnArgs);
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Set the frontend RxHTML forest", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama space set-rxhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
-			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
-		}
-	}
-	public static class SpaceUploadArgs {
-		public Config config;
-		public String space;
-		public String gc = "no";
-		public String root = null;
-		public String file;
-		public static SpaceUploadArgs from(String[] args, int start) {
-			SpaceUploadArgs returnArgs = new SpaceUploadArgs();
 			try {
 				returnArgs.config = new Config(args);
 			} catch (Exception er) {
@@ -817,28 +717,6 @@ public class Arguments {
 							returnArgs.space = args[k+1];
 							k++;
 							missing[0] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-					case "-g":
-					case "--gc": {
-						if (k+1 < args.length) {
-							returnArgs.gc = args[k+1];
-							k++;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-					case "-r":
-					case "--root": {
-						if (k+1 < args.length) {
-							returnArgs.root = args[k+1];
-							k++;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -882,15 +760,122 @@ public class Arguments {
 			return (invalid ? null : returnArgs);
 		}
 		public static void help() {
+			System.out.println(Util.prefix("Set the frontend RxHTML forest", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama space set-rxhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
+		}
+	}
+	public static class SpaceUploadArgs {
+		public Config config;
+		public String space;
+		public String gc = "no";
+		public String root = null;
+		public String file = null;
+		public String directory = null;
+		public static SpaceUploadArgs from(String[] args, int start) {
+			SpaceUploadArgs returnArgs = new SpaceUploadArgs();
+			try {
+				returnArgs.config = new Config(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			String[] missing = new String[]{"--space", };
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-s":
+					case "--space": {
+						if (k+1 < args.length) {
+							returnArgs.space = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-g":
+					case "--gc": {
+						if (k+1 < args.length) {
+							returnArgs.gc = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-r":
+					case "--root": {
+						if (k+1 < args.length) {
+							returnArgs.root = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-f":
+					case "--file": {
+						if (k+1 < args.length) {
+							returnArgs.file = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-d":
+					case "--directory": {
+						if (k+1 < args.length) {
+							returnArgs.directory = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
+		}
+		public static void help() {
 			System.out.println(Util.prefix("Placeholder", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space upload", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-g, --gc", Util.ANSI.Green) + " " + Util.prefix("<gc>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-r, --root", Util.ANSI.Green) + " " + Util.prefix("<root>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-d, --directory", Util.ANSI.Green) + " " + Util.prefix("<directory>", Util.ANSI.White));
 		}
 	}
 	public static class SpaceUsageArgs {
@@ -1921,7 +1906,7 @@ public class Arguments {
 		public Config config;
 		public String output;
 		public String main;
-		public String imports;
+		public String imports = "imports";
 		public static CodeBundlePlanArgs from(String[] args, int start) {
 			CodeBundlePlanArgs returnArgs = new CodeBundlePlanArgs();
 			try {
@@ -1929,7 +1914,7 @@ public class Arguments {
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
-			String[] missing = new String[]{"--output", "--main", "--imports", };
+			String[] missing = new String[]{"--output", "--main", };
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
 					case "-o":
@@ -1961,7 +1946,6 @@ public class Arguments {
 						if (k+1 < args.length) {
 							returnArgs.imports = args[k+1];
 							k++;
-							missing[2] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -1999,12 +1983,14 @@ public class Arguments {
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-m, --main", Util.ANSI.Green) + " " + Util.prefix("<main>", Util.ANSI.White));
+			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White));
 		}
 	}
 	public static class CodeCompileFileArgs {
 		public Config config;
 		public String file;
+		public String imports = "imports";
 		public String dumpTo = null;
 		public static CodeCompileFileArgs from(String[] args, int start) {
 			CodeCompileFileArgs returnArgs = new CodeCompileFileArgs();
@@ -2022,6 +2008,17 @@ public class Arguments {
 							returnArgs.file = args[k+1];
 							k++;
 							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-i":
+					case "--imports": {
+						if (k+1 < args.length) {
+							returnArgs.imports = args[k+1];
+							k++;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -2070,6 +2067,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-d, --dump-to", Util.ANSI.Green) + " " + Util.prefix("<dump-to>", Util.ANSI.White));
 		}
 	}
@@ -2124,6 +2122,7 @@ public class Arguments {
 	public static class CodeReflectDumpArgs {
 		public Config config;
 		public String file;
+		public String imports = "imports";
 		public String dumpTo = null;
 		public static CodeReflectDumpArgs from(String[] args, int start) {
 			CodeReflectDumpArgs returnArgs = new CodeReflectDumpArgs();
@@ -2141,6 +2140,17 @@ public class Arguments {
 							returnArgs.file = args[k+1];
 							k++;
 							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-i":
+					case "--imports": {
+						if (k+1 < args.length) {
+							returnArgs.imports = args[k+1];
+							k++;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -2189,6 +2199,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-d, --dump-to", Util.ANSI.Green) + " " + Util.prefix("<dump-to>", Util.ANSI.White));
 		}
 	}
@@ -3795,63 +3806,6 @@ public class Arguments {
 			System.out.println(Util.prefix("Initializes the config with a valid token", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama init", Util.ANSI.Green));
-		}
-	}
-	public static class StressArgs {
-		public Config config;
-		public String scenario;
-		public static StressArgs from(String[] args, int start) {
-			StressArgs returnArgs = new StressArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			String[] missing = new String[]{"--scenario", };
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-					case "-s":
-					case "--scenario": {
-						if (k+1 < args.length) {
-							returnArgs.scenario = args[k+1];
-							k++;
-							missing[0] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			boolean invalid = false;
-			for (String misArg : missing) {
-				if (misArg != null) {
-					System.err.println("Expected argument '" + misArg + "'");
-					invalid = true;
-				}
-			}
-			return (invalid ? null : returnArgs);
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Stress test using the canary tool", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama stress", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
-			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --scenario", Util.ANSI.Green) + " " + Util.prefix("<scenario>", Util.ANSI.White));
 		}
 	}
 }

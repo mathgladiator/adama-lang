@@ -18,9 +18,9 @@ public class HelpCoverageTests {
     NewMain.testMain(new String[]{"space", "create", "--help"});
     NewMain.testMain(new String[]{"space", "delete", "--help"});
     NewMain.testMain(new String[]{"space", "deploy", "--help"});
-    NewMain.testMain(new String[]{"space", "download", "--help"});
     NewMain.testMain(new String[]{"space", "encrypt-secret", "--help"});
     NewMain.testMain(new String[]{"space", "generate-key", "--help"});
+    NewMain.testMain(new String[]{"space", "get", "--help"});
     NewMain.testMain(new String[]{"space", "get-rxhtml", "--help"});
     NewMain.testMain(new String[]{"space", "list", "--help"});
     NewMain.testMain(new String[]{"space", "reflect", "--help"});
@@ -93,6 +93,5 @@ public class HelpCoverageTests {
     NewMain.testMain(new String[]{"services", "solo", "--help"});
     NewMain.testMain(new String[]{"dumpenv", "--help"});
     NewMain.testMain(new String[]{"init", "--help"});
-    NewMain.testMain(new String[]{"stress", "--help"});
   }
 }

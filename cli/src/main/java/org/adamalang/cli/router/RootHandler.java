@@ -27,5 +27,4 @@ public interface RootHandler {
   ServicesHandler makeServicesHandler();
   void dumpenv(DumpenvArgs args, YesOrError output) throws Exception;
   void init(InitArgs args, YesOrError output) throws Exception;
-  void stress(StressArgs args, YesOrError output) throws Exception;
 }

@@ -39,9 +39,6 @@ public class Main {
         case "business":
           Business.execute(config, next);
           return;
-        case "code":
-          Code.execute(config, next);
-          return;
         case "database":
           Database.execute(config, next);
           return;
@@ -60,13 +57,6 @@ public class Main {
           return;
         case "service":
           Service.execute(config, next);
-          return;
-        case "space":
-        case "spaces":
-          Space.execute(config, next);
-          return;
-        case "stress":
-          Stress.execute(config, next);
           return;
         case "dumpenv":
           for (Map.Entry<String, String> entry : System.getenv().entrySet()) {
