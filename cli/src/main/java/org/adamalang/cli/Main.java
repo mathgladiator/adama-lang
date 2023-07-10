@@ -30,15 +30,6 @@ public class Main {
         case "account":
           Account.execute(config, next);
           return;
-        case "authority":
-          Authority.execute(config, next);
-          return;
-        case "aws":
-          AWS.execute(config, next);
-          return;
-        case "business":
-          Business.execute(config, next);
-          return;
         case "database":
           Database.execute(config, next);
           return;
@@ -54,9 +45,6 @@ public class Main {
           return;
         case "init":
           Init.execute(config, next);
-          return;
-        case "service":
-          Service.execute(config, next);
           return;
         case "dumpenv":
           for (Map.Entry<String, String> entry : System.getenv().entrySet()) {

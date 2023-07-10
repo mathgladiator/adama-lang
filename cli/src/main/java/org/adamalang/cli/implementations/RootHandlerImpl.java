@@ -9,18 +9,15 @@
 package org.adamalang.cli.implementations;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.canary.DriveTraffic;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.cli.router.*;
 import org.adamalang.cli.runtime.Output;
-import org.adamalang.common.ConfigObject;
+
 import org.adamalang.common.Json;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.Map;
 
 public class RootHandlerImpl implements RootHandler {
@@ -32,16 +29,6 @@ public class RootHandlerImpl implements RootHandler {
     @Override
     public AccountHandler makeAccountHandler() {
         return new AccountHandlerImpl();
-    }
-
-    @Override
-    public AwsHandler makeAwsHandler() {
-        return new AwsHandlerImpl();
-    }
-
-    @Override
-    public BusinessHandler makeBusinessHandler() {
-        return new BusinessHandlerImpl();
     }
 
     @Override

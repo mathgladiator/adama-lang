@@ -40,15 +40,6 @@ public class HelpCoverageTests {
     NewMain.testMain(new String[]{"account", "--help"});
     NewMain.testMain(new String[]{"account", "set-password", "--help"});
     NewMain.testMain(new String[]{"account", "test-gtoken", "--help"});
-    NewMain.testMain(new String[]{"aws", "--help"});
-    NewMain.testMain(new String[]{"aws", "download-archive", "--help"});
-    NewMain.testMain(new String[]{"aws", "memory-test", "--help"});
-    NewMain.testMain(new String[]{"aws", "setup", "--help"});
-    NewMain.testMain(new String[]{"aws", "test-asset-listing", "--help"});
-    NewMain.testMain(new String[]{"aws", "test-email", "--help"});
-    NewMain.testMain(new String[]{"aws", "test-enqueue", "--help"});
-    NewMain.testMain(new String[]{"business", "--help"});
-    NewMain.testMain(new String[]{"business", "add-balance", "--help"});
     NewMain.testMain(new String[]{"code", "--help"});
     NewMain.testMain(new String[]{"code", "bundle-plan", "--help"});
     NewMain.testMain(new String[]{"code", "compile-file", "--help"});

@@ -328,7 +328,7 @@
         <documentation>
             Manage authorities
         </documentation>
-        <command name="create">
+        <command name="create" output="json">
             <documentation>
                 Creates a new authority
             </documentation>
@@ -368,8 +368,8 @@
                 Make a new set of public keys
             </documentation>
             <arg name="authority" />
-            <arg name="keystore" />
-            <arg name="priv" />
+            <arg name="keystore" default="keystore.json" />
+            <arg name="priv" default="private.key.json" />
         </command>
 
         <command name="append-local">
@@ -377,11 +377,11 @@
                 Append a new public key to the public key file
             </documentation>
             <arg name="authority" />
-            <arg name="keystore" />
+            <arg name="keystore" default="keystore.json" />
             <arg name="priv" />
         </command>
 
-        <command name="sign">
+        <command name="sign" output="json">
             <documentation>
                 Sign an agent with a local private key
             </documentation>
@@ -395,7 +395,7 @@
         <documentation>
             Manage your account
         </documentation>
-        <command name="set-password">
+        <command name="set-password" interactive="true">
             <documentation>
                 Create a password to be used on web
             </documentation>
@@ -404,65 +404,6 @@
             <documentation>
                 Test a Google token converts to an email
             </documentation>
-        </command>
-    </group>
-
-    <group name="aws">
-        <documentation>
-            Tools for working with AWS
-        </documentation>
-
-        <command name="setup">
-            <documentation>
-                Interactive setup for the config
-            </documentation>
-        </command>
-
-        <command name="test-email">
-            <documentation>
-                Test Email via AWS
-            </documentation>
-        </command>
-
-        <command name="test-asset-listing">
-            <documentation>
-                Placeholder
-            </documentation>
-            <arg name="space" />
-            <arg name="key" />
-        </command>
-
-        <command name="test-enqueue">
-            <documentation>
-                Placeholder
-            </documentation>
-        </command>
-
-        <command name="download-archive">
-            <documentation>
-                Download (and validate) an archive
-            </documentation>
-            <arg name="archive" />
-            <arg name="space" />
-            <arg name="key" />
-        </command>
-        <command name="memory-test">
-            <documentation>
-                Crash by allocating memory
-            </documentation>
-        </command>
-    </group>
-
-    <group name="business">
-        <documentation>
-            Business tools to support developers
-        </documentation>
-        <command name="add-balance">
-            <documentation>
-                Interactive setup for the config
-            </documentation>
-            <arg name="email" />
-            <arg name="pennies" />
         </command>
     </group>
 

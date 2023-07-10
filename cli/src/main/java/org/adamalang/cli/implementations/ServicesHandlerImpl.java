@@ -56,26 +56,31 @@ public class ServicesHandlerImpl implements ServicesHandler {
             default:
                 System.err.println("invalid role:" + role);
         }
+        output.out();
     }
 
     @Override
     public void backend(Arguments.ServicesBackendArgs args, Output.YesOrError output) throws Exception {
         Backend.run(args.config);
+        output.out();
     }
 
     @Override
     public void frontend(Arguments.ServicesFrontendArgs args, Output.YesOrError output) throws Exception {
         Frontend.run(args.config);
+        output.out();
     }
 
     @Override
     public void overlord(Arguments.ServicesOverlordArgs args, Output.YesOrError output) throws Exception {
         Overlord.run(args.config);
+        output.out();
     }
 
     @Override
     public void solo(Arguments.ServicesSoloArgs args, Output.YesOrError output) throws Exception {
         Solo.run(args.config);
+        output.out();
     }
 
     @Override
@@ -111,5 +116,6 @@ public class ServicesHandlerImpl implements ServicesHandler {
         metricsFactory.page("fp", "First Party");
         new FirstPartyMetrics(metricsFactory);
         metricsFactory.finish(new File("./prometheus/consoles"));
+        output.out();
     }
 }

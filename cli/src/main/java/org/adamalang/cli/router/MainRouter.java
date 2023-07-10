@@ -199,7 +199,7 @@ public class MainRouter {
                 AuthorityCreateArgs.help();
                 return 1;
                }
-               YesOrError out = output.makeYesOrError();
+               JsonOrError out = output.makeJsonOrError();
                authorityHandler.create(authorityArgs, out);
                return 0;
             }
@@ -259,7 +259,7 @@ public class MainRouter {
                 AuthoritySignArgs.help();
                 return 1;
                }
-               YesOrError out = output.makeYesOrError();
+               JsonOrError out = output.makeJsonOrError();
                authorityHandler.sign(authorityArgs, out);
                return 0;
             }
@@ -310,112 +310,6 @@ public class MainRouter {
             default:
               System.err.println("Invalid subcommand '" + args[1] + "' of command 'account'");
               System.err.println("See 'adama account help' for a list of subcommands.");
-              return 1;
-          }
-        case "aws":
-          AwsHandler awsHandler = handler.makeAwsHandler();
-          if (args.length == 1) {
-            displayAwsHelp();
-            return 1;
-          }
-          switch (args[1]) {
-            case "download-archive": {
-              AwsDownloadArchiveArgs awsArgs = AwsDownloadArchiveArgs.from(args, 2);
-              if (awsArgs == null) {
-                AwsDownloadArchiveArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               awsHandler.downloadArchive(awsArgs, out);
-               return 0;
-            }
-            case "memory-test": {
-              AwsMemoryTestArgs awsArgs = AwsMemoryTestArgs.from(args, 2);
-              if (awsArgs == null) {
-                AwsMemoryTestArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               awsHandler.memoryTest(awsArgs, out);
-               return 0;
-            }
-            case "setup": {
-              AwsSetupArgs awsArgs = AwsSetupArgs.from(args, 2);
-              if (awsArgs == null) {
-                AwsSetupArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               awsHandler.setup(awsArgs, out);
-               return 0;
-            }
-            case "test-asset-listing": {
-              AwsTestAssetListingArgs awsArgs = AwsTestAssetListingArgs.from(args, 2);
-              if (awsArgs == null) {
-                AwsTestAssetListingArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               awsHandler.testAssetListing(awsArgs, out);
-               return 0;
-            }
-            case "test-email": {
-              AwsTestEmailArgs awsArgs = AwsTestEmailArgs.from(args, 2);
-              if (awsArgs == null) {
-                AwsTestEmailArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               awsHandler.testEmail(awsArgs, out);
-               return 0;
-            }
-            case "test-enqueue": {
-              AwsTestEnqueueArgs awsArgs = AwsTestEnqueueArgs.from(args, 2);
-              if (awsArgs == null) {
-                AwsTestEnqueueArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               awsHandler.testEnqueue(awsArgs, out);
-               return 0;
-            }
-            case "--help":
-            case "-h":
-            case "help": {
-              displayAwsHelp();
-              return 1;
-            }
-            default:
-              System.err.println("Invalid subcommand '" + args[1] + "' of command 'aws'");
-              System.err.println("See 'adama aws help' for a list of subcommands.");
-              return 1;
-          }
-        case "business":
-          BusinessHandler businessHandler = handler.makeBusinessHandler();
-          if (args.length == 1) {
-            displayBusinessHelp();
-            return 1;
-          }
-          switch (args[1]) {
-            case "add-balance": {
-              BusinessAddBalanceArgs businessArgs = BusinessAddBalanceArgs.from(args, 2);
-              if (businessArgs == null) {
-                BusinessAddBalanceArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               businessHandler.addBalance(businessArgs, out);
-               return 0;
-            }
-            case "--help":
-            case "-h":
-            case "help": {
-              displayBusinessHelp();
-              return 1;
-            }
-            default:
-              System.err.println("Invalid subcommand '" + args[1] + "' of command 'business'");
-              System.err.println("See 'adama business help' for a list of subcommands.");
               return 1;
           }
         case "code":

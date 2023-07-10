@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Util;
-import org.adamalang.cli.commands.Code;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.CodeHandler;
 import org.adamalang.cli.runtime.Output;
@@ -21,10 +20,12 @@ import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.lsp.LanguageServer;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.services.FirstPartyServices;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
@@ -41,8 +42,22 @@ public class CodeHandlerImpl implements CodeHandler {
         int port = Integer.parseInt(args.port);
         LanguageServer.singleThread(port);
     }
+    public static class CompileResult {
+        public final String code;
+        public final String reflection;
 
-    public static Code.CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) throws Exception {
+        public CompileResult(String code, String reflection) {
+            this.code = code;
+            this.reflection = reflection;
+            try {
+                new LivingDocumentFactory("space", "TempClass", code, reflection.toString(), Deliverer.FAILURE);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public static CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) throws Exception {
         final var options = CompilerOptions.start().make();
         final var globals = GlobalObjectPool.createPoolWithStdLib();
         final var state = new EnvironmentState(globals, options);
@@ -58,7 +73,7 @@ public class CodeHandlerImpl implements CodeHandler {
             String javaCode = document.compileJava(state);
             JsonStreamWriter reflect = new JsonStreamWriter();
             document.writeTypeReflectionJson(reflect);
-            return new Code.CompileResult(javaCode, reflect.toString());
+            return new CompileResult(javaCode, reflect.toString());
         }
         ArrayNode parsed = (ArrayNode) (new JsonMapper().readTree(document.errorsJson()));
         for (int k = 0; k < parsed.size(); k++) {
@@ -212,7 +227,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
     @Override
     public void compileFile(Arguments.CodeCompileFileArgs args, Output.YesOrError output) throws Exception {
-        Code.CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
+        CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
         if (args.dumpTo != null) {
             Files.writeString(new File(args.dumpTo).toPath(), result.code);
         }
@@ -221,7 +236,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
     @Override
     public void reflectDump(Arguments.CodeReflectDumpArgs args, Output.YesOrError output) throws Exception {
-        Code.CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
+        CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
         if (args.dumpTo != null) {
             Files.writeString(new File(args.dumpTo).toPath(), result.reflection);
         }

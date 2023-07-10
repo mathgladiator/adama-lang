@@ -20,8 +20,6 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("space", 15), Util.ANSI.Cyan) + "Provides command related to working with space collections...");
     System.out.println("    " + Util.prefix(Util.justifyLeft("authority", 15), Util.ANSI.Cyan) + "Manage authorities");
     System.out.println("    " + Util.prefix(Util.justifyLeft("account", 15), Util.ANSI.Cyan) + "Manage your account");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("aws", 15), Util.ANSI.Cyan) + "Tools for working with AWS");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("business", 15), Util.ANSI.Cyan) + "Business tools to support developers");
     System.out.println("    " + Util.prefix(Util.justifyLeft("code", 15), Util.ANSI.Cyan) + "Local developer tools");
     System.out.println("    " + Util.prefix(Util.justifyLeft("contrib", 15), Util.ANSI.Cyan) + "Open source contributor tools");
     System.out.println("    " + Util.prefix(Util.justifyLeft("database", 15), Util.ANSI.Cyan) + "Prepare database for usage");
@@ -85,33 +83,6 @@ public class Help {
     System.out.println(Util.prefix("ACCOUNTSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix(Util.justifyLeft("set-password", 15), Util.ANSI.Green) + "Create a password to be used on web");
     System.out.println("    " + Util.prefix(Util.justifyLeft("test-gtoken", 15), Util.ANSI.Green) + "Test a Google token converts to an email");
-  }
-  public static void displayAwsHelp() {
-    System.out.println(Util.prefix("Tools for working with AWS", Util.ANSI.Green));
-    System.out.println();
-    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("adama aws", Util.ANSI.Green) + " " + Util.prefix("[AWSSUBCOMMAND]", Util.ANSI.Magenta));
-    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix(Util.justifyLeft("--config", 15), Util.ANSI.Green) + "Supplies a config file path other than the default (~/.adama)");
-    System.out.println();
-    System.out.println(Util.prefix("AWSSUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix(Util.justifyLeft("download-archive", 15), Util.ANSI.Green) + "Download (and validate) an archive");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("memory-test", 15), Util.ANSI.Green) + "Crash by allocating memory");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("setup", 15), Util.ANSI.Green) + "Interactive setup for the config");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("test-asset-listing", 15), Util.ANSI.Green) + "Placeholder");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("test-email", 15), Util.ANSI.Green) + "Test Email via AWS");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("test-enqueue", 15), Util.ANSI.Green) + "Placeholder");
-  }
-  public static void displayBusinessHelp() {
-    System.out.println(Util.prefix("Business tools to support developers", Util.ANSI.Green));
-    System.out.println();
-    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("adama business", Util.ANSI.Green) + " " + Util.prefix("[BUSINESSSUBCOMMAND]", Util.ANSI.Magenta));
-    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix(Util.justifyLeft("--config", 15), Util.ANSI.Green) + "Supplies a config file path other than the default (~/.adama)");
-    System.out.println();
-    System.out.println(Util.prefix("BUSINESSSUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix(Util.justifyLeft("add-balance", 15), Util.ANSI.Green) + "Interactive setup for the config");
   }
   public static void displayCodeHelp() {
     System.out.println(Util.prefix("Local developer tools", Util.ANSI.Green));

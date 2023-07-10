@@ -15,8 +15,6 @@ public interface RootHandler {
   SpaceHandler makeSpaceHandler();
   AuthorityHandler makeAuthorityHandler();
   AccountHandler makeAccountHandler();
-  AwsHandler makeAwsHandler();
-  BusinessHandler makeBusinessHandler();
   CodeHandler makeCodeHandler();
   ContribHandler makeContribHandler();
   DatabaseHandler makeDatabaseHandler();

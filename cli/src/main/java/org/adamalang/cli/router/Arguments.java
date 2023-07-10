@@ -952,7 +952,7 @@ public class Arguments {
 	public static class AuthorityAppendLocalArgs {
 		public Config config;
 		public String authority;
-		public String keystore;
+		public String keystore = "keystore.json";
 		public String priv;
 		public static AuthorityAppendLocalArgs from(String[] args, int start) {
 			AuthorityAppendLocalArgs returnArgs = new AuthorityAppendLocalArgs();
@@ -961,7 +961,7 @@ public class Arguments {
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
-			String[] missing = new String[]{"--authority", "--keystore", "--priv", };
+			String[] missing = new String[]{"--authority", "--priv", };
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
 					case "-a":
@@ -981,7 +981,6 @@ public class Arguments {
 						if (k+1 < args.length) {
 							returnArgs.keystore = args[k+1];
 							k++;
-							missing[1] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -993,7 +992,7 @@ public class Arguments {
 						if (k+1 < args.length) {
 							returnArgs.priv = args[k+1];
 							k++;
-							missing[2] = null;
+							missing[1] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -1030,8 +1029,9 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama authority append-local", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-k, --keystore", Util.ANSI.Green) + " " + Util.prefix("<keystore>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-p, --priv", Util.ANSI.Green) + " " + Util.prefix("<priv>", Util.ANSI.White));
+			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-k, --keystore", Util.ANSI.Green) + " " + Util.prefix("<keystore>", Util.ANSI.White));
 		}
 	}
 	public static class AuthorityCreateArgs {
@@ -1071,8 +1071,8 @@ public class Arguments {
 	public static class AuthorityCreateLocalArgs {
 		public Config config;
 		public String authority;
-		public String keystore;
-		public String priv;
+		public String keystore = "keystore.json";
+		public String priv = "private.key.json";
 		public static AuthorityCreateLocalArgs from(String[] args, int start) {
 			AuthorityCreateLocalArgs returnArgs = new AuthorityCreateLocalArgs();
 			try {
@@ -1080,7 +1080,7 @@ public class Arguments {
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
-			String[] missing = new String[]{"--authority", "--keystore", "--priv", };
+			String[] missing = new String[]{"--authority", };
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
 					case "-a":
@@ -1100,7 +1100,6 @@ public class Arguments {
 						if (k+1 < args.length) {
 							returnArgs.keystore = args[k+1];
 							k++;
-							missing[1] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -1112,7 +1111,6 @@ public class Arguments {
 						if (k+1 < args.length) {
 							returnArgs.priv = args[k+1];
 							k++;
-							missing[2] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -1149,6 +1147,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama authority create-local", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White));
+			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-k, --keystore", Util.ANSI.Green) + " " + Util.prefix("<keystore>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-p, --priv", Util.ANSI.Green) + " " + Util.prefix("<priv>", Util.ANSI.White));
 		}
@@ -1537,369 +1536,6 @@ public class Arguments {
 			System.out.println(Util.prefix("Test a Google token converts to an email", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama account test-gtoken", Util.ANSI.Green));
-		}
-	}
-	public static class AwsDownloadArchiveArgs {
-		public Config config;
-		public String archive;
-		public String space;
-		public String key;
-		public static AwsDownloadArchiveArgs from(String[] args, int start) {
-			AwsDownloadArchiveArgs returnArgs = new AwsDownloadArchiveArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			String[] missing = new String[]{"--archive", "--space", "--key", };
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-					case "-a":
-					case "--archive": {
-						if (k+1 < args.length) {
-							returnArgs.archive = args[k+1];
-							k++;
-							missing[0] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-					case "-s":
-					case "--space": {
-						if (k+1 < args.length) {
-							returnArgs.space = args[k+1];
-							k++;
-							missing[1] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-					case "-k":
-					case "--key": {
-						if (k+1 < args.length) {
-							returnArgs.key = args[k+1];
-							k++;
-							missing[2] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			boolean invalid = false;
-			for (String misArg : missing) {
-				if (misArg != null) {
-					System.err.println("Expected argument '" + misArg + "'");
-					invalid = true;
-				}
-			}
-			return (invalid ? null : returnArgs);
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Download (and validate) an archive", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama aws download-archive", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
-			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-a, --archive", Util.ANSI.Green) + " " + Util.prefix("<archive>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
-		}
-	}
-	public static class AwsMemoryTestArgs {
-		public Config config;
-		public static AwsMemoryTestArgs from(String[] args, int start) {
-			AwsMemoryTestArgs returnArgs = new AwsMemoryTestArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			return returnArgs;
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Crash by allocating memory", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama aws memory-test", Util.ANSI.Green));
-		}
-	}
-	public static class AwsSetupArgs {
-		public Config config;
-		public static AwsSetupArgs from(String[] args, int start) {
-			AwsSetupArgs returnArgs = new AwsSetupArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			return returnArgs;
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Interactive setup for the config", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama aws setup", Util.ANSI.Green));
-		}
-	}
-	public static class AwsTestAssetListingArgs {
-		public Config config;
-		public String space;
-		public String key;
-		public static AwsTestAssetListingArgs from(String[] args, int start) {
-			AwsTestAssetListingArgs returnArgs = new AwsTestAssetListingArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			String[] missing = new String[]{"--space", "--key", };
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-					case "-s":
-					case "--space": {
-						if (k+1 < args.length) {
-							returnArgs.space = args[k+1];
-							k++;
-							missing[0] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-					case "-k":
-					case "--key": {
-						if (k+1 < args.length) {
-							returnArgs.key = args[k+1];
-							k++;
-							missing[1] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			boolean invalid = false;
-			for (String misArg : missing) {
-				if (misArg != null) {
-					System.err.println("Expected argument '" + misArg + "'");
-					invalid = true;
-				}
-			}
-			return (invalid ? null : returnArgs);
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Placeholder", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama aws test-asset-listing", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
-			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
-		}
-	}
-	public static class AwsTestEmailArgs {
-		public Config config;
-		public static AwsTestEmailArgs from(String[] args, int start) {
-			AwsTestEmailArgs returnArgs = new AwsTestEmailArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			return returnArgs;
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Test Email via AWS", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama aws test-email", Util.ANSI.Green));
-		}
-	}
-	public static class AwsTestEnqueueArgs {
-		public Config config;
-		public static AwsTestEnqueueArgs from(String[] args, int start) {
-			AwsTestEnqueueArgs returnArgs = new AwsTestEnqueueArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			return returnArgs;
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Placeholder", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama aws test-enqueue", Util.ANSI.Green));
-		}
-	}
-	public static class BusinessAddBalanceArgs {
-		public Config config;
-		public String email;
-		public String pennies;
-		public static BusinessAddBalanceArgs from(String[] args, int start) {
-			BusinessAddBalanceArgs returnArgs = new BusinessAddBalanceArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			String[] missing = new String[]{"--email", "--pennies", };
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-					case "-e":
-					case "--email": {
-						if (k+1 < args.length) {
-							returnArgs.email = args[k+1];
-							k++;
-							missing[0] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-					case "-p":
-					case "--pennies": {
-						if (k+1 < args.length) {
-							returnArgs.pennies = args[k+1];
-							k++;
-							missing[1] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			boolean invalid = false;
-			for (String misArg : missing) {
-				if (misArg != null) {
-					System.err.println("Expected argument '" + misArg + "'");
-					invalid = true;
-				}
-			}
-			return (invalid ? null : returnArgs);
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Interactive setup for the config", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama business add-balance", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
-			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-e, --email", Util.ANSI.Green) + " " + Util.prefix("<email>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-p, --pennies", Util.ANSI.Green) + " " + Util.prefix("<pennies>", Util.ANSI.White));
 		}
 	}
 	public static class CodeBundlePlanArgs {
