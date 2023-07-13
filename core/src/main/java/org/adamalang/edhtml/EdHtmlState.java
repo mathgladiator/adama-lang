@@ -22,6 +22,7 @@ public class EdHtmlState {
   public final File gen_path;
   public final Element document;
   public final StringBuilder output_rx;
+  public final boolean skip_use;
 
   public EdHtmlState(String[] args) throws Exception {
     this.base = baseOf(args);
@@ -44,9 +45,23 @@ public class EdHtmlState {
     if (!(this.gen_path.exists() && this.gen_path.isDirectory())) {
       throw new Exception("The --gen path does not exist:" + includes_path);
     }
+    this.skip_use = false;
     this.output_rx = new StringBuilder();
     this.output_rx.append("<forest>\n");
     this.document = Jsoup.parse(input).getElementsByTag("build").first();
+  }
+
+  public EdHtmlState(String base, String input, String output, String include_path, String gen_path, boolean skipUse) throws Exception {
+    this.base = new File(base);
+    this.input = new File(this.base, input);
+    this.output = new File(this.base, output);
+    this.includes_path = new File(this.base, include_path);
+    this.gen_path = new File(this.base, gen_path);
+
+    this.skip_use = skipUse;
+    this.output_rx = new StringBuilder();
+    this.output_rx.append("<forest>\n");
+    this.document = Jsoup.parse(this.input).getElementsByTag("build").first();
   }
 
   /** helper: find the base path */

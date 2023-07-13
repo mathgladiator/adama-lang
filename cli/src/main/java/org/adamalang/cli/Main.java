@@ -40,9 +40,6 @@ public class Main {
         case "document":
           Documents.execute(config, next);
           return;
-        case "frontend":
-          Frontend.execute(config, next);
-          return;
         case "init":
           Init.execute(config, next);
           return;

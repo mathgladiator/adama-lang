@@ -3049,6 +3049,8 @@ public class Arguments {
 	}
 	public static class FrontendDevServerArgs {
 		public Config config;
+		public String rxhtmlPath = ".";
+		public String assetPath = ".";
 		public static FrontendDevServerArgs from(String[] args, int start) {
 			FrontendDevServerArgs returnArgs = new FrontendDevServerArgs();
 			try {
@@ -3058,6 +3060,28 @@ public class Arguments {
 			}
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
+					case "-r":
+					case "--rxhtml-path": {
+						if (k+1 < args.length) {
+							returnArgs.rxhtmlPath = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-a":
+					case "--asset-path": {
+						if (k+1 < args.length) {
+							returnArgs.assetPath = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -3078,11 +3102,20 @@ public class Arguments {
 		public static void help() {
 			System.out.println(Util.prefix("Host the working directory as a webserver", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama frontend dev-server", Util.ANSI.Green));
+			System.out.println("    " + Util.prefix("adama frontend dev-server", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-a, --asset-path", Util.ANSI.Green) + " " + Util.prefix("<asset-path>", Util.ANSI.White));
 		}
 	}
 	public static class FrontendEdhtmlArgs {
 		public Config config;
+		public String base = ".";
+		public String input = "build.ed.html";
+		public String output = "output.rx.html";
+		public String includes = "includes";
+		public String skipuse = "false";
+		public String gen = "gen";
 		public static FrontendEdhtmlArgs from(String[] args, int start) {
 			FrontendEdhtmlArgs returnArgs = new FrontendEdhtmlArgs();
 			try {
@@ -3092,6 +3125,72 @@ public class Arguments {
 			}
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
+					case "-b":
+					case "--base": {
+						if (k+1 < args.length) {
+							returnArgs.base = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-i":
+					case "--input": {
+						if (k+1 < args.length) {
+							returnArgs.input = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-o":
+					case "--output": {
+						if (k+1 < args.length) {
+							returnArgs.output = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-in":
+					case "--includes": {
+						if (k+1 < args.length) {
+							returnArgs.includes = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-sk":
+					case "--skipuse": {
+						if (k+1 < args.length) {
+							returnArgs.skipuse = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-g":
+					case "--gen": {
+						if (k+1 < args.length) {
+							returnArgs.gen = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -3112,11 +3211,19 @@ public class Arguments {
 		public static void help() {
 			System.out.println(Util.prefix("Compile an edhtml build instruction file", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama frontend edhtml", Util.ANSI.Green));
+			System.out.println("    " + Util.prefix("adama frontend edhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-b, --base", Util.ANSI.Green) + " " + Util.prefix("<base>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-in, --includes", Util.ANSI.Green) + " " + Util.prefix("<includes>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-sk, --skipuse", Util.ANSI.Green) + " " + Util.prefix("<skipuse>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-g, --gen", Util.ANSI.Green) + " " + Util.prefix("<gen>", Util.ANSI.White));
 		}
 	}
 	public static class FrontendRxhtmlArgs {
 		public Config config;
+		public String input;
 		public String output;
 		public static FrontendRxhtmlArgs from(String[] args, int start) {
 			FrontendRxhtmlArgs returnArgs = new FrontendRxhtmlArgs();
@@ -3125,15 +3232,27 @@ public class Arguments {
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
-			String[] missing = new String[]{"--output", };
+			String[] missing = new String[]{"--input", "--output", };
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
+					case "-i":
+					case "--input": {
+						if (k+1 < args.length) {
+							returnArgs.input = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 					case "-o":
 					case "--output": {
 						if (k+1 < args.length) {
 							returnArgs.output = args[k+1];
 							k++;
-							missing[0] = null;
+							missing[1] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -3169,6 +3288,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama frontend rxhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
 		}
 	}

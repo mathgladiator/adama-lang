@@ -31,6 +31,6 @@ public class Text implements Tree {
 
   @Override
   public String js(String env) {
-    return "\"" + text + "\""; // BIG TODO: escaping
+    return "\"" + text.replaceAll("[\n|\r]", "") + "\""; // BIG TODO: escaping
   }
 }

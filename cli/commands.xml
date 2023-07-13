@@ -12,6 +12,46 @@
         </documentation>
     </arg-definition>
     <!-- May have to represent the actual representation-->
+
+    <arg-definition name="rxhtml-path" type="string" short="r">
+        <documentation>
+            The path to scan for RxHTML files
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="asset-path" type="string" short="a">
+        <documentation>
+            The path to scan for static assets
+        </documentation>
+    </arg-definition>
+
+
+    <arg-definition name="base" type="string" short="b">
+        <documentation>
+            The base for working with edhtml
+        </documentation>
+    </arg-definition>
+
+
+    <arg-definition name="includes" type="string" short="in">
+        <documentation>
+            The rx.html includes
+        </documentation>
+    </arg-definition>
+    <arg-definition name="skipuse" type="string" short="sk">
+        <documentation>
+            Skip the &lt;use&gt; elements.
+        </documentation>
+    </arg-definition>
+
+
+    <arg-definition name="gen" type="string" short="g">
+        <documentation>
+            The factory for generating stuff
+        </documentation>
+    </arg-definition>
+
+
     <arg-definition name="file" type="string" short="f">
         <documentation>
             A file
@@ -635,22 +675,26 @@
             <documentation>
                 Compile an rxhtml template set
             </documentation>
+            <arg name="input" />
             <arg name="output" />
         </command>
         <command name="edhtml">
             <documentation>
                 Compile an edhtml build instruction file
             </documentation>
-<!--            <arg name="base" default ="." />-->
-<!--            <arg name="input" default="build.ed.html" />-->
-<!--            <arg name="output" default="output.rx.html"/>-->
-<!--            <arg name="includes" default="includes"/>-->
-<!--            <arg name="gen" default="gen" />-->
+            <arg name="base" default ="." />
+            <arg name="input" default="build.ed.html" />
+            <arg name="output" default="output.rx.html" />
+            <arg name="includes" default="includes" />
+            <arg name="skipuse" default="false" />
+            <arg name="gen" default="gen" />
         </command>
         <command name="dev-server">
             <documentation>
                Host the working directory as a webserver
             </documentation>
+            <arg name="rxhtml-path" default="." />
+            <arg name="asset-path" default="." />
         </command>
     </group>
 

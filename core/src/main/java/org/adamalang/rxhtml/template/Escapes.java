@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class Escapes {
   public static String escapeNewLine(String x) {
-    return String.join("\\n", x.split(Pattern.quote("\n"), -1));
+    return String.join("\\n", x.split(Pattern.quote("\n"), -1)).replaceAll(Pattern.quote("\r"), "");
   }
   public static String escapeSlash(String x) {
     return String.join("\\\\", x.split(Pattern.quote("\\"), -1));
