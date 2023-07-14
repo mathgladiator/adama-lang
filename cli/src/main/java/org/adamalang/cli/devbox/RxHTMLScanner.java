@@ -8,6 +8,7 @@
  */
 package org.adamalang.cli.devbox;
 
+import org.adamalang.cli.interactive.TerminalIO;
 import org.adamalang.common.web.UriMatcher;
 import org.adamalang.rxhtml.Feedback;
 import org.adamalang.rxhtml.RxHtmlResult;
@@ -23,14 +24,16 @@ import java.util.function.Consumer;
 /** this class will scan a directory for changes to .rx.html sources */
 public class RxHTMLScanner implements AutoCloseable {
   private final AtomicBoolean alive;
+  private final TerminalIO io;
   private final File scanRoot;
   private final Consumer<RxHTMLBundle> onBuilt;
   private final WatchService service;
   private final HashMap<String, WatchKey> watchKeyCache;
   private final Thread scanner;
 
-  public RxHTMLScanner(AtomicBoolean alive, File scanRoot, Consumer<RxHTMLBundle> onBuilt) throws Exception {
+  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, Consumer<RxHTMLBundle> onBuilt) throws Exception {
     this.alive = alive;
+    this.io = io;
     this.scanRoot = scanRoot;
     this.onBuilt = onBuilt;
     this.service = FileSystems.getDefault().newWatchService();
@@ -109,6 +112,7 @@ public class RxHTMLScanner implements AutoCloseable {
   }
 
   private void rebuild() throws Exception {
+    io.notice("RxHTML rebuilt");
     ArrayList<UriMatcher> matchers = new ArrayList<>();
     RxHtmlResult updated = RxHtmlTool.convertFilesToTemplateForest(rxhtml(scanRoot), matchers, Feedback.NoOp);
     onBuilt.accept(new RxHTMLBundle(matchers, updated.shell.makeShell(updated, true), updated.javascript, updated.style));

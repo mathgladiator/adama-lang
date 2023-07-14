@@ -117,8 +117,7 @@ public class DevBoxServiceBase implements ServiceBase {
     return null;
   }
 
-  public void start() throws Exception {
-    System.err.println("Starting Webserver");
+  public Thread start() throws Exception {
     ServiceRunnable webServer = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), this, new CertificateFinder() {
       @Override
       public void fetch(String domain, Callback<SslContext> callback) {
@@ -126,15 +125,9 @@ public class DevBoxServiceBase implements ServiceBase {
       }
     }, () -> {
     });
-    webServer.run();
-    System.err.println("WebServer Died");
-    // TODO
-    /*
     Thread serviceThread = new Thread(webServer);
     serviceThread.start();
     webServer.waitForReady(1000);
-    serviceThread.join();
-     */
-
+    return serviceThread;
   }
 }

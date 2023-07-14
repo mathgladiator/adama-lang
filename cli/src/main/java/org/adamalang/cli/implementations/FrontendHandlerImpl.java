@@ -10,6 +10,7 @@ package org.adamalang.cli.implementations;
 
 import org.adamalang.cli.devbox.DevBoxServiceBase;
 import org.adamalang.cli.devbox.RxHTMLScanner;
+import org.adamalang.cli.interactive.TerminalIO;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.FrontendHandler;
 import org.adamalang.cli.runtime.Output;
@@ -59,12 +60,23 @@ public class FrontendHandlerImpl implements FrontendHandler {
     @Override
     public void devServer(Arguments.FrontendDevServerArgs args, Output.YesOrError output) throws Exception {
         AtomicBoolean alive = new AtomicBoolean(true);
+        TerminalIO terminal = new TerminalIO();
         AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
-        try (RxHTMLScanner scanner = new RxHTMLScanner(alive, new File(args.rxhtmlPath), (b) -> bundle.set(b))) {
+        try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), (b) -> bundle.set(b))) {
             WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
+            terminal.notice("Starting Webserver");
             DevBoxServiceBase base = new DevBoxServiceBase(webConfig, bundle, new File(args.assetPath));
-            base.start();
-            // TODO: throw the above into a thread, and then work with console IO here (FUN PART)
+            Thread webServerThread = base.start();
+            while (alive.get()) {
+                String ln = terminal.readline().trim();
+                if ("kill".equalsIgnoreCase(ln)) {
+                    terminal.notice("Lowering alive");
+                    alive.set(false);
+                    webServerThread.interrupt();
+
+                }
+            }
+
         }
     }
 }

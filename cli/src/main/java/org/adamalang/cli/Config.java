@@ -22,7 +22,6 @@ import java.util.function.Consumer;
 public class Config {
   public final String[] argsForTool;
   public final String configPath;
-  public final boolean requestingHelp;
   private ObjectNode cache;
 
   public Config(String[] args) throws Exception {
@@ -33,16 +32,12 @@ public class Config {
       if ("--config".equals(args[k]) && k + 1 < args.length) {
         _configPath = args[k + 1];
         k++;
-      } else if ("--help".equals(args[k]) || "-h".equals(args[k])) {
-        _requestingHelp = true;
-        break;
       } else {
         argsToUse.add(args[k]);
       }
     }
     this.argsForTool = argsToUse.toArray(new String[argsToUse.size()]);
     this.configPath = _configPath;
-    this.requestingHelp = _requestingHelp;
     File _configFile = new File(configPath);
     if (!_configFile.exists()) {
       ObjectNode defaultConfig = Json.newJsonObject();
