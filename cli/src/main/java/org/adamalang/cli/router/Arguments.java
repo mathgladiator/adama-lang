@@ -3051,7 +3051,7 @@ public class Arguments {
 		public Config config;
 		public String rxhtmlPath = ".";
 		public String assetPath = ".";
-		public String localLibadamaPath = "";
+		public String localLibadamaPath = null;
 		public static FrontendDevServerArgs from(String[] args, int start) {
 			FrontendDevServerArgs returnArgs = new FrontendDevServerArgs();
 			try {
