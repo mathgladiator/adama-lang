@@ -60,25 +60,24 @@ public class RxHtmlTool {
 
   public static RxHtmlResult convertFilesToTemplateForest(List<File> files, ArrayList<UriMatcher> matchers, ShellConfig config) throws Exception {
     Environment env = Environment.fresh(config.feedback);
+    String bundled = Bundler.bundle(files);
     Root.start(env);
     Shell shell = new Shell(config);
     StringBuilder style = new StringBuilder();
     ArrayList<String> patterns = new ArrayList<>();
-    for (File file : files) {
-      Document document = Jsoup.parse(file, "UTF-8");
-      shell.scan(document);
-      ArrayList<String> defaultRedirects = getDefaultRedirect(document);
-      for (Element element : document.getElementsByTag("template")) {
-        Root.template(env.element(element, true));
-      }
-      for (Element element : document.getElementsByTag("style")) {
-        style.append(element.html()).append(" ");
-      }
-      for (Element element : document.getElementsByTag("page")) {
-        matchers.add(RxHtmlToAdama.uriOf(element.attr("uri")).matcher());
-        patterns.add(element.attr("uri"));
-        Root.page(env.element(element, true), defaultRedirects);
-      }
+    Document document = Jsoup.parse(bundled, "UTF-8");
+    shell.scan(document);
+    ArrayList<String> defaultRedirects = getDefaultRedirect(document);
+    for (Element element : document.getElementsByTag("template")) {
+      Root.template(env.element(element, true));
+    }
+    for (Element element : document.getElementsByTag("style")) {
+      style.append(element.html()).append(" ");
+    }
+    for (Element element : document.getElementsByTag("page")) {
+      matchers.add(RxHtmlToAdama.uriOf(element.attr("uri")).matcher());
+      patterns.add(element.attr("uri"));
+      Root.page(env.element(element, true), defaultRedirects);
     }
     String javascript = Root.finish(env);
     return new RxHtmlResult(javascript, style.toString().trim(), shell, patterns);
