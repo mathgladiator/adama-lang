@@ -36,7 +36,30 @@ public class TemplateIfnotSimpleTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script>");
+    gold.append("\n");
+    gold.append("\n(function($){");
+    gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c = $.E('div');");
+    gold.append("\n    $.IF(c,a,'obj',false,false,function(e,d) {");
+    gold.append("\n      e.append($.L(d,'key'));");
+    gold.append("\n      e.append($.T(' - '));");
+    gold.append("\n      e.append($.L(d,'value'));");
+    gold.append("\n    },function(e,d) {");
+    gold.append("\n      var f = $.E('div');");
+    gold.append("\n      f.append($.T(' Not set! '));");
+    gold.append("\n      e.append(f);");
+    gold.append("\n    });");
+    gold.append("\n    b.append(c);");
+    gold.append("\n  });");
+    gold.append("\n})(RxHTML);");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</script><style>");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</style></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

@@ -37,7 +37,31 @@ public class TemplateCommandGotoTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script>");
+    gold.append("\n");
+    gold.append("\n(function($){");
+    gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c = $.E('button');");
+    gold.append("\n    var e = {};");
+    gold.append("\n    $.YS($.pV(a),e,'here');");
+    gold.append("\n    $.onGO(c,'click',a,function(){ return \"/\" + e['here'];});");
+    gold.append("\n    c.append($.T('goto View'));");
+    gold.append("\n    b.append(c);");
+    gold.append("\n    var c = $.E('button');");
+    gold.append("\n    var g = {};");
+    gold.append("\n    $.YS($.pD(a),g,'there');");
+    gold.append("\n    $.onGO(c,'click',a,function(){ return \"/path-to-data/\" + g['there'];});");
+    gold.append("\n    c.append($.T('goto Data'));");
+    gold.append("\n    b.append(c);");
+    gold.append("\n  });");
+    gold.append("\n})(RxHTML);");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</script><style>");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</style></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

@@ -35,7 +35,29 @@ public class TemplateTemplatesTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script>");
+    gold.append("\n");
+    gold.append("\n(function($){");
+    gold.append("\n  $.TP('temp', function(a,b,c) {");
+    gold.append("\n    a.append($.T(' This is a template with a fragment: '));");
+    gold.append("\n    c(a,b,'');");
+    gold.append("\n  });");
+    gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    b.append($.T(' This is a page which is going to use the template. '));");
+    gold.append("\n    var c = $.E('div');");
+    gold.append("\n    $.UT(c,a,'temp', function(d,e,f) {");
+    gold.append("\n      d.append($.T(' This is data within the template. '));");
+    gold.append("\n    });");
+    gold.append("\n    b.append(c);");
+    gold.append("\n  });");
+    gold.append("\n})(RxHTML);");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</script><style>");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</style></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

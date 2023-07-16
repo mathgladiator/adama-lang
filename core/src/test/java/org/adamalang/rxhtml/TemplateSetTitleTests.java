@@ -31,7 +31,25 @@ public class TemplateSetTitleTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script>");
+    gold.append("\n");
+    gold.append("\n(function($){");
+    gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.RX(['value']);");
+    gold.append("\n    $.Y2(a,c,'value','val',function(d) {");
+    gold.append("\n      c.value=d['val'] + \" - YO\"");
+    gold.append("\n      c.__();");
+    gold.append("\n    });");
+    gold.append("\n    $.ST(c);");
+    gold.append("\n  });");
+    gold.append("\n})(RxHTML);");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</script><style>");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</style></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

@@ -25,7 +25,19 @@ public class TemplateShellWarnSecondPickFirstTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><title>Default Title</title><meta name=\"referrer\" content=\"origin\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/favicon-16x16.png\"><link rel=\"manifest\" href=\"/site.webmanifest\"><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><title>Default Title</title><meta name=\"referrer\" content=\"origin\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/favicon-16x16.png\"><link rel=\"manifest\" href=\"/site.webmanifest\"><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script>");
+    gold.append("\n");
+    gold.append("\n(function($){");
+    gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n  });");
+    gold.append("\n})(RxHTML);");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</script><style>");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</style></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

@@ -37,7 +37,31 @@ public class TemplateCheckboxTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script>");
+    gold.append("\n");
+    gold.append("\n(function($){");
+    gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c = $.E('input');");
+    gold.append("\n    c.setAttribute('type','checkbox');");
+    gold.append("\n    {");
+    gold.append("\n      var d = {};");
+    gold.append("\n      d.__dom = c;");
+    gold.append("\n      var e = (function() {");
+    gold.append("\n        this.__dom.checked=this['is_thing'];");
+    gold.append("\n      }).bind(d);");
+    gold.append("\n      $.Y(a,d,'is_thing',e);");
+    gold.append("\n      e();");
+    gold.append("\n    }");
+    gold.append("\n    b.append(c);");
+    gold.append("\n  });");
+    gold.append("\n})(RxHTML);");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</script><style>");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</style></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

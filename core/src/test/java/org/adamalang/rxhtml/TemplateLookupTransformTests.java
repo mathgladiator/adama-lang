@@ -31,7 +31,25 @@ public class TemplateLookupTransformTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script>");
+    gold.append("\n");
+    gold.append("\n(function($){");
+    gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    b.append($.LT($.pR($.pD(a)),'title',function(x) { return ('' + x).trim(); }));");
+    gold.append("\n    b.append($.LT(a,'person',function(x) { return x.agent; }));");
+    gold.append("\n    b.append($.LT(a,'person',function(x) { return x.authority; }));");
+    gold.append("\n    b.append($.LT(a,'person',function(x) { return ('' + x).toUpperCase(); }));");
+    gold.append("\n    b.append($.LT(a,'person',function(x) { return ('' + x).toLowerCase(); }));");
+    gold.append("\n    b.append($.LT(a,'person',function(x) { return x; }));");
+    gold.append("\n  });");
+    gold.append("\n})(RxHTML);");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</script><style>");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</style></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

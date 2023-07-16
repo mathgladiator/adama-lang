@@ -33,12 +33,10 @@ public class Shell {
     }
   }
 
-  public String makeShell(RxHtmlResult result, boolean inline) {
+  public String makeShell(RxHtmlResult result) {
     StringBuilder sb = new StringBuilder();
     StringBuilder scripts = new StringBuilder();
-
     if (shell != null) {
-      inline = shell.hasAttr("inline");
       sb.append("<!DOCTYPE html>\n<html");
       if (shell.hasAttr("html-class")) {
         sb.append(" class=\"").append(shell.attr("html-class")).append("\"");
@@ -65,13 +63,8 @@ public class Shell {
       sb.append("<!DOCTYPE html>\n<html>\n<head>");
     }
     sb.append("<script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script>");
-    if (inline) {
-      sb.append("<script>\n\n").append(result.javascript).append("\n\n</script>");
-      sb.append("<style>\n\n").append(result.style).append("\n\n</style>");
-    } else {
-      sb.append("<link rel=\"stylesheet\" href=\"/template.css\">");
-      sb.append("<script src=\"/template.js\"></script>");
-    }
+    sb.append("<script>\n\n").append(result.javascript).append("\n\n</script>");
+    sb.append("<style>\n\n").append(result.style).append("\n\n</style>");
     sb.append(scripts);
     sb.append("</head>");
     if (shell != null) {

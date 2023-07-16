@@ -33,7 +33,27 @@ public class TemplateSvgTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><link rel=\"stylesheet\" href=\"/template.css\"><script src=\"/template.js\"></script></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script>");
+    gold.append("\n");
+    gold.append("\n(function($){");
+    gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c = $.E('svg', 'http://www.w3.org/2000/svg');");
+    gold.append("\n    c.setAttribute('height','210');");
+    gold.append("\n    c.setAttribute('width','400');");
+    gold.append("\n    var d = $.E('path', 'http://www.w3.org/2000/svg');");
+    gold.append("\n    d.setAttribute('d','M150 0 L75 200 L225 200 Z');");
+    gold.append("\n    c.append(d);");
+    gold.append("\n    c.append($.T(' Sorry, your browser does not support inline SVG. '));");
+    gold.append("\n    b.append(c);");
+    gold.append("\n  });");
+    gold.append("\n})(RxHTML);");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</script><style>");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n</style></head><body></body><script>RxHTML.init();</script></html>");
     return gold.toString();
   }
   @Override

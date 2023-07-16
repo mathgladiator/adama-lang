@@ -32,18 +32,9 @@ public class RxHtmlToAdama {
 
   public static String codegen(String rxhtml) throws AdamaLangException {
     RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(rxhtml, Feedback.NoOp);
-    String escapedTemplate = Escapes.escape34(result.javascript);
-    String path = "t_" + Long.toString(System.currentTimeMillis(), 16) + ".js";
-
     StringBuilder adama = new StringBuilder();
-    adama.append("@web get /\"").append(path).append("\" {\n");
-    adama.append("  return {\n");
-    adama.append("    js: \"" + escapedTemplate + "\"\n");
-    adama.append("  };\n");
-    adama.append("}\n");
-
      for (Uri uri : assembleUrisFrom(rxhtml)) {
-      String shell = result.shell.makeShell(result, true);
+      String shell = result.shell.makeShell(result);
       adama.append("@web get ").append(uri.rxhtmlPath()).append(" {\n");
       adama.append("  return {\n");
       adama.append("    html: \"").append(Escapes.escape34(shell)).append("\"\n");

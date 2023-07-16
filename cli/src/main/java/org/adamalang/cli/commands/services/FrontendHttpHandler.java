@@ -145,7 +145,7 @@ public class FrontendHttpHandler implements HttpHandler {
         RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, Feedback.NoOp);
         // TODO: cache this along with a timestamp (OR, tie it to the document)
         if (rxhtmlResult.test(uri)) {
-          String html = rxhtmlResult.shell.makeShell(rxhtmlResult, true);
+          String html = rxhtmlResult.shell.makeShell(rxhtmlResult);
           HttpResult result = new HttpResult("text/html", html.getBytes(StandardCharsets.UTF_8), false);
           callback.success(result);
           return;

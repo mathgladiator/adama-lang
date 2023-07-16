@@ -115,7 +115,7 @@ public class RxHTMLScanner implements AutoCloseable {
     io.notice("RxHTML rebuilt");
     ArrayList<UriMatcher> matchers = new ArrayList<>();
     RxHtmlResult updated = RxHtmlTool.convertFilesToTemplateForest(rxhtml(scanRoot), matchers, Feedback.NoOp);
-    onBuilt.accept(new RxHTMLBundle(matchers, updated.shell.makeShell(updated, true), updated.javascript, updated.style));
+    onBuilt.accept(new RxHTMLBundle(matchers, updated.shell.makeShell(updated), updated.javascript, updated.style));
   }
 
 

@@ -55,6 +55,6 @@ public class RxHtmlResult {
 
   @Override
   public String toString() {
-    return "JavaScript:" + javascript.trim() + "\nStyle:" + style.trim() + "\nShell:" + shell.makeShell(this, false);
+    return "JavaScript:" + javascript.trim() + "\nStyle:" + style.trim() + "\nShell:" + shell.makeShell(this);
   }
 }
