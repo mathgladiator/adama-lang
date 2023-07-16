@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.rxhtml;
+package org.adamalang.rxhtml.template.config;
 
 import org.jsoup.nodes.Element;
 

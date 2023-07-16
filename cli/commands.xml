@@ -25,6 +25,11 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="local-libadama-path" type="string" short="lap">
+        <documentation>
+            The path to the libadama.js source code for direct linkage.
+        </documentation>
+    </arg-definition>
 
     <arg-definition name="base" type="string" short="b">
         <documentation>
@@ -695,6 +700,7 @@
             </documentation>
             <arg name="rxhtml-path" default="." />
             <arg name="asset-path" default="." />
+            <arg name="local-libadama-path" default="null" />
         </command>
     </group>
 

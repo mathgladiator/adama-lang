@@ -9,12 +9,11 @@
 package org.adamalang.rxhtml;
 
 import org.adamalang.common.web.UriMatcher;
-import org.adamalang.rxhtml.atl.Parser;
-import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.template.Environment;
-import org.adamalang.rxhtml.template.Escapes;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.Shell;
+import org.adamalang.rxhtml.template.config.Feedback;
+import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,7 +21,6 @@ import org.jsoup.nodes.Element;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
@@ -36,13 +34,13 @@ public class RxHtmlTool {
     return defaults;
   }
 
-  public static RxHtmlResult convertStringToTemplateForest(String str, Feedback feedback) {
-    Environment env = Environment.fresh(feedback);
+  public static RxHtmlResult convertStringToTemplateForest(String str, ShellConfig config) {
+    Environment env = Environment.fresh(config.feedback);
     Root.start(env);
     Document document = Jsoup.parse(str);
     ArrayList<String> defaultRedirects = getDefaultRedirect(document);
     StringBuilder style = new StringBuilder();
-    Shell shell = new Shell(feedback);
+    Shell shell = new Shell(config);
     shell.scan(document);
     ArrayList<String> patterns = new ArrayList<>();
     for (Element element : document.getElementsByTag("template")) {
@@ -60,10 +58,10 @@ public class RxHtmlTool {
     return new RxHtmlResult(javascript, style.toString(), shell, patterns);
   }
 
-  public static RxHtmlResult convertFilesToTemplateForest(List<File> files, ArrayList<UriMatcher> matchers, Feedback feedback) throws Exception {
-    Environment env = Environment.fresh(feedback);
+  public static RxHtmlResult convertFilesToTemplateForest(List<File> files, ArrayList<UriMatcher> matchers, ShellConfig config) throws Exception {
+    Environment env = Environment.fresh(config.feedback);
     Root.start(env);
-    Shell shell = new Shell(feedback);
+    Shell shell = new Shell(config);
     StringBuilder style = new StringBuilder();
     ArrayList<String> patterns = new ArrayList<>();
     for (File file : files) {

@@ -10,9 +10,11 @@ package org.adamalang.cli.devbox;
 
 import org.adamalang.cli.interactive.TerminalIO;
 import org.adamalang.common.web.UriMatcher;
-import org.adamalang.rxhtml.Feedback;
+import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
+import org.adamalang.rxhtml.template.config.ShellConfig;
+import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.nio.file.*;
@@ -26,15 +28,17 @@ public class RxHTMLScanner implements AutoCloseable {
   private final AtomicBoolean alive;
   private final TerminalIO io;
   private final File scanRoot;
+  private final boolean useLocalAdamaJavascript;
   private final Consumer<RxHTMLBundle> onBuilt;
   private final WatchService service;
   private final HashMap<String, WatchKey> watchKeyCache;
   private final Thread scanner;
 
-  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, Consumer<RxHTMLBundle> onBuilt) throws Exception {
+  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, Consumer<RxHTMLBundle> onBuilt) throws Exception {
     this.alive = alive;
     this.io = io;
     this.scanRoot = scanRoot;
+    this.useLocalAdamaJavascript = useLocalAdamaJavascript;
     this.onBuilt = onBuilt;
     this.service = FileSystems.getDefault().newWatchService();
     this.watchKeyCache = new HashMap<>();
@@ -114,7 +118,13 @@ public class RxHTMLScanner implements AutoCloseable {
   private void rebuild() throws Exception {
     io.notice("RxHTML rebuilt");
     ArrayList<UriMatcher> matchers = new ArrayList<>();
-    RxHtmlResult updated = RxHtmlTool.convertFilesToTemplateForest(rxhtml(scanRoot), matchers, Feedback.NoOp);
+    Feedback feedback = new Feedback() {
+      @Override
+      public void warn(Element element, String warning) {
+        io.notice("Element Warning:" + warning);
+      }
+    };
+    RxHtmlResult updated = RxHtmlTool.convertFilesToTemplateForest(rxhtml(scanRoot), matchers, ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
     onBuilt.accept(new RxHTMLBundle(matchers, updated.shell.makeShell(updated), updated.javascript, updated.style));
   }
 

@@ -8,7 +8,7 @@
  */
 package org.adamalang.rxhtml.acl;
 
-import org.adamalang.rxhtml.Feedback;
+import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.acl.commands.*;
 import org.adamalang.rxhtml.template.Environment;
 import org.junit.Assert;

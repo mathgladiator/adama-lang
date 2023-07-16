@@ -20,6 +20,7 @@ import org.adamalang.edhtml.phases.Generate;
 import org.adamalang.edhtml.phases.Stamp;
 import org.adamalang.edhtml.phases.Use;
 import org.adamalang.rxhtml.RxHtmlTool;
+import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.web.service.WebConfig;
 
 import java.io.File;
@@ -43,7 +44,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
     public void rxhtml(Arguments.FrontendRxhtmlArgs args, Output.YesOrError output) throws Exception {
         ArrayList<File> files = new ArrayList<>();
         aggregateFiles(new File(args.input), files);
-        Files.writeString(new File(args.output).toPath(), RxHtmlTool.convertFilesToTemplateForest(files, new ArrayList<>(), (element, warning) -> System.err.println(warning)).javascript);
+        Files.writeString(new File(args.output).toPath(), RxHtmlTool.convertFilesToTemplateForest(files, new ArrayList<>(), ShellConfig.start().withFeedback((element, warning) -> System.err.println(warning)).end()).javascript);
     }
 
     @Override
@@ -59,13 +60,21 @@ public class FrontendHandlerImpl implements FrontendHandler {
 
     @Override
     public void devServer(Arguments.FrontendDevServerArgs args, Output.YesOrError output) throws Exception {
+        String localLibAdamaJSPath = "".equals(args.localLibadamaPath) ? null : args.localLibadamaPath;
+        File localLibAdamaJSFile = null;
+        if (localLibAdamaJSPath != null) {
+            localLibAdamaJSFile = new File(localLibAdamaJSPath);
+            if (!(localLibAdamaJSFile.exists() && localLibAdamaJSFile.isDirectory())) {
+                throw new Exception("--local-libadama-path was provided but the directory doesn't exist (or is a file)");
+            }
+        }
         AtomicBoolean alive = new AtomicBoolean(true);
         TerminalIO terminal = new TerminalIO();
         AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
-        try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), (b) -> bundle.set(b))) {
+        try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), localLibAdamaJSPath != null, (b) -> bundle.set(b))) {
             WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
             terminal.notice("Starting Webserver");
-            DevBoxServiceBase base = new DevBoxServiceBase(webConfig, bundle, new File(args.assetPath));
+            DevBoxServiceBase base = new DevBoxServiceBase(webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile);
             Thread webServerThread = base.start();
             while (alive.get()) {
                 String ln = terminal.readline().trim();

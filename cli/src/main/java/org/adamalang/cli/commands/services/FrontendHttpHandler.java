@@ -15,7 +15,6 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
 import org.adamalang.common.keys.SigningKeyPair;
-import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.Domain;
 import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.mysql.model.Domains;
@@ -26,9 +25,10 @@ import org.adamalang.net.client.Client;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.web.*;
-import org.adamalang.rxhtml.Feedback;
+import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
+import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.service.SpaceKeyRequest;
 import org.slf4j.Logger;
@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
 
 /** the http handler for the service */
 public class FrontendHttpHandler implements HttpHandler {
@@ -142,7 +141,7 @@ public class FrontendHttpHandler implements HttpHandler {
       }
       String rxhtml = Spaces.getRxHtml(init.database, spaceId);
       if (rxhtml != null) {
-        RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, Feedback.NoOp);
+        RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().end());
         // TODO: cache this along with a timestamp (OR, tie it to the document)
         if (rxhtmlResult.test(uri)) {
           String html = rxhtmlResult.shell.makeShell(rxhtmlResult);

@@ -9,6 +9,7 @@
 package org.adamalang.rxhtml;
 
 import org.adamalang.rxhtml.template.Shell;
+import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ public class RxHtmlResultTests {
     ArrayList<String> patterns = new ArrayList<>();
     patterns.add("/hi/there");
     patterns.add("/hi/$name/ok");
-    RxHtmlResult result = new RxHtmlResult("js", "css", new Shell(Feedback.NoOp), patterns);
+    RxHtmlResult result = new RxHtmlResult("js", "css", new Shell(ShellConfig.start().end()), patterns);
     Assert.assertFalse(result.test("/"));
     Assert.assertFalse(result.test("/hi"));
     Assert.assertFalse(result.test("/hi/nope"));

@@ -28,17 +28,21 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DevBoxServiceBase implements ServiceBase {
 
   private final WebConfig webConfig;
   private final AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle;
   private final File staticAssetRoot;
+  private final File localLibAdamaJS;
 
-  public DevBoxServiceBase(WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot) {
+  public DevBoxServiceBase(WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS) {
     this.webConfig = webConfig;
     this.bundle = bundle;
     this.staticAssetRoot = staticAssetRoot;
+    this.localLibAdamaJS = localLibAdamaJS;
   }
 
   @Override
@@ -72,12 +76,31 @@ public class DevBoxServiceBase implements ServiceBase {
           callback.failure(new ErrorCodeException(500));
           return;
         }
-        if ("/template.js".endsWith(uri)) {
+        if ("/template.js".equals(uri)) {
           callback.success(new HttpResult("text/javascript", current.forestJavaScript.getBytes(), false));
           return;
         }
-        if ("/template.css".endsWith(uri)) {
+        if ("/template.css".equals(uri)) {
           callback.success(new HttpResult("text/javascript", current.forestStyle.getBytes(), false));
+          return;
+        }
+        if (uri != null && uri.endsWith("/devlibadama.js") && localLibAdamaJS != null) {
+          StringBuilder js = new StringBuilder();
+          try {
+            js.append("/** tree.js **/\n\n");
+            js.append(Files.readString(new File(localLibAdamaJS, "tree.js").toPath()));
+            js.append("/** connection.js **/\n\n");
+            js.append(Files.readString(new File(localLibAdamaJS, "connection.js").toPath()));
+            js.append("/** rxhtml.js **/\n\n");
+
+            String rxhtml = Files.readString(new File(localLibAdamaJS, "rxhtml.js").toPath());
+            // TODO: have a way to point this to localhost:$port
+            rxhtml = rxhtml.replaceAll(Pattern.quote("/*ENDPOINT=[*/Adama.Production/*]*/"), Matcher.quoteReplacement("/*REPLACED*/Adama.Production"));
+            js.append(rxhtml);
+            callback.success(new HttpResult("text/javascript", js.toString().getBytes(), false));
+          } catch (Exception ex) {
+            callback.failure(new ErrorCodeException(500));
+          }
           return;
         }
 

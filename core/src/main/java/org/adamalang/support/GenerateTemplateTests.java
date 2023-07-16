@@ -9,11 +9,10 @@
 package org.adamalang.support;
 
 import org.adamalang.common.DefaultCopyright;
-import org.adamalang.rxhtml.Feedback;
+import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.RxHtmlTool;
+import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.support.testgen.TestClass;
-import org.adamalang.support.testgen.TestForge;
-import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -37,7 +36,7 @@ public class GenerateTemplateTests {
           System.out.println("  " + warning);
           issues.append("WARNING:").append(warning).append("\n");
         };
-        String gold = RxHtmlTool.convertFilesToTemplateForest(Collections.singletonList(file), new ArrayList<>(), feedback).toString();
+        String gold = RxHtmlTool.convertFilesToTemplateForest(Collections.singletonList(file), new ArrayList<>(), ShellConfig.start().withFeedback(feedback).end()).toString();
         String name = file.getName().substring(0, file.getName().length() - 8).replace(Pattern.quote("."), "_");
         name = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);
         String classname = "Template" + name + "Tests";

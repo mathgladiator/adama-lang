@@ -8,6 +8,8 @@
  */
 package org.adamalang.rxhtml;
 
+import org.adamalang.rxhtml.template.config.Feedback;
+import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.junit.Assert;
@@ -27,7 +29,7 @@ public abstract class BaseRxHtmlTest {
   public void stable() throws Exception {
     StringBuilder issuesLive = new StringBuilder();
     Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
-    String live = RxHtmlTool.convertStringToTemplateForest(source(), feedback).toString();
+    String live = RxHtmlTool.convertStringToTemplateForest(source(), ShellConfig.start().withFeedback(feedback).end()).toString();
     Assert.assertEquals(gold(), live.trim());
     Assert.assertEquals(issues().trim(), issuesLive.toString().trim());
   }

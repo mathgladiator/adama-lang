@@ -9,6 +9,8 @@
 package org.adamalang.rxhtml;
 
 import org.adamalang.rxhtml.template.Escapes;
+import org.adamalang.rxhtml.template.config.Feedback;
+import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.exceptions.ParseException;
 import org.adamalang.translator.parser.token.Token;
@@ -31,7 +33,7 @@ import java.util.regex.Pattern;
 public class RxHtmlToAdama {
 
   public static String codegen(String rxhtml) throws AdamaLangException {
-    RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(rxhtml, Feedback.NoOp);
+    RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().end());
     StringBuilder adama = new StringBuilder();
      for (Uri uri : assembleUrisFrom(rxhtml)) {
       String shell = result.shell.makeShell(result);

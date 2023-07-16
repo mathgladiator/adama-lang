@@ -8,7 +8,7 @@
  */
 package org.adamalang.rxhtml.template;
 
-import org.adamalang.rxhtml.Feedback;
+import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.codegen.VariablePool;
 import org.adamalang.rxhtml.codegen.Writer;
 import org.jsoup.nodes.Comment;

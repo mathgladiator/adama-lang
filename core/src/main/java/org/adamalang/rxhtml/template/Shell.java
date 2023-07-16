@@ -8,18 +8,18 @@
  */
 package org.adamalang.rxhtml.template;
 
-import org.adamalang.rxhtml.Feedback;
 import org.adamalang.rxhtml.RxHtmlResult;
+import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 /** a class for pulling out the first and (hopefully) only shell */
 public class Shell {
-  private final Feedback feedback;
+  private final ShellConfig config;
   private Element shell;
 
-  public Shell(Feedback feedback) {
-    this.feedback = feedback;
+  public Shell(ShellConfig config) {
+    this.config = config;
     this.shell = null;
   }
 
@@ -28,7 +28,7 @@ public class Shell {
       if (this.shell == null) {
         this.shell = element;
       } else {
-        feedback.warn(element, "A duplicate shell was found");
+        config.feedback.warn(element, "A duplicate shell was found");
       }
     }
   }
@@ -62,7 +62,11 @@ public class Shell {
     } else {
       sb.append("<!DOCTYPE html>\n<html>\n<head>");
     }
-    sb.append("<script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script>");
+    if (config.useLocalAdamaJavascript) {
+      sb.append("<script src=\"/" + System.currentTimeMillis() + "/devlibadama.js\"></script>");
+    } else {
+      sb.append("<script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script>");
+    }
     sb.append("<script>\n\n").append(result.javascript).append("\n\n</script>");
     sb.append("<style>\n\n").append(result.style).append("\n\n</style>");
     sb.append(scripts);

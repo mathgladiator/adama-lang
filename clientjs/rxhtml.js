@@ -3,7 +3,8 @@ var RxHTML = (function () {
 
   var templates = {};
   var router = {};
-  var connection = new Adama.Connection(Adama.Production);
+  // This strange escaping is for developer mode to proxy to localhost.
+  var connection = new Adama.Connection(/*ENDPOINT=[*/Adama.Production/*]*/);
   var connections = {};
 
   var connectionMonitorDom = document.createElement("div");

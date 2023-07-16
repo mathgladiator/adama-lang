@@ -8,12 +8,13 @@
  */
 package org.adamalang.rxhtml;
 
+import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.junit.Test;
 
 public class SimpleTests {
 
   private static void drive(String rxhtml) {
-    System.err.println(RxHtmlTool.convertStringToTemplateForest(rxhtml, (e, x) -> System.err.println(x)).toString());
+    System.err.println(RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().withFeedback((e, x) -> System.err.println(x)).end()));
   }
 
   @Test
