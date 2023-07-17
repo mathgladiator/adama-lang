@@ -27,17 +27,18 @@ import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
-import org.adamalang.services.FirstPartyServices;
 
 import java.io.File;
 import java.util.List;
 
 public class Backend {
   public final CommonServiceInit init;
+  public final Thread serverThread;
   public final Client client;
 
-  public Backend(CommonServiceInit init, Client client) {
+  public Backend(CommonServiceInit init, Thread serverThread, Client client) {
     this.init = init;
+    this.serverThread = serverThread;
     this.client = client;
   }
   public static Backend run(Config config) throws Exception {
@@ -114,12 +115,12 @@ public class Backend {
       public void run() throws Exception {
         // billingPubSub.terminate();
         // This will send to all connections an empty list which will remove from the routing table. At this point, we should wait all connections migrate away
-
+        System.err.println("backend shutting down");
         handle.kill();
         caravan.shutdown();
       }
     })));
     System.err.println("backend running");
-    return new Backend(init, client);
+    return new Backend(init, serverThread, client);
   }
 }

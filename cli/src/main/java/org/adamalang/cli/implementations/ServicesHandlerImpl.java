@@ -42,7 +42,7 @@ public class ServicesHandlerImpl implements ServicesHandler {
         String role = config.get_string("role", "none");
         switch (role) {
             case "backend":
-                Backend.run(config);
+                Backend.run(config).serverThread.join();
                 return;
             case "overlord":
                 Overlord.run(config);
@@ -61,7 +61,7 @@ public class ServicesHandlerImpl implements ServicesHandler {
 
     @Override
     public void backend(Arguments.ServicesBackendArgs args, Output.YesOrError output) throws Exception {
-        Backend.run(args.config);
+        Backend.run(args.config).serverThread.join();
         output.out();
     }
 

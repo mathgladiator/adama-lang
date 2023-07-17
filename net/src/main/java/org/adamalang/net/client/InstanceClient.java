@@ -661,7 +661,7 @@ public class InstanceClient implements AutoCloseable {
     executor.execute(new NamedRunnable("execute-reflect") {
       @Override
       public void execute() throws Exception {
-        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_CREATE_TIMEOUT, ErrorCodes.ADAMA_NET_CREATE_REJECTED, metrics.client_create.start()) {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_REFLECT_TIMEOUT, ErrorCodes.ADAMA_NET_REFLECT_REJECTED, metrics.client_create.start()) {
           @Override
           protected void executeNow(ChannelClient client) {
             client.open(new ServerCodec.StreamReflection() {

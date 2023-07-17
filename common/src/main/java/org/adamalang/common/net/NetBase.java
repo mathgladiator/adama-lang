@@ -99,6 +99,7 @@ public class NetBase {
         @Override
         public void operationComplete(ChannelFuture channelFuture) throws Exception {
           if (!channelFuture.isSuccess()) {
+            LOGGER.error("failed-connect(): " + target, channelFuture.cause());
             lifecycle.failed(new ErrorCodeException(ErrorCodes.NET_CONNECT_FAILED_TO_CONNECT));
           }
         }

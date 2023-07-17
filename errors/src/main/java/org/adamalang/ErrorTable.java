@@ -673,6 +673,10 @@ public class ErrorTable {
     descriptions.put(773152, "no description of error (yet)");
     names.put(786466, "ADAMA_NET_PING_REJECTED");
     descriptions.put(786466, "no description of error (yet)");
+    names.put(799728, "ADAMA_NET_REFLECT_TIMEOUT");
+    descriptions.put(799728, "no description of error (yet)");
+    names.put(787440, "ADAMA_NET_REFLECT_REJECTED");
+    descriptions.put(787440, "no description of error (yet)");
     names.put(720955, "ADAMA_NET_CREATE_TIMEOUT");
     descriptions.put(720955, "no description of error (yet)");
     names.put(717952, "ADAMA_NET_CREATE_FOUND_REGION_RATHER_THAN_MACHINE");
