@@ -29,9 +29,10 @@ public class DomainMapDocumentRequest {
   public final String space;
   public final SpacePolicy policy;
   public final String key;
+  public final Boolean route;
   public final String certificate;
 
-  public DomainMapDocumentRequest(final String identity, final AuthenticatedUser who, final String domain, final DomainWithPolicy resolvedDomain, final String space, final SpacePolicy policy, final String key, final String certificate) {
+  public DomainMapDocumentRequest(final String identity, final AuthenticatedUser who, final String domain, final DomainWithPolicy resolvedDomain, final String space, final SpacePolicy policy, final String key, final Boolean route, final String certificate) {
     this.identity = identity;
     this.who = who;
     this.domain = domain;
@@ -39,6 +40,7 @@ public class DomainMapDocumentRequest {
     this.space = space;
     this.policy = policy;
     this.key = key;
+    this.route = route;
     this.certificate = certificate;
   }
 
@@ -54,8 +56,9 @@ public class DomainMapDocumentRequest {
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String key = request.getString("key", true, 466947);
       ValidateKey.validate(key);
+      final Boolean route = request.getBoolean("route", false, 0);
       final String certificate = request.getString("certificate", false, 0);
-      _latch.with(() -> new DomainMapDocumentRequest(identity, who.get(), domain, resolvedDomain.get(), space, policy.get(), key, certificate));
+      _latch.with(() -> new DomainMapDocumentRequest(identity, who.get(), domain, resolvedDomain.get(), space, policy.get(), key, route, certificate));
       nexus.identityService.execute(session, identity, who);
       nexus.domainService.execute(session, domain, resolvedDomain);
       nexus.spaceService.execute(session, space, policy);
@@ -75,5 +78,6 @@ public class DomainMapDocumentRequest {
     _node.put("space", space);
     org.adamalang.transforms.SpacePolicyLocator.logInto(policy, _node);
     _node.put("key", key);
+    _node.put("route", route);
   }
 }

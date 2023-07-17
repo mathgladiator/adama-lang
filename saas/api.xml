@@ -41,6 +41,12 @@
         <validate service="org.adamalang.validators.ValidateKey"/>
     </parameter-definition>
 
+    <parameter-definition name="route" type="boolean" optional="true" logged="true">
+        <documentation>
+            A domain can route to the space or to a document's handler
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="viewer-state" type="json-object" optional="true">
         <documentation>
             A connection to a document has a side-channel for passing information about the client's view into the evaluation of bubbles.
@@ -856,6 +862,7 @@
         <parameter name="domain"/>
         <parameter name="space"/>
         <parameter name="key" />
+        <parameter name="route" />
         <parameter name="certificate"/>
         <documentation>
             Map a domain to a space.

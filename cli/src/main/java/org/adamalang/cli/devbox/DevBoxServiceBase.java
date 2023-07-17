@@ -9,6 +9,7 @@
 package org.adamalang.cli.devbox;
 
 import io.netty.handler.ssl.SslContext;
+import org.adamalang.api.ConnectionRouter;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -20,6 +21,8 @@ import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
+import org.adamalang.web.io.JsonRequest;
+import org.adamalang.web.io.JsonResponder;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
 import org.adamalang.web.service.WebMetrics;
@@ -47,8 +50,24 @@ public class DevBoxServiceBase implements ServiceBase {
 
   @Override
   public ServiceConnection establish(ConnectionContext context) {
-    // TODO: decide if we support a proxy mode for Adama?
-    return null;
+    DevBoxSocketAPI api = new DevBoxSocketAPI();
+    ConnectionRouter router = new ConnectionRouter(null, null, api);
+    return new ServiceConnection() {
+      @Override
+      public void execute(JsonRequest request, JsonResponder responder) {
+
+      }
+
+      @Override
+      public boolean keepalive() {
+        return true;
+      }
+
+      @Override
+      public void kill() {
+
+      }
+    };
   }
 
   @Override

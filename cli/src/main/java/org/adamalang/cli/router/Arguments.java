@@ -2885,6 +2885,7 @@ public class Arguments {
 		public String space;
 		public String cert = null;
 		public String key = null;
+		public String route = "false";
 		public String auto = "true";
 		public static DomainMapArgs from(String[] args, int start) {
 			DomainMapArgs returnArgs = new DomainMapArgs();
@@ -2942,6 +2943,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-re":
+					case "--route": {
+						if (k+1 < args.length) {
+							returnArgs.route = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 					case "-a":
 					case "--auto": {
 						if (k+1 < args.length) {
@@ -2987,6 +2999,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-c, --cert", Util.ANSI.Green) + " " + Util.prefix("<cert>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-re, --route", Util.ANSI.Green) + " " + Util.prefix("<route>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-a, --auto", Util.ANSI.Green) + " " + Util.prefix("<auto>", Util.ANSI.White));
 		}
 	}

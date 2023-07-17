@@ -37,6 +37,7 @@ public class DomainHandlerImpl implements DomainHandler {
                 if (args.key != null) {
                     request.put("method", "domain/map-document");
                     request.put("key", args.key);
+                    request.put("key", "true".equals(args.route));
                 } else {
                     request.put("method", "domain/map");
                 }

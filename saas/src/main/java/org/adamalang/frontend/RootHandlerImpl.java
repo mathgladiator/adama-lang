@@ -351,11 +351,11 @@ public class RootHandlerImpl implements RootHandler {
     }
   }
 
-  private void handleDomainMap(SpacePolicy policy, AuthenticatedUser who, String domain, String certificate, String space, String key, SimpleResponder responder) {
+  private void handleDomainMap(SpacePolicy policy, AuthenticatedUser who, String domain, String certificate, String space, String key, boolean route, SimpleResponder responder) {
     try {
       if (policy.canUserManageDomain(who)) {
         String cert = certificate != null ? MasterKey.encrypt(nexus.masterKey, certificate) : null;
-        if (Domains.map(nexus.database, who.id, fixDomain(domain), space, key, cert)) { // Domains.map ensures ownership on UPDATE to prevent conflicts
+        if (Domains.map(nexus.database, who.id, fixDomain(domain), space, key, route, cert)) { // Domains.map ensures ownership on UPDATE to prevent conflicts
           if (cert == null) {
             nexus.signalControl.raiseAutomaticDomain(domain);
           }
@@ -373,12 +373,12 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(Session session, DomainMapRequest request, SimpleResponder responder) {
-    handleDomainMap(request.policy, request.who, request.domain, request.certificate, request.space, null, responder);
+    handleDomainMap(request.policy, request.who, request.domain, request.certificate, request.space, null, false, responder);
   }
 
   @Override
   public void handle(Session session, DomainMapDocumentRequest request, SimpleResponder responder) {
-    handleDomainMap(request.policy, request.who, request.domain, request.certificate, request.space, request.key, responder);
+    handleDomainMap(request.policy, request.who, request.domain, request.certificate, request.space, request.key, false, responder);
   }
 
   @Override

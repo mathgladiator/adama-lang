@@ -261,6 +261,7 @@ private final MultiWebClientRetryPool pool;
     node.put("domain", request.domain);
     node.put("space", request.space);
     node.put("key", request.key);
+    node.put("route", request.route);
     node.put("certificate", request.certificate);
     pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }

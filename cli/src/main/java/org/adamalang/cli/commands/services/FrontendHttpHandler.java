@@ -177,7 +177,7 @@ public class FrontendHttpHandler implements HttpHandler {
       try {
         Domain domain = Domains.get(init.database, host); // TODO: cache this?
         if (domain != null) {
-          if (domain.key != null) {
+          if (domain.key != null && domain.routeKey) {
             SpaceKeyRequest skr = new SpaceKeyRequest(domain.space, domain.key, uri);
             get(skr, headers, parametersJson, callback);
           } else {

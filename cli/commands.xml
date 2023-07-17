@@ -93,6 +93,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="route" type="boolean" short="re">
+        <documentation>
+            The routing of a domain to a document should not go to document. Instead, the domain is a proxy to a space where the domain can then be used to look up a key.
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="marker" type="string" short="m">
         <documentation>
             Placeholder
@@ -654,6 +660,7 @@
             <arg name="space" />
             <arg name="cert" default="null" />
             <arg name="key" default="null" />
+            <arg name="route" default="false" />
             <arg name="auto" default="true" />
         </command>
 

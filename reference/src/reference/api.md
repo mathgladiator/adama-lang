@@ -689,12 +689,13 @@ Map a domain to a space.
 | domain | yes | String | A domain name. |
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
+| route | no | Boolean | A domain can route to the space or to a document's handler |
 | certificate | no | String | A TLS/SSL Certificate encoded as json. |
 
 
 ### Template
 ```js
-connection.DomainMapDocument(identity, domain, space, key, certificate, {
+connection.DomainMapDocument(identity, domain, space, key, route, certificate, {
   success: function() {
   },
   failure: function(reason) {

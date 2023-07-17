@@ -486,13 +486,13 @@ class WebSocketAdamaConnection {
       request: {"method":"domain/map", "id":parId, "identity": identity, "domain": domain, "space": space, "certificate": certificate}
     });
   }
-  DomainMapDocument(identity, domain, space, key, certificate, responder) {
+  DomainMapDocument(identity, domain, space, key, route, certificate, responder) {
     var self = this;
     var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"domain/map-document", "id":parId, "identity": identity, "domain": domain, "space": space, "key": key, "certificate": certificate}
+      request: {"method":"domain/map-document", "id":parId, "identity": identity, "domain": domain, "space": space, "key": key, "route": route, "certificate": certificate}
     });
   }
   DomainList(identity, responder) {

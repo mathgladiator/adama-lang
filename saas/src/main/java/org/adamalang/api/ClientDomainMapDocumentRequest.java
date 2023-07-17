@@ -14,5 +14,6 @@ public class ClientDomainMapDocumentRequest {
   public String domain;
   public String space;
   public String key;
+  public Boolean route;
   public String certificate;
 }

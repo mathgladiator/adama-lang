@@ -220,6 +220,7 @@ public class Installer {
             "  `owner` INT(4) UNSIGNED NOT NULL," + //
             "  `space` VARCHAR(128) NOT NULL," + //
             "  `key` VARCHAR(128)," + //
+            "  `route` BOOLEAN DEFAULT FALSE," + //
             "  `domain` VARCHAR(254) NOT NULL," + //
             "  `certificate` LONGTEXT NOT NULL," + //
             "  `automatic` BOOLEAN DEFAULT FALSE," + //

@@ -16,14 +16,16 @@ public class Domain {
   public final int owner;
   public final String space;
   public final String key;
+  public final boolean routeKey;
   public final String certificate;
   public final Date updated;
   public final long timestamp;
 
-  public Domain(String domain, int owner, String space, String key, String certificate, Date updated, long timestamp) {
+  public Domain(String domain, int owner, String space, String key, boolean routeKey, String certificate, Date updated, long timestamp) {
     this.domain = domain;
     this.owner = owner;
     this.space = space;
+    this.routeKey = routeKey;
     this.key = key;
     this.certificate = certificate;
     this.updated = updated;
