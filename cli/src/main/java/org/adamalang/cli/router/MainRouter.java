@@ -720,6 +720,7 @@ public class MainRouter {
               System.err.println("See 'adama frontend help' for a list of subcommands.");
               return 1;
           }
+        case "service":
         case "services":
           ServicesHandler servicesHandler = handler.makeServicesHandler();
           if (args.length == 1) {

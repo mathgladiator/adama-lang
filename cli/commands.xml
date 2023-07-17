@@ -710,7 +710,7 @@
         </documentation>
     </command>
 
-    <group name="services">
+    <group name="services" alt-name="service">
         <documentation>
             Launch a service
         </documentation>
