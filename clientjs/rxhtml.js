@@ -8,24 +8,25 @@ var RxHTML = (function () {
   var connections = {};
 
   var connectionMonitorDom = document.createElement("div");
-  var _latency = document.createElement("span");
-  var _status = document.createElement("span");
   connection.onstatuschange = function(status) {
-    _status.innerHTML = status ? "Yes" : "No";
+    var icon = function(color) { return "<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\""+color+"\" class=\"w-6 h-6\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z\" /></svg>\n"; };
     if (!status) {
-      _latency.innerHTML = "";
+      connectionMonitorDom.innerHTML = icon("red");
       connection.onping = function(_1, _2) {};
     } else {
       connection.onping = function(_, latency) {
-        if (latency >= 1) {
-          _latency.innerHTML = "" + latency;
+        if (latency >= 100) {
+          connectionMonitorDom.innerHTML = icon("orange");
+        } else {
+          connectionMonitorDom.innerHTML = icon("green");
         }
       };
     }
   };
-  connectionMonitorDom.appendChild(_status);
-  connectionMonitorDom.appendChild(_latency);
   connectionMonitorDom.style = "position:fixed; bottom:0px; right:0px";
+  if (Adama.Debugger) {
+    connectionMonitorDom.onclick = Adama.Debugger.toggle;
+  }
   connection.start();
 
   var rootReplace = "/";
@@ -64,7 +65,13 @@ var RxHTML = (function () {
         id: 0,
         connection_state: false,
         choices: {},
+        bound: "",
+        debugger: function(delta) {},
+        raw: connection
       };
+      if (Adama.Debugger) {
+        obj.debugger = Adama.Debugger.register(obj);
+      }
       obj.set_connected = function(cs) {
         if (this.connection_state == cs) {
           return;
@@ -1471,6 +1478,8 @@ var RxHTML = (function () {
       }
       var co = get_connection_obj(rxobj.name);
       var desired = rxobj.space + "/" + rxobj.key;
+      co.space = rxobj.space;
+      co.key = rxobj.key;
       var bind = function (sendNow) {
         unsub.view = state.view.tree.subscribe(function () {
           if (co.ptr == null) {
@@ -1512,6 +1521,7 @@ var RxHTML = (function () {
       unsub.view();
       co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), {
         next: function (payload) {
+          co.debugger(payload);
           co.set_connected(true);
           if ("data" in payload.delta) {
             co.tree.update(payload.delta.data);

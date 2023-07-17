@@ -91,8 +91,9 @@ public class DevBoxServiceBase implements ServiceBase {
             js.append(Files.readString(new File(localLibAdamaJS, "tree.js").toPath()));
             js.append("/** connection.js **/\n\n");
             js.append(Files.readString(new File(localLibAdamaJS, "connection.js").toPath()));
+            js.append("/** debugger.js **/\n\n");
+            js.append(Files.readString(new File(localLibAdamaJS, "debugger.js").toPath()));
             js.append("/** rxhtml.js **/\n\n");
-
             String rxhtml = Files.readString(new File(localLibAdamaJS, "rxhtml.js").toPath());
             // TODO: have a way to point this to localhost:$port
             rxhtml = rxhtml.replaceAll(Pattern.quote("/*ENDPOINT=[*/Adama.Production/*]*/"), Matcher.quoteReplacement("/*REPLACED*/Adama.Production"));
