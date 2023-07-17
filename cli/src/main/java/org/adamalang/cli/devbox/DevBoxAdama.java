@@ -1,3 +1,11 @@
+/*
+ * This file is subject to the terms and conditions outlined in the
+ * file 'LICENSE' (it's dual licensed) located in the root directory
+ * near the README.md which you should also read. For more information
+ * about the project which owns this file, see https://www.adama-platform.com/ .
+ *
+ * (c) 2021 - 2023 by Adama Platform Initiative, LLC
+ */
 package org.adamalang.cli.devbox;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -8,15 +16,17 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.CoreStream;
+import org.adamalang.web.contracts.ServiceConnection;
+import org.adamalang.web.io.JsonRequest;
+import org.adamalang.web.io.JsonResponder;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DevBoxAdama extends DevBoxRouter {
+public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   private final CoreService service;
   private final ConcurrentHashMap<Long, CoreStream> streams;
 
@@ -161,5 +171,22 @@ public class DevBoxAdama extends DevBoxRouter {
   @Override
   public void handle_DocumentsHashPassword(long requestId, String password, HashedPasswordResponder responder) {
 
+  }
+
+  @Override
+  public void execute(JsonRequest request, JsonResponder responder) {
+    route(request, responder);
+  }
+
+  @Override
+  public boolean keepalive() {
+    return true;
+  }
+
+  @Override
+  public void kill() {
+    for(CoreStream stream : streams.values()) {
+      stream.close();
+    }
   }
 }

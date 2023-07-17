@@ -9,12 +9,9 @@
 package org.adamalang.cli.devbox;
 
 import io.netty.handler.ssl.SslContext;
-import org.adamalang.api.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.common.metrics.RequestResponseMonitor;
-import org.adamalang.common.metrics.StreamMonitor;
 import org.adamalang.common.web.UriMatcher;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.ContentType;
@@ -50,21 +47,8 @@ public class DevBoxServiceBase implements ServiceBase {
 
   @Override
   public ServiceConnection establish(ConnectionContext context) {
-    return new ServiceConnection() {
-      @Override
-      public void execute(JsonRequest request, JsonResponder responder) {
-      }
-
-      @Override
-      public boolean keepalive() {
-        return true;
-      }
-
-      @Override
-      public void kill() {
-
-      }
-    };
+    // if we have a service and a table, then let's use it!
+    return new DevBoxAdama(null);
   }
 
   @Override
