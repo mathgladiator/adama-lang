@@ -26,7 +26,7 @@ Adama.Debugger = (function() {
       return "" + obj;
     }
     var result = [];
-    result.push("<table border='1'>");
+    result.push("<table style=\"border:1px black solid\">");
     var skip = function(key) {
       return key.startsWith("__") || key.startsWith("#") || key.startsWith("@");
     }
@@ -116,12 +116,41 @@ Adama.Debugger = (function() {
   };
 
   self.toggle = function() {
-    console.log("toggle debugger 123");
     if (self.shown) {
       document.body.removeChild(self.root);
     } else {
       self.root = document.createElement("div");
-      self.root.style = "position:absolute; top:0px; left:0px; width:500px; height:500px; background: white; border: 1px solid red; z-index:1000; overflow:scroll";
+
+      debuggerPosition = localStorage.getItem("AdamaDebuggerPosition");
+      if (!debuggerPosition) {
+        debuggerPosition + "top:0px; left:0px;width:640px;height:480px";
+      }
+      console.log(debuggerPosition);
+      self.root.style = "position:absolute;" + debuggerPosition + ";background: white;border:1px solid red;z-index:1000; overflow:scroll";
+      var titleBar = document.createElement("div");
+      titleBar.innerHTML = "Adama Debugger";
+      titleBar.style = "background: #ccc; cursor:move; width:100%; font-variant: small-caps; padding:2px; text-align: center;";
+      titleBar.onmousedown = function(ev) {
+        ev.preventDefault();
+        var rect = self.root.getBoundingClientRect();
+        var start = {x: ev.clientX, y: ev.clientY};
+        var update = function(nx) {
+          self.root.style.left = (rect.left + nx.clientX - start.x) + "px";
+          self.root.style.top = (rect.top + nx.clientY - start.y) + "px";
+        };
+        window.onmousemove = function(nx) {
+          update(nx);
+          localStorage.setItem("AdamaDebuggerPosition", "top:"+self.root.style.top+"; left:"+self.root.style.left+";width:640px;height:480px");
+        };
+        window.onmouseup = function(nx) {
+          update(nx);
+          localStorage.setItem("AdamaDebuggerPosition", "top:"+self.root.style.top+"; left:"+self.root.style.left+";width:640px;height:480px");
+          window.onmousemove = function() {};
+          window.onmouseup = function() {};
+        };
+        return false;
+      }
+      self.root.appendChild(titleBar);
       self.root.appendChild(connectionSelector);
       self.root.appendChild(viewJson);
       self.root.appendChild(viewChannels);
