@@ -829,7 +829,7 @@
         </documentation>
     </method>
 
-    <method name="space/reflect" responder="reflection">
+    <method name="space/reflect" responder="reflection" devbox="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -963,7 +963,7 @@
         </documentation>
     </method>
 
-    <method name="connection/create" responder="data" create="document-stream">
+    <method name="connection/create" responder="data" create="document-stream" devbox="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -973,7 +973,7 @@
         </documentation>
     </method>
 
-    <method name="connection/create-via-domain" responder="data" create="document-stream">
+    <method name="connection/create-via-domain" responder="data" create="document-stream" devbox="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="viewer-state"/>
@@ -982,7 +982,7 @@
         </documentation>
     </method>
 
-    <method name="connection/send" responder="seq" handler="document-stream" find-by="connection" error-find-by="457745">
+    <method name="connection/send" responder="seq" handler="document-stream" find-by="connection" error-find-by="457745" devbox="true">
         <parameter name="connection"/>
         <parameter name="channel"/>
         <parameter name="message"/>
@@ -991,7 +991,7 @@
         </documentation>
     </method>
 
-    <method name="connection/password" responder="seq" handler="document-stream" find-by="connection" error-find-by="462832">
+    <method name="connection/password" responder="seq" handler="document-stream" find-by="connection" error-find-by="462832" devbox="true">
         <parameter name="connection"/>
         <parameter name="username"/>
         <parameter name="password"/>
@@ -1001,7 +1001,7 @@
         </documentation>
     </method>
 
-    <method name="connection/send-once" responder="seq" handler="document-stream" find-by="connection" error-find-by="410619">
+    <method name="connection/send-once" responder="seq" handler="document-stream" find-by="connection" error-find-by="410619" devbox="true">
         <parameter name="connection"/>
         <parameter name="channel"/>
         <parameter name="dedupe"/>
@@ -1011,14 +1011,14 @@
         </documentation>
     </method>
 
-    <method name="connection/can-attach" responder="yes" handler="document-stream" find-by="connection" error-find-by="494559">
+    <method name="connection/can-attach" responder="yes" handler="document-stream" find-by="connection" error-find-by="494559" devbox="true">
         <parameter name="connection"/>
         <documentation>
             Ask whether the connection can have attachments attached.
         </documentation>
     </method>
 
-    <method name="connection/attach" responder="seq" handler="document-stream" find-by="connection" error-find-by="442363">
+    <method name="connection/attach" responder="seq" handler="document-stream" find-by="connection" error-find-by="442363" devbox="true">
         <parameter name="connection"/>
         <parameter name="asset-id"/>
         <parameter name="filename"/>
@@ -1033,7 +1033,7 @@
         </documentation>
     </method>
 
-    <method name="connection/update" responder="simple" handler="document-stream" find-by="connection" error-find-by="438302">
+    <method name="connection/update" responder="simple" handler="document-stream" find-by="connection" error-find-by="438302" devbox="true">
         <parameter name="connection"/>
         <parameter name="viewer-state"/>
         <documentation>
@@ -1044,15 +1044,14 @@
         </documentation>
     </method>
 
-    <method name="connection/end" responder="simple" handler="document-stream" find-by="connection"
-            error-find-by="474128" destroy="true">
+    <method name="connection/end" responder="simple" handler="document-stream" find-by="connection" error-find-by="474128" destroy="true" devbox="true">
         <parameter name="connection"/>
         <documentation>
             Disconnect from the document.
         </documentation>
     </method>
 
-    <method name="documents/hash-password" responder="hashed-password">
+    <method name="documents/hash-password" responder="hashed-password" devbox="true">
         <parameter name="password"/>
         <documentation>
             For documents that want to hold secrets, then these secrets should not be stored plaintext.

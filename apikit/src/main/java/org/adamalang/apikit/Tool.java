@@ -50,6 +50,7 @@ public class Tool {
     Map<String, Responder> responders = Responder.respondersOf(doc, fields);
     Method[] methods = Method.methodsOf(doc, parameters, responders);
     String nexus = AssembleNexus.make(packageName, parameters);
+    String devbox = AssembleDevBox.make(packageName, methods);
     Map<String, String> requestsFiles = AssembleRequestTypes.make(packageName, methods);
     Map<String, String> responderFiles = AssembleResponders.make(packageName, responders);
     Map<String, String> handlerFiles = AssembleHandlers.make(packageName, methods);
@@ -68,6 +69,7 @@ public class Tool {
     }
 
     HashMap<String, String> apiOutput = new HashMap<>();
+    apiOutput.put("DevBoxRouter.java", devbox);
     apiOutput.put("ConnectionNexus.java", nexus);
     apiOutput.put("ConnectionRouter.java", router);
     apiOutput.put("ApiMetrics.java", metrics);
