@@ -74,8 +74,8 @@ public class DevBoxAdama extends DevBoxRouter {
 
   @Override
   public void handle_ConnectionCreateViaDomain(long requestId, String identity, String domain, ObjectNode viewerState, DataResponder responder) {
-    CoreRequestContext context = new CoreRequestContext(principalOf(identity), "localhost", "127.0.0.1", key);
     Key key = null; // TODO: resolve from config
+    CoreRequestContext context = new CoreRequestContext(principalOf(identity), "localhost", "127.0.0.1", key.key);
 
     service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
       @Override
