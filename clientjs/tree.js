@@ -36,6 +36,10 @@ function AdamaTree() {
     return JSON.stringify(root);
   };
 
+  this.raw = function() {
+    return root;
+  };
+
   // filter the subscriptions to the ones that have the key
   var sub = function (s, key) {
     // if we have nothing, then we return nothing

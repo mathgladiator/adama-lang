@@ -15,6 +15,65 @@ Adama.Debugger = (function() {
   var viewJson = document.createElement("div");
   var viewChannels = document.createElement("div");
 
+  var turn_json_into_html = function(obj, arr) {
+    if (typeof(obj) == "function") {
+      return "function...";
+    }
+    if (typeof(obj) == "undefined") {
+      return "";
+    }
+    if (typeof(obj) != "object") {
+      return "" + obj;
+    }
+    var result = [];
+    result.push("<table border='1'>");
+    var skip = function(key) {
+      return key.startsWith("__") || key.startsWith("#") || key.startsWith("@");
+    }
+    if (Array.isArray(obj)) {
+      var n = obj.length;
+      var flatten = n > 0 && typeof(obj[0]) == "object" && !Array.isArray(obj[0]);
+      if (flatten) {
+        var dom = {};
+        for (var k = 0; k < n; k++) {
+          for (var j in obj[k]) {
+            if (skip(j)) continue;
+            dom[j] = true;
+          }
+        }
+        var keys = [];
+        for (var k in dom) {
+          keys.push(k);
+        }
+        keys.sort();
+        result.push("<tr>");
+        for (var k = 0; k < keys.length; k++) {
+          result.push("<td>" + keys[k] + "</td>")
+        }
+        result.push("</tr>");
+        for (var k = 0; k < n; k++) {
+          result.push("<tr>");
+          for (var j = 0; j < keys.length; j++) {
+            result.push("<td>" + turn_json_into_html(obj[k][keys[j]]) + "</td>")
+          }
+          result.push("</tr>");
+        }
+
+      } else {
+        for (var k = 0; k < n; k++) {
+          result.push("<tr><td>" + k + "</td><td>" + turn_json_into_html(obj[k]) + "</td></tr>")
+        }
+      }
+    } else {
+      for (var k in obj) {
+        if (skip(k)) continue;
+        result.push("<tr><td valign='top'>" + k + "</td><td>" + turn_json_into_html(obj[k]) + "</td></tr>")
+      }
+    }
+    result.push("</table>");
+    return result.join("");
+  }
+
   var render = function(name) {
     var co = connections[name];
     if (co.rendered == co.bound) {
@@ -24,10 +83,9 @@ Adama.Debugger = (function() {
     co.debug_tree.nuke();
     viewJson.innerHTML = co.debug_tree.str();
     co.debug_tree.subscribe(function() {
-      viewJson.innerHTML = co.debug_tree.str();
+      viewJson.innerHTML = turn_json_into_html(co.debug_tree.raw());
     });
-
-    console.log("RENDER:" + co.space + "/" + co.key);
+    // TODO: co.raw.SpaceReflect(co.identity, co.space, co.key, {
   };
 
   var connectionSelector = document.createElement("select");
@@ -63,7 +121,7 @@ Adama.Debugger = (function() {
       document.body.removeChild(self.root);
     } else {
       self.root = document.createElement("div");
-      self.root.style = "position:absolute; top:0px; left:0px; width:500px; height:500px; background: white; border: 1px solid red; z-index:1000";
+      self.root.style = "position:absolute; top:0px; left:0px; width:500px; height:500px; background: white; border: 1px solid red; z-index:1000; overflow:scroll";
       self.root.appendChild(connectionSelector);
       self.root.appendChild(viewJson);
       self.root.appendChild(viewChannels);

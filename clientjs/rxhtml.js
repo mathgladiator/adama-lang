@@ -1478,8 +1478,6 @@ var RxHTML = (function () {
       }
       var co = get_connection_obj(rxobj.name);
       var desired = rxobj.space + "/" + rxobj.key;
-      co.space = rxobj.space;
-      co.key = rxobj.key;
       var bind = function (sendNow) {
         unsub.view = state.view.tree.subscribe(function () {
           if (co.ptr == null) {
@@ -1505,8 +1503,6 @@ var RxHTML = (function () {
         bind(true);
         return;
       }
-      co.space = rxobj.space;
-      co.key = rxobj.key;
       if (co.ptr != null) {
         co.ptr.end({success:function(){}, failure:function(){}});
         co.ptr = null;
@@ -1519,6 +1515,9 @@ var RxHTML = (function () {
       var identity = idLookup.identity;
       var cleanup = idLookup.cleanup;
       unsub.view();
+      co.space = rxobj.space;
+      co.key = rxobj.key;
+      co.identity = identity;
       co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), {
         next: function (payload) {
           co.debugger(payload);
