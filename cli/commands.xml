@@ -19,6 +19,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="microverse" type="string" short="mv">
+        <documentation>
+            The microverse which defines the local devbox solo mode.
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="asset-path" type="string" short="a">
         <documentation>
             The path to scan for static assets
@@ -714,6 +720,7 @@
             </documentation>
             <arg name="rxhtml-path" default="." />
             <arg name="asset-path" default="." />
+            <arg name="microverse" default="local.verse.json" />
             <arg name="local-libadama-path" default="null" />
         </command>
     </group>

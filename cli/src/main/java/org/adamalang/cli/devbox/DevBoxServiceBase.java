@@ -9,6 +9,7 @@
 package org.adamalang.cli.devbox;
 
 import io.netty.handler.ssl.SslContext;
+import org.adamalang.cli.interactive.TerminalIO;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -32,23 +33,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DevBoxServiceBase implements ServiceBase {
-
+  private final TerminalIO io;
   private final WebConfig webConfig;
   private final AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle;
   private final File staticAssetRoot;
   private final File localLibAdamaJS;
+  private final DevBoxAdamaMicroVerse verse;
 
-  public DevBoxServiceBase(WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS) {
+  public DevBoxServiceBase(TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, DevBoxAdamaMicroVerse verse) {
+    this.io = io;
     this.webConfig = webConfig;
     this.bundle = bundle;
     this.staticAssetRoot = staticAssetRoot;
     this.localLibAdamaJS = localLibAdamaJS;
+    this.verse = verse;
   }
 
   @Override
   public ServiceConnection establish(ConnectionContext context) {
     // if we have a service and a table, then let's use it!
-    return new DevBoxAdama(null, null);
+    return new DevBoxAdama(context, this.io, verse);
   }
 
   @Override
@@ -90,13 +94,19 @@ public class DevBoxServiceBase implements ServiceBase {
             js.append("/** tree.js **/\n\n");
             js.append(Files.readString(new File(localLibAdamaJS, "tree.js").toPath()));
             js.append("/** connection.js **/\n\n");
-            js.append(Files.readString(new File(localLibAdamaJS, "connection.js").toPath()));
+            String connection = Files.readString(new File(localLibAdamaJS, "connection.js").toPath());
+            if (verse != null) {
+              connection = connection.replaceAll(Pattern.quote("\"wss://\""), Matcher.quoteReplacement("\"ws://\""));
+            }
+            js.append(connection);
             js.append("/** debugger.js **/\n\n");
             js.append(Files.readString(new File(localLibAdamaJS, "debugger.js").toPath()));
             js.append("/** rxhtml.js **/\n\n");
             String rxhtml = Files.readString(new File(localLibAdamaJS, "rxhtml.js").toPath());
             // TODO: have a way to point this to localhost:$port
-            rxhtml = rxhtml.replaceAll(Pattern.quote("/*ENDPOINT=[*/Adama.Production/*]*/"), Matcher.quoteReplacement("/*REPLACED*/Adama.Production"));
+            if (verse != null) {
+              rxhtml = rxhtml.replaceAll(Pattern.quote("/*ENDPOINT=[*/Adama.Production/*]*/"), Matcher.quoteReplacement("localhost:8080"));
+            }
             js.append(rxhtml);
             callback.success(new HttpResult("text/javascript", js.toString().getBytes(), false));
           } catch (Exception ex) {

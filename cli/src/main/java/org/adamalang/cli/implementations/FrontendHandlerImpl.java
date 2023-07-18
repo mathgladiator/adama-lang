@@ -8,6 +8,8 @@
  */
 package org.adamalang.cli.implementations;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.cli.devbox.DevBoxAdamaMicroVerse;
 import org.adamalang.cli.devbox.DevBoxServiceBase;
 import org.adamalang.cli.devbox.RxHTMLScanner;
 import org.adamalang.cli.interactive.TerminalIO;
@@ -15,6 +17,7 @@ import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.FrontendHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.ConfigObject;
+import org.adamalang.common.Json;
 import org.adamalang.edhtml.EdHtmlState;
 import org.adamalang.edhtml.phases.Generate;
 import org.adamalang.edhtml.phases.Stamp;
@@ -68,13 +71,26 @@ public class FrontendHandlerImpl implements FrontendHandler {
                 throw new Exception("--local-libadama-path was provided but the directory doesn't exist (or is a file)");
             }
         }
-        AtomicBoolean alive = new AtomicBoolean(true);
         TerminalIO terminal = new TerminalIO();
+        DevBoxAdamaMicroVerse verse = null;
+        if (args.microverse != null) {
+            File microverseDef = new File(args.microverse);
+            if (microverseDef.exists() && microverseDef.isFile()) {
+                ObjectNode defn = Json.parseJsonObject(Files.readString(microverseDef.toPath()));
+                verse = DevBoxAdamaMicroVerse.load(terminal, defn);
+                if (verse == null) {
+                    terminal.notice("microverse: '" + args.microverse + "' failed, using production");
+                }
+            } else {
+                terminal.notice("microverse: '" + args.microverse + "' is not present, using production");
+            }
+        }
+        AtomicBoolean alive = new AtomicBoolean(true);
         AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
         try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), localLibAdamaJSPath != null, (b) -> bundle.set(b))) {
             WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
             terminal.notice("Starting Webserver");
-            DevBoxServiceBase base = new DevBoxServiceBase(webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile);
+            DevBoxServiceBase base = new DevBoxServiceBase(terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, verse);
             Thread webServerThread = base.start();
             while (alive.get()) {
                 String ln = terminal.readline().trim();
@@ -82,10 +98,8 @@ public class FrontendHandlerImpl implements FrontendHandler {
                     terminal.notice("Lowering alive");
                     alive.set(false);
                     webServerThread.interrupt();
-
                 }
             }
-
         }
     }
 }

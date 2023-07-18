@@ -22,19 +22,22 @@ import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.web.contracts.ServiceConnection;
+import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
+  private final ConnectionContext context;
   private final TerminalIO io;
-  private final CoreService service;
   private final ConcurrentHashMap<Long, CoreStream> streams;
+  private final DevBoxAdamaMicroVerse verse;
 
-  public DevBoxAdama(TerminalIO io, CoreService service) {
+  public DevBoxAdama(ConnectionContext context, TerminalIO io, DevBoxAdamaMicroVerse verse) {
+    this.context = context;
     this.io = io;
-    this.service = service;
+    this.verse = verse;
     this.streams = new ConcurrentHashMap<>();
   }
 
@@ -45,7 +48,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
   @Override
   public void handle_SpaceReflect(long requestId, String identity, String space, String key, ReflectionResponder responder) {
-    service.reflect(new Key(space, key), new Callback<>() {
+    verse.service.reflect(new Key(space, key), new Callback<>() {
       @Override
       public void success(String value) {
         responder.complete(Json.parseJsonObject(value));
@@ -61,9 +64,9 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   @Override
   public void handle_ConnectionCreate(long requestId, String identity, String space, String key, ObjectNode viewerState, DataResponder responder) {
     // public void connect(CoreRequestContext context, Key key, String viewerState, AssetIdEncoder assetIdEncoder, Streamback stream) {
-    CoreRequestContext context = new CoreRequestContext(principalOf(identity), "localhost", "127.0.0.1", key);
+    CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key);
 
-    service.connect(context, new Key(space, key), viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
+    verse.service.connect(context, new Key(space, key), viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
       @Override
       public void onSetupComplete(CoreStream stream) {
         streams.put(requestId, stream);
@@ -90,7 +93,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     Key key = null; // TODO: resolve from config
     CoreRequestContext context = new CoreRequestContext(principalOf(identity), "localhost", "127.0.0.1", key.key);
 
-    service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
+    verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
       @Override
       public void onSetupComplete(CoreStream stream) {
         streams.put(requestId, stream);
@@ -168,7 +171,11 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
   @Override
   public void handle_ConnectionEnd(long requestId, Long connection, SimpleResponder responder) {
-
+    CoreStream stream = streams.remove(connection);
+    if (stream != null) {
+      stream.close();
+    }
+    responder.complete();
   }
 
   @Override
@@ -178,7 +185,11 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
   @Override
   public void execute(JsonRequest request, JsonResponder responder) {
-    route(request, responder);
+    if (verse != null) {
+      route(request, responder);
+    } else {
+      responder.error(new ErrorCodeException(-1));
+    }
   }
 
   @Override

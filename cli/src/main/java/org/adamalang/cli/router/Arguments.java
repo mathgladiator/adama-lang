@@ -3121,6 +3121,7 @@ public class Arguments {
 		public Config config;
 		public String rxhtmlPath = ".";
 		public String assetPath = ".";
+		public String microverse = "local.verse.json";
 		public String localLibadamaPath = null;
 		public static FrontendDevServerArgs from(String[] args, int start) {
 			FrontendDevServerArgs returnArgs = new FrontendDevServerArgs();
@@ -3146,6 +3147,17 @@ public class Arguments {
 					case "--asset-path": {
 						if (k+1 < args.length) {
 							returnArgs.assetPath = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-mv":
+					case "--microverse": {
+						if (k+1 < args.length) {
+							returnArgs.microverse = args[k+1];
 							k++;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
@@ -3188,6 +3200,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-a, --asset-path", Util.ANSI.Green) + " " + Util.prefix("<asset-path>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-mv, --microverse", Util.ANSI.Green) + " " + Util.prefix("<microverse>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White));
 		}
 	}
