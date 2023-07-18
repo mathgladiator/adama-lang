@@ -288,6 +288,20 @@ public class JsonStreamReaderTests {
   }
 
   @Test
+  public void tree_bool_true_as_str() {
+    JsonStreamReader reader = new JsonStreamReader("\"true\"");
+    Assert.assertTrue(reader.readBoolean());
+    Assert.assertTrue(reader.end());
+  }
+
+  @Test
+  public void tree_bool_false_as_str() {
+    JsonStreamReader reader = new JsonStreamReader("\"false\"");
+    Assert.assertFalse(reader.readBoolean());
+    Assert.assertTrue(reader.end());
+  }
+
+  @Test
   public void tree_bool_false() {
     JsonStreamReader reader = new JsonStreamReader("false");
     Object obj = reader.readJavaTree();

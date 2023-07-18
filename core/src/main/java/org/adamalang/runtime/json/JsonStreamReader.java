@@ -87,7 +87,14 @@ public class JsonStreamReader {
 
   public boolean readBoolean() {
     ensureQueueHappy(1);
-    return tokens.removeFirst().type == JsonTokenType.True;
+    JsonToken token = tokens.removeFirst();
+    if (token.type == JsonTokenType.True) {
+      return true;
+    }
+    if (token.type == JsonTokenType.StringLiteral) {
+      return token.data.equals("true");
+    }
+    return false;
   }
 
   private String readValueWithDefaultZeros() {
