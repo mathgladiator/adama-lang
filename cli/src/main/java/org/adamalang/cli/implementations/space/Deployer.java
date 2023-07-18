@@ -43,7 +43,7 @@ public class Deployer {
     } else {
       planJson = Files.readString(new File(args.plan).toPath());
     }
-    if (!CodeHandlerImpl.sharedValidatePlan(new File(args.plan))) {
+    if (!CodeHandlerImpl.sharedValidatePlan(planJson)) {
       throw new Exception("Failed to validate plan");
     }
     DeploymentPlan localPlan = new DeploymentPlan(planJson, (t, c) -> t.printStackTrace());

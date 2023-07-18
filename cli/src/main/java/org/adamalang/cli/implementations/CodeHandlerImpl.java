@@ -90,11 +90,15 @@ public class CodeHandlerImpl implements CodeHandler {
     public static boolean sharedValidatePlan(File file) {
         ObjectNode node;
         try {
-            node = Json.parseJsonObject(Files.readString(file.toPath()));
+            return sharedValidatePlan(Files.readString(file.toPath()));
         } catch (Exception ex) {
             System.err.println("Plan is not json; stopping");
             return false;
         }
+    }
+
+    public static boolean sharedValidatePlan(String plan) {
+        ObjectNode node = Json.parseJsonObject(plan);
         JsonNode versionsNode = node.get("versions");
         JsonNode defaultNode = node.get("default");
         JsonNode planNode = node.get("plan");
