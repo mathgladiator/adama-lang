@@ -130,7 +130,9 @@ public class CodeHandlerImpl implements CodeHandler {
                     } else {
                         JsonNode includesNode = bundle.get("includes");
                         HashMap<String, String> includes = new HashMap<>();
-                        if (includesNode == null || !includesNode.isObject()) {
+                        if (includesNode == null || includesNode.isNull()) {
+                            // this is fine, nothing to include
+                        } else if (!includesNode.isObject()) {
                             System.err.println("bundle '"+bundle.toPrettyString() + "' doesn't have an includes that is an object");
                             success = false;
                         } else {
