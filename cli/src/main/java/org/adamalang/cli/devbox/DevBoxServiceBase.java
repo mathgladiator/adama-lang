@@ -48,7 +48,7 @@ public class DevBoxServiceBase implements ServiceBase {
   @Override
   public ServiceConnection establish(ConnectionContext context) {
     // if we have a service and a table, then let's use it!
-    return new DevBoxAdama(null);
+    return new DevBoxAdama(null, null);
   }
 
   @Override

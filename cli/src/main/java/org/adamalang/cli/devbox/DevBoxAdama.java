@@ -11,6 +11,7 @@ package org.adamalang.cli.devbox;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.api.*;
+import org.adamalang.cli.interactive.TerminalIO;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
@@ -27,10 +28,12 @@ import org.adamalang.web.io.JsonResponder;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
+  private final TerminalIO io;
   private final CoreService service;
   private final ConcurrentHashMap<Long, CoreStream> streams;
 
-  public DevBoxAdama(CoreService service) {
+  public DevBoxAdama(TerminalIO io, CoreService service) {
+    this.io = io;
     this.service = service;
     this.streams = new ConcurrentHashMap<>();
   }
