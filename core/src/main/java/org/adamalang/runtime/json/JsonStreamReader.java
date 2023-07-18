@@ -109,15 +109,23 @@ public class JsonStreamReader {
     String toParse = readValueWithDefaultZeros();
     try {
       return Integer.parseInt(toParse);
-    } catch (NumberFormatException nfe) {
-      return (int) Double.parseDouble(toParse);
+    } catch (NumberFormatException nfe1) {
+      try {
+        return (int) Double.parseDouble(toParse);
+      } catch (NumberFormatException nfe2) {
+        return 0;
+      }
     }
   }
 
   public long readLong() {
     ensureQueueHappy(1);
     String toParse = readValueWithDefaultZeros();
-    return Long.parseLong(toParse);
+    try {
+      return Long.parseLong(toParse);
+    } catch (NumberFormatException nfe) {
+      return readInteger();
+    }
   }
 
   public NtPrincipal readNtPrincipal() {
