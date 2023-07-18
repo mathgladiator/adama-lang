@@ -43,13 +43,8 @@ public class Main {
         case "init":
           Init.execute(config, next);
           return;
-        case "dumpenv":
-          for (Map.Entry<String, String> entry : System.getenv().entrySet()) {
-            System.err.println(entry.getKey() + "=" + entry.getValue());
-          }
-          return;
       }
-      NewMain.main(args);
+      NewMain.main(preFilteredArgs);
     } catch (Exception ex) {
       if (ex instanceof ErrorCodeException) {
         System.err.println(Util.prefix("[ERROR]", Util.ANSI.Red));

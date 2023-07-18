@@ -27,7 +27,6 @@ public class Config {
   public Config(String[] args) throws Exception {
     ArrayList<String> argsToUse = new ArrayList<>();
     String _configPath = System.getProperty("user.home") + "/.adama";
-    boolean _requestingHelp = false;
     for (int k = 0; k < args.length; k++) {
       if ("--config".equals(args[k]) && k + 1 < args.length) {
         _configPath = args[k + 1];
@@ -44,7 +43,6 @@ public class Config {
       // TODO: once I have a launch, make this use the default URL and ideal parameters
       Files.writeString(_configFile.toPath(), defaultConfig.toPrettyString());
     }
-
     this.cache = Json.parseJsonObject(Files.readString(_configFile.toPath()));
   }
 
