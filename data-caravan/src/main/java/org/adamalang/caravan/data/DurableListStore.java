@@ -11,13 +11,11 @@ package org.adamalang.caravan.data;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.caravan.contracts.ByteArrayStream;
-import org.adamalang.caravan.entries.Append;
-import org.adamalang.caravan.entries.Delete;
-import org.adamalang.caravan.entries.OrganizationSnapshot;
-import org.adamalang.caravan.entries.Trim;
+import org.adamalang.caravan.entries.*;
 import org.adamalang.caravan.events.EventCodec;
 import org.adamalang.caravan.events.RestoreWalker;
 import org.adamalang.caravan.index.*;
+import org.adamalang.runtime.data.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +31,7 @@ public class DurableListStore {
   private final DiskMetrics metrics;
   private final Index index;
   private final Heap heap;
+  private final KeyMap keymap;
 
   // storage used for reading/writing
   private final Storage storage;
@@ -66,6 +65,7 @@ public class DurableListStore {
   public DurableListStore(DiskMetrics metrics, File storeFile, File walRoot, long size, int flushCutOffBytes, long maxLogSize) throws IOException {
     this.metrics = metrics;
     this.index = new Index();
+    this.keymap = new KeyMap();
     DurableListStoreSizing sizing = new DurableListStoreSizing(size, storeFile);
     this.heap = sizing.heap;
     this.storage = sizing.storage;
@@ -138,6 +138,12 @@ public class DurableListStore {
               for (Region region : index.trim(trim.id, trim.maxSize)) {
                 heap.free(region);
               }
+              break;
+            case 0x30:
+              keymap.apply(MapKey.readAfterTypeId(buf));
+              break;
+            case 0x36:
+              keymap.apply(DelKey.readAfterTypeId(buf));
               break;
             default:
               throw new IOException("unrecogized code:" + code);
