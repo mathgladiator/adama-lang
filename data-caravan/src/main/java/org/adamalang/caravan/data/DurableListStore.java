@@ -214,8 +214,20 @@ public class DurableListStore {
     }
   }
 
+  /*
+  private int mapKeyToLocalId(Key key) {
+    Integer result = keymap.get(key);
+    if (result != null) {
+      MapKey mk = keymap.inventAndApply(key);
+      mk.write(buffer);
+      return mk.id;
+    }
+    return result;
+  }
+  */
+
   /** append a byte array to the given id */
-  public Integer append(long id, ArrayList<byte[]> batch, int seq, long assetBytes, Runnable notification) {
+  public Integer append(Key key, long id, ArrayList<byte[]> batch, int seq, long assetBytes, Runnable notification) {
     // allocate the items in the batch
     ArrayList<RegionByteArrayPairing> wheres = new ArrayList<>();
     for (byte[] bytes : batch) {
@@ -236,6 +248,7 @@ public class DurableListStore {
 
     // walk the regions allocated and the bytes
     int lastSize = -1;
+    // int localId = mapKeyToLocalId(key);
     for (RegionByteArrayPairing pairing : wheres) {
       metrics.appends.run();
       RestoreWalker walker = new RestoreWalker();
@@ -300,6 +313,7 @@ public class DurableListStore {
     this.notifications.add(notification);
     storage.write(where, bytes);
     int size = index.append(id, new AnnotatedRegion(where.position, where.size, seq, assetBytes));
+    // int localId = mapKeyToLocalId(key);
     new Append(id, where.position, bytes, seq, assetBytes).write(buffer);
     if (buffer.writerIndex() > flushCutOffBytes) {
       // the buffer is full, so flush it
@@ -328,6 +342,7 @@ public class DurableListStore {
       ArrayList<AnnotatedRegion> regions = index.trim(id, maxSize);
       if (regions != null && regions.size() > 0) {
         this.notifications.add(notification);
+        // int localId = mapKeyToLocalId(key);
         new Trim(id, maxSize).write(buffer);
         for (Region region : regions) {
           metrics.items_trimmed.run();
@@ -350,6 +365,11 @@ public class DurableListStore {
       for (Region region : regions) {
         heap.free(region);
       }
+      /*
+      DelKey dk = new DelKey(key);
+      keymap.apply(dk);
+      dk.write(buffer);
+      */
       new Delete(id).write(buffer);
       this.notifications.add(notification);
       if (buffer.writerIndex() > flushCutOffBytes) {

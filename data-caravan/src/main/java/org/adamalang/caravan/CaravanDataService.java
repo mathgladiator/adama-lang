@@ -92,7 +92,7 @@ public class CaravanDataService implements ArchivingDataService {
               public void finished() { // Note: runs in the thread calling execute since store.read is sync
                 // aftering reading into the cache, let's merge what we have restored
                 LocalCache builder = this;
-                mergeRestore(id, builder, writes, new Callback<Void>() {
+                mergeRestore(key, id, builder, writes, new Callback<Void>() {
                   @Override
                   public void success(Void value) { // note; this callback runs in the executor
                     addToCacheIfDoesntExistReturnCorrect(id, builder);
@@ -114,7 +114,7 @@ public class CaravanDataService implements ArchivingDataService {
               return;
             }
           } else {
-            mergeRestore(id, cached, writes, callback);
+            mergeRestore(key, id, cached, writes, callback);
           }
         });
       }
@@ -260,7 +260,7 @@ public class CaravanDataService implements ArchivingDataService {
     }
   }
 
-  private void mergeRestore(long id, LocalCache cached, ArrayList<byte[]> writes, Callback<Void> callback) {
+  private void mergeRestore(Key key, long id, LocalCache cached, ArrayList<byte[]> writes, Callback<Void> callback) {
     ArrayList<byte[]> filtered = cached.filter(writes);
     if (filtered.size() == 0) {
       callback.success(null);
@@ -270,7 +270,7 @@ public class CaravanDataService implements ArchivingDataService {
     for (byte[] toAppend : filtered) {
       EventCodec.route(Unpooled.wrappedBuffer(toAppend), walker);
     }
-    if (store.append(id, filtered, walker.seq, walker.assetBytes, () -> {
+    if (store.append(key, id, filtered, walker.seq, walker.assetBytes, () -> {
       executor.execute(new NamedRunnable("restore-write-map") {
         @Override
         public void execute() throws Exception {

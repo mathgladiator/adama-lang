@@ -163,7 +163,7 @@ public class DurableListStoreTests {
         batch1.add(encode(("K:" + k)));
       }
       Assert.assertEquals(65536, store.available());
-      store.append(42, batch1, 10, 1024, event);
+      store.append(new Key("s", "42"), 42, batch1, 10, 1024, event);
       Assert.assertEquals(60093, store.available());
       store.flush(false);
       {
@@ -177,7 +177,7 @@ public class DurableListStoreTests {
         for (int k = 0; k < 1024; k++) {
           batch2.add(encode("K:" + k));
         }
-        Assert.assertEquals(1025, (int) store.append(100, batch2, 10, 1024, event));
+        Assert.assertEquals(1025, (int) store.append(new Key("s", "100"), 100, batch2, 10, 1024, event));
         {
           MockByteArrayStream stream = new MockByteArrayStream();
           store.read(new Key("s", "100"), 100, wrap(stream));
@@ -190,7 +190,7 @@ public class DurableListStoreTests {
         for (int k = 0; k < 7 * 1024; k++) {
           batch3.add(encode("K:" + k));
         }
-        Assert.assertNull(store.append(100, batch3, 10, 1024, event));
+        Assert.assertNull(store.append(new Key("s", "100"), 100, batch3, 10, 1024, event));
       }
       Assert.assertEquals(3806, store.available());
       Assert.assertTrue(store.trim(new Key("s", "100"), 100, 1000, () -> {}));
