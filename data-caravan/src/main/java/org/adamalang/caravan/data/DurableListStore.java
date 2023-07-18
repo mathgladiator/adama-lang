@@ -289,7 +289,7 @@ public class DurableListStore {
     openLogForWriting();
   }
 
-  public Integer append(long id, byte[] bytes, int seq, long assetBytes, Runnable notification) {
+  public Integer append(Key key, long id, byte[] bytes, int seq, long assetBytes, Runnable notification) {
     Region where = heap.ask(bytes.length);
     if (where == null) {
       metrics.failed_append.run();
@@ -309,7 +309,7 @@ public class DurableListStore {
   }
 
   /** read the given object by scanning all appends */
-  public void read(long id, ByteArrayStream streamback) throws Exception {
+  public void read(Key key, long id, ByteArrayStream streamback) throws Exception {
     Iterator<AnnotatedRegion> it = index.get(id);
     int at = 0;
     while (it.hasNext()) {
@@ -323,7 +323,7 @@ public class DurableListStore {
   }
 
   /** remove the $count appends from the head of the object */
-  public boolean trim(long id, int maxSize, Runnable notification) {
+  public boolean trim(Key key, long id, int maxSize, Runnable notification) {
     if (maxSize > 0) {
       ArrayList<AnnotatedRegion> regions = index.trim(id, maxSize);
       if (regions != null && regions.size() > 0) {
@@ -344,7 +344,7 @@ public class DurableListStore {
   }
 
   /** delete the given object by id */
-  public boolean delete(long id, Runnable notification) {
+  public boolean delete(Key key, long id, Runnable notification) {
     ArrayList<AnnotatedRegion> regions = index.delete(id);
     if (regions != null) {
       for (Region region : regions) {

@@ -107,7 +107,7 @@ public class CaravanDataService implements ArchivingDataService {
               }
             };
             try {
-              store.read(id, newBuilderToCache);
+              store.read(key, id, newBuilderToCache);
             } catch (Exception ex) {
               LOGGER.error("failed-restore", ex);
               callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_RESTORE_CANT_READ, ex));
@@ -141,7 +141,7 @@ public class CaravanDataService implements ArchivingDataService {
       File finalOutput = new File(root, archiveKey);
       try {
         DataOutputStream output = new DataOutputStream(new FileOutputStream(tempOutput));
-        store.read(id, new ByteArrayStream() {
+        store.read(key, id, new ByteArrayStream() {
           @Override
           public void next(int appendIndex, byte[] value, int seq, long assetBytes) throws Exception {
             deltaBytesSum.addAndGet(value.length);
@@ -202,7 +202,7 @@ public class CaravanDataService implements ArchivingDataService {
           public void execute() throws Exception {
             LocalCache cached = cache.get(id);
             if (load && cached == null) {
-              load(id, new Callback<>() {
+              load(key, id, new Callback<>() {
                 @Override
                 public void success(LocalCache cached) {
                   executor.execute(new NamedRunnable(name, "load") {
@@ -234,7 +234,7 @@ public class CaravanDataService implements ArchivingDataService {
     });
   }
 
-  private void load(long id, Callback<LocalCache> callback) {
+  private void load(Key key, long id, Callback<LocalCache> callback) {
     try {
       LocalCache builder = new LocalCache() {
         @Override
@@ -253,7 +253,7 @@ public class CaravanDataService implements ArchivingDataService {
           });
         }
       };
-      store.read(id, builder);
+      store.read(key, id, builder);
     } catch (Exception ex) {
       LOGGER.error("failed-load-" + id, ex);
       callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_LOAD_FAILURE_EXCEPTION, ex));
@@ -292,7 +292,7 @@ public class CaravanDataService implements ArchivingDataService {
         callback.success(cached.build());
         return;
       }
-      load(id, new Callback<LocalCache>() {
+      load(key, id, new Callback<LocalCache>() {
         @Override
         public void success(LocalCache builder) {
           callback.success(addToCacheIfDoesntExistReturnCorrect(id, builder).build());
@@ -325,7 +325,7 @@ public class CaravanDataService implements ArchivingDataService {
         }
       };
       builder.handle(change);
-      if (store.append(id, ByteArrayHelper.convert(buf), patch.seqEnd, patch.assetBytes, () -> {
+      if (store.append(key, id, ByteArrayHelper.convert(buf), patch.seqEnd, patch.assetBytes, () -> {
         executor.execute(new NamedRunnable("commit-cache") {
           @Override
           public void execute() throws Exception {
@@ -363,7 +363,7 @@ public class CaravanDataService implements ArchivingDataService {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
         return;
       }
-      if (store.append(id, write, patches[patches.length - 1].seqEnd, assetBytes, () -> {
+      if (store.append(key, id, write, patches[patches.length - 1].seqEnd, assetBytes, () -> {
         executor.execute(new NamedRunnable("patch-commit") {
           @Override
           public void execute() throws Exception {
@@ -403,7 +403,7 @@ public class CaravanDataService implements ArchivingDataService {
   @Override
   public void delete(Key key, Callback<Void> callback) {
     execute("delete", key, false, callback, (id, cached) -> {
-      store.delete(id, () -> {
+      store.delete(key, id, () -> {
       });
       keyToIdService.forget(key);
       cache.remove(id);
@@ -427,14 +427,14 @@ public class CaravanDataService implements ArchivingDataService {
     byte[] bytes = ByteArrayHelper.convert(buf);
 
     execute("snapshot", key, true, callback, (id, cached) -> {
-      Integer size = store.append(id, bytes, snapshot.seq, snapshot.assetBytes, () -> {
+      Integer size = store.append(key, id, bytes, snapshot.seq, snapshot.assetBytes, () -> {
       });
       if (size == null) {
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_OUT_OF_SPACE_SNAPSHOT));
       } else {
         cached.handle(snap);
         int toPreserve = Math.max(snapshot.history, cached.getMinimumHistoryToPreserve());
-        store.trim(id, toPreserve, () -> {
+        store.trim(key, id, toPreserve, () -> {
           callback.success(0);// huh, this is interesting
         });
       }
