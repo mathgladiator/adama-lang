@@ -1698,7 +1698,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Self_Outside_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":28},\"end\":{\"line\":1,\"character\":15,\"byte\":33}},\"severity\":1,\"source\":\"error\",\"message\":\"@self requires being inside a record (SELF)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":27},\"end\":{\"line\":1,\"character\":15,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"@self requires being inside a record (SELF)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

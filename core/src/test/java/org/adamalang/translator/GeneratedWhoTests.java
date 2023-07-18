@@ -46,7 +46,7 @@ public class GeneratedWhoTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Who_CantPromoteOrdinaryClient_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":0,\"byte\":93},\"end\":{\"line\":11,\"character\":1,\"byte\":189}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'secure<principal>' is unable to store type 'principal'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":0,\"byte\":85},\"end\":{\"line\":11,\"character\":1,\"byte\":178}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'secure<principal>' is unable to store type 'principal'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -86,7 +86,7 @@ public class GeneratedWhoTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Who_CantStateTransition_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":16},\"end\":{\"line\":1,\"character\":14,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers (WHO)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":15},\"end\":{\"line\":1,\"character\":14,\"byte\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers (WHO)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -126,7 +126,7 @@ public class GeneratedWhoTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Who_CopySecureClient_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":93},\"end\":{\"line\":6,\"character\":19,\"byte\":110}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'secure<principal>' is unable to store type 'principal'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":87},\"end\":{\"line\":6,\"character\":19,\"byte\":104}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'secure<principal>' is unable to store type 'principal'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

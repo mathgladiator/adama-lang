@@ -1295,7 +1295,7 @@ var RxHTML = (function () {
       connections[conKey].tree.nuke();
     }
     var parts = (path.startsWith("/") ? path.substring(1) : path).split("/");
-    var init = {"__session_id": "R" + Math.random()};
+    var init = {};
     var foo = route(parts, 0, router, init);
     nuke(where);
     if (foo != null) {

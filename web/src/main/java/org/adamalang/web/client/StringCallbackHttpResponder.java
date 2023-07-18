@@ -39,7 +39,7 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
       if (header.status == 200 || header.status == 204) {
         invokeSuccess = true;
       } else {
-        logger.error("get-callback-not-200:", header.status + ":" + header.headers.toString());
+        logger.error("get-callback-not-200: {}, {}", header.status + ":" + header.headers.toString());
         monitor.failure(ErrorCodes.WEB_STRING_CALLBACK_NOT_200);
         callback.failure(new ErrorCodeException(ErrorCodes.WEB_STRING_CALLBACK_NOT_200, header.status + ""));
         emissionPossible = false;

@@ -874,7 +874,7 @@ public class GeneratedFunctionsAbortableTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:FunctionsAbortable_Sad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":13,\"character\":2,\"byte\":142},\"end\":{\"line\":13,\"character\":12,\"byte\":152}},\"severity\":1,\"source\":\"error\",\"message\":\"Abortable functions can only be called from another abortable function or within a message handler (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":14,\"character\":2,\"byte\":159},\"end\":{\"line\":14,\"character\":5,\"byte\":162}},\"severity\":1,\"source\":\"error\",\"message\":\"Abortable functions can only be called from another abortable function or within a message handler (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":13,\"character\":2,\"byte\":129},\"end\":{\"line\":13,\"character\":12,\"byte\":139}},\"severity\":1,\"source\":\"error\",\"message\":\"Abortable functions can only be called from another abortable function or within a message handler (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":14,\"character\":2,\"byte\":145},\"end\":{\"line\":14,\"character\":5,\"byte\":148}},\"severity\":1,\"source\":\"error\",\"message\":\"Abortable functions can only be called from another abortable function or within a message handler (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

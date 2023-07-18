@@ -46,7 +46,7 @@ public class GeneratedInventionPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:InventionPolicy_ControlFlowOpen_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":9,\"byte\":20},\"end\":{\"line\":5,\"character\":3,\"byte\":73}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'invent' policy must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":9,\"byte\":19},\"end\":{\"line\":5,\"character\":3,\"byte\":68}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'invent' policy must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -86,7 +86,7 @@ public class GeneratedInventionPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:InventionPolicy_NotSimpleConstructor_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":9,\"byte\":20},\"end\":{\"line\":3,\"character\":3,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"Invention requires all constructors to not accept messages (INVENT)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":9,\"byte\":19},\"end\":{\"line\":3,\"character\":3,\"byte\":41}},\"severity\":1,\"source\":\"error\",\"message\":\"Invention requires all constructors to not accept messages (INVENT)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

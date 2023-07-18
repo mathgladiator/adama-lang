@@ -46,7 +46,7 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BlindSendPolicy_ControlFlowOpen_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7,\"byte\":18},\"end\":{\"line\":5,\"character\":3,\"byte\":71}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'send' policy must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7,\"byte\":17},\"end\":{\"line\":5,\"character\":3,\"byte\":66}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'send' policy must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

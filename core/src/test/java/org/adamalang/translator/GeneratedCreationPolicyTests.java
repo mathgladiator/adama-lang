@@ -46,7 +46,7 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:CreationPolicy_ControlFlowOpen_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":9,\"byte\":20},\"end\":{\"line\":5,\"character\":3,\"byte\":73}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'create' policy must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":9,\"byte\":19},\"end\":{\"line\":5,\"character\":3,\"byte\":68}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'create' policy must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

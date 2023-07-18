@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 
 /** https://stripe.com/docs/api */
 public class Stripe extends SimpleService {
-  private static final Logger LOGGER = LoggerFactory.getLogger(Twilio.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(Stripe.class);
   private final FirstPartyMetrics metrics;
   private final ExecutorService executor;
   private final WebClientBase base;

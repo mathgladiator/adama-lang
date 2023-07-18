@@ -732,7 +732,7 @@ public class GeneratedAssetsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Assets_CanAttach_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":12,\"byte\":12},\"end\":{\"line\":1,\"character\":1,\"byte\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"The @can_attach handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":12,\"byte\":12},\"end\":{\"line\":1,\"character\":1,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"The @can_attach handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -772,7 +772,7 @@ public class GeneratedAssetsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Assets_Failures_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":49},\"end\":{\"line\":4,\"character\":8,\"byte\":55}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'asset' lacks field 'food' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":49},\"end\":{\"line\":4,\"character\":8,\"byte\":55}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":62},\"end\":{\"line\":5,\"character\":7,\"byte\":67}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'asset' is unable to store type 'int'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":45},\"end\":{\"line\":4,\"character\":8,\"byte\":51}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'asset' lacks field 'food' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":45},\"end\":{\"line\":4,\"character\":8,\"byte\":51}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":57},\"end\":{\"line\":5,\"character\":7,\"byte\":62}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'asset' is unable to store type 'int'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
