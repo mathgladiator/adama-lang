@@ -48,6 +48,11 @@ public class JsonStreamReaderTests {
     Assert.assertEquals(42, reader.readInteger());
   }
 
+  public void obj_to_zero_int_2() {
+    JsonStreamReader reader = new JsonStreamReader("\"X\"");
+    Assert.assertEquals(0, reader.readInteger());
+  }
+
   public void arr_to_zero_int() {
     JsonStreamReader reader = new JsonStreamReader("[123,\"\"],42");
     Assert.assertEquals(0, reader.readInteger());
