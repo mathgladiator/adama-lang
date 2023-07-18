@@ -542,85 +542,85 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/accounts", node, callback);
         return;
       case "DeleteAccountsAccount":
-        invoke("DELETE", "/v1/accounts/" + Json.readString(node, "account"), node, callback);
+        invoke("DELETE", "/v1/accounts/" + Json.readStringAndRemove(node, "account"), node, callback);
         return;
       case "GetAccountsAccount":
-        invoke("GET", "/v1/accounts/" + Json.readString(node, "account"), node, callback);
+        invoke("GET", "/v1/accounts/" + Json.readStringAndRemove(node, "account"), node, callback);
         return;
       case "PostAccountsAccount":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account"), node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account"), node, callback);
         return;
       case "PostAccountsAccountBankAccounts":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account") + "/bank_accounts", node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/bank_accounts", node, callback);
         return;
       case "DeleteAccountsAccountBankAccountsId":
-        invoke("DELETE", "/v1/accounts/" + Json.readString(node, "account") + "/bank_accounts/" + Json.readString(node, "id"), node, callback);
+        invoke("DELETE", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/bank_accounts/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetAccountsAccountBankAccountsId":
-        invoke("GET", "/v1/accounts/" + Json.readString(node, "account") + "/bank_accounts/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/bank_accounts/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostAccountsAccountBankAccountsId":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account") + "/bank_accounts/" + Json.readString(node, "id"), node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/bank_accounts/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetAccountsAccountCapabilities":
-        invoke("GET", "/v1/accounts/" + Json.readString(node, "account") + "/capabilities", node, callback);
+        invoke("GET", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/capabilities", node, callback);
         return;
       case "GetAccountsAccountCapabilitiesCapability":
-        invoke("GET", "/v1/accounts/" + Json.readString(node, "account") + "/capabilities/" + Json.readString(node, "capability"), node, callback);
+        invoke("GET", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/capabilities/" + Json.readStringAndRemove(node, "capability"), node, callback);
         return;
       case "PostAccountsAccountCapabilitiesCapability":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account") + "/capabilities/" + Json.readString(node, "capability"), node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/capabilities/" + Json.readStringAndRemove(node, "capability"), node, callback);
         return;
       case "GetAccountsAccountExternalAccounts":
-        invoke("GET", "/v1/accounts/" + Json.readString(node, "account") + "/external_accounts", node, callback);
+        invoke("GET", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/external_accounts", node, callback);
         return;
       case "PostAccountsAccountExternalAccounts":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account") + "/external_accounts", node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/external_accounts", node, callback);
         return;
       case "DeleteAccountsAccountExternalAccountsId":
-        invoke("DELETE", "/v1/accounts/" + Json.readString(node, "account") + "/external_accounts/" + Json.readString(node, "id"), node, callback);
+        invoke("DELETE", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/external_accounts/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetAccountsAccountExternalAccountsId":
-        invoke("GET", "/v1/accounts/" + Json.readString(node, "account") + "/external_accounts/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/external_accounts/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostAccountsAccountExternalAccountsId":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account") + "/external_accounts/" + Json.readString(node, "id"), node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/external_accounts/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostAccountsAccountLoginLinks":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account") + "/login_links", node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/login_links", node, callback);
         return;
       case "GetAccountsAccountPeople":
-        invoke("GET", "/v1/accounts/" + Json.readString(node, "account") + "/people", node, callback);
+        invoke("GET", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/people", node, callback);
         return;
       case "PostAccountsAccountPeople":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account") + "/people", node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/people", node, callback);
         return;
       case "DeleteAccountsAccountPeoplePerson":
-        invoke("DELETE", "/v1/accounts/" + Json.readString(node, "account") + "/people/" + Json.readString(node, "person"), node, callback);
+        invoke("DELETE", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/people/" + Json.readStringAndRemove(node, "person"), node, callback);
         return;
       case "GetAccountsAccountPeoplePerson":
-        invoke("GET", "/v1/accounts/" + Json.readString(node, "account") + "/people/" + Json.readString(node, "person"), node, callback);
+        invoke("GET", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/people/" + Json.readStringAndRemove(node, "person"), node, callback);
         return;
       case "PostAccountsAccountPeoplePerson":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account") + "/people/" + Json.readString(node, "person"), node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/people/" + Json.readStringAndRemove(node, "person"), node, callback);
         return;
       case "GetAccountsAccountPersons":
-        invoke("GET", "/v1/accounts/" + Json.readString(node, "account") + "/persons", node, callback);
+        invoke("GET", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/persons", node, callback);
         return;
       case "PostAccountsAccountPersons":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account") + "/persons", node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/persons", node, callback);
         return;
       case "DeleteAccountsAccountPersonsPerson":
-        invoke("DELETE", "/v1/accounts/" + Json.readString(node, "account") + "/persons/" + Json.readString(node, "person"), node, callback);
+        invoke("DELETE", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/persons/" + Json.readStringAndRemove(node, "person"), node, callback);
         return;
       case "GetAccountsAccountPersonsPerson":
-        invoke("GET", "/v1/accounts/" + Json.readString(node, "account") + "/persons/" + Json.readString(node, "person"), node, callback);
+        invoke("GET", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/persons/" + Json.readStringAndRemove(node, "person"), node, callback);
         return;
       case "PostAccountsAccountPersonsPerson":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account") + "/persons/" + Json.readString(node, "person"), node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/persons/" + Json.readStringAndRemove(node, "person"), node, callback);
         return;
       case "PostAccountsAccountReject":
-        invoke("POST", "/v1/accounts/" + Json.readString(node, "account") + "/reject", node, callback);
+        invoke("POST", "/v1/accounts/" + Json.readStringAndRemove(node, "account") + "/reject", node, callback);
         return;
       case "GetApplePayDomains":
         invoke("GET", "/v1/apple_pay/domains", node, callback);
@@ -629,31 +629,31 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/apple_pay/domains", node, callback);
         return;
       case "DeleteApplePayDomainsDomain":
-        invoke("DELETE", "/v1/apple_pay/domains/" + Json.readString(node, "domain"), node, callback);
+        invoke("DELETE", "/v1/apple_pay/domains/" + Json.readStringAndRemove(node, "domain"), node, callback);
         return;
       case "GetApplePayDomainsDomain":
-        invoke("GET", "/v1/apple_pay/domains/" + Json.readString(node, "domain"), node, callback);
+        invoke("GET", "/v1/apple_pay/domains/" + Json.readStringAndRemove(node, "domain"), node, callback);
         return;
       case "GetApplicationFees":
         invoke("GET", "/v1/application_fees", node, callback);
         return;
       case "GetApplicationFeesFeeRefundsId":
-        invoke("GET", "/v1/application_fees/" + Json.readString(node, "fee") + "/refunds/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/application_fees/" + Json.readStringAndRemove(node, "fee") + "/refunds/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostApplicationFeesFeeRefundsId":
-        invoke("POST", "/v1/application_fees/" + Json.readString(node, "fee") + "/refunds/" + Json.readString(node, "id"), node, callback);
+        invoke("POST", "/v1/application_fees/" + Json.readStringAndRemove(node, "fee") + "/refunds/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetApplicationFeesId":
-        invoke("GET", "/v1/application_fees/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/application_fees/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostApplicationFeesIdRefund":
-        invoke("POST", "/v1/application_fees/" + Json.readString(node, "id") + "/refund", node, callback);
+        invoke("POST", "/v1/application_fees/" + Json.readStringAndRemove(node, "id") + "/refund", node, callback);
         return;
       case "GetApplicationFeesIdRefunds":
-        invoke("GET", "/v1/application_fees/" + Json.readString(node, "id") + "/refunds", node, callback);
+        invoke("GET", "/v1/application_fees/" + Json.readStringAndRemove(node, "id") + "/refunds", node, callback);
         return;
       case "PostApplicationFeesIdRefunds":
-        invoke("POST", "/v1/application_fees/" + Json.readString(node, "id") + "/refunds", node, callback);
+        invoke("POST", "/v1/application_fees/" + Json.readStringAndRemove(node, "id") + "/refunds", node, callback);
         return;
       case "GetAppsSecrets":
         invoke("GET", "/v1/apps/secrets", node, callback);
@@ -674,13 +674,13 @@ public class Stripe extends SimpleService {
         invoke("GET", "/v1/balance/history", node, callback);
         return;
       case "GetBalanceHistoryId":
-        invoke("GET", "/v1/balance/history/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/balance/history/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetBalanceTransactions":
         invoke("GET", "/v1/balance_transactions", node, callback);
         return;
       case "GetBalanceTransactionsId":
-        invoke("GET", "/v1/balance_transactions/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/balance_transactions/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetBillingPortalConfigurations":
         invoke("GET", "/v1/billing_portal/configurations", node, callback);
@@ -689,10 +689,10 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/billing_portal/configurations", node, callback);
         return;
       case "GetBillingPortalConfigurationsConfiguration":
-        invoke("GET", "/v1/billing_portal/configurations/" + Json.readString(node, "configuration"), node, callback);
+        invoke("GET", "/v1/billing_portal/configurations/" + Json.readStringAndRemove(node, "configuration"), node, callback);
         return;
       case "PostBillingPortalConfigurationsConfiguration":
-        invoke("POST", "/v1/billing_portal/configurations/" + Json.readString(node, "configuration"), node, callback);
+        invoke("POST", "/v1/billing_portal/configurations/" + Json.readStringAndRemove(node, "configuration"), node, callback);
         return;
       case "PostBillingPortalSessions":
         invoke("POST", "/v1/billing_portal/sessions", node, callback);
@@ -707,37 +707,37 @@ public class Stripe extends SimpleService {
         invoke("GET", "/v1/charges/search", node, callback);
         return;
       case "GetChargesCharge":
-        invoke("GET", "/v1/charges/" + Json.readString(node, "charge"), node, callback);
+        invoke("GET", "/v1/charges/" + Json.readStringAndRemove(node, "charge"), node, callback);
         return;
       case "PostChargesCharge":
-        invoke("POST", "/v1/charges/" + Json.readString(node, "charge"), node, callback);
+        invoke("POST", "/v1/charges/" + Json.readStringAndRemove(node, "charge"), node, callback);
         return;
       case "PostChargesChargeCapture":
-        invoke("POST", "/v1/charges/" + Json.readString(node, "charge") + "/capture", node, callback);
+        invoke("POST", "/v1/charges/" + Json.readStringAndRemove(node, "charge") + "/capture", node, callback);
         return;
       case "GetChargesChargeDispute":
-        invoke("GET", "/v1/charges/" + Json.readString(node, "charge") + "/dispute", node, callback);
+        invoke("GET", "/v1/charges/" + Json.readStringAndRemove(node, "charge") + "/dispute", node, callback);
         return;
       case "PostChargesChargeDispute":
-        invoke("POST", "/v1/charges/" + Json.readString(node, "charge") + "/dispute", node, callback);
+        invoke("POST", "/v1/charges/" + Json.readStringAndRemove(node, "charge") + "/dispute", node, callback);
         return;
       case "PostChargesChargeDisputeClose":
-        invoke("POST", "/v1/charges/" + Json.readString(node, "charge") + "/dispute/close", node, callback);
+        invoke("POST", "/v1/charges/" + Json.readStringAndRemove(node, "charge") + "/dispute/close", node, callback);
         return;
       case "PostChargesChargeRefund":
-        invoke("POST", "/v1/charges/" + Json.readString(node, "charge") + "/refund", node, callback);
+        invoke("POST", "/v1/charges/" + Json.readStringAndRemove(node, "charge") + "/refund", node, callback);
         return;
       case "GetChargesChargeRefunds":
-        invoke("GET", "/v1/charges/" + Json.readString(node, "charge") + "/refunds", node, callback);
+        invoke("GET", "/v1/charges/" + Json.readStringAndRemove(node, "charge") + "/refunds", node, callback);
         return;
       case "PostChargesChargeRefunds":
-        invoke("POST", "/v1/charges/" + Json.readString(node, "charge") + "/refunds", node, callback);
+        invoke("POST", "/v1/charges/" + Json.readStringAndRemove(node, "charge") + "/refunds", node, callback);
         return;
       case "GetChargesChargeRefundsRefund":
-        invoke("GET", "/v1/charges/" + Json.readString(node, "charge") + "/refunds/" + Json.readString(node, "refund"), node, callback);
+        invoke("GET", "/v1/charges/" + Json.readStringAndRemove(node, "charge") + "/refunds/" + Json.readStringAndRemove(node, "refund"), node, callback);
         return;
       case "PostChargesChargeRefundsRefund":
-        invoke("POST", "/v1/charges/" + Json.readString(node, "charge") + "/refunds/" + Json.readString(node, "refund"), node, callback);
+        invoke("POST", "/v1/charges/" + Json.readStringAndRemove(node, "charge") + "/refunds/" + Json.readStringAndRemove(node, "refund"), node, callback);
         return;
       case "GetCheckoutSessions":
         invoke("GET", "/v1/checkout/sessions", node, callback);
@@ -746,19 +746,19 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/checkout/sessions", node, callback);
         return;
       case "GetCheckoutSessionsSession":
-        invoke("GET", "/v1/checkout/sessions/" + Json.readString(node, "session"), node, callback);
+        invoke("GET", "/v1/checkout/sessions/" + Json.readStringAndRemove(node, "session"), node, callback);
         return;
       case "PostCheckoutSessionsSessionExpire":
-        invoke("POST", "/v1/checkout/sessions/" + Json.readString(node, "session") + "/expire", node, callback);
+        invoke("POST", "/v1/checkout/sessions/" + Json.readStringAndRemove(node, "session") + "/expire", node, callback);
         return;
       case "GetCheckoutSessionsSessionLineItems":
-        invoke("GET", "/v1/checkout/sessions/" + Json.readString(node, "session") + "/line_items", node, callback);
+        invoke("GET", "/v1/checkout/sessions/" + Json.readStringAndRemove(node, "session") + "/line_items", node, callback);
         return;
       case "GetCountrySpecs":
         invoke("GET", "/v1/country_specs", node, callback);
         return;
       case "GetCountrySpecsCountry":
-        invoke("GET", "/v1/country_specs/" + Json.readString(node, "country"), node, callback);
+        invoke("GET", "/v1/country_specs/" + Json.readStringAndRemove(node, "country"), node, callback);
         return;
       case "GetCoupons":
         invoke("GET", "/v1/coupons", node, callback);
@@ -767,13 +767,13 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/coupons", node, callback);
         return;
       case "DeleteCouponsCoupon":
-        invoke("DELETE", "/v1/coupons/" + Json.readString(node, "coupon"), node, callback);
+        invoke("DELETE", "/v1/coupons/" + Json.readStringAndRemove(node, "coupon"), node, callback);
         return;
       case "GetCouponsCoupon":
-        invoke("GET", "/v1/coupons/" + Json.readString(node, "coupon"), node, callback);
+        invoke("GET", "/v1/coupons/" + Json.readStringAndRemove(node, "coupon"), node, callback);
         return;
       case "PostCouponsCoupon":
-        invoke("POST", "/v1/coupons/" + Json.readString(node, "coupon"), node, callback);
+        invoke("POST", "/v1/coupons/" + Json.readStringAndRemove(node, "coupon"), node, callback);
         return;
       case "GetCreditNotes":
         invoke("GET", "/v1/credit_notes", node, callback);
@@ -788,16 +788,16 @@ public class Stripe extends SimpleService {
         invoke("GET", "/v1/credit_notes/preview/lines", node, callback);
         return;
       case "GetCreditNotesCreditNoteLines":
-        invoke("GET", "/v1/credit_notes/" + Json.readString(node, "credit_note") + "/lines", node, callback);
+        invoke("GET", "/v1/credit_notes/" + Json.readStringAndRemove(node, "credit_note") + "/lines", node, callback);
         return;
       case "GetCreditNotesId":
-        invoke("GET", "/v1/credit_notes/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/credit_notes/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostCreditNotesId":
-        invoke("POST", "/v1/credit_notes/" + Json.readString(node, "id"), node, callback);
+        invoke("POST", "/v1/credit_notes/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostCreditNotesIdVoid":
-        invoke("POST", "/v1/credit_notes/" + Json.readString(node, "id") + "/void", node, callback);
+        invoke("POST", "/v1/credit_notes/" + Json.readStringAndRemove(node, "id") + "/void", node, callback);
         return;
       case "GetCustomers":
         invoke("GET", "/v1/customers", node, callback);
@@ -809,166 +809,166 @@ public class Stripe extends SimpleService {
         invoke("GET", "/v1/customers/search", node, callback);
         return;
       case "DeleteCustomersCustomer":
-        invoke("DELETE", "/v1/customers/" + Json.readString(node, "customer"), node, callback);
+        invoke("DELETE", "/v1/customers/" + Json.readStringAndRemove(node, "customer"), node, callback);
         return;
       case "GetCustomersCustomer":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer"), node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer"), node, callback);
         return;
       case "PostCustomersCustomer":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer"), node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer"), node, callback);
         return;
       case "GetCustomersCustomerBalanceTransactions":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/balance_transactions", node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/balance_transactions", node, callback);
         return;
       case "PostCustomersCustomerBalanceTransactions":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/balance_transactions", node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/balance_transactions", node, callback);
         return;
       case "GetCustomersCustomerBalanceTransactionsTransaction":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/balance_transactions/" + Json.readString(node, "transaction"), node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/balance_transactions/" + Json.readStringAndRemove(node, "transaction"), node, callback);
         return;
       case "PostCustomersCustomerBalanceTransactionsTransaction":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/balance_transactions/" + Json.readString(node, "transaction"), node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/balance_transactions/" + Json.readStringAndRemove(node, "transaction"), node, callback);
         return;
       case "GetCustomersCustomerBankAccounts":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/bank_accounts", node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/bank_accounts", node, callback);
         return;
       case "PostCustomersCustomerBankAccounts":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/bank_accounts", node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/bank_accounts", node, callback);
         return;
       case "DeleteCustomersCustomerBankAccountsId":
-        invoke("DELETE", "/v1/customers/" + Json.readString(node, "customer") + "/bank_accounts/" + Json.readString(node, "id"), node, callback);
+        invoke("DELETE", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/bank_accounts/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetCustomersCustomerBankAccountsId":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/bank_accounts/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/bank_accounts/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostCustomersCustomerBankAccountsId":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/bank_accounts/" + Json.readString(node, "id"), node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/bank_accounts/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostCustomersCustomerBankAccountsIdVerify":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/bank_accounts/" + Json.readString(node, "id") + "/verify", node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/bank_accounts/" + Json.readStringAndRemove(node, "id") + "/verify", node, callback);
         return;
       case "GetCustomersCustomerCards":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/cards", node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/cards", node, callback);
         return;
       case "PostCustomersCustomerCards":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/cards", node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/cards", node, callback);
         return;
       case "DeleteCustomersCustomerCardsId":
-        invoke("DELETE", "/v1/customers/" + Json.readString(node, "customer") + "/cards/" + Json.readString(node, "id"), node, callback);
+        invoke("DELETE", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/cards/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetCustomersCustomerCardsId":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/cards/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/cards/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostCustomersCustomerCardsId":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/cards/" + Json.readString(node, "id"), node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/cards/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetCustomersCustomerCashBalance":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/cash_balance", node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/cash_balance", node, callback);
         return;
       case "PostCustomersCustomerCashBalance":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/cash_balance", node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/cash_balance", node, callback);
         return;
       case "GetCustomersCustomerCashBalanceTransactions":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/cash_balance_transactions", node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/cash_balance_transactions", node, callback);
         return;
       case "GetCustomersCustomerCashBalanceTransactionsTransaction":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/cash_balance_transactions/" + Json.readString(node, "transaction"), node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/cash_balance_transactions/" + Json.readStringAndRemove(node, "transaction"), node, callback);
         return;
       case "DeleteCustomersCustomerDiscount":
-        invoke("DELETE", "/v1/customers/" + Json.readString(node, "customer") + "/discount", node, callback);
+        invoke("DELETE", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/discount", node, callback);
         return;
       case "GetCustomersCustomerDiscount":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/discount", node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/discount", node, callback);
         return;
       case "PostCustomersCustomerFundingInstructions":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/funding_instructions", node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/funding_instructions", node, callback);
         return;
       case "GetCustomersCustomerPaymentMethods":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/payment_methods", node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/payment_methods", node, callback);
         return;
       case "GetCustomersCustomerPaymentMethodsPaymentMethod":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/payment_methods/" + Json.readString(node, "payment_method"), node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/payment_methods/" + Json.readStringAndRemove(node, "payment_method"), node, callback);
         return;
       case "GetCustomersCustomerSources":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/sources", node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/sources", node, callback);
         return;
       case "PostCustomersCustomerSources":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/sources", node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/sources", node, callback);
         return;
       case "DeleteCustomersCustomerSourcesId":
-        invoke("DELETE", "/v1/customers/" + Json.readString(node, "customer") + "/sources/" + Json.readString(node, "id"), node, callback);
+        invoke("DELETE", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/sources/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetCustomersCustomerSourcesId":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/sources/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/sources/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostCustomersCustomerSourcesId":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/sources/" + Json.readString(node, "id"), node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/sources/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostCustomersCustomerSourcesIdVerify":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/sources/" + Json.readString(node, "id") + "/verify", node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/sources/" + Json.readStringAndRemove(node, "id") + "/verify", node, callback);
         return;
       case "GetCustomersCustomerSubscriptions":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/subscriptions", node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/subscriptions", node, callback);
         return;
       case "PostCustomersCustomerSubscriptions":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/subscriptions", node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/subscriptions", node, callback);
         return;
       case "DeleteCustomersCustomerSubscriptionsSubscriptionExposedId":
-        invoke("DELETE", "/v1/customers/" + Json.readString(node, "customer") + "/subscriptions/" + Json.readString(node, "subscription_exposed_id"), node, callback);
+        invoke("DELETE", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/subscriptions/" + Json.readStringAndRemove(node, "subscription_exposed_id"), node, callback);
         return;
       case "GetCustomersCustomerSubscriptionsSubscriptionExposedId":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/subscriptions/" + Json.readString(node, "subscription_exposed_id"), node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/subscriptions/" + Json.readStringAndRemove(node, "subscription_exposed_id"), node, callback);
         return;
       case "PostCustomersCustomerSubscriptionsSubscriptionExposedId":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/subscriptions/" + Json.readString(node, "subscription_exposed_id"), node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/subscriptions/" + Json.readStringAndRemove(node, "subscription_exposed_id"), node, callback);
         return;
       case "DeleteCustomersCustomerSubscriptionsSubscriptionExposedIdDiscount":
-        invoke("DELETE", "/v1/customers/" + Json.readString(node, "customer") + "/subscriptions/" + Json.readString(node, "subscription_exposed_id") + "/discount", node, callback);
+        invoke("DELETE", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/subscriptions/" + Json.readStringAndRemove(node, "subscription_exposed_id") + "/discount", node, callback);
         return;
       case "GetCustomersCustomerSubscriptionsSubscriptionExposedIdDiscount":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/subscriptions/" + Json.readString(node, "subscription_exposed_id") + "/discount", node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/subscriptions/" + Json.readStringAndRemove(node, "subscription_exposed_id") + "/discount", node, callback);
         return;
       case "GetCustomersCustomerTaxIds":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/tax_ids", node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/tax_ids", node, callback);
         return;
       case "PostCustomersCustomerTaxIds":
-        invoke("POST", "/v1/customers/" + Json.readString(node, "customer") + "/tax_ids", node, callback);
+        invoke("POST", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/tax_ids", node, callback);
         return;
       case "DeleteCustomersCustomerTaxIdsId":
-        invoke("DELETE", "/v1/customers/" + Json.readString(node, "customer") + "/tax_ids/" + Json.readString(node, "id"), node, callback);
+        invoke("DELETE", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/tax_ids/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetCustomersCustomerTaxIdsId":
-        invoke("GET", "/v1/customers/" + Json.readString(node, "customer") + "/tax_ids/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/customers/" + Json.readStringAndRemove(node, "customer") + "/tax_ids/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetDisputes":
         invoke("GET", "/v1/disputes", node, callback);
         return;
       case "GetDisputesDispute":
-        invoke("GET", "/v1/disputes/" + Json.readString(node, "dispute"), node, callback);
+        invoke("GET", "/v1/disputes/" + Json.readStringAndRemove(node, "dispute"), node, callback);
         return;
       case "PostDisputesDispute":
-        invoke("POST", "/v1/disputes/" + Json.readString(node, "dispute"), node, callback);
+        invoke("POST", "/v1/disputes/" + Json.readStringAndRemove(node, "dispute"), node, callback);
         return;
       case "PostDisputesDisputeClose":
-        invoke("POST", "/v1/disputes/" + Json.readString(node, "dispute") + "/close", node, callback);
+        invoke("POST", "/v1/disputes/" + Json.readStringAndRemove(node, "dispute") + "/close", node, callback);
         return;
       case "PostEphemeralKeys":
         invoke("POST", "/v1/ephemeral_keys", node, callback);
         return;
       case "DeleteEphemeralKeysKey":
-        invoke("DELETE", "/v1/ephemeral_keys/" + Json.readString(node, "key"), node, callback);
+        invoke("DELETE", "/v1/ephemeral_keys/" + Json.readStringAndRemove(node, "key"), node, callback);
         return;
       case "GetEvents":
         invoke("GET", "/v1/events", node, callback);
         return;
       case "GetEventsId":
-        invoke("GET", "/v1/events/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/events/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetExchangeRates":
         invoke("GET", "/v1/exchange_rates", node, callback);
         return;
       case "GetExchangeRatesRateId":
-        invoke("GET", "/v1/exchange_rates/" + Json.readString(node, "rate_id"), node, callback);
+        invoke("GET", "/v1/exchange_rates/" + Json.readStringAndRemove(node, "rate_id"), node, callback);
         return;
       case "GetFileLinks":
         invoke("GET", "/v1/file_links", node, callback);
@@ -977,10 +977,10 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/file_links", node, callback);
         return;
       case "GetFileLinksLink":
-        invoke("GET", "/v1/file_links/" + Json.readString(node, "link"), node, callback);
+        invoke("GET", "/v1/file_links/" + Json.readStringAndRemove(node, "link"), node, callback);
         return;
       case "PostFileLinksLink":
-        invoke("POST", "/v1/file_links/" + Json.readString(node, "link"), node, callback);
+        invoke("POST", "/v1/file_links/" + Json.readStringAndRemove(node, "link"), node, callback);
         return;
       case "GetFiles":
         invoke("GET", "/v1/files", node, callback);
@@ -989,34 +989,34 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/files", node, callback);
         return;
       case "GetFilesFile":
-        invoke("GET", "/v1/files/" + Json.readString(node, "file"), node, callback);
+        invoke("GET", "/v1/files/" + Json.readStringAndRemove(node, "file"), node, callback);
         return;
       case "GetFinancialConnectionsAccounts":
         invoke("GET", "/v1/financial_connections/accounts", node, callback);
         return;
       case "GetFinancialConnectionsAccountsAccount":
-        invoke("GET", "/v1/financial_connections/accounts/" + Json.readString(node, "account"), node, callback);
+        invoke("GET", "/v1/financial_connections/accounts/" + Json.readStringAndRemove(node, "account"), node, callback);
         return;
       case "PostFinancialConnectionsAccountsAccountDisconnect":
-        invoke("POST", "/v1/financial_connections/accounts/" + Json.readString(node, "account") + "/disconnect", node, callback);
+        invoke("POST", "/v1/financial_connections/accounts/" + Json.readStringAndRemove(node, "account") + "/disconnect", node, callback);
         return;
       case "GetFinancialConnectionsAccountsAccountOwners":
-        invoke("GET", "/v1/financial_connections/accounts/" + Json.readString(node, "account") + "/owners", node, callback);
+        invoke("GET", "/v1/financial_connections/accounts/" + Json.readStringAndRemove(node, "account") + "/owners", node, callback);
         return;
       case "PostFinancialConnectionsAccountsAccountRefresh":
-        invoke("POST", "/v1/financial_connections/accounts/" + Json.readString(node, "account") + "/refresh", node, callback);
+        invoke("POST", "/v1/financial_connections/accounts/" + Json.readStringAndRemove(node, "account") + "/refresh", node, callback);
         return;
       case "PostFinancialConnectionsSessions":
         invoke("POST", "/v1/financial_connections/sessions", node, callback);
         return;
       case "GetFinancialConnectionsSessionsSession":
-        invoke("GET", "/v1/financial_connections/sessions/" + Json.readString(node, "session"), node, callback);
+        invoke("GET", "/v1/financial_connections/sessions/" + Json.readStringAndRemove(node, "session"), node, callback);
         return;
       case "GetIdentityVerificationReports":
         invoke("GET", "/v1/identity/verification_reports", node, callback);
         return;
       case "GetIdentityVerificationReportsReport":
-        invoke("GET", "/v1/identity/verification_reports/" + Json.readString(node, "report"), node, callback);
+        invoke("GET", "/v1/identity/verification_reports/" + Json.readStringAndRemove(node, "report"), node, callback);
         return;
       case "GetIdentityVerificationSessions":
         invoke("GET", "/v1/identity/verification_sessions", node, callback);
@@ -1025,16 +1025,16 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/identity/verification_sessions", node, callback);
         return;
       case "GetIdentityVerificationSessionsSession":
-        invoke("GET", "/v1/identity/verification_sessions/" + Json.readString(node, "session"), node, callback);
+        invoke("GET", "/v1/identity/verification_sessions/" + Json.readStringAndRemove(node, "session"), node, callback);
         return;
       case "PostIdentityVerificationSessionsSession":
-        invoke("POST", "/v1/identity/verification_sessions/" + Json.readString(node, "session"), node, callback);
+        invoke("POST", "/v1/identity/verification_sessions/" + Json.readStringAndRemove(node, "session"), node, callback);
         return;
       case "PostIdentityVerificationSessionsSessionCancel":
-        invoke("POST", "/v1/identity/verification_sessions/" + Json.readString(node, "session") + "/cancel", node, callback);
+        invoke("POST", "/v1/identity/verification_sessions/" + Json.readStringAndRemove(node, "session") + "/cancel", node, callback);
         return;
       case "PostIdentityVerificationSessionsSessionRedact":
-        invoke("POST", "/v1/identity/verification_sessions/" + Json.readString(node, "session") + "/redact", node, callback);
+        invoke("POST", "/v1/identity/verification_sessions/" + Json.readStringAndRemove(node, "session") + "/redact", node, callback);
         return;
       case "GetInvoiceitems":
         invoke("GET", "/v1/invoiceitems", node, callback);
@@ -1043,13 +1043,13 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/invoiceitems", node, callback);
         return;
       case "DeleteInvoiceitemsInvoiceitem":
-        invoke("DELETE", "/v1/invoiceitems/" + Json.readString(node, "invoiceitem"), node, callback);
+        invoke("DELETE", "/v1/invoiceitems/" + Json.readStringAndRemove(node, "invoiceitem"), node, callback);
         return;
       case "GetInvoiceitemsInvoiceitem":
-        invoke("GET", "/v1/invoiceitems/" + Json.readString(node, "invoiceitem"), node, callback);
+        invoke("GET", "/v1/invoiceitems/" + Json.readStringAndRemove(node, "invoiceitem"), node, callback);
         return;
       case "PostInvoiceitemsInvoiceitem":
-        invoke("POST", "/v1/invoiceitems/" + Json.readString(node, "invoiceitem"), node, callback);
+        invoke("POST", "/v1/invoiceitems/" + Json.readStringAndRemove(node, "invoiceitem"), node, callback);
         return;
       case "GetInvoices":
         invoke("GET", "/v1/invoices", node, callback);
@@ -1067,46 +1067,46 @@ public class Stripe extends SimpleService {
         invoke("GET", "/v1/invoices/upcoming/lines", node, callback);
         return;
       case "DeleteInvoicesInvoice":
-        invoke("DELETE", "/v1/invoices/" + Json.readString(node, "invoice"), node, callback);
+        invoke("DELETE", "/v1/invoices/" + Json.readStringAndRemove(node, "invoice"), node, callback);
         return;
       case "GetInvoicesInvoice":
-        invoke("GET", "/v1/invoices/" + Json.readString(node, "invoice"), node, callback);
+        invoke("GET", "/v1/invoices/" + Json.readStringAndRemove(node, "invoice"), node, callback);
         return;
       case "PostInvoicesInvoice":
-        invoke("POST", "/v1/invoices/" + Json.readString(node, "invoice"), node, callback);
+        invoke("POST", "/v1/invoices/" + Json.readStringAndRemove(node, "invoice"), node, callback);
         return;
       case "PostInvoicesInvoiceFinalize":
-        invoke("POST", "/v1/invoices/" + Json.readString(node, "invoice") + "/finalize", node, callback);
+        invoke("POST", "/v1/invoices/" + Json.readStringAndRemove(node, "invoice") + "/finalize", node, callback);
         return;
       case "GetInvoicesInvoiceLines":
-        invoke("GET", "/v1/invoices/" + Json.readString(node, "invoice") + "/lines", node, callback);
+        invoke("GET", "/v1/invoices/" + Json.readStringAndRemove(node, "invoice") + "/lines", node, callback);
         return;
       case "PostInvoicesInvoiceMarkUncollectible":
-        invoke("POST", "/v1/invoices/" + Json.readString(node, "invoice") + "/mark_uncollectible", node, callback);
+        invoke("POST", "/v1/invoices/" + Json.readStringAndRemove(node, "invoice") + "/mark_uncollectible", node, callback);
         return;
       case "PostInvoicesInvoicePay":
-        invoke("POST", "/v1/invoices/" + Json.readString(node, "invoice") + "/pay", node, callback);
+        invoke("POST", "/v1/invoices/" + Json.readStringAndRemove(node, "invoice") + "/pay", node, callback);
         return;
       case "PostInvoicesInvoiceSend":
-        invoke("POST", "/v1/invoices/" + Json.readString(node, "invoice") + "/send", node, callback);
+        invoke("POST", "/v1/invoices/" + Json.readStringAndRemove(node, "invoice") + "/send", node, callback);
         return;
       case "PostInvoicesInvoiceVoid":
-        invoke("POST", "/v1/invoices/" + Json.readString(node, "invoice") + "/void", node, callback);
+        invoke("POST", "/v1/invoices/" + Json.readStringAndRemove(node, "invoice") + "/void", node, callback);
         return;
       case "GetIssuingAuthorizations":
         invoke("GET", "/v1/issuing/authorizations", node, callback);
         return;
       case "GetIssuingAuthorizationsAuthorization":
-        invoke("GET", "/v1/issuing/authorizations/" + Json.readString(node, "authorization"), node, callback);
+        invoke("GET", "/v1/issuing/authorizations/" + Json.readStringAndRemove(node, "authorization"), node, callback);
         return;
       case "PostIssuingAuthorizationsAuthorization":
-        invoke("POST", "/v1/issuing/authorizations/" + Json.readString(node, "authorization"), node, callback);
+        invoke("POST", "/v1/issuing/authorizations/" + Json.readStringAndRemove(node, "authorization"), node, callback);
         return;
       case "PostIssuingAuthorizationsAuthorizationApprove":
-        invoke("POST", "/v1/issuing/authorizations/" + Json.readString(node, "authorization") + "/approve", node, callback);
+        invoke("POST", "/v1/issuing/authorizations/" + Json.readStringAndRemove(node, "authorization") + "/approve", node, callback);
         return;
       case "PostIssuingAuthorizationsAuthorizationDecline":
-        invoke("POST", "/v1/issuing/authorizations/" + Json.readString(node, "authorization") + "/decline", node, callback);
+        invoke("POST", "/v1/issuing/authorizations/" + Json.readStringAndRemove(node, "authorization") + "/decline", node, callback);
         return;
       case "GetIssuingCardholders":
         invoke("GET", "/v1/issuing/cardholders", node, callback);
@@ -1115,10 +1115,10 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/issuing/cardholders", node, callback);
         return;
       case "GetIssuingCardholdersCardholder":
-        invoke("GET", "/v1/issuing/cardholders/" + Json.readString(node, "cardholder"), node, callback);
+        invoke("GET", "/v1/issuing/cardholders/" + Json.readStringAndRemove(node, "cardholder"), node, callback);
         return;
       case "PostIssuingCardholdersCardholder":
-        invoke("POST", "/v1/issuing/cardholders/" + Json.readString(node, "cardholder"), node, callback);
+        invoke("POST", "/v1/issuing/cardholders/" + Json.readStringAndRemove(node, "cardholder"), node, callback);
         return;
       case "GetIssuingCards":
         invoke("GET", "/v1/issuing/cards", node, callback);
@@ -1127,10 +1127,10 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/issuing/cards", node, callback);
         return;
       case "GetIssuingCardsCard":
-        invoke("GET", "/v1/issuing/cards/" + Json.readString(node, "card"), node, callback);
+        invoke("GET", "/v1/issuing/cards/" + Json.readStringAndRemove(node, "card"), node, callback);
         return;
       case "PostIssuingCardsCard":
-        invoke("POST", "/v1/issuing/cards/" + Json.readString(node, "card"), node, callback);
+        invoke("POST", "/v1/issuing/cards/" + Json.readStringAndRemove(node, "card"), node, callback);
         return;
       case "GetIssuingDisputes":
         invoke("GET", "/v1/issuing/disputes", node, callback);
@@ -1139,55 +1139,55 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/issuing/disputes", node, callback);
         return;
       case "GetIssuingDisputesDispute":
-        invoke("GET", "/v1/issuing/disputes/" + Json.readString(node, "dispute"), node, callback);
+        invoke("GET", "/v1/issuing/disputes/" + Json.readStringAndRemove(node, "dispute"), node, callback);
         return;
       case "PostIssuingDisputesDispute":
-        invoke("POST", "/v1/issuing/disputes/" + Json.readString(node, "dispute"), node, callback);
+        invoke("POST", "/v1/issuing/disputes/" + Json.readStringAndRemove(node, "dispute"), node, callback);
         return;
       case "PostIssuingDisputesDisputeSubmit":
-        invoke("POST", "/v1/issuing/disputes/" + Json.readString(node, "dispute") + "/submit", node, callback);
+        invoke("POST", "/v1/issuing/disputes/" + Json.readStringAndRemove(node, "dispute") + "/submit", node, callback);
         return;
       case "GetIssuingSettlements":
         invoke("GET", "/v1/issuing/settlements", node, callback);
         return;
       case "GetIssuingSettlementsSettlement":
-        invoke("GET", "/v1/issuing/settlements/" + Json.readString(node, "settlement"), node, callback);
+        invoke("GET", "/v1/issuing/settlements/" + Json.readStringAndRemove(node, "settlement"), node, callback);
         return;
       case "PostIssuingSettlementsSettlement":
-        invoke("POST", "/v1/issuing/settlements/" + Json.readString(node, "settlement"), node, callback);
+        invoke("POST", "/v1/issuing/settlements/" + Json.readStringAndRemove(node, "settlement"), node, callback);
         return;
       case "GetIssuingTransactions":
         invoke("GET", "/v1/issuing/transactions", node, callback);
         return;
       case "GetIssuingTransactionsTransaction":
-        invoke("GET", "/v1/issuing/transactions/" + Json.readString(node, "transaction"), node, callback);
+        invoke("GET", "/v1/issuing/transactions/" + Json.readStringAndRemove(node, "transaction"), node, callback);
         return;
       case "PostIssuingTransactionsTransaction":
-        invoke("POST", "/v1/issuing/transactions/" + Json.readString(node, "transaction"), node, callback);
+        invoke("POST", "/v1/issuing/transactions/" + Json.readStringAndRemove(node, "transaction"), node, callback);
         return;
       case "PostLinkAccountSessions":
         invoke("POST", "/v1/link_account_sessions", node, callback);
         return;
       case "GetLinkAccountSessionsSession":
-        invoke("GET", "/v1/link_account_sessions/" + Json.readString(node, "session"), node, callback);
+        invoke("GET", "/v1/link_account_sessions/" + Json.readStringAndRemove(node, "session"), node, callback);
         return;
       case "GetLinkedAccounts":
         invoke("GET", "/v1/linked_accounts", node, callback);
         return;
       case "GetLinkedAccountsAccount":
-        invoke("GET", "/v1/linked_accounts/" + Json.readString(node, "account"), node, callback);
+        invoke("GET", "/v1/linked_accounts/" + Json.readStringAndRemove(node, "account"), node, callback);
         return;
       case "PostLinkedAccountsAccountDisconnect":
-        invoke("POST", "/v1/linked_accounts/" + Json.readString(node, "account") + "/disconnect", node, callback);
+        invoke("POST", "/v1/linked_accounts/" + Json.readStringAndRemove(node, "account") + "/disconnect", node, callback);
         return;
       case "GetLinkedAccountsAccountOwners":
-        invoke("GET", "/v1/linked_accounts/" + Json.readString(node, "account") + "/owners", node, callback);
+        invoke("GET", "/v1/linked_accounts/" + Json.readStringAndRemove(node, "account") + "/owners", node, callback);
         return;
       case "PostLinkedAccountsAccountRefresh":
-        invoke("POST", "/v1/linked_accounts/" + Json.readString(node, "account") + "/refresh", node, callback);
+        invoke("POST", "/v1/linked_accounts/" + Json.readStringAndRemove(node, "account") + "/refresh", node, callback);
         return;
       case "GetMandatesMandate":
-        invoke("GET", "/v1/mandates/" + Json.readString(node, "mandate"), node, callback);
+        invoke("GET", "/v1/mandates/" + Json.readStringAndRemove(node, "mandate"), node, callback);
         return;
       case "GetPaymentIntents":
         invoke("GET", "/v1/payment_intents", node, callback);
@@ -1199,28 +1199,28 @@ public class Stripe extends SimpleService {
         invoke("GET", "/v1/payment_intents/search", node, callback);
         return;
       case "GetPaymentIntentsIntent":
-        invoke("GET", "/v1/payment_intents/" + Json.readString(node, "intent"), node, callback);
+        invoke("GET", "/v1/payment_intents/" + Json.readStringAndRemove(node, "intent"), node, callback);
         return;
       case "PostPaymentIntentsIntent":
-        invoke("POST", "/v1/payment_intents/" + Json.readString(node, "intent"), node, callback);
+        invoke("POST", "/v1/payment_intents/" + Json.readStringAndRemove(node, "intent"), node, callback);
         return;
       case "PostPaymentIntentsIntentApplyCustomerBalance":
-        invoke("POST", "/v1/payment_intents/" + Json.readString(node, "intent") + "/apply_customer_balance", node, callback);
+        invoke("POST", "/v1/payment_intents/" + Json.readStringAndRemove(node, "intent") + "/apply_customer_balance", node, callback);
         return;
       case "PostPaymentIntentsIntentCancel":
-        invoke("POST", "/v1/payment_intents/" + Json.readString(node, "intent") + "/cancel", node, callback);
+        invoke("POST", "/v1/payment_intents/" + Json.readStringAndRemove(node, "intent") + "/cancel", node, callback);
         return;
       case "PostPaymentIntentsIntentCapture":
-        invoke("POST", "/v1/payment_intents/" + Json.readString(node, "intent") + "/capture", node, callback);
+        invoke("POST", "/v1/payment_intents/" + Json.readStringAndRemove(node, "intent") + "/capture", node, callback);
         return;
       case "PostPaymentIntentsIntentConfirm":
-        invoke("POST", "/v1/payment_intents/" + Json.readString(node, "intent") + "/confirm", node, callback);
+        invoke("POST", "/v1/payment_intents/" + Json.readStringAndRemove(node, "intent") + "/confirm", node, callback);
         return;
       case "PostPaymentIntentsIntentIncrementAuthorization":
-        invoke("POST", "/v1/payment_intents/" + Json.readString(node, "intent") + "/increment_authorization", node, callback);
+        invoke("POST", "/v1/payment_intents/" + Json.readStringAndRemove(node, "intent") + "/increment_authorization", node, callback);
         return;
       case "PostPaymentIntentsIntentVerifyMicrodeposits":
-        invoke("POST", "/v1/payment_intents/" + Json.readString(node, "intent") + "/verify_microdeposits", node, callback);
+        invoke("POST", "/v1/payment_intents/" + Json.readStringAndRemove(node, "intent") + "/verify_microdeposits", node, callback);
         return;
       case "GetPaymentLinks":
         invoke("GET", "/v1/payment_links", node, callback);
@@ -1229,13 +1229,13 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/payment_links", node, callback);
         return;
       case "GetPaymentLinksPaymentLink":
-        invoke("GET", "/v1/payment_links/" + Json.readString(node, "payment_link"), node, callback);
+        invoke("GET", "/v1/payment_links/" + Json.readStringAndRemove(node, "payment_link"), node, callback);
         return;
       case "PostPaymentLinksPaymentLink":
-        invoke("POST", "/v1/payment_links/" + Json.readString(node, "payment_link"), node, callback);
+        invoke("POST", "/v1/payment_links/" + Json.readStringAndRemove(node, "payment_link"), node, callback);
         return;
       case "GetPaymentLinksPaymentLinkLineItems":
-        invoke("GET", "/v1/payment_links/" + Json.readString(node, "payment_link") + "/line_items", node, callback);
+        invoke("GET", "/v1/payment_links/" + Json.readStringAndRemove(node, "payment_link") + "/line_items", node, callback);
         return;
       case "GetPaymentMethods":
         invoke("GET", "/v1/payment_methods", node, callback);
@@ -1244,16 +1244,16 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/payment_methods", node, callback);
         return;
       case "GetPaymentMethodsPaymentMethod":
-        invoke("GET", "/v1/payment_methods/" + Json.readString(node, "payment_method"), node, callback);
+        invoke("GET", "/v1/payment_methods/" + Json.readStringAndRemove(node, "payment_method"), node, callback);
         return;
       case "PostPaymentMethodsPaymentMethod":
-        invoke("POST", "/v1/payment_methods/" + Json.readString(node, "payment_method"), node, callback);
+        invoke("POST", "/v1/payment_methods/" + Json.readStringAndRemove(node, "payment_method"), node, callback);
         return;
       case "PostPaymentMethodsPaymentMethodAttach":
-        invoke("POST", "/v1/payment_methods/" + Json.readString(node, "payment_method") + "/attach", node, callback);
+        invoke("POST", "/v1/payment_methods/" + Json.readStringAndRemove(node, "payment_method") + "/attach", node, callback);
         return;
       case "PostPaymentMethodsPaymentMethodDetach":
-        invoke("POST", "/v1/payment_methods/" + Json.readString(node, "payment_method") + "/detach", node, callback);
+        invoke("POST", "/v1/payment_methods/" + Json.readStringAndRemove(node, "payment_method") + "/detach", node, callback);
         return;
       case "GetPayouts":
         invoke("GET", "/v1/payouts", node, callback);
@@ -1262,16 +1262,16 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/payouts", node, callback);
         return;
       case "GetPayoutsPayout":
-        invoke("GET", "/v1/payouts/" + Json.readString(node, "payout"), node, callback);
+        invoke("GET", "/v1/payouts/" + Json.readStringAndRemove(node, "payout"), node, callback);
         return;
       case "PostPayoutsPayout":
-        invoke("POST", "/v1/payouts/" + Json.readString(node, "payout"), node, callback);
+        invoke("POST", "/v1/payouts/" + Json.readStringAndRemove(node, "payout"), node, callback);
         return;
       case "PostPayoutsPayoutCancel":
-        invoke("POST", "/v1/payouts/" + Json.readString(node, "payout") + "/cancel", node, callback);
+        invoke("POST", "/v1/payouts/" + Json.readStringAndRemove(node, "payout") + "/cancel", node, callback);
         return;
       case "PostPayoutsPayoutReverse":
-        invoke("POST", "/v1/payouts/" + Json.readString(node, "payout") + "/reverse", node, callback);
+        invoke("POST", "/v1/payouts/" + Json.readStringAndRemove(node, "payout") + "/reverse", node, callback);
         return;
       case "GetPlans":
         invoke("GET", "/v1/plans", node, callback);
@@ -1280,13 +1280,13 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/plans", node, callback);
         return;
       case "DeletePlansPlan":
-        invoke("DELETE", "/v1/plans/" + Json.readString(node, "plan"), node, callback);
+        invoke("DELETE", "/v1/plans/" + Json.readStringAndRemove(node, "plan"), node, callback);
         return;
       case "GetPlansPlan":
-        invoke("GET", "/v1/plans/" + Json.readString(node, "plan"), node, callback);
+        invoke("GET", "/v1/plans/" + Json.readStringAndRemove(node, "plan"), node, callback);
         return;
       case "PostPlansPlan":
-        invoke("POST", "/v1/plans/" + Json.readString(node, "plan"), node, callback);
+        invoke("POST", "/v1/plans/" + Json.readStringAndRemove(node, "plan"), node, callback);
         return;
       case "GetPrices":
         invoke("GET", "/v1/prices", node, callback);
@@ -1298,10 +1298,10 @@ public class Stripe extends SimpleService {
         invoke("GET", "/v1/prices/search", node, callback);
         return;
       case "GetPricesPrice":
-        invoke("GET", "/v1/prices/" + Json.readString(node, "price"), node, callback);
+        invoke("GET", "/v1/prices/" + Json.readStringAndRemove(node, "price"), node, callback);
         return;
       case "PostPricesPrice":
-        invoke("POST", "/v1/prices/" + Json.readString(node, "price"), node, callback);
+        invoke("POST", "/v1/prices/" + Json.readStringAndRemove(node, "price"), node, callback);
         return;
       case "GetProducts":
         invoke("GET", "/v1/products", node, callback);
@@ -1313,13 +1313,13 @@ public class Stripe extends SimpleService {
         invoke("GET", "/v1/products/search", node, callback);
         return;
       case "DeleteProductsId":
-        invoke("DELETE", "/v1/products/" + Json.readString(node, "id"), node, callback);
+        invoke("DELETE", "/v1/products/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetProductsId":
-        invoke("GET", "/v1/products/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/products/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostProductsId":
-        invoke("POST", "/v1/products/" + Json.readString(node, "id"), node, callback);
+        invoke("POST", "/v1/products/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetPromotionCodes":
         invoke("GET", "/v1/promotion_codes", node, callback);
@@ -1328,10 +1328,10 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/promotion_codes", node, callback);
         return;
       case "GetPromotionCodesPromotionCode":
-        invoke("GET", "/v1/promotion_codes/" + Json.readString(node, "promotion_code"), node, callback);
+        invoke("GET", "/v1/promotion_codes/" + Json.readStringAndRemove(node, "promotion_code"), node, callback);
         return;
       case "PostPromotionCodesPromotionCode":
-        invoke("POST", "/v1/promotion_codes/" + Json.readString(node, "promotion_code"), node, callback);
+        invoke("POST", "/v1/promotion_codes/" + Json.readStringAndRemove(node, "promotion_code"), node, callback);
         return;
       case "GetQuotes":
         invoke("GET", "/v1/quotes", node, callback);
@@ -1340,34 +1340,34 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/quotes", node, callback);
         return;
       case "GetQuotesQuote":
-        invoke("GET", "/v1/quotes/" + Json.readString(node, "quote"), node, callback);
+        invoke("GET", "/v1/quotes/" + Json.readStringAndRemove(node, "quote"), node, callback);
         return;
       case "PostQuotesQuote":
-        invoke("POST", "/v1/quotes/" + Json.readString(node, "quote"), node, callback);
+        invoke("POST", "/v1/quotes/" + Json.readStringAndRemove(node, "quote"), node, callback);
         return;
       case "PostQuotesQuoteAccept":
-        invoke("POST", "/v1/quotes/" + Json.readString(node, "quote") + "/accept", node, callback);
+        invoke("POST", "/v1/quotes/" + Json.readStringAndRemove(node, "quote") + "/accept", node, callback);
         return;
       case "PostQuotesQuoteCancel":
-        invoke("POST", "/v1/quotes/" + Json.readString(node, "quote") + "/cancel", node, callback);
+        invoke("POST", "/v1/quotes/" + Json.readStringAndRemove(node, "quote") + "/cancel", node, callback);
         return;
       case "GetQuotesQuoteComputedUpfrontLineItems":
-        invoke("GET", "/v1/quotes/" + Json.readString(node, "quote") + "/computed_upfront_line_items", node, callback);
+        invoke("GET", "/v1/quotes/" + Json.readStringAndRemove(node, "quote") + "/computed_upfront_line_items", node, callback);
         return;
       case "PostQuotesQuoteFinalize":
-        invoke("POST", "/v1/quotes/" + Json.readString(node, "quote") + "/finalize", node, callback);
+        invoke("POST", "/v1/quotes/" + Json.readStringAndRemove(node, "quote") + "/finalize", node, callback);
         return;
       case "GetQuotesQuoteLineItems":
-        invoke("GET", "/v1/quotes/" + Json.readString(node, "quote") + "/line_items", node, callback);
+        invoke("GET", "/v1/quotes/" + Json.readStringAndRemove(node, "quote") + "/line_items", node, callback);
         return;
       case "GetQuotesQuotePdf":
-        invoke("GET", "/v1/quotes/" + Json.readString(node, "quote") + "/pdf", node, callback);
+        invoke("GET", "/v1/quotes/" + Json.readStringAndRemove(node, "quote") + "/pdf", node, callback);
         return;
       case "GetRadarEarlyFraudWarnings":
         invoke("GET", "/v1/radar/early_fraud_warnings", node, callback);
         return;
       case "GetRadarEarlyFraudWarningsEarlyFraudWarning":
-        invoke("GET", "/v1/radar/early_fraud_warnings/" + Json.readString(node, "early_fraud_warning"), node, callback);
+        invoke("GET", "/v1/radar/early_fraud_warnings/" + Json.readStringAndRemove(node, "early_fraud_warning"), node, callback);
         return;
       case "GetRadarValueListItems":
         invoke("GET", "/v1/radar/value_list_items", node, callback);
@@ -1376,10 +1376,10 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/radar/value_list_items", node, callback);
         return;
       case "DeleteRadarValueListItemsItem":
-        invoke("DELETE", "/v1/radar/value_list_items/" + Json.readString(node, "item"), node, callback);
+        invoke("DELETE", "/v1/radar/value_list_items/" + Json.readStringAndRemove(node, "item"), node, callback);
         return;
       case "GetRadarValueListItemsItem":
-        invoke("GET", "/v1/radar/value_list_items/" + Json.readString(node, "item"), node, callback);
+        invoke("GET", "/v1/radar/value_list_items/" + Json.readStringAndRemove(node, "item"), node, callback);
         return;
       case "GetRadarValueLists":
         invoke("GET", "/v1/radar/value_lists", node, callback);
@@ -1388,13 +1388,13 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/radar/value_lists", node, callback);
         return;
       case "DeleteRadarValueListsValueList":
-        invoke("DELETE", "/v1/radar/value_lists/" + Json.readString(node, "value_list"), node, callback);
+        invoke("DELETE", "/v1/radar/value_lists/" + Json.readStringAndRemove(node, "value_list"), node, callback);
         return;
       case "GetRadarValueListsValueList":
-        invoke("GET", "/v1/radar/value_lists/" + Json.readString(node, "value_list"), node, callback);
+        invoke("GET", "/v1/radar/value_lists/" + Json.readStringAndRemove(node, "value_list"), node, callback);
         return;
       case "PostRadarValueListsValueList":
-        invoke("POST", "/v1/radar/value_lists/" + Json.readString(node, "value_list"), node, callback);
+        invoke("POST", "/v1/radar/value_lists/" + Json.readStringAndRemove(node, "value_list"), node, callback);
         return;
       case "GetRefunds":
         invoke("GET", "/v1/refunds", node, callback);
@@ -1403,13 +1403,13 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/refunds", node, callback);
         return;
       case "GetRefundsRefund":
-        invoke("GET", "/v1/refunds/" + Json.readString(node, "refund"), node, callback);
+        invoke("GET", "/v1/refunds/" + Json.readStringAndRemove(node, "refund"), node, callback);
         return;
       case "PostRefundsRefund":
-        invoke("POST", "/v1/refunds/" + Json.readString(node, "refund"), node, callback);
+        invoke("POST", "/v1/refunds/" + Json.readStringAndRemove(node, "refund"), node, callback);
         return;
       case "PostRefundsRefundCancel":
-        invoke("POST", "/v1/refunds/" + Json.readString(node, "refund") + "/cancel", node, callback);
+        invoke("POST", "/v1/refunds/" + Json.readStringAndRemove(node, "refund") + "/cancel", node, callback);
         return;
       case "GetReportingReportRuns":
         invoke("GET", "/v1/reporting/report_runs", node, callback);
@@ -1418,22 +1418,22 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/reporting/report_runs", node, callback);
         return;
       case "GetReportingReportRunsReportRun":
-        invoke("GET", "/v1/reporting/report_runs/" + Json.readString(node, "report_run"), node, callback);
+        invoke("GET", "/v1/reporting/report_runs/" + Json.readStringAndRemove(node, "report_run"), node, callback);
         return;
       case "GetReportingReportTypes":
         invoke("GET", "/v1/reporting/report_types", node, callback);
         return;
       case "GetReportingReportTypesReportType":
-        invoke("GET", "/v1/reporting/report_types/" + Json.readString(node, "report_type"), node, callback);
+        invoke("GET", "/v1/reporting/report_types/" + Json.readStringAndRemove(node, "report_type"), node, callback);
         return;
       case "GetReviews":
         invoke("GET", "/v1/reviews", node, callback);
         return;
       case "GetReviewsReview":
-        invoke("GET", "/v1/reviews/" + Json.readString(node, "review"), node, callback);
+        invoke("GET", "/v1/reviews/" + Json.readStringAndRemove(node, "review"), node, callback);
         return;
       case "PostReviewsReviewApprove":
-        invoke("POST", "/v1/reviews/" + Json.readString(node, "review") + "/approve", node, callback);
+        invoke("POST", "/v1/reviews/" + Json.readStringAndRemove(node, "review") + "/approve", node, callback);
         return;
       case "GetSetupAttempts":
         invoke("GET", "/v1/setup_attempts", node, callback);
@@ -1445,19 +1445,19 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/setup_intents", node, callback);
         return;
       case "GetSetupIntentsIntent":
-        invoke("GET", "/v1/setup_intents/" + Json.readString(node, "intent"), node, callback);
+        invoke("GET", "/v1/setup_intents/" + Json.readStringAndRemove(node, "intent"), node, callback);
         return;
       case "PostSetupIntentsIntent":
-        invoke("POST", "/v1/setup_intents/" + Json.readString(node, "intent"), node, callback);
+        invoke("POST", "/v1/setup_intents/" + Json.readStringAndRemove(node, "intent"), node, callback);
         return;
       case "PostSetupIntentsIntentCancel":
-        invoke("POST", "/v1/setup_intents/" + Json.readString(node, "intent") + "/cancel", node, callback);
+        invoke("POST", "/v1/setup_intents/" + Json.readStringAndRemove(node, "intent") + "/cancel", node, callback);
         return;
       case "PostSetupIntentsIntentConfirm":
-        invoke("POST", "/v1/setup_intents/" + Json.readString(node, "intent") + "/confirm", node, callback);
+        invoke("POST", "/v1/setup_intents/" + Json.readStringAndRemove(node, "intent") + "/confirm", node, callback);
         return;
       case "PostSetupIntentsIntentVerifyMicrodeposits":
-        invoke("POST", "/v1/setup_intents/" + Json.readString(node, "intent") + "/verify_microdeposits", node, callback);
+        invoke("POST", "/v1/setup_intents/" + Json.readStringAndRemove(node, "intent") + "/verify_microdeposits", node, callback);
         return;
       case "GetShippingRates":
         invoke("GET", "/v1/shipping_rates", node, callback);
@@ -1466,37 +1466,37 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/shipping_rates", node, callback);
         return;
       case "GetShippingRatesShippingRateToken":
-        invoke("GET", "/v1/shipping_rates/" + Json.readString(node, "shipping_rate_token"), node, callback);
+        invoke("GET", "/v1/shipping_rates/" + Json.readStringAndRemove(node, "shipping_rate_token"), node, callback);
         return;
       case "PostShippingRatesShippingRateToken":
-        invoke("POST", "/v1/shipping_rates/" + Json.readString(node, "shipping_rate_token"), node, callback);
+        invoke("POST", "/v1/shipping_rates/" + Json.readStringAndRemove(node, "shipping_rate_token"), node, callback);
         return;
       case "GetSigmaScheduledQueryRuns":
         invoke("GET", "/v1/sigma/scheduled_query_runs", node, callback);
         return;
       case "GetSigmaScheduledQueryRunsScheduledQueryRun":
-        invoke("GET", "/v1/sigma/scheduled_query_runs/" + Json.readString(node, "scheduled_query_run"), node, callback);
+        invoke("GET", "/v1/sigma/scheduled_query_runs/" + Json.readStringAndRemove(node, "scheduled_query_run"), node, callback);
         return;
       case "PostSources":
         invoke("POST", "/v1/sources", node, callback);
         return;
       case "GetSourcesSource":
-        invoke("GET", "/v1/sources/" + Json.readString(node, "source"), node, callback);
+        invoke("GET", "/v1/sources/" + Json.readStringAndRemove(node, "source"), node, callback);
         return;
       case "PostSourcesSource":
-        invoke("POST", "/v1/sources/" + Json.readString(node, "source"), node, callback);
+        invoke("POST", "/v1/sources/" + Json.readStringAndRemove(node, "source"), node, callback);
         return;
       case "GetSourcesSourceMandateNotificationsMandateNotification":
-        invoke("GET", "/v1/sources/" + Json.readString(node, "source") + "/mandate_notifications/" + Json.readString(node, "mandate_notification"), node, callback);
+        invoke("GET", "/v1/sources/" + Json.readStringAndRemove(node, "source") + "/mandate_notifications/" + Json.readStringAndRemove(node, "mandate_notification"), node, callback);
         return;
       case "GetSourcesSourceSourceTransactions":
-        invoke("GET", "/v1/sources/" + Json.readString(node, "source") + "/source_transactions", node, callback);
+        invoke("GET", "/v1/sources/" + Json.readStringAndRemove(node, "source") + "/source_transactions", node, callback);
         return;
       case "GetSourcesSourceSourceTransactionsSourceTransaction":
-        invoke("GET", "/v1/sources/" + Json.readString(node, "source") + "/source_transactions/" + Json.readString(node, "source_transaction"), node, callback);
+        invoke("GET", "/v1/sources/" + Json.readStringAndRemove(node, "source") + "/source_transactions/" + Json.readStringAndRemove(node, "source_transaction"), node, callback);
         return;
       case "PostSourcesSourceVerify":
-        invoke("POST", "/v1/sources/" + Json.readString(node, "source") + "/verify", node, callback);
+        invoke("POST", "/v1/sources/" + Json.readStringAndRemove(node, "source") + "/verify", node, callback);
         return;
       case "GetSubscriptionItems":
         invoke("GET", "/v1/subscription_items", node, callback);
@@ -1505,19 +1505,19 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/subscription_items", node, callback);
         return;
       case "DeleteSubscriptionItemsItem":
-        invoke("DELETE", "/v1/subscription_items/" + Json.readString(node, "item"), node, callback);
+        invoke("DELETE", "/v1/subscription_items/" + Json.readStringAndRemove(node, "item"), node, callback);
         return;
       case "GetSubscriptionItemsItem":
-        invoke("GET", "/v1/subscription_items/" + Json.readString(node, "item"), node, callback);
+        invoke("GET", "/v1/subscription_items/" + Json.readStringAndRemove(node, "item"), node, callback);
         return;
       case "PostSubscriptionItemsItem":
-        invoke("POST", "/v1/subscription_items/" + Json.readString(node, "item"), node, callback);
+        invoke("POST", "/v1/subscription_items/" + Json.readStringAndRemove(node, "item"), node, callback);
         return;
       case "GetSubscriptionItemsSubscriptionItemUsageRecordSummaries":
-        invoke("GET", "/v1/subscription_items/" + Json.readString(node, "subscription_item") + "/usage_record_summaries", node, callback);
+        invoke("GET", "/v1/subscription_items/" + Json.readStringAndRemove(node, "subscription_item") + "/usage_record_summaries", node, callback);
         return;
       case "PostSubscriptionItemsSubscriptionItemUsageRecords":
-        invoke("POST", "/v1/subscription_items/" + Json.readString(node, "subscription_item") + "/usage_records", node, callback);
+        invoke("POST", "/v1/subscription_items/" + Json.readStringAndRemove(node, "subscription_item") + "/usage_records", node, callback);
         return;
       case "GetSubscriptionSchedules":
         invoke("GET", "/v1/subscription_schedules", node, callback);
@@ -1526,16 +1526,16 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/subscription_schedules", node, callback);
         return;
       case "GetSubscriptionSchedulesSchedule":
-        invoke("GET", "/v1/subscription_schedules/" + Json.readString(node, "schedule"), node, callback);
+        invoke("GET", "/v1/subscription_schedules/" + Json.readStringAndRemove(node, "schedule"), node, callback);
         return;
       case "PostSubscriptionSchedulesSchedule":
-        invoke("POST", "/v1/subscription_schedules/" + Json.readString(node, "schedule"), node, callback);
+        invoke("POST", "/v1/subscription_schedules/" + Json.readStringAndRemove(node, "schedule"), node, callback);
         return;
       case "PostSubscriptionSchedulesScheduleCancel":
-        invoke("POST", "/v1/subscription_schedules/" + Json.readString(node, "schedule") + "/cancel", node, callback);
+        invoke("POST", "/v1/subscription_schedules/" + Json.readStringAndRemove(node, "schedule") + "/cancel", node, callback);
         return;
       case "PostSubscriptionSchedulesScheduleRelease":
-        invoke("POST", "/v1/subscription_schedules/" + Json.readString(node, "schedule") + "/release", node, callback);
+        invoke("POST", "/v1/subscription_schedules/" + Json.readStringAndRemove(node, "schedule") + "/release", node, callback);
         return;
       case "GetSubscriptions":
         invoke("GET", "/v1/subscriptions", node, callback);
@@ -1547,25 +1547,25 @@ public class Stripe extends SimpleService {
         invoke("GET", "/v1/subscriptions/search", node, callback);
         return;
       case "DeleteSubscriptionsSubscriptionExposedId":
-        invoke("DELETE", "/v1/subscriptions/" + Json.readString(node, "subscription_exposed_id"), node, callback);
+        invoke("DELETE", "/v1/subscriptions/" + Json.readStringAndRemove(node, "subscription_exposed_id"), node, callback);
         return;
       case "GetSubscriptionsSubscriptionExposedId":
-        invoke("GET", "/v1/subscriptions/" + Json.readString(node, "subscription_exposed_id"), node, callback);
+        invoke("GET", "/v1/subscriptions/" + Json.readStringAndRemove(node, "subscription_exposed_id"), node, callback);
         return;
       case "PostSubscriptionsSubscriptionExposedId":
-        invoke("POST", "/v1/subscriptions/" + Json.readString(node, "subscription_exposed_id"), node, callback);
+        invoke("POST", "/v1/subscriptions/" + Json.readStringAndRemove(node, "subscription_exposed_id"), node, callback);
         return;
       case "DeleteSubscriptionsSubscriptionExposedIdDiscount":
-        invoke("DELETE", "/v1/subscriptions/" + Json.readString(node, "subscription_exposed_id") + "/discount", node, callback);
+        invoke("DELETE", "/v1/subscriptions/" + Json.readStringAndRemove(node, "subscription_exposed_id") + "/discount", node, callback);
         return;
       case "PostSubscriptionsSubscriptionResume":
-        invoke("POST", "/v1/subscriptions/" + Json.readString(node, "subscription") + "/resume", node, callback);
+        invoke("POST", "/v1/subscriptions/" + Json.readStringAndRemove(node, "subscription") + "/resume", node, callback);
         return;
       case "PostTaxCalculations":
         invoke("POST", "/v1/tax/calculations", node, callback);
         return;
       case "GetTaxCalculationsCalculationLineItems":
-        invoke("GET", "/v1/tax/calculations/" + Json.readString(node, "calculation") + "/line_items", node, callback);
+        invoke("GET", "/v1/tax/calculations/" + Json.readStringAndRemove(node, "calculation") + "/line_items", node, callback);
         return;
       case "PostTaxTransactionsCreateFromCalculation":
         invoke("POST", "/v1/tax/transactions/create_from_calculation", node, callback);
@@ -1574,16 +1574,16 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/tax/transactions/create_reversal", node, callback);
         return;
       case "GetTaxTransactionsTransaction":
-        invoke("GET", "/v1/tax/transactions/" + Json.readString(node, "transaction"), node, callback);
+        invoke("GET", "/v1/tax/transactions/" + Json.readStringAndRemove(node, "transaction"), node, callback);
         return;
       case "GetTaxTransactionsTransactionLineItems":
-        invoke("GET", "/v1/tax/transactions/" + Json.readString(node, "transaction") + "/line_items", node, callback);
+        invoke("GET", "/v1/tax/transactions/" + Json.readStringAndRemove(node, "transaction") + "/line_items", node, callback);
         return;
       case "GetTaxCodes":
         invoke("GET", "/v1/tax_codes", node, callback);
         return;
       case "GetTaxCodesId":
-        invoke("GET", "/v1/tax_codes/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/tax_codes/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetTaxRates":
         invoke("GET", "/v1/tax_rates", node, callback);
@@ -1592,10 +1592,10 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/tax_rates", node, callback);
         return;
       case "GetTaxRatesTaxRate":
-        invoke("GET", "/v1/tax_rates/" + Json.readString(node, "tax_rate"), node, callback);
+        invoke("GET", "/v1/tax_rates/" + Json.readStringAndRemove(node, "tax_rate"), node, callback);
         return;
       case "PostTaxRatesTaxRate":
-        invoke("POST", "/v1/tax_rates/" + Json.readString(node, "tax_rate"), node, callback);
+        invoke("POST", "/v1/tax_rates/" + Json.readStringAndRemove(node, "tax_rate"), node, callback);
         return;
       case "GetTerminalConfigurations":
         invoke("GET", "/v1/terminal/configurations", node, callback);
@@ -1604,13 +1604,13 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/terminal/configurations", node, callback);
         return;
       case "DeleteTerminalConfigurationsConfiguration":
-        invoke("DELETE", "/v1/terminal/configurations/" + Json.readString(node, "configuration"), node, callback);
+        invoke("DELETE", "/v1/terminal/configurations/" + Json.readStringAndRemove(node, "configuration"), node, callback);
         return;
       case "GetTerminalConfigurationsConfiguration":
-        invoke("GET", "/v1/terminal/configurations/" + Json.readString(node, "configuration"), node, callback);
+        invoke("GET", "/v1/terminal/configurations/" + Json.readStringAndRemove(node, "configuration"), node, callback);
         return;
       case "PostTerminalConfigurationsConfiguration":
-        invoke("POST", "/v1/terminal/configurations/" + Json.readString(node, "configuration"), node, callback);
+        invoke("POST", "/v1/terminal/configurations/" + Json.readStringAndRemove(node, "configuration"), node, callback);
         return;
       case "PostTerminalConnectionTokens":
         invoke("POST", "/v1/terminal/connection_tokens", node, callback);
@@ -1622,13 +1622,13 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/terminal/locations", node, callback);
         return;
       case "DeleteTerminalLocationsLocation":
-        invoke("DELETE", "/v1/terminal/locations/" + Json.readString(node, "location"), node, callback);
+        invoke("DELETE", "/v1/terminal/locations/" + Json.readStringAndRemove(node, "location"), node, callback);
         return;
       case "GetTerminalLocationsLocation":
-        invoke("GET", "/v1/terminal/locations/" + Json.readString(node, "location"), node, callback);
+        invoke("GET", "/v1/terminal/locations/" + Json.readStringAndRemove(node, "location"), node, callback);
         return;
       case "PostTerminalLocationsLocation":
-        invoke("POST", "/v1/terminal/locations/" + Json.readString(node, "location"), node, callback);
+        invoke("POST", "/v1/terminal/locations/" + Json.readStringAndRemove(node, "location"), node, callback);
         return;
       case "GetTerminalReaders":
         invoke("GET", "/v1/terminal/readers", node, callback);
@@ -1637,49 +1637,49 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/terminal/readers", node, callback);
         return;
       case "DeleteTerminalReadersReader":
-        invoke("DELETE", "/v1/terminal/readers/" + Json.readString(node, "reader"), node, callback);
+        invoke("DELETE", "/v1/terminal/readers/" + Json.readStringAndRemove(node, "reader"), node, callback);
         return;
       case "GetTerminalReadersReader":
-        invoke("GET", "/v1/terminal/readers/" + Json.readString(node, "reader"), node, callback);
+        invoke("GET", "/v1/terminal/readers/" + Json.readStringAndRemove(node, "reader"), node, callback);
         return;
       case "PostTerminalReadersReader":
-        invoke("POST", "/v1/terminal/readers/" + Json.readString(node, "reader"), node, callback);
+        invoke("POST", "/v1/terminal/readers/" + Json.readStringAndRemove(node, "reader"), node, callback);
         return;
       case "PostTerminalReadersReaderCancelAction":
-        invoke("POST", "/v1/terminal/readers/" + Json.readString(node, "reader") + "/cancel_action", node, callback);
+        invoke("POST", "/v1/terminal/readers/" + Json.readStringAndRemove(node, "reader") + "/cancel_action", node, callback);
         return;
       case "PostTerminalReadersReaderProcessPaymentIntent":
-        invoke("POST", "/v1/terminal/readers/" + Json.readString(node, "reader") + "/process_payment_intent", node, callback);
+        invoke("POST", "/v1/terminal/readers/" + Json.readStringAndRemove(node, "reader") + "/process_payment_intent", node, callback);
         return;
       case "PostTerminalReadersReaderProcessSetupIntent":
-        invoke("POST", "/v1/terminal/readers/" + Json.readString(node, "reader") + "/process_setup_intent", node, callback);
+        invoke("POST", "/v1/terminal/readers/" + Json.readStringAndRemove(node, "reader") + "/process_setup_intent", node, callback);
         return;
       case "PostTerminalReadersReaderRefundPayment":
-        invoke("POST", "/v1/terminal/readers/" + Json.readString(node, "reader") + "/refund_payment", node, callback);
+        invoke("POST", "/v1/terminal/readers/" + Json.readStringAndRemove(node, "reader") + "/refund_payment", node, callback);
         return;
       case "PostTerminalReadersReaderSetReaderDisplay":
-        invoke("POST", "/v1/terminal/readers/" + Json.readString(node, "reader") + "/set_reader_display", node, callback);
+        invoke("POST", "/v1/terminal/readers/" + Json.readStringAndRemove(node, "reader") + "/set_reader_display", node, callback);
         return;
       case "PostTestHelpersCustomersCustomerFundCashBalance":
-        invoke("POST", "/v1/test_helpers/customers/" + Json.readString(node, "customer") + "/fund_cash_balance", node, callback);
+        invoke("POST", "/v1/test_helpers/customers/" + Json.readStringAndRemove(node, "customer") + "/fund_cash_balance", node, callback);
         return;
       case "PostTestHelpersIssuingCardsCardShippingDeliver":
-        invoke("POST", "/v1/test_helpers/issuing/cards/" + Json.readString(node, "card") + "/shipping/deliver", node, callback);
+        invoke("POST", "/v1/test_helpers/issuing/cards/" + Json.readStringAndRemove(node, "card") + "/shipping/deliver", node, callback);
         return;
       case "PostTestHelpersIssuingCardsCardShippingFail":
-        invoke("POST", "/v1/test_helpers/issuing/cards/" + Json.readString(node, "card") + "/shipping/fail", node, callback);
+        invoke("POST", "/v1/test_helpers/issuing/cards/" + Json.readStringAndRemove(node, "card") + "/shipping/fail", node, callback);
         return;
       case "PostTestHelpersIssuingCardsCardShippingReturn":
-        invoke("POST", "/v1/test_helpers/issuing/cards/" + Json.readString(node, "card") + "/shipping/return", node, callback);
+        invoke("POST", "/v1/test_helpers/issuing/cards/" + Json.readStringAndRemove(node, "card") + "/shipping/return", node, callback);
         return;
       case "PostTestHelpersIssuingCardsCardShippingShip":
-        invoke("POST", "/v1/test_helpers/issuing/cards/" + Json.readString(node, "card") + "/shipping/ship", node, callback);
+        invoke("POST", "/v1/test_helpers/issuing/cards/" + Json.readStringAndRemove(node, "card") + "/shipping/ship", node, callback);
         return;
       case "PostTestHelpersRefundsRefundExpire":
-        invoke("POST", "/v1/test_helpers/refunds/" + Json.readString(node, "refund") + "/expire", node, callback);
+        invoke("POST", "/v1/test_helpers/refunds/" + Json.readStringAndRemove(node, "refund") + "/expire", node, callback);
         return;
       case "PostTestHelpersTerminalReadersReaderPresentPaymentMethod":
-        invoke("POST", "/v1/test_helpers/terminal/readers/" + Json.readString(node, "reader") + "/present_payment_method", node, callback);
+        invoke("POST", "/v1/test_helpers/terminal/readers/" + Json.readStringAndRemove(node, "reader") + "/present_payment_method", node, callback);
         return;
       case "GetTestHelpersTestClocks":
         invoke("GET", "/v1/test_helpers/test_clocks", node, callback);
@@ -1688,40 +1688,40 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/test_helpers/test_clocks", node, callback);
         return;
       case "DeleteTestHelpersTestClocksTestClock":
-        invoke("DELETE", "/v1/test_helpers/test_clocks/" + Json.readString(node, "test_clock"), node, callback);
+        invoke("DELETE", "/v1/test_helpers/test_clocks/" + Json.readStringAndRemove(node, "test_clock"), node, callback);
         return;
       case "GetTestHelpersTestClocksTestClock":
-        invoke("GET", "/v1/test_helpers/test_clocks/" + Json.readString(node, "test_clock"), node, callback);
+        invoke("GET", "/v1/test_helpers/test_clocks/" + Json.readStringAndRemove(node, "test_clock"), node, callback);
         return;
       case "PostTestHelpersTestClocksTestClockAdvance":
-        invoke("POST", "/v1/test_helpers/test_clocks/" + Json.readString(node, "test_clock") + "/advance", node, callback);
+        invoke("POST", "/v1/test_helpers/test_clocks/" + Json.readStringAndRemove(node, "test_clock") + "/advance", node, callback);
         return;
       case "PostTestHelpersTreasuryInboundTransfersIdFail":
-        invoke("POST", "/v1/test_helpers/treasury/inbound_transfers/" + Json.readString(node, "id") + "/fail", node, callback);
+        invoke("POST", "/v1/test_helpers/treasury/inbound_transfers/" + Json.readStringAndRemove(node, "id") + "/fail", node, callback);
         return;
       case "PostTestHelpersTreasuryInboundTransfersIdReturn":
-        invoke("POST", "/v1/test_helpers/treasury/inbound_transfers/" + Json.readString(node, "id") + "/return", node, callback);
+        invoke("POST", "/v1/test_helpers/treasury/inbound_transfers/" + Json.readStringAndRemove(node, "id") + "/return", node, callback);
         return;
       case "PostTestHelpersTreasuryInboundTransfersIdSucceed":
-        invoke("POST", "/v1/test_helpers/treasury/inbound_transfers/" + Json.readString(node, "id") + "/succeed", node, callback);
+        invoke("POST", "/v1/test_helpers/treasury/inbound_transfers/" + Json.readStringAndRemove(node, "id") + "/succeed", node, callback);
         return;
       case "PostTestHelpersTreasuryOutboundPaymentsIdFail":
-        invoke("POST", "/v1/test_helpers/treasury/outbound_payments/" + Json.readString(node, "id") + "/fail", node, callback);
+        invoke("POST", "/v1/test_helpers/treasury/outbound_payments/" + Json.readStringAndRemove(node, "id") + "/fail", node, callback);
         return;
       case "PostTestHelpersTreasuryOutboundPaymentsIdPost":
-        invoke("POST", "/v1/test_helpers/treasury/outbound_payments/" + Json.readString(node, "id") + "/post", node, callback);
+        invoke("POST", "/v1/test_helpers/treasury/outbound_payments/" + Json.readStringAndRemove(node, "id") + "/post", node, callback);
         return;
       case "PostTestHelpersTreasuryOutboundPaymentsIdReturn":
-        invoke("POST", "/v1/test_helpers/treasury/outbound_payments/" + Json.readString(node, "id") + "/return", node, callback);
+        invoke("POST", "/v1/test_helpers/treasury/outbound_payments/" + Json.readStringAndRemove(node, "id") + "/return", node, callback);
         return;
       case "PostTestHelpersTreasuryOutboundTransfersOutboundTransferFail":
-        invoke("POST", "/v1/test_helpers/treasury/outbound_transfers/" + Json.readString(node, "outbound_transfer") + "/fail", node, callback);
+        invoke("POST", "/v1/test_helpers/treasury/outbound_transfers/" + Json.readStringAndRemove(node, "outbound_transfer") + "/fail", node, callback);
         return;
       case "PostTestHelpersTreasuryOutboundTransfersOutboundTransferPost":
-        invoke("POST", "/v1/test_helpers/treasury/outbound_transfers/" + Json.readString(node, "outbound_transfer") + "/post", node, callback);
+        invoke("POST", "/v1/test_helpers/treasury/outbound_transfers/" + Json.readStringAndRemove(node, "outbound_transfer") + "/post", node, callback);
         return;
       case "PostTestHelpersTreasuryOutboundTransfersOutboundTransferReturn":
-        invoke("POST", "/v1/test_helpers/treasury/outbound_transfers/" + Json.readString(node, "outbound_transfer") + "/return", node, callback);
+        invoke("POST", "/v1/test_helpers/treasury/outbound_transfers/" + Json.readStringAndRemove(node, "outbound_transfer") + "/return", node, callback);
         return;
       case "PostTestHelpersTreasuryReceivedCredits":
         invoke("POST", "/v1/test_helpers/treasury/received_credits", node, callback);
@@ -1733,7 +1733,7 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/tokens", node, callback);
         return;
       case "GetTokensToken":
-        invoke("GET", "/v1/tokens/" + Json.readString(node, "token"), node, callback);
+        invoke("GET", "/v1/tokens/" + Json.readStringAndRemove(node, "token"), node, callback);
         return;
       case "GetTopups":
         invoke("GET", "/v1/topups", node, callback);
@@ -1742,13 +1742,13 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/topups", node, callback);
         return;
       case "GetTopupsTopup":
-        invoke("GET", "/v1/topups/" + Json.readString(node, "topup"), node, callback);
+        invoke("GET", "/v1/topups/" + Json.readStringAndRemove(node, "topup"), node, callback);
         return;
       case "PostTopupsTopup":
-        invoke("POST", "/v1/topups/" + Json.readString(node, "topup"), node, callback);
+        invoke("POST", "/v1/topups/" + Json.readStringAndRemove(node, "topup"), node, callback);
         return;
       case "PostTopupsTopupCancel":
-        invoke("POST", "/v1/topups/" + Json.readString(node, "topup") + "/cancel", node, callback);
+        invoke("POST", "/v1/topups/" + Json.readStringAndRemove(node, "topup") + "/cancel", node, callback);
         return;
       case "GetTransfers":
         invoke("GET", "/v1/transfers", node, callback);
@@ -1757,22 +1757,22 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/transfers", node, callback);
         return;
       case "GetTransfersIdReversals":
-        invoke("GET", "/v1/transfers/" + Json.readString(node, "id") + "/reversals", node, callback);
+        invoke("GET", "/v1/transfers/" + Json.readStringAndRemove(node, "id") + "/reversals", node, callback);
         return;
       case "PostTransfersIdReversals":
-        invoke("POST", "/v1/transfers/" + Json.readString(node, "id") + "/reversals", node, callback);
+        invoke("POST", "/v1/transfers/" + Json.readStringAndRemove(node, "id") + "/reversals", node, callback);
         return;
       case "GetTransfersTransfer":
-        invoke("GET", "/v1/transfers/" + Json.readString(node, "transfer"), node, callback);
+        invoke("GET", "/v1/transfers/" + Json.readStringAndRemove(node, "transfer"), node, callback);
         return;
       case "PostTransfersTransfer":
-        invoke("POST", "/v1/transfers/" + Json.readString(node, "transfer"), node, callback);
+        invoke("POST", "/v1/transfers/" + Json.readStringAndRemove(node, "transfer"), node, callback);
         return;
       case "GetTransfersTransferReversalsId":
-        invoke("GET", "/v1/transfers/" + Json.readString(node, "transfer") + "/reversals/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/transfers/" + Json.readStringAndRemove(node, "transfer") + "/reversals/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostTransfersTransferReversalsId":
-        invoke("POST", "/v1/transfers/" + Json.readString(node, "transfer") + "/reversals/" + Json.readString(node, "id"), node, callback);
+        invoke("POST", "/v1/transfers/" + Json.readStringAndRemove(node, "transfer") + "/reversals/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetTreasuryCreditReversals":
         invoke("GET", "/v1/treasury/credit_reversals", node, callback);
@@ -1781,7 +1781,7 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/treasury/credit_reversals", node, callback);
         return;
       case "GetTreasuryCreditReversalsCreditReversal":
-        invoke("GET", "/v1/treasury/credit_reversals/" + Json.readString(node, "credit_reversal"), node, callback);
+        invoke("GET", "/v1/treasury/credit_reversals/" + Json.readStringAndRemove(node, "credit_reversal"), node, callback);
         return;
       case "GetTreasuryDebitReversals":
         invoke("GET", "/v1/treasury/debit_reversals", node, callback);
@@ -1790,7 +1790,7 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/treasury/debit_reversals", node, callback);
         return;
       case "GetTreasuryDebitReversalsDebitReversal":
-        invoke("GET", "/v1/treasury/debit_reversals/" + Json.readString(node, "debit_reversal"), node, callback);
+        invoke("GET", "/v1/treasury/debit_reversals/" + Json.readStringAndRemove(node, "debit_reversal"), node, callback);
         return;
       case "GetTreasuryFinancialAccounts":
         invoke("GET", "/v1/treasury/financial_accounts", node, callback);
@@ -1799,16 +1799,16 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/treasury/financial_accounts", node, callback);
         return;
       case "GetTreasuryFinancialAccountsFinancialAccount":
-        invoke("GET", "/v1/treasury/financial_accounts/" + Json.readString(node, "financial_account"), node, callback);
+        invoke("GET", "/v1/treasury/financial_accounts/" + Json.readStringAndRemove(node, "financial_account"), node, callback);
         return;
       case "PostTreasuryFinancialAccountsFinancialAccount":
-        invoke("POST", "/v1/treasury/financial_accounts/" + Json.readString(node, "financial_account"), node, callback);
+        invoke("POST", "/v1/treasury/financial_accounts/" + Json.readStringAndRemove(node, "financial_account"), node, callback);
         return;
       case "GetTreasuryFinancialAccountsFinancialAccountFeatures":
-        invoke("GET", "/v1/treasury/financial_accounts/" + Json.readString(node, "financial_account") + "/features", node, callback);
+        invoke("GET", "/v1/treasury/financial_accounts/" + Json.readStringAndRemove(node, "financial_account") + "/features", node, callback);
         return;
       case "PostTreasuryFinancialAccountsFinancialAccountFeatures":
-        invoke("POST", "/v1/treasury/financial_accounts/" + Json.readString(node, "financial_account") + "/features", node, callback);
+        invoke("POST", "/v1/treasury/financial_accounts/" + Json.readStringAndRemove(node, "financial_account") + "/features", node, callback);
         return;
       case "GetTreasuryInboundTransfers":
         invoke("GET", "/v1/treasury/inbound_transfers", node, callback);
@@ -1817,10 +1817,10 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/treasury/inbound_transfers", node, callback);
         return;
       case "GetTreasuryInboundTransfersId":
-        invoke("GET", "/v1/treasury/inbound_transfers/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/treasury/inbound_transfers/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostTreasuryInboundTransfersInboundTransferCancel":
-        invoke("POST", "/v1/treasury/inbound_transfers/" + Json.readString(node, "inbound_transfer") + "/cancel", node, callback);
+        invoke("POST", "/v1/treasury/inbound_transfers/" + Json.readStringAndRemove(node, "inbound_transfer") + "/cancel", node, callback);
         return;
       case "GetTreasuryOutboundPayments":
         invoke("GET", "/v1/treasury/outbound_payments", node, callback);
@@ -1829,10 +1829,10 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/treasury/outbound_payments", node, callback);
         return;
       case "GetTreasuryOutboundPaymentsId":
-        invoke("GET", "/v1/treasury/outbound_payments/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/treasury/outbound_payments/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "PostTreasuryOutboundPaymentsIdCancel":
-        invoke("POST", "/v1/treasury/outbound_payments/" + Json.readString(node, "id") + "/cancel", node, callback);
+        invoke("POST", "/v1/treasury/outbound_payments/" + Json.readStringAndRemove(node, "id") + "/cancel", node, callback);
         return;
       case "GetTreasuryOutboundTransfers":
         invoke("GET", "/v1/treasury/outbound_transfers", node, callback);
@@ -1841,34 +1841,34 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/treasury/outbound_transfers", node, callback);
         return;
       case "GetTreasuryOutboundTransfersOutboundTransfer":
-        invoke("GET", "/v1/treasury/outbound_transfers/" + Json.readString(node, "outbound_transfer"), node, callback);
+        invoke("GET", "/v1/treasury/outbound_transfers/" + Json.readStringAndRemove(node, "outbound_transfer"), node, callback);
         return;
       case "PostTreasuryOutboundTransfersOutboundTransferCancel":
-        invoke("POST", "/v1/treasury/outbound_transfers/" + Json.readString(node, "outbound_transfer") + "/cancel", node, callback);
+        invoke("POST", "/v1/treasury/outbound_transfers/" + Json.readStringAndRemove(node, "outbound_transfer") + "/cancel", node, callback);
         return;
       case "GetTreasuryReceivedCredits":
         invoke("GET", "/v1/treasury/received_credits", node, callback);
         return;
       case "GetTreasuryReceivedCreditsId":
-        invoke("GET", "/v1/treasury/received_credits/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/treasury/received_credits/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetTreasuryReceivedDebits":
         invoke("GET", "/v1/treasury/received_debits", node, callback);
         return;
       case "GetTreasuryReceivedDebitsId":
-        invoke("GET", "/v1/treasury/received_debits/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/treasury/received_debits/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetTreasuryTransactionEntries":
         invoke("GET", "/v1/treasury/transaction_entries", node, callback);
         return;
       case "GetTreasuryTransactionEntriesId":
-        invoke("GET", "/v1/treasury/transaction_entries/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/treasury/transaction_entries/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetTreasuryTransactions":
         invoke("GET", "/v1/treasury/transactions", node, callback);
         return;
       case "GetTreasuryTransactionsId":
-        invoke("GET", "/v1/treasury/transactions/" + Json.readString(node, "id"), node, callback);
+        invoke("GET", "/v1/treasury/transactions/" + Json.readStringAndRemove(node, "id"), node, callback);
         return;
       case "GetWebhookEndpoints":
         invoke("GET", "/v1/webhook_endpoints", node, callback);
@@ -1877,13 +1877,13 @@ public class Stripe extends SimpleService {
         invoke("POST", "/v1/webhook_endpoints", node, callback);
         return;
       case "DeleteWebhookEndpointsWebhookEndpoint":
-        invoke("DELETE", "/v1/webhook_endpoints/" + Json.readString(node, "webhook_endpoint"), node, callback);
+        invoke("DELETE", "/v1/webhook_endpoints/" + Json.readStringAndRemove(node, "webhook_endpoint"), node, callback);
         return;
       case "GetWebhookEndpointsWebhookEndpoint":
-        invoke("GET", "/v1/webhook_endpoints/" + Json.readString(node, "webhook_endpoint"), node, callback);
+        invoke("GET", "/v1/webhook_endpoints/" + Json.readStringAndRemove(node, "webhook_endpoint"), node, callback);
         return;
       case "PostWebhookEndpointsWebhookEndpoint":
-        invoke("POST", "/v1/webhook_endpoints/" + Json.readString(node, "webhook_endpoint"), node, callback);
+        invoke("POST", "/v1/webhook_endpoints/" + Json.readStringAndRemove(node, "webhook_endpoint"), node, callback);
         return;
 /** END[CODEGEN-METHODS] **/
       default:

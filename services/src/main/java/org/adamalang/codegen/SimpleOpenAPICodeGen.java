@@ -54,7 +54,7 @@ public class SimpleOpenAPICodeGen {
         Matcher matcher = VAREXTRACT.matcher(outputURL);
         while (matcher.find()) {
           String name = matcher.group(1);
-          outputURL = outputURL.replaceAll(Pattern.quote("{" + matcher.group(1) + "}"), "\" + Json.readString(node, \"" + name + "\") + \"");
+          outputURL = outputURL.replaceAll(Pattern.quote("{" + matcher.group(1) + "}"), "\" + Json.readStringAndRemove(node, \"" + name + "\") + \"");
           matcher = VAREXTRACT.matcher(outputURL);
         }
         if (outputURL.endsWith("+ \"\"")) {

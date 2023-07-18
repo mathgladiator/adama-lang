@@ -64,6 +64,17 @@ public class Json {
     return node.toString();
   }
 
+  public static String readStringAndRemove(ObjectNode tree, String field) {
+    JsonNode node = tree.remove(field);
+    if (node == null || node.isNull()) {
+      return null;
+    }
+    if (node.isTextual()) {
+      return node.textValue();
+    }
+    return node.toString();
+  }
+
   public static Boolean readBool(ObjectNode tree, String field) {
     JsonNode node = tree.get(field);
     if (node == null || node.isNull() || !node.isBoolean()) {

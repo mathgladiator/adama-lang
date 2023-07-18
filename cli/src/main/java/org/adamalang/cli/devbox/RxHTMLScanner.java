@@ -42,6 +42,7 @@ public class RxHTMLScanner implements AutoCloseable {
     this.onBuilt = onBuilt;
     this.service = FileSystems.getDefault().newWatchService();
     this.watchKeyCache = new HashMap<>();
+    sync(scanRoot);
     this.scanner = new Thread(() -> {
       try {
         rebuild();

@@ -8,6 +8,7 @@
  */
 package org.adamalang.common;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -69,6 +70,13 @@ public class JsonTests {
     Assert.assertEquals("1234", Json.readString(Json.parseJsonObject("{\"x\":\"1234\"}"), "x"));
     Assert.assertEquals("123", Json.readString(Json.parseJsonObject("{\"x\":123}"), "x"));
     Assert.assertNull(Json.readString(Json.parseJsonObject("{}"), "x"));
+  }
+
+  @Test
+  public void str_remove() {
+    ObjectNode node = Json.parseJsonObject("{\"x\":\"1234\"}");
+    Assert.assertEquals("1234", Json.readStringAndRemove(node, "x"));
+    Assert.assertEquals("{}", node.toString());
   }
 
   @Test

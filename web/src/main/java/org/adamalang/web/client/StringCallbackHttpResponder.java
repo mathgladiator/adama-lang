@@ -24,6 +24,7 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
   private ByteArrayOutputStream memory;
   private boolean invokeSuccess;
   private boolean emissionPossible;
+  private boolean logBody;
 
   public StringCallbackHttpResponder(Logger logger, RequestResponseMonitor.RequestResponseMonitorInstance monitor, Callback<String> callback) {
     this.logger = logger;
@@ -31,6 +32,7 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
     this.callback = callback;
     this.invokeSuccess = false;
     this.emissionPossible = true;
+    this.logBody = false;
   }
 
   @Override
@@ -43,6 +45,7 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
         monitor.failure(ErrorCodes.WEB_STRING_CALLBACK_NOT_200);
         callback.failure(new ErrorCodeException(ErrorCodes.WEB_STRING_CALLBACK_NOT_200, header.status + ""));
         emissionPossible = false;
+        logBody = true;
       }
     }
   }
@@ -66,6 +69,9 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
   public void bodyEnd() {
     if (invokeSuccess && emissionPossible) {
       callback.success(new String(memory.toByteArray(), StandardCharsets.UTF_8));
+    }
+    if (logBody) {
+      logger.error("failed body: {}", new String(memory.toByteArray(), StandardCharsets.UTF_8));
     }
   }
 
