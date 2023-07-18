@@ -8,19 +8,204 @@
  */
 package org.adamalang.cli.devbox;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.caravan.contracts.KeyToIdService;
+import org.adamalang.cli.implementations.CodeHandlerImpl;
 import org.adamalang.cli.interactive.TerminalIO;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.deploy.DeploymentFactoryBase;
+import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.sys.CoreService;
+
+import java.io.File;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a microverse is a local cosmos of an Adama machine that outlines everything needed to run Adama locally without a DB */
 public class DevBoxAdamaMicroVerse {
+  private final TerminalIO io;
+  private final AtomicBoolean alive;
+  public final DevCoreServiceFactory factory;
   public final CoreService service;
+  public final ArrayList<LocalSpaceDefn> spaces;
+  private final WatchService watchService;
+  private final Thread scanner;
 
-  private DevBoxAdamaMicroVerse(CoreService service) {
-    this.service = service;
+  public static class LocalSpaceDefn {
+    public final String spaceName;
+    public final String mainFile;
+    public final String includePath;
+    private HashMap<String, WatchKey> watchKeyCache;
+    private final DeploymentFactoryBase base;
+    public String lastDeployedPlan;
+
+    public LocalSpaceDefn(String spaceName, String mainFile, String includePath, DeploymentFactoryBase base) {
+      this.spaceName = spaceName;
+      this.mainFile = mainFile;
+      this.includePath = includePath;
+      this.watchKeyCache = new HashMap<>();
+      this.base = base;
+      this.lastDeployedPlan = "";
+    }
+
+    public String bundle() throws Exception {
+      ObjectNode plan = Json.newJsonObject();
+      ObjectNode version = plan.putObject("versions").putObject("file");
+      version.put("main", Files.readString(new File(mainFile).toPath()));
+      ObjectNode includes = version.putObject("includes");
+      if (includePath != null) {
+        for (Map.Entry<String, String> entry : CodeHandlerImpl.getImports(includePath).entrySet()) {
+          includes.put(entry.getKey(), entry.getValue());
+        }
+      }
+      plan.put("default", "file");
+      plan.putArray("plan");
+      return plan.toString();
+    }
   }
 
-  public static DevBoxAdamaMicroVerse load(TerminalIO io, ObjectNode defn) {
-    return null;
+  private void rebuild() {
+      for (LocalSpaceDefn defn : spaces) {
+        try {
+          String plan = defn.bundle();
+          if (!defn.lastDeployedPlan.equals(plan)) {
+            long start = System.currentTimeMillis();
+            io.notice("Validating:" + defn.spaceName);
+            if (CodeHandlerImpl.sharedValidatePlan(plan)) {
+              io.notice("Deploying:" + defn.spaceName);
+              defn.base.deploy(defn.spaceName, new DeploymentPlan(plan, (t, ec) -> {
+                io.error("DeployIssue[Code-" + ec + "]: " + t.getMessage());
+              }));
+              defn.lastDeployedPlan = plan;
+              io.notice("Deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
+            } else {
+              io.error("Failed to validate: '" + defn.spaceName + "'");
+            }
+          }
+        } catch (Exception ex) {
+          io.error("Failed to bundle: '" + defn.spaceName + " + ' :: " + ex.getMessage());
+        }
+      }
+  }
+
+  private DevBoxAdamaMicroVerse(TerminalIO io, AtomicBoolean alive, DevCoreServiceFactory factory, ArrayList<LocalSpaceDefn> spaces) throws Exception {
+    this.io = io;
+    this.alive = alive;
+    this.factory = factory;
+    this.service = factory.service;
+    this.spaces = spaces;
+    this.watchService = FileSystems.getDefault().newWatchService();
+    this.scanner = new Thread(() -> {
+      try {
+        rebuild();
+        while (alive.get()) {
+          poll();
+        }
+      } catch (Exception ex) {
+        if (!(ex instanceof InterruptedException)) {
+          ex.printStackTrace();
+        }
+        alive.set(false);
+      }
+    });
+    this.scanner.start();
+  }
+
+  public void shutdown() throws Exception {
+    alive.set(false);
+    scanner.interrupt();
+    factory.shutdown();
+  }
+
+  private void poll() throws Exception {
+    WatchKey wk = watchService.take();
+    boolean doRebuild = false;
+    for (WatchEvent<?> event : wk.pollEvents()) {
+      final Path changed = (Path) event.context();
+      String filename = changed.toFile().getName();
+      if (changed.toFile().isDirectory() || filename.contains(".adama")) {
+        doRebuild = true;
+      }
+      wk.reset();
+    }
+    if (doRebuild) {
+      rebuild();
+    }
+  }
+
+  public static DevBoxAdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn) throws Exception {
+    String caravanLocation = "caravan";
+    String cloudLocation = "cloud";
+    if (defn.has("caravan-path")) {
+      caravanLocation = defn.get("caravan-path").asText();
+    }
+    if (defn.has("cloud-path")) {
+      cloudLocation = defn.get("cloud-path").asText();
+    }
+    File caravanPath = new File(caravanLocation);
+    if (!caravanPath.exists()) {
+      caravanPath.mkdirs();
+    }
+    File cloudPath = new File(cloudLocation);
+    if (!cloudPath.exists()) {
+      cloudPath.mkdirs();
+    }
+    HashMap<Key, Long> keys = new HashMap<>();
+    JsonNode documentsNode = defn.get("documents");
+    if (documentsNode != null && documentsNode.isArray()) {
+      ArrayNode documents = (ArrayNode) documentsNode;
+      for (int k = 0; k < documents.size(); k++) {
+        if (documents.get(k) != null && documents.get(k).isObject()) {
+          ObjectNode document = (ObjectNode) documents.get(k);
+          Key key = new Key(document.get("space").textValue(), document.get("key").textValue());
+          keys.put(key, document.get("id").longValue());
+        }
+      }
+    }
+    DevCoreServiceFactory factory = new DevCoreServiceFactory(alive, caravanPath, cloudPath, new NoOpMetricsFactory(), new KeyToIdService() {
+      @Override
+      public void translate(Key key, Callback<Long> callback) {
+        if (keys.containsKey(key)) {
+          callback.success(keys.get(key));
+          return;
+        }
+        callback.failure(new ErrorCodeException(1000));
+      }
+
+      @Override
+      public void forget(Key key) {
+        // N/A
+      }
+    });
+
+    JsonNode spacesNode = defn.get("spaces");
+    if (spacesNode == null || !spacesNode.isArray()) {
+      io.notice("the microverse lacked a spaces array");
+      return null;
+    }
+    ArrayNode spaces = (ArrayNode) spacesNode;
+    ArrayList<LocalSpaceDefn> localSpaces = new ArrayList<>();
+    for (int k = 0; k < spaces.size(); k++) {
+      ObjectNode space = (ObjectNode) spaces.get(k);
+      String name = space.get("name").textValue();
+      String mainFile = space.get("main").textValue();
+      String importPath = null;
+      JsonNode importNode = space.get("import");
+      if (importNode != null) {
+        importPath = importNode.textValue();
+      }
+      localSpaces.add(new LocalSpaceDefn(name, mainFile, importPath, factory.base));
+    }
+
+    return new DevBoxAdamaMicroVerse(io, alive, factory, localSpaces);
   }
 }

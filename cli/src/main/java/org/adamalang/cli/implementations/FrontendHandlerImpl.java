@@ -27,7 +27,9 @@ import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.web.service.WebConfig;
 
 import java.io.File;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -63,6 +65,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
 
     @Override
     public void devServer(Arguments.FrontendDevServerArgs args, Output.YesOrError output) throws Exception {
+        AtomicBoolean alive = new AtomicBoolean(true);
         String localLibAdamaJSPath = "".equals(args.localLibadamaPath) ? null : args.localLibadamaPath;
         File localLibAdamaJSFile = null;
         if (localLibAdamaJSPath != null) {
@@ -77,7 +80,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
             File microverseDef = new File(args.microverse);
             if (microverseDef.exists() && microverseDef.isFile()) {
                 ObjectNode defn = Json.parseJsonObject(Files.readString(microverseDef.toPath()));
-                verse = DevBoxAdamaMicroVerse.load(terminal, defn);
+                verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn);
                 if (verse == null) {
                     terminal.notice("microverse: '" + args.microverse + "' failed, using production");
                 }
@@ -85,7 +88,6 @@ public class FrontendHandlerImpl implements FrontendHandler {
                 terminal.notice("microverse: '" + args.microverse + "' is not present, using production");
             }
         }
-        AtomicBoolean alive = new AtomicBoolean(true);
         AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
         try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), localLibAdamaJSPath != null, (b) -> bundle.set(b))) {
             WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
@@ -94,10 +96,13 @@ public class FrontendHandlerImpl implements FrontendHandler {
             Thread webServerThread = base.start();
             while (alive.get()) {
                 String ln = terminal.readline().trim();
-                if ("kill".equalsIgnoreCase(ln)) {
+                if ("kill".equalsIgnoreCase(ln) || "exit".equalsIgnoreCase(ln) || "quit".equalsIgnoreCase(ln) || "q".equalsIgnoreCase(ln)) {
                     terminal.notice("Lowering alive");
                     alive.set(false);
                     webServerThread.interrupt();
+                    if (verse != null) {
+                        verse.shutdown();
+                    }
                 }
             }
         }

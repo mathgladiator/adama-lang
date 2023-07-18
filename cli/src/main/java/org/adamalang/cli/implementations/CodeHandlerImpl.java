@@ -204,7 +204,7 @@ public class CodeHandlerImpl implements CodeHandler {
         output.out();
     }
 
-    private static HashMap<String, String> getImports(String imports) throws Exception {
+    public static HashMap<String, String> getImports(String imports) throws Exception {
         HashMap<String, String> map = new HashMap<>();
         File fileImports = new File(imports);
         if (fileImports.exists() && fileImports.isDirectory()) {

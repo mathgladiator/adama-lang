@@ -9,6 +9,8 @@
 package org.adamalang.cli.devbox;
 
 import org.adamalang.cli.interactive.TerminalIO;
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.web.UriMatcher;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.RxHtmlResult;
@@ -33,6 +35,9 @@ public class RxHTMLScanner implements AutoCloseable {
   private final WatchService service;
   private final HashMap<String, WatchKey> watchKeyCache;
   private final Thread scanner;
+  private final SimpleExecutor executor;
+  private final AtomicBoolean scheduled;
+  private final AtomicBoolean again;
 
   public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, Consumer<RxHTMLBundle> onBuilt) throws Exception {
     this.alive = alive;
@@ -57,6 +62,9 @@ public class RxHTMLScanner implements AutoCloseable {
       }
     });
     this.scanner.start();
+    this.executor = SimpleExecutor.create("build");
+    this.scheduled = new AtomicBoolean(false);
+    this.again = new AtomicBoolean(false);
   }
 
   @Override
@@ -117,16 +125,32 @@ public class RxHTMLScanner implements AutoCloseable {
   }
 
   private void rebuild() throws Exception {
-    io.notice("RxHTML rebuilt");
-    ArrayList<UriMatcher> matchers = new ArrayList<>();
-    Feedback feedback = new Feedback() {
-      @Override
-      public void warn(Element element, String warning) {
-        io.notice("Element Warning:" + warning);
-      }
-    };
-    RxHtmlResult updated = RxHtmlTool.convertFilesToTemplateForest(rxhtml(scanRoot), matchers, ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
-    onBuilt.accept(new RxHTMLBundle(matchers, updated.shell.makeShell(updated), updated.javascript, updated.style));
+    if (scheduled.compareAndSet(false, true)) {
+      executor.schedule(new NamedRunnable("rebuild") {
+        @Override
+        public void execute() throws Exception {
+          try {
+            do {
+              again.set(false);
+              io.notice("RxHTML rebuilt");
+              ArrayList<UriMatcher> matchers = new ArrayList<>();
+              Feedback feedback = new Feedback() {
+                @Override
+                public void warn(Element element, String warning) {
+                  io.notice("Element Warning:" + warning);
+                }
+              };
+              RxHtmlResult updated = RxHtmlTool.convertFilesToTemplateForest(rxhtml(scanRoot), matchers, ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
+              onBuilt.accept(new RxHTMLBundle(matchers, updated.shell.makeShell(updated), updated.javascript, updated.style));
+            } while (again.get());
+          } finally {
+            scheduled.set(false);
+          }
+        }
+      }, 100);
+    } else {
+      again.set(true);
+    }
   }
 
 

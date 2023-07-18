@@ -33,10 +33,10 @@ public class DevCoreServiceFactory {
   private final SimpleExecutor caravanExecutor;
   private final Thread flusher;
   private final CaravanDataService dataService;
-  private final DeploymentFactoryBase base;
-  private final CoreService service;
+  public final DeploymentFactoryBase base;
+  public final CoreService service;
 
-  private DevCoreServiceFactory(AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory, KeyToIdService keyToIdService) throws Exception {
+  public DevCoreServiceFactory(AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory, KeyToIdService keyToIdService) throws Exception {
     this.alive = alive;
     this.caravanExecutor = SimpleExecutor.create("caravan");
     File walRoot = new File(caravanPath, "wal");
