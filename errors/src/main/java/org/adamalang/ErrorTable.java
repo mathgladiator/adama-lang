@@ -392,6 +392,10 @@ public class ErrorTable {
     descriptions.put(986120, "no description of error (yet)");
     names.put(921607, "API_SPACE_SET_ROLE_NO_PERMISSION_TO_EXECUTE");
     descriptions.put(921607, "no description of error (yet)");
+    names.put(988380, "API_SPACE_LIST_DEVELOPERS_UNKNOWN_EXCEPTION");
+    descriptions.put(988380, "no description of error (yet)");
+    names.put(966875, "API_SPACE_LIST_DEVELOPERS_NO_PERMISSION_TO_EXECUTE");
+    descriptions.put(966875, "no description of error (yet)");
     names.put(941064, "API_SPACE_LIST_UNKNOWN_EXCEPTION");
     descriptions.put(941064, "no description of error (yet)");
     names.put(920576, "API_SPACE_LIST_NO_PERMISSION_TO_EXECUTE");

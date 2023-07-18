@@ -18,6 +18,7 @@ public class HelpCoverageTests {
     NewMain.testMain(new String[]{"space", "create", "--help"});
     NewMain.testMain(new String[]{"space", "delete", "--help"});
     NewMain.testMain(new String[]{"space", "deploy", "--help"});
+    NewMain.testMain(new String[]{"space", "developers", "--help"});
     NewMain.testMain(new String[]{"space", "encrypt-secret", "--help"});
     NewMain.testMain(new String[]{"space", "generate-key", "--help"});
     NewMain.testMain(new String[]{"space", "get", "--help"});

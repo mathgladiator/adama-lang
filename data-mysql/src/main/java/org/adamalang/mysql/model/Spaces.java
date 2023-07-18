@@ -168,7 +168,7 @@ public class Spaces {
   public static List<SpaceListingItem> list(DataBase dataBase, int userId, String marker, int limit) throws Exception {
     return dataBase.transactSimple((connection) -> {
       // select * from a LEFT OUTER JOIN b on a.a = b.b;
-      String sql = "SELECT `s`.`name`,`s`.`owner`,`s`.`created`,`s`.`enabled`,`s`.`storage_bytes` FROM `" + dataBase.databaseName + //
+      String sql = "SELECT DISTINCT `s`.`name`,`s`.`owner`,`s`.`created`,`s`.`enabled`,`s`.`storage_bytes` FROM `" + dataBase.databaseName + //
           "`.`spaces` as `s` LEFT OUTER JOIN `" + dataBase.databaseName + "`.`grants` as `g` ON `s`.`id` = `g`.`space`" + //
           " WHERE (`s`.owner=" + userId + " OR `g`.`user`=" + userId + ") AND `s`.`name`>? ORDER BY `s`.`name` ASC LIMIT " + limit;
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -231,6 +231,21 @@ public class Spaces {
         DataBase.execute(connection, "INSERT INTO `" + dataBase.databaseName + "`.`grants` (`space`, `user`, `role`) VALUES (" + spaceId + "," + userId + "," + role.role + ")");
       }
       return null;
+    });
+  }
+
+  public static List<Developer> listDevelopers(DataBase dataBase, int spaceId) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      ArrayList<Developer> developers = new ArrayList<>();
+      String sql = "SELECT `email`, `role` FROM `" + dataBase.databaseName + "`.`grants` LEFT JOIN `" + dataBase.databaseName + "`.`emails` ON `emails`.`id` = `grants`.`user` WHERE `space`=" + spaceId;
+      DataBase.walk(connection, (rs) -> {
+        try {
+          developers.add(new Developer(rs.getString(1), Role.from(rs.getInt(2)).toString().toLowerCase(Locale.ENGLISH)));
+        } catch (ErrorCodeException ex) {
+          throw new RuntimeException(ex);
+        }
+      }, sql);
+      return developers;
     });
   }
 

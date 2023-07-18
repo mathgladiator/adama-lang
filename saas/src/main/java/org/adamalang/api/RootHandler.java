@@ -55,6 +55,8 @@ public interface RootHandler {
 
   public void handle(Session session, SpaceSetRoleRequest request, SimpleResponder responder);
 
+  public void handle(Session session, SpaceListDevelopersRequest request, DeveloperResponder responder);
+
   public void handle(Session session, SpaceReflectRequest request, ReflectionResponder responder);
 
   public void handle(Session session, SpaceListRequest request, SpaceListingResponder responder);

@@ -606,6 +606,22 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
+  public void handle(Session session, SpaceListDevelopersRequest request, DeveloperResponder responder) {
+    try {
+      if (request.policy.canUserListDeveloper(request.who)) {
+        for (Developer developer : Spaces.listDevelopers(nexus.database, request.policy.id)) {
+          responder.next(developer.email, developer.role);
+        }
+        responder.finish();
+      } else {
+        throw new ErrorCodeException(ErrorCodes.API_SPACE_LIST_DEVELOPERS_NO_PERMISSION_TO_EXECUTE);
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_LIST_DEVELOPERS_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
   public void handle(Session session, SpaceReflectRequest request, ReflectionResponder responder) {
     if (request.policy.canUserSeeReflection(request.who)) {
       nexus.adama.reflect(request.space, request.key, new Callback<String>() {

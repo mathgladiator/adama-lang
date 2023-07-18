@@ -15,6 +15,7 @@ public interface SpaceHandler {
   void create(SpaceCreateArgs args, YesOrError output) throws Exception;
   void delete(SpaceDeleteArgs args, YesOrError output) throws Exception;
   void deploy(SpaceDeployArgs args, YesOrError output) throws Exception;
+  void developers(SpaceDevelopersArgs args, JsonOrError output) throws Exception;
   void encryptSecret(SpaceEncryptSecretArgs args, YesOrError output) throws Exception;
   void generateKey(SpaceGenerateKeyArgs args, YesOrError output) throws Exception;
   void get(SpaceGetArgs args, YesOrError output) throws Exception;

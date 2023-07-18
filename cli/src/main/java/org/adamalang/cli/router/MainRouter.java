@@ -65,6 +65,16 @@ public class MainRouter {
                spaceHandler.deploy(spaceArgs, out);
                return 0;
             }
+            case "developers": {
+              SpaceDevelopersArgs spaceArgs = SpaceDevelopersArgs.from(args, 2);
+              if (spaceArgs == null) {
+                SpaceDevelopersArgs.help();
+                return 1;
+               }
+               JsonOrError out = output.makeJsonOrError();
+               spaceHandler.developers(spaceArgs, out);
+               return 0;
+            }
             case "encrypt-secret": {
               SpaceEncryptSecretArgs spaceArgs = SpaceEncryptSecretArgs.from(args, 2);
               if (spaceArgs == null) {

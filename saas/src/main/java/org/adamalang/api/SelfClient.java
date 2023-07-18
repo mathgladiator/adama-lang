@@ -222,6 +222,15 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }
 
+  /** space/list-developers */
+  public void spaceListDevelopers(ClientSpaceListDevelopersRequest request, Stream<ClientDeveloperResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "space/list-developers");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    pool.requestStream(node, (obj) -> new ClientDeveloperResponse(obj), streamback);
+  }
+
   /** space/reflect */
   public void spaceReflect(ClientSpaceReflectRequest request, Callback<ClientReflectionResponse> callback) {
     ObjectNode node = Json.newJsonObject();

@@ -22,6 +22,15 @@ public enum Role {
     this.role = role;
   }
 
+  public static Role from(int x) throws ErrorCodeException {
+    for (Role r : Role.values()) {
+      if (x == r.role) {
+        return r;
+      }
+    }
+    throw new ErrorCodeException(ErrorCodes.INVALID_ROLE);
+  }
+
   public static Role from(String x) throws ErrorCodeException {
     switch (x.toLowerCase(Locale.ROOT).trim()) {
       case "developer":

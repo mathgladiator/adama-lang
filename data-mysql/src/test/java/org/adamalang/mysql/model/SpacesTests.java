@@ -81,6 +81,8 @@ public class SpacesTests {
           Assert.assertEquals("owner", ls2.get(0).callerRole);
         }
         Spaces.setRole(dataBase, 2, alice, Role.Developer);
+        List<Developer> devs = Spaces.listDevelopers(dataBase, 2);
+        Assert.assertEquals(1, devs.size());
         {
           SpaceInfo spaceInfo1 = Spaces.getSpaceInfo(dataBase, "space1");
           SpaceInfo spaceInfo2 = Spaces.getSpaceInfo(dataBase, "space2");

@@ -334,6 +334,13 @@
             <arg name="limit" default="100" />
         </command>
 
+        <command name="developers" output="json">
+            <documentation>
+                List developers for the given space
+            </documentation>
+            <arg name="space" />
+        </command>
+
         <command name="usage" output="json">
             <documentation>
                 Iterate the billed usage

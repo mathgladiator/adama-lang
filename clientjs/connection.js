@@ -459,6 +459,15 @@ class WebSocketAdamaConnection {
       request: {"method":"space/set-role", "id":parId, "identity": identity, "space": space, "email": email, "role": role}
     });
   }
+  SpaceListDevelopers(identity, space, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_stream({
+      id: parId,
+      responder: responder,
+      request: {"method":"space/list-developers", "id":parId, "identity": identity, "space": space}
+    });
+  }
   SpaceReflect(identity, space, key, responder) {
     var self = this;
     var parId = self.__id();

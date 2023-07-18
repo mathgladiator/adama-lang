@@ -656,6 +656,17 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="email" type="string">
+        <documentation>
+            A developer email
+        </documentation>
+    </field-definition>
+
+    <responder name="developer" stream="true">
+        <field name="email" />
+        <field name="role" />
+    </responder>
+
     <responder name="hashed-password">
         <field name="password-hash"/>
     </responder>
@@ -826,6 +837,14 @@
             Set the role of an Adama developer for a particular space.
 
             Spaces can be shared among Adama developers.
+        </documentation>
+    </method>
+
+    <method name="space/list-developers" responder="developer">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <documentation>
+            List the developers with access to this space
         </documentation>
     </method>
 

@@ -149,6 +149,24 @@ public class SpaceHandlerImpl implements SpaceHandler {
     }
 
     @Override
+    public void developers(Arguments.SpaceDevelopersArgs args, Output.JsonOrError output) throws Exception {
+        Config config = args.config;
+        String identity = config.get_string("identity", null);
+        try (WebSocketClient client = new WebSocketClient(config)) {
+            try (Connection connection = client.open()) {
+                ObjectNode request = Json.newJsonObject();
+                request.put("method", "space/list-developers");
+                request.put("identity", identity);
+                request.put("space", args.space);
+                connection.stream(request, (cId, response) -> {
+                    output.add(response);
+                });
+            }
+        }
+        output.out();
+    }
+
+    @Override
     public void usage(Arguments.SpaceUsageArgs args, Output.JsonOrError output) throws Exception {
         Config config = args.config;
         String identity = config.get_string("identity", null);
