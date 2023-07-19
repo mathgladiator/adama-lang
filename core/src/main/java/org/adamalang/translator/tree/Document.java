@@ -224,6 +224,10 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(Include in) {
+    if (in.resource.text.equals("main")) {
+      typeChecker.issueError(in, "main is a reserved word for importing", "Blah");
+    }
+
     String codeToParseIntoDoc = includes.get(in.resource.text);
     if (codeToParseIntoDoc == null) {
       typeChecker.issueError(in, String.format("Failed to include '%s' as it was not bound to the deployment", in.resource.text), "DocumentInclude");

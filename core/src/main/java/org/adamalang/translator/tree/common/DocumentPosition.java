@@ -46,10 +46,10 @@ public class DocumentPosition {
 
   /** @param other another document position to ingest */
   public DocumentPosition ingest(final DocumentPosition other) {
-    if (this.source == null) {
-      this.source = other.source;
-    }
     if (other != null) {
+      if (this.source == null) {
+        this.source = other.source;
+      }
       ingest(other.startLineIndex, other.startLinePosition, other.startByte);
       ingest(other.endLineIndex, other.endLinePosition, other.endByte);
     }
