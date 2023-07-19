@@ -265,7 +265,7 @@ public class AdamaLanguageServerProtocolTests {
             JsonHelp.parseJsonObject(
                 "{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"#sm\"}}}"));
     Assert.assertEquals(
-        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/publishDiagnostics\",\"params\":{\"uri\":\"URI\",\"diagnostics\":[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":3,\"byte\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"Parser was expecting an atomic expression, but got end of stream instead. (Parser)\"}]}}",
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/publishDiagnostics\",\"params\":{\"uri\":\"URI\",\"diagnostics\":[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":3,\"byte\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"Parser was expecting an atomic expression, but got end of stream instead.\",\"file\":\"#sm\"}]}}",
         response.toString());
   }
 
@@ -277,7 +277,7 @@ public class AdamaLanguageServerProtocolTests {
             JsonHelp.parseJsonObject(
                 "{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"#sm { int x = true; }\"}}}"));
     Assert.assertEquals(
-        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/publishDiagnostics\",\"params\":{\"uri\":\"URI\",\"diagnostics\":[{\"range\":{\"start\":{\"line\":0,\"character\":6,\"byte\":6},\"end\":{\"line\":0,\"character\":9,\"byte\":9}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'bool'. (TypeCheckReferences)\"}]}}",
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/publishDiagnostics\",\"params\":{\"uri\":\"URI\",\"diagnostics\":[{\"range\":{\"start\":{\"line\":0,\"character\":6,\"byte\":6},\"end\":{\"line\":0,\"character\":9,\"byte\":9}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'bool'.\",\"file\":\"#sm { int x = true; }\"}]}}",
         response.toString());
   }
 
@@ -333,6 +333,6 @@ public class AdamaLanguageServerProtocolTests {
                 "{\"id\":42,\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"#sm { int x = true; }\"}}}")),
         memory);
     String result = new String(memory.toByteArray());
-    Assert.assertEquals(355, result.length());
+    Assert.assertEquals(364, result.length());
   }
 }
