@@ -77,7 +77,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
 
   public void test(final DocumentPosition position, final Environment environment, final ArrayList<TyType> args) {
     if (args.size() != types.size()) {
-      environment.document.createError(position, String.format("Function invoked with wrong number of arguments. Expected %d, got %d", types.size(), args.size()), "FunctionInvoke");
+      environment.document.createError(position, String.format("Function invoked with wrong number of arguments. Expected %d, got %d", types.size(), args.size()));
     }
     for (var iter = 0; iter < Math.min(args.size(), types.size()); iter++) {
       environment.rules.CanTypeAStoreTypeB(types.get(iter), args.get(iter), StorageTweak.None, false);
@@ -97,7 +97,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
       }
     }
     if (sameCount == types.size()) {
-      environment.document.createError(this, "Overloaded function has many identical calls", "FunctionOverlap");
+      environment.document.createError(this, "Overloaded function has many identical calls");
     }
   }
 

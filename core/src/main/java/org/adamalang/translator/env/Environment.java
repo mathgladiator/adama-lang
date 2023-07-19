@@ -137,11 +137,11 @@ public class Environment {
   /** define a variable within the environment */
   public Environment define(final String name, final TyType type, final boolean isReadonly, final DocumentPosition position) {
     if (variables.containsKey(name)) {
-      document.createError(position, String.format("Variable '%s' was already defined", name), "EnvironmentDefine");
+      document.createError(position, String.format("Variable '%s' was already defined", name));
       return this;
     }
     if (type == null) {
-      document.createError(position, String.format("Variable '%s' has no backing type", name), "EnvironmentDefine");
+      document.createError(position, String.format("Variable '%s' has no backing type", name));
     }
     variables.put(name, type);
     if (isReadonly) {
@@ -178,7 +178,7 @@ public class Environment {
     if (result != null) {
       // is the current environment
       if (!compute && (readonly.contains(name) || result.behavior == TypeBehavior.ReadOnlyNativeValue) && !silent) {
-        document.createError(position, String.format("The variable '%s' is readonly", name), "VariableLookup");
+        document.createError(position, String.format("The variable '%s' is readonly", name));
       }
       return lookup_return(name, result);
     }
@@ -190,7 +190,7 @@ public class Environment {
     if (result == null && parent != null) {
       result = parent.lookup(name, compute, position, silent);
       if (result != null && !compute && state.isReadonly() && !silent) {
-        document.createError(position, String.format("The variable '%s' is readonly due to the environment", name), "VariableLookup");
+        document.createError(position, String.format("The variable '%s' is readonly due to the environment", name));
       }
     }
     // then it must be a function
@@ -232,7 +232,7 @@ public class Environment {
   /** assert the environment must be a compute environment */
   public Environment mustBeComputeContext(final DocumentPosition position) {
     if (!state.isContextComputation()) {
-      document.createError(position, String.format("Expression expected to be computed, rather than assigned to"), "Environment");
+      document.createError(position, String.format("Expression expected to be computed, rather than assigned to"));
     }
     return this;
   }

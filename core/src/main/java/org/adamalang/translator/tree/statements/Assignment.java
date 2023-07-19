@@ -85,7 +85,7 @@ public class Assignment extends Statement {
           environment.rules.IsTable(refType, false);
           if (refType != null && exprType != null) {
             if (refType.behavior.isReadOnly) {
-              environment.document.createError(DocumentPosition.sum(refType, exprType), String.format("'%s' is unable to accept an ingestion of '%s'.", refType.getAdamaType(), exprType.getAdamaType()), "RuleSetIngest");
+              environment.document.createError(DocumentPosition.sum(refType, exprType), String.format("'%s' is unable to accept an ingestion of '%s'.", refType.getAdamaType(), exprType.getAdamaType()));
             }
             if (isArray) {
               environment.define(ingestionDefine.text, new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, ingestionDefine, ingestionDefine), ingestionDefine), true, this);

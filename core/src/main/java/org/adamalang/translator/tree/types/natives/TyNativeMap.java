@@ -111,11 +111,11 @@ public class TyNativeMap extends TyType implements //
     rangeType.typing(environment);
     final var resolvedDomainType = environment.rules.Resolve(domainType, false);
     if (resolvedDomainType != null && !(resolvedDomainType instanceof CanBeMapDomain)) {
-      environment.document.createError(this, String.format("The domain type '%s' is not an appropriate.", resolvedDomainType.getAdamaType()), "TyNativeMap");
+      environment.document.createError(this, String.format("The domain type '%s' is not an appropriate.", resolvedDomainType.getAdamaType()));
     }
     final var resolvedRangeType = environment.rules.Resolve(rangeType, false);
     if (RuleSetTable.IsTable(environment, resolvedRangeType, true)) {
-      environment.document.createError(this, String.format("The range type '%s' is not an appropriate for a map.", resolvedRangeType.getAdamaType()), "TyNativeMap");
+      environment.document.createError(this, String.format("The range type '%s' is not an appropriate for a map.", resolvedRangeType.getAdamaType()));
     }
   }
 

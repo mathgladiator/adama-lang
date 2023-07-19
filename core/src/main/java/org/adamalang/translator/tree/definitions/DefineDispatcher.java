@@ -108,7 +108,7 @@ public class DefineDispatcher extends Definition {
       }
       final var flow = code.typing(prepareEnvironment(environment));
       if (returnType != null && flow == ControlFlow.Open) {
-        environment.document.createError(this, String.format("Dispatch '%s' does not return in all cases", functionName.text), "DefineDispatcher");
+        environment.document.createError(this, String.format("Dispatch '%s' does not return in all cases", functionName.text));
       }
     });
   }

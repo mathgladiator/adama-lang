@@ -53,7 +53,7 @@ public class RuleSetAssignment {
     if (result != CanAssignResult.No) {
       return result;
     }
-    environment.document.createError(left, String.format("The type '%s' is not applicable for assignment (=)", left.getAdamaType()), "Assignment");
+    environment.document.createError(left, String.format("The type '%s' is not applicable for assignment (=)", left.getAdamaType()));
     return CanAssignResult.No;
   }
 
@@ -149,7 +149,7 @@ public class RuleSetAssignment {
         return true;
       }
       if (!silent) {
-        environment.document.createError(originalTypeA, String.format("Type check failure: enum types are incompatible '%s' vs '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()), "Assignment");
+        environment.document.createError(originalTypeA, String.format("Type check failure: enum types are incompatible '%s' vs '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()));
       }
     }
     if (RuleSetCommon.AreBothChannelTypesCompatible(environment, typeA, typeB)) {
@@ -199,7 +199,7 @@ public class RuleSetAssignment {
       final var aMaybe = aEmbedAssign == AssignableEmbedType.Maybe && RuleSetMaybe.IsMaybe(environment, typeA, true);
       if (aMaybe && bEmbedAssign == AssignableEmbedType.None) {
         if (typeA instanceof TyReactiveMaybe && (typeB instanceof TyReactiveRecord || typeB instanceof TyNativeReactiveRecordPtr)) {
-          environment.document.createError(originalTypeA, String.format("Type check failure: the type '%s' is unable to store type '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()), "TypeCheckReferencesX");
+          environment.document.createError(originalTypeA, String.format("Type check failure: the type '%s' is unable to store type '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()));
           return false;
         }
         final var childA = RuleSetCommon.ExtractEmbeddedType(environment, typeA, silent);
@@ -225,7 +225,7 @@ public class RuleSetAssignment {
       }
     }
     if (!silent) {
-      environment.document.createError(originalTypeA, String.format("Type check failure: the type '%s' is unable to store type '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()), "TypeCheckReferences");
+      environment.document.createError(originalTypeA, String.format("Type check failure: the type '%s' is unable to store type '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()));
     }
     return false;
   }

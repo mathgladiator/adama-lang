@@ -47,7 +47,7 @@ public class ViewerIsPolicy extends Policy {
   public void typing(final Environment environment, final StructureStorage owningStructureStorage) {
     final var fd = owningStructureStorage.fields.get(fieldToken.text);
     if (fd == null) {
-      environment.document.createError(this, String.format("Field '%s' was not defined within the record", fieldToken.text), "ViewerPolicy");
+      environment.document.createError(this, String.format("Field '%s' was not defined within the record", fieldToken.text));
       return;
     }
     RuleSetAsync.IsPrincipal(environment, fd.type, false);

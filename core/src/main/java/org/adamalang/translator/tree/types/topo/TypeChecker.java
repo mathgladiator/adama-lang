@@ -21,5 +21,5 @@ public interface TypeChecker {
 
   public void register(Set<String> depends, Consumer<Environment> checker);
 
-  public void issueError(DocumentPosition dp, String message, String tutorial);
+  public void issueError(DocumentPosition dp, String message);
 }

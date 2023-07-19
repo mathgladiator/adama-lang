@@ -39,7 +39,7 @@ public class HeadersConstant extends Expression {
       TyNativeString str = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"));
       return new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, null, str, null, str, null);
     } else {
-      environment.document.createError(this, "@headers is only available in web paths", "WHO");
+      environment.document.createError(this, "@headers is only available in web paths");
       return null;
     }
   }

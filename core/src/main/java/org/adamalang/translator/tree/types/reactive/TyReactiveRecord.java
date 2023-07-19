@@ -183,7 +183,7 @@ public class TyReactiveRecord extends TyType implements //
   public void typing(TypeCheckerRoot checker) {
     final var fdId = storage.fields.get("id");
     if (fdId == null || !(fdId.type instanceof TyReactiveInteger)) {
-      checker.issueError(this, "id must be type int", "Record");
+      checker.issueError(this, "id must be type int");
     }
     storage.typing(name, checker);
   }

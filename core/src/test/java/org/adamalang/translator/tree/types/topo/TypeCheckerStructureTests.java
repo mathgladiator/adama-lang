@@ -24,7 +24,7 @@ public class TypeCheckerStructureTests {
   @Test
   public void sanity() {
     TypeCheckerStructure tcs = new TypeCheckerStructure();
-    tcs.issueError(DocumentPosition.ZERO, "message", "Here");
+    tcs.issueError(DocumentPosition.ZERO, "message");
     tcs.define(Token.WRAP("x"), Collections.emptySet(), (env) -> {});
     tcs.register(Collections.singleton("x"), (env) -> {});
     TypeCheckerRoot root = new TypeCheckerRoot();

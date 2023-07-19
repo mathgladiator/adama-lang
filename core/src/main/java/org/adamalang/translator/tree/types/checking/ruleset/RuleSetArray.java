@@ -34,7 +34,7 @@ public class RuleSetArray {
       if (tyType != null && tyType instanceof TyNativeArray) {
         return true;
       } else if (!silent) {
-        environment.document.createError(tyTypeOriginal, String.format("Type check failure: expected an array, but was actually type '%s'.", tyTypeOriginal.getAdamaType()), "RuleSetArray");
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: expected an array, but was actually type '%s'.", tyTypeOriginal.getAdamaType()));
       }
     }
     return false;

@@ -178,7 +178,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(final BubbleDefinition bd) {
     if (root.storage.has(bd.nameToken.text)) {
-      typeChecker.issueError(bd, String.format("Global field '%s' was already defined", bd.nameToken.text), "GlobalDefine");
+      typeChecker.issueError(bd, String.format("Global field '%s' was already defined", bd.nameToken.text));
       return;
     }
     root.storage().addFromRoot(bd, typeChecker);
@@ -194,7 +194,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(final DefineCustomPolicy customPolicy) {
     if (root.storage.policies.containsKey(customPolicy.name.text)) {
-      typeChecker.issueError(customPolicy, String.format("Global policy '%s' was already defined", customPolicy.name.text), "GlobalDefine");
+      typeChecker.issueError(customPolicy, String.format("Global policy '%s' was already defined", customPolicy.name.text));
       return;
     }
     root.storage.policies.put(customPolicy.name.text, customPolicy);
@@ -209,9 +209,9 @@ public class Document implements TopLevelDocumentHandler {
       ((TyNativeEnum) type).storage.associate(dd);
     } else {
       if (type == null) {
-        typeChecker.issueError(dd, String.format("Dispatcher '%s' was unable to find the given enumeration type of '%s'", dd.functionName.text, dd.enumNameToken.text), "DocumentDefine");
+        typeChecker.issueError(dd, String.format("Dispatcher '%s' was unable to find the given enumeration type of '%s'", dd.functionName.text, dd.enumNameToken.text));
       } else {
-        typeChecker.issueError(dd, String.format("Dispatcher '%s' found '%s', but it was '%s'", dd.functionName.text, dd.enumNameToken.text, type.getAdamaType()), "DocumentDefine");
+        typeChecker.issueError(dd, String.format("Dispatcher '%s' found '%s', but it was '%s'", dd.functionName.text, dd.enumNameToken.text, type.getAdamaType()));
       }
     }
   }
@@ -225,19 +225,19 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(Include in) {
     if (in.resource.text.equals("main")) {
-      typeChecker.issueError(in, "main is a reserved word for importing", "Blah");
+      typeChecker.issueError(in, "main is a reserved word for importing");
     }
 
     String codeToParseIntoDoc = includes.get(in.resource.text);
     if (codeToParseIntoDoc == null) {
-      typeChecker.issueError(in, String.format("Failed to include '%s' as it was not bound to the deployment", in.resource.text), "DocumentInclude");
+      typeChecker.issueError(in, String.format("Failed to include '%s' as it was not bound to the deployment", in.resource.text));
     } else {
       final var tokenEngine = new TokenEngine(in.resource.text, codeToParseIntoDoc.codePoints().iterator());
       final var parser = new Parser(tokenEngine);
       try {
         parser.document().accept(this);
       } catch (AdamaLangException ale) {
-        typeChecker.issueError(in, String.format("Inclusion of '%s' resulted in an error; '%s'", in.resource.text, ale.getMessage()), "DocumentInclude");
+        typeChecker.issueError(in, String.format("Inclusion of '%s' resulted in an error; '%s'", in.resource.text, ale.getMessage()));
       }
     }
   }
@@ -246,10 +246,10 @@ public class Document implements TopLevelDocumentHandler {
   public void add(LinkService link) {
     int id = inventClassId();
     String defn = ServiceRegistry.getLinkDefinition(link.name.text, id, link.toParams(), link.names(), (err) -> {
-      typeChecker.issueError(link, err, "DocumentDefine");
+      typeChecker.issueError(link, err);
     });
     if (defn == null) {
-      typeChecker.issueError(link, String.format("The link '%s' was not found.", link.name.text), "DocumentDefine");
+      typeChecker.issueError(link, String.format("The link '%s' was not found.", link.name.text));
       return;
     }
     final var tokenEngine = new TokenEngine("link:" + link.name.text, defn.codePoints().iterator());
@@ -257,14 +257,14 @@ public class Document implements TopLevelDocumentHandler {
     try {
       parser.document().accept(this);
     } catch (AdamaLangException ale) {
-      typeChecker.issueError(link, String.format("Linkage of '%s' resulted in an error; '%s'", link.name.text, ale.getMessage()), "DocumentInclude");
+      typeChecker.issueError(link, String.format("Linkage of '%s' resulted in an error; '%s'", link.name.text, ale.getMessage()));
     }
   }
 
   @Override
   public void add(DefineService ds) {
     if (defined.contains(ds.name.text)) {
-      typeChecker.issueError(ds, String.format("The service '%s' was already defined.", ds.name.text), "DocumentDefine");
+      typeChecker.issueError(ds, String.format("The service '%s' was already defined.", ds.name.text));
     }
     services.put(ds.name.text, ds);
     defined.add(ds.name.text);
@@ -274,7 +274,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(DefineAuthorization da) {
     if (auths.size() >= 1) {
-      typeChecker.issueError(da, "Only one @authorize action allowed", "DocumentDefine");
+      typeChecker.issueError(da, "Only one @authorize action allowed");
     }
     auths.add(da);
     da.typing(typeChecker);
@@ -283,7 +283,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(DefinePassword dp) {
     if (passwords.size() >= 1) {
-      typeChecker.issueError(dp, "Only one @password action allowed", "DocumentDefine");
+      typeChecker.issueError(dp, "Only one @password action allowed");
     }
     passwords.add(dp);
     dp.typing(typeChecker);
@@ -292,7 +292,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(final DefineFunction func) {
     if (defined.contains(func.name)) {
-      typeChecker.issueError(func, String.format("The %s '%s' was already defined.", func.specialization == FunctionSpecialization.Pure ? "function" : "procedure", func.name), "DocumentDefine");
+      typeChecker.issueError(func, String.format("The %s '%s' was already defined.", func.specialization == FunctionSpecialization.Pure ? "function" : "procedure", func.name));
     }
     functionsDefines.add(func.name);
     functionDefinitions.add(func);
@@ -307,7 +307,7 @@ public class Document implements TopLevelDocumentHandler {
       channelsThatAreFutures.add(handler.channel);
     }
     if (functionsDefines.contains(handler.channel) || defined.contains(handler.channel)) {
-      typeChecker.issueError(handler, String.format("Handler '%s' was already defined.", handler.channel), "DocumentDefine");
+      typeChecker.issueError(handler, String.format("Handler '%s' was already defined.", handler.channel));
     }
     defined.add(handler.channel);
     handler.typing(typeChecker);
@@ -328,7 +328,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(final FieldDefinition fd) {
     if (root.storage.has(fd.name) || defined.contains(fd.name)) {
-      typeChecker.issueError(fd, String.format("Global field '%s' was already defined", fd.nameToken.text), "GlobalDefine");
+      typeChecker.issueError(fd, String.format("Global field '%s' was already defined", fd.nameToken.text));
       return;
     }
     defined.add(fd.name);
@@ -340,13 +340,13 @@ public class Document implements TopLevelDocumentHandler {
     if (storage instanceof TyType) {
       if (types.containsKey(storage.name())) {
         TyType prior = types.get(storage.name());
-        typeChecker.issueError((TyType) storage, String.format("The enumeration '%s' was already defined.", storage.name()), "DocumentDefine");
-        typeChecker.issueError(prior, String.format("The enumeration '%s' was defined here.", storage.name()), "DocumentDefine");
+        typeChecker.issueError((TyType) storage, String.format("The enumeration '%s' was already defined.", storage.name()));
+        typeChecker.issueError(prior, String.format("The enumeration '%s' was defined here.", storage.name()));
         return;
       }
       storage.storage().typing(typeChecker);;
       for (final String s : storage.storage().duplicates) {
-        typeChecker.issueError((TyType) storage, String.format("The enumeration '%s' has duplicates for '%s' defined.", storage.name(), s), "DocumentDefine");
+        typeChecker.issueError((TyType) storage, String.format("The enumeration '%s' has duplicates for '%s' defined.", storage.name(), s));
       }
       types.put(storage.name(), (TyType) storage);
     }
@@ -357,8 +357,8 @@ public class Document implements TopLevelDocumentHandler {
     if (storage instanceof TyType) {
       if (types.containsKey(storage.name())) {
         TyType prior = types.get(storage.name());
-        typeChecker.issueError((TyType) storage, String.format("The %s '%s' was already defined.", storage instanceof TyNativeMessage ? "message" : "record", storage.name()), "DocumentDefine");
-        typeChecker.issueError(prior, String.format("The %s '%s' was defined here.", prior instanceof TyNativeMessage ? "message" : "record", storage.name()), "DocumentDefine");
+        typeChecker.issueError((TyType) storage, String.format("The %s '%s' was already defined.", storage instanceof TyNativeMessage ? "message" : "record", storage.name()));
+        typeChecker.issueError(prior, String.format("The %s '%s' was defined here.", prior instanceof TyNativeMessage ? "message" : "record", storage.name()));
       }
       types.put(storage.name(), (TyType) storage);
       storage.typing(typeChecker);
@@ -373,7 +373,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(AugmentViewerState avs) {
     if (defined.contains(avs.name.text)) {
-      typeChecker.issueError(avs, String.format("View field '%s' was already defined.", avs.name.text), "GlobalDefine");
+      typeChecker.issueError(avs, String.format("View field '%s' was already defined.", avs.name.text));
     }
     defined.add(avs.name.text);
     viewerType.storage.add(new FieldDefinition(null, null, avs.type, avs.name, null, null, null, avs.semicolon));
@@ -392,7 +392,7 @@ public class Document implements TopLevelDocumentHandler {
   public void add(DefineWebGet dwg) {
     dwg.typing(typeChecker);
     if (!webGet.map(dwg.uri, dwg)) {
-      createError(dwg, String.format("Web get path %s has a conflict", dwg.uri), "Web");
+      createError(dwg, String.format("Web get path %s has a conflict", dwg.uri));
     }
   }
 
@@ -400,7 +400,7 @@ public class Document implements TopLevelDocumentHandler {
   public void add(DefineWebDelete dwd) {
     dwd.typing(typeChecker);
     if (!webDelete.map(dwd.uri, dwd)) {
-      createError(dwd, String.format("Web delete path %s has a conflict", dwd.uri), "Web");
+      createError(dwd, String.format("Web delete path %s has a conflict", dwd.uri));
     }
   }
 
@@ -408,7 +408,7 @@ public class Document implements TopLevelDocumentHandler {
   public void add(DefineWebPut dwp) {
     dwp.typing(typeChecker);
     if (!webPut.map(dwp.uri, dwp)) {
-      createError(dwp, String.format("Web put path %s has a conflict", dwp.uri), "Web");
+      createError(dwp, String.format("Web put path %s has a conflict", dwp.uri));
     }
   }
 
@@ -416,7 +416,7 @@ public class Document implements TopLevelDocumentHandler {
   public void add(DefineWebOptions dwo) {
     dwo.typing(typeChecker);
     if (!webOptions.map(dwo.uri, dwo)) {
-      createError(dwo, String.format("Web options path %s has a conflict", dwo.uri), "Web");
+      createError(dwo, String.format("Web options path %s has a conflict", dwo.uri));
     }
   }
 
@@ -437,7 +437,7 @@ public class Document implements TopLevelDocumentHandler {
   public void importFile(final String filename, final DocumentPosition position) {
     final var file = search(filename);
     if (!file.exists()) {
-      createError(position, String.format("File '%s' was not found", filename), "ImportIssue");
+      createError(position, String.format("File '%s' was not found", filename));
       return;
     }
     try {
@@ -445,13 +445,13 @@ public class Document implements TopLevelDocumentHandler {
       final var parser = new Parser(tokenEngine);
       parser.document().accept(this);
     } catch (final ScanException e) {
-      createError(position, String.format("File '%s' failed to lex: %s", filename, e.getMessage()), "ParseException");
-      createError(position, String.format("Import failed (Lex): %s", e.getMessage()), "ImportIssue");
+      createError(position, String.format("File '%s' failed to lex: %s", filename, e.getMessage()));
+      createError(position, String.format("Import failed (Lex): %s", e.getMessage()));
     } catch (final ParseException e) {
-      createError(e.toDocumentPosition(), String.format("File '%s' failed to parse: %s", filename, e.getMessage()), "ParseException");
-      createError(position, String.format("Import failed (Parse): %s", e.getMessage()), "ImportIssue");
+      createError(e.toDocumentPosition(), String.format("File '%s' failed to parse: %s", filename, e.getMessage()));
+      createError(position, String.format("Import failed (Parse): %s", e.getMessage()));
     } catch (final Exception e) {
-      createError(position, String.format("File '%s' failed to import due '" + e.getMessage() + "'", filename), "ImportIssue");
+      createError(position, String.format("File '%s' failed to import due '" + e.getMessage() + "'", filename));
 
     }
   }
@@ -469,13 +469,6 @@ public class Document implements TopLevelDocumentHandler {
   }
 
   /** create an error with a reference to a tutorial */
-  @Deprecated
-  public DocumentError createError(final DocumentPosition position, final String message, final String tutorial) {
-    final var err = new DocumentError(position, message);
-    errorLists.add(err);
-    return err;
-  }
-
   public DocumentError createError(final DocumentPosition position, final String message) {
     final var err = new DocumentError(position, message);
     errorLists.add(err);
@@ -513,7 +506,7 @@ public class Document implements TopLevelDocumentHandler {
       if (de.which == DocumentEvent.AskInvention) {
         for (DefineConstructor c : constructors) {
           if (c.messageTypeToken != null) {
-            createError(de, "Invention requires all constructors to not accept messages", "INVENT");
+            createError(de, "Invention requires all constructors to not accept messages");
           }
         }
       }
@@ -537,7 +530,7 @@ public class Document implements TopLevelDocumentHandler {
       }
       String cycle = Cycle.detect(graph);
       if (cycle != null) {
-        createError(DocumentPosition.ZERO, "A cycle was detected within records: " + cycle, "Cycle");
+        createError(DocumentPosition.ZERO, "A cycle was detected within records: " + cycle);
       }
     }
     TyType constructorMessageType = null;

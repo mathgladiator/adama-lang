@@ -36,7 +36,7 @@ public class ViewerConstant extends Expression {
       environment.useSpecial(environment.document.viewerType, "__viewer");
       return environment.document.viewerType;
     } else {
-      environment.document.createError(this, "@viewer is only available in bubbles", "WHO");
+      environment.document.createError(this, "@viewer is only available in bubbles");
       return null;
     }
   }

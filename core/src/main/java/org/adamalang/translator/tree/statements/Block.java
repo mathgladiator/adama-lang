@@ -76,14 +76,14 @@ public class Block extends Statement {
           inDefault = stmt instanceof DefaultCase;
           if (inDefault) {
             if (hasDefault) {
-              environment.document.createError(stmt, String.format("Switch has too many defaults."), "SwitchBlock");
+              environment.document.createError(stmt, String.format("Switch has too many defaults."));
             }
             hasDefault = true;
           }
           detectDeadCode = false;
         }
         if (detectDeadCode) {
-          environment.document.createError(stmt, String.format("This code is unreachable."), "SwitchBlock");
+          environment.document.createError(stmt, String.format("This code is unreachable."));
         }
         ControlFlow flow = stmt.typing(environment);
         if (flow == ControlFlow.Returns) {
@@ -111,7 +111,7 @@ public class Block extends Statement {
       for (final Statement stmt : statements) {
         // check that it must be Open
         if (flow == ControlFlow.Returns) {
-          environment.document.createError(stmt, String.format("This code is unreachable."), "Block");
+          environment.document.createError(stmt, String.format("This code is unreachable."));
         }
         if (stmt.typing(environment) == ControlFlow.Returns) {
           flow = ControlFlow.Returns;

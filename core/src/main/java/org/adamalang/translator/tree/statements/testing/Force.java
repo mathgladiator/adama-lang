@@ -40,7 +40,7 @@ public class Force extends Statement {
   @Override
   public ControlFlow typing(final Environment environment) {
     if (!environment.state.isTesting()) {
-      environment.document.createError(this, String.format("Forcing a step designed exclusively for testing"), "Testing");
+      environment.document.createError(this, String.format("Forcing a step designed exclusively for testing"));
     }
     return ControlFlow.Open;
   }

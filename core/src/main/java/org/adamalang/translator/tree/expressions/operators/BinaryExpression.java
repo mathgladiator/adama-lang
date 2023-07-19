@@ -71,7 +71,7 @@ public class BinaryExpression extends Expression {
       if (((IsEnum) left).name().equals(((IsEnum) right).name())) {
         return true;
       } else {
-        environment.document.createError(DocumentPosition.sum(left, right), String.format("Type check failure: enum types are incompatible '%s' vs '%s'.", left.getAdamaType(), right.getAdamaType()), "RuleSetEquality");
+        environment.document.createError(DocumentPosition.sum(left, right), String.format("Type check failure: enum types are incompatible '%s' vs '%s'.", left.getAdamaType(), right.getAdamaType()));
         return false;
       }
     }
@@ -98,7 +98,7 @@ public class BinaryExpression extends Expression {
 
     if (typeLeft != null && typeRight != null) {
       if (op.leftAssignment && typeLeft.behavior.isReadOnly) {
-        environment.document.createError(DocumentPosition.sum(left, right), String.format("'%s' is unable to accept an assignment of '%s'.", typeLeft.getAdamaType(), typeRight.getAdamaType()), "RuleSetAssign");
+        environment.document.createError(DocumentPosition.sum(left, right), String.format("'%s' is unable to accept an assignment of '%s'.", typeLeft.getAdamaType(), typeRight.getAdamaType()));
       }
     }
 

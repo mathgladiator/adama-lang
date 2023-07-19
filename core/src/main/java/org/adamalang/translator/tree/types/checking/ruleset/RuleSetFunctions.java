@@ -20,7 +20,7 @@ public class RuleSetFunctions {
       if (tyType != null && tyType instanceof TyNativeFunctional) {
         return true;
       } else if (!silent) {
-        environment.document.createError(tyTypeOriginal, String.format("Type check failure: The given type was expected to be a function: '%s'", tyTypeOriginal.getAdamaType()), "RuleSetFunctions");
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: The given type was expected to be a function: '%s'", tyTypeOriginal.getAdamaType()));
       }
     }
     return false;

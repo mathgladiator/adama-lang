@@ -50,14 +50,14 @@ public class Case extends Statement {
     value.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     TyType caseType = environment.getCaseType();
     if (caseType == null) {
-      environment.document.createError(this, String.format("case label should be within a switch statement"), "SwitchCase");
+      environment.document.createError(this, String.format("case label should be within a switch statement"));
       return ControlFlow.Open;
     }
     if (environment.rules.IsInteger(caseType, true) && !(value instanceof IntegerConstant)) {
-      environment.document.createError(this, String.format("case label should be an integer constant"), "SwitchCase");
+      environment.document.createError(this, String.format("case label should be an integer constant"));
     }
     if (environment.rules.IsString(caseType, true) && !(value instanceof StringConstant)) {
-      environment.document.createError(this, String.format("case label should be an string constant"), "SwitchCase");
+      environment.document.createError(this, String.format("case label should be an string constant"));
     }
     if (RuleSetEnums.IsEnum(environment, caseType, true)) {
       if (value instanceof EnumValuesArray) {
@@ -66,7 +66,7 @@ public class Case extends Statement {
       } else if (value instanceof EnumConstant) {
         return ControlFlow.Open;
       }
-      environment.document.createError(this, String.format("case label should be an enum constant or enum array reference"), "SwitchCase");
+      environment.document.createError(this, String.format("case label should be an enum constant or enum array reference"));
     }
     return ControlFlow.Open;
   }

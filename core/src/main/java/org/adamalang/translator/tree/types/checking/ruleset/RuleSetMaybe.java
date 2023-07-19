@@ -22,7 +22,7 @@ public class RuleSetMaybe {
         return true;
       }
       if (!silent) {
-        environment.document.createError(tyTypeOriginal, String.format("Type check failure: the type '%s' was expected to be a maybe<?>", tyTypeOriginal.getAdamaType()), "RuleSetMaybe");
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: the type '%s' was expected to be a maybe<?>", tyTypeOriginal.getAdamaType()));
       }
     }
     return false;

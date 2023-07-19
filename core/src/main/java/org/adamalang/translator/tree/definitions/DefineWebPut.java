@@ -82,7 +82,7 @@ public class DefineWebPut extends Definition implements UriAction {
         if (environment.rules.IsNativeMessage(messageTypeFound, false)) {
           Environment env = next(environment);
           if (code.typing(env) == ControlFlow.Open) {
-            environment.document.createError(this, String.format("The @web handlers must return a message"), "Web");
+            environment.document.createError(this, String.format("The @web handlers must return a message"));
           }
         }
       }

@@ -26,7 +26,7 @@ public class RuleSetTable {
       if (tyType != null && (tyType instanceof TyNativeTable || tyType instanceof TyReactiveTable)) {
         return true;
       } else if (!silent) {
-        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'table<?>', but got a type of '%s'.", tyTypeOriginal.getAdamaType()), "TypeCheckReferences");
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'table<?>', but got a type of '%s'.", tyTypeOriginal.getAdamaType()));
       }
     }
     return false;

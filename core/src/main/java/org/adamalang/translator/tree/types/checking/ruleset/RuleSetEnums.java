@@ -24,10 +24,10 @@ public class RuleSetEnums {
       if (type instanceof IsEnum) {
         return (IsEnum) type.makeCopyWithNewPosition(position, type.behavior);
       } else if (!silent) {
-        environment.document.createError(position, String.format("Type incorrect: expecting '%s' to be an enumeration; instead, found a type of '%s'.", name, type.getAdamaType()), "TypeCheckReferences");
+        environment.document.createError(position, String.format("Type incorrect: expecting '%s' to be an enumeration; instead, found a type of '%s'.", name, type.getAdamaType()));
       }
     } else if (!silent) {
-      environment.document.createError(position, String.format("Type not found: an enumeration named '%s' was not found.", name), "TypeCheckReferences");
+      environment.document.createError(position, String.format("Type not found: an enumeration named '%s' was not found.", name));
     }
     return null;
   }

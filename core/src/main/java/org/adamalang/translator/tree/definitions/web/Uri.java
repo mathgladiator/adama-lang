@@ -147,7 +147,7 @@ public class Uri extends Definition {
       TyType typeToCheck = var.getValue();
       boolean valid = typeToCheck instanceof TyNativeInteger || typeToCheck instanceof TyNativeDouble || typeToCheck instanceof TyNativeLong || typeToCheck instanceof TyNativeString || typeToCheck instanceof TyNativeBoolean;
       if (!valid) {
-        environment.document.createError(this, "The parameter type must be int, long, double, string, or boolean", "WebUri");
+        environment.document.createError(this, "The parameter type must be int, long, double, string, or boolean");
       }
     }
   }

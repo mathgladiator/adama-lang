@@ -70,11 +70,11 @@ public class TyInternalReadonlyClass extends TyType {
       } else if (fType.getType() == NtPrincipal.class) {
         return new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("client"));
       } else {
-        environment.document.createError(this, "Field '" + field + "' had a type we didn't recognize in internal type: " + clazz.getSimpleName(), "InternalTypes");
+        environment.document.createError(this, "Field '" + field + "' had a type we didn't recognize in internal type: " + clazz.getSimpleName());
         return null;
       }
     } catch (Exception ex) {
-      environment.document.createError(this, "Field '" + field + "' was not found in internal type: " + clazz.getSimpleName(), "InternalTypes");
+      environment.document.createError(this, "Field '" + field + "' was not found in internal type: " + clazz.getSimpleName());
       return null;
     }
   }

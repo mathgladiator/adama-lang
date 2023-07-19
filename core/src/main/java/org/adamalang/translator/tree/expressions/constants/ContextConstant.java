@@ -40,7 +40,7 @@ public class ContextConstant extends Expression {
       environment.useSpecial(type, "__context");
       return type;
     } else {
-      environment.document.createError(this, "@context is only available within static policies, constructors, document events, authorize handler, message handlers", "WHO");
+      environment.document.createError(this, "@context is only available within static policies, constructors, document events, authorize handler, message handlers");
       return null;
     }
   }

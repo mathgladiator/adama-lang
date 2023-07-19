@@ -100,15 +100,15 @@ public class Return extends Statement {
         consider("cache_ttl_seconds", webReturnType, (ty) -> environment.rules.IsInteger(ty, false));
         if (method.equals("options")) {
           if (body != 0) {
-            environment.document.createError(this, String.format("The return statement within a @web expects no body fields; got " + body + " instead"), "ReturnFlowWeb");
+            environment.document.createError(this, String.format("The return statement within a @web expects no body fields; got " + body + " instead"));
           }
         } else {
           if (body != 1) {
-            environment.document.createError(this, String.format("The return statement within a @web expects exactly one body type; got " + body + " instead"), "ReturnFlowWeb");
+            environment.document.createError(this, String.format("The return statement within a @web expects exactly one body type; got " + body + " instead"));
           }
         }
       } else {
-        environment.document.createError(this, String.format("The return statement within a @web expects a message type"), "ReturnFlowWeb");
+        environment.document.createError(this, String.format("The return statement within a @web expects a message type"));
       }
       return ControlFlow.Returns;
     } else {
@@ -120,10 +120,10 @@ public class Return extends Statement {
             return ControlFlow.Open;
           }
         } else {
-          environment.document.createError(this, String.format("The return statement expects no expression"), "ReturnFlow");
+          environment.document.createError(this, String.format("The return statement expects no expression"));
         }
       } else if (expectedReturnType != null) {
-        environment.document.createError(this, String.format("The return statement expected an expression of type `%s`", expectedReturnType.getAdamaType()), "ReturnFlow");
+        environment.document.createError(this, String.format("The return statement expected an expression of type `%s`", expectedReturnType.getAdamaType()));
       }
       return ControlFlow.Returns;
     }

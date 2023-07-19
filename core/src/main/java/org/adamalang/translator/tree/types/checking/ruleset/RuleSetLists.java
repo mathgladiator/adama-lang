@@ -34,7 +34,7 @@ public class RuleSetLists {
         return true;
       }
       if (!silent) {
-        environment.document.createError(tyTypeOriginal, String.format("Type check failure: expected an list, but was actually type '%s'.", tyTypeOriginal.getAdamaType()), "RuleSetArray");
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: expected an list, but was actually type '%s'.", tyTypeOriginal.getAdamaType()));
       }
     }
     return false;

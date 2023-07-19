@@ -82,9 +82,9 @@ public class TypeCheckerStructure implements TypeChecker {
   }
 
   @Override
-  public void issueError(DocumentPosition dp, String message, String tutorial) {
+  public void issueError(DocumentPosition dp, String message) {
     this.checks.add(new Check(null, null, env -> {
-      env.document.createError(dp, message, tutorial);
+      env.document.createError(dp, message);
     }));
   }
 

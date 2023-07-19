@@ -39,7 +39,7 @@ public class SelfConstant extends Expression {
       environment.useSpecial(resolvedType, "__this");
       return resolvedType;
     } else {
-      environment.document.createError(this, "@self requires being inside a record", "SELF");
+      environment.document.createError(this, "@self requires being inside a record");
       return null;
     }
   }

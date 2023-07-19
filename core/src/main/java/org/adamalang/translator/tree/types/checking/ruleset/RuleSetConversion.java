@@ -14,7 +14,7 @@ import org.adamalang.translator.tree.types.TyType;
 public class RuleSetConversion {
   public static void SignalConversionIssue(final Environment environment, final TyType given, final boolean silent) {
     if (!silent && given != null) {
-      environment.document.createError(given, String.format("Type check failure: the type `%s` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message.", given.getAdamaType()), "TypeCheckFailures");
+      environment.document.createError(given, String.format("Type check failure: the type `%s` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message.", given.getAdamaType()));
     }
   }
 }

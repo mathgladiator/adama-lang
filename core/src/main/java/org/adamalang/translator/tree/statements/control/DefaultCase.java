@@ -38,13 +38,12 @@ public class DefaultCase extends Statement {
 
   @Override
   public ControlFlow typing(Environment environment) {
-
     TyType caseType = environment.getCaseType();
     if (caseType == null) {
-      environment.document.createError(this, String.format("default: requires being in a switch statement"), "SwitchCase");
+      environment.document.createError(this, String.format("default: requires being in a switch statement"));
     }
     if (environment.checkDefaultReturnTrueIfMultiple()) {
-      environment.document.createError(this, String.format("there can be only one default case"), "SwitchCase");
+      environment.document.createError(this, String.format("there can be only one default case"));
     }
     return ControlFlow.Open;
   }

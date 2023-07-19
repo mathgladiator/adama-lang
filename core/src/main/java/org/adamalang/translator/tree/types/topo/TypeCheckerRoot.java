@@ -66,8 +66,8 @@ public class TypeCheckerRoot implements TypeChecker {
   }
 
   @Override
-  public void issueError(DocumentPosition dp, String message, String tutorial) {
-    this.checks.add(new Check(null, null, env -> env.document.createError(dp, message, tutorial)));
+  public void issueError(DocumentPosition dp, String message) {
+    this.checks.add(new Check(null, null, env -> env.document.createError(dp, message)));
   }
 
 

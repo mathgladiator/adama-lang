@@ -51,7 +51,7 @@ public class LocalTypeAssignmentResult {
 
     if (ltype != null && rtype != null) {
       if (ltype.behavior.isReadOnly) {
-        environment.document.createError(DocumentPosition.sum(ltype, rtype), String.format("'%s' is unable to accept an set of '%s'.", ltype.getAdamaType(), rtype.getAdamaType()), "RuleSetAssignmentSet");
+        environment.document.createError(DocumentPosition.sum(ltype, rtype), String.format("'%s' is unable to accept an set of '%s'.", ltype.getAdamaType(), rtype.getAdamaType()));
       }
     }
 

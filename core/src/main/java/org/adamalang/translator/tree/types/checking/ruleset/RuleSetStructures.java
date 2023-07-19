@@ -31,7 +31,7 @@ public class RuleSetStructures {
           RuleSetAssignment.CanTypeAStoreTypeB(environment, elementB.getValue().type, other.type, StorageTweak.None, silent);
         } else {
           if (!silent) {
-            environment.document.createError(typeA, String.format("The type '%s' contains field '%s' which is not found within '%s'.", typeB.getAdamaType(), elementB.getKey(), typeA.getAdamaType()), "RuleSetStructures");
+            environment.document.createError(typeA, String.format("The type '%s' contains field '%s' which is not found within '%s'.", typeB.getAdamaType(), elementB.getKey(), typeA.getAdamaType()));
           }
           result = false;
         }
@@ -47,7 +47,7 @@ public class RuleSetStructures {
       if (tyType != null && (tyType instanceof IsStructure)) {
         return true;
       } else if (!silent) {
-        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'record' or 'message', but got a type of '%s'.", tyTypeOriginal.getAdamaType()), "RuleSetStructures");
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'record' or 'message', but got a type of '%s'.", tyTypeOriginal.getAdamaType()));
       }
     }
     return false;

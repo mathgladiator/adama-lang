@@ -30,7 +30,7 @@ public class CodeGenMessageHandling {
     HashMap<String, String> executeDirect = new HashMap<>();
     for (final DefineHandler handler : environment.document.handlers) {
       if (channelsDefined.contains(handler.channel)) {
-        environment.document.createError(handler, String.format("Channel '%s' is already handled", handler.channel), "MessageHandlers");
+        environment.document.createError(handler, String.format("Channel '%s' is already handled", handler.channel));
         continue;
       }
       channelsDefined.add(handler.channel);

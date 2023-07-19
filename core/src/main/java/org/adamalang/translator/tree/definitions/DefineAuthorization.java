@@ -68,7 +68,7 @@ public class DefineAuthorization extends Definition {
       toUse.setReturnType(new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, authorize));
       ControlFlow flow = code.typing(toUse);
       if (flow == ControlFlow.Open) {
-        checker.issueError(this, "@authorize must either return a string or abort", "Authorize");
+        checker.issueError(this, "@authorize must either return a string or abort");
       }
     });
   }

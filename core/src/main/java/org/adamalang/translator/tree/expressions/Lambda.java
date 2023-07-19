@@ -79,12 +79,12 @@ public class Lambda extends Expression implements LatentCodeSnippet {
     if (suggestion != null && suggestion instanceof TyNativeFunctional) {
       ArrayList<FunctionOverloadInstance> instances = ((TyNativeFunctional) suggestion).overloads;
       if (instances.size() != 1) {
-        environment.document.createError(this, "Not enough functional overload instances available", "Lambda");
+        environment.document.createError(this, "Not enough functional overload instances available");
         return null;
       }
       FunctionOverloadInstance instance = instances.get(0);
       if (instance.types.size() != 1) {
-        environment.document.createError(this, "Lambda requires exactly one parameter on type inference", "Lambda");
+        environment.document.createError(this, "Lambda requires exactly one parameter on type inference");
         return null;
       }
 
@@ -103,7 +103,7 @@ public class Lambda extends Expression implements LatentCodeSnippet {
       variableType = environment.rules.Resolve(instance.types.get(0), false);
       next.define(variable.text, variableType, true, this);
       if (variableType == null) {
-        environment.document.createError(this, "Failed to infer the variable type of the lambda", "Lambda");
+        environment.document.createError(this, "Failed to infer the variable type of the lambda");
       }
       exprType = environment.rules.Resolve(expr.typing(next, null), false);
       if (specialsUsed != null) {
@@ -117,7 +117,7 @@ public class Lambda extends Expression implements LatentCodeSnippet {
         return new TyNativeFunctional("apply", FunctionOverloadInstance.WRAP(created), FunctionStyleJava.ExpressionThenArgs);
       }
     }
-    environment.document.createError(this, "Failed to infer the type arguments for the @lambda", "Lambda");
+    environment.document.createError(this, "Failed to infer the type arguments for the @lambda");
     return null;
   }
 

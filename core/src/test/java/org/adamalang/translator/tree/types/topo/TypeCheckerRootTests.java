@@ -23,7 +23,7 @@ public class TypeCheckerRootTests {
   @Test
   public void sanity() {
     TypeCheckerRoot tcr = new TypeCheckerRoot();
-    tcr.issueError(DocumentPosition.ZERO, "message", "Here");
+    tcr.issueError(DocumentPosition.ZERO, "message");
     tcr.define(Token.WRAP("x"), Collections.emptySet(), (env) -> {});
     tcr.register(Collections.singleton("x"), (env) -> {});
     tcr.alias("::x", "x");

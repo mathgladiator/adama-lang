@@ -50,7 +50,7 @@ public class EnumConstant extends Expression {
     if (isEnum != null) {
       final var valueFound = isEnum.storage().options.get(value);
       if (valueFound == null) {
-        environment.document.createError(this, String.format("Type lookup failure: unable to find value '%s' within the enumeration '%s'", value, isEnum.name()), "Enumerations");
+        environment.document.createError(this, String.format("Type lookup failure: unable to find value '%s' within the enumeration '%s'", value, isEnum.name()));
       } else {
         foundValue = valueFound;
       }

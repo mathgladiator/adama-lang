@@ -56,14 +56,14 @@ public class PumpMessage extends Statement {
   public ControlFlow typing(final Environment environment) {
     final var next = environment.scopeWithComputeContext(ComputeContext.Computation);
     if (!next.state.isTesting()) {
-      environment.document.createError(this, String.format("Pumping a message is designed exclusively for testing"), "Testing");
+      environment.document.createError(this, String.format("Pumping a message is designed exclusively for testing"));
     }
     final var exprType = expression.typing(next, null /* ug */);
     environment.rules.IsNativeMessage(exprType, false);
     if (exprType != null) {
       final var messageNameType = next.document.channelToMessageType.get(channelToken.text);
       if (messageNameType == null) {
-        environment.document.createError(this, String.format("Channel '%s' does not exist", channelToken.text), "Testing");
+        environment.document.createError(this, String.format("Channel '%s' does not exist", channelToken.text));
         return ControlFlow.Open;
       }
       messageType = environment.rules.FindMessageStructure(messageNameType, this, false);

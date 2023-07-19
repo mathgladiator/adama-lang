@@ -70,7 +70,7 @@ public class ForEach extends Statement {
   @Override
   public ControlFlow typing(final Environment environment) {
     if (environment.defined(variable)) {
-      environment.document.createError(this, String.format("The variable '" + variable + "' is already defined"), "ForEach");
+      environment.document.createError(this, String.format("The variable '" + variable + "' is already defined"));
     }
     final var type = iterable.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null /* we know nothing to suggest */);
     if (type != null) {

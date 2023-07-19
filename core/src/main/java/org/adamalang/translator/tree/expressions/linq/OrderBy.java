@@ -82,10 +82,10 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
               fieldType = environment.rules.ExtractEmbeddedType(fieldType, false);
             }
             if (!(fieldType instanceof IsOrderable)) {
-              environment.document.createError(key, String.format("Typing issue: the structure '%s' has field '%s' but it is not orderable..", element.getAdamaType(), key.name), "RuleSetStructures");
+              environment.document.createError(key, String.format("Typing issue: the structure '%s' has field '%s' but it is not orderable..", element.getAdamaType(), key.name));
             }
           } else {
-            environment.document.createError(key, String.format("Field not found: the structure '%s' does not contain the field '%s'.", element.getAdamaType(), key.name), "RuleSetStructures");
+            environment.document.createError(key, String.format("Field not found: the structure '%s' does not contain the field '%s'.", element.getAdamaType(), key.name));
           }
         }
       }

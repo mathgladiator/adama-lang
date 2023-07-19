@@ -108,7 +108,7 @@ public class DefineFunction extends Definition {
         producedInstance.dependOn(depends);
       }
       if (returnType != null && flow == ControlFlow.Open) {
-        environment.document.createError(this, String.format("The %s '%s' does not return in all cases", specialization == FunctionSpecialization.Pure ? "function" : "procedure", nameToken.text), "FunctionDefine");
+        environment.document.createError(this, String.format("The %s '%s' does not return in all cases", specialization == FunctionSpecialization.Pure ? "function" : "procedure", nameToken.text));
       }
     });
   }

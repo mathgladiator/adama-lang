@@ -83,10 +83,10 @@ public class Reduce extends LinqExpression {
         functionInstance = functionalType.find(this, expectedArgs, environment);
         if (functionInstance != null) {
           if (!functionInstance.pure) {
-            environment.document.createError(this, String.format("Function '%s' must be a pure function a value", funcType.getAdamaType()), "Reduce");
+            environment.document.createError(this, String.format("Function '%s' must be a pure function a value", funcType.getAdamaType()));
           }
           if (functionInstance.returnType == null) {
-            environment.document.createError(this, String.format("Function '%s' must return value", funcType.getAdamaType()), "Reduce");
+            environment.document.createError(this, String.format("Function '%s' must return value", funcType.getAdamaType()));
           }
         }
       }
@@ -113,7 +113,7 @@ public class Reduce extends LinqExpression {
           return resultType;
         }
       } else {
-        environment.document.createError(this, String.format("Field '%s' was not found for reduction", fieldToken.text), "Reduce");
+        environment.document.createError(this, String.format("Field '%s' was not found for reduction", fieldToken.text));
       }
     }
     return null;

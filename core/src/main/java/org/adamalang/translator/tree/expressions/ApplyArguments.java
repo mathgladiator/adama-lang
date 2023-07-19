@@ -99,9 +99,9 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       functionStyle = ((TyNativeFunctional) exprType).style;
       if (functionStyle == FunctionStyleJava.RemoteCall) {
         if (environmentToUse.state.isReadonlyEnvironment() || environmentToUse.state.isPure()) {
-          environmentToUse.document.createError(expression, String.format("Services can not be invoked in read-only or pure functional context"), "FunctionInvoke");
+          environmentToUse.document.createError(expression, String.format("Services can not be invoked in read-only or pure functional context"));
         } else if (environmentToUse.state.getCacheObject() == null) {
-          environmentToUse.document.createError(expression, String.format("Remote invocation not available in this scope"), "FunctionInvoke");
+          environmentToUse.document.createError(expression, String.format("Remote invocation not available in this scope"));
         }
       }
       functionInstance = ((TyNativeFunctional) exprType).find(expression, argTypes, environmentToUse);
@@ -109,23 +109,23 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
         environmentToUse.lookup(depend, true, this, true);
       }
       if (environmentToUse.state.isPure() && !functionInstance.pure) {
-        environmentToUse.document.createError(expression, String.format("Pure functions can only call other pure functions"), "FunctionInvoke");
+        environmentToUse.document.createError(expression, String.format("Pure functions can only call other pure functions"));
       }
       if (functionInstance.aborts && !(environmentToUse.state.isAbortable() || environmentToUse.state.isMessageHandler())) {
-        environmentToUse.document.createError(expression, String.format("Abortable functions can only be called from another abortable function or within a message handler"), "FunctionInvoke");
+        environmentToUse.document.createError(expression, String.format("Abortable functions can only be called from another abortable function or within a message handler"));
       }
       if (functionInstance.viewer) {
         environmentToUse.useSpecial(environmentToUse.document.viewerType, "__viewer");
       }
       boolean hasViewer = environmentToUse.state.isBubble() || environmentToUse.state.hasViewer();
       if (!hasViewer && functionInstance.viewer) {
-        environmentToUse.document.createError(expression, String.format("Functions with viewer can only be used from viewer states"), "FunctionInvoke");
+        environmentToUse.document.createError(expression, String.format("Functions with viewer can only be used from viewer states"));
       }
       if (environmentToUse.state.isReadonlyEnvironment() && !functionInstance.pure) {
-        environmentToUse.document.createError(expression, String.format("Read only methods can only call other read-only methods or pure functions"), "FunctionInvoke");
+        environmentToUse.document.createError(expression, String.format("Read only methods can only call other read-only methods or pure functions"));
       }
       if (environmentToUse.state.isReactiveExpression() && !functionInstance.pure) {
-        environmentToUse.document.createError(expression, String.format("Reactive expressions can only invoke pure functions"), "FunctionInvoke");
+        environmentToUse.document.createError(expression, String.format("Reactive expressions can only invoke pure functions"));
       }
       var returnType = functionInstance.returnType;
       if (isAggregate) {
@@ -141,7 +141,7 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
         return returnType.makeCopyWithNewPosition(this, returnType.behavior);
       }
     }
-    environmentX.document.createError(expression, String.format("Expression is not a function"), "FunctionInvoke");
+    environmentX.document.createError(expression, String.format("Expression is not a function"));
     return null;
   }
 

@@ -562,7 +562,7 @@ public class BinaryOperatorTable {
       String rightAdamaType = right.getAdamaType();
       BinaryOperatorResult result = table.get(leftAdamaType + operator + rightAdamaType);
       if (result == null) {
-        environment.document.createError(DocumentPosition.sum(left, right), String.format("Could not find a meaning for '%s' %s '%s'", leftAdamaType, operator, rightAdamaType), "OperatorTable");
+        environment.document.createError(DocumentPosition.sum(left, right), String.format("Could not find a meaning for '%s' %s '%s'", leftAdamaType, operator, rightAdamaType));
       }
       return result;
     }

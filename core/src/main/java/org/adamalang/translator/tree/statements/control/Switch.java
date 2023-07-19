@@ -55,7 +55,7 @@ public class Switch extends Statement {
     caseType = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     boolean good = environment.rules.IsInteger(caseType, true) || environment.rules.IsString(caseType, true) || RuleSetEnums.IsEnum(environment, caseType, true);
     if (!good) {
-      environment.document.createError(this, String.format("switch statements work with integer, string, or enum types"), "SwitchCase");
+      environment.document.createError(this, String.format("switch statements work with integer, string, or enum types"));
     }
     next.setCaseType(caseType);
     return code.typing(next);

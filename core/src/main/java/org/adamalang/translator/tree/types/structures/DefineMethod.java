@@ -95,7 +95,7 @@ public class DefineMethod extends StructureComponent {
       }
       final var flow = code.typing(prepareEnvironment(environment));
       if (returnType != null && flow == ControlFlow.Open) {
-        environment.document.createError(this, String.format("Function '%s' does not return in all cases", nameToken.text), "MethodDefine");
+        environment.document.createError(this, String.format("Function '%s' does not return in all cases", nameToken.text));
       }
       cachedInstance = new FunctionOverloadInstance("__METH_" + functionId + "_" + name, returnType, argTypes, paint);
       for (String depend : depends) {

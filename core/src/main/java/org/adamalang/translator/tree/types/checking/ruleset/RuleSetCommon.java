@@ -228,7 +228,7 @@ public class RuleSetCommon {
         TyType childType = Resolve(environment, ((DetailContainsAnEmbeddedType) tyType).getEmbeddedType(environment), silent);
         if (childType == null) {
           if (!silent) {
-            environment.document.createError(tyTypeOriginal, String.format("The type '%s' is using a type that was not found.", tyTypeOriginal.getAdamaType()), "TypeCheckReferences");
+            environment.document.createError(tyTypeOriginal, String.format("The type '%s' is using a type that was not found.", tyTypeOriginal.getAdamaType()));
           }
           return null;
         }
@@ -245,7 +245,7 @@ public class RuleSetCommon {
 
   static void SignalTypeNotFound(final Environment environment, final TyType type, final boolean silent) {
     if (!silent) {
-      environment.document.createError(type, String.format("Type not found: the type '%s' was not found.", type.getAdamaType()), "TypeCheckReferences");
+      environment.document.createError(type, String.format("Type not found: the type '%s' was not found.", type.getAdamaType()));
     }
   }
 
@@ -262,7 +262,7 @@ public class RuleSetCommon {
 
   static void SignalTypeFailure(final Environment environment, final TyType expected, final TyType given, final boolean silent) {
     if (!silent && given != null) {
-      environment.document.createError(given, String.format("Type check failure: must have a type of '%s', but the type is actually '%s'", expected.getAdamaType(), given.getAdamaType()), "TypeCheckFailures");
+      environment.document.createError(given, String.format("Type check failure: must have a type of '%s', but the type is actually '%s'", expected.getAdamaType(), given.getAdamaType()));
     }
   }
 
@@ -341,8 +341,7 @@ public class RuleSetCommon {
       if (!silent && tyTypeOriginal != null) {
         environment.document.createError(tyTypeOriginal, String.format("Type check failure: Must have a type of '%s' or '%s', but the type is actually '%s'", //
                 new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).getAdamaType(), //
-                new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null).getAdamaType(), tyTypeOriginal.getAdamaType()), //
-            "TypeCheckFailures");
+                new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null).getAdamaType(), tyTypeOriginal.getAdamaType()));
       }
     }
     return false;
@@ -414,7 +413,7 @@ public class RuleSetCommon {
           return aActualMessage;
         }
       } else if (!silent) {
-        environment.document.createError(aActualMessage, String.format("The message types `%s` and `%s` can not be joined.", aActualMessage.getAdamaType(), bActualMessage.getAdamaType()), "MaxUnionType");
+        environment.document.createError(aActualMessage, String.format("The message types `%s` and `%s` can not be joined.", aActualMessage.getAdamaType(), bActualMessage.getAdamaType()));
       }
     }
     return null;
@@ -430,7 +429,7 @@ public class RuleSetCommon {
 
   static void SignalTypeCompatibility(final Environment environment, final TyType expected, final TyType given, final boolean silent) {
     if (!silent && given != null) {
-      environment.document.createError(given, String.format("Type check failure: The types '%s' and '%s' are not compatible for type unification", expected.getAdamaType(), given.getAdamaType()), "TypeCompatabilities");
+      environment.document.createError(given, String.format("Type check failure: The types '%s' and '%s' are not compatible for type unification", expected.getAdamaType(), given.getAdamaType()));
     }
   }
 

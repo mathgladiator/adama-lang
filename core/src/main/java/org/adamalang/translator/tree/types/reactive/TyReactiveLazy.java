@@ -62,13 +62,13 @@ public class TyReactiveLazy extends TyType implements //
     computedType.typing(environment);
     var typedAs = environment.rules.Resolve(computedType, false);
     if (!(typedAs instanceof DetailHasDeltaType)) {
-      environment.document.createError(this, String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()), "Lazy");
+      environment.document.createError(this, String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()));
       return;
     }
     while (typedAs instanceof DetailContainsAnEmbeddedType) {
       typedAs = environment.rules.Resolve(((DetailContainsAnEmbeddedType) typedAs).getEmbeddedType(environment), false);
       if (!(typedAs instanceof DetailHasDeltaType)) {
-        environment.document.createError(this, String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()), "Lazy");
+        environment.document.createError(this, String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()));
         return;
       }
     }

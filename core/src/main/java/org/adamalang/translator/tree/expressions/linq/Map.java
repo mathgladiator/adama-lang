@@ -61,10 +61,10 @@ public class Map extends LinqExpression {
         functionalType = (TyNativeFunctional) funcType;
         functionInstance = functionalType.find(this, guessInputTypes, environment);
         if (functionInstance.aborts) {
-          environment.document.createError(this, String.format("Function '%s' must not abort within a map function", funcType.getAdamaType()), "Map");
+          environment.document.createError(this, String.format("Function '%s' must not abort within a map function", funcType.getAdamaType()));
         }
         if (functionInstance.returnType == null) {
-          environment.document.createError(this, String.format("Function '%s' must return value", funcType.getAdamaType()), "Map");
+          environment.document.createError(this, String.format("Function '%s' must return value", funcType.getAdamaType()));
         }
         return new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(functionInstance.returnType));
       }

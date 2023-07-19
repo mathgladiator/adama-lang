@@ -110,7 +110,7 @@ public class DefineService extends Definition {
       typing(inputTypeName.text, environment);
       typing(outputTypeName.text, environment);
       if ("dynamic".equals(outputTypeName.text) && outputArrayExt != null) {
-       environment.document.createError(this, "service method returns dynamic, and can't be an array", "Service");
+       environment.document.createError(this, "service method returns dynamic, and can't be an array");
       }
     }
   }
@@ -162,7 +162,7 @@ public class DefineService extends Definition {
       HashSet<String> alreadyDefinedAspects = new HashSet<>();
       for (ServiceAspect aspect : aspects) {
         if (alreadyDefinedAspects.contains(aspect.name.text)) {
-          environment.document.createError(this, String.format("'%s' was already defined as an aspect within the service.", aspect.name.text), "ServiceDefine");
+          environment.document.createError(this, String.format("'%s' was already defined as an aspect within the service.", aspect.name.text));
         }
         alreadyDefinedAspects.add(aspect.name.text);
         aspect.typing(environment);
@@ -170,7 +170,7 @@ public class DefineService extends Definition {
       HashSet<String> alreadyDefinedMethods = new HashSet<>();
       for (ServiceMethod method : methods) {
         if (alreadyDefinedMethods.contains(method.name.text)) {
-          environment.document.createError(this, String.format("'%s' was already defined as a method within the service.", method.name.text), "ServiceDefine");
+          environment.document.createError(this, String.format("'%s' was already defined as a method within the service.", method.name.text));
         }
         alreadyDefinedMethods.add(method.name.text);
         method.typing(environment);

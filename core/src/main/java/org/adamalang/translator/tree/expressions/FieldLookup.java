@@ -69,7 +69,7 @@ public class FieldLookup extends Expression {
 
   private void enforceSpecialIDReadonly(Environment environment) {
     if ("id".equals(fieldName) && environment.state.isContextAssignment()) {
-      environment.document.createError(this, "'id' is a special readonly field", "FieldLookup");
+      environment.document.createError(this, "'id' is a special readonly field");
     }
   }
 
@@ -84,7 +84,7 @@ public class FieldLookup extends Expression {
         isGlobalObject = true;
         final var func = ((TyNativeGlobalObject) eType).lookupMethod(fieldName, environment);
         if (func == null) {
-          environment.document.createError(this, String.format("Global '%s' lacks '%s'", ((TyNativeGlobalObject) eType).globalName, fieldName), "GlobalLookup");
+          environment.document.createError(this, String.format("Global '%s' lacks '%s'", ((TyNativeGlobalObject) eType).globalName, fieldName));
           return null;
         }
       }
@@ -95,7 +95,7 @@ public class FieldLookup extends Expression {
         } else if ("value".equals(fieldName)) {
           return ePair.rangeType;
         }
-        environment.document.createError(this, String.format("Pair '%s' does not have '%s' field, and only supports 'key' and 'value'", eType.getAdamaType(), fieldName), "FieldLookup");
+        environment.document.createError(this, String.format("Pair '%s' does not have '%s' field, and only supports 'key' and 'value'", eType.getAdamaType(), fieldName));
         return null;
       }
       if (eType instanceof TyInternalReadonlyClass) {
@@ -133,7 +133,7 @@ public class FieldLookup extends Expression {
       }
       if (eType instanceof IsStructure) {
         if (!environment.state.isContextComputation() && eType.behavior == TypeBehavior.ReadOnlyNativeValue) {
-          environment.document.createError(this, String.format("The field '%s' is on a readonly message", fieldName), "FieldLookup");
+          environment.document.createError(this, String.format("The field '%s' is on a readonly message", fieldName));
         }
         if (eType instanceof TyReactiveRecord) {
           enforceSpecialIDReadonly(environment);
@@ -163,7 +163,7 @@ public class FieldLookup extends Expression {
           }
         }
       }
-      environment.document.createError(this, String.format("Type '%s' lacks field '%s'", eType.getAdamaType(), fieldName), "FieldLookup");
+      environment.document.createError(this, String.format("Type '%s' lacks field '%s'", eType.getAdamaType(), fieldName));
     }
     return null;
   }

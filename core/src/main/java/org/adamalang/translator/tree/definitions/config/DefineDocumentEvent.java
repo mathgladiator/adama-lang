@@ -77,7 +77,7 @@ public class DefineDocumentEvent extends StaticPiece {
     switch (which) {
       case AssetAttachment: {
         if (parameterNameToken == null) {
-          environment.document.createError(this, String.format("The @attached a parameter (i.a. @attached(asset) {...})"), "DocumentEvents");
+          environment.document.createError(this, String.format("The @attached a parameter (i.a. @attached(asset) {...})"));
         }
       }
     }
@@ -85,22 +85,22 @@ public class DefineDocumentEvent extends StaticPiece {
     if (codeControlFlow == ControlFlow.Open) {
       switch (which) {
         case ClientConnected:
-          environment.document.createError(this, String.format("The @connected handler must return a boolean"), "DocumentEvents");
+          environment.document.createError(this, String.format("The @connected handler must return a boolean"));
           return;
         case Delete:
-          environment.document.createError(this, String.format("The @delete handler must return a boolean"), "DocumentEvents");
+          environment.document.createError(this, String.format("The @delete handler must return a boolean"));
           return;
         case AskCreation:
-          environment.document.createError(this, String.format("The 'create' policy must return a boolean"), "DocumentEvents");
+          environment.document.createError(this, String.format("The 'create' policy must return a boolean"));
           return;
         case AskInvention:
-          environment.document.createError(this, String.format("The 'invent' policy must return a boolean"), "DocumentEvents");
+          environment.document.createError(this, String.format("The 'invent' policy must return a boolean"));
           return;
         case AskSendWhileDisconnected:
-          environment.document.createError(this, String.format("The 'send' policy must return a boolean"), "DocumentEvents");
+          environment.document.createError(this, String.format("The 'send' policy must return a boolean"));
           return;
         case AskAssetAttachment:
-          environment.document.createError(this, String.format("The @can_attach handler must return a boolean"), "DocumentEvents");
+          environment.document.createError(this, String.format("The @can_attach handler must return a boolean"));
           return;
       }
     }

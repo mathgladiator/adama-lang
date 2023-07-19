@@ -45,7 +45,7 @@ public class Lookup extends Expression {
       return type;
     }
     if (type == null) {
-      environment.document.createError(this, String.format("The variable '%s' was not defined", variableToken.text), "VariableLookup");
+      environment.document.createError(this, String.format("The variable '%s' was not defined", variableToken.text));
     }
     if (type != null && environment.state.isContextComputation() && type instanceof DetailComputeRequiresGet) {
       addGet = true;

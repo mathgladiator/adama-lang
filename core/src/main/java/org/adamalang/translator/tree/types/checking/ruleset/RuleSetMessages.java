@@ -20,10 +20,10 @@ public class RuleSetMessages {
       if (type instanceof TyNativeMessage) {
         return (TyNativeMessage) type.makeCopyWithNewPosition(position, type.behavior);
       } else if (!silent) {
-        environment.document.createError(position, String.format("Type incorrect: expecting '%s' to be a message type; instead, found a type of '%s'.", name, type.getAdamaType()), "TypeCheckReferences");
+        environment.document.createError(position, String.format("Type incorrect: expecting '%s' to be a message type; instead, found a type of '%s'.", name, type.getAdamaType()));
       }
     } else if (!silent) {
-      environment.document.createError(position, String.format("Type not found: a message named '%s' was not found.", name), "TypeCheckReferences");
+      environment.document.createError(position, String.format("Type not found: a message named '%s' was not found.", name));
     }
     return null;
   }
@@ -36,7 +36,7 @@ public class RuleSetMessages {
         return true;
       }
       if (!silent) {
-        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'message', but got a type of '%s'.", tyTypeOriginal.getAdamaType()), "TypeCheckReferences");
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'message', but got a type of '%s'.", tyTypeOriginal.getAdamaType()));
       }
     }
     return false;

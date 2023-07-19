@@ -33,14 +33,14 @@ public class RuleSetIngestion {
           if (CanAIngestB(environment, ((IsMap) typeLeft).getRangeType(environment), ((IsMap) typeRight).getRangeType(environment), silent)) {
             return true;
           } else if (!silent) {
-            environment.document.createError(originalTypeA, String.format("Type check failure: ranges are incompatble for ingestion.", typeLeft.getAdamaType()), "RuleSetIngestion");
+            environment.document.createError(originalTypeA, String.format("Type check failure: ranges are incompatble for ingestion.", typeLeft.getAdamaType()));
           }
         } else {
           return RuleSetAssignment.CanTypeAStoreTypeB(environment, ((IsMap) typeLeft).getRangeType(environment), ((IsMap) typeRight).getRangeType(environment), StorageTweak.None, silent);
         }
         return false;
       } else if (!silent) {
-        environment.document.createError(originalTypeA, String.format("Type check failure: domains are incompatble for ingestion %s <- %s.", ((IsMap) typeLeft).getDomainType(environment).getAdamaType(), ((IsMap) typeRight).getDomainType(environment).getAdamaType()), "RuleSetIngestion");
+        environment.document.createError(originalTypeA, String.format("Type check failure: domains are incompatble for ingestion %s <- %s.", ((IsMap) typeLeft).getDomainType(environment).getAdamaType(), ((IsMap) typeRight).getDomainType(environment).getAdamaType()));
       }
     }
     TyType leftStructureType = null;
@@ -52,7 +52,7 @@ public class RuleSetIngestion {
     } else if (environment.rules.IsMaybe(typeLeft, true)) {
       return CanAIngestB(environment, environment.rules.ExtractEmbeddedType(typeLeft, silent), typeRight, silent);
     } else if (!silent) {
-      environment.document.createError(originalTypeA, String.format("Type check failure: unable to ingest into this type '%s'.", typeLeft.getAdamaType()), "RuleSetIngestion");
+      environment.document.createError(originalTypeA, String.format("Type check failure: unable to ingest into this type '%s'.", typeLeft.getAdamaType()));
     }
     if (environment.rules.IsStructure(typeRight, true)) {
       rightStructureType = typeRight;
@@ -61,7 +61,7 @@ public class RuleSetIngestion {
     } else if (environment.rules.IsNativeListOfStructure(typeRight, true)) {
       rightStructureType = environment.rules.ExtractEmbeddedType(typeRight, silent);
     } else if (!silent) {
-      environment.document.createError(originalTypeB, String.format("Type check failure: '%s' unable to produce data to ingest into '%s'.", typeRight.getAdamaType(), typeLeft.getAdamaType()), "RuleSetIngestion");
+      environment.document.createError(originalTypeB, String.format("Type check failure: '%s' unable to produce data to ingest into '%s'.", typeRight.getAdamaType(), typeLeft.getAdamaType()));
     }
     leftStructureType = environment.rules.Resolve(leftStructureType, silent);
     rightStructureType = environment.rules.Resolve(rightStructureType, silent);
@@ -75,7 +75,7 @@ public class RuleSetIngestion {
       final var leftField = leftStorage.fields.get(rightFieldEntry.getKey());
       final var rightField = rightFieldEntry.getValue();
       if (leftField == null) {
-        environment.document.createError(originalTypeB, String.format("Type check failure: The field '%s' was lost during ingestion", rightFieldEntry.getKey()), "RuleSetIngestion");
+        environment.document.createError(originalTypeB, String.format("Type check failure: The field '%s' was lost during ingestion", rightFieldEntry.getKey()));
         possible = false;
       } else {
         if (RuleSetIngestion.IngestionLeftSidePossible(environment, leftField.type)) {

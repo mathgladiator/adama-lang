@@ -22,7 +22,7 @@ public class RuleSetStateMachine {
     if (defineStateTransition != null) {
       return defineStateTransition;
     } else if (!silent) {
-      environment.document.createError(position, String.format("State machine transition not found: a state machine label '%s' was not found.", name), "StateMachineLabels");
+      environment.document.createError(position, String.format("State machine transition not found: a state machine label '%s' was not found.", name));
     }
     return null;
   }

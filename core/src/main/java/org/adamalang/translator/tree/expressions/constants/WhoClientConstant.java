@@ -39,7 +39,7 @@ public class WhoClientConstant extends Expression {
       environment.useSpecial(type, "__who");
       return type;
     } else {
-      environment.document.createError(this, "@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers", "WHO");
+      environment.document.createError(this, "@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers");
       return null;
     }
   }

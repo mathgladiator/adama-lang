@@ -62,7 +62,7 @@ public class DefineCustomPolicy extends DocumentPosition {
     checker.define(Token.WRAP("policy:" + name), fe.free, (environment -> {
       final var flow = code.typing(scope(environment, null));
       if (flow == ControlFlow.Open) {
-        environment.document.createError(this, String.format("Policy '%s' does not return in all cases", name.text), "PolicyDefine");
+        environment.document.createError(this, String.format("Policy '%s' does not return in all cases", name.text));
       }
     }));
   }

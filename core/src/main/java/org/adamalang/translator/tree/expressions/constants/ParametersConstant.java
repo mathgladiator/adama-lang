@@ -37,7 +37,7 @@ public class ParametersConstant extends Expression {
       environment.mustBeComputeContext(this);
       return new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"));
     } else {
-      environment.document.createError(this, "@parameters is only available in web paths", "WHO");
+      environment.document.createError(this, "@parameters is only available in web paths");
       return null;
     }
   }

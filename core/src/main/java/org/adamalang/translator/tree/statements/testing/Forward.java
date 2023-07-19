@@ -46,7 +46,7 @@ public class Forward extends Statement {
   public ControlFlow typing(final Environment prior) {
     Environment environment = prior.scopeWithComputeContext(ComputeContext.Computation);
     if (!environment.state.isTesting()) {
-      environment.document.createError(this, String.format("Forward is exclusively for testing"), "Testing");
+      environment.document.createError(this, String.format("Forward is exclusively for testing"));
     }
     environment.rules.IsNumeric(expression.typing(environment, new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null)), false);
     return ControlFlow.Open;

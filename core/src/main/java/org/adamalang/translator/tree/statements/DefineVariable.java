@@ -99,7 +99,7 @@ public class DefineVariable extends Statement {
     if (type != null && type instanceof TyReactiveRecord) {
       type = new TyNativeReactiveRecordPtr(TypeBehavior.ReadWriteWithSetGet, (TyReactiveRecord) type);
       if (value == null) {
-        environment.document.createError(type, String.format("Reactive pointers must be initialized"), "DefinePtr");
+        environment.document.createError(type, String.format("Reactive pointers must be initialized"));
       }
     }
     // is capable of getting an assignment
@@ -116,7 +116,7 @@ public class DefineVariable extends Statement {
     if (type != null) {
       type.typing(environment);
       if (environment.defined(name)) {
-        environment.document.createError(this, String.format("Variable '%s' was already defined", name), "DefineVariable");
+        environment.document.createError(this, String.format("Variable '%s' was already defined", name));
       } else {
         environment.define(name, type.makeCopyWithNewPosition(this, type.behavior), type.behavior == TypeBehavior.ReadOnlyNativeValue, type);
       }

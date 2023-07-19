@@ -94,12 +94,12 @@ public class RuleSetEquality {
         if (((IsEnum) typeA).name().equals(((IsEnum) typeB).name())) {
           return CanTestEqualityResult.Yes;
         } else if (!silent) {
-          environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: enum types are incompatible '%s' vs '%s'.", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetEquality");
+          environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: enum types are incompatible '%s' vs '%s'.", typeA.getAdamaType(), typeB.getAdamaType()));
         }
         return CanTestEqualityResult.No;
       }
       if (!silent) {
-        environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: unable to compare types '%s' and '%s' for equality.", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetEquality");
+        environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: unable to compare types '%s' and '%s' for equality.", typeA.getAdamaType(), typeB.getAdamaType()));
       }
     }
     return CanTestEqualityResult.No;

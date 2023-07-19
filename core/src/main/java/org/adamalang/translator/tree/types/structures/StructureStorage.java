@@ -119,7 +119,7 @@ public class StructureStorage extends DocumentPosition {
     bd.expression.free(fe);
     inChecker.register(fe.free, env -> bd.typing(env.watch(Watcher.make(env, bd.variablesToWatch, bd.servicesToWatch))));
     if (has(bd.nameToken.text)) {
-      inChecker.issueError(bd, String.format("Bubble '%s' was already defined", bd.nameToken.text), "StructureDefine");
+      inChecker.issueError(bd, String.format("Bubble '%s' was already defined", bd.nameToken.text));
       return;
     }
     bubbles.put(bd.nameToken.text, bd);
@@ -179,7 +179,7 @@ public class StructureStorage extends DocumentPosition {
     ingest(fd);
 
     if (has(fd.nameToken.text)) {
-      insertChecker.issueError(fd, String.format("Field '%s' was already defined", fd.nameToken.text), "StructureDefine");
+      insertChecker.issueError(fd, String.format("Field '%s' was already defined", fd.nameToken.text));
       return;
     }
     if (fd.defaultValueOverride != null) {
@@ -204,16 +204,16 @@ public class StructureStorage extends DocumentPosition {
       checker.register(Collections.singleton(indexDefn.nameToken.text), env -> {
         final var fd = fields.get(indexDefn.nameToken.text);
         if (fd == null) {
-          env.document.createError(indexDefn, String.format("Index could not find field '%s'", indexDefn.nameToken.text), "StructureDefine");
+          env.document.createError(indexDefn, String.format("Index could not find field '%s'", indexDefn.nameToken.text));
         } else {
           final var canBeIndex = fd.type instanceof TyReactiveInteger || fd.type instanceof TyReactiveEnum || fd.type instanceof TyReactivePrincipal || fd.type instanceof TyReactiveDate || fd.type instanceof TyReactiveTime;
           if (!canBeIndex) {
-            env.document.createError(indexDefn, String.format("Index for field '%s' is not possible due to type", indexDefn.nameToken.text, fd.type.getAdamaType()), "StructureDefine");
+            env.document.createError(indexDefn, String.format("Index for field '%s' is not possible due to type", indexDefn.nameToken.text, fd.type.getAdamaType()));
           }
         }
       });
     } else {
-      checker.issueError(indexDefn, String.format("Index was already defined: '%s'", indexDefn.nameToken.text), "StructureDefine");
+      checker.issueError(indexDefn, String.format("Index was already defined: '%s'", indexDefn.nameToken.text));
     }
   }
 
@@ -221,7 +221,7 @@ public class StructureStorage extends DocumentPosition {
   public void addPolicy(final DefineCustomPolicy policy) {
     emissions.add(emit -> policy.emit(emit));
     if (policies.containsKey(policy.name.text)) {
-      checker.issueError(policy, String.format("Policy '%s' was already defined", policy.name.text), "RecordMethodDefine");
+      checker.issueError(policy, String.format("Policy '%s' was already defined", policy.name.text));
       return;
     }
     policies.put(policy.name.text, policy);
@@ -271,7 +271,7 @@ public class StructureStorage extends DocumentPosition {
         final var dp = new DocumentPosition();
         dp.ingest(requireToken);
         dp.ingest(semicolon);
-        env.document.createError(dp, String.format("Policy '%s' was not found", policyToCheck), "CustomPolicy");
+        env.document.createError(dp, String.format("Policy '%s' was not found", policyToCheck));
       }
     });
   }

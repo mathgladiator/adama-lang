@@ -64,7 +64,7 @@ public class DefineWebGet extends Definition implements UriAction {
     checker.register(fe.free, (environment) -> {
       Environment env = next(environment);
       if (code.typing(env) == ControlFlow.Open) {
-        environment.document.createError(this, String.format("The @web handlers must return a message"), "Web");
+        environment.document.createError(this, String.format("The @web handlers must return a message"));
       }
     });
   }

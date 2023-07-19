@@ -60,7 +60,7 @@ public class RuleSetBump {
         }
       }
       if (!silent) {
-        environment.document.createError(typeOriginal, String.format("Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got '%s'", typeOriginal.getAdamaType()), "CanBumpNumeric");
+        environment.document.createError(typeOriginal, String.format("Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got '%s'", typeOriginal.getAdamaType()));
       }
     }
     return CanBumpResult.No;
