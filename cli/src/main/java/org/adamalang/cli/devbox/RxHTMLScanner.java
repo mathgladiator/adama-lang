@@ -48,6 +48,9 @@ public class RxHTMLScanner implements AutoCloseable {
     this.service = FileSystems.getDefault().newWatchService();
     this.watchKeyCache = new HashMap<>();
     sync(scanRoot);
+    this.executor = SimpleExecutor.create("build");
+    this.scheduled = new AtomicBoolean(false);
+    this.again = new AtomicBoolean(false);
     this.scanner = new Thread(() -> {
       try {
         rebuild();
@@ -62,9 +65,6 @@ public class RxHTMLScanner implements AutoCloseable {
       }
     });
     this.scanner.start();
-    this.executor = SimpleExecutor.create("build");
-    this.scheduled = new AtomicBoolean(false);
-    this.again = new AtomicBoolean(false);
   }
 
   @Override
