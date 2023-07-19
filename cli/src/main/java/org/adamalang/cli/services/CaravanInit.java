@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.cli.commands.services;
+package org.adamalang.cli.services;
 
 import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.CaravanMetrics;

@@ -18,7 +18,6 @@ public interface RootHandler {
   CodeHandler makeCodeHandler();
   ContribHandler makeContribHandler();
   DatabaseHandler makeDatabaseHandler();
-  DebugHandler makeDebugHandler();
   DocumentHandler makeDocumentHandler();
   DomainHandler makeDomainHandler();
   FrontendHandler makeFrontendHandler();

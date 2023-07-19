@@ -6,11 +6,11 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.cli.commands.services.distributed;
+package org.adamalang.cli.services.distributed;
 
 import org.adamalang.cli.Config;
-import org.adamalang.cli.commands.services.CommonServiceInit;
-import org.adamalang.cli.commands.services.Role;
+import org.adamalang.cli.services.CommonServiceInit;
+import org.adamalang.cli.services.Role;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.net.client.Client;

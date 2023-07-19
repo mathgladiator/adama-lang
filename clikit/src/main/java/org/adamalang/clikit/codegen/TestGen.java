@@ -20,19 +20,19 @@ public class TestGen {
         {
             StringBuilder sb = new StringBuilder();
             sb.append("package ").append(packageName).append(";\n\n");
-            sb.append("import org.adamalang.cli.NewMain;\n");
+            sb.append("import org.adamalang.cli.Main;\n");
             sb.append("import org.junit.Test;\n\n");
             sb.append("public class HelpCoverageTests {\n");
             sb.append("  @Test\n");
             sb.append("  public void coverage() {\n");
             for (Group group : groups) {
-                sb.append("    NewMain.testMain(new String[]{\"").append(group.name).append("\", \"--help\"});\n");
+                sb.append("    Main.testMain(new String[]{\"").append(group.name).append("\", \"--help\"});\n");
                 for (Command command : group.commandList) {
-                    sb.append("    NewMain.testMain(new String[]{\"").append(group.name).append("\", \"").append(command.name).append("\", \"--help\"});\n");
+                    sb.append("    Main.testMain(new String[]{\"").append(group.name).append("\", \"").append(command.name).append("\", \"--help\"});\n");
                 }
             }
             for (Command command : mainCommands) {
-                sb.append("    NewMain.testMain(new String[]{\"").append(command.name).append("\", \"--help\"});\n");
+                sb.append("    Main.testMain(new String[]{\"").append(command.name).append("\", \"--help\"});\n");
             }
             sb.append("  }\n");
             sb.append("}");

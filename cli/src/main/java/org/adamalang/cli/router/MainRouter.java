@@ -301,16 +301,6 @@ public class MainRouter {
                accountHandler.setPassword(accountArgs, out);
                return 0;
             }
-            case "test-gtoken": {
-              AccountTestGtokenArgs accountArgs = AccountTestGtokenArgs.from(args, 2);
-              if (accountArgs == null) {
-                AccountTestGtokenArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               accountHandler.testGtoken(accountArgs, out);
-               return 0;
-            }
             case "--help":
             case "-h":
             case "help": {
@@ -536,34 +526,6 @@ public class MainRouter {
               System.err.println("See 'adama database help' for a list of subcommands.");
               return 1;
           }
-        case "debug":
-          DebugHandler debugHandler = handler.makeDebugHandler();
-          if (args.length == 1) {
-            displayDebugHelp();
-            return 1;
-          }
-          switch (args[1]) {
-            case "archive": {
-              DebugArchiveArgs debugArgs = DebugArchiveArgs.from(args, 2);
-              if (debugArgs == null) {
-                DebugArchiveArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               debugHandler.archive(debugArgs, out);
-               return 0;
-            }
-            case "--help":
-            case "-h":
-            case "help": {
-              displayDebugHelp();
-              return 1;
-            }
-            default:
-              System.err.println("Invalid subcommand '" + args[1] + "' of command 'debug'");
-              System.err.println("See 'adama debug help' for a list of subcommands.");
-              return 1;
-          }
         case "documents":
         case "document":
           DocumentHandler documentHandler = handler.makeDocumentHandler();
@@ -578,7 +540,7 @@ public class MainRouter {
                 DocumentAttachArgs.help();
                 return 1;
                }
-               YesOrError out = output.makeYesOrError();
+               JsonOrError out = output.makeJsonOrError();
                documentHandler.attach(documentArgs, out);
                return 0;
             }

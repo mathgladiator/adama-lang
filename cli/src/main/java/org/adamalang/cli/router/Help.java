@@ -23,7 +23,6 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("code", 15), Util.ANSI.Cyan) + "Local developer tools");
     System.out.println("    " + Util.prefix(Util.justifyLeft("contrib", 15), Util.ANSI.Cyan) + "Open source contributor tools");
     System.out.println("    " + Util.prefix(Util.justifyLeft("database", 15), Util.ANSI.Cyan) + "Prepare database for usage");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("debug", 15), Util.ANSI.Cyan) + "Debug tool for production");
     System.out.println("    " + Util.prefix(Util.justifyLeft("document", 15), Util.ANSI.Cyan) + "Interact with documents");
     System.out.println("    " + Util.prefix(Util.justifyLeft("domain", 15), Util.ANSI.Cyan) + "Manage Domains");
     System.out.println("    " + Util.prefix(Util.justifyLeft("frontend", 15), Util.ANSI.Cyan) + "Frontend tools (rxhtml)");
@@ -83,7 +82,6 @@ public class Help {
     System.out.println();
     System.out.println(Util.prefix("ACCOUNTSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix(Util.justifyLeft("set-password", 15), Util.ANSI.Green) + "Create a password to be used on web");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("test-gtoken", 15), Util.ANSI.Green) + "Test a Google token converts to an email");
   }
   public static void displayCodeHelp() {
     System.out.println(Util.prefix("Local developer tools", Util.ANSI.Green));
@@ -130,17 +128,6 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("configure", 15), Util.ANSI.Green) + "Update the configuration");
     System.out.println("    " + Util.prefix(Util.justifyLeft("install", 15), Util.ANSI.Green) + "Install the tables on a monolithic database");
     System.out.println("    " + Util.prefix(Util.justifyLeft("migrate", 15), Util.ANSI.Green) + "Migrate data from 'db' to 'nextdb'");
-  }
-  public static void displayDebugHelp() {
-    System.out.println(Util.prefix("Debug tool for production", Util.ANSI.Green));
-    System.out.println();
-    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("adama debug", Util.ANSI.Green) + " " + Util.prefix("[DEBUGSUBCOMMAND]", Util.ANSI.Magenta));
-    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix(Util.justifyLeft("--config", 15), Util.ANSI.Green) + "Supplies a config file path other than the default (~/.adama)");
-    System.out.println();
-    System.out.println(Util.prefix("DEBUGSUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix(Util.justifyLeft("archive", 15), Util.ANSI.Green) + "Explain the data within an archive");
   }
   public static void displayDocumentHelp() {
     System.out.println(Util.prefix("Interact with documents", Util.ANSI.Green));

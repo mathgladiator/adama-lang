@@ -39,7 +39,8 @@ public class DocumentHandlerImpl implements DocumentHandler {
                 request.put("space", args.space);
                 request.put("key", args.key);
                 connection.stream(request, (cId, response) -> {
-                    System.err.println(response.toPrettyString());
+                    System.out.println(response.toPrettyString());
+                    // NOTE: due to the streaming nature, we really can't do much else
                 });
             }
         }
@@ -60,7 +61,8 @@ public class DocumentHandlerImpl implements DocumentHandler {
                     request.put("entropy", args.entropy);
                 }
                 request.set("arg", argNode);
-                System.err.println(connection.execute(request).toPrettyString());
+                connection.execute(request);
+                output.out();
             }
         }
     }
@@ -75,7 +77,8 @@ public class DocumentHandlerImpl implements DocumentHandler {
                 request.put("identity", identity);
                 request.put("space", args.space);
                 request.put("key", args.key);
-                System.err.println(connection.execute(request).toPrettyString());
+                connection.execute(request);
+                output.out();
             }
         }
     }
@@ -95,14 +98,15 @@ public class DocumentHandlerImpl implements DocumentHandler {
                 }
                 request.put("limit", limit);
                 connection.stream(request, (cId, item) -> {
-                    System.err.println(item.toPrettyString());
+                    output.add(item);
                 });
+                output.out();
             }
         }
     }
 
     @Override
-    public void attach(Arguments.DocumentAttachArgs args, Output.YesOrError output) throws Exception {
+    public void attach(Arguments.DocumentAttachArgs args, Output.JsonOrError output) throws Exception {
         SimpleExecutor executor = SimpleExecutor.create("offload");
         String identity = args.config.get_string("identity", null);
         String space = args.space;
@@ -112,8 +116,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
         if (args.name != null) {
             filename = args.name;
         }
-        String contentTypeInfer = Files.probeContentType(new File(args.file).toPath());
-        String contentType = contentTypeInfer;
+        String contentType = Files.probeContentType(new File(args.file).toPath());;
         if (args.type != null) {
             contentType = args.type;
         }
@@ -136,7 +139,6 @@ public class DocumentHandlerImpl implements DocumentHandler {
                                 try {
                                     int rd = input.read(chunk);
                                     if (rd > 0) {
-                                        System.err.println("Uploading..." + rd + " bytes");
                                         MessageDigest digest = Hashing.md5();
                                         digest.update(chunk, 0, rd);
                                         ObjectNode append = Json.newJsonObject();
@@ -146,11 +148,11 @@ public class DocumentHandlerImpl implements DocumentHandler {
                                         append.put("base64-bytes", Base64.getEncoder().encodeToString(Arrays.copyOfRange(chunk, 0, rd)));
                                         connection.execute(append);
                                     } else {
-                                        System.err.println("Finishing");
                                         ObjectNode append = Json.newJsonObject();
                                         append.put("method", "attachment/finish");
                                         append.put("upload", cId.intValue());
-                                        connection.execute(append);
+                                        output.add(connection.execute(append));
+                                        output.out();
                                         connection.close();
                                         executor.shutdown();
                                     }

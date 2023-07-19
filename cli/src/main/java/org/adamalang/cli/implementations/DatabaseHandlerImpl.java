@@ -66,12 +66,13 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
             roleNode.put("password", password);
             roleNode.put("database_name", dbname);
         });
+        output.out();
     }
-
 
     @Override
     public void install(Arguments.DatabaseInstallArgs args, Output.YesOrError output) throws Exception {
         new Installer(new DataBase(new DataBaseConfig(new ConfigObject(args.config.read())), new DataBaseMetrics(new NoOpMetricsFactory()))).install();
+        output.out();
     }
 
     @Override
@@ -82,5 +83,6 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
         newConfig.set("db", config.read().get("nextdb"));
         DataBase nextDB = new DataBase(new DataBaseConfig(new ConfigObject(newConfig)), new DataBaseMetrics(new NoOpMetricsFactory()));
         Migrate.copy(priorDB, nextDB, name -> System.out.println("At:" + name));
+        output.out();
     }
 }

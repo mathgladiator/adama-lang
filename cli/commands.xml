@@ -464,11 +464,6 @@
                 Create a password to be used on web
             </documentation>
         </command>
-        <command name="test-gtoken">
-            <documentation>
-                Test a Google token converts to an email
-            </documentation>
-        </command>
     </group>
 
     <group name="code">
@@ -595,19 +590,6 @@
         </command>
     </group>
 
-    <group name="debug">
-        <documentation>
-            Debug tool for production
-        </documentation>
-        <command name="archive">
-            <documentation>
-                Explain the data within an archive
-            </documentation>
-            <arg name="space" />
-            <arg name="archive" />
-        </command>
-    </group>
-
     <group name="document" alt-name="documents">
         <documentation>
             Interact with documents
@@ -648,7 +630,7 @@
             <arg name="limit" default="1000" />
         </command>
 
-        <command name="attach">
+        <command name="attach" output="json">
             <documentation>
                 Attach an asset to a document
             </documentation>
@@ -725,7 +707,7 @@
         </command>
     </group>
 
-    <command name="init">
+    <command name="init" interactive="true">
         <documentation>
             Initializes the config with a valid token
         </documentation>

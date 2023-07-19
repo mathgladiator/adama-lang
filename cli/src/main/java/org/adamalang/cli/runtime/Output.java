@@ -34,12 +34,12 @@ public class Output {
         }
     }
 
-
     public class YesOrError {
         public void out() {
             System.out.println(Util.prefix("\u2705", Util.ANSI.Green));
         }
     }
+
     public YesOrError makeYesOrError() {
         return new YesOrError();
     }
@@ -47,9 +47,14 @@ public class Output {
     public class JsonOrError {
         private ArrayList<ObjectNode> objList = new ArrayList<>();
 
+        public void reset() {
+            objList.clear();
+        }
+
         public void add(ObjectNode item) {
             objList.add(item);
         }
+
         public void out() {
              // In the case of json only
             if (json) {

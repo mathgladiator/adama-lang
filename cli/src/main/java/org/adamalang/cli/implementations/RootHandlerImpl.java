@@ -47,11 +47,6 @@ public class RootHandlerImpl implements RootHandler {
     }
 
     @Override
-    public DebugHandler makeDebugHandler() {
-        return new DebugHandlerImpl();
-    }
-
-    @Override
     public DocumentHandler makeDocumentHandler() {
         return new DocumentHandlerImpl();
     }
@@ -141,6 +136,7 @@ public class RootHandlerImpl implements RootHandler {
                     node.put("email", email);
                     node.set("identity", responseGenerateIdentity.get("identity"));
                 });
+                output.out();
             }
         }
     }

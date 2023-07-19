@@ -1561,40 +1561,6 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama account set-password", Util.ANSI.Green));
 		}
 	}
-	public static class AccountTestGtokenArgs {
-		public Config config;
-		public static AccountTestGtokenArgs from(String[] args, int start) {
-			AccountTestGtokenArgs returnArgs = new AccountTestGtokenArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			return returnArgs;
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Test a Google token converts to an email", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama account test-gtoken", Util.ANSI.Green));
-		}
-	}
 	public static class CodeBundlePlanArgs {
 		public Config config;
 		public String output;
@@ -2392,77 +2358,6 @@ public class Arguments {
 			System.out.println(Util.prefix("Migrate data from 'db' to 'nextdb'", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama database migrate", Util.ANSI.Green));
-		}
-	}
-	public static class DebugArchiveArgs {
-		public Config config;
-		public String space;
-		public String archive;
-		public static DebugArchiveArgs from(String[] args, int start) {
-			DebugArchiveArgs returnArgs = new DebugArchiveArgs();
-			try {
-				returnArgs.config = new Config(args);
-			} catch (Exception er) {
-				System.out.println("Error creating default config file.");
-			}
-			String[] missing = new String[]{"--space", "--archive", };
-			for (int k = start; k < args.length; k++) {
-				switch(args[k]) {
-					case "-s":
-					case "--space": {
-						if (k+1 < args.length) {
-							returnArgs.space = args[k+1];
-							k++;
-							missing[0] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-					case "-a":
-					case "--archive": {
-						if (k+1 < args.length) {
-							returnArgs.archive = args[k+1];
-							k++;
-							missing[1] = null;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-						case "--help":
-						case "-h":
-						case "help":
-							if (k == start)
-								return null;
-						case "--config":
-							k++;
-						case "--json":
-						case "--no-color":
-							break;
-						default:
-							System.err.println("Unknown argument '" + args[k] + "'");
-							return null;
-				}
-			}
-			boolean invalid = false;
-			for (String misArg : missing) {
-				if (misArg != null) {
-					System.err.println("Expected argument '" + misArg + "'");
-					invalid = true;
-				}
-			}
-			return (invalid ? null : returnArgs);
-		}
-		public static void help() {
-			System.out.println(Util.prefix("Explain the data within an archive", Util.ANSI.Green));
-			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama debug archive", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
-			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-a, --archive", Util.ANSI.Green) + " " + Util.prefix("<archive>", Util.ANSI.White));
 		}
 	}
 	public static class DocumentAttachArgs {

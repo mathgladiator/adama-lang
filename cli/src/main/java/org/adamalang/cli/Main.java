@@ -8,52 +8,21 @@
  */
 package org.adamalang.cli;
 
-import org.adamalang.ErrorTable;
-import org.adamalang.cli.commands.*;
-import org.adamalang.common.ErrorCodeException;
-
-import java.util.Map;
+import org.adamalang.cli.router.RootHandler;
+import org.adamalang.cli.runtime.Output;
+import org.adamalang.cli.router.MainRouter;
+import org.adamalang.cli.implementations.RootHandlerImpl;
 
 public class Main {
-
-  public static void main(String[] preFilteredArgs) throws Exception {
-    try {
-      Config config = new Config(preFilteredArgs);
-      if (preFilteredArgs.length == 0) {
-        NewMain.main(preFilteredArgs);
-        return;
-      }
-      String[] args = config.argsForTool;
-      String command = Util.normalize(args[0]);
-      String[] next = Util.tail(args);
-      switch (command) {
-        case "account":
-          Account.execute(config, next);
-          return;
-        case "database":
-          Database.execute(config, next);
-          return;
-        case "debug":
-          Debug.execute(config, next);
-          return;
-        case "documents":
-        case "document":
-          Documents.execute(config, next);
-          return;
-        case "init":
-          Init.execute(config, next);
-          return;
-      }
-      NewMain.main(preFilteredArgs);
-    } catch (Exception ex) {
-      if (ex instanceof ErrorCodeException) {
-        System.err.println(Util.prefix("[ERROR]", Util.ANSI.Red));
-        System.err.println("#:" + ((ErrorCodeException) ex).code);
-        System.err.println("Name:" + ErrorTable.INSTANCE.names.get(((ErrorCodeException) ex).code));
-        System.err.println("Description:" + ErrorTable.INSTANCE.descriptions.get(((ErrorCodeException) ex).code));
-      } else {
-        ex.printStackTrace();
-      }
+    public static void main(String[] args) {
+        RootHandler handler = new RootHandlerImpl();
+        Output output = new Output(args);
+        System.exit(MainRouter.route(args, handler, output));
     }
-  }
+
+    public static void testMain(String[] args) {
+        RootHandler handler = new RootHandlerImpl();
+        Output output = new Output(args);
+        MainRouter.route(args, handler, output);
+    }
 }

@@ -13,5 +13,4 @@ import org.adamalang.cli.runtime.Output.*;
 
 public interface AccountHandler {
   void setPassword(AccountSetPasswordArgs args, YesOrError output) throws Exception;
-  void testGtoken(AccountTestGtokenArgs args, YesOrError output) throws Exception;
 }
