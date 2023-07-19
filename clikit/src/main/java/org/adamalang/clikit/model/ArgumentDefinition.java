@@ -15,6 +15,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** Defines an argument that can be used by CLI commands **/
 public class ArgumentDefinition {
@@ -24,7 +26,10 @@ public class ArgumentDefinition {
     public final String shortField;
     public ArgumentDefinition(String type, String docs, String shortField) {
         type = type.toLowerCase(Locale.ROOT);
-        this.documentation = docs;
+        this.documentation = docs.trim() // LAME
+            .replaceAll(Pattern.quote("\""), Matcher.quoteReplacement("\\\"")) //
+            .replaceAll(Pattern.quote("\n"), Matcher.quoteReplacement("\\n")) //
+            .replaceAll(Pattern.quote("\r"), Matcher.quoteReplacement(""));
         this.type = type;
         this.shortField = shortField;
     }

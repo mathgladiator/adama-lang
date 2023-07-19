@@ -134,13 +134,13 @@ public class ArgumentsGen {
                 if (requiredArgs.size() > 0) {
                     sb.append("\t\t\tSystem.out.println(Util.prefixBold(\"FLAGS:\", Util.ANSI.Yellow));\n");
                     for (Argument arg: requiredArgs) {
-                        sb.append("\t\t\tSystem.out.println(\"    \" + Util.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", Util.ANSI.Green) + \" \" + Util.prefix(\"<").append(arg.name).append(">\", Util.ANSI.White));\n");
+                        sb.append("\t\t\tSystem.out.println(\"    \" + Util.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", Util.ANSI.Green) + \" \" + Util.prefix(\"<").append(arg.name).append(">\", Util.ANSI.White) + \" : ").append(arg.definition.documentation).append("\");\n");
                     }
                 }
                 if (optionalArgs.size() > 0) {
                     sb.append("\t\t\tSystem.out.println(Util.prefixBold(\"OPTIONAL FLAGS:\", Util.ANSI.Yellow));\n");
                     for (Argument arg: optionalArgs) {
-                        sb.append("\t\t\tSystem.out.println(\"    \" + Util.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", Util.ANSI.Green) + \" \" + Util.prefix(\"<").append(arg.name).append(">\", Util.ANSI.White));\n");
+                        sb.append("\t\t\tSystem.out.println(\"    \" + Util.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", Util.ANSI.Green) + \" \" + Util.prefix(\"<").append(arg.name).append(">\", Util.ANSI.White) + \" : ").append(arg.definition.documentation).append("\");\n");
                     }
                 }
                 sb.append("\t\t}\n");

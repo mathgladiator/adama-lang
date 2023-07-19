@@ -66,7 +66,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space create", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
 		}
 	}
 	public static class SpaceDeleteArgs {
@@ -123,7 +123,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space delete", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
 		}
 	}
 	public static class SpaceDeployArgs {
@@ -204,10 +204,10 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space deploy", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-p, --plan", Util.ANSI.Green) + " " + Util.prefix("<plan>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-p, --plan", Util.ANSI.Green) + " " + Util.prefix("<plan>", Util.ANSI.White) + " : A deployment plan; see https://book.adama-platform.com/reference/deployment-plan.html .");
+			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White) + " : A file.");
 		}
 	}
 	public static class SpaceDevelopersArgs {
@@ -264,7 +264,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space developers", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
 		}
 	}
 	public static class SpaceEncryptSecretArgs {
@@ -321,7 +321,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space encrypt-secret", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
 		}
 	}
 	public static class SpaceGenerateKeyArgs {
@@ -378,7 +378,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space generate-key", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
 		}
 	}
 	public static class SpaceGetArgs {
@@ -448,8 +448,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space get", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
 		}
 	}
 	public static class SpaceGetRxhtmlArgs {
@@ -519,8 +519,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space get-rxhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
 		}
 	}
 	public static class SpaceListArgs {
@@ -580,8 +580,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space list", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-m, --marker", Util.ANSI.Green) + " " + Util.prefix("<marker>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-l, --limit", Util.ANSI.Green) + " " + Util.prefix("<limit>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-m, --marker", Util.ANSI.Green) + " " + Util.prefix("<marker>", Util.ANSI.White) + " : Items greater than the marker are returned.");
+			System.out.println("    " + Util.prefix("-l, --limit", Util.ANSI.Green) + " " + Util.prefix("<limit>", Util.ANSI.White) + " : Limit the returned items.");
 		}
 	}
 	public static class SpaceReflectArgs {
@@ -663,10 +663,10 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space reflect", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
 		}
 	}
 	public static class SpaceSetRoleArgs {
@@ -748,10 +748,10 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space set-role", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-e, --email", Util.ANSI.Green) + " " + Util.prefix("<email>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + Util.prefix("-e, --email", Util.ANSI.Green) + " " + Util.prefix("<email>", Util.ANSI.White) + " : An email address.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-r, --role", Util.ANSI.Green) + " " + Util.prefix("<role>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-r, --role", Util.ANSI.Green) + " " + Util.prefix("<role>", Util.ANSI.White) + " : Options are 'developer' or 'none'.");
 		}
 	}
 	public static class SpaceSetRxhtmlArgs {
@@ -821,8 +821,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space set-rxhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White) + " : A file.");
 		}
 	}
 	public static class SpaceUploadArgs {
@@ -927,12 +927,12 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space upload", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-g, --gc", Util.ANSI.Green) + " " + Util.prefix("<gc>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-r, --root", Util.ANSI.Green) + " " + Util.prefix("<root>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-d, --directory", Util.ANSI.Green) + " " + Util.prefix("<directory>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-g, --gc", Util.ANSI.Green) + " " + Util.prefix("<gc>", Util.ANSI.White) + " : Delete assets that were not present in this upload.");
+			System.out.println("    " + Util.prefix("-r, --root", Util.ANSI.Green) + " " + Util.prefix("<root>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White) + " : A file.");
+			System.out.println("    " + Util.prefix("-d, --directory", Util.ANSI.Green) + " " + Util.prefix("<directory>", Util.ANSI.White) + " : A directory.");
 		}
 	}
 	public static class SpaceUsageArgs {
@@ -1001,9 +1001,9 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama space usage", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-l, --limit", Util.ANSI.Green) + " " + Util.prefix("<limit>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-l, --limit", Util.ANSI.Green) + " " + Util.prefix("<limit>", Util.ANSI.White) + " : Limit the returned items.");
 		}
 	}
 	public static class AuthorityAppendLocalArgs {
@@ -1085,10 +1085,10 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama authority append-local", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-p, --priv", Util.ANSI.Green) + " " + Util.prefix("<priv>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White) + " : The name or key of a keystore.");
+			System.out.println("    " + Util.prefix("-p, --priv", Util.ANSI.Green) + " " + Util.prefix("<priv>", Util.ANSI.White) + " : A special JSON encoded private key");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-k, --keystore", Util.ANSI.Green) + " " + Util.prefix("<keystore>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-k, --keystore", Util.ANSI.Green) + " " + Util.prefix("<keystore>", Util.ANSI.White) + " : A special JSON encoded keystore holding only public keys.");
 		}
 	}
 	public static class AuthorityCreateArgs {
@@ -1203,10 +1203,10 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama authority create-local", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White) + " : The name or key of a keystore.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-k, --keystore", Util.ANSI.Green) + " " + Util.prefix("<keystore>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-p, --priv", Util.ANSI.Green) + " " + Util.prefix("<priv>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-k, --keystore", Util.ANSI.Green) + " " + Util.prefix("<keystore>", Util.ANSI.White) + " : A special JSON encoded keystore holding only public keys.");
+			System.out.println("    " + Util.prefix("-p, --priv", Util.ANSI.Green) + " " + Util.prefix("<priv>", Util.ANSI.White) + " : A special JSON encoded private key");
 		}
 	}
 	public static class AuthorityDestroyArgs {
@@ -1263,7 +1263,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama authority destroy", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White) + " : The name or key of a keystore.");
 		}
 	}
 	public static class AuthorityGetArgs {
@@ -1333,8 +1333,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama authority get", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-k, --keystore", Util.ANSI.Green) + " " + Util.prefix("<keystore>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White) + " : The name or key of a keystore.");
+			System.out.println("    " + Util.prefix("-k, --keystore", Util.ANSI.Green) + " " + Util.prefix("<keystore>", Util.ANSI.White) + " : A special JSON encoded keystore holding only public keys.");
 		}
 	}
 	public static class AuthorityListArgs {
@@ -1438,8 +1438,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama authority set", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-k, --keystore", Util.ANSI.Green) + " " + Util.prefix("<keystore>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-a, --authority", Util.ANSI.Green) + " " + Util.prefix("<authority>", Util.ANSI.White) + " : The name or key of a keystore.");
+			System.out.println("    " + Util.prefix("-k, --keystore", Util.ANSI.Green) + " " + Util.prefix("<keystore>", Util.ANSI.White) + " : A special JSON encoded keystore holding only public keys.");
 		}
 	}
 	public static class AuthoritySignArgs {
@@ -1521,10 +1521,10 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama authority sign", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-ag, --agent", Util.ANSI.Green) + " " + Util.prefix("<agent>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
+			System.out.println("    " + Util.prefix("-ag, --agent", Util.ANSI.Green) + " " + Util.prefix("<agent>", Util.ANSI.White) + " : The user id or agent part of a principal.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-v, --validate", Util.ANSI.Green) + " " + Util.prefix("<validate>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-v, --validate", Util.ANSI.Green) + " " + Util.prefix("<validate>", Util.ANSI.White) + " : Should the plan be validated.");
 		}
 	}
 	public static class AccountSetPasswordArgs {
@@ -1640,10 +1640,10 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama code bundle-plan", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-m, --main", Util.ANSI.Green) + " " + Util.prefix("<main>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-m, --main", Util.ANSI.Green) + " " + Util.prefix("<main>", Util.ANSI.White) + " : Placeholder");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White) + " : Placeholder");
 		}
 	}
 	public static class CodeCompileFileArgs {
@@ -1724,10 +1724,10 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama code compile-file", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White) + " : A file.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-d, --dump-to", Util.ANSI.Green) + " " + Util.prefix("<dump-to>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-d, --dump-to", Util.ANSI.Green) + " " + Util.prefix("<dump-to>", Util.ANSI.White) + " : Placeholder");
 		}
 	}
 	public static class CodeLspArgs {
@@ -1775,7 +1775,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama code lsp", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-p, --port", Util.ANSI.Green) + " " + Util.prefix("<port>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-p, --port", Util.ANSI.Green) + " " + Util.prefix("<port>", Util.ANSI.White) + " : Placeholder");
 		}
 	}
 	public static class CodeReflectDumpArgs {
@@ -1856,10 +1856,10 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama code reflect-dump", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White) + " : A file.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-d, --dump-to", Util.ANSI.Green) + " " + Util.prefix("<dump-to>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-d, --dump-to", Util.ANSI.Green) + " " + Util.prefix("<dump-to>", Util.ANSI.White) + " : Placeholder");
 		}
 	}
 	public static class CodeValidatePlanArgs {
@@ -1916,7 +1916,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama code validate-plan", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-p, --plan", Util.ANSI.Green) + " " + Util.prefix("<plan>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-p, --plan", Util.ANSI.Green) + " " + Util.prefix("<plan>", Util.ANSI.White) + " : A deployment plan; see https://book.adama-platform.com/reference/deployment-plan.html .");
 		}
 	}
 	public static class ContribBundleJsArgs {
@@ -2192,9 +2192,9 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama contrib tests-adama", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-e, --errors", Util.ANSI.Green) + " " + Util.prefix("<errors>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-e, --errors", Util.ANSI.Green) + " " + Util.prefix("<errors>", Util.ANSI.White) + " : Placeholder");
 		}
 	}
 	public static class ContribTestsRxhtmlArgs {
@@ -2254,8 +2254,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama contrib tests-rxhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
 		}
 	}
 	public static class DatabaseConfigureArgs {
@@ -2464,12 +2464,12 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama document attach", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
+			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White) + " : A file.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-n, --name", Util.ANSI.Green) + " " + Util.prefix("<name>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-t, --type", Util.ANSI.Green) + " " + Util.prefix("<type>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-n, --name", Util.ANSI.Green) + " " + Util.prefix("<name>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-t, --type", Util.ANSI.Green) + " " + Util.prefix("<type>", Util.ANSI.White) + " : Placeholder");
 		}
 	}
 	public static class DocumentConnectArgs {
@@ -2539,8 +2539,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama document connect", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
 		}
 	}
 	public static class DocumentCreateArgs {
@@ -2635,11 +2635,11 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama document create", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-aa, --arg", Util.ANSI.Green) + " " + Util.prefix("<arg>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
+			System.out.println("    " + Util.prefix("-aa, --arg", Util.ANSI.Green) + " " + Util.prefix("<arg>", Util.ANSI.White) + " : The constructor argument.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-e, --entropy", Util.ANSI.Green) + " " + Util.prefix("<entropy>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-e, --entropy", Util.ANSI.Green) + " " + Util.prefix("<entropy>", Util.ANSI.White) + " : A random seed.");
 		}
 	}
 	public static class DocumentDeleteArgs {
@@ -2709,8 +2709,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama document delete", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
 		}
 	}
 	public static class DocumentListArgs {
@@ -2791,10 +2791,10 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama document list", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-m, --marker", Util.ANSI.Green) + " " + Util.prefix("<marker>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-l, --limit", Util.ANSI.Green) + " " + Util.prefix("<limit>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-m, --marker", Util.ANSI.Green) + " " + Util.prefix("<marker>", Util.ANSI.White) + " : Items greater than the marker are returned.");
+			System.out.println("    " + Util.prefix("-l, --limit", Util.ANSI.Green) + " " + Util.prefix("<limit>", Util.ANSI.White) + " : Limit the returned items.");
 		}
 	}
 	public static class DomainListArgs {
@@ -2946,13 +2946,13 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama domain map", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-d, --domain", Util.ANSI.Green) + " " + Util.prefix("<domain>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-d, --domain", Util.ANSI.Green) + " " + Util.prefix("<domain>", Util.ANSI.White) + " : The domain name");
+			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-c, --cert", Util.ANSI.Green) + " " + Util.prefix("<cert>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-re, --route", Util.ANSI.Green) + " " + Util.prefix("<route>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-a, --auto", Util.ANSI.Green) + " " + Util.prefix("<auto>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-c, --cert", Util.ANSI.Green) + " " + Util.prefix("<cert>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
+			System.out.println("    " + Util.prefix("-re, --route", Util.ANSI.Green) + " " + Util.prefix("<route>", Util.ANSI.White) + " : Should the domain route to the key's handler.");
+			System.out.println("    " + Util.prefix("-a, --auto", Util.ANSI.Green) + " " + Util.prefix("<auto>", Util.ANSI.White) + " : Should the Adama Platform automatically get a domain.");
 		}
 	}
 	public static class DomainUnmapArgs {
@@ -3009,7 +3009,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama domain unmap", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-d, --domain", Util.ANSI.Green) + " " + Util.prefix("<domain>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-d, --domain", Util.ANSI.Green) + " " + Util.prefix("<domain>", Util.ANSI.White) + " : The domain name");
 		}
 	}
 	public static class FrontendDevServerArgs {
@@ -3093,10 +3093,10 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama frontend dev-server", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-a, --asset-path", Util.ANSI.Green) + " " + Util.prefix("<asset-path>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-mv, --microverse", Util.ANSI.Green) + " " + Util.prefix("<microverse>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White) + " : The path to scan for RxHTML files.");
+			System.out.println("    " + Util.prefix("-a, --asset-path", Util.ANSI.Green) + " " + Util.prefix("<asset-path>", Util.ANSI.White) + " : The path to map for static assets.");
+			System.out.println("    " + Util.prefix("-mv, --microverse", Util.ANSI.Green) + " " + Util.prefix("<microverse>", Util.ANSI.White) + " : The microverse plan which defines the local devbox solo mode.");
+			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White) + " : The path to the libadama.js source code for direct linkage.");
 		}
 	}
 	public static class FrontendEdhtmlArgs {
@@ -3204,12 +3204,12 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama frontend edhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-b, --base", Util.ANSI.Green) + " " + Util.prefix("<base>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-in, --includes", Util.ANSI.Green) + " " + Util.prefix("<includes>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-sk, --skipuse", Util.ANSI.Green) + " " + Util.prefix("<skipuse>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-g, --gen", Util.ANSI.Green) + " " + Util.prefix("<gen>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-b, --base", Util.ANSI.Green) + " " + Util.prefix("<base>", Util.ANSI.White) + " : The base directory for working with edhtml.");
+			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-in, --includes", Util.ANSI.Green) + " " + Util.prefix("<includes>", Util.ANSI.White) + " : The rx.html includes");
+			System.out.println("    " + Util.prefix("-sk, --skipuse", Util.ANSI.Green) + " " + Util.prefix("<skipuse>", Util.ANSI.White) + " : Skip the use elements.");
+			System.out.println("    " + Util.prefix("-g, --gen", Util.ANSI.Green) + " " + Util.prefix("<gen>", Util.ANSI.White) + " : The factory for generating stuff");
 		}
 	}
 	public static class FrontendRxhtmlArgs {
@@ -3279,8 +3279,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama frontend rxhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White));
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
 		}
 	}
 	public static class ServicesAutoArgs {

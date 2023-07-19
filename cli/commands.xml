@@ -3,31 +3,26 @@
     <!-- define all the arguments -->
     <arg-definition name="space" type="string" short="s">
         <documentation>
-            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
-            denote the name of that collection.
-        </documentation>
-        <documentation>
-            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
-            denote the name of that collection.
+            A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.
         </documentation>
     </arg-definition>
     <!-- May have to represent the actual representation-->
 
     <arg-definition name="rxhtml-path" type="string" short="r">
         <documentation>
-            The path to scan for RxHTML files
+            The path to scan for RxHTML files.
         </documentation>
     </arg-definition>
 
     <arg-definition name="microverse" type="string" short="mv">
         <documentation>
-            The microverse which defines the local devbox solo mode.
+            The microverse plan which defines the local devbox solo mode.
         </documentation>
     </arg-definition>
 
     <arg-definition name="asset-path" type="string" short="a">
         <documentation>
-            The path to scan for static assets
+            The path to map for static assets.
         </documentation>
     </arg-definition>
 
@@ -39,22 +34,21 @@
 
     <arg-definition name="base" type="string" short="b">
         <documentation>
-            The base for working with edhtml
+            The base directory for working with edhtml.
         </documentation>
     </arg-definition>
-
 
     <arg-definition name="includes" type="string" short="in">
         <documentation>
             The rx.html includes
         </documentation>
     </arg-definition>
+
     <arg-definition name="skipuse" type="string" short="sk">
         <documentation>
-            Skip the &lt;use&gt; elements.
+            Skip the use elements.
         </documentation>
     </arg-definition>
-
 
     <arg-definition name="gen" type="string" short="g">
         <documentation>
@@ -62,88 +56,87 @@
         </documentation>
     </arg-definition>
 
-
     <arg-definition name="file" type="string" short="f">
         <documentation>
-            A file
+            A file.
         </documentation>
     </arg-definition>
 
     <arg-definition name="directory" type="string" short="d">
         <documentation>
-            A directory
+            A directory.
         </documentation>
     </arg-definition>
 
     <arg-definition name="plan" type="string" short="p">
         <documentation>
-            Placeholder
+            A deployment plan; see https://book.adama-platform.com/reference/deployment-plan.html .
         </documentation>
     </arg-definition>
 
     <arg-definition name="gc" type="boolean" short="g">
         <documentation>
-            Placeholder
+            Delete assets that were not present in this upload.
         </documentation>
     </arg-definition>
 
     <arg-definition name="limit" type="int" short="l">
         <documentation>
-            Placeholder
+            Limit the returned items.
         </documentation>
     </arg-definition>
 
     <arg-definition name="key" type="string" short="k">
         <documentation>
-            Placeholder
+            A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).
         </documentation>
     </arg-definition>
 
     <arg-definition name="route" type="boolean" short="re">
         <documentation>
-            The routing of a domain to a document should not go to document. Instead, the domain is a proxy to a space where the domain can then be used to look up a key.
+            Should the domain route to the key's handler.
         </documentation>
     </arg-definition>
 
     <arg-definition name="marker" type="string" short="m">
         <documentation>
-            Placeholder
+            Items greater than the marker are returned.
         </documentation>
     </arg-definition>
 
     <arg-definition name="output" type="string" short="o">
         <documentation>
-            Placeholder
+            A file to output to.
         </documentation>
     </arg-definition>
 
     <arg-definition name="email" type="string" short="e">
         <documentation>
-            Placeholder
+            An email address.
         </documentation>
     </arg-definition>
 
     <arg-definition name="role" type="string" short="r">
         <documentation>
-            Placeholder
+            Options are 'developer' or 'none'.
         </documentation>
     </arg-definition>
 
     <arg-definition name="validate" type="string" short="v">
         <documentation>
-            Placeholder
+            Should the plan be validated.
         </documentation>
     </arg-definition>
 
     <arg-definition name="authority" type="string" short="a">
         <documentation>
-            Placeholder
+            The name or key of a keystore.
         </documentation>
     </arg-definition>
 
     <arg-definition name="agent" type="string" short="ag">
         <documentation>
-            Placeholder
+            The user id or agent part of a principal.
         </documentation>
     </arg-definition>
 
@@ -155,29 +148,17 @@
 
     <arg-definition name="keystore" type="string" short="k">
         <documentation>
-            Placeholder
+            A special JSON encoded keystore holding only public keys.
         </documentation>
     </arg-definition>
 
     <arg-definition name="priv" type="string" short="p">
         <documentation>
-            Placeholder
+            A special JSON encoded private key
         </documentation>
     </arg-definition>
 
     <arg-definition name="dump-to" type="string" short="d">
-        <documentation>
-            Placeholder
-        </documentation>
-    </arg-definition>
-
-    <arg-definition name="archive" type="string" short="a">
-        <documentation>
-            Placeholder
-        </documentation>
-    </arg-definition>
-
-    <arg-definition name="pennies" type="string" short="p">
         <documentation>
             Placeholder
         </documentation>
@@ -204,13 +185,13 @@
 
     <arg-definition name="arg" type="string" short="aa">
         <documentation>
-            Placeholder
+            The constructor argument.
         </documentation>
     </arg-definition>
 
     <arg-definition name="entropy" type="string" short="e">
         <documentation>
-            Placeholder
+            A random seed.
         </documentation>
     </arg-definition>
 
@@ -222,7 +203,7 @@
 
     <arg-definition name="domain" type="string" short="d">
         <documentation>
-            Placeholder
+            The domain name
         </documentation>
     </arg-definition>
 
@@ -234,24 +215,11 @@
 
     <arg-definition name="auto" type="string" short="a">
         <documentation>
-            Placeholder
-        </documentation>
-    </arg-definition>
-
-
-    <arg-definition name="scenario" type="string" short="s" >
-        <documentation>
-            Placeholder
+            Should the Adama Platform automatically get a domain.
         </documentation>
     </arg-definition>
 
     <arg-definition name="type" type="string" short="t" >
-        <documentation>
-            Placeholder
-        </documentation>
-    </arg-definition>
-
-    <arg-definition name="entropy" type="string" short="e">
         <documentation>
             Placeholder
         </documentation>
@@ -279,8 +247,8 @@
                 Creates a new space
             </documentation>
             <arg name="space" />
-
         </command>
+
         <command name="delete">
             <documentation>
                 Deletes an empty space
