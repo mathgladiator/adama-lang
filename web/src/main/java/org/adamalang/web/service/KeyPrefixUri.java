@@ -24,7 +24,7 @@ public class KeyPrefixUri {
     if (slashIndex > offset) {
       return new KeyPrefixUri(uri.substring(offset, slashIndex), uri.substring(slashIndex));
     } else {
-      return new KeyPrefixUri(uri.substring(offset), "/'");
+      return new KeyPrefixUri(uri.substring(offset), "/");
     }
   }
 }
