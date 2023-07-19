@@ -5,18 +5,19 @@ This document is a living road map of the Adama Platform. As such, it contains t
 ## Developer relations &amp; adoption
 The current story for developers is "meh", so these items help improve and modernize the developer experience.
 
-| project                         | IP  | milestones/description                                                                                                                                                                                                         |
-|---------------------------------|-----|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| vs code extension               |     | (1.) Syntax highlighting, (2.) Language server protocol (LSP) - local, (3) LSP - cloud, (4) new ".adama.deploy" file to have 1-click shipping                                                                                  |
-| sublime extension               |     | Since sublime is so fast, try to get core Adama language support for syntax highlighting                                                                                                                                       |                                                                                                     
-| improve command line experience | X   | (1) Create a new "micro-language" for defining the CLI api to leverage code generation, (2) use language to create new execution framework, (3) shell prediction and completion, (4) address issues #130, #132, #133, and #134 |
-| Android client                  |     | (1) Write a simplified web-socket interface, (2) implement interface with OkHttp, (3) update apikit code generator to produce a SDK talking to the web socket interface.                                                       |
-| bootstrap                       |     | Build a tool to bootstrap an RxHTML application from an Adama file                                                                                                                                                             |
-| integrate-linter                |     | integrate the linter to detect issues prior launch; address #62                                                                                                                                                                |
-| lib-react                       |     | library to use Adama with React                                                                                                                                                                                                |
-| lib-vue                         |     | library to use Adama with Vue                                                                                                                                                                                                  |
-| lib-svelte                      |     | library to use Adama with svelte                                                                                                                                                                                               |
-| js-client-retry                 |     | Individual retries per document                                                                                                                                                                                                |
+| project               | IP  | milestones/description                                                                                                                                                   |
+|-----------------------|-----|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| vs code extension     | X   | (1.) Syntax highlighting, (2.) Language server protocol (LSP) - local, (3) LSP - cloud, (4) new ".adama.deploy" file to have 1-click shipping                            |
+| sublime extension     |     | Since sublime is so fast, try to get core Adama language support for syntax highlighting                                                                                 |                                                                                                     
+| Android client        |     | (1) Write a simplified web-socket interface, (2) implement interface with OkHttp, (3) update apikit code generator to produce a SDK talking to the web socket interface. |
+| iOS client            |     | (1) Write a simplified web-socket interface, (2) implement interface with ?, (3) update apikit code generator to produce a SDK talking to the web socket interface.      |
+| capacitor.js template |     | A template to turn an RxHTML project into a mobile app with deployment pipeline                                                                                          |
+|  integrate-linter     |     | integrate the linter to detect issues prior launch; address #62                                                                                                          |
+|                       |     |                                                                                                                                                                          |
+| lib-react             |     | library to use Adama with React                                                                                                                                          |
+| lib-vue               |     | library to use Adama with Vue                                                                                                                                            |
+| lib-svelte            |     | library to use Adama with svelte                                                                                                                                         |
+| js-client-retry       |     | Individual retries per document                                                                                                                                          |
 
 ## Documentation
 
@@ -57,6 +58,7 @@ The current story for developers is "meh", so these items help improve and moder
 
 ## Web management
 The [online web portal](https://ide.adama-platform.com) needs a lot of work to be useful.
+NOTE: It may make more sense to fully deprecate the IDE as it takes time and isn't that useful.
 
 | project         | IP  | milestones/description                                                    |
 |-----------------|-----|---------------------------------------------------------------------------|
@@ -72,8 +74,9 @@ If your name isn't Jeff, then the current environment is not great.
 | project                             | IP  | milestones/description                                                                                          |
 |-------------------------------------|-----|-----------------------------------------------------------------------------------------------------------------|
 | shell script love                   |     | Improve the build experience outside of Ubuntu                                                                  |
-| test MacOS                          |     | Work through issues with unit tests on MacOS and any productivity issues with the python build script           |
-| local mode                          |     | Adama should be able to run locally with a special version of Adama just for applications and local development |
+| test MacOS                          | X   | Work through issues with unit tests on MacOS and any productivity issues with the python build script           |
+| test Windows                        | X   | Work through issues with unit tests on Windows and any productivity issues with the python build script         |
+| local mode                          | X   | Adama should be able to run locally with a special version of Adama just for applications and local development |
 | faster unit tests                   |     | Improve the testing to not leverage shared resources (stdout, *cough*) such that testing can be made parallel   |
 | write documentation about structure |     | Write a document to outlining the high level mono-repo structure                                                |
 
@@ -82,7 +85,6 @@ The language is going to big with many features!
 
 | project                | IP  | milestones/description                                                                                                                                              |
 |------------------------|-----|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| break-top-down         | X   | The lexocongraphical ordering of typing is problematic, #126                                                                                                        |
 | index-tensor           |     | Tables should be indexable based on integer tuples. Beyond efficiency, language extensions can help work with tables in a more natural array style (think 2D grids) |
 | index-graph            |     | Tables should be able to become hyper graphs for efficient navigation between records using a graph where edges can be annotated (this maps)                        |
 | full-text-index        |     | introduce full indexing where records describe a rich query language                                                                                                |
@@ -104,7 +106,7 @@ For integration across different ecosystems, there are more protocols to bridge 
 
 | project   | IP  | milestones/description                                                                                    |
 |-----------|-----|-----------------------------------------------------------------------------------------------------------|
-| mqtt      |     | (1) Write design document how to adapt Adama to MQTT, (2) Build it with TLS, (3) Built it with plain-text |
+| mqtt      | X   | (1) Write design document how to adapt Adama to MQTT, (2) Build it with TLS, (3) Built it with plain-text |
 | sse       |     | (1) Write design document how to adapt Adama to Server-Sent Events, (2) Build it with TLS                 |                             
 
 ## Infrastructure - Enterprise data
