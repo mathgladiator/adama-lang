@@ -15,22 +15,22 @@ import org.adamalang.runtime.json.JsonStreamWriter;
  * document
  */
 public class DocumentError {
+  public final String file;
   public final String message;
   public final DocumentPosition position;
-  public final String tutorial;
 
   /**
    * construct the error
    * @param position where within the file the error happened
    * @param message what is the message for the error
    */
-  public DocumentError(final DocumentPosition position, final String message, final String tutorial) {
+  public DocumentError(final DocumentPosition position, final String message) {
     if (position == null || message == null) {
       throw new NullPointerException();
     }
+    this.file = position.getSource();
     this.message = message;
     this.position = position;
-    this.tutorial = tutorial;
   }
 
   /** write the error out into the given ObjectNode using the LSP format */
@@ -47,7 +47,8 @@ public class DocumentError {
     writer.writeString("error");
 
     writer.writeObjectFieldIntro("message");
-    writer.writeString(tutorial == null ? message : message + " (" + tutorial + ")");
+    writer.writeString(message);
+
     writer.endObject();
     return writer.toString();
   }

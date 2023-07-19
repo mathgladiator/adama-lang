@@ -46,7 +46,7 @@ public class GeneratedAuthTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Auth_NoReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":1,\"character\":1,\"byte\":35}},\"severity\":1,\"source\":\"error\",\"message\":\"@authorize must either return a string or abort (Authorize)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":1,\"character\":1,\"byte\":35}},\"severity\":1,\"source\":\"error\",\"message\":\"@authorize must either return a string or abort\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -696,7 +696,7 @@ public class GeneratedAuthTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Auth_TooManyPW_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":0,\"byte\":19},\"end\":{\"line\":4,\"character\":1,\"byte\":36}},\"severity\":1,\"source\":\"error\",\"message\":\"Only one @password action allowed (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":0,\"byte\":19},\"end\":{\"line\":4,\"character\":1,\"byte\":36}},\"severity\":1,\"source\":\"error\",\"message\":\"Only one @password action allowed\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -736,7 +736,7 @@ public class GeneratedAuthTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Auth_TooMany_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":0,\"byte\":101},\"end\":{\"line\":9,\"character\":1,\"byte\":145}},\"severity\":1,\"source\":\"error\",\"message\":\"Only one @authorize action allowed (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":0,\"byte\":101},\"end\":{\"line\":9,\"character\":1,\"byte\":145}},\"severity\":1,\"source\":\"error\",\"message\":\"Only one @authorize action allowed\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

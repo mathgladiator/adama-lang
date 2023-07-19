@@ -46,7 +46,7 @@ public class GeneratedControlTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Control_CantAbortOutsideOfMessageHandler_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":55},\"end\":{\"line\":8,\"character\":8,\"byte\":61}},\"severity\":1,\"source\":\"error\",\"message\":\"Can only 'abort' from a message handler or an abortable procedure/method (EvaluationContext)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":55},\"end\":{\"line\":8,\"character\":8,\"byte\":61}},\"severity\":1,\"source\":\"error\",\"message\":\"Can only 'abort' from a message handler or an abortable procedure/method\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -86,7 +86,7 @@ public class GeneratedControlTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Control_CantBlockOutsideOfStateTransition_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":45},\"end\":{\"line\":5,\"character\":8,\"byte\":51}},\"severity\":1,\"source\":\"error\",\"message\":\"Can only 'block' from a state machine transition (EvaluationContext)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":45},\"end\":{\"line\":5,\"character\":8,\"byte\":51}},\"severity\":1,\"source\":\"error\",\"message\":\"Can only 'block' from a state machine transition\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -5679,7 +5679,7 @@ public class GeneratedControlTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Control_NotMaybeInIf_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":6,\"byte\":19},\"end\":{\"line\":1,\"character\":7,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' was expected to be a maybe<?> (RuleSetMaybe)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":6,\"byte\":19},\"end\":{\"line\":1,\"character\":7,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' was expected to be a maybe<?>\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

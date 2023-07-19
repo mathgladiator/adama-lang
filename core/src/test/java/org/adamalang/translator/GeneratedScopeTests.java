@@ -46,7 +46,7 @@ public class GeneratedScopeTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Scope_CantRedefineChildScope_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":4,\"byte\":40},\"end\":{\"line\":3,\"character\":10,\"byte\":46}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'z' was already defined (DefineVariable)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":4,\"byte\":40},\"end\":{\"line\":3,\"character\":10,\"byte\":46}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'z' was already defined\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -86,7 +86,7 @@ public class GeneratedScopeTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Scope_ForEachRedefine_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":24},\"end\":{\"line\":3,\"character\":3,\"byte\":54}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is already defined (ForEach)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":24},\"end\":{\"line\":3,\"character\":3,\"byte\":54}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is already defined\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

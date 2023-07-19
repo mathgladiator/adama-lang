@@ -469,8 +469,15 @@ public class Document implements TopLevelDocumentHandler {
   }
 
   /** create an error with a reference to a tutorial */
+  @Deprecated
   public DocumentError createError(final DocumentPosition position, final String message, final String tutorial) {
-    final var err = new DocumentError(position, message, tutorial);
+    final var err = new DocumentError(position, message);
+    errorLists.add(err);
+    return err;
+  }
+
+  public DocumentError createError(final DocumentPosition position, final String message) {
+    final var err = new DocumentError(position, message);
     errorLists.add(err);
     return err;
   }

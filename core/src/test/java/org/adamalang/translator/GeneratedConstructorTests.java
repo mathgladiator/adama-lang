@@ -46,7 +46,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Constructor_CantUnionTypes_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":9,\"character\":2,\"byte\":81},\"end\":{\"line\":9,\"character\":6,\"byte\":85}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'MB' and 'bool' are not compatible for type unification (TypeCompatabilities)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":9,\"character\":2,\"byte\":81},\"end\":{\"line\":9,\"character\":6,\"byte\":85}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'MB' and 'bool' are not compatible for type unification\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

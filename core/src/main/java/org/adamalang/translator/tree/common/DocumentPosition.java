@@ -28,6 +28,10 @@ public class DocumentPosition {
     reset();
   }
 
+  public String getSource() {
+    return source;
+  }
+
   /** convert the document position to a token with an identifier type */
   public Token asIdentiferToken(String sourceName, String name) {
     return new Token(sourceName, name, MajorTokenType.Identifier, null, startLineIndex, startLinePosition,  endLineIndex, endLinePosition, startByte, endByte);

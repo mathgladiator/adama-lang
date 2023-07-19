@@ -46,7 +46,7 @@ public class GeneratedCOETests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:COE_InfiniteCrossFormula_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: A, B, A (Cycle)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: A, B, A\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -86,7 +86,7 @@ public class GeneratedCOETests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:COE_InfiniteCycle_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":19,\"byte\":63},\"end\":{\"line\":2,\"character\":20,\"byte\":64}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":44},\"end\":{\"line\":2,\"character\":21,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'z' has no type (StructureTyping)\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":44},\"end\":{\"line\":2,\"character\":21,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'z' has no backing type (EnvironmentDefine)\"},{\"range\":{\"start\":{\"line\":1,\"character\":19,\"byte\":41},\"end\":{\"line\":1,\"character\":20,\"byte\":42}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":22},\"end\":{\"line\":1,\"character\":21,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'y' has no type (StructureTyping)\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":22},\"end\":{\"line\":1,\"character\":21,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'y' has no backing type (EnvironmentDefine)\"},{\"range\":{\"start\":{\"line\":0,\"character\":19,\"byte\":19},\"end\":{\"line\":0,\"character\":20,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' was not defined (VariableLookup)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":21,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'x' has no type (StructureTyping)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":21,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type (EnvironmentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":19,\"byte\":63},\"end\":{\"line\":2,\"character\":20,\"byte\":64}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' was not defined\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":44},\"end\":{\"line\":2,\"character\":21,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'z' has no type\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":44},\"end\":{\"line\":2,\"character\":21,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'z' has no backing type\"},{\"range\":{\"start\":{\"line\":1,\"character\":19,\"byte\":41},\"end\":{\"line\":1,\"character\":20,\"byte\":42}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' was not defined\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":22},\"end\":{\"line\":1,\"character\":21,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'y' has no type\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":22},\"end\":{\"line\":1,\"character\":21,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'y' has no backing type\"},{\"range\":{\"start\":{\"line\":0,\"character\":19,\"byte\":19},\"end\":{\"line\":0,\"character\":20,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' was not defined\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":21,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'x' has no type\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":21,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -126,7 +126,7 @@ public class GeneratedCOETests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:COE_InfiniteInvalidate_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: X, Y, X (Cycle)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: X, Y, X\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -166,7 +166,7 @@ public class GeneratedCOETests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:COE_InfiniteRecord_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: R, R (Cycle)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: R, R\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

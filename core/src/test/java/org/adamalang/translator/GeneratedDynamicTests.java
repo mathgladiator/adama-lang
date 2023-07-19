@@ -658,7 +658,7 @@ public class GeneratedDynamicTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Dynamic_Random_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":15},\"end\":{\"line\":1,\"character\":9,\"byte\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'dynamic' is unable to store type 'bool'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":15},\"end\":{\"line\":1,\"character\":9,\"byte\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'dynamic' is unable to store type 'bool'.\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

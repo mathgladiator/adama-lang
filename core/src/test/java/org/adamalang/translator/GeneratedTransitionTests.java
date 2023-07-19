@@ -1840,7 +1840,7 @@ public class GeneratedTransitionTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Transition_RequiresNumber_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":22,\"byte\":76},\"end\":{\"line\":6,\"character\":26,\"byte\":80}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'bool' (TypeCheckFailures)\"},{\"range\":{\"start\":{\"line\":2,\"character\":23,\"byte\":37},\"end\":{\"line\":2,\"character\":26,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'string' (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":22,\"byte\":76},\"end\":{\"line\":6,\"character\":26,\"byte\":80}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'bool'\"},{\"range\":{\"start\":{\"line\":2,\"character\":23,\"byte\":37},\"end\":{\"line\":2,\"character\":26,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'string'\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

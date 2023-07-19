@@ -46,7 +46,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Testing_CantForceOutsideOfTest_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":16},\"end\":{\"line\":2,\"character\":8,\"byte\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Forcing a step designed exclusively for testing (Testing)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":16},\"end\":{\"line\":2,\"character\":8,\"byte\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Forcing a step designed exclusively for testing\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -86,7 +86,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Testing_CantPumpOutsideOfTest_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":60},\"end\":{\"line\":8,\"character\":29,\"byte\":87}},\"severity\":1,\"source\":\"error\",\"message\":\"Pumping a message is designed exclusively for testing (Testing)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":60},\"end\":{\"line\":8,\"character\":29,\"byte\":87}},\"severity\":1,\"source\":\"error\",\"message\":\"Pumping a message is designed exclusively for testing\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -126,7 +126,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Testing_ForwardNotDouble_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11,\"byte\":27},\"end\":{\"line\":1,\"character\":15,\"byte\":31}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'string' (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11,\"byte\":27},\"end\":{\"line\":1,\"character\":15,\"byte\":31}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'string'\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -166,7 +166,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Testing_ForwardNotTesting_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":14,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Forward is exclusively for testing (Testing)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":14},\"end\":{\"line\":1,\"character\":14,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Forward is exclusively for testing\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2582,7 +2582,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Testing_PumpNoChannel_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":51},\"end\":{\"line\":6,\"character\":30,\"byte\":79}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'chanx' does not exist (Testing)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":51},\"end\":{\"line\":6,\"character\":30,\"byte\":79}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'chanx' does not exist\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2622,7 +2622,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Testing_PumpNoMessage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":16,\"byte\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":36},\"end\":{\"line\":3,\"character\":29,\"byte\":63}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":4,\"character\":8,\"byte\":72},\"end\":{\"line\":4,\"character\":11,\"byte\":75}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'message', but got a type of 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":66},\"end\":{\"line\":4,\"character\":19,\"byte\":83}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'x' does not exist (Testing)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":16,\"byte\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found.\"},{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":36},\"end\":{\"line\":3,\"character\":29,\"byte\":63}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'X' was not found.\"},{\"range\":{\"start\":{\"line\":4,\"character\":8,\"byte\":72},\"end\":{\"line\":4,\"character\":11,\"byte\":75}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'message', but got a type of 'int'.\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":66},\"end\":{\"line\":4,\"character\":19,\"byte\":83}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'x' does not exist\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

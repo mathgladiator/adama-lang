@@ -46,7 +46,7 @@ public class GeneratedDeleteEventsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:DeleteEvents_DeleteMustReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":8,\"byte\":8},\"end\":{\"line\":1,\"character\":1,\"byte\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"The @delete handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":8,\"byte\":8},\"end\":{\"line\":1,\"character\":1,\"byte\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"The @delete handler must return a boolean\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

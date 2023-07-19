@@ -196,10 +196,10 @@ public class AdamaLanguageServerProtocol {
       // forward the errors to the input array
       diagnostics.addAll((ArrayNode) new JsonMapper().readTree(document.errorsJson()));
     } catch (ScanException se) {
-      DocumentError error = new DocumentError(se.position, se.getMessage(), "Scanner");
+      DocumentError error = new DocumentError(se.position, se.getMessage());
       diagnostics.add(new JsonMapper().readTree(error.json()));
     } catch (ParseException pe) {
-      DocumentError error = new DocumentError(pe.toDocumentPosition(), pe.rawMessage, "Parser");
+      DocumentError error = new DocumentError(pe.toDocumentPosition(), pe.rawMessage);
       diagnostics.add(new JsonMapper().readTree(error.json()));
     }
   }

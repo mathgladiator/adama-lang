@@ -46,7 +46,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_AlreadyExists_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":0,\"byte\":85},\"end\":{\"line\":15,\"character\":1,\"byte\":240}},\"severity\":1,\"source\":\"error\",\"message\":\"'internal' was already defined as an aspect within the service. (ServiceDefine)\"},{\"range\":{\"start\":{\"line\":8,\"character\":0,\"byte\":85},\"end\":{\"line\":15,\"character\":1,\"byte\":240}},\"severity\":1,\"source\":\"error\",\"message\":\"'send' was already defined as a method within the service. (ServiceDefine)\"},{\"range\":{\"start\":{\"line\":16,\"character\":0,\"byte\":241},\"end\":{\"line\":18,\"character\":1,\"byte\":283}},\"severity\":1,\"source\":\"error\",\"message\":\"The service 'sms' was already defined. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":0,\"byte\":85},\"end\":{\"line\":15,\"character\":1,\"byte\":240}},\"severity\":1,\"source\":\"error\",\"message\":\"'internal' was already defined as an aspect within the service.\"},{\"range\":{\"start\":{\"line\":8,\"character\":0,\"byte\":85},\"end\":{\"line\":15,\"character\":1,\"byte\":240}},\"severity\":1,\"source\":\"error\",\"message\":\"'send' was already defined as a method within the service.\"},{\"range\":{\"start\":{\"line\":16,\"character\":0,\"byte\":241},\"end\":{\"line\":18,\"character\":1,\"byte\":283}},\"severity\":1,\"source\":\"error\",\"message\":\"The service 'sms' was already defined.\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -86,7 +86,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_CantDefineArrayDynamic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":103},\"end\":{\"line\":8,\"character\":38,\"byte\":139}},\"severity\":1,\"source\":\"error\",\"message\":\"service method returns dynamic, and can't be an array (Service)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":8,\"character\":2,\"byte\":103},\"end\":{\"line\":8,\"character\":38,\"byte\":139}},\"severity\":1,\"source\":\"error\",\"message\":\"service method returns dynamic, and can't be an array\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -126,7 +126,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_CantDoInPolicy_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":16,\"character\":2,\"byte\":186},\"end\":{\"line\":16,\"character\":10,\"byte\":194}},\"severity\":1,\"source\":\"error\",\"message\":\"Remote invocation not available in this scope (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":16,\"character\":2,\"byte\":186},\"end\":{\"line\":16,\"character\":10,\"byte\":194}},\"severity\":1,\"source\":\"error\",\"message\":\"Remote invocation not available in this scope\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2302,7 +2302,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_LinkSampleHasError_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":35}},\"severity\":1,\"source\":\"error\",\"message\":\"has an error param which is an error (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":35}},\"severity\":1,\"source\":\"error\",\"message\":\"has an error param which is an error\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2342,7 +2342,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_LinkSampleNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":27,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"The link 'oops_i_did_it_again' was not found. (DocumentDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":27,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"The link 'oops_i_did_it_again' was not found.\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2382,7 +2382,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Service_MethodHasTypeNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":41,\"byte\":55}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'SendRequest' was not found. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":41,\"byte\":55}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'SendResponse' was not found. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":41,\"byte\":55}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'SendRequest' was not found.\"},{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":16},\"end\":{\"line\":1,\"character\":41,\"byte\":55}},\"severity\":1,\"source\":\"error\",\"message\":\"Type not found: a message named 'SendResponse' was not found.\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

@@ -15,17 +15,17 @@ public class DocumentErrorTests {
   @Test
   public void coverage_NullInputs() {
     try {
-      new DocumentError(null, "hi", null);
+      new DocumentError(null, "hi");
       Assert.fail();
     } catch (final NullPointerException npe) {
     }
     try {
-      new DocumentError(new DocumentPosition(), null, null);
+      new DocumentError(new DocumentPosition(), null);
       Assert.fail();
     } catch (final NullPointerException npe) {
     }
     try {
-      new DocumentError(null, null, null);
+      new DocumentError(null, null);
       Assert.fail();
     } catch (final NullPointerException npe) {
     }
@@ -33,7 +33,7 @@ public class DocumentErrorTests {
 
   @Test
   public void toLSP() {
-    final var error = new DocumentError(new DocumentPosition().ingest(42, 4, 10), "something", null);
+    final var error = new DocumentError(new DocumentPosition().ingest(42, 4, 10), "something");
     error.json();
   }
 }

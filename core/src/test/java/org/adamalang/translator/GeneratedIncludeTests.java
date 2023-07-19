@@ -46,7 +46,7 @@ public class GeneratedIncludeTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Include_Bad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":13,\"byte\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Inclusion of 'bad' resulted in an error; 'Parser was expecting an identifier, but got a Symbol:; instead. {Token: `;` @ (0,10) -> (0,11): Symbol}' (DocumentInclude)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":13,\"byte\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Inclusion of 'bad' resulted in an error; 'Parser was expecting an identifier, but got a Symbol:; instead. {Token: `;` @ (0,10) -> (0,11): Symbol}'\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -639,42 +639,82 @@ public class GeneratedIncludeTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_NotFound_3 = null;
-  private String get_NotFound_3() {
-    if (cached_NotFound_3 != null) {
-      return cached_NotFound_3;
+  private String cached_MainNotAllowed_3 = null;
+  private String get_MainNotAllowed_3() {
+    if (cached_MainNotAllowed_3 != null) {
+      return cached_MainNotAllowed_3;
     }
-    cached_NotFound_3 = generateTestOutput(false, "NotFound_3", "./test_code/Include_NotFound_failure.a");
-    return cached_NotFound_3;
+    cached_MainNotAllowed_3 = generateTestOutput(false, "MainNotAllowed_3", "./test_code/Include_MainNotAllowed_failure.a");
+    return cached_MainNotAllowed_3;
+  }
+
+  @Test
+  public void testMainNotAllowedFailure() {
+    assertLiveFail(get_MainNotAllowed_3());
+  }
+
+  @Test
+  public void testMainNotAllowedNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_MainNotAllowed_3());
+  }
+
+  @Test
+  public void testMainNotAllowedExceptionFree() {
+    assertExceptionFree(get_MainNotAllowed_3());
+  }
+
+  @Test
+  public void testMainNotAllowedTODOFree() {
+    assertTODOFree(get_MainNotAllowed_3());
+  }
+
+  @Test
+  public void stable_MainNotAllowed_3() {
+    String live = get_MainNotAllowed_3();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Include_MainNotAllowed_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":13,\"byte\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"main is a reserved word for importing\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":13,\"byte\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Failed to include 'main' as it was not bound to the deployment\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_NotFound_4 = null;
+  private String get_NotFound_4() {
+    if (cached_NotFound_4 != null) {
+      return cached_NotFound_4;
+    }
+    cached_NotFound_4 = generateTestOutput(false, "NotFound_4", "./test_code/Include_NotFound_failure.a");
+    return cached_NotFound_4;
   }
 
   @Test
   public void testNotFoundFailure() {
-    assertLiveFail(get_NotFound_3());
+    assertLiveFail(get_NotFound_4());
   }
 
   @Test
   public void testNotFoundNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_NotFound_3());
+    assertNotTerribleLineNumbers(get_NotFound_4());
   }
 
   @Test
   public void testNotFoundExceptionFree() {
-    assertExceptionFree(get_NotFound_3());
+    assertExceptionFree(get_NotFound_4());
   }
 
   @Test
   public void testNotFoundTODOFree() {
-    assertTODOFree(get_NotFound_3());
+    assertTODOFree(get_NotFound_4());
   }
 
   @Test
-  public void stable_NotFound_3() {
-    String live = get_NotFound_3();
+  public void stable_NotFound_4() {
+    String live = get_NotFound_4();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Include_NotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":15,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Failed to include 'howdy' as it was not bound to the deployment (DocumentInclude)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":15,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Failed to include 'howdy' as it was not bound to the deployment\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
