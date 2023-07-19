@@ -41,6 +41,7 @@ public class DevBoxAdamaMicroVerse {
   private final Thread scanner;
 
   public static class LocalSpaceDefn {
+    private final WatchService watchService;
     public final String spaceName;
     public final String mainFile;
     public final String includePath;
@@ -48,7 +49,8 @@ public class DevBoxAdamaMicroVerse {
     private final DeploymentFactoryBase base;
     public String lastDeployedPlan;
 
-    public LocalSpaceDefn(String spaceName, String mainFile, String includePath, DeploymentFactoryBase base) {
+    public LocalSpaceDefn(WatchService watchService, String spaceName, String mainFile, String includePath, DeploymentFactoryBase base) {
+      this.watchService = watchService;
       this.spaceName = spaceName;
       this.mainFile = mainFile;
       this.includePath = includePath;
@@ -57,13 +59,36 @@ public class DevBoxAdamaMicroVerse {
       this.lastDeployedPlan = "";
     }
 
+    private File scan(File f) throws Exception {
+      if (f.isDirectory()) {
+        if (!watchKeyCache.containsKey(f.getPath())) {
+          WatchKey rootWK = f.toPath().register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
+          watchKeyCache.put(f.getPath(), rootWK);
+        }
+      }
+      return f;
+    }
+
+    public HashMap<String, String> getImports(String imports) throws Exception {
+      HashMap<String, String> map = new HashMap<>();
+      File fileImports = scan(new File(imports));
+      if (fileImports.exists() && fileImports.isDirectory()) {
+        for (File f : fileImports.listFiles((dir, name) -> name.endsWith(".adama"))) {
+          String name = f.getName().substring(0, f.getName().length() - 6);
+          map.put(name, Files.readString(f.toPath()));
+        }
+      }
+      return map;
+    }
+
     public String bundle() throws Exception {
       ObjectNode plan = Json.newJsonObject();
       ObjectNode version = plan.putObject("versions").putObject("file");
       version.put("main", Files.readString(new File(mainFile).toPath()));
+      scan(new File("."));
       ObjectNode includes = version.putObject("includes");
       if (includePath != null) {
-        for (Map.Entry<String, String> entry : CodeHandlerImpl.getImports(includePath).entrySet()) {
+        for (Map.Entry<String, String> entry : getImports(includePath).entrySet()) {
           includes.put(entry.getKey(), entry.getValue());
         }
       }
@@ -92,18 +117,18 @@ public class DevBoxAdamaMicroVerse {
             }
           }
         } catch (Exception ex) {
-          io.error("Failed to bundle: '" + defn.spaceName + " + ' :: " + ex.getMessage());
+          io.error("Failed to bundle: '" + defn.spaceName + "'; reason=" + ex.getMessage());
         }
       }
   }
 
-  private DevBoxAdamaMicroVerse(TerminalIO io, AtomicBoolean alive, DevCoreServiceFactory factory, ArrayList<LocalSpaceDefn> spaces) throws Exception {
+  private DevBoxAdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, DevCoreServiceFactory factory, ArrayList<LocalSpaceDefn> spaces) throws Exception {
     this.io = io;
     this.alive = alive;
     this.factory = factory;
     this.service = factory.service;
     this.spaces = spaces;
-    this.watchService = FileSystems.getDefault().newWatchService();
+    this.watchService = watchService;
     this.scanner = new Thread(() -> {
       try {
         rebuild();
@@ -140,6 +165,7 @@ public class DevBoxAdamaMicroVerse {
     if (doRebuild) {
       rebuild();
     }
+    Thread.sleep(1000);
   }
 
   public static DevBoxAdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn) throws Exception {
@@ -192,6 +218,7 @@ public class DevBoxAdamaMicroVerse {
       io.notice("the microverse lacked a spaces array");
       return null;
     }
+    WatchService watchService = FileSystems.getDefault().newWatchService();
     ArrayNode spaces = (ArrayNode) spacesNode;
     ArrayList<LocalSpaceDefn> localSpaces = new ArrayList<>();
     for (int k = 0; k < spaces.size(); k++) {
@@ -203,9 +230,9 @@ public class DevBoxAdamaMicroVerse {
       if (importNode != null) {
         importPath = importNode.textValue();
       }
-      localSpaces.add(new LocalSpaceDefn(name, mainFile, importPath, factory.base));
+      localSpaces.add(new LocalSpaceDefn(watchService, name, mainFile, importPath, factory.base));
     }
 
-    return new DevBoxAdamaMicroVerse(io, alive, factory, localSpaces);
+    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces);
   }
 }

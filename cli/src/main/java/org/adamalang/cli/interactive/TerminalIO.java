@@ -27,6 +27,10 @@ public class TerminalIO {
     reader.printAbove(AttributedString.fromAnsi(Util.prefix("NOTICE: " + ln, Util.ANSI.Yellow)));
   }
 
+  public synchronized void info(String ln) {
+    reader.printAbove(AttributedString.fromAnsi(Util.prefix("INFO: " + ln, Util.ANSI.Green)));
+  }
+
   public synchronized void write(String ln) {
     reader.printAbove(ln);
   }

@@ -10,6 +10,7 @@ package org.adamalang.cli.devbox;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.api.*;
 import org.adamalang.cli.interactive.TerminalIO;
 import org.adamalang.common.Callback;
@@ -19,7 +20,6 @@ import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
-import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
@@ -31,8 +31,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   private final ConnectionContext context;
   private final TerminalIO io;
-  private final ConcurrentHashMap<Long, CoreStream> streams;
+  private final ConcurrentHashMap<Long, LocalStream> streams;
   private final DevBoxAdamaMicroVerse verse;
+
+  private class LocalStream {
+    public final Key key;
+    public final CoreStream ref;
+
+    public LocalStream(Key key, CoreStream ref) {
+      this.key = key;
+      this.ref = ref;
+    }
+  }
 
   public DevBoxAdama(ConnectionContext context, TerminalIO io, DevBoxAdamaMicroVerse verse) {
     this.context = context;
@@ -65,11 +75,11 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   public void handle_ConnectionCreate(long requestId, String identity, String space, String key, ObjectNode viewerState, DataResponder responder) {
     // public void connect(CoreRequestContext context, Key key, String viewerState, AssetIdEncoder assetIdEncoder, Streamback stream) {
     CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key);
-
     verse.service.connect(context, new Key(space, key), viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
       @Override
       public void onSetupComplete(CoreStream stream) {
-        streams.put(requestId, stream);
+        streams.put(requestId, new LocalStream(new Key(space, key), stream));
+        io.info("connected to " + space + "/" + key);
       }
 
       @Override
@@ -78,6 +88,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
       @Override
       public void next(String data) {
+        io.info("[" + space + "/" + key + "]:" + data);
         responder.next(Json.parseJsonObject(data));
       }
 
@@ -96,7 +107,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
       @Override
       public void onSetupComplete(CoreStream stream) {
-        streams.put(requestId, stream);
+        streams.put(requestId, new LocalStream(key, stream));
       }
 
       @Override
@@ -131,9 +142,9 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
   @Override
   public void handle_ConnectionSend(long requestId, Long connection, String channel, JsonNode message, SeqResponder responder) {
-    CoreStream stream = streams.get(connection);
+    LocalStream stream = streams.get(connection);
     if (stream != null) {
-      stream.send(channel, null, message.toString(), wrap(responder));
+      stream.ref.send(channel, null, message.toString(), wrap(responder));
     } else {
       responder.error(new ErrorCodeException(-1));
     }
@@ -141,14 +152,29 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
   @Override
   public void handle_ConnectionPassword(long requestId, Long connection, String username, String password, String new_password, SeqResponder responder) {
+    LocalStream stream = streams.get(connection);
+    if (stream != null) {
+      verse.service.authorize(context.origin, context.remoteIp, stream.key, username, password, new Callback<String>() {
+        @Override
+        public void success(String value) {
+          stream.ref.password(new_password, wrap(responder));
+        }
 
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      });
+    } else {
+      responder.error(new ErrorCodeException(-1));
+    }
   }
 
   @Override
   public void handle_ConnectionSendOnce(long requestId, Long connection, String channel, String dedupe, JsonNode message, SeqResponder responder) {
-    CoreStream stream = streams.get(connection);
+    LocalStream stream = streams.get(connection);
     if (stream != null) {
-      stream.send(channel, dedupe, message.toString(), wrap(responder));
+      stream.ref.send(channel, dedupe, message.toString(), wrap(responder));
     } else {
       responder.error(new ErrorCodeException(-1));
     }
@@ -156,31 +182,56 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
   @Override
   public void handle_ConnectionCanAttach(long requestId, Long connection, YesResponder responder) {
+    LocalStream stream = streams.get(connection);
+    if (stream != null) {
+      stream.ref.canAttach(new Callback<Boolean>() {
+        @Override
+        public void success(Boolean value) {
+          responder.complete(value);
+        }
 
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      });
+    } else {
+      responder.error(new ErrorCodeException(-1));
+    }
   }
 
   @Override
   public void handle_ConnectionAttach(long requestId, Long connection, String assetId, String filename, String contentType, Long size, String digestMd5, String digestSha384, SeqResponder responder) {
-
+    LocalStream stream = streams.get(connection);
+    if (stream != null) {
+      stream.ref.attach(assetId, filename, contentType, size, digestMd5, digestSha384, wrap(responder));
+    } else {
+      responder.error(new ErrorCodeException(-1));
+    }
   }
 
   @Override
   public void handle_ConnectionUpdate(long requestId, Long connection, ObjectNode viewerState, SimpleResponder responder) {
-
+    LocalStream stream = streams.get(connection);
+    if (stream != null) {
+      stream.ref.update(viewerState.toString());
+    } else {
+      responder.error(new ErrorCodeException(-1));
+    }
   }
 
   @Override
   public void handle_ConnectionEnd(long requestId, Long connection, SimpleResponder responder) {
-    CoreStream stream = streams.remove(connection);
+    LocalStream stream = streams.remove(connection);
     if (stream != null) {
-      stream.close();
+      stream.ref.close();
     }
     responder.complete();
   }
 
   @Override
   public void handle_DocumentsHashPassword(long requestId, String password, HashedPasswordResponder responder) {
-
+    responder.complete(SCryptUtil.scrypt(password, 16384, 8, 1));
   }
 
   @Override
@@ -199,8 +250,8 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
   @Override
   public void kill() {
-    for(CoreStream stream : streams.values()) {
-      stream.close();
+    for(LocalStream stream : streams.values()) {
+      stream.ref.close();
     }
   }
 }
