@@ -78,7 +78,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
       final var document = new Document();
       document.setClassName(className);
       document.setIncludes(includes);
-      final var tokenEngine = new TokenEngine(spaceName, code.codePoints().iterator());
+      final var tokenEngine = new TokenEngine("main", code.codePoints().iterator());
       final var parser = new Parser(tokenEngine);
       parser.document().accept(document);
       if (!document.check(state.scope())) {

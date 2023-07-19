@@ -11,6 +11,7 @@ package org.adamalang.cli.implementations;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.devbox.DevBoxAdamaMicroVerse;
 import org.adamalang.cli.devbox.DevBoxServiceBase;
+import org.adamalang.cli.devbox.DevBoxServices;
 import org.adamalang.cli.devbox.RxHTMLScanner;
 import org.adamalang.cli.interactive.TerminalIO;
 import org.adamalang.cli.router.Arguments;
@@ -75,6 +76,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
             }
         }
         TerminalIO terminal = new TerminalIO();
+        DevBoxServices.install((line) -> terminal.info(line));
         DevBoxAdamaMicroVerse verse = null;
         if (args.microverse != null) {
             File microverseDef = new File(args.microverse);

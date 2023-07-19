@@ -15,6 +15,7 @@ import org.adamalang.translator.parser.token.Token;
 /** Defines a position within a document. Usually, this is a construct within the document */
 public class DocumentPosition {
   public static final DocumentPosition ZERO = new DocumentPosition().ingest(0, 0, 0);
+  private String source;
   private int endLineIndex;
   private int endLinePosition;
   private int startLineIndex;
@@ -45,6 +46,9 @@ public class DocumentPosition {
 
   /** @param other another document position to ingest */
   public DocumentPosition ingest(final DocumentPosition other) {
+    if (this.source == null) {
+      this.source = other.source;
+    }
     if (other != null) {
       ingest(other.startLineIndex, other.startLinePosition, other.startByte);
       ingest(other.endLineIndex, other.endLinePosition, other.endByte);
@@ -83,6 +87,9 @@ public class DocumentPosition {
     if (tokens != null) {
       for (final Token token : tokens) {
         if (token != null) {
+          if (this.source == null) {
+            this.source = token.sourceName;
+          }
           ingest(token.lineStart, token.charStart, token.byteStart);
           ingest(token.lineEnd, token.charEnd, token.byteEnd);
         }

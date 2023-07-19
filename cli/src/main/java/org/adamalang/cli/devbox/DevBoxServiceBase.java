@@ -14,6 +14,12 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.web.UriMatcher;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.web.WebContext;
+import org.adamalang.runtime.sys.web.WebPut;
+import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.ContentType;
 import org.adamalang.web.contracts.CertificateFinder;
@@ -141,7 +147,24 @@ public class DevBoxServiceBase implements ServiceBase {
 
       @Override
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
-        callback.failure(new ErrorCodeException(0));
+        if (verse != null) {
+          Key key = null;
+          WebPut webPut = new WebPut(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), uri, headers, new NtDynamic(parametersJson), body);
+
+          verse.service.webPut(key, webPut, new Callback<WebResponse>() {
+            @Override
+            public void success(WebResponse value) {
+              // TODO: factor this out
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              callback.failure(ex);
+            }
+          });
+        } else {
+          callback.failure(new ErrorCodeException(0));
+        }
       }
     };
   }
