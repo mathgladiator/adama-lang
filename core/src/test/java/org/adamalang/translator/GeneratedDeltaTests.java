@@ -46,7 +46,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Delta_BadThingsOnLazy_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":9,\"character\":0,\"byte\":120},\"end\":{\"line\":9,\"character\":15,\"byte\":135}},\"severity\":1,\"source\":\"error\",\"message\":\"Lazy type has inappropriate type `channel<M>`\"},{\"range\":{\"start\":{\"line\":9,\"character\":0,\"byte\":120},\"end\":{\"line\":11,\"character\":26,\"byte\":187}},\"severity\":1,\"source\":\"error\",\"message\":\"Lazy type has inappropriate type `maybe<channel<M>>`\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":9,\"character\":0,\"byte\":120},\"end\":{\"line\":9,\"character\":15,\"byte\":135}},\"severity\":1,\"source\":\"error\",\"message\":\"Lazy type has inappropriate type `channel<M>`\",\"file\":\"./test_code/Delta_BadThingsOnLazy_failure.a\"},{\"range\":{\"start\":{\"line\":9,\"character\":0,\"byte\":120},\"end\":{\"line\":11,\"character\":26,\"byte\":187}},\"severity\":1,\"source\":\"error\",\"message\":\"Lazy type has inappropriate type `maybe<channel<M>>`\",\"file\":\"./test_code/Delta_BadThingsOnLazy_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

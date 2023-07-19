@@ -46,7 +46,7 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BlindSendPolicy_ControlFlowOpen_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7,\"byte\":17},\"end\":{\"line\":5,\"character\":3,\"byte\":66}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'send' policy must return a boolean\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7,\"byte\":17},\"end\":{\"line\":5,\"character\":3,\"byte\":66}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'send' policy must return a boolean\",\"file\":\"./test_code/BlindSendPolicy_ControlFlowOpen_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -665,7 +665,7 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BlindSendPolicy_TimeNotStatic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":31},\"end\":{\"line\":2,\"character\":20,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'Time' lacks 'now'\"},{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":31},\"end\":{\"line\":2,\"character\":20,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":31},\"end\":{\"line\":2,\"character\":20,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'Time' lacks 'now'\",\"file\":\"./test_code/BlindSendPolicy_TimeNotStatic_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":31},\"end\":{\"line\":2,\"character\":20,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function\",\"file\":\"./test_code/BlindSendPolicy_TimeNotStatic_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

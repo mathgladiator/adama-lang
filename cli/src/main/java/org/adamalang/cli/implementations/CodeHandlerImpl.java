@@ -82,7 +82,8 @@ public class CodeHandlerImpl implements CodeHandler {
             int endLine = errorItem.get("range").get("end").get("line").intValue();
             int startCharacter = errorItem.get("range").get("start").get("character").intValue();
             int endCharacter = errorItem.get("range").get("end").get("character").intValue();
-            System.err.println(Util.prefix("[start=" + startLine + ":" + startCharacter + ", end=" + endLine + ":" + endCharacter + "]", Util.ANSI.Red) + " :" + errorItem.get("message").textValue());
+            String file = errorItem.get("file").textValue();
+            System.err.println(Util.prefix("[" + file + ";start=" + startLine + ":" + startCharacter + ", end=" + endLine + ":" + endCharacter + "]", Util.ANSI.Red) + " :" + errorItem.get("message").textValue());
         }
         throw new Exception("failed to compile: " + filename);
     }

@@ -46,7 +46,7 @@ public class GeneratedReturnTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Return_ShouldReturnButDoesnt_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":27},\"end\":{\"line\":1,\"character\":9,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"The return statement expected an expression of type `int`\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":27},\"end\":{\"line\":1,\"character\":9,\"byte\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"The return statement expected an expression of type `int`\",\"file\":\"./test_code/Return_ShouldReturnButDoesnt_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -86,7 +86,7 @@ public class GeneratedReturnTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Return_ShouldntReturnButDoes_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":20},\"end\":{\"line\":1,\"character\":11,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"The return statement expects no expression\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":20},\"end\":{\"line\":1,\"character\":11,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"The return statement expects no expression\",\"file\":\"./test_code/Return_ShouldntReturnButDoes_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

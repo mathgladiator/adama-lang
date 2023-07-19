@@ -46,7 +46,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:RecordsMethod_CallingMethodReadOnly_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":10,\"byte\":99},\"end\":{\"line\":5,\"character\":13,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions\"},{\"range\":{\"start\":{\"line\":5,\"character\":18,\"byte\":107},\"end\":{\"line\":5,\"character\":21,\"byte\":110}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":5,\"character\":10,\"byte\":99},\"end\":{\"line\":5,\"character\":13,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions\",\"file\":\"./test_code/RecordsMethod_CallingMethodReadOnly_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":18,\"byte\":107},\"end\":{\"line\":5,\"character\":21,\"byte\":110}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions\",\"file\":\"./test_code/RecordsMethod_CallingMethodReadOnly_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

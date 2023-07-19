@@ -2229,7 +2229,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Array_ParenthesisInvalidTypeDuringTPTC_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":19,\"byte\":32},\"end\":{\"line\":1,\"character\":23,\"byte\":36}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'AutoMaxRecord2' and 'bool' are not compatible for type unification\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":19,\"byte\":32},\"end\":{\"line\":1,\"character\":23,\"byte\":36}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'AutoMaxRecord2' and 'bool' are not compatible for type unification\",\"file\":\"./test_code/Array_ParenthesisInvalidTypeDuringTPTC_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

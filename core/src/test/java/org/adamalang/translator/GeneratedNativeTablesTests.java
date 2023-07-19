@@ -46,7 +46,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:NativeTables_BadMethod_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":47},\"end\":{\"line\":6,\"character\":8,\"byte\":53}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'table<M>' lacks field 'nope'\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":47},\"end\":{\"line\":6,\"character\":8,\"byte\":53}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":47},\"end\":{\"line\":6,\"character\":8,\"byte\":53}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'table<M>' lacks field 'nope'\",\"file\":\"./test_code/NativeTables_BadMethod_failure.a\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":47},\"end\":{\"line\":6,\"character\":8,\"byte\":53}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function\",\"file\":\"./test_code/NativeTables_BadMethod_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -1776,7 +1776,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:NativeTables_NoMessage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":9},\"end\":{\"line\":1,\"character\":9,\"byte\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'table<M>' is using a type that was not found.\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":9},\"end\":{\"line\":1,\"character\":9,\"byte\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'table<M>' is using a type that was not found.\",\"file\":\"./test_code/NativeTables_NoMessage_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

@@ -870,7 +870,7 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:FunctionsViewer_Sad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":9,\"byte\":128},\"end\":{\"line\":7,\"character\":20,\"byte\":139}},\"severity\":1,\"source\":\"error\",\"message\":\"Functions with viewer can only be used from viewer states\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":9,\"byte\":128},\"end\":{\"line\":7,\"character\":20,\"byte\":139}},\"severity\":1,\"source\":\"error\",\"message\":\"Functions with viewer can only be used from viewer states\",\"file\":\"./test_code/FunctionsViewer_Sad_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
