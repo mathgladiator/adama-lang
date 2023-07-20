@@ -11,6 +11,7 @@ package org.adamalang.cli.implementations;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.cli.implementations.space.Kickstarter;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.cli.router.*;
@@ -139,6 +140,13 @@ public class RootHandlerImpl implements RootHandler {
                 output.out();
             }
         }
+    }
+
+    @Override
+    public void kickstart(Arguments.KickstartArgs args, Output.YesOrError output) throws Exception {
+        Kickstarter.intro();
+        String space = Kickstarter.name();
+        String template = Kickstarter.template();
     }
 
     @Override

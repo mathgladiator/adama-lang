@@ -675,6 +675,12 @@
         </command>
     </group>
 
+    <command name="kickstart" interactive="true">
+        <documentation>
+            Kickstart a project via an interactive process!
+        </documentation>
+    </command>
+
     <command name="init" interactive="true">
         <documentation>
             Initializes the config with a valid token

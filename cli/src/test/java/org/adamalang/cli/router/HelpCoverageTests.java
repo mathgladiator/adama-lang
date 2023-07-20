@@ -82,5 +82,6 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"services", "solo", "--help"});
     Main.testMain(new String[]{"dumpenv", "--help"});
     Main.testMain(new String[]{"init", "--help"});
+    Main.testMain(new String[]{"kickstart", "--help"});
   }
 }

@@ -18,7 +18,6 @@ import org.adamalang.common.ConfigObject;
 import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
-import org.adamalang.mysql.contracts.MigrationStatus;
 
 public class DatabaseHandlerImpl implements DatabaseHandler {
     @Override

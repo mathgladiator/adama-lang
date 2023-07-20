@@ -28,9 +28,7 @@ import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.web.service.WebConfig;
 
 import java.io.File;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;

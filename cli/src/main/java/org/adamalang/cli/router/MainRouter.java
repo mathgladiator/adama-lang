@@ -791,6 +791,16 @@ public class MainRouter {
              handler.init(mainArgs , out);
              return 0;
           }
+          case "kickstart": {
+            KickstartArgs mainArgs = KickstartArgs.from(args, 1);
+            if (mainArgs == null) {
+              KickstartArgs.help();
+              return 1;
+             }
+             YesOrError out = output.makeYesOrError();
+             handler.kickstart(mainArgs , out);
+             return 0;
+          }
           default:
             System.err.println("Invalid command '" + args[0] + "'");
             System.err.println("See 'adama help' for a list of commands.");

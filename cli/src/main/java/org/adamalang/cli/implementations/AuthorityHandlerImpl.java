@@ -10,7 +10,6 @@ package org.adamalang.cli.implementations;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
-import org.adamalang.cli.Util;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.cli.router.Arguments;

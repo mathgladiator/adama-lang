@@ -29,6 +29,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("services", 15), Util.ANSI.Cyan) + "Launch a service");
     System.out.println("    " + Util.prefix(Util.justifyLeft("dumpenv", 15), Util.ANSI.Green) + "Dump your environment variables");
     System.out.println("    " + Util.prefix(Util.justifyLeft("init", 15), Util.ANSI.Green) + "Initializes the config with a valid token");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("kickstart", 15), Util.ANSI.Green) + "Kickstart a project via an interactive process!");
   }
   public static void displaySpaceHelp() {
     System.out.println(Util.prefix("Provides command related to working with space collections...", Util.ANSI.Green));
