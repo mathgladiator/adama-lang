@@ -85,7 +85,14 @@ Adama.Debugger = (function() {
     co.debug_tree.subscribe(function() {
       viewJson.innerHTML = turn_json_into_html(co.debug_tree.raw());
     });
-    // TODO: co.raw.SpaceReflect(co.identity, co.space, co.key, {
+    co.raw.SpaceReflect(co.identity, co.space, co.key, {
+      success: function (payload) {
+        console.log(schema.reflection);
+      },
+      failure: function(reason) {
+        console.log("Failed to get schema");
+      }
+    });
   };
 
   var connectionSelector = document.createElement("select");
@@ -122,8 +129,8 @@ Adama.Debugger = (function() {
       self.root = document.createElement("div");
 
       debuggerPosition = localStorage.getItem("AdamaDebuggerPosition");
-      if (!debuggerPosition) {
-        debuggerPosition + "top:0px; left:0px;width:640px;height:480px";
+      if (!debuggerPosition || debuggerPosition == "") {
+        debuggerPosition = "top:0px; left:0px;width:640px;height:480px";
       }
       console.log(debuggerPosition);
       self.root.style = "position:absolute;" + debuggerPosition + ";background: white;border:1px solid red;z-index:1000; overflow:scroll";

@@ -8,12 +8,17 @@
  */
 package org.adamalang.cli.devbox;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.handler.ssl.SslContext;
+import org.adamalang.ErrorCodes;
 import org.adamalang.cli.interactive.TerminalIO;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
+import org.adamalang.common.keys.SigningKeyPair;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.web.UriMatcher;
+import org.adamalang.mysql.model.Secrets;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -28,10 +33,12 @@ import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.*;
 import org.adamalang.web.service.ServiceRunnable;
+import org.adamalang.web.service.SpaceKeyRequest;
 import org.adamalang.web.service.WebConfig;
 import org.adamalang.web.service.WebMetrics;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -148,23 +155,46 @@ public class DevBoxServiceBase implements ServiceBase {
         }
       }
 
+
+      private Callback<WebResponse> route(SpaceKeyRequest skr, Callback<HttpResult> callback) {
+        return new Callback<>() {
+          @Override
+          public void success(WebResponse response) {
+            if (response != null) {
+              if ("text/agent".equals(response.contentType)) {
+                // TODO: pull a signing key from the verse config
+                // SigningKeyPair keyPair = Secrets.getOrCreateDocumentSigningKey(init.database, init.masterKey, skr.space, skr.key);
+                // String identity = keyPair.signDocument(skr.space, skr.key, response.body);
+                String identity = "anonymous:" + response.body;
+                ObjectNode json = Json.newJsonObject();
+                json.put("identity", identity);
+                callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
+              } else {
+                if (response.asset != null) {
+                  callback.success(new HttpResult(skr.space, skr.key, response.asset, response.cors));
+                } else {
+                  callback.success(new HttpResult(response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors));
+                }
+              }
+            } else {
+              callback.success(null);
+            }
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        };
+      }
+
       @Override
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         if (verse != null) {
-          Key key = null;
-          WebPut webPut = new WebPut(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), uri, headers, new NtDynamic(parametersJson), body);
-
-          verse.service.webPut(key, webPut, new Callback<WebResponse>() {
-            @Override
-            public void success(WebResponse value) {
-              // TODO: factor this out
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              callback.failure(ex);
-            }
-          });
+          SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
+          Key key = new Key(skr.space, skr.key);
+          WebPut webPut = new WebPut(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson), body);
+          verse.service.webPut(key, webPut, route(skr, callback));
         } else {
           callback.failure(new ErrorCodeException(0));
         }
