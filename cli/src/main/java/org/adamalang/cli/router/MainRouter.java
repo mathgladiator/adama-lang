@@ -467,6 +467,16 @@ public class MainRouter {
                contribHandler.testsRxhtml(contribArgs, out);
                return 0;
             }
+            case "version": {
+              ContribVersionArgs contribArgs = ContribVersionArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribVersionArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.version(contribArgs, out);
+               return 0;
+            }
             case "--help":
             case "-h":
             case "help": {

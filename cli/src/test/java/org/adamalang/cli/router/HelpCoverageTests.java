@@ -55,6 +55,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"contrib", "make-et", "--help"});
     Main.testMain(new String[]{"contrib", "tests-adama", "--help"});
     Main.testMain(new String[]{"contrib", "tests-rxhtml", "--help"});
+    Main.testMain(new String[]{"contrib", "version", "--help"});
     Main.testMain(new String[]{"database", "--help"});
     Main.testMain(new String[]{"database", "configure", "--help"});
     Main.testMain(new String[]{"database", "install", "--help"});

@@ -109,13 +109,14 @@ public class Help {
     System.out.println();
     System.out.println(Util.prefix("CONTRIBSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix(Util.justifyLeft("bundle-js", 15), Util.ANSI.Green) + "Bundles the libadama.js into the webserver");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("copyright", 15), Util.ANSI.Green) + "Sprinkle Jeff's name everywhere.");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("copyright", 15), Util.ANSI.Green) + "Sprinkle the copyright everywhere.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-api", 15), Util.ANSI.Green) + "Produces api files for SaaS and documentation for the WebSocket low level API.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-cli", 15), Util.ANSI.Green) + "Generate the command line router");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-codec", 15), Util.ANSI.Green) + "Generates the networking codec");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-et", 15), Util.ANSI.Green) + "Generates the error table which provides useful insight to issues");
     System.out.println("    " + Util.prefix(Util.justifyLeft("tests-adama", 15), Util.ANSI.Green) + "Generate tests for Adama Language.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("tests-rxhtml", 15), Util.ANSI.Green) + "Generate tests for RxHTML.");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("version", 15), Util.ANSI.Green) + "Create the version number for the platform");
   }
   public static void displayDatabaseHelp() {
     System.out.println(Util.prefix("Prepare database for usage", Util.ANSI.Green));

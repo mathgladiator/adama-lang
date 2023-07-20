@@ -14,15 +14,21 @@ import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.ContribHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.DefaultCopyright;
+import org.adamalang.common.ProtectedUUID;
 import org.adamalang.common.codec.CodecCodeGen;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerMessage;
+import org.adamalang.runtime.natives.NtDate;
+import org.adamalang.runtime.natives.NtDateTime;
+import org.adamalang.runtime.stdlib.LibDate;
 import org.adamalang.support.GenerateLanguageTests;
 import org.adamalang.support.GenerateTemplateTests;
 import org.adamalang.web.service.BundleJavaScript;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ContribHandlerImpl implements ContribHandler {
   private static void copyrightScan(File root) throws Exception {
@@ -59,6 +65,15 @@ public class ContribHandlerImpl implements ContribHandler {
   public void copyright(Arguments.ContribCopyrightArgs args, Output.YesOrError output) throws Exception {
     System.out.println(Util.prefix("Ensuring all files have copyright notice", Util.ANSI.Cyan));
     copyrightScan(new File("."));
+    output.out();
+  }
+
+  @Override
+  public void version(Arguments.ContribVersionArgs args, Output.YesOrError output) throws Exception {
+    String versionCode = ProtectedUUID.generate() + ":" + new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+    System.out.println(Util.prefix("Generating a version number: " + versionCode, Util.ANSI.Cyan));
+    String versionFile = "package org.adamalang.common;\n" + "\n" + "public class Platform {\n" + "  public static String VERSION = \"" + versionCode + "\";\n" + "}\n";
+    Files.writeString(new File("common/src/main/java/org/adamalang/common/Platform.java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + versionFile);
     output.out();
   }
 

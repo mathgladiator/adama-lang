@@ -15,6 +15,7 @@ import io.netty.handler.codec.http.cookie.ClientCookieEncoder;
 import io.netty.handler.codec.http.cookie.DefaultCookie;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import org.adamalang.common.Platform;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.client.TestClientCallback;
 import org.adamalang.web.client.TestClientRequestBuilder;
@@ -47,7 +48,7 @@ public class WebSocketHandlerTests {
             .withWebSocket()
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("{\"status\":\"connected\",\"assets\":false}");
+        callback.assertData("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}");
       }
 
       {
@@ -59,7 +60,7 @@ public class WebSocketHandlerTests {
             .withWebSocket()
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("{\"status\":\"connected\",\"assets\":true}");
+        callback.assertData("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":true}");
       }
 
       {
@@ -71,7 +72,7 @@ public class WebSocketHandlerTests {
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        callback.assertData("{\"status\":\"connected\",\"assets\":false}");
+        callback.assertData("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}");
         callback.awaitPing();
         callback.assertDataPrefix(1, "{\"ping\":");
 
@@ -92,7 +93,7 @@ public class WebSocketHandlerTests {
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        callback.assertData("{\"status\":\"connected\",\"assets\":false}");
+        callback.assertData("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}");
         callback.awaitPing();
         callback.assertDataPrefix(1, "{\"ping\":");
 
@@ -113,7 +114,7 @@ public class WebSocketHandlerTests {
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        callback.assertData("{\"status\":\"connected\",\"assets\":false}");
+        callback.assertData("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}");
         callback.awaitPing();
         callback.assertDataPrefix(1, "{\"ping\":");
 
@@ -133,7 +134,7 @@ public class WebSocketHandlerTests {
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        callback.assertData("{\"status\":\"connected\",\"assets\":false}");
+        callback.assertData("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}");
         callback.awaitPing();
         callback.assertDataPrefix(1, "{\"ping\":");
 
@@ -144,7 +145,7 @@ public class WebSocketHandlerTests {
         box.assertData(0, "{\"deliver\":500,\"done\":false,\"response\":{\"death\":1}}");
         callback.awaitDisconnect();
         callback.assertData(
-            "{\"status\":\"connected\",\"assets\":false}{\"deliver\":500,\"done\":false,\"response\":{\"death\":1}}{\"status\":\"disconnected\",\"reason\":\"keepalive-failure\"}");
+            "{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}{\"deliver\":500,\"done\":false,\"response\":{\"death\":1}}{\"status\":\"disconnected\",\"reason\":\"keepalive-failure\"}");
       }
 
       {
@@ -156,13 +157,13 @@ public class WebSocketHandlerTests {
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        callback.assertData("{\"status\":\"connected\",\"assets\":false}");
+        callback.assertData("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}");
         callback.awaitPing();
         callback.assertDataPrefix(1, "{\"ping\":");
         b.channel().writeAndFlush(new TextWebSocketFrame("{}"));
         callback.awaitDisconnect();
         callback.assertData(
-            "{\"status\":\"connected\",\"assets\":false}{\"status\":\"disconnected\",\"reason\":233120}");
+            "{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}{\"status\":\"disconnected\",\"reason\":233120}");
       }
 
       {
@@ -174,13 +175,13 @@ public class WebSocketHandlerTests {
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        callback.assertData("{\"status\":\"connected\",\"assets\":false}");
+        callback.assertData("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}");
         callback.awaitPing();
         callback.assertDataPrefix(1, "{\"ping\":");
         b.channel().writeAndFlush(new TextWebSocketFrame("{\"pong\":42}"));
         callback.awaitDisconnect();
         callback.assertData(
-            "{\"status\":\"connected\",\"assets\":false}{\"status\":\"disconnected\",\"reason\":295116}");
+            "{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}{\"status\":\"disconnected\",\"reason\":295116}");
       }
 
       {
@@ -192,7 +193,7 @@ public class WebSocketHandlerTests {
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        callback.assertData("{\"status\":\"connected\",\"assets\":false}");
+        callback.assertData("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}");
         callback.awaitPing();
         callback.assertDataPrefix(1, "{\"ping\":");
         b.channel().writeAndFlush(new TextWebSocketFrame("{\"pong\":42,\"ping\":80}"));
@@ -209,14 +210,14 @@ public class WebSocketHandlerTests {
                 .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        callback.assertData("{\"status\":\"connected\",\"assets\":false}");
+        callback.assertData("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}");
         callback.awaitPing();
         callback.assertDataPrefix(1, "{\"ping\":");
         b.channel()
             .writeAndFlush(new BinaryWebSocketFrame(Unpooled.wrappedBuffer(new byte[] {0x42})));
         callback.awaitDisconnect();
         callback.assertData(
-            "{\"status\":\"connected\",\"assets\":false}{\"status\":\"disconnected\",\"reason\":213711}");
+            "{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":false}{\"status\":\"disconnected\",\"reason\":213711}");
       }
     } finally {
       runnable.shutdown();

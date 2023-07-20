@@ -20,6 +20,7 @@ import org.adamalang.ErrorTable;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
+import org.adamalang.common.Platform;
 import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
@@ -100,7 +101,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       HttpHeaders headers = ((WebSocketServerProtocolHandler.HandshakeComplete) evt).requestHeaders();
       context = ConnectionContextFactory.of(ctx, headers);
       // tell client all is ok
-      ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\",\"assets\":" + (context.assetKey != null ? "true" : "false") + "}"));
+      ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":" + (context.assetKey != null ? "true" : "false") + "}"));
       // establish the service
       connection = base.establish(context);
       metrics.websockets_active_child_connections.up();

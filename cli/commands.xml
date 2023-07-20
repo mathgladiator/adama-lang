@@ -532,7 +532,12 @@
         </command>
         <command name="copyright">
             <documentation>
-                Sprinkle Jeff's name everywhere.
+                Sprinkle the copyright everywhere.
+            </documentation>
+        </command>
+        <command name="version">
+            <documentation>
+                Create the version number for the platform
             </documentation>
         </command>
     </group>

@@ -20,4 +20,5 @@ public interface ContribHandler {
   void makeEt(ContribMakeEtArgs args, YesOrError output) throws Exception;
   void testsAdama(ContribTestsAdamaArgs args, YesOrError output) throws Exception;
   void testsRxhtml(ContribTestsRxhtmlArgs args, YesOrError output) throws Exception;
+  void version(ContribVersionArgs args, YesOrError output) throws Exception;
 }
