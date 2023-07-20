@@ -12,8 +12,7 @@ The current story for developers is "meh", so these items help improve and moder
 | Android client        |     | (1) Write a simplified web-socket interface, (2) implement interface with OkHttp, (3) update apikit code generator to produce a SDK talking to the web socket interface. |
 | iOS client            |     | (1) Write a simplified web-socket interface, (2) implement interface with ?, (3) update apikit code generator to produce a SDK talking to the web socket interface.      |
 | capacitor.js template |     | A template to turn an RxHTML project into a mobile app with deployment pipeline                                                                                          |
-|  integrate-linter     |     | integrate the linter to detect issues prior launch; address #62                                                                                                          |
-|                       |     |                                                                                                                                                                          |
+| integrate-linter      |     | integrate the linter to detect issues prior launch; address #62                                                                                                          |
 | lib-react             |     | library to use Adama with React                                                                                                                                          |
 | lib-vue               |     | library to use Adama with Vue                                                                                                                                            |
 | lib-svelte            |     | library to use Adama with svelte                                                                                                                                         |
@@ -23,10 +22,9 @@ The current story for developers is "meh", so these items help improve and moder
 
 | project              | IP  | description                                                                                        |
 |----------------------|-----|----------------------------------------------------------------------------------------------------|
-| kickoff demos        |     | See [https://asciinema.org/](https://asciinema.org/) for more information                          |
+| kickoff demos        | X   | See [https://asciinema.org/](https://asciinema.org/) for more information                          |
 | client-walk          |     | A detailed walkthough about how to use the client library, the expectations, and core APIs         |
 | improve overview     |     | Make the overview easier to understand, more details, etc                                          |
-| detailed tour        |     | Convert the video to an online document                                                            |
 | cheat-sheet          |     | document the vital aspects of the language and provide copy-pasta examples                         |
 | micro-examples       |     | a mini stack-overflow of sorts                                                                     |
 | tutorial-app         |     | walk through the basics of building an Adama with just Adama and RxHTML                            |
