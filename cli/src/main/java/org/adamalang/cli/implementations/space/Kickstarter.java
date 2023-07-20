@@ -1,41 +1,95 @@
 package org.adamalang.cli.implementations.space;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.cli.remote.Connection;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.validators.ValidateSpace;
 
 public class Kickstarter {
-  public static void intro() {
+
+  public final Config config;
+  public final Connection connection;
+  public final String identity;
+  private String space;
+  private String template;
+
+  public Kickstarter(Config config, Connection connection) {
+    this.config = config;
+    this.connection = connection;
+    this.identity = config.get_string("identity", null);
+    this.space = null;
+    this.template = null;
+  }
+
+  public void intro() {
     System.out.println("Greetings fellow human! Welcome to the " + Util.prefix("Adama Project Kickstart Tool", Util.ANSI.Green) + "!");
     System.out.println();
     System.out.println("This tool will help create a project for you to experience the wonder");
-    System.out.println("of the Adama Platform... Alright, so let's begin by naming your");
-    System.out.println(Util.prefix("Adama Specification", Util.ANSI.Cyan) + " by naming your space (a valid space name is");
-    System.out.println("lowercase alphanumeric between 3 and 127 characters with hyphens");
+    System.out.println("of the Adama Platform... First, let's begin by picking a template to");
+    System.out.println("seed the project");
+    System.out.println();
+
+  }
+
+  public void askSpaceName() {
+    System.out.println("Second, let's name your space (a valid space name is lowercase");
+    System.out.println("alphanumeric between 3 and 127 characters with hyphens");
     System.out.println("but no double hyphens.");
     System.out.println();
-  }
 
-  public static String name() {
-    boolean askSpace = true;
-    String name = null;
-    while (askSpace) {
-      askSpace = false;
-      System.out.println("Space name:");
-      name = System.console().readLine();
+    while (true) {
+      System.out.print("Space name:");
+      space = System.console().readLine();
       try {
-        ValidateSpace.validate(name);
+        ValidateSpace.validate(space);
       } catch (ErrorCodeException ex) {
         System.out.println(Util.prefix("Invalid space name (reason=" + ex.code + ")!", Util.ANSI.Red) + " Try again please.");
-        askSpace = true;
+        System.out.println();
+        continue;
+      }
+      System.out.println("OK, the space name looks good! Let's see if it is globally unique by talking to the platform. Beep Blop...");
+      ObjectNode request = Json.newJsonObject();
+      request.put("method", "space/create");
+      request.put("identity", identity);
+      request.put("space", space);
+      request.put("template", template);
+      try {
+        System.out.println(Util.prefix("Space created!", Util.ANSI.Green));
+        connection.execute(request);
+        return;
+      } catch (Exception ex) {
+        if (ex instanceof ErrorCodeException) {
+          // IF exists, then ask "Since this project already exists, do you want to construct your environment"
+          System.out.print(Util.prefix("Failed:" + ((ErrorCodeException) ex).code, Util.ANSI.Red));
+        } else {
+          System.err.println("Exception: " + ex.getMessage());
+          return;
+        }
       }
     }
-    System.out.println("OK, the space name looks good! Let's see if it is globally unique by talking to the platform. Beep Blop...");
-    // TODO: create the space
-    return name;
   }
 
-  public static String template() {
-    return null;
+  public static void askTemplate() {
+    // TODO: list templates from production
+    System.out.print("Template: ");
+    String template = System.console().readLine();
+    // TODO: validate
+  }
+
+  public void flow() {
+    intro();
+    Kickstarter.askTemplate();
+    askSpaceName();
+    if (space == null) {
+      System.out.print(Util.prefix("Failed to get space name resolved", Util.ANSI.Red));
+      return;
+    }
+    // TODO: download plan, shred to directory
+    // TODO: download rxhtml, shred into pages?
+    // TODO: setup the verse
+    // TODO: setup the .gitignore
   }
 }

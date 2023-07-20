@@ -124,7 +124,7 @@ public class Connection implements AutoCloseable {
         if (value.get() instanceof ObjectNode) {
           return (ObjectNode) value.get();
         } else {
-          throw (Exception) value.get();
+          throw (ErrorCodeException) value.get();
         }
       }
       return Json.newJsonObject();

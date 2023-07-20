@@ -18,6 +18,7 @@ import org.adamalang.cli.router.*;
 import org.adamalang.cli.runtime.Output;
 
 import org.adamalang.common.Json;
+import org.adamalang.common.Validators;
 
 import java.util.Map;
 
@@ -144,9 +145,11 @@ public class RootHandlerImpl implements RootHandler {
 
     @Override
     public void kickstart(Arguments.KickstartArgs args, Output.YesOrError output) throws Exception {
-        Kickstarter.intro();
-        String space = Kickstarter.name();
-        String template = Kickstarter.template();
+        try (WebSocketClient client = new WebSocketClient(args.config)) {
+            try (Connection connection = client.open()) {
+                new Kickstarter(args.config, connection).flow();
+            }
+        }
     }
 
     @Override
