@@ -10,27 +10,19 @@ package org.adamalang.services.entropy;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
-import org.adamalang.services.FirstPartyMetrics;
-import org.adamalang.services.ServiceConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 public class SafeRandom extends SimpleService {
-  private final ExecutorService executor;
   private final Random rng;
 
-  public SafeRandom(ExecutorService executor) {
+  public SafeRandom() {
     super("saferandom", new NtPrincipal("saferandom", "service"), true);
-    this.executor = executor;
     this.rng = new Random();
   }
 
@@ -47,12 +39,17 @@ public class SafeRandom extends SimpleService {
 
   @Override
   public void request(String method, String request, Callback<String> callback) {
+    // NOTE: this is not a "secure" random.
     if ("ask".equals(method)) {
       ObjectNode parsed = Json.parseJsonObject(request);
       String pool = parsed.get("pool").textValue();
       int count = parsed.get("count").intValue();
-      String result = pool + count;
-      callback.success("{\"result\":\"" + result + "\"}");
+      StringBuilder sb = new StringBuilder();
+      for (int k = 0; k < count; k++) {
+        int j = rng.nextInt(pool.length());
+        sb.append(pool.charAt(j));
+      }
+      callback.success("{\"result\":\"" + sb + "\"}");
     }
   }
 }

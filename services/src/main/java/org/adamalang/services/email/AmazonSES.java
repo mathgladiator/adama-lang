@@ -25,21 +25,18 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 public class AmazonSES extends SimpleService {
   private static final Logger LOGGER = LoggerFactory.getLogger(AmazonSES.class);
   private final FirstPartyMetrics metrics;
-  private final ExecutorService executor;
   private final WebClientBase base;
   private final String region;
   private final Credential credential;
 
-  public AmazonSES(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base, ExecutorService executor) throws ErrorCodeException {
+  public AmazonSES(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base) throws ErrorCodeException {
     super("amazonses", new NtPrincipal("amazonses", "service"), true);
     this.metrics = metrics;
-    this.executor = executor;
     this.credential = new Credential(config.getDecryptedSecret("access_id"), config.getDecryptedSecret("secret_key"));
     this.region = config.getString("region", "us-east-2");
     this.base = base;

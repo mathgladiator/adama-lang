@@ -62,7 +62,6 @@ public class CodeHandlerImpl implements CodeHandler {
         final var globals = GlobalObjectPool.createPoolWithStdLib();
         final var state = new EnvironmentState(globals, options);
         final var document = new Document();
-        FirstPartyServices.install(new NoOpMetricsFactory(), null, null, null);
         document.setClassName("TempClass");
         final var tokenEngine = new TokenEngine(filename, code.codePoints().iterator());
         final var parser = new Parser(tokenEngine);
@@ -234,6 +233,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
     @Override
     public void compileFile(Arguments.CodeCompileFileArgs args, Output.YesOrError output) throws Exception {
+        FirstPartyServices.install(new NoOpMetricsFactory(), null, null, null);
         CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
         if (args.dumpTo != null) {
             Files.writeString(new File(args.dumpTo).toPath(), result.code);
@@ -243,6 +243,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
     @Override
     public void reflectDump(Arguments.CodeReflectDumpArgs args, Output.YesOrError output) throws Exception {
+        FirstPartyServices.install(new NoOpMetricsFactory(), null, null, null);
         CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
         if (args.dumpTo != null) {
             Files.writeString(new File(args.dumpTo).toPath(), result.reflection);

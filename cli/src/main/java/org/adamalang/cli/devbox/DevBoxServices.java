@@ -9,10 +9,14 @@
 package org.adamalang.cli.devbox;
 
 import org.adamalang.common.Callback;
+import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.remote.SimpleService;
+import org.adamalang.services.FirstPartyServices;
 import org.adamalang.services.email.AmazonSES;
+import org.adamalang.services.entropy.SafeRandom;
 
 import java.util.HashSet;
 import java.util.function.Consumer;
@@ -36,12 +40,16 @@ public class DevBoxServices {
 
     @Override
     public void request(String method, String request, Callback<String> callback) {
-      logger.accept("Service[AmazonSES]::" + method + "(" + request + ")");
+      logger.accept("Service[AmazonSES/ " + space+ "]::" + method + "(" + request + ")");
       callback.success("{}");
     }
   }
 
   public static void install(Consumer<String> logger) {
+    FirstPartyServices.install(new NoOpMetricsFactory(), null, null, null);
+    logger.accept("Installing DevBox Override Services");
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw) -> new DevBoxAmazonSES(space, logger));
+    ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw) -> new SafeRandom());
+    // TODO: Stripe?
   }
 }

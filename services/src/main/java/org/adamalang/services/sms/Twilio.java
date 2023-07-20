@@ -45,12 +45,10 @@ public class Twilio extends SimpleService {
   private static final Logger LOGGER = LoggerFactory.getLogger(Twilio.class);
   private final FirstPartyMetrics metrics;
   private final WebClientBase base;
-  private final ExecutorService executor;
 
-  public Twilio(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base, ExecutorService executor) throws ErrorCodeException {
+  public Twilio(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base) throws ErrorCodeException {
     super("twilio", new NtPrincipal("twilio", "service"), true);
     this.metrics = metrics;
-    this.executor = executor;
     this.base = base;
     String username = config.getDecryptedSecret("username");
     String password = config.getDecryptedSecret("password");

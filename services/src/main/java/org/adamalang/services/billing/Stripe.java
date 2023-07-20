@@ -37,14 +37,12 @@ import java.util.function.Consumer;
 public class Stripe extends SimpleService {
   private static final Logger LOGGER = LoggerFactory.getLogger(Stripe.class);
   private final FirstPartyMetrics metrics;
-  private final ExecutorService executor;
   private final WebClientBase base;
   private final String apikey;
 
-  public Stripe(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base, ExecutorService executor) throws ErrorCodeException {
+  public Stripe(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base) throws ErrorCodeException {
     super("stripe", new NtPrincipal("stripe", "service"), true);
     this.metrics = metrics;
-    this.executor = executor;
     this.base = base;
     this.apikey = config.getDecryptedSecret("apikey");
   }

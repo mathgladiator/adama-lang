@@ -81,11 +81,14 @@ public class ServiceRegistry {
 
   private Service resolveService(String spaceName, HashMap<String, Object> config) {
     Object clazz = config.get("class");
-    if (clazz != null && clazz instanceof String) {
-      BiFunction<String, HashMap<String, Object>, Service> cons = REGISTRY.get((String) clazz);
-      if (cons != null) {
-        return cons.apply(spaceName, config);
+    try {
+      if (clazz != null && clazz instanceof String) {
+        BiFunction<String, HashMap<String, Object>, Service> cons = REGISTRY.get((String) clazz);
+        if (cons != null) {
+          return cons.apply(spaceName, config);
+        }
       }
+    } catch (Exception ex) { // ignore it
     }
     return null;
   }
