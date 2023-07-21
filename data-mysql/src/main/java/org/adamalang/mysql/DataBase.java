@@ -77,9 +77,9 @@ public class DataBase implements AutoCloseable {
   }
 
   public <R> void transact(SQLTransact<R> transaction, Callback<R> callback, int failureReason) {
+    RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.transaction.start();
     int backoff = (int) (25 + Math.random() * 25);
     while (true) {
-      RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.transaction.start();
       try {
         Connection connection = pool.getConnection();
         boolean commit = false;
@@ -108,7 +108,6 @@ public class DataBase implements AutoCloseable {
           LOG.error("database-exception", ex);
         } else {
           metrics.valid_exception.run();
-          instance.success();
         }
         if (backoff < 500 && !validException) {
           try {
@@ -119,7 +118,9 @@ public class DataBase implements AutoCloseable {
         } else {
           ErrorCodeException ece = ErrorCodeException.detectOrWrap(failureReason, ex, LOGGER);
           callback.failure(ece);
-          if (!validException) {
+          if (validException) {
+            instance.success();
+          } else {
             instance.failure(ece.code);
           }
           return;

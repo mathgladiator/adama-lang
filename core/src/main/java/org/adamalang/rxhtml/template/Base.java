@@ -65,7 +65,7 @@ public class Base {
     }
     return eVar;
   }
-  
+
   private static int countAttr(Element element, String... attrs) {
     int count = 0;
     for (String attr : attrs) {

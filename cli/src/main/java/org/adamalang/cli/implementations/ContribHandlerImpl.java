@@ -70,7 +70,7 @@ public class ContribHandlerImpl implements ContribHandler {
 
   @Override
   public void version(Arguments.ContribVersionArgs args, Output.YesOrError output) throws Exception {
-    String versionCode = ProtectedUUID.generate() + ":" + new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+    String versionCode = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
     System.out.println(Util.prefix("Generating a version number: " + versionCode, Util.ANSI.Cyan));
     String versionFile = "package org.adamalang.common;\n" + "\n" + "public class Platform {\n" + "  public static String VERSION = \"" + versionCode + "\";\n" + "}\n";
     Files.writeString(new File("common/src/main/java/org/adamalang/common/Platform.java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + versionFile);

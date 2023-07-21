@@ -50,7 +50,7 @@ public class SimpleWebSocketConnectionAgent implements WebLifecycle {
   }
 
   @Override
-  public void connected(WebClientConnection connection) {
+  public void connected(WebClientConnection connection, String version) {
     executor.execute(new NamedRunnable("setting-up-document-agents") {
       @Override
       public void execute() throws Exception {

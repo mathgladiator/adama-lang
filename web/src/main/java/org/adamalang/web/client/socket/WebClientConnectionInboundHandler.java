@@ -58,7 +58,11 @@ public class WebClientConnectionInboundHandler extends SimpleChannelInboundHandl
 
     if (node.has("status")) {
       if ("connected".equals(node.get("status").textValue())) {
-        lifecycle.connected(connection);
+        String version = "?";
+        if (node.has("version")) {
+          version = node.get("version").textValue();
+        }
+        lifecycle.connected(connection, version);
       }
       return;
     }

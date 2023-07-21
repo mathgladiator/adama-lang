@@ -214,7 +214,7 @@ public class WebClient implements WebLifecycle {
   }
 
   @Override
-  public void connected(WebClientConnection conn) {
+  public void connected(WebClientConnection conn, String version) {
     executor.execute(new NamedRunnable("webclient") {
       @Override
       public void execute() throws Exception {

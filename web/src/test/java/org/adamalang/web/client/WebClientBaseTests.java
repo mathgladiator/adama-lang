@@ -52,7 +52,7 @@ public class WebClientBaseTests {
           "http://localhost:" + webConfig.port + "/~s",
           new WebLifecycle() {
             @Override
-            public void connected(WebClientConnection connection) {
+            public void connected(WebClientConnection connection, String version) {
               connRef.set(connection);
               connection.execute(Json.parseJsonObject("{\"method\":\"cake\"}"), streamCake);
               connection.execute(Json.parseJsonObject("{\"method\":\"ex\"}"), streamEx);
@@ -109,7 +109,7 @@ public class WebClientBaseTests {
           "http://localhost:" + webConfig.port + "/~s",
           new WebLifecycle() {
             @Override
-            public void connected(WebClientConnection connection) {
+            public void connected(WebClientConnection connection, String version) {
               connection.close();
               connectedLatch.countDown();
             }
@@ -155,7 +155,7 @@ public class WebClientBaseTests {
           "http://localhost:" + webConfig.port + "/~s",
           new WebLifecycle() {
             @Override
-            public void connected(WebClientConnection connection) {
+            public void connected(WebClientConnection connection, String version) {
               connRef.set(connection);
               connection.execute(Json.parseJsonObject("{\"method\":\"crash\"}"), new LatchedWebJsonStream());
               connectedLatch.countDown();
@@ -203,7 +203,7 @@ public class WebClientBaseTests {
           "http://localhost:" + webConfig.port + "/~s",
           new WebLifecycle() {
             @Override
-            public void connected(WebClientConnection connection) {
+            public void connected(WebClientConnection connection, String version) {
               connRef.set(connection);
               connection.execute(Json.parseJsonObject("{\"method\":\"cake\"}"), new WebJsonStream() {
                 @Override
@@ -261,7 +261,7 @@ public class WebClientBaseTests {
           "http://xyz.localhost.not.found:9999/s",
           new WebLifecycle() {
             @Override
-            public void connected(WebClientConnection connection) {
+            public void connected(WebClientConnection connection, String version) {
             }
 
             @Override

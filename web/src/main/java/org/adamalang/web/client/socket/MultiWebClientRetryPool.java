@@ -58,7 +58,7 @@ public class MultiWebClientRetryPool {
       base.open(endpoint, new WebLifecycle() {
         private int backoff = 0;
         @Override
-        public void connected(WebClientConnection connection) {
+        public void connected(WebClientConnection connection, String version) {
           metrics.inflight.up();
           backoff = 0;
           executor.execute(new NamedRunnable("connected") {

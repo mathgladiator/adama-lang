@@ -12,7 +12,7 @@ import org.adamalang.web.client.socket.WebClientConnection;
 
 /** lifecycle of a connection */
 public interface WebLifecycle {
-  void connected(WebClientConnection connection);
+  void connected(WebClientConnection connection, String version);
 
   void ping(int latency);
 
