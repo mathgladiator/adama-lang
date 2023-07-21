@@ -75,7 +75,7 @@ if args.jar:
         fail("jar", "Failed to build mvn")
 
 if made_jar:
-    cmd_args = ["cp", "./cli/target/cli-0.2-jar-with-dependencies.jar", "./release/adama.jar"]
+    cmd_args = ["cp", "./cli/target/cli-MAIN-jar-with-dependencies.jar", "./release/adama.jar"]
     if execute_cmd(" ".join(cmd_args)) != 0:
         fail("jar", "Failed to copy adama.jar")
 

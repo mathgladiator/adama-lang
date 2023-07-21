@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.adamalang</groupId>
         <artifactId>base</artifactId>
-        <version>0.2</version>
+        <version>MAIN</version>
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -14,22 +14,22 @@
         <dependency>
             <groupId>org.adamalang</groupId>
             <artifactId>common</artifactId>
-            <version>0.2</version>
+            <version>MAIN</version>
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
             <artifactId>web</artifactId>
-            <version>0.2</version>
+            <version>MAIN</version>
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
             <artifactId>data-mysql</artifactId>
-            <version>0.2</version>
+            <version>MAIN</version>
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
             <artifactId>net</artifactId>
-            <version>0.2</version>
+            <version>MAIN</version>
         </dependency>
         <dependency>
             <groupId>commons-validator</groupId>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.adamalang</groupId>
             <artifactId>services</artifactId>
-            <version>0.2</version>
+            <version>MAIN</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.adamalang</groupId>
     <artifactId>common</artifactId>
-    <version>0.2</version>
+    <version>MAIN</version>
     <parent>
         <groupId>org.adamalang</groupId>
         <artifactId>base</artifactId>
-        <version>0.2</version>
+        <version>MAIN</version>
         <relativePath>../</relativePath>
     </parent>
     <dependencies>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>org.adamalang</groupId>
             <artifactId>errors</artifactId>
-            <version>0.2</version>
+            <version>MAIN</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

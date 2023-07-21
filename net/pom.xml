@@ -5,18 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.adamalang</groupId>
     <artifactId>net</artifactId>
-    <version>0.2</version>
+    <version>MAIN</version>
     <parent>
         <groupId>org.adamalang</groupId>
         <artifactId>base</artifactId>
-        <version>0.2</version>
+        <version>MAIN</version>
         <relativePath>../</relativePath>
     </parent>
     <dependencies>
         <dependency>
             <groupId>org.adamalang</groupId>
             <artifactId>core</artifactId>
-            <version>0.2</version>
+            <version>MAIN</version>
         </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>base</artifactId>
         <groupId>org.adamalang</groupId>
-        <version>0.2</version>
+        <version>MAIN</version>
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>

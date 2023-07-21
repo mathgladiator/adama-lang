@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class PreciseSchedulerBus implements Runnable {
   private final ArrayList<Runnable>[] schedule;
   private int at;
-  private long delay;
   private long snapshot;
 
   /** create with the given argument indicating how many milliseconds we can schedule in the future */
@@ -24,10 +23,10 @@ public class PreciseSchedulerBus implements Runnable {
     for (int k = 0; k < max; k++) {
       schedule[k] = new ArrayList<>();
     }
-    this.delay = 1000000;
     this.snapshot = System.nanoTime();
   }
 
+  @SuppressWarnings("BusyWait")
   @Override
   public void run() {
     while (true) {

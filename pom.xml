@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.adamalang</groupId>
     <artifactId>base</artifactId>
-    <version>0.2</version>
+    <version>MAIN</version>
     <inceptionYear>2020</inceptionYear>
     <packaging>pom</packaging>
     <licenses>
