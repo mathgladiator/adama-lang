@@ -9,6 +9,7 @@
 package org.adamalang.rxhtml.template;
 
 import org.jsoup.nodes.Comment;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
@@ -64,9 +65,21 @@ public class Base {
     }
     return eVar;
   }
+  
+  private static int countAttr(Element element, String... attrs) {
+    int count = 0;
+    for (String attr : attrs) {
+      if (element.hasAttr(attr)) {
+        count++;
+      }
+    }
+    return count;
+  }
 
   private static void body(Environment env, String eVar) {
-    // TODO: warning if too many of the rx:*
+    if (countAttr(env.element, "rx:iterate", "rx:if", "rx:ifnot", "rx:wrap", "rx:switch", "rx:template") > 1) {
+      env.feedback.warn(env.element, "Too many incompatible rx:flags");
+    }
     Attributes rx = new Attributes(env, eVar);
     if (env.element.hasAttr("rx:iterate")) {
       rx._iterate();
@@ -83,6 +96,7 @@ public class Base {
     } else {
       children(env);
     }
+
   }
 
   public static String write(Environment env, boolean returnVariable) {
