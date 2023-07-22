@@ -414,6 +414,42 @@ public abstract class LivingDocument implements RxParent, Caller {
     return false;
   }
 
+  public boolean __sendViewState(String viewport, NtDynamic msg) {
+    if (__currentViewId >= 0) {
+      PrivateView pv = __viewsById.get(__currentViewId);
+      if (pv != null) {
+        final var writer = new JsonStreamWriter();
+        writer.beginObject();
+        writer.writeObjectFieldIntro("viewport");
+        writer.writeString(viewport);
+        writer.writeObjectFieldIntro("message");
+        writer.writeNtDynamic(msg);
+        writer.endObject();
+        pv.deliver(writer.toString());
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean __logViewState(String log) {
+    if (__currentViewId >= 0) {
+      PrivateView pv = __viewsById.get(__currentViewId);
+      if (pv != null) {
+        final var writer = new JsonStreamWriter();
+        writer.beginObject();
+        writer.writeObjectFieldIntro("log");
+        writer.writeString(log);
+        writer.endObject();
+        pv.deliver(writer.toString());
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+
   public boolean __gotoViewState(String uri) {
     if (__currentViewId >= 0) {
       PrivateView pv = __viewsById.get(__currentViewId);

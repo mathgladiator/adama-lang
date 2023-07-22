@@ -1518,6 +1518,7 @@ var RxHTML = (function () {
       co.space = rxobj.space;
       co.key = rxobj.key;
       co.identity = identity;
+      co.handlers = {};
       co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), {
         next: function (payload) {
           co.debugger(payload);
@@ -1531,12 +1532,22 @@ var RxHTML = (function () {
           if ('viewstate' in payload.delta) {
             state.view.tree.update(payload.delta.viewstate);
           }
+          if ('log' in payload.delta) {
+            console.log(payload.delta.log);
+          }
+          if ('viewport' in payload.delta && 'message' in payload.delta) {
+            var viewport = payload.delta.viewport;
+            if (viewport in co.handlers) {
+              co.handlers[viewport](payload.delta.message, co);
+            }
+          }
           if ('goto' in payload.delta) {
             self.goto(payload.delta.goto);
           }
         },
         complete: function() {
           co.set_connected(false);
+          // TODO: signal NULL to handlers?
         },
         should_retry:true,
         retry_task_name: "Document Connection:" + rxobj.space + "/" + rxobj.key,

@@ -4,11 +4,19 @@ message M {
 
 public bool sent;
 public bool went;
+public bool wrote;
 
 channel foo(M m) {
   sent = ViewState.merge({error:true, invalid_x:true}.to_dynamic());
+  ViewState.log("Here1");
 }
 
 channel go(M m) {
   went = ViewState.goto("/");
+  ViewState.log("Here2");
+}
+
+channel chatter(M m) {
+  wrote = ViewState.send("token", {token:1234}.to_dynamic());
+  ViewState.log("Here3");
 }

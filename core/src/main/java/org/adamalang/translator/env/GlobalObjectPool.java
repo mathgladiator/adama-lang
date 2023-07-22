@@ -67,6 +67,8 @@ public class GlobalObjectPool {
     final var viewer = new TyNativeGlobalObject("ViewState", null, false);
     viewer.functions.put("merge", generateInternalDocumentFunction("__mergeViewState", tyDyn, tyBool, null, null));
     viewer.functions.put("goto", generateInternalDocumentFunction("__gotoViewState", tyStr, tyBool, null, null));
+    viewer.functions.put("send",generateInternalDocumentFunction("__sendViewState", tyStr, tyDyn, tyBool, null, null));
+    viewer.functions.put("log",generateInternalDocumentFunction("__logViewState", tyStr, tyBool, null, null));
     pool.add(viewer);
 
     final var random = new TyNativeGlobalObject("Random", null, false);
@@ -123,6 +125,21 @@ public class GlobalObjectPool {
     final var overloads = new ArrayList<FunctionOverloadInstance>();
     final var args = new ArrayList<TyType>();
     args.add(arg);
+    FunctionOverloadInstance foi = new FunctionOverloadInstance(name, returnType, args, FunctionPaint.READONLY_NORMAL);
+    overloads.add(foi);
+    if (extensions != null) {
+      HashMap<String, ArrayList<FunctionOverloadInstance>> byFirstParameterType = new HashMap<>();
+      GlobalFactory.prepareForExtension(foi, byFirstParameterType);
+      GlobalFactory.injectExtension(adamaName, byFirstParameterType, extensions);
+    }
+    return new TyNativeFunctional(name, overloads, FunctionStyleJava.InjectNameThenArgs);
+  }
+
+  private static TyNativeFunctional generateInternalDocumentFunction(final String name, final TyType arg1, TyType arg2, final TyType returnType, String adamaName, final HashMap<String, HashMap<String, TyNativeFunctional>> extensions) {
+    final var overloads = new ArrayList<FunctionOverloadInstance>();
+    final var args = new ArrayList<TyType>();
+    args.add(arg1);
+    args.add(arg2);
     FunctionOverloadInstance foi = new FunctionOverloadInstance(name, returnType, args, FunctionPaint.READONLY_NORMAL);
     overloads.add(foi);
     if (extensions != null) {
