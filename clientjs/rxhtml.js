@@ -657,9 +657,9 @@ var RxHTML = (function () {
   };
 
   self.exCC = function (dom, type, state, customCommandName) {
-    dom.addEventListener(type, function () {
+    reg_event(state, dom, type, (type, function () {
       if (customCommandName in customs) {
-        customs[customCommandName]();
+        customs[customCommandName](state, dom);
       }
     });
   };
@@ -711,7 +711,7 @@ var RxHTML = (function () {
   }
 
   self.exFIN = function (dom, type, state, channel) {
-    dom.addEventListener(type, function () {
+    reg_event(state, dom, type, function () {
       var arr = make_choice_array(state, channel);
       var clear = function() {
         delete state.data.connection.choices[channel];
@@ -770,7 +770,7 @@ var RxHTML = (function () {
   // choose
   self.exCH = function (dom, type, state, name, channel, key) {
     var decide = {value: null};
-    dom.addEventListener(type, function () {
+    reg_event(state, dom, type, function () {
       var result = find(state, channel, key, decide.value);
       if (result != null) {
         var choices = state.data.connection.choices;
@@ -794,7 +794,7 @@ var RxHTML = (function () {
 
   self.exD = function (dom, type, state, name, channel, key) {
     var decide = {value: null};
-    dom.addEventListener(type, function () {
+    reg_event(state, dom, type, function () {
       var result = find(state, channel, key, decide.value);
       if (result != null) {
         let start = performance.now();
@@ -813,22 +813,26 @@ var RxHTML = (function () {
     });
   };
 
-  // RUNTIME: <tag .. rx:event="... force-auth=name,token ...">
-  self.onFORCE_AUTH = function(dom, type, identityName, identity) {
-    var runnable = function () {
-      identities[identityName] = identity;
-      localStorage.setItem("identity_" + identityName, identity);
-    };
+  var reg_event = function(state, dom, type, runnable) {
+    // TODO: connected/disconnected as special events to consider
     if (type == "load") {
       window.setTimeout(runnable, 1);
     } else {
       dom.addEventListener(type, runnable);
     }
+  }
+
+  // RUNTIME: <tag .. rx:event="... force-auth=name,token ...">
+  self.onFORCE_AUTH = function(dom, type, identityName, identity) {
+    reg_event(null, dom, type, function () {
+      identities[identityName] = identity;
+      localStorage.setItem("identity_" + identityName, identity);
+    });
   };
 
   // RUNTIME: <tag .. rx:event="... set:name=value ...">
   self.onS = function (dom, type, state, name, value) {
-    var runnable = function () {
+    reg_event(state, dom, type, function () {
       var obj = {};
       if (typeof (value) == "function") {
         obj[name] = value();
@@ -837,54 +841,38 @@ var RxHTML = (function () {
       }
       var delta = path_to(state[state.current], obj);
       state[state.current].tree.update(delta);
-    };
-    if (type == "load") {
-      window.setTimeout(runnable, 1);
-    } else {
-      dom.addEventListener(type, runnable);
-    }
+    });
   };
 
   // RUNTIME: <tag .. rx:event="... te:name ...">
   self.onTE = function (dom, type, state, name) {
-    var runnable = function (event) {
+    reg_event(state, dom, type, function (event) {
       var obj = {};
       obj[name] = event.message;
       var delta = path_to(state[state.current], obj);
       state[state.current].tree.update(delta);
-    };
-    dom.addEventListener(type, runnable);
+    });
   };
 
   // RUNTIME: <tag .. rx:event="... reset ...">
   self.oRST = function (dom, type, state) {
-    var runnable = function (event) {
+    reg_event(state, dom, type, function (event) {
       dom.reset();
-    };
-    if (type == "load") {
-      window.setTimeout(runnable, 1);
-    } else {
-      dom.addEventListener(type, runnable);
-    }
+    });
   };
 
   // RUNTIME: <tag .. rx:event="... goto:uri ...">
   self.onGO = function (dom, type, state, value) {
-    var runnable = function () {
+    reg_event(state, dom, type, function () {
       var uri = (typeof (value) == "function") ? value() : value;
       self.goto(uri);
-    };
-    if (type == "load") {
-      window.setTimeout(runnable, 1);
-    } else {
-      dom.addEventListener(type, runnable);
-    }
+    });
   };
 
   // RUNTIME: <tag .. rx:event="... toggle:name ...">
   self.onT = function (dom, type, state, name) {
     var captured = {value: false};
-    dom.addEventListener(type, function () {
+    reg_event(state, dom, type,  function () {
       var obj = {};
       obj[name] = !captured.value;
       var delta = path_to(state[state.current], obj);
@@ -898,7 +886,7 @@ var RxHTML = (function () {
   // RUNTIME: <tag .. rx:event="... delta:name=diff" ...">
   self.onD = function (dom, type, state, name, diff) {
     var captured = {value: 0};
-    dom.addEventListener(type, function () {
+    reg_event(state, dom, type, function () {
       var obj = {};
       obj[name] = captured.value + diff;
       var delta = path_to(state[state.current], obj);
