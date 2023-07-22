@@ -657,7 +657,7 @@ var RxHTML = (function () {
   };
 
   self.exCC = function (dom, type, state, customCommandName) {
-    reg_event(state, dom, type, (type, function () {
+    reg_event(state, dom, type, function () {
       if (customCommandName in customs) {
         customs[customCommandName](state, dom);
       }
