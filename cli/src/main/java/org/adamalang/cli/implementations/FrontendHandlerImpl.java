@@ -23,6 +23,7 @@ import org.adamalang.edhtml.EdHtmlState;
 import org.adamalang.edhtml.phases.Generate;
 import org.adamalang.edhtml.phases.Stamp;
 import org.adamalang.edhtml.phases.Use;
+import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.web.service.WebConfig;
@@ -49,6 +50,14 @@ public class FrontendHandlerImpl implements FrontendHandler {
         ArrayList<File> files = new ArrayList<>();
         aggregateFiles(new File(args.input), files);
         Files.writeString(new File(args.output).toPath(), RxHtmlTool.convertFilesToTemplateForest(files, new ArrayList<>(), ShellConfig.start().withFeedback((element, warning) -> System.err.println(warning)).end()).javascript);
+    }
+
+    @Override
+    public void make200(Arguments.FrontendMake200Args args, Output.YesOrError output) throws Exception {
+        ArrayList<File> files = new ArrayList<>();
+        aggregateFiles(new File(args.rxhtmlPath), files);
+        RxHtmlResult updated = RxHtmlTool.convertFilesToTemplateForest(files, new ArrayList<>(), ShellConfig.start().withFeedback((element, warning) -> System.err.println(warning)).end());
+        Files.writeString(new File(args.output).toPath(), updated.shell.makeShell(updated));
     }
 
     @Override

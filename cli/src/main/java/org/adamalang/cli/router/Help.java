@@ -170,6 +170,7 @@ public class Help {
     System.out.println(Util.prefix("FRONTENDSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix(Util.justifyLeft("dev-server", 15), Util.ANSI.Green) + "Host the working directory as a webserver");
     System.out.println("    " + Util.prefix(Util.justifyLeft("edhtml", 15), Util.ANSI.Green) + "Compile an edhtml build instruction file");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("make-200", 15), Util.ANSI.Green) + "Create a 200.html");
     System.out.println("    " + Util.prefix(Util.justifyLeft("rxhtml", 15), Util.ANSI.Green) + "Compile an rxhtml template set");
   }
   public static void displayServicesHelp() {

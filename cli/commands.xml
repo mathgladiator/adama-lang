@@ -678,6 +678,13 @@
             <arg name="microverse" default="local.verse.json" />
             <arg name="local-libadama-path" default="null" />
         </command>
+        <command name="make-200">
+            <documentation>
+                Create a 200.html
+            </documentation>
+            <arg name="rxhtml-path" default="." />
+            <arg name="output" default="200.html" />
+        </command>
     </group>
 
     <command name="kickstart" interactive="true">
