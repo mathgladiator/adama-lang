@@ -267,7 +267,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "init/setup-account", "id": parId, "email": email }
+      request: {"method":"init/setup-account", "id":parId, "email": email}
     });
   }
   InitConvertGoogleUser(accessToken, responder) {
@@ -276,7 +276,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "init/convert-google-user", "id": parId, "access-token": accessToken }
+      request: {"method":"init/convert-google-user", "id":parId, "access-token": accessToken}
     });
   }
   InitCompleteAccount(email, revoke, code, responder) {
@@ -285,7 +285,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "init/complete-account", "id": parId, "email": email, "revoke": revoke, "code": code }
+      request: {"method":"init/complete-account", "id":parId, "email": email, "revoke": revoke, "code": code}
     });
   }
   AccountSetPassword(identity, password, responder) {
@@ -294,7 +294,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "account/set-password", "id": parId, "identity": identity, "password": password }
+      request: {"method":"account/set-password", "id":parId, "identity": identity, "password": password}
     });
   }
   AccountGetPaymentPlan(identity, responder) {
@@ -303,7 +303,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "account/get-payment-plan", "id": parId, "identity": identity }
+      request: {"method":"account/get-payment-plan", "id":parId, "identity": identity}
     });
   }
   AccountLogin(email, password, responder) {
@@ -312,7 +312,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "account/login", "id": parId, "email": email, "password": password }
+      request: {"method":"account/login", "id":parId, "email": email, "password": password}
     });
   }
   Probe(identity, responder) {
@@ -321,7 +321,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "probe", "id": parId, "identity": identity }
+      request: {"method":"probe", "id":parId, "identity": identity}
     });
   }
   AuthorityCreate(identity, responder) {
@@ -330,7 +330,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "authority/create", "id": parId, "identity": identity }
+      request: {"method":"authority/create", "id":parId, "identity": identity}
     });
   }
   AuthoritySet(identity, authority, keyStore, responder) {
@@ -339,7 +339,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "authority/set", "id": parId, "identity": identity, "authority": authority, "key-store": keyStore }
+      request: {"method":"authority/set", "id":parId, "identity": identity, "authority": authority, "key-store": keyStore}
     });
   }
   AuthorityGet(identity, authority, responder) {
@@ -348,7 +348,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "authority/get", "id": parId, "identity": identity, "authority": authority }
+      request: {"method":"authority/get", "id":parId, "identity": identity, "authority": authority}
     });
   }
   AuthorityList(identity, responder) {
@@ -357,7 +357,7 @@ class WebSocketAdamaConnection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: { "method": "authority/list", "id": parId, "identity": identity }
+      request: {"method":"authority/list", "id":parId, "identity": identity}
     });
   }
   AuthorityDestroy(identity, authority, responder) {
@@ -366,7 +366,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "authority/destroy", "id": parId, "identity": identity, "authority": authority }
+      request: {"method":"authority/destroy", "id":parId, "identity": identity, "authority": authority}
     });
   }
   SpaceCreate(identity, space, template, responder) {
@@ -375,7 +375,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "space/create", "id": parId, "identity": identity, "space": space, "template": template }
+      request: {"method":"space/create", "id":parId, "identity": identity, "space": space, "template": template}
     });
   }
   SpaceGenerateKey(identity, space, responder) {
@@ -384,7 +384,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "space/generate-key", "id": parId, "identity": identity, "space": space }
+      request: {"method":"space/generate-key", "id":parId, "identity": identity, "space": space}
     });
   }
   SpaceUsage(identity, space, limit, responder) {
@@ -393,7 +393,7 @@ class WebSocketAdamaConnection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: { "method": "space/usage", "id": parId, "identity": identity, "space": space, "limit": limit }
+      request: {"method":"space/usage", "id":parId, "identity": identity, "space": space, "limit": limit}
     });
   }
   SpaceGet(identity, space, responder) {
@@ -402,7 +402,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "space/get", "id": parId, "identity": identity, "space": space }
+      request: {"method":"space/get", "id":parId, "identity": identity, "space": space}
     });
   }
   SpaceSet(identity, space, plan, responder) {
@@ -411,7 +411,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "space/set", "id": parId, "identity": identity, "space": space, "plan": plan }
+      request: {"method":"space/set", "id":parId, "identity": identity, "space": space, "plan": plan}
     });
   }
   SpaceRedeployKick(identity, space, responder) {
@@ -420,7 +420,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "space/redeploy-kick", "id": parId, "identity": identity, "space": space }
+      request: {"method":"space/redeploy-kick", "id":parId, "identity": identity, "space": space}
     });
   }
   SpaceSetRxhtml(identity, space, rxhtml, responder) {
@@ -429,7 +429,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "space/set-rxhtml", "id": parId, "identity": identity, "space": space, "rxhtml": rxhtml }
+      request: {"method":"space/set-rxhtml", "id":parId, "identity": identity, "space": space, "rxhtml": rxhtml}
     });
   }
   SpaceGetRxhtml(identity, space, responder) {
@@ -438,7 +438,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "space/get-rxhtml", "id": parId, "identity": identity, "space": space }
+      request: {"method":"space/get-rxhtml", "id":parId, "identity": identity, "space": space}
     });
   }
   SpaceDelete(identity, space, responder) {
@@ -447,7 +447,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "space/delete", "id": parId, "identity": identity, "space": space }
+      request: {"method":"space/delete", "id":parId, "identity": identity, "space": space}
     });
   }
   SpaceSetRole(identity, space, email, role, responder) {
@@ -456,7 +456,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "space/set-role", "id": parId, "identity": identity, "space": space, "email": email, "role": role }
+      request: {"method":"space/set-role", "id":parId, "identity": identity, "space": space, "email": email, "role": role}
     });
   }
   SpaceListDevelopers(identity, space, responder) {
@@ -465,7 +465,7 @@ class WebSocketAdamaConnection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: { "method": "space/list-developers", "id": parId, "identity": identity, "space": space }
+      request: {"method":"space/list-developers", "id":parId, "identity": identity, "space": space}
     });
   }
   SpaceReflect(identity, space, key, responder) {
@@ -474,7 +474,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "space/reflect", "id": parId, "identity": identity, "space": space, "key": key }
+      request: {"method":"space/reflect", "id":parId, "identity": identity, "space": space, "key": key}
     });
   }
   SpaceList(identity, marker, limit, responder) {
@@ -483,7 +483,7 @@ class WebSocketAdamaConnection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: { "method": "space/list", "id": parId, "identity": identity, "marker": marker, "limit": limit }
+      request: {"method":"space/list", "id":parId, "identity": identity, "marker": marker, "limit": limit}
     });
   }
   DomainMap(identity, domain, space, certificate, responder) {
@@ -492,7 +492,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "domain/map", "id": parId, "identity": identity, "domain": domain, "space": space, "certificate": certificate }
+      request: {"method":"domain/map", "id":parId, "identity": identity, "domain": domain, "space": space, "certificate": certificate}
     });
   }
   DomainMapDocument(identity, domain, space, key, route, certificate, responder) {
@@ -501,7 +501,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "domain/map-document", "id": parId, "identity": identity, "domain": domain, "space": space, "key": key, "route": route, "certificate": certificate }
+      request: {"method":"domain/map-document", "id":parId, "identity": identity, "domain": domain, "space": space, "key": key, "route": route, "certificate": certificate}
     });
   }
   DomainList(identity, responder) {
@@ -510,7 +510,7 @@ class WebSocketAdamaConnection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: { "method": "domain/list", "id": parId, "identity": identity }
+      request: {"method":"domain/list", "id":parId, "identity": identity}
     });
   }
   DomainUnmap(identity, domain, responder) {
@@ -519,7 +519,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "domain/unmap", "id": parId, "identity": identity, "domain": domain }
+      request: {"method":"domain/unmap", "id":parId, "identity": identity, "domain": domain}
     });
   }
   DomainGet(identity, domain, responder) {
@@ -528,7 +528,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "domain/get", "id": parId, "identity": identity, "domain": domain }
+      request: {"method":"domain/get", "id":parId, "identity": identity, "domain": domain}
     });
   }
   DocumentAuthorize(space, key, username, password, responder) {
@@ -537,7 +537,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "document/authorize", "id": parId, "space": space, "key": key, "username": username, "password": password }
+      request: {"method":"document/authorize", "id":parId, "space": space, "key": key, "username": username, "password": password}
     });
   }
   DocumentAuthorizeDomain(domain, username, password, responder) {
@@ -546,7 +546,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "document/authorize-domain", "id": parId, "domain": domain, "username": username, "password": password }
+      request: {"method":"document/authorize-domain", "id":parId, "domain": domain, "username": username, "password": password}
     });
   }
   DocumentCreate(identity, space, key, entropy, arg, responder) {
@@ -555,7 +555,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "document/create", "id": parId, "identity": identity, "space": space, "key": key, "entropy": entropy, "arg": arg }
+      request: {"method":"document/create", "id":parId, "identity": identity, "space": space, "key": key, "entropy": entropy, "arg": arg}
     });
   }
   DocumentDelete(identity, space, key, responder) {
@@ -564,7 +564,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "document/delete", "id": parId, "identity": identity, "space": space, "key": key }
+      request: {"method":"document/delete", "id":parId, "identity": identity, "space": space, "key": key}
     });
   }
   DocumentList(identity, space, marker, limit, responder) {
@@ -573,7 +573,7 @@ class WebSocketAdamaConnection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: { "method": "document/list", "id": parId, "identity": identity, "space": space, "marker": marker, "limit": limit }
+      request: {"method":"document/list", "id":parId, "identity": identity, "space": space, "marker": marker, "limit": limit}
     });
   }
   MessageDirectSend(identity, space, key, viewerState, channel, message, responder) {
@@ -582,7 +582,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "message/direct-send", "id": parId, "identity": identity, "space": space, "key": key, "viewer-state": viewerState, "channel": channel, "message": message }
+      request: {"method":"message/direct-send", "id":parId, "identity": identity, "space": space, "key": key, "viewer-state": viewerState, "channel": channel, "message": message}
     });
   }
   MessageDirectSendOnce(identity, space, key, dedupe, channel, message, responder) {
@@ -591,7 +591,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "message/direct-send-once", "id": parId, "identity": identity, "space": space, "key": key, "dedupe": dedupe, "channel": channel, "message": message }
+      request: {"method":"message/direct-send-once", "id":parId, "identity": identity, "space": space, "key": key, "dedupe": dedupe, "channel": channel, "message": message}
     });
   }
   ConnectionCreate(identity, space, key, viewerState, responder) {
@@ -600,61 +600,61 @@ class WebSocketAdamaConnection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: { "method": "connection/create", "id": parId, "identity": identity, "space": space, "key": key, "viewer-state": viewerState },
-      send: function (channel, message, subResponder) {
+      request: {"method":"connection/create", "id":parId, "identity": identity, "space": space, "key": key, "viewer-state": viewerState},
+      send: function(channel, message, subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/send", id: subId, "connection": parId, "channel": channel, "message": message }
+          request: { method: "connection/send", id: subId, "connection":parId, "channel": channel, "message": message}
         });
       },
-      password: function (username, password, new_password, subResponder) {
+      password: function(username, password, new_password, subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/password", id: subId, "connection": parId, "username": username, "password": password, "new_password": new_password }
+          request: { method: "connection/password", id: subId, "connection":parId, "username": username, "password": password, "new_password": new_password}
         });
       },
-      sendOnce: function (channel, dedupe, message, subResponder) {
+      sendOnce: function(channel, dedupe, message, subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/send-once", id: subId, "connection": parId, "channel": channel, "dedupe": dedupe, "message": message }
+          request: { method: "connection/send-once", id: subId, "connection":parId, "channel": channel, "dedupe": dedupe, "message": message}
         });
       },
-      canAttach: function (subResponder) {
+      canAttach: function(subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/can-attach", id: subId, "connection": parId }
+          request: { method: "connection/can-attach", id: subId, "connection":parId}
         });
       },
-      attach: function (assetId, filename, contentType, size, digestMd5, digestSha384, subResponder) {
+      attach: function(assetId, filename, contentType, size, digestMd5, digestSha384, subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/attach", id: subId, "connection": parId, "asset-id": assetId, "filename": filename, "content-type": contentType, "size": size, "digest-md5": digestMd5, "digest-sha384": digestSha384 }
+          request: { method: "connection/attach", id: subId, "connection":parId, "asset-id": assetId, "filename": filename, "content-type": contentType, "size": size, "digest-md5": digestMd5, "digest-sha384": digestSha384}
         });
       },
-      update: function (viewerState, subResponder) {
+      update: function(viewerState, subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/update", id: subId, "connection": parId, "viewer-state": viewerState }
+          request: { method: "connection/update", id: subId, "connection":parId, "viewer-state": viewerState}
         });
       },
-      end: function (subResponder) {
+      end: function(subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/end", id: subId, "connection": parId }
+          request: { method: "connection/end", id: subId, "connection":parId}
         });
       }
     });
@@ -665,61 +665,61 @@ class WebSocketAdamaConnection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: { "method": "connection/create-via-domain", "id": parId, "identity": identity, "domain": domain, "viewer-state": viewerState },
-      send: function (channel, message, subResponder) {
+      request: {"method":"connection/create-via-domain", "id":parId, "identity": identity, "domain": domain, "viewer-state": viewerState},
+      send: function(channel, message, subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/send", id: subId, "connection": parId, "channel": channel, "message": message }
+          request: { method: "connection/send", id: subId, "connection":parId, "channel": channel, "message": message}
         });
       },
-      password: function (username, password, new_password, subResponder) {
+      password: function(username, password, new_password, subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/password", id: subId, "connection": parId, "username": username, "password": password, "new_password": new_password }
+          request: { method: "connection/password", id: subId, "connection":parId, "username": username, "password": password, "new_password": new_password}
         });
       },
-      sendOnce: function (channel, dedupe, message, subResponder) {
+      sendOnce: function(channel, dedupe, message, subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/send-once", id: subId, "connection": parId, "channel": channel, "dedupe": dedupe, "message": message }
+          request: { method: "connection/send-once", id: subId, "connection":parId, "channel": channel, "dedupe": dedupe, "message": message}
         });
       },
-      canAttach: function (subResponder) {
+      canAttach: function(subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/can-attach", id: subId, "connection": parId }
+          request: { method: "connection/can-attach", id: subId, "connection":parId}
         });
       },
-      attach: function (assetId, filename, contentType, size, digestMd5, digestSha384, subResponder) {
+      attach: function(assetId, filename, contentType, size, digestMd5, digestSha384, subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/attach", id: subId, "connection": parId, "asset-id": assetId, "filename": filename, "content-type": contentType, "size": size, "digest-md5": digestMd5, "digest-sha384": digestSha384 }
+          request: { method: "connection/attach", id: subId, "connection":parId, "asset-id": assetId, "filename": filename, "content-type": contentType, "size": size, "digest-md5": digestMd5, "digest-sha384": digestSha384}
         });
       },
-      update: function (viewerState, subResponder) {
+      update: function(viewerState, subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/update", id: subId, "connection": parId, "viewer-state": viewerState }
+          request: { method: "connection/update", id: subId, "connection":parId, "viewer-state": viewerState}
         });
       },
-      end: function (subResponder) {
+      end: function(subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "connection/end", id: subId, "connection": parId }
+          request: { method: "connection/end", id: subId, "connection":parId}
         });
       }
     });
@@ -730,7 +730,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "documents/hash-password", "id": parId, "password": password }
+      request: {"method":"documents/hash-password", "id":parId, "password": password}
     });
   }
   ConfigureMakeOrGetAssetKey(responder) {
@@ -739,7 +739,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "configure/make-or-get-asset-key", "id": parId }
+      request: {"method":"configure/make-or-get-asset-key", "id":parId}
     });
   }
   AttachmentStart(identity, space, key, filename, contentType, responder) {
@@ -748,21 +748,21 @@ class WebSocketAdamaConnection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: { "method": "attachment/start", "id": parId, "identity": identity, "space": space, "key": key, "filename": filename, "content-type": contentType },
-      append: function (chunkMd5, base64Bytes, subResponder) {
+      request: {"method":"attachment/start", "id":parId, "identity": identity, "space": space, "key": key, "filename": filename, "content-type": contentType},
+      append: function(chunkMd5, base64Bytes, subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "attachment/append", id: subId, "upload": parId, "chunk-md5": chunkMd5, "base64-bytes": base64Bytes }
+          request: { method: "attachment/append", id: subId, "upload":parId, "chunk-md5": chunkMd5, "base64-bytes": base64Bytes}
         });
       },
-      finish: function (subResponder) {
+      finish: function(subResponder) {
         var subId = self.__id();
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "attachment/finish", id: subId, "upload": parId }
+          request: { method: "attachment/finish", id: subId, "upload":parId}
         });
       }
     });
@@ -773,7 +773,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "super/check-in", "id": parId, "identity": identity }
+      request: {"method":"super/check-in", "id":parId, "identity": identity}
     });
   }
   SuperListAutomaticDomains(identity, timestamp, responder) {
@@ -782,7 +782,7 @@ class WebSocketAdamaConnection {
     return self.__execute_stream({
       id: parId,
       responder: responder,
-      request: { "method": "super/list-automatic-domains", "id": parId, "identity": identity, "timestamp": timestamp }
+      request: {"method":"super/list-automatic-domains", "id":parId, "identity": identity, "timestamp": timestamp}
     });
   }
   SuperSetDomainCertificate(identity, domain, certificate, timestamp, responder) {
@@ -791,7 +791,7 @@ class WebSocketAdamaConnection {
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: { "method": "super/set-domain-certificate", "id": parId, "identity": identity, "domain": domain, "certificate": certificate, "timestamp": timestamp }
+      request: {"method":"super/set-domain-certificate", "id":parId, "identity": identity, "domain": domain, "certificate": certificate, "timestamp": timestamp}
     });
   }
 

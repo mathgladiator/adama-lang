@@ -55,7 +55,7 @@ public class Twilio extends SimpleService {
   }
 
   @Override
-  public void request(String method, String request, Callback<String> callback) {
+  public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
     ObjectNode node = Json.parseJsonObject(request);
     switch (method) {
       case "send":

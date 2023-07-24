@@ -48,7 +48,7 @@ public class ServiceRemoteTests {
       ServiceRegistry.REGISTRY.put("sqr1", (space, properties) -> {
         return new SimpleService("sqr1", NtPrincipal.NO_ONE, true) {
           @Override
-          public void request(String method, String request, Callback<String> callback) {
+          public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
             actions.add(() -> {
               callback.failure(new ErrorCodeException(403, "Fire-bidden"));
             });
@@ -113,7 +113,7 @@ public class ServiceRemoteTests {
       ServiceRegistry.REGISTRY.put("sqr2", (space, properties) -> {
         return new SimpleService("sqr2", NtPrincipal.NO_ONE, true) {
           @Override
-          public void request(String method, String request, Callback<String> callback) {
+          public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
             int _x = 1;
             JsonStreamReader reader = new JsonStreamReader(request);
             if (reader.startObject()) {
@@ -192,7 +192,7 @@ public class ServiceRemoteTests {
       ServiceRegistry.REGISTRY.put("sqr3", (space, properties) -> {
         return new SimpleService("sqr3", NtPrincipal.NO_ONE, false) {
           @Override
-          public void request(String method, String request, Callback<String> callback) {
+          public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
             int _x = 1;
             JsonStreamReader reader = new JsonStreamReader(request);
             if (reader.startObject()) {
@@ -276,7 +276,7 @@ public class ServiceRemoteTests {
       ServiceRegistry.REGISTRY.put("sqr4", (space, properties) -> {
         return new SimpleService("sqr4", NtPrincipal.NO_ONE, false) {
           @Override
-          public void request(String method, String request, Callback<String> callback) {
+          public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
             int _x = 1;
             JsonStreamReader reader = new JsonStreamReader(request);
             if (reader.startObject()) {
@@ -352,7 +352,7 @@ public class ServiceRemoteTests {
       ServiceRegistry.REGISTRY.put("sqr5", (space, properties) -> {
         return new SimpleService("sqr5", NtPrincipal.NO_ONE, false) {
           @Override
-          public void request(String method, String request, Callback<String> callback) {
+          public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
             int _x = 1;
             JsonStreamReader reader = new JsonStreamReader(request);
             if (reader.startObject()) {
@@ -432,7 +432,7 @@ public class ServiceRemoteTests {
       ServiceRegistry.REGISTRY.put("sqr6", (space, properties) -> {
         return new SimpleService("sqr6", NtPrincipal.NO_ONE, true) {
           @Override
-          public void request(String method, String request, Callback<String> callback) {
+          public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
             int _x = 1;
             JsonStreamReader reader = new JsonStreamReader(request);
             if (reader.startObject()) {

@@ -37,7 +37,7 @@ public class SampleService extends SimpleService {
   }
 
   @Override
-  public void request(String method, String request, Callback<String> callback) {
+  public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
     if (method.equals("echo")) {
       callback.success(request);
     } else {

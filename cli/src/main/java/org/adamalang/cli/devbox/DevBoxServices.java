@@ -39,14 +39,14 @@ public class DevBoxServices {
     }
 
     @Override
-    public void request(String method, String request, Callback<String> callback) {
+    public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
       logger.accept("Service[AmazonSES/ " + space+ "]::" + method + "(" + request + ")");
       callback.success("{}");
     }
   }
 
   public static void install(Consumer<String> logger) {
-    FirstPartyServices.install(new NoOpMetricsFactory(), null, null, null);
+    FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null, null);
     logger.accept("Installing DevBox Override Services");
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw) -> new DevBoxAmazonSES(space, logger));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw) -> new SafeRandom());

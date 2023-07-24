@@ -68,7 +68,7 @@ public class SpaceHandlerImpl implements SpaceHandler {
 
     @Override
     public void deploy(Arguments.SpaceDeployArgs args, Output.YesOrError output) throws Exception {
-        FirstPartyServices.install(new NoOpMetricsFactory(), null, null, null);
+        FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null, null);
         Deployer.deploy(args, output);
     }
 

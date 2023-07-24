@@ -84,6 +84,7 @@ public class CommonServiceInit {
   public final int minDomainsToHoldTo;
   public final int maxDomainsToHoldTo;
   public final int maxDomainAge;
+  public final SimpleExecutor services;
 
   public CommonServiceInit(Config config, Role role) throws Exception {
     MachineHeat.install();
@@ -157,7 +158,8 @@ public class CommonServiceInit {
     }, 5000);
     engine = netBase.startGossiping();
     // TODO: promote the concept of the multi-region client as "everyone needs a client"
-    FirstPartyServices.install(metricsFactory, database, webBase, masterKey);
+    services = SimpleExecutor.create("executor");
+    FirstPartyServices.install(services, metricsFactory, database, webBase, masterKey);
 
     System.out.println("[Setup]");
     System.out.println("         role:" + role.name);
@@ -186,6 +188,11 @@ public class CommonServiceInit {
       try {
         webBase.shutdown();
       } catch (Exception ex) {
+      }
+      try {
+        services.shutdown();
+      } catch (Exception ex) {
+
       }
     })));
   }

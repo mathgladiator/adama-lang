@@ -10,6 +10,7 @@ package org.adamalang.runtime.remote;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ public class SampleServiceTests {
   public void coverage() {
     SampleService ss = new SampleService();
     AtomicBoolean called = new AtomicBoolean(false);
-    ss.request("method", "{}", new Callback<String>() {
+    ss.request(NtPrincipal.NO_ONE, "method", "{}", new Callback<String>() {
       @Override
       public void success(String value) {
         Assert.fail();

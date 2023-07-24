@@ -33,7 +33,7 @@ public abstract class SimpleService implements Service {
   @Override
   public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtPrincipal who, NtToDynamic request, Function<String, T> parser) {
     return cache.answer(name, method, who, request, parser, (id, json) -> {
-      request(method, json, new Callback<String>() {
+      request(who, method, json, new Callback<String>() {
         @Override
         public void success(String value) {
           deliver(new RemoteResult(value, null, null));
@@ -52,5 +52,5 @@ public abstract class SimpleService implements Service {
     });
   }
 
-  public abstract void request(String method, String request, Callback<String> callback);
+  public abstract void request(NtPrincipal who, String method, String request, Callback<String> callback);
 }

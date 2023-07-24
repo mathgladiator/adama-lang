@@ -9,6 +9,7 @@
 package org.adamalang.services;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.remote.Service;
@@ -24,8 +25,17 @@ import org.slf4j.LoggerFactory;
 public class FirstPartyServices {
   private static final Logger LOGGER = LoggerFactory.getLogger(FirstPartyServices.class);
 
-  public static void install(MetricsFactory factory, DataBase dataBase, WebClientBase webClientBase, String masterKey) {
+  public static void install(SimpleExecutor executor, MetricsFactory factory, DataBase dataBase, WebClientBase webClientBase, String masterKey) {
     FirstPartyMetrics metrics = new FirstPartyMetrics(factory);
+    /*
+    SelfClient adamaClientRaw = null;
+    if (executor != null){
+      // TODO: sort out a plan for variuos endpoints... OR make it part of the signature
+      MultiWebClientRetryPool pool = new MultiWebClientRetryPool(executor, webClientBase, new MultiWebClientRetryPoolMetrics(factory), new MultiWebClientRetryPoolConfig(new ConfigObject(Json.newJsonObject())), "aws-us-east.adama-platform.com");
+      adamaClientRaw = new SelfClient(pool);
+    }
+    final SelfClient adamaClient = adamaClientRaw;
+    */
     ServiceRegistry.add("adama", Adama.class, (space, configRaw) -> { // TODO
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {

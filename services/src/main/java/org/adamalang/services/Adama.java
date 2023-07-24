@@ -18,25 +18,62 @@ import org.adamalang.runtime.remote.SimpleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutorService;
+import java.util.HashSet;
+import java.util.function.Consumer;
 
 public class Adama extends SimpleService {
   private static final Logger LOGGER = LoggerFactory.getLogger(Adama.class);
   private final FirstPartyMetrics metrics;
+//  private final SelfClient client;
 
   public Adama(FirstPartyMetrics metrics, ServiceConfig config) throws ErrorCodeException {
     super("adama", new NtPrincipal("adama", "service"), true);
     this.metrics = metrics;
   }
+  public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("message AdamaCreateDocument_").append(uniqueId).append(" { string space; string key; maybe<long> entropy; dynamic arg; }\n");
+    sb.append("message SimpleResponse_").append(uniqueId).append(" { }\n");
+    sb.append("service adama {\n");
+    sb.append("  class=\"adama\";\n");
+    sb.append("  method secured<AdamaCreateDocument_").append(uniqueId).append(", SimpleResponse_").append(uniqueId).append("> documentCreate;\n");
+    sb.append("}\n");
+    return sb.toString();
+  }
 
   @Override
-  public void request(String method, String request, Callback<String> callback) {
+  public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+    // TODO: create an identity from who
+    String identity = "anonymous:nope";
     ObjectNode node = Json.parseJsonObject(request);
     switch (method) {
-      case "create":
-        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_IMPLEMENTED));
+      case "documentCreate": {
+        /*
+        ClientDocumentCreateRequest req = new ClientDocumentCreateRequest();
+        req.identity = identity;
+        req.space = Json.readString(node, "space");
+        req.key = Json.readString(node, "key");
+        if (node.has("entropy")) {
+          req.entropy = "" + Json.readLong(node, "entropy");
+        }
+        req.arg = Json.readObject(node, "arg");
+        client.documentCreate(req, new Callback<ClientSimpleResponse>() {
+          @Override
+          public void success(ClientSimpleResponse response) {
+            callback.success("{}");
+          }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
         return;
+        }
+        */
+        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
+      }
       case "sendDirect":
+        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
         return;
       default:
         callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
