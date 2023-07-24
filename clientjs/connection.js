@@ -540,6 +540,15 @@ class WebSocketAdamaConnection {
       request: {"method":"document/authorize", "id":parId, "space": space, "key": key, "username": username, "password": password}
     });
   }
+  DocumentAuthorizeDomain(domain, username, password, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"document/authorize-domain", "id":parId, "domain": domain, "username": username, "password": password}
+    });
+  }
   DocumentCreate(identity, space, key, entropy, arg, responder) {
     var self = this;
     var parId = self.__id();

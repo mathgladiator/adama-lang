@@ -312,6 +312,16 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientInitiationResponse(obj), callback);
   }
 
+  /** document/authorize-domain */
+  public void documentAuthorizeDomain(ClientDocumentAuthorizeDomainRequest request, Callback<ClientInitiationResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "document/authorize-domain");
+    node.put("domain", request.domain);
+    node.put("username", request.username);
+    node.put("password", request.password);
+    pool.requestResponse(node, (obj) -> new ClientInitiationResponse(obj), callback);
+  }
+
   /** document/create */
   public void documentCreate(ClientDocumentCreateRequest request, Callback<ClientSimpleResponse> callback) {
     ObjectNode node = Json.newJsonObject();

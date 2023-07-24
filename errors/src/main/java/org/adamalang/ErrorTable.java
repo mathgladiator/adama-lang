@@ -348,6 +348,12 @@ public class ErrorTable {
     descriptions.put(998384, "no description of error (yet)");
     names.put(980204, "API_AUTH_DOCUMENT_UNKNOWN_EXCEPTION");
     descriptions.put(980204, "no description of error (yet)");
+    names.put(902399, "API_AUTH_DOMAIN_AUTH_DOMAIN_INVALID_MAPPED");
+    descriptions.put(902399, "no description of error (yet)");
+    names.put(983294, "API_AUTH_DOMAIN_AUTH_NO_KEY_MAPPED");
+    descriptions.put(983294, "no description of error (yet)");
+    names.put(994556, "API_AUTH_DOMAIN_AUTH_UNKNOWN_EXCEPTION");
+    descriptions.put(994556, "no description of error (yet)");
     names.put(991368, "API_SET_PASSWORD_UNKNOWN_EXCEPTION");
     descriptions.put(991368, "no description of error (yet)");
     names.put(983199, "API_SET_PASSWORD_ONLY_ADAMA_DEV_EXCEPTION");

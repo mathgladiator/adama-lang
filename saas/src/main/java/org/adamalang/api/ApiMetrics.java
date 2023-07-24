@@ -43,6 +43,7 @@ public class ApiMetrics {
   public final RequestResponseMonitor monitor_DomainUnmap;
   public final RequestResponseMonitor monitor_DomainGet;
   public final RequestResponseMonitor monitor_DocumentAuthorize;
+  public final RequestResponseMonitor monitor_DocumentAuthorizeDomain;
   public final RequestResponseMonitor monitor_DocumentCreate;
   public final RequestResponseMonitor monitor_DocumentDelete;
   public final RequestResponseMonitor monitor_DocumentList;
@@ -98,6 +99,7 @@ public class ApiMetrics {
     this.monitor_DomainUnmap = factory.makeRequestResponseMonitor("domain/unmap");
     this.monitor_DomainGet = factory.makeRequestResponseMonitor("domain/get");
     this.monitor_DocumentAuthorize = factory.makeRequestResponseMonitor("document/authorize");
+    this.monitor_DocumentAuthorizeDomain = factory.makeRequestResponseMonitor("document/authorize-domain");
     this.monitor_DocumentCreate = factory.makeRequestResponseMonitor("document/create");
     this.monitor_DocumentDelete = factory.makeRequestResponseMonitor("document/delete");
     this.monitor_DocumentList = factory.makeRequestResponseMonitor("document/list");

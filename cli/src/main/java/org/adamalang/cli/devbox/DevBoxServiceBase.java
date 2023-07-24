@@ -167,10 +167,7 @@ public class DevBoxServiceBase implements ServiceBase {
           public void success(WebResponse response) {
             if (response != null) {
               if ("text/agent".equals(response.contentType)) {
-                // TODO: pull a signing key from the verse config
-                // SigningKeyPair keyPair = Secrets.getOrCreateDocumentSigningKey(init.database, init.masterKey, skr.space, skr.key);
-                // String identity = keyPair.signDocument(skr.space, skr.key, response.body);
-                String identity = "anonymous:" + response.body;
+                String identity = "document/" + skr.space + "/" + skr.key + "/" + response.body;
                 ObjectNode json = Json.newJsonObject();
                 json.put("identity", identity);
                 callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));

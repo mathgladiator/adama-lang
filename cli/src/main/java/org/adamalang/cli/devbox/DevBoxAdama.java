@@ -24,6 +24,7 @@ import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   private final SimpleExecutor executor;
@@ -53,6 +54,10 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   }
 
   private NtPrincipal principalOf(String identity) {
+    if (identity.startsWith("document/")) {
+      String[] parts = identity.split(Pattern.quote("/"));
+      return new NtPrincipal(parts[3], "doc/" + parts[1] + "/" + parts[2]);
+    }
     // TODO: parse identity and then resolve against a table
     return NtPrincipal.NO_ONE;
   }
@@ -70,6 +75,35 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
         responder.error(ex);
       }
     });
+  }
+
+  // public void authorize(String origin, String ip, Key key, String username, String password, Callback<String> callback) {
+  private void commonAuthorize(Key key, String username, String password, InitiationResponder responder) {
+    verse.service.authorize(context.origin, context.remoteIp, key, username, password, new Callback<String>() {
+      @Override
+      public void success(String value) {
+        responder.complete("document/" + key.space + "/" + key.key + "/" + value);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
+  @Override
+  public void handle_DocumentAuthorize(long requestId, String space, String key, String username, String password, InitiationResponder responder) {
+    commonAuthorize(new Key(space, key), username, password, responder);
+  }
+
+  @Override
+  public void handle_DocumentAuthorizeDomain(long requestId, String domain, String username, String password, InitiationResponder responder) {
+    if (verse.domainKeyToUse != null) {
+      commonAuthorize(verse.domainKeyToUse, username, password, responder);
+    } else {
+      responder.error(new ErrorCodeException(1));
+    }
   }
 
   private void internalConnect(long requestId, String identity, Key key, ObjectNode viewerState, DataResponder responder) {

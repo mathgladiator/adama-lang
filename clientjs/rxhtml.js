@@ -367,14 +367,10 @@ var RxHTML = (function () {
   self.pR = function (state) {
     var next = {service: state.service, data: state.data, view: state.view, current: state.current};
     var prior = next[state.current];
-    while (prior.parent != null) {
-      if (prior.parent == null) {
-        next[state.current];
-        return prior;
-      }
+    while (prior != null) {
+      next[state.current] = prior;
       prior = prior.parent;
     }
-    next[state.current] = prior;
     return next;
   };
   self.newStateRootOf = self.pR;
@@ -1311,6 +1307,7 @@ var RxHTML = (function () {
   };
 
   self.goto = function (uri) {
+    console.log("going to:" + uri);
     window.setTimeout(function () {
       if (uri.startsWith("/")) {
         self.run(document.body, uri, true);
@@ -1539,9 +1536,12 @@ var RxHTML = (function () {
       if (!valid) {
         return;
       }
+      var idLookup = self.ID(rxobj.identity, function() { return rxobj.redirect; });
+      if (idLookup.abort) {
+        return;
+      }
       var co = get_connection_obj(rxobj.name);
-      var desired = rxobj.space + "/" + rxobj.key;
-
+      var desired = rxobj.space + "/" + rxobj.key + "/" + idLookup.identity; // TODO: need some kind of hashing function here
       var sync_tree = function() {
         var new_tree = state.view.tree.copy();
         co.viewstate_sent = false;
@@ -1575,10 +1575,7 @@ var RxHTML = (function () {
         co.ptr = null;
       }
       co.bound = desired;
-      var idLookup = self.ID(rxobj.identity, function() { return rxobj.redirect; });
-      if (idLookup.abort) {
-        return;
-      }
+
       var identity = idLookup.identity;
       var cleanup = idLookup.cleanup;
       unsub.view();
@@ -1706,6 +1703,7 @@ var RxHTML = (function () {
         success: function (payload) {
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
+          // TODO: blow away connections
           self.goto(rxobj.rx_forward);
           fire_success(form);
         },

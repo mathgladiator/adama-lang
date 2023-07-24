@@ -88,13 +88,12 @@ public class RootHandlerImpl implements RootHandler {
     }
   }
 
-  @Override
-  public void handle(Session session, DocumentAuthorizeRequest request, InitiationResponder responder) {
-    nexus.adama.authorize(session.authenticator.ip(), session.authenticator.origin(), request.space, request.key, request.username, request.password, new Callback<String>() {
+  private void commonAuthorize(Session session, Key key, String username, String password, InitiationResponder responder) {
+    nexus.adama.authorize(session.authenticator.ip(), session.authenticator.origin(), key.space, key.key, username, password, new Callback<String>() {
       @Override
       public void success(String agent) {
         try {
-          String identity = Secrets.getOrCreateDocumentSigningKey(nexus.database, nexus.masterKey, request.space, request.key).signDocument(request.space, request.key, agent);
+          String identity = Secrets.getOrCreateDocumentSigningKey(nexus.database, nexus.masterKey, key.space, key.key).signDocument(key.space, key.key, agent);
           responder.complete(identity);
         } catch (Exception ex) {
           responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_AUTH_DOCUMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
@@ -106,6 +105,29 @@ public class RootHandlerImpl implements RootHandler {
         responder.error(ex);
       }
     });
+  }
+
+  @Override
+  public void handle(Session session, DocumentAuthorizeRequest request, InitiationResponder responder) {
+    commonAuthorize(session, new Key(request.space, request.key), request.username, request.password, responder);
+  }
+
+  @Override
+  public void handle(Session session, DocumentAuthorizeDomainRequest request, InitiationResponder responder) {
+    try {
+      Domain domain = Domains.get(nexus.database, fixDomain(request.domain));
+      if (domain != null) {
+        if (domain.key != null) {
+          commonAuthorize(session, new Key(domain.space, domain.key), request.username, request.password, responder);
+        } else {
+          responder.error(new ErrorCodeException(ErrorCodes.API_AUTH_DOMAIN_AUTH_NO_KEY_MAPPED));
+        }
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_AUTH_DOMAIN_AUTH_DOMAIN_INVALID_MAPPED));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_AUTH_DOMAIN_AUTH_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
   }
 
   @Override

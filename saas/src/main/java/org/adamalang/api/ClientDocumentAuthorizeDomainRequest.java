@@ -6,8 +6,11 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static String VERSION = "20230724022241";
+/** generated request type for document/authorize-domain */
+public class ClientDocumentAuthorizeDomainRequest {
+  public String domain;
+  public String username;
+  public String password;
 }

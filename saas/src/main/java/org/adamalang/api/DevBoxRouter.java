@@ -18,6 +18,10 @@ public abstract class DevBoxRouter {
 
   public abstract void handle_SpaceReflect(long requestId, String identity, String space, String key, ReflectionResponder responder);
 
+  public abstract void handle_DocumentAuthorize(long requestId, String space, String key, String username, String password, InitiationResponder responder);
+
+  public abstract void handle_DocumentAuthorizeDomain(long requestId, String domain, String username, String password, InitiationResponder responder);
+
   public abstract void handle_ConnectionCreate(long requestId, String identity, String space, String key, ObjectNode viewerState, DataResponder responder);
 
   public abstract void handle_ConnectionCreateViaDomain(long requestId, String identity, String domain, ObjectNode viewerState, DataResponder responder);
@@ -49,6 +53,21 @@ public abstract class DevBoxRouter {
           request.getStringNormalize("space", true, 461828), //
           request.getString("key", true, 466947), //
           new ReflectionResponder(responder));
+          return;
+        case "document/authorize":
+          handle_DocumentAuthorize(requestId, //
+          request.getStringNormalize("space", true, 461828), //
+          request.getString("key", true, 466947), //
+          request.getString("username", true, 458737), //
+          request.getString("password", true, 465917), //
+          new InitiationResponder(responder));
+          return;
+        case "document/authorize-domain":
+          handle_DocumentAuthorizeDomain(requestId, //
+          request.getString("domain", true, 488444), //
+          request.getString("username", true, 458737), //
+          request.getString("password", true, 465917), //
+          new InitiationResponder(responder));
           return;
         case "connection/create":
           handle_ConnectionCreate(requestId, //

@@ -916,9 +916,18 @@
         </documentation>
     </method>
 
-    <method name="document/authorize" responder="initiation">
+    <method name="document/authorize" responder="initiation" devbox="true">
         <parameter name="space"/>
         <parameter name="key"/>
+        <parameter name="username"/>
+        <parameter name="password"/>
+        <documentation>
+            Authorize a username and password against a document.
+        </documentation>
+    </method>
+
+    <method name="document/authorize-domain" responder="initiation" devbox="true">
+        <parameter name="domain"/>
         <parameter name="username"/>
         <parameter name="password"/>
         <documentation>
