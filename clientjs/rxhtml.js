@@ -1775,15 +1775,16 @@ var RxHTML = (function () {
               var type = this.getResponseHeader("Content-Type");
               if (type == "text/error") {
                 fire_failure(form, this.responseText);
+                return;
               } else if (type == "application/json") {
                 var payload = JSON.parse(this.responseText);
                 if ('identity' in payload) {
                   identities[identityName] = payload.identity;
                   localStorage.setItem("identity_" + identityName, payload.identity);
                 }
-                self.goto(rxobj.rx_forward);
-                fire_success(form);
               }
+              self.goto(rxobj.rx_forward);
+              fire_success(form);
             } else {
               fire_failure(form, "Failed to communicate to server");
             }
