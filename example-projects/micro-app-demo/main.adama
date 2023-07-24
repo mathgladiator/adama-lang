@@ -1,0 +1,12 @@
+@static {
+  create {
+    return true;
+  }
+  invent {
+    return true;
+  }
+}
+
+@connected {
+  return true;
+}
