@@ -407,7 +407,7 @@ public class LivingDocumentTests {
       }
     });
     gotResponse.await(1000, TimeUnit.MILLISECONDS);
-    setup.document.invalidate(new RealDocumentSetup.AssertInt(3));
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(4));
     setup.assertCompare();
   }
 

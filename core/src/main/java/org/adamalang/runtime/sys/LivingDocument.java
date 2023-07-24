@@ -1266,6 +1266,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         __revert();
         exception = false;
         EphemeralFuture<WebResponse> future = new EphemeralFuture<>();
+        __seq.bumpUpPre();
         __webQueue.queue(put.context, put, future, cache, delay);
         return __simple_commit(put.context.who, request, future, 0L);
       }
@@ -1563,22 +1564,24 @@ public abstract class LivingDocument implements RxParent, Caller {
         Iterator<Map.Entry<Integer, WebQueueItem>> it = __webQueue.iterator();
         while (it.hasNext()) {
           WebQueueItem item = it.next().getValue();
-          dirtyLeft--;
           try {
-            // TODO: reset random
+            __random = new Random(seedUsed);
             if (item.item instanceof WebPut) {
               __currentWebCache = item.cache;
-              WebResponse response = __put_internal((WebPut) item.item);
+              WebPut put = (WebPut) item.item;
+              WebResponse response = __put_internal(put);
               if (item.future != null) {
                 item.future.send(response);
               }
             }
+            dirtyLeft--;
             item.state = WebQueueState.Remove;
             __webQueue.dirty();
-            break;
+            return __invalidate_trailer(who, request, dirtyLeft > 0);
           } catch (ComputeBlockedException cbe) {
             __revert();
             __time.set(timeBackup);
+            __seq.bumpUpPre();
           }
         }
       }

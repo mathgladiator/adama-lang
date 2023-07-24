@@ -469,6 +469,8 @@ public class DurableLivingDocument implements Queryable {
         }
       };
 
+      boolean requireInvalidate = false;
+      int invalidateWaitTime = Integer.MAX_VALUE;
       boolean requestsCleanUp = false;
       for (final IngestRequest request : requests) {
         try {
@@ -480,6 +482,10 @@ public class DurableLivingDocument implements Queryable {
           if (request.change != null) {
             changes.add(request.change);
             last = request.change;
+            if (last.update.requiresFutureInvalidation) {
+              requireInvalidate = true;
+              invalidateWaitTime = Math.min(invalidateWaitTime, last.update.whenToInvalidateMilliseconds);
+            }
           } else {
             request.callback.failure(new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CHANGE));
           }
@@ -507,10 +513,12 @@ public class DurableLivingDocument implements Queryable {
           }
         });
       };
-      while (last.update.requiresFutureInvalidation && last.update.whenToInvalidateMilliseconds == 0) {
+      while (requireInvalidate && invalidateWaitTime == 0) {
         // inject an invalidation
         try {
           last = document.__transact(forgeInvalidate(), currentFactory);
+          requireInvalidate = last.update.requiresFutureInvalidation;
+          invalidateWaitTime = last.update.whenToInvalidateMilliseconds;
           changes.add(last);
         } catch (ErrorCodeException ex) {
           triggerFailure.accept(ex);

@@ -45,11 +45,11 @@ public class DevBoxServices {
     }
   }
 
-  public static void install(Consumer<String> logger) {
+  public static void install(SimpleExecutor executor, Consumer<String> logger) {
     FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null, null);
     logger.accept("Installing DevBox Override Services");
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw) -> new DevBoxAmazonSES(space, logger));
-    ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw) -> new SafeRandom());
+    ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw) -> new SafeRandom(executor));
     // TODO: Stripe?
   }
 }

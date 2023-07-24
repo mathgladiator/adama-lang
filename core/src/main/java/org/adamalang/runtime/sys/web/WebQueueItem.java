@@ -12,6 +12,7 @@ import org.adamalang.runtime.async.EphemeralFuture;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.remote.RxCache;
+import org.adamalang.runtime.sys.web.partial.WebPartial;
 
 /** an item within the queue for processing web tasks */
 public class WebQueueItem {
@@ -34,7 +35,7 @@ public class WebQueueItem {
   public static WebQueueItem from(int taskId, JsonStreamReader reader, RxCache cache) {
     if (reader.startObject()) {
       WebContext _context = null;
-      WebItem _item = null;
+      WebPartial _item_partial = null;
       while (reader.notEndOfObject()) {
         switch (reader.fieldName()) {
           case "cache":
@@ -44,13 +45,13 @@ public class WebQueueItem {
             _context = WebContext.readFromObject(reader);
             break;
           case "item":
-            _item = WebItem.read(_context, reader);
+            _item_partial = WebPartial.read(reader);
             break;
           default:
             reader.skipValue();
         }
       }
-      return new WebQueueItem(taskId, _context, _item, cache, null);
+      return new WebQueueItem(taskId, _context, _item_partial.convert(_context), cache, null);
     } else {
       reader.skipValue();
     }

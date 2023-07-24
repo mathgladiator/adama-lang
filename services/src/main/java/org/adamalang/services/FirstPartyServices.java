@@ -76,6 +76,6 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
-    ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw) -> new SafeRandom());
+    ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw) -> new SafeRandom(executor));
   }
 }

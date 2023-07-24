@@ -85,6 +85,7 @@ public class DevCoreServiceFactory {
     flusher.start();
     this.base = new DeploymentFactoryBase();
     this.service = new CoreService(new CoreMetrics(metricsFactory), base, (samples) -> {}, dataService, TimeSource.REAL_TIME, 2);
+    base.attachDeliverer(service);
   }
 
   public void shutdown() throws Exception {

@@ -22,6 +22,13 @@ public class TokenStream {
     while (it.hasNext()) {
       int cp = it.next();
       switch (cp) {
+        case '`':
+          if (state == ScanState.Start) {
+            state = ScanState.Text;
+          }
+          cp = it.next();
+          currentText.append(Character.toString(cp));
+          break;
         case '{': {
           switch (state) {
             case Text: {
@@ -105,12 +112,12 @@ public class TokenStream {
             case Start:
             case Text:
               state = ScanState.Text;
-              currentText.append((char) cp); // TODO: escape unicode characters
-              break;
             case PushVariable:
             case PushCondition:
-              currentText.append((char) cp); // TODO: escape unicode characters
-
+              currentText.append(Character.toString(cp)); // TODO: escape unicode characters
+              if (cp == '\\') {
+                currentText.append(Character.toString(cp));
+              }
           }
         }
       }

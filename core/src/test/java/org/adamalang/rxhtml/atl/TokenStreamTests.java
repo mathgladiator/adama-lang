@@ -8,6 +8,7 @@
  */
 package org.adamalang.rxhtml.atl;
 
+import org.adamalang.translator.parser.token.TokenEngine;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -139,6 +140,41 @@ public class TokenStreamTests {
     assertNextIsText(it, "b");
     assertNextIsCondition(it, "good", TokenStream.Modifier.End);
     assertNextIsText(it, "c");
+    assertNoNext(it);
+  }
+
+  @Test
+  public void escaping1() {
+    Iterator<TokenStream.Token> it = TokenStream.tokenize("`[`]`{`}").iterator();
+    assertNextIsText(it, "[]{}");
+    assertNoNext(it);
+  }
+
+  @Test
+  public void escaping2() {
+    Iterator<TokenStream.Token> it = TokenStream.tokenize("a`{`}b").iterator();
+    assertNextIsText(it, "a{}b");
+    assertNoNext(it);
+  }
+
+  @Test
+  public void escaping3() {
+    Iterator<TokenStream.Token> it = TokenStream.tokenize("a`[`]b").iterator();
+    assertNextIsText(it, "a[]b");
+    assertNoNext(it);
+  }
+
+  @Test
+  public void escaping4() {
+    Iterator<TokenStream.Token> it = TokenStream.tokenize("[a`{]").iterator();
+    assertNextIsCondition(it, "a{", TokenStream.Modifier.None);
+    assertNoNext(it);
+  }
+
+  @Test
+  public void escaping5() {
+    Iterator<TokenStream.Token> it = TokenStream.tokenize("{a`{}").iterator();
+    assertNextIsVariable(it, "a{", TokenStream.Modifier.None);
     assertNoNext(it);
   }
 }

@@ -163,7 +163,7 @@ public class Attributes {
           env.writer.tab().append(computeFoo).append("();").newline();
           env.writer.tabDown().tab().append("}").newline();
         } else {
-          writeDomSetter(eVar, attr.getKey(), "'" + new Escaping(attr.getValue()).switchQuotes().go() + "'");
+          writeDomSetter(eVar, attr.getKey(), tree.js("this"));
         }
       } else {
         writeDomSetter(eVar, attr.getKey(), "true");

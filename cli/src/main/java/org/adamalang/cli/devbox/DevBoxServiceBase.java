@@ -185,6 +185,7 @@ public class DevBoxServiceBase implements ServiceBase {
 
           @Override
           public void failure(ErrorCodeException ex) {
+            io.error("route failure: " + ex.code);
             callback.failure(ex);
           }
         };
@@ -193,6 +194,7 @@ public class DevBoxServiceBase implements ServiceBase {
       @Override
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         if (verse != null) {
+          // TODO: differiate between a document/domain put
           SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
           Key key = new Key(skr.space, skr.key);
           WebPut webPut = new WebPut(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson), body);

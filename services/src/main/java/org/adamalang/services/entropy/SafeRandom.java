@@ -9,8 +9,8 @@
 package org.adamalang.services.entropy;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.common.Callback;
-import org.adamalang.common.Json;
+import org.adamalang.ErrorCodes;
+import org.adamalang.common.*;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
 
@@ -20,10 +20,12 @@ import java.util.function.Consumer;
 
 public class SafeRandom extends SimpleService {
   private final Random rng;
+  private final SimpleExecutor offload;
 
-  public SafeRandom() {
+  public SafeRandom(SimpleExecutor offload) {
     super("saferandom", new NtPrincipal("saferandom", "service"), true);
     this.rng = new Random();
+    this.offload = offload;
   }
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
@@ -39,17 +41,28 @@ public class SafeRandom extends SimpleService {
 
   @Override
   public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
-    // NOTE: this is not a "secure" random.
-    if ("ask".equals(method)) {
-      ObjectNode parsed = Json.parseJsonObject(request);
-      String pool = parsed.get("pool").textValue();
-      int count = parsed.get("count").intValue();
-      StringBuilder sb = new StringBuilder();
-      for (int k = 0; k < count; k++) {
-        int j = rng.nextInt(pool.length());
-        sb.append(pool.charAt(j));
+    offload.execute(new NamedRunnable("randomness") {
+      @Override
+      public void execute() throws Exception {
+        try {
+          // NOTE: this is not a "secure" random.
+          if ("ask".equals(method)) {
+            ObjectNode parsed = Json.parseJsonObject(request);
+            String pool = parsed.get("pool").textValue();
+            int count = parsed.get("count").intValue();
+            StringBuilder sb = new StringBuilder();
+            for (int k = 0; k < count; k++) {
+              int j = rng.nextInt(pool.length());
+              sb.append(pool.charAt(j));
+            }
+            callback.success("{\"result\":\"" + sb + "\"}");
+          } else {
+            callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
+          }
+        } catch (Exception ex) {
+          callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_EXCEPTION));
+        }
       }
-      callback.success("{\"result\":\"" + sb + "\"}");
-    }
+    });
   }
 }

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.Json;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.web.service.WebConfig;
 
 import java.io.File;
@@ -21,6 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class DevBoxStart {
   public static void start(Arguments.FrontendDevServerArgs args) throws Exception {
+    SimpleExecutor offload = SimpleExecutor.create("executor");
     DynamicControl control = new DynamicControl();
     AtomicBoolean alive = new AtomicBoolean(true);
     String localLibAdamaJSPath = "".equals(args.localLibadamaPath) ? null : args.localLibadamaPath;
@@ -32,7 +34,7 @@ public class DevBoxStart {
       }
     }
     TerminalIO terminal = new TerminalIO();
-    DevBoxServices.install((line) -> terminal.info(line));
+    DevBoxServices.install(offload, (line) -> terminal.info(line));
     DevBoxAdamaMicroVerse verse = null;
     if (args.microverse != null) {
       File microverseDef = new File(args.microverse);

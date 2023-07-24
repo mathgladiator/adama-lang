@@ -12,6 +12,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.web.partial.WebPartial;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -40,8 +41,8 @@ public class WebPutTests {
   @Test
   public void route() {
     WebContext context = new WebContext(NtPrincipal.NO_ONE, "origin", "ip");
-    JsonStreamReader reader = new JsonStreamReader("{\"put\":{\"uri\":\"/uri\",\"headers\":{\"x\":\"abc\"},\"parameters\":{\"p\":123},\"bodyJson\":{}}}");
-    WebPut put = (WebPut) WebItem.read(context, reader);
+    JsonStreamReader reader = new JsonStreamReader("{\"put\":{\"uri\":\"/uri\",\"headers\":{\"x\":\"abc\"},\"parameters\":{\"p\":123},\"bodyJson\":{},\"junk\":\"rat\"}}");
+    WebPut put = (WebPut) WebPartial.read(reader).convert(context);
     Assert.assertEquals("/uri", put.uri);
     Assert.assertEquals("{\"p\":123}", put.parameters.json);
     Assert.assertEquals("{}", put.bodyJson);

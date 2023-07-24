@@ -21,7 +21,7 @@ public class TemplateCheckboxTests extends BaseRxHtmlTest {
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c = $.E('input');");
-    gold.append("\n    c.setAttribute('type','checkbox');");
+    gold.append("\n    c.setAttribute('type',\"checkbox\");");
     gold.append("\n    {");
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
@@ -42,7 +42,7 @@ public class TemplateCheckboxTests extends BaseRxHtmlTest {
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c = $.E('input');");
-    gold.append("\n    c.setAttribute('type','checkbox');");
+    gold.append("\n    c.setAttribute('type',\"checkbox\");");
     gold.append("\n    {");
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");

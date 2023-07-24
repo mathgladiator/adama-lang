@@ -33,6 +33,14 @@ public class WebPut implements WebItem {
     this.bodyJson = bodyJson;
   }
 
+  public WebPut(WebContext context, WebPut prior) {
+    this.context = context;
+    this.headers = prior.headers;
+    this.uri = prior.uri;
+    this.parameters = prior.parameters;
+    this.bodyJson = prior.bodyJson;
+  }
+
   public static WebPut read(WebContext context, JsonStreamReader reader) {
     String uri = null;
     NtDynamic parameters = null;

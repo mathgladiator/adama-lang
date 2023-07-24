@@ -14,21 +14,6 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 /** a web item persisted */
 public interface WebItem {
 
-  /** load the web item from an object (most likely in a queue) */
-  static WebItem read(WebContext context, JsonStreamReader reader) {
-    WebItem result = null;
-    if (reader.startObject()) {
-      while (reader.notEndOfObject()) {
-        if ("put".equals(reader.fieldName())) {
-          result = WebPut.read(context, reader);
-        } else {
-          reader.skipValue();
-        }
-      }
-    }
-    return result;
-  }
-
   /** write the item as a field within another object */
   void writeAsObject(JsonStreamWriter writer);
 }

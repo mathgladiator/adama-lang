@@ -882,6 +882,8 @@ public class ErrorTable {
     descriptions.put(888888, "no description of error (yet)");
     names.put(888889, "FIRST_PARTY_SERVICES_METHOD_NOT_IMPLEMENTED");
     descriptions.put(888889, "no description of error (yet)");
+    names.put(888890, "FIRST_PARTY_SERVICES_METHOD_EXCEPTION");
+    descriptions.put(888890, "no description of error (yet)");
     names.put(823242, "FIRST_PARTY_AMAZON_SES_FAILURE");
     descriptions.put(823242, "no description of error (yet)");
     names.put(823243, "FIRST_PARTY_AMAZON_SES_MISSING_ARGS");

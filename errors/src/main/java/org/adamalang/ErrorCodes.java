@@ -735,6 +735,7 @@ public class ErrorCodes {
 
   public static final int FIRST_PARTY_SERVICES_METHOD_NOT_FOUND = 888888;
   public static final int FIRST_PARTY_SERVICES_METHOD_NOT_IMPLEMENTED = 888889;
+  public static final int FIRST_PARTY_SERVICES_METHOD_EXCEPTION = 888890;
 
   public static final int FIRST_PARTY_AMAZON_SES_FAILURE = 823242;
   public static final int FIRST_PARTY_AMAZON_SES_MISSING_ARGS = 823243;
