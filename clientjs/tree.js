@@ -36,7 +36,7 @@ function AdamaTree() {
     return JSON.stringify(root);
   };
 
-  this.raw = function() {
+  this.raw = function () {
     return root;
   };
 
@@ -66,9 +66,9 @@ function AdamaTree() {
         // fire each event
         var evts = v["@e"];
         for (var k = 0; k < evts.length; k++) {
-          events.push(function() {
+          events.push(function () {
             this.f(this.v);
-          }.bind({f:evts[k],v:value}));
+          }.bind({ f: evts[k], v: value }));
         }
       }
     }
@@ -308,7 +308,7 @@ function AdamaTree() {
     fire(s, tree, events);
   };
 
-  var fire_events = function(events) {
+  var fire_events = function (events) {
     for (var k = 0; k < events.length; k++) {
       events[k]();
     }

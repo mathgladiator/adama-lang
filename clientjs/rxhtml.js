@@ -8,13 +8,13 @@ var RxHTML = (function () {
   var connections = {};
 
   var connectionMonitorDom = document.createElement("div");
-  connection.onstatuschange = function(status) {
-    var icon = function(color) { return "<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\""+color+"\" class=\"w-6 h-6\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z\" /></svg>\n"; };
+  connection.onstatuschange = function (status) {
+    var icon = function (color) { return "<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"" + color + "\" class=\"w-6 h-6\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z\" /></svg>\n"; };
     if (!status) {
       connectionMonitorDom.innerHTML = icon("red");
-      connection.onping = function(_1, _2) {};
+      connection.onping = function (_1, _2) { };
     } else {
-      connection.onping = function(_, latency) {
+      connection.onping = function (_, latency) {
         if (latency >= 100) {
           connectionMonitorDom.innerHTML = icon("orange");
         } else {
@@ -71,10 +71,10 @@ var RxHTML = (function () {
         synced: false,
         filter: {},
         vsseq: 0,
-        debugger: function(delta) {},
+        debugger: function (delta) { },
         raw: connection
       };
-      obj.nuke = function() {
+      obj.nuke = function () {
         this.connection_events = {};
         this.sync_events = {};
         this.choice_subs = {};
@@ -82,7 +82,7 @@ var RxHTML = (function () {
       if (Adama.Debugger) {
         obj.debugger = Adama.Debugger.register(obj);
       }
-      obj.sync = function() {
+      obj.sync = function () {
         var synced = this.connection_state && this.viewstate_sent;
         if (this.synced == synced) {
           return;
@@ -98,7 +98,7 @@ var RxHTML = (function () {
           delete obj.sync_events[axe[k]];
         }
       }.bind(obj);
-      obj.subscribe_sync = function(callback) {
+      obj.subscribe_sync = function (callback) {
         var s = "-|" + this.id++;
         this.sync_events[s] = callback;
         callback(this.synced);
@@ -106,7 +106,7 @@ var RxHTML = (function () {
           delete this.sync_events[s];
         }.bind(this);
       };
-      obj.set_connected = function(cs) {
+      obj.set_connected = function (cs) {
         if (this.connection_state == cs) {
           return;
         }
@@ -122,7 +122,7 @@ var RxHTML = (function () {
         }
         this.sync();
       }.bind(obj);
-      obj.connected = function(callback) {
+      obj.connected = function (callback) {
         var s = "-|" + this.id++;
         this.connection_events[s] = callback;
         callback(this.connection_state);
@@ -130,7 +130,7 @@ var RxHTML = (function () {
           delete this.connection_events[s];
         }.bind(this);
       }.bind(obj);
-      obj.subscribe_any = function(callback) {
+      obj.subscribe_any = function (callback) {
         var s = "-|" + this.id++;
         this.decisions[s] = callback;
         return function () {
@@ -144,7 +144,7 @@ var RxHTML = (function () {
           delete this.decisions[s];
         }.bind(this);
       }.bind(obj);
-      obj.subscribe_reset = function(callback) {
+      obj.subscribe_reset = function (callback) {
         var dr = "reset|" + this.id++;
         this.resets[dr] = callback;
         return function () {
@@ -158,7 +158,7 @@ var RxHTML = (function () {
           delete this.choice_subs[s];
         }.bind(this);
       }.bind(obj);
-      obj.onchoices = function(channel, choice) {
+      obj.onchoices = function (channel, choice) {
         var axe = [];
         for (var sub in obj.choice_subs) {
           if (sub.startsWith(channel + "|")) {
@@ -183,7 +183,7 @@ var RxHTML = (function () {
           delete obj.resets[axeReset[k]];
         }
         for (var ch in obj.outstanding) {
-          obj.outstanding[ch] = {options: []};
+          obj.outstanding[ch] = { options: [] };
         }
         var n = outstanding.length;
         for (var k = 0; k < n; k++) {
@@ -252,7 +252,7 @@ var RxHTML = (function () {
     if (parent != null) {
       parent.delta[ss.path] = new_delta;
     }
-    return {tree: ss.tree, parent: parent, delta: new_delta, path: ss.path};
+    return { tree: ss.tree, parent: parent, delta: new_delta, path: ss.path };
   };
   self.makeDeltaCopy = new_delta_copy;
 
@@ -289,7 +289,7 @@ var RxHTML = (function () {
 
   // HELPER: debounce the given functional when rapid function spread is expected
   var debounce = function (ms, foo) {
-    var status = {inflight: false, timeout: null};
+    var status = { inflight: false, timeout: null };
     status.inflight = false;
     return function () {
       if (!status.inflight) {
@@ -353,19 +353,19 @@ var RxHTML = (function () {
 
   // RUNTIME | Switch to the view object
   self.pV = function (state) {
-    return {service: state.service, data: state.data, view: state.view, current: "view"};
+    return { service: state.service, data: state.data, view: state.view, current: "view" };
   };
   self.newStateViewOf = self.pV;
 
   // RUNTIME | Switch to the data object
   self.pD = function (state) {
-    return {service: state.service, data: state.data, view: state.view, current: "data"};
+    return { service: state.service, data: state.data, view: state.view, current: "data" };
   };
   self.newStateDataOf = self.pD;
 
   // RUNTIME | Switch to the root object / (Root)
   self.pR = function (state) {
-    var next = {service: state.service, data: state.data, view: state.view, current: state.current};
+    var next = { service: state.service, data: state.data, view: state.view, current: state.current };
     var prior = next[state.current];
     while (prior != null) {
       next[state.current] = prior;
@@ -377,7 +377,7 @@ var RxHTML = (function () {
 
   // RUNTIME | ../ (Up)
   self.pU = function (state) {
-    var next = {service: state.service, data: state.data, view: state.view, current: state.current};
+    var next = { service: state.service, data: state.data, view: state.view, current: state.current };
     var prior = next[state.current];
     if (prior.parent != null) {
       next[state.current] = prior;
@@ -392,7 +392,7 @@ var RxHTML = (function () {
     if (!(name in prior.delta)) {
       prior.delta[name] = {};
     }
-    var next = {service: state.service, data: state.data, view: state.view, current: state.current};
+    var next = { service: state.service, data: state.data, view: state.view, current: state.current };
     next[state.current] = {
       tree: prior.tree,
       delta: prior.delta[name],
@@ -425,7 +425,7 @@ var RxHTML = (function () {
   };
   self.newStateCreateViewChild = self.pEV;
 
-  self.pIE = function(state, name, expandView) {
+  self.pIE = function (state, name, expandView) {
     var next = self.pI(state, name);
     if (expandView) {
       return self.pEV(next, name);
@@ -468,7 +468,7 @@ var RxHTML = (function () {
   };
 
   // RUNTIME: build an rxobj
-  self.RX = function(vars) {
+  self.RX = function (vars) {
     var o = {};
     o._ = {};
     for (var k = 0; k < vars.length; k++) {
@@ -536,12 +536,12 @@ var RxHTML = (function () {
       }
       var co = get_connection_obj(rxObj.name);
       this.name = rxObj.name;
-      co.connected(function(cs) {
+      co.connected(function (cs) {
         nuke(parent);
         fire_unsub(unsub);
         var state = {
           service: priorState.service,
-          data: {connection: co, tree: co.tree, delta: {}, parent: null, path: null},
+          data: { connection: co, tree: co.tree, delta: {}, parent: null, path: null },
           view: new_delta_copy(priorState.view),
           current: "data"
         };
@@ -554,7 +554,7 @@ var RxHTML = (function () {
         // TODO: return false to unsub
         return true;
       });
-    }.bind({name: ""});
+    }.bind({ name: "" });
   };
 
   // RUNTIME | <template name="...">
@@ -592,7 +592,7 @@ var RxHTML = (function () {
 
   // RUNTIME | <tag rx:switch=path ..>
   self.SW = function (parent, priorState, name, childrenMaker) {
-    var swst = {prior: null};
+    var swst = { prior: null };
     add_unsub(swst);
     var sub = function (value) {
       if (value == this.prior) {
@@ -614,7 +614,7 @@ var RxHTML = (function () {
     var it_state = self.pIE(state, name, expandView);
     var domByKey = {};
     var viewUnSubByKey = {};
-    var kill = function() {
+    var kill = function () {
       for (var key in viewUnSubByKey) {
         fire_unsub(viewUnSubByKey[key]);
         delete viewUnSubByKey[key];
@@ -696,12 +696,12 @@ var RxHTML = (function () {
   };
 
   // custom event on forms; rx:success="..."
-  var fire_success = function(form) {
+  var fire_success = function (form) {
     form.dispatchEvent(new Event("success"));
   };
 
   // custom event on forms; rx:failed="..."
-  var fire_failure = function(form, msg) {
+  var fire_failure = function (form, msg) {
     var e = new Event("failure");
     e.message = msg;
     console.log("FAILURE:" + msg);
@@ -709,7 +709,7 @@ var RxHTML = (function () {
   };
 
   self.aCC = function (form, state, customCommandName) {
-    var signal = function(msg) {
+    var signal = function (msg) {
       if (signal == null) {
         fire_success(form);
       } else {
@@ -728,7 +728,7 @@ var RxHTML = (function () {
     };
   };
 
-  var make_choice_array = function(state, channel) {
+  var make_choice_array = function (state, channel) {
     var choices = state.data.connection.choices;
     if (!(channel in choices)) {
       choices[channel] = {};
@@ -744,7 +744,7 @@ var RxHTML = (function () {
   self.exFIN = function (dom, type, state, channel) {
     reg_event(state, dom, type, function () {
       var arr = make_choice_array(state, channel);
-      var clear = function() {
+      var clear = function () {
         delete state.data.connection.choices[channel];
         state.data.connection.onchoices(channel, {});
       };
@@ -800,7 +800,7 @@ var RxHTML = (function () {
 
   // choose
   self.exCH = function (dom, type, state, name, channel, key) {
-    var decide = {value: null};
+    var decide = { value: null };
     reg_event(state, dom, type, function () {
       var result = find(state, channel, key, decide.value);
       if (result != null) {
@@ -824,7 +824,7 @@ var RxHTML = (function () {
   };
 
   self.exD = function (dom, type, state, name, channel, key) {
-    var decide = {value: null};
+    var decide = { value: null };
     reg_event(state, dom, type, function () {
       var result = find(state, channel, key, decide.value);
       if (result != null) {
@@ -844,7 +844,7 @@ var RxHTML = (function () {
     });
   };
 
-  var reg_event = function(state, dom, type, runnable) {
+  var reg_event = function (state, dom, type, runnable) {
     // TODO: connected/disconnected as special events to consider
     if (type == "load") {
       window.setTimeout(runnable, 1);
@@ -854,22 +854,22 @@ var RxHTML = (function () {
   }
 
   // RUNTIME: <tag .. rx:event="... fire:channel ..." ...>
-  self.onFR = function(state, dom, type, channel) {
+  self.onFR = function (state, dom, type, channel) {
     reg_event(state, dom, type, function () {
       console.log(state.data);
       state.data.connection.ptr.send(channel, {}, {
-        success: function() {
+        success: function () {
           console.log("SENT '" + channel + "'");
         },
-        failure: function(reason) {
-          console.log("FAILED TO FIRE '" + channel + "' DUE:" + reason);''
+        failure: function (reason) {
+          console.log("FAILED TO FIRE '" + channel + "' DUE:" + reason); ''
         }
       });
     });
   }
 
   // RUNTIME: <tag .. rx:event="... force-auth=name,token ...">
-  self.onFORCE_AUTH = function(dom, type, identityName, identity) {
+  self.onFORCE_AUTH = function (dom, type, identityName, identity) {
     reg_event(null, dom, type, function () {
       identities[identityName] = identity;
       localStorage.setItem("identity_" + identityName, identity);
@@ -917,8 +917,8 @@ var RxHTML = (function () {
 
   // RUNTIME: <tag .. rx:event="... toggle:name ...">
   self.onT = function (dom, type, state, name) {
-    var captured = {value: false};
-    reg_event(state, dom, type,  function () {
+    var captured = { value: false };
+    reg_event(state, dom, type, function () {
       var obj = {};
       obj[name] = !captured.value;
       var delta = path_to(state[state.current], obj);
@@ -931,7 +931,7 @@ var RxHTML = (function () {
 
   // RUNTIME: <tag .. rx:event="... delta:name=diff" ...">
   self.onD = function (dom, type, state, name, diff) {
-    var captured = {value: 0};
+    var captured = { value: 0 };
     reg_event(state, dom, type, function () {
       var obj = {};
       obj[name] = captured.value + diff;
@@ -1060,7 +1060,7 @@ var RxHTML = (function () {
         makerFalse(parent, next);
       }
       subscribe_state(state, unsub);
-    }.bind({shown: 'no'});
+    }.bind({ shown: 'no' });
     subscribe(priorState, name, set);
   };
 
@@ -1118,7 +1118,7 @@ var RxHTML = (function () {
     var hasName = "name" in el;
     var insertAt = objToInsertInto;
     // the apply function is how we inject the value into the object
-    var apply = function(val) {};
+    var apply = function (val) { };
 
     if (hasName && (justSet || isInputBox || isFieldSet)) {
       var name = "";
@@ -1137,7 +1137,7 @@ var RxHTML = (function () {
       if (name.endsWith("+")) {
         // here, we push the value into the array
         name = name.substring(0, name.length - 1);
-        apply = function(v) {
+        apply = function (v) {
           if (!(name in insertAt)) {
             insertAt[name] = [v];
           } else {
@@ -1146,7 +1146,7 @@ var RxHTML = (function () {
         };
       } else {
         // here we set the object
-        apply = function(v) {
+        apply = function (v) {
           insertAt[name] = v;
         };
       }
@@ -1200,7 +1200,7 @@ var RxHTML = (function () {
   };
 
   // HELPER | return a password from the given form
-  var get_password = function(el) {
+  var get_password = function (el) {
     if (el.tagName.toUpperCase() == "INPUT" && el.type.toUpperCase() == "PASSWORD") {
       return [el.name, el.value];
     }
@@ -1220,7 +1220,7 @@ var RxHTML = (function () {
 
   var wrappers = {};
   var wrappers_onload = {};
-  self.PRWP = function(name, foo) {
+  self.PRWP = function (name, foo) {
     wrappers[name] = foo;
     if (name in wrappers_onload) {
       var toload = wrappers_onload[name];
@@ -1231,11 +1231,11 @@ var RxHTML = (function () {
   };
 
   // <... rx:wrap=const >
-  self.WP = function(dom, state, name, childMakerWithCase) {
+  self.WP = function (dom, state, name, childMakerWithCase) {
     if (name in wrappers) {
       wrappers[name](dom, state, childMakerWithCase, self);
     } else {
-      var loader = function() {
+      var loader = function () {
         wrappers[name](dom, state, childMakerWithCase, self);
       };
       if (name in wrappers_onload) {
@@ -1331,11 +1331,11 @@ var RxHTML = (function () {
       connections[conKey].nuke();
     }
     var parts = (path.startsWith("/") ? path.substring(1) : path).split("/");
-    var init = {"__session_id": "R" + Math.random()};
+    var init = { "__session_id": "R" + Math.random() };
     var foo = route(parts, 0, router, init);
     nuke(where);
     if (foo != null) {
-      var state = {service: connection, data: null, view: fresh(where), current: "view"};
+      var state = { service: connection, data: null, view: fresh(where), current: "view" };
       state.view.init = init;
       foo(where, state);
       state.view.tree.subscribe(state.view.delta);
@@ -1362,7 +1362,7 @@ var RxHTML = (function () {
     for (var cid in connections) {
       var co = connections[cid];
       if (co.ptr != null) {
-        co.ptr.end({success:function(){}, failure:function(){}});
+        co.ptr.end({ success: function () { }, failure: function () { } });
       }
       axe.push(cid);
     }
@@ -1387,16 +1387,16 @@ var RxHTML = (function () {
   };
 
   /** RUNTIME | redirect to a page with state */
-  self.aRDp = function(state, puller) {
-    return function() {
+  self.aRDp = function (state, puller) {
+    return function () {
       var uri = puller(state.view.init);
       return uri;
     };
   };
 
   /** RUNTIME | redirect to a static page */
-  self.aRDz = function(raw) {
-    return function() {
+  self.aRDz = function (raw) {
+    return function () {
       return raw;
     }
   };
@@ -1432,25 +1432,25 @@ var RxHTML = (function () {
         // TODO: this assumes a full app goes to the window
         self.goto(redirectToFunc());
       }, 10);
-      return {abort: true};
+      return { abort: true };
     }
 
-    return {abort: false, cleanup: cleanup, identity: identity};
+    return { abort: false, cleanup: cleanup, identity: identity };
   };
 
   /* For custom callbacks to redirect and invalidate ID failures */
-  self.FIDCL = function(callback, lookup) {
+  self.FIDCL = function (callback, lookup) {
     return {
-      success: function(result) {
+      success: function (result) {
         callback.success(result);
       },
-      next: function(item) {
+      next: function (item) {
         callback.next(item);
       },
-      complete: function() {
+      complete: function () {
         callback.complete();
       },
-      failure: function(reason) {
+      failure: function (reason) {
         callback.failure(reason);
         if (reason == 966671) {
           lookup.cleanup();
@@ -1484,7 +1484,7 @@ var RxHTML = (function () {
       }
       var state = {
         service: priorState.service,
-        data: {connection: priorState.connection, tree: customTree, delta: {}, parent: null, path: null},
+        data: { connection: priorState.connection, tree: customTree, delta: {}, parent: null, path: null },
         view: new_delta_copy(priorState.view),
         current: "data"
       };
@@ -1502,9 +1502,9 @@ var RxHTML = (function () {
   };
 
   // <viewsync>
-  self.VSy = function(parent, priorState, avail, notavail) {
+  self.VSy = function (parent, priorState, avail, notavail) {
     var unsub = make_unsub();
-    priorState.data.connection.subscribe_sync(function(synced) {
+    priorState.data.connection.subscribe_sync(function (synced) {
       nuke(parent);
       fire_unsub(unsub);
       var state = fork(priorState);
@@ -1519,10 +1519,132 @@ var RxHTML = (function () {
     });
   };
 
+  var bind_responder = function (co, state, cleanup) {
+    return {
+      next: function (payload) {
+        co.debugger(payload);
+        co.set_connected(true);
+        if ("data" in payload.delta) {
+          co.tree.update(payload.delta.data);
+        }
+        if ("outstanding" in payload.delta) {
+          co.ondecide(payload.delta.outstanding);
+        }
+        if ('viewstate' in payload.delta) {
+          state.view.tree.update(payload.delta.viewstate);
+        }
+        if ('log' in payload.delta) {
+          console.log(payload.delta.log);
+        }
+        if ('viewport' in payload.delta && 'message' in payload.delta) {
+          var viewport = payload.delta.viewport;
+          if (viewport in co.handlers) {
+            co.handlers[viewport](payload.delta.message, co);
+          }
+        }
+        if ('view-state-filter' in payload.delta) {
+          var filter = {};
+          var keys = payload.delta['view-state-filter'];
+          for (var k = 0; k < keys.length; k++) {
+            filter[keys[k]] = true;
+          }
+          co.filter = filter;
+        }
+        if ('goto' in payload.delta) {
+          self.goto(payload.delta.goto);
+        }
+      },
+      complete: function () {
+        co.set_connected(false);
+        // TODO: signal NULL to handlers?
+      },
+      should_retry: true,
+      retry_task_name: "Document Connection:" + co.label,
+      failure: function (reason) {
+        console.log("CONNECT FAILURE:" + co.label + "::" + reason);
+        co.set_connected(false);
+        // TODO: if not authorized
+        // TODO: schedule a retry? invoke:  rxobj.__();
+        /*
+        if (false) {
+          cleanup();
+        }
+        */
+        co.ptr = null;
+      }
+    }
+  };
+
+  var setup_co = function(desired, unsub, co, state) {
+    var sync_tree = function () {
+      var new_tree = state.view.tree.copy();
+      co.viewstate_sent = false;
+      co.vsseq++;
+      co.sync();
+      var synced = function () {
+        if (co.vsseq == this.bound) {
+          co.viewstate_sent = true;
+          co.sync();
+        }
+      }.bind({ bound: co.vsseq });
+      co.ptr.update(new_tree, { success: synced, failure: synced });
+    };
+    var bind = function (sendNow) {
+      unsub.view = state.view.tree.subscribe(function () {
+        if (co.ptr == null) {
+          return;
+        }
+        sync_tree();
+      });
+      if (sendNow) {
+        sync_tree();
+      }
+    };
+    if (co.ptr != null && co.bound == desired) {
+      bind(true);
+      return false;
+    }
+    if (co.ptr != null) {
+      co.ptr.end({ success: function () { }, failure: function () { } });
+      co.ptr = null;
+    }
+    return bind;
+  };
 
   // <connection use-domain ...>
-  self.DCONNECT = function(state, rxobj) {
+  self.DCONNECT = function (state, rxobj) {
+    var unsub = {
+      view: function () {
+      }
+    };
+    rxobj.__ = debounce(5, function () {
+      if (!('name' in rxobj)) {
+        return;
+      }
+      var idLookup = self.ID(rxobj.identity, function () { return rxobj.redirect; });
+      if (idLookup.abort) {
+        return;
+      }
+      var co = get_connection_obj(rxobj.name);
+      var domain = location.host.split(":")[0];
+      var desired = domain + idLookup.identity;
+      var bind = setup_co(desired, unsub, co, state);
+      if (bind === false) {
+        return;
+      }
+      co.bound = desired;
 
+      var identity = idLookup.identity;
+      var cleanup = idLookup.cleanup;
+      unsub.view();
+      co.identity = identity;
+      co.handlers = {};
+      co.viewstate_sent = true;
+      co.label = "Domain:" + domain + " [ " + rxobj.name + "]";
+      co.ptr = connection.ConnectionCreateViaDomain(identity, domain, state.view.tree.copy(), bind_responder(co, state, cleanup));
+      co.tree.update({});
+      bind(false);
+    });
   };
 
   // <connection ...>
@@ -1536,43 +1658,15 @@ var RxHTML = (function () {
       if (!valid) {
         return;
       }
-      var idLookup = self.ID(rxobj.identity, function() { return rxobj.redirect; });
+      var idLookup = self.ID(rxobj.identity, function () { return rxobj.redirect; });
       if (idLookup.abort) {
         return;
       }
       var co = get_connection_obj(rxobj.name);
       var desired = rxobj.space + "/" + rxobj.key + "/" + idLookup.identity; // TODO: need some kind of hashing function here
-      var sync_tree = function() {
-        var new_tree = state.view.tree.copy();
-        co.viewstate_sent = false;
-        co.vsseq++;
-        co.sync();
-        var synced = function() {
-          if (co.vsseq == this.bound) {
-            co.viewstate_sent = true;
-            co.sync();
-          }
-        }.bind({bound:co.vsseq});
-        co.ptr.update(new_tree, { success: synced, failure: synced });
-      };
-      var bind = function (sendNow) {
-        unsub.view = state.view.tree.subscribe(function () {
-          if (co.ptr == null) {
-            return;
-          }
-          sync_tree();
-        });
-        if (sendNow) {
-          sync_tree();
-        }
-      };
-      if (co.ptr != null && co.bound == desired) {
-        bind(true);
+      var bind = setup_co(desired, unsub, co, state);
+      if (bind === false) {
         return;
-      }
-      if (co.ptr != null) {
-        co.ptr.end({success:function(){}, failure:function(){}});
-        co.ptr = null;
       }
       co.bound = desired;
 
@@ -1584,59 +1678,8 @@ var RxHTML = (function () {
       co.identity = identity;
       co.handlers = {};
       co.viewstate_sent = true;
-      co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), {
-        next: function (payload) {
-          co.debugger(payload);
-          co.set_connected(true);
-          if ("data" in payload.delta) {
-            co.tree.update(payload.delta.data);
-          }
-          if ("outstanding" in payload.delta) {
-            co.ondecide(payload.delta.outstanding);
-          }
-          if ('viewstate' in payload.delta) {
-            state.view.tree.update(payload.delta.viewstate);
-          }
-          if ('log' in payload.delta) {
-            console.log(payload.delta.log);
-          }
-          if ('viewport' in payload.delta && 'message' in payload.delta) {
-            var viewport = payload.delta.viewport;
-            if (viewport in co.handlers) {
-              co.handlers[viewport](payload.delta.message, co);
-            }
-          }
-          if ('view-state-filter' in payload.delta) {
-            var filter = {};
-            var keys = payload.delta['view-state-filter'];
-            for (var k = 0; k < keys.length; k++) {
-              filter[keys[k]] = true;
-            }
-            co.filter = filter;
-          }
-          if ('goto' in payload.delta) {
-            self.goto(payload.delta.goto);
-          }
-        },
-        complete: function() {
-          co.set_connected(false);
-          // TODO: signal NULL to handlers?
-        },
-        should_retry:true,
-        retry_task_name: "Document Connection:" + rxobj.space + "/" + rxobj.key,
-        failure: function (reason) {
-          console.log("CONNECT FAILURE:" + rxobj.space + "/" + rxobj.key + " [" + rxobj.name + "] " + reason);
-          co.set_connected(false);
-          // TODO: if not authorized
-          // TODO: schedule a retry? invoke:  rxobj.__();
-          /*
-          if (false) {
-            cleanup();
-          }
-          */
-          co.ptr = null;
-        }
-      });
+      co.label = co.space + "/" + co.key + " [ " + rxobj.name + "]";
+      co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), bind_responder(co, state, cleanup));
       co.tree.update({});
       bind(false);
     });
@@ -1645,7 +1688,7 @@ var RxHTML = (function () {
   self.INTERNAL = function (priorState) {
     return {
       service: priorState.service,
-      data: {connection: null, tree: new AdamaTree(), delta: {}, parent: null, path: null},
+      data: { connection: null, tree: new AdamaTree(), delta: {}, parent: null, path: null },
       view: new_delta_copy(priorState.view),
       current: "data"
     };
@@ -1668,7 +1711,7 @@ var RxHTML = (function () {
   };
 
   self.aUP = function (form, state, identityName, rxobj) {
-    var idLookup = self.ID(identityName, function() { return rxobj.rx_forward; }); // TODO: make rxvar
+    var idLookup = self.ID(identityName, function () { return rxobj.rx_forward; }); // TODO: make rxvar
     if (idLookup.abort) {
       return;
     }
@@ -1695,7 +1738,7 @@ var RxHTML = (function () {
   }
   // RUNTIME | rx:action=document:sign-in
   self.aDSO = function (form, state, identityName, rxobj) {
-    rxobj.__ = function() {};
+    rxobj.__ = function () { };
     form.onsubmit = function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
@@ -1714,19 +1757,19 @@ var RxHTML = (function () {
     };
   };
 
-  var commonPut = function(form, state, identityName, rxobj, urlfactory) {
+  var commonPut = function (form, state, identityName, rxobj, urlfactory) {
     // WIP
-    rxobj.__ = function() {};
+    rxobj.__ = function () { };
     form.onsubmit = function (evt) {
       evt.preventDefault();
       var req = get_form(form, false);
       // TODO: this assumes exactly one password in the root message
       var pws = get_password(form);
 
-      var next = function() {
+      var next = function () {
         var url = urlfactory(rxobj);
         var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
+        xhttp.onreadystatechange = function () {
           if (this.readyState == 4) {
             if (this.status == 200) {
               var type = this.getResponseHeader("Content-Type");
@@ -1753,11 +1796,11 @@ var RxHTML = (function () {
 
       if (pws !== null) {
         connection.DocumentsHashPassword(pws[1], {
-          success:function(hashed_pw) {
+          success: function (hashed_pw) {
             req[pws[0]] = hashed_pw.passwordHash;
             next();
           },
-          failed: function() {
+          failed: function () {
             fire_failure(form, "Failed to hash password");
           }
         });
@@ -1769,17 +1812,17 @@ var RxHTML = (function () {
 
   // RUNTIME | rx:action=domain:put
   self.adDPUT = function (form, state, identityName, rxobj) {
-    commonPut(form, state, identityName, rxobj, function(rxobj) { return location.protocol + "//" + location.host + "/" + rxobj.path;})
+    commonPut(form, state, identityName, rxobj, function (rxobj) { return location.protocol + "//" + location.host + "/" + rxobj.path; })
   };
 
   // RUNTIME | rx:action=document:put
   self.aDPUT = function (form, state, identityName, rxobj) {
-    commonPut(form, state, identityName, rxobj, function(rxobj) { return "https://" + connection.host + "/" + rxobj.space + "/" + rxobj.key + "/" + rxobj.path;})
+    commonPut(form, state, identityName, rxobj, function (rxobj) { return "https://" + connection.host + "/" + rxobj.space + "/" + rxobj.key + "/" + rxobj.path; })
   };
 
   // RUNTIME | rx:action=adama:sign-in
   self.aSO = function (form, state, identityName, rxobj) {
-    rxobj.__ = function() {};
+    rxobj.__ = function () { };
     window.setTimeout(function () {
       recall_email(form);
     }, 1);
@@ -1800,7 +1843,7 @@ var RxHTML = (function () {
           fire_success(form);
         },
         failure: function (reason) {
-         fire_failure(form, "AccountLogin Failed:" + reason);
+          fire_failure(form, "AccountLogin Failed:" + reason);
         }
       });
     };
