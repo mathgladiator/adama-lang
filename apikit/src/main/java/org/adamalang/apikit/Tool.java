@@ -41,6 +41,7 @@ public class Tool {
     Document doc = builder.parse(input);
     Element api = DocumentHelper.first(doc.getElementsByTagName("api"), "root api node");
     String outputPathStr = DocumentHelper.attribute(api, "output-path");
+    String clientOutputPathStr = DocumentHelper.attribute(api, "client-output-path");
     String testOutputPathStr = DocumentHelper.attribute(api, "test-output-path");
     String packageName = DocumentHelper.attribute(api, "package");
     String docsFile = api.getAttribute("docs");
@@ -58,6 +59,7 @@ public class Tool {
     String router = AssembleConnectionRouter.make(packageName, methods);
     String metrics = AssembleMetrics.make(packageName, methods);
     File outputPath = new File(root, outputPathStr);
+    File clientOutputPath = new File(clientOutputPathStr);
     outputPath.mkdirs();
     if (!(outputPath.exists() && outputPath.isDirectory())) {
       throw new Exception("output path failed to be created");
@@ -76,7 +78,7 @@ public class Tool {
     apiOutput.putAll(requestsFiles);
     apiOutput.putAll(responderFiles);
     apiOutput.putAll(handlerFiles);
-    apiOutput.putAll(javaClientFiles);
+
     // write out the nexus
     HashMap<File, String> diskWrites = new HashMap<>();
     for (Map.Entry<String, String> request : apiOutput.entrySet()) {
@@ -92,6 +94,9 @@ public class Tool {
       String clientJs = Files.readString(new File(root, clientFileJs).toPath());
       clientJs = AssembleJavaScriptClient.injectInvokePlainJs(clientJs, methods);
       diskWrites.put(new File(root, clientFileJs), clientJs);
+    }
+    for (Map.Entry<String, String> javaClient : javaClientFiles.entrySet()) {
+      diskWrites.put(new File(clientOutputPath, javaClient.getKey()), javaClient.getValue());
     }
     return diskWrites;
   }

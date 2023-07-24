@@ -8,7 +8,10 @@
  */
 package org.adamalang.services;
 
+import org.adamalang.api.SelfClient;
+import org.adamalang.common.ConfigObject;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.mysql.DataBase;
@@ -19,6 +22,9 @@ import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.entropy.SafeRandom;
 import org.adamalang.services.sms.Twilio;
 import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.socket.MultiWebClientRetryPool;
+import org.adamalang.web.client.socket.MultiWebClientRetryPoolConfig;
+import org.adamalang.web.client.socket.MultiWebClientRetryPoolMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +33,6 @@ public class FirstPartyServices {
 
   public static void install(SimpleExecutor executor, MetricsFactory factory, DataBase dataBase, WebClientBase webClientBase, String masterKey) {
     FirstPartyMetrics metrics = new FirstPartyMetrics(factory);
-    /*
     SelfClient adamaClientRaw = null;
     if (executor != null){
       // TODO: sort out a plan for variuos endpoints... OR make it part of the signature
@@ -35,11 +40,10 @@ public class FirstPartyServices {
       adamaClientRaw = new SelfClient(pool);
     }
     final SelfClient adamaClient = adamaClientRaw;
-    */
     ServiceRegistry.add("adama", Adama.class, (space, configRaw) -> { // TODO
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
-        return new Adama(metrics, config);
+        return new Adama(metrics, adamaClient, config);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-adama", ex);
         return Service.FAILURE;

@@ -10,6 +10,9 @@ package org.adamalang.services;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
+import org.adamalang.api.ClientDocumentCreateRequest;
+import org.adamalang.api.ClientSimpleResponse;
+import org.adamalang.api.SelfClient;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
@@ -24,10 +27,11 @@ import java.util.function.Consumer;
 public class Adama extends SimpleService {
   private static final Logger LOGGER = LoggerFactory.getLogger(Adama.class);
   private final FirstPartyMetrics metrics;
-//  private final SelfClient client;
+  private final SelfClient client;
 
-  public Adama(FirstPartyMetrics metrics, ServiceConfig config) throws ErrorCodeException {
+  public Adama(FirstPartyMetrics metrics, SelfClient client, ServiceConfig config) throws ErrorCodeException {
     super("adama", new NtPrincipal("adama", "service"), true);
+    this.client = client;
     this.metrics = metrics;
   }
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
@@ -48,7 +52,6 @@ public class Adama extends SimpleService {
     ObjectNode node = Json.parseJsonObject(request);
     switch (method) {
       case "documentCreate": {
-        /*
         ClientDocumentCreateRequest req = new ClientDocumentCreateRequest();
         req.identity = identity;
         req.space = Json.readString(node, "space");
@@ -68,9 +71,6 @@ public class Adama extends SimpleService {
           }
         });
         return;
-        }
-        */
-        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
       }
       case "sendDirect":
         callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));

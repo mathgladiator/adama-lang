@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<api output-path="./saas/src/main/java/org/adamalang/control" test-output-path="./saas/src/test/java/org/adamalang/control" package="org.adamalang.control">
+<api output-path="./saas/src/main/java/org/adamalang/control" test-output-path="./saas/src/test/java/org/adamalang/control" client-output-path="./saasclient/src/main/java/org/adamalang/control" package="org.adamalang.control">
     <parameter-definition name="machine-identity" type="string" missing-error="9001">
         <documentation>
             A machine identity

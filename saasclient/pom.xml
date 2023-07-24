@@ -9,7 +9,7 @@
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>services</artifactId>
+    <artifactId>saasclient</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.adamalang</groupId>
@@ -18,27 +18,7 @@
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
-            <artifactId>core</artifactId>
-            <version>MAIN</version>
-        </dependency>
-        <dependency>
-            <groupId>org.adamalang</groupId>
             <artifactId>web</artifactId>
-            <version>MAIN</version>
-        </dependency>
-        <dependency>
-            <groupId>org.adamalang</groupId>
-            <artifactId>data-mysql</artifactId>
-            <version>MAIN</version>
-        </dependency>
-        <dependency>
-            <groupId>org.adamalang</groupId>
-            <artifactId>saasclient</artifactId>
-            <version>MAIN</version>
-        </dependency>
-        <dependency>
-            <groupId>org.adamalang</groupId>
-            <artifactId>net</artifactId>
             <version>MAIN</version>
         </dependency>
         <dependency>
