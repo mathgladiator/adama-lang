@@ -102,7 +102,7 @@ public class TemplateReactiveConnectionTests extends BaseRxHtmlTest {
   public String source() {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
-    source.append("\n    <page uri=\"/\">");
+    source.append("\n<page uri=\"/\">");
     source.append("\n        <connection name=\"myname\" space=\"space{suffix}\" key=\"{view:/key}\">");
     source.append("\n");
     source.append("\n        </connection>");

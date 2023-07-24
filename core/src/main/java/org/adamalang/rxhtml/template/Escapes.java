@@ -8,33 +8,18 @@
  */
 package org.adamalang.rxhtml.template;
 
-import java.util.regex.Pattern;
+import org.adamalang.common.Escaping;
 
 public class Escapes {
-  public static String escapeNewLine(String x) {
-    return String.join("\\n", x.split(Pattern.quote("\n"), -1)).replaceAll(Pattern.quote("\r"), "");
-  }
-  public static String escapeSlash(String x) {
-    return String.join("\\\\", x.split(Pattern.quote("\\"), -1));
-  }
-  public static String escape39(String x) {
-    return String.join("\\'", escapeNewLine(escapeSlash(x)).split(Pattern.quote("'"), -1));
-  }
-  public static String escape34(String x) {
-    return String.join("\\\"", escapeNewLine(escapeSlash(x)).split(Pattern.quote("\""), -1));
-  }
-
   public static String constantOf(String value) {
-    String processedValue = "'" + Escapes.escape39(value) + "'";
+    if (value.equals("true") || value.equals("false")) {
+      return value;
+    }
     try {
       Double.parseDouble(value);
-      processedValue = value;
+      return value;
     } catch (NumberFormatException nfe) {
     }
-    if (value.equals("true") || value.equals("false")) {
-      processedValue = value;
-    }
-    return processedValue;
+    return "'" + new Escaping(value).switchQuotes().go() + "'";
   }
-
 }

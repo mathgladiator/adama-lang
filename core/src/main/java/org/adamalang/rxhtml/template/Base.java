@@ -8,6 +8,7 @@
  */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.common.Escaping;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -168,7 +169,7 @@ public class Base {
       }
       if (node instanceof TextNode) {
         TextNode text = (TextNode) node;
-        env.writer.tab().append(env.parentVariable).append(".append($.T('").append(Escapes.escape39(text.text())).append("'));").newline();
+        env.writer.tab().append(env.parentVariable).append(".append($.T('").append(new Escaping(text.text()).switchQuotes().go()).append("'));").newline();
       } else if (node instanceof org.jsoup.nodes.Element) {
         org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) node;
         Environment childEnv = env.element(child, nodes.size() == 1);

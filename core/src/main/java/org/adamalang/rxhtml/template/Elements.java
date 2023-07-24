@@ -51,16 +51,28 @@ public class Elements {
     if (!env.element.hasAttr("redirect")) {
       env.element.attr("redirect", "/sign-in");
     }
-    // TODO: validate that space and key are set
-
-    RxObject obj = new RxObject(env, "name", "space", "key", "identity", "redirect");
-    env.writer.tab().append("$.CONNECT(") //
-        .append(env.stateVar) //
-        .append(",").append(obj.rxObj) //
-        .append(");").newline();
-    obj.finish();
-    if (env.element.childNodeSize() > 0) {
-      Elements.pick(env);
+    if (env.element.hasAttr("use-domain")) {
+      // TODO: test this
+      RxObject obj = new RxObject(env, "name", "identity", "redirect");
+      env.writer.tab().append("$.DCONNECT(") //
+          .append(env.stateVar) //
+          .append(",").append(obj.rxObj) //
+          .append(");").newline();
+      obj.finish();
+      if (env.element.childNodeSize() > 0) {
+        Elements.pick(env);
+      }
+    } else {
+      // TODO: validate that space and key are set
+      RxObject obj = new RxObject(env, "name", "space", "key", "identity", "redirect");
+      env.writer.tab().append("$.CONNECT(") //
+          .append(env.stateVar) //
+          .append(",").append(obj.rxObj) //
+          .append(");").newline();
+      obj.finish();
+      if (env.element.childNodeSize() > 0) {
+        Elements.pick(env);
+      }
     }
   }
 

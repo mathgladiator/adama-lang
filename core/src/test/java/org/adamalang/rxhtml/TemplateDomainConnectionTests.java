@@ -8,7 +8,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateCommandFireTests extends BaseRxHtmlTest {
+public class TemplateDomainConnectionTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
@@ -20,14 +20,19 @@ public class TemplateCommandFireTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c = $.E('button');");
-    gold.append("\n    $.onFR(a,c,'click','foo');");
-    gold.append("\n    c.append($.T('Fire Foo'));");
-    gold.append("\n    b.append(c);");
-    gold.append("\n    var c = $.E('span');");
-    gold.append("\n    $.onFR(a,c,'load','init_token');");
-    gold.append("\n    c.append($.T('Init a token'));");
-    gold.append("\n    b.append(c);");
+    gold.append("\n    var c=$.RX([]);");
+    gold.append("\n    c.name='myname';");
+    gold.append("\n    c.identity=true;");
+    gold.append("\n    c.redirect='/sign-in';");
+    gold.append("\n    $.DCONNECT(a,c);");
+    gold.append("\n    c.__();");
+    gold.append("\n    var d=$.RX([]);");
+    gold.append("\n    d.name='myname';");
+    gold.append("\n    $.P(b,a,d,function(b,e) {");
+    gold.append("\n      b.append($.T(' NEAT '));");
+    gold.append("\n    },function(b,e) {");
+    gold.append("\n    });");
+    gold.append("\n    d.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -37,14 +42,19 @@ public class TemplateCommandFireTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c = $.E('button');");
-    gold.append("\n    $.onFR(a,c,'click','foo');");
-    gold.append("\n    c.append($.T('Fire Foo'));");
-    gold.append("\n    b.append(c);");
-    gold.append("\n    var c = $.E('span');");
-    gold.append("\n    $.onFR(a,c,'load','init_token');");
-    gold.append("\n    c.append($.T('Init a token'));");
-    gold.append("\n    b.append(c);");
+    gold.append("\n    var c=$.RX([]);");
+    gold.append("\n    c.name='myname';");
+    gold.append("\n    c.identity=true;");
+    gold.append("\n    c.redirect='/sign-in';");
+    gold.append("\n    $.DCONNECT(a,c);");
+    gold.append("\n    c.__();");
+    gold.append("\n    var d=$.RX([]);");
+    gold.append("\n    d.name='myname';");
+    gold.append("\n    $.P(b,a,d,function(b,e) {");
+    gold.append("\n      b.append($.T(' NEAT '));");
+    gold.append("\n    },function(b,e) {");
+    gold.append("\n    });");
+    gold.append("\n    d.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");
@@ -61,8 +71,9 @@ public class TemplateCommandFireTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <button rx:click=\"fire:foo\">Fire Foo</button>");
-    source.append("\n        <span rx:load=\"fire:init_token\">Init a token</span>");
+    source.append("\n        <connection name=\"myname\" use-domain>");
+    source.append("\n            NEAT");
+    source.append("\n        </connection>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

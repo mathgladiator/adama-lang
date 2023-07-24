@@ -8,6 +8,7 @@
  */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.common.Escaping;
 import org.adamalang.rxhtml.acl.commands.Command;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
@@ -162,7 +163,7 @@ public class Attributes {
           env.writer.tab().append(computeFoo).append("();").newline();
           env.writer.tabDown().tab().append("}").newline();
         } else {
-          writeDomSetter(eVar, attr.getKey(), "'" + Escapes.escape39(attr.getValue()) + "'");
+          writeDomSetter(eVar, attr.getKey(), "'" + new Escaping(attr.getValue()).switchQuotes().go() + "'");
         }
       } else {
         writeDomSetter(eVar, attr.getKey(), "true");

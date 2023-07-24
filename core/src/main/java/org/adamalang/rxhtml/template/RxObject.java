@@ -8,6 +8,7 @@
  */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.common.Escaping;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.jsoup.nodes.Attribute;
@@ -70,7 +71,7 @@ public class RxObject {
           }
           _delayed = true;
         } else {
-          env.writer.tab().append(rxObj).append(".").append(nameToUse).append("='").append(Escapes.escape39(value)).append("';").newline();
+          env.writer.tab().append(rxObj).append(".").append(nameToUse).append("='").append(new Escaping(value).switchQuotes().go()).append("';").newline();
         }
       } else {
         env.writer.tab().append(rxObj).append(".").append(nameToUse).append("=true;").newline();

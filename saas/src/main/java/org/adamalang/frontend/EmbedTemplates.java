@@ -8,7 +8,7 @@
  */
 package org.adamalang.frontend;
 
-import org.adamalang.rxhtml.template.Escapes;
+import org.adamalang.common.Escaping;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.regex.Pattern;
@@ -33,7 +33,7 @@ public class EmbedTemplates {
       if (rxhtmlFile.exists()) {
         rxhtml = Files.readString(rxhtmlFile.toPath());
       }
-      sb.append("    templates.put(\"").append(name).append("\", new SpaceTemplate(\"").append(Escapes.escapeNewLine(Escapes.escape34(adama)).replaceAll("\r", "")).append("\",\"").append(Escapes.escapeNewLine(Escapes.escape34(rxhtml)).replaceAll("\r", "")).append("\"));\n");
+      sb.append("    templates.put(\"").append(name).append("\", new SpaceTemplate(\"").append(new Escaping(adama).go()).append("\",\"").append(new Escaping(rxhtml).go()).append("\"));\n");
     }
     Files.writeString(javaSpaceTemplates.toPath(), prefix + "\n" + sb + "    " + suffix);
   }

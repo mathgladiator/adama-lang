@@ -8,8 +8,7 @@
  */
 package org.adamalang.rxhtml;
 
-import org.adamalang.rxhtml.template.Escapes;
-import org.adamalang.rxhtml.template.config.Feedback;
+import org.adamalang.common.Escaping;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.exceptions.ParseException;
@@ -39,7 +38,7 @@ public class RxHtmlToAdama {
       String shell = result.shell.makeShell(result);
       adama.append("@web get ").append(uri.rxhtmlPath()).append(" {\n");
       adama.append("  return {\n");
-      adama.append("    html: \"").append(Escapes.escape34(shell)).append("\"\n");
+      adama.append("    html: \"").append(new Escaping(shell).go()).append("\"\n");
       adama.append("  };\n");
       adama.append("}\n");
     }
