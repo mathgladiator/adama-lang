@@ -87,7 +87,7 @@ Adama.Debugger = (function() {
     });
     co.raw.SpaceReflect(co.identity, co.space, co.key, {
       success: function (payload) {
-        console.log(schema.reflection);
+        console.log(payload.reflection);
       },
       failure: function(reason) {
         console.log("Failed to get schema");

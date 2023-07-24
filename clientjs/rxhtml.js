@@ -822,6 +822,21 @@ var RxHTML = (function () {
     }
   }
 
+  // RUNTIME: <tag .. rx:event="... fire:channel ..." ...>
+  self.onFR = function(state, dom, type, channel) {
+    reg_event(state, dom, type, function () {
+      console.log(state.data);
+      state.data.connection.ptr.send(channel, {}, {
+        success: function() {
+          console.log("SENT '" + channel + "'");
+        },
+        failure: function(reason) {
+          console.log("FAILED TO FIRE '" + channel + "' DUE:" + reason);''
+        }
+      });
+    });
+  }
+
   // RUNTIME: <tag .. rx:event="... force-auth=name,token ...">
   self.onFORCE_AUTH = function(dom, type, identityName, identity) {
     reg_event(null, dom, type, function () {

@@ -72,6 +72,9 @@ public class Parser {
             commands.add(new Lower(body));
             break;
           }
+          case "fire": {
+            commands.add(new Fire(body));
+          } break;
           case "decide": {
             String[] parts = body.split(Pattern.quote("|"));
             commands.add(new Decide(parts[0], parts.length > 1 ? parts[1] : "id", parts.length > 2 ? parts[2] : "id"));

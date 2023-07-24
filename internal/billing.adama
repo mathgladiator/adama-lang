@@ -45,7 +45,7 @@ table<Bill> _bills;
 
 channel record_bill(NewBill bill) open {
   if (@who.isOverlord()) {
-    if((iterate _bills where hour == bill.hour)[0] as old_bill) {
+    if((iterate _bills where when == bill.when)[0] as old_bill) {
       old_bill <- bill;
     } else {
       _bills <- bill;
@@ -53,4 +53,24 @@ channel record_bill(NewBill bill) open {
   } else {
     abort;
   }
+}
+
+message Empty {}
+
+channel initialize_token(Empty m) {
+  ViewState.log("Hello World");
+}
+
+message BillingInformation {
+  string name;
+  string address1;
+  string address2;
+  string city;
+  string state;
+  string country;
+  string postal;
+}
+
+channel update_billing_information(BillingInformation bi) {
+
 }
