@@ -74,6 +74,11 @@ var RxHTML = (function () {
         debugger: function(delta) {},
         raw: connection
       };
+      obj.nuke = function() {
+        this.connection_events = {};
+        this.sync_events = {};
+        this.choice_subs = {};
+      }.bind(obj);
       if (Adama.Debugger) {
         obj.debugger = Adama.Debugger.register(obj);
       }
@@ -93,6 +98,14 @@ var RxHTML = (function () {
           delete obj.sync_events[axe[k]];
         }
       }.bind(obj);
+      obj.subscribe_sync = function(callback) {
+        var s = "-|" + this.id++;
+        this.sync_events[s] = callback;
+        callback(this.synced);
+        return function () {
+          delete this.sync_events[s];
+        }.bind(this);
+      };
       obj.set_connected = function(cs) {
         if (this.connection_state == cs) {
           return;
@@ -107,6 +120,7 @@ var RxHTML = (function () {
         for (var k = 0; k < axe.length; k++) {
           delete obj.connection_events[axe[k]];
         }
+        this.sync();
       }.bind(obj);
       obj.connected = function(callback) {
         var s = "-|" + this.id++;
@@ -1317,6 +1331,7 @@ var RxHTML = (function () {
   self.run = function (where, path, push) {
     for (conKey in connections) {
       connections[conKey].tree.nuke();
+      connections[conKey].nuke();
     }
     var parts = (path.startsWith("/") ? path.substring(1) : path).split("/");
     var init = {"__session_id": "R" + Math.random()};
@@ -1489,9 +1504,24 @@ var RxHTML = (function () {
     });
   };
 
-  self.VSy = function(dom, state, avail, notavail) {
-
+  // <viewsync>
+  self.VSy = function(parent, priorState, avail, notavail) {
+    var unsub = make_unsub();
+    priorState.data.connection.subscribe_sync(function(synced) {
+      nuke(parent);
+      fire_unsub(unsub);
+      var state = fork(priorState);
+      if (synced) {
+        avail(parent, state);
+      } else {
+        notavail(parent, state);
+      }
+      subscribe_state(state, unsub);
+      // TODO: return false to unsub
+      return true;
+    });
   };
+
 
   // <connection use-domain ...>
   self.DCONNECT = function(state, rxobj) {
@@ -1518,8 +1548,7 @@ var RxHTML = (function () {
         co.vsseq++;
         co.sync();
         var synced = function() {
-          // last one wins
-          if (co.vsseq == this.boound) {
+          if (co.vsseq == this.bound) {
             co.viewstate_sent = true;
             co.sync();
           }
@@ -1562,7 +1591,6 @@ var RxHTML = (function () {
         next: function (payload) {
           co.debugger(payload);
           co.set_connected(true);
-          co.sync();
           if ("data" in payload.delta) {
             co.tree.update(payload.delta.data);
           }
@@ -1664,6 +1692,10 @@ var RxHTML = (function () {
     form.target = iframeTarget.name;
   };
 
+  // RUNTIME | rx:action=domain:sign-in
+  self.adDSO = function (form, state, identityName, rxobj) {
+
+  }
   // RUNTIME | rx:action=document:sign-in
   self.aDSO = function (form, state, identityName, rxobj) {
     rxobj.__ = function() {};
@@ -1684,8 +1716,7 @@ var RxHTML = (function () {
     };
   };
 
-  // RUNTIME | rx:action=document:put
-  self.aDPUT = function (form, state, identityName, rxobj) {
+  var commonPut = function(form, state, identityName, rxobj, urlfactory) {
     // WIP
     rxobj.__ = function() {};
     form.onsubmit = function (evt) {
@@ -1695,7 +1726,7 @@ var RxHTML = (function () {
       var pws = get_password(form);
 
       var next = function() {
-        var url = "https://" + connection.host + "/" + rxobj.space + "/" + rxobj.key + "/" + rxobj.path;
+        var url = urlfactory(rxobj);
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4) {
@@ -1736,6 +1767,16 @@ var RxHTML = (function () {
         next();
       }
     };
+  }
+
+  // RUNTIME | rx:action=domain:put
+  self.adDPUT = function (form, state, identityName, rxobj) {
+    commonPut(form, state, identityName, rxobj, function(rxobj) { return location.protocol + "//" + location.host + "/" + rxobj.path;})
+  };
+
+  // RUNTIME | rx:action=document:put
+  self.aDPUT = function (form, state, identityName, rxobj) {
+    commonPut(form, state, identityName, rxobj, function(rxobj) { return "https://" + connection.host + "/" + rxobj.space + "/" + rxobj.key + "/" + rxobj.path;})
   };
 
   // RUNTIME | rx:action=adama:sign-in

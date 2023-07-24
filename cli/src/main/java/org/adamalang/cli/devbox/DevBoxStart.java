@@ -67,6 +67,11 @@ public class DevBoxStart {
           terminal.notice("slowing down view updates by 5 seconds");
           control.slowViewerStateUpdates.set(true);
         }
+
+        if ("fast-updates".equalsIgnoreCase(ln)) {
+          terminal.notice("normalizing view update speed");
+          control.slowViewerStateUpdates.set(false);
+        }
       }
     }
   }

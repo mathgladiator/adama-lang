@@ -343,24 +343,28 @@ public class Attributes {
 
   public void _action() {
     String action = env.element.attr("rx:action").trim();
-    if ("document:sign-in".equalsIgnoreCase(action)) { // sign in as an Adama user
+    boolean isSignIn = "document:sign-in".equalsIgnoreCase(action);
+    boolean isDomainSignIn = "domain:sign-in".equalsIgnoreCase(action);
+    boolean documentPut = "document:put".equalsIgnoreCase(action);
+    boolean domainDocumentPut = "domain:put".equalsIgnoreCase(action);
+    if (isSignIn || isDomainSignIn) { // sign in as an Adama user
       check_action_document_sign_in();
       if (!env.element.hasAttr("rx:forward")) {
         env.element.attr("rx:forward", "/");
       }
       convertFailureVariableToEvents(env.element, "sign_in_failed");
       RxObject obj = new RxObject(env, "rx:forward");
-      env.writer.tab().append("$.aDSO(").append(eVar) //
+      env.writer.tab().append(isDomainSignIn ? "$.adDSO(" : "$.aDSO(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(env.val("rx:identity", "default")) //
           .append("',").append(obj.rxObj) //
           .append(");").newline();
-    } else if ("document:put".equalsIgnoreCase(action)) { // sign in as an Adama user
+    } else if (documentPut || domainDocumentPut) { // sign in as an Adama user
       if (!env.element.hasAttr("rx:forward")) {
         env.element.attr("rx:forward", "/");
       }
-      RxObject obj = new RxObject(env, "space", "key", "path", "rx:forward");
-      env.writer.tab().append("$.aDPUT(").append(eVar) //
+      RxObject obj = domainDocumentPut ? new RxObject(env, "path", "rx:forward") : new RxObject(env, "space", "key", "path", "rx:forward");
+      env.writer.tab().append(domainDocumentPut ? "$.adDPUT(" : "$.aDPUT(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(env.val("rx:identity", "default")) //
           .append("',").append(obj.rxObj) //

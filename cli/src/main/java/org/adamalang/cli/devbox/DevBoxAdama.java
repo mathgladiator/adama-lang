@@ -72,15 +72,13 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     });
   }
 
-  @Override
-  public void handle_ConnectionCreate(long requestId, String identity, String space, String key, ObjectNode viewerState, DataResponder responder) {
-    // public void connect(CoreRequestContext context, Key key, String viewerState, AssetIdEncoder assetIdEncoder, Streamback stream) {
-    CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key);
-    verse.service.connect(context, new Key(space, key), viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
+  private void internalConnect(long requestId, String identity, Key key, ObjectNode viewerState, DataResponder responder) {
+    CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key.key);
+    verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
       @Override
       public void onSetupComplete(CoreStream stream) {
-        streams.put(requestId, new LocalStream(new Key(space, key), stream));
-        io.info("connected to " + space + "/" + key);
+        streams.put(requestId, new LocalStream(key, stream));
+        io.info("connected to " + key.space + "/" +key.key);
       }
 
       @Override
@@ -89,7 +87,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
       @Override
       public void next(String data) {
-        io.info("[" + space + "/" + key + "]:" + data);
+        io.info("[" + key.space + "/" + key.key + "]:" + data);
         responder.next(Json.parseJsonObject(data));
       }
 
@@ -101,30 +99,17 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   }
 
   @Override
+  public void handle_ConnectionCreate(long requestId, String identity, String space, String key, ObjectNode viewerState, DataResponder responder) {
+    internalConnect(requestId, identity, new Key(space, key), viewerState, responder);
+  }
+
+  @Override
   public void handle_ConnectionCreateViaDomain(long requestId, String identity, String domain, ObjectNode viewerState, DataResponder responder) {
-    Key key = null; // TODO: resolve from config
-    CoreRequestContext context = new CoreRequestContext(principalOf(identity), "localhost", "127.0.0.1", key.key);
-
-    verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
-      @Override
-      public void onSetupComplete(CoreStream stream) {
-        streams.put(requestId, new LocalStream(key, stream));
-      }
-
-      @Override
-      public void status(StreamStatus status) {
-      }
-
-      @Override
-      public void next(String data) {
-        responder.next(Json.parseJsonObject(data));
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        responder.error(ex);
-      }
-    });
+    if (verse != null) {
+      internalConnect(requestId, identity, verse.domainKeyToUse, viewerState, responder);
+    } else {
+      responder.error(new ErrorCodeException(10023));
+    }
   }
 
   private static Callback<Integer> wrap(SeqResponder responder) {

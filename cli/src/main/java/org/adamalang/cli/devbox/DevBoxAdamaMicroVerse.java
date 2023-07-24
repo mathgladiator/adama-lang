@@ -38,6 +38,7 @@ public class DevBoxAdamaMicroVerse {
   public final ArrayList<LocalSpaceDefn> spaces;
   private final WatchService watchService;
   private final Thread scanner;
+  public final Key domainKeyToUse;
 
   public static class LocalSpaceDefn {
     private final WatchService watchService;
@@ -121,11 +122,12 @@ public class DevBoxAdamaMicroVerse {
       }
   }
 
-  private DevBoxAdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, DevCoreServiceFactory factory, ArrayList<LocalSpaceDefn> spaces) throws Exception {
+  private DevBoxAdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, DevCoreServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse) throws Exception {
     this.io = io;
     this.alive = alive;
     this.factory = factory;
     this.service = factory.service;
+    this.domainKeyToUse = domainKeyToUse;
     this.spaces = spaces;
     this.watchService = watchService;
     this.scanner = new Thread(() -> {
@@ -184,6 +186,8 @@ public class DevBoxAdamaMicroVerse {
     if (!cloudPath.exists()) {
       cloudPath.mkdirs();
     }
+    Key domainKeyToUse = null;
+
     HashMap<Key, Long> keys = new HashMap<>();
     JsonNode documentsNode = defn.get("documents");
     if (documentsNode != null && documentsNode.isArray()) {
@@ -192,6 +196,9 @@ public class DevBoxAdamaMicroVerse {
         if (documents.get(k) != null && documents.get(k).isObject()) {
           ObjectNode document = (ObjectNode) documents.get(k);
           Key key = new Key(document.get("space").textValue(), document.get("key").textValue());
+          if (document.has("domain")) {
+            domainKeyToUse = key;
+          }
           keys.put(key, document.get("id").longValue());
         }
       }
@@ -232,6 +239,9 @@ public class DevBoxAdamaMicroVerse {
       localSpaces.add(new LocalSpaceDefn(watchService, name, mainFile, importPath, factory.base));
     }
 
-    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces);
+    if (domainKeyToUse != null) {
+      io.notice("mapping host to :" + domainKeyToUse.space + "/" + domainKeyToUse.key);
+    }
+    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse);
   }
 }

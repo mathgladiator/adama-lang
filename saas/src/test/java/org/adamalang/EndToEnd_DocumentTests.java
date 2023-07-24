@@ -36,6 +36,7 @@ public class EndToEnd_DocumentTests {
       Iterator<String> c5 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/create\",\"space\":\"newspace\",\"key\":\"a\",\"arg\":{}}");
       Assert.assertEquals("FINISH:{}", c5.next());
       Iterator<String> c6 = fe.execute("{\"id\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"newspace\",\"key\":\"a\"}");
+      Assert.assertEquals("STREAM:{\"delta\":{\"view-state-filter\":[\"z\"]}}", c6.next());
       Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1,\"zpx\":1},\"seq\":4}}", c6.next());
       Iterator<String> c7 = fe.execute("{\"id\":8,\"method\":\"connection/send\",\"connection\":100,\"channel\":\"foo\",\"message\":{\"z\":2}}");
       Assert.assertEquals("FINISH:{\"seq\":5}", c7.next());
@@ -60,6 +61,7 @@ public class EndToEnd_DocumentTests {
       Assert.assertEquals("ERROR:438302", fe.execute("{\"id\":1000,\"method\":\"connection/update\",\"connection\":1000,\"viewer-state\":{\"z\":100}}").next());
       Assert.assertEquals("ERROR:474128", fe.execute("{\"id\":1000,\"method\":\"connection/end\",\"connection\":1000}").next());
       Iterator<String> c12 = fe.execute("{\"id\":125,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"newspace\",\"key\":\"a\"}");
+      Assert.assertEquals("STREAM:{\"delta\":{\"view-state-filter\":[\"z\"]}}", c12.next());
       Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1000,\"zpx\":1000},\"seq\":12}}", c12.next());
       Iterator<String> c13 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/create\",\"space\":\"ide\",\"key\":\"a\",\"arg\":{}}");
       Assert.assertEquals("ERROR:995505", c13.next());

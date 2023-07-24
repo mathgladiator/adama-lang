@@ -71,7 +71,7 @@ public class InstanceClientTests {
             "@static { create { return true; } send { return @who.isOverlord(); } } @connected { return true; } public int x; @construct { x = 1000; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble zpx = @viewer.z + x;")) {
       bed.startServer();
       MockEvents events = new MockEvents();
-      Runnable happy = events.latchAt(6);
+      Runnable happy = events.latchAt(7);
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
@@ -95,11 +95,12 @@ public class InstanceClientTests {
         });
         happy.run();
         events.assertWrite(0, "CONNECTED");
-        events.assertWrite(1, "DELTA:{\"data\":{\"x\":1000,\"zpx\":1000},\"seq\":4}");
-        events.assertWrite(2, "DELTA:{\"data\":{\"zpx\":1100},\"seq\":5}");
-        events.assertWrite(3, "DELTA:{\"data\":{\"x\":2000,\"zpx\":2100},\"seq\":6}");
-        events.assertWrite(4, "DELTA:{\"data\":{\"x\":2100,\"zpx\":2200},\"seq\":7}");
-        events.assertWrite(5, "DISCONNECTED");
+        events.assertWrite(1, "DELTA:{\"view-state-filter\":[\"z\"]}");
+        events.assertWrite(2, "DELTA:{\"data\":{\"x\":1000,\"zpx\":1000},\"seq\":4}");
+        events.assertWrite(3, "DELTA:{\"data\":{\"zpx\":1100},\"seq\":5}");
+        events.assertWrite(4, "DELTA:{\"data\":{\"x\":2000,\"zpx\":2100},\"seq\":6}");
+        events.assertWrite(5, "DELTA:{\"data\":{\"x\":2100,\"zpx\":2200},\"seq\":7}");
+        events.assertWrite(6, "DISCONNECTED");
       }
     }
   }
