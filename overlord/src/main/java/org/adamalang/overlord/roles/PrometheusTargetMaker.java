@@ -38,6 +38,7 @@ public class PrometheusTargetMaker {
         cached.put(endpoint.ip + ":" + endpoint.port, endpoint);
       }
       metrics.targets_watcher_fired.run();
+      int backendHosts = 0;
       HashSet<String> seen = new HashSet<>();
       JsonStreamWriter writer = new JsonStreamWriter();
       writer.beginArray();
@@ -54,7 +55,11 @@ public class PrometheusTargetMaker {
             {
               writer.beginObject();
               writer.writeObjectFieldIntro("service");
-              writer.writeString(classifyByPort(endpoint.monitoringPort));
+              String service = classifyByPort(endpoint.monitoringPort);
+              if ("backend".equals(service)) {
+                backendHosts++;
+              }
+              writer.writeString(service);
               writer.endObject();
             }
             writer.writeObjectFieldIntro("targets");
@@ -68,6 +73,13 @@ public class PrometheusTargetMaker {
         }
       }
       writer.endArray();
+      if (backendHosts == 0) {
+        metrics.targets_scan_zero_backend.set(1);
+        LOGGER.error("zero back-end hosts detected; aborting targets");
+        return;
+      } else {
+        metrics.targets_scan_zero_backend.set(0);
+      }
       try {
         String toWrite = writer.toString();
         handler.put("/targets", "<html><head><title>Targets</title></head><body><pre>" + JsonMapper.builder().build().readTree(toWrite).toPrettyString() + "</pre></body></html>");
