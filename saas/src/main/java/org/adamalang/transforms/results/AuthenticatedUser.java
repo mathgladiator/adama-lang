@@ -43,6 +43,7 @@ public class AuthenticatedUser {
   public enum Source {
     Social, //
     Adama, //
+    Internal, //
     Anonymous, //
     Authority, //
     Document, //

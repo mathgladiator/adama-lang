@@ -9,6 +9,7 @@
 package org.adamalang.services;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.jsonwebtoken.Jwts;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.ClientDocumentCreateRequest;
 import org.adamalang.api.ClientSimpleResponse;
@@ -21,7 +22,9 @@ import org.adamalang.runtime.remote.SimpleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.PrivateKey;
 import java.util.HashSet;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
 public class Adama extends SimpleService {
@@ -34,6 +37,7 @@ public class Adama extends SimpleService {
     this.client = client;
     this.metrics = metrics;
   }
+
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
     sb.append("message AdamaCreateDocument_").append(uniqueId).append(" { string space; string key; maybe<long> entropy; dynamic arg; }\n");
@@ -43,6 +47,20 @@ public class Adama extends SimpleService {
     sb.append("  method secured<AdamaCreateDocument_").append(uniqueId).append(", SimpleResponse_").append(uniqueId).append("> documentCreate;\n");
     sb.append("}\n");
     return sb.toString();
+  }
+
+  private String toIdentity(NtPrincipal principal, int keyId, PrivateKey key) {
+    TreeMap<String, Object> claims = new TreeMap<>();
+    claims.put("kid", keyId);
+    if ("adama".equals(principal)) {
+      claims.put("ps", "Adama");
+      claims.put("puid", Long.parseLong(principal.agent));
+    } else {
+      claims.put("ps", "Internal");
+      claims.put("puid", 0L);
+    }
+    claims.put("pa", principal.authority);
+    return Jwts.builder().setClaims(claims).setIssuer("internal").setSubject(principal.agent).signWith(key).compact();
   }
 
   @Override

@@ -18,6 +18,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.Json;
 import org.adamalang.common.keys.SigningKeyPair;
 import org.adamalang.connection.Session;
 import org.adamalang.mysql.DataBase;
@@ -150,6 +151,21 @@ public class PerSessionAuthenticator {
         callback.success(user);
         return;
       }
+
+      if ("internal".equals(parsedToken.iss)) {
+        PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(database, parsedToken.key_id));
+        Jwts.parserBuilder()
+            .setSigningKey(publicKey)
+            .requireIssuer("internal")
+            .build()
+            .parseClaimsJws(identity);
+        ConnectionContext context = new ConnectionContext("::adama", "0.0.0.0", "", null);
+        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_source, parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context, true);
+        session.identityCache.put(identity, user);
+        callback.success(user);
+        return;
+      }
+
       if ("super".equals(parsedToken.iss)) {
         for (String publicKey64 : superKeys) {
           PublicKey publicKey = decodePublicKey(publicKey64);
@@ -224,8 +240,9 @@ public class PerSessionAuthenticator {
         try {
           String middle = new String(Base64.getDecoder().decode(parts[1]));
           JsonMapper mapper = new JsonMapper();
-          JsonNode tree = mapper.readTree(middle);
-          if (tree != null && tree.isObject()) {
+          JsonNode treeRaw = mapper.readTree(middle);
+          if (treeRaw != null && treeRaw.isObject()) {
+            ObjectNode tree = (ObjectNode) treeRaw;
             JsonNode _iss = tree.get("iss");
             JsonNode _sub = tree.get("sub");
             JsonNode _key_id = tree.get("kid");
@@ -233,11 +250,11 @@ public class PerSessionAuthenticator {
               this.key_id = _key_id.asInt();
               this.proxy_source = AuthenticatedUser.Source.valueOf(tree.get("ps").asText());
               this.proxy_user_id = tree.get("puid").asInt();
-              this.proxy_authority = tree.get("pa").asText();
-              this.proxy_origin = tree.get("po").asText();
-              this.proxy_ip = tree.get("pip").asText();
-              this.proxy_asset_key = tree.get("pak").asText();
-              this.proxy_useragent = tree.get("pua").asText();
+              this.proxy_authority = Json.readString(tree, "pa");
+              this.proxy_origin = Json.readString(tree, "po");
+              this.proxy_ip = Json.readString(tree, "pip");
+              this.proxy_asset_key = Json.readString(tree, "pak");
+              this.proxy_useragent = Json.readString(tree, "pua");
             } else {
               this.key_id = -1;
               this.proxy_source = null;
