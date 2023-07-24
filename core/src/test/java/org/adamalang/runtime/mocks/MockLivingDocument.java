@@ -66,6 +66,11 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public String __getViewStateFilter() {
+    return "[]";
+  }
+
+  @Override
   public boolean __open_channel(String name) {
     return false;
   }

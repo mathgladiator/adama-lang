@@ -960,6 +960,10 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
     gold.append("\n  private final Sink<RTxM> __queue_foo = new Sink<>(\"foo\");");
     gold.append("\n  private final NtChannel<RTxM> foo = new NtChannel<>(__futures, __queue_foo);");
     gold.append("\n  @Override");

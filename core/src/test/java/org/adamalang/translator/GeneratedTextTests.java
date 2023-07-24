@@ -481,6 +481,10 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -1165,6 +1169,10 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
@@ -1863,6 +1871,10 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
     gold.append("\n  private void handleChannelMessage_write(CoreRequestContext __context, NtPrincipal __who, RTxAppend a) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
@@ -2744,6 +2756,10 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");

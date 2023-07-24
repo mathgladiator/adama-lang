@@ -566,6 +566,10 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
     gold.append("\n  private final Sink<RTxX[]> __queue_chan = new Sink<>(\"chan\");");
     gold.append("\n  private final NtChannel<RTxX[]> chan = new NtChannel<>(__futures, __queue_chan);");
     gold.append("\n  @Override");
@@ -1317,6 +1321,10 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
     gold.append("\n  private final Sink<RTxX> __queue_chan = new Sink<>(\"chan\");");
     gold.append("\n  private final NtChannel<RTxX> chan = new NtChannel<>(__futures, __queue_chan);");
     gold.append("\n  @Override");
@@ -2081,6 +2089,10 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
     gold.append("\n  private final Sink<RTxX> __queue_chan = new Sink<>(\"chan\");");
     gold.append("\n  private final NtChannel<RTxX> chan = new NtChannel<>(__futures, __queue_chan);");
     gold.append("\n  @Override");

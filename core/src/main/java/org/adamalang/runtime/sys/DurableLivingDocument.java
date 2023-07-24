@@ -745,6 +745,12 @@ public class DurableLivingDocument implements Queryable {
   public void createPrivateView(final NtPrincipal who, final Perspective perspective, JsonStreamReader viewerState, AssetIdEncoder encoder, Callback<PrivateView> callback) {
     PrivateView result = document.__createView(who, perspective, encoder);
     result.ingest(viewerState);
+    /*
+    String viewStateFilter = document.__getViewStateFilter();
+    if (!"[]".equals(viewStateFilter)) {
+      result.deliver("{\"view-state-filter\":" + viewStateFilter + "}");
+    }
+    */
     invalidate(Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
   }
 

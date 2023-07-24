@@ -1417,6 +1417,8 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
+  public abstract String __getViewStateFilter();
+
   /** transaction: a person connects to document */
   private LivingDocumentChange __transaction_delete(final String request, final CoreRequestContext context) throws ErrorCodeException {
     final var startedTime = System.nanoTime();

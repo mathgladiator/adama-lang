@@ -642,6 +642,10 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -1418,6 +1422,10 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -2179,6 +2187,10 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
@@ -3032,6 +3044,10 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[\\\"class_filter\\\"]\";");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -3804,6 +3820,10 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");
@@ -4658,6 +4678,10 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[\\\"class_filter\\\"]\";");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    return false;");

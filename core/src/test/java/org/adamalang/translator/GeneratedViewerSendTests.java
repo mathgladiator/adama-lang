@@ -735,6 +735,10 @@ public class GeneratedViewerSendTests extends GeneratedBase {
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __getViewStateFilter() {");
+    gold.append("\n    return \"[]\";");
+    gold.append("\n  }");
     gold.append("\n  private void handleChannelMessage_foo(CoreRequestContext __context, NtPrincipal __who, RTxM m) throws AbortMessageException {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
