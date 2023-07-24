@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.caravan.contracts.KeyToIdService;
 import org.adamalang.cli.implementations.CodeHandlerImpl;
-import org.adamalang.cli.interactive.TerminalIO;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;

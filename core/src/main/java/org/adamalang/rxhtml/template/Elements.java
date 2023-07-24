@@ -44,6 +44,29 @@ public class Elements {
     env.writer.tab().append("$.ST(").append(obj.rxObj).append(");").newline();
   }
 
+  public static void viewsync(Environment env) {
+    String childStateVar = env.pool.ask();
+    String parentVar = soloParent(env);
+    env.writer.tab().append("$.VSy(").append(parentVar).append(",").append(env.stateVar).append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
+      if (node instanceof Element) {
+        return !(node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
+      } else {
+        return true;
+      }
+    });
+    env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
+      if (node instanceof Element) {
+        return (node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
+      } else {
+        return false;
+      }
+    });
+    env.writer.tabDown().tab().append("});").newline();
+    env.pool.give(childStateVar);
+  }
+
   public static void connection(Environment env) {
     if (!env.element.hasAttr("name")) {
       env.element.attr("name", "default");

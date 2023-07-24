@@ -8,7 +8,6 @@
  */
 package org.adamalang.cli.devbox;
 
-import org.adamalang.cli.interactive.TerminalIO;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.web.UriMatcher;

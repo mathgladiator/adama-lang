@@ -478,6 +478,10 @@ public class CoreService implements Deliverer, Queryable {
           public void success(PrivateView view) {
             stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, view));
             stream.status(Streamback.StreamStatus.Connected);
+            String viewStateFilter = document.document().__getViewStateFilter();
+            if (!"[]".equals(viewStateFilter)) {
+              view.deliver("{\"view-state-filter\":" + viewStateFilter + "}");
+            }
           }
 
           @Override

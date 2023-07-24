@@ -6,8 +6,14 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.cli.devbox;
 
-public class Platform {
-  public static String VERSION = "20230723235614";
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class DynamicControl {
+  public final AtomicBoolean slowViewerStateUpdates;
+
+  public DynamicControl() {
+    this.slowViewerStateUpdates = new AtomicBoolean(false);
+  }
 }

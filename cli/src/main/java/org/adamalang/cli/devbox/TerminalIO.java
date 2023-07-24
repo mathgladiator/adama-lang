@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.cli.interactive;
+package org.adamalang.cli.devbox;
 
 import org.adamalang.cli.Util;
 import org.jline.reader.*;

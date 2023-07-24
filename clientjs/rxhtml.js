@@ -62,16 +62,37 @@ var RxHTML = (function () {
         choice_subs: {},
         resets: {},
         connection_events: {},
+        sync_events: {},
         id: 0,
         connection_state: false,
         choices: {},
         bound: "",
+        viewstate_sent: true,
+        synced: false,
+        filter: {},
+        vsseq: 0,
         debugger: function(delta) {},
         raw: connection
       };
       if (Adama.Debugger) {
         obj.debugger = Adama.Debugger.register(obj);
       }
+      obj.sync = function() {
+        var synced = this.connection_state && this.viewstate_sent;
+        if (this.synced == synced) {
+          return;
+        }
+        this.synced = synced;
+        var axe = [];
+        for (var sub in obj.sync_events) {
+          if (!(obj.sync_events[sub](synced))) {
+            axe.push(sub);
+          }
+        }
+        for (var k = 0; k < axe.length; k++) {
+          delete obj.sync_events[axe[k]];
+        }
+      }.bind(obj);
       obj.set_connected = function(cs) {
         if (this.connection_state == cs) {
           return;
@@ -1468,6 +1489,15 @@ var RxHTML = (function () {
     });
   };
 
+  self.VSy = function(dom, state, avail, notavail) {
+
+  };
+
+  // <connection use-domain ...>
+  self.DCONNECT = function(state, rxobj) {
+
+  };
+
   // <connection ...>
   self.CONNECT = function (state, rxobj) {
     var unsub = {
@@ -1481,25 +1511,30 @@ var RxHTML = (function () {
       }
       var co = get_connection_obj(rxobj.name);
       var desired = rxobj.space + "/" + rxobj.key;
+
+      var sync_tree = function() {
+        var new_tree = state.view.tree.copy();
+        co.viewstate_sent = false;
+        co.vsseq++;
+        co.sync();
+        var synced = function() {
+          // last one wins
+          if (co.vsseq == this.boound) {
+            co.viewstate_sent = true;
+            co.sync();
+          }
+        }.bind({bound:co.vsseq});
+        co.ptr.update(new_tree, { success: synced, failure: synced });
+      };
       var bind = function (sendNow) {
         unsub.view = state.view.tree.subscribe(function () {
           if (co.ptr == null) {
             return;
           }
-          co.ptr.update(state.view.tree.copy(), {
-            success: function () {
-            },
-            failure: function () {
-            }
-          });
+          sync_tree();
         });
         if (sendNow) {
-          co.ptr.update(state.view.tree.copy(), {
-            success: function () {
-            },
-            failure: function () {
-            }
-          });
+          sync_tree();
         }
       };
       if (co.ptr != null && co.bound == desired) {
@@ -1522,10 +1557,12 @@ var RxHTML = (function () {
       co.key = rxobj.key;
       co.identity = identity;
       co.handlers = {};
+      co.viewstate_sent = true;
       co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), {
         next: function (payload) {
           co.debugger(payload);
           co.set_connected(true);
+          co.sync();
           if ("data" in payload.delta) {
             co.tree.update(payload.delta.data);
           }
@@ -1543,6 +1580,14 @@ var RxHTML = (function () {
             if (viewport in co.handlers) {
               co.handlers[viewport](payload.delta.message, co);
             }
+          }
+          if ('view-state-filter' in payload.delta) {
+            var filter = {};
+            var keys = payload.delta['view-state-filter'];
+            for (var k = 0; k < keys.length; k++) {
+              filter[keys[k]] = true;
+            }
+            co.filter = filter;
           }
           if ('goto' in payload.delta) {
             self.goto(payload.delta.goto);

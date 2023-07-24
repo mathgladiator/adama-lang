@@ -12,10 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.api.*;
-import org.adamalang.cli.interactive.TerminalIO;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Json;
+import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -29,7 +26,9 @@ import org.adamalang.web.io.JsonResponder;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
+  private final SimpleExecutor executor;
   private final ConnectionContext context;
+  private final DynamicControl control;
   private final TerminalIO io;
   private final ConcurrentHashMap<Long, LocalStream> streams;
   private final DevBoxAdamaMicroVerse verse;
@@ -44,8 +43,10 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     }
   }
 
-  public DevBoxAdama(ConnectionContext context, TerminalIO io, DevBoxAdamaMicroVerse verse) {
+  public DevBoxAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, DevBoxAdamaMicroVerse verse) {
+    this.executor = executor;
     this.context = context;
+    this.control = control;
     this.io = io;
     this.verse = verse;
     this.streams = new ConcurrentHashMap<>();
@@ -214,7 +215,18 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   public void handle_ConnectionUpdate(long requestId, Long connection, ObjectNode viewerState, SimpleResponder responder) {
     LocalStream stream = streams.get(connection);
     if (stream != null) {
-      stream.ref.update(viewerState.toString());
+      if (control.slowViewerStateUpdates.get()) {
+        executor.schedule(new NamedRunnable("slow update") {
+          @Override
+          public void execute() throws Exception {
+            stream.ref.update(viewerState.toString());
+            responder.complete();
+          }
+        }, 5000);
+      } else {
+        stream.ref.update(viewerState.toString());
+        responder.complete();
+      }
     } else {
       responder.error(new ErrorCodeException(-1));
     }

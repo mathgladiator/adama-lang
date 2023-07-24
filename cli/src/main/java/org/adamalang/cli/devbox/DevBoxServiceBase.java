@@ -10,15 +10,12 @@ package org.adamalang.cli.devbox;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.handler.ssl.SslContext;
-import org.adamalang.ErrorCodes;
-import org.adamalang.cli.interactive.TerminalIO;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
-import org.adamalang.common.keys.SigningKeyPair;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.web.UriMatcher;
-import org.adamalang.mysql.model.Secrets;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -46,6 +43,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DevBoxServiceBase implements ServiceBase {
+  private final SimpleExecutor executor;
+  private final DynamicControl control;
   private final TerminalIO io;
   private final WebConfig webConfig;
   private final AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle;
@@ -53,7 +52,9 @@ public class DevBoxServiceBase implements ServiceBase {
   private final File localLibAdamaJS;
   private final DevBoxAdamaMicroVerse verse;
 
-  public DevBoxServiceBase(TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, DevBoxAdamaMicroVerse verse) {
+  public DevBoxServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, DevBoxAdamaMicroVerse verse) {
+    this.executor = SimpleExecutor.create("executor");
+    this.control = control;
     this.io = io;
     this.webConfig = webConfig;
     this.bundle = bundle;
@@ -65,7 +66,11 @@ public class DevBoxServiceBase implements ServiceBase {
   @Override
   public ServiceConnection establish(ConnectionContext context) {
     // if we have a service and a table, then let's use it!
-    return new DevBoxAdama(context, this.io, verse);
+    return new DevBoxAdama(executor, context, this.control, this.io, verse);
+  }
+
+  public void shutdown() {
+    executor.shutdown();
   }
 
   @Override

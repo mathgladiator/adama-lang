@@ -9,11 +9,7 @@
 package org.adamalang.cli.implementations;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.cli.devbox.DevBoxAdamaMicroVerse;
-import org.adamalang.cli.devbox.DevBoxServiceBase;
-import org.adamalang.cli.devbox.DevBoxServices;
-import org.adamalang.cli.devbox.RxHTMLScanner;
-import org.adamalang.cli.interactive.TerminalIO;
+import org.adamalang.cli.devbox.*;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.FrontendHandler;
 import org.adamalang.cli.runtime.Output;
@@ -73,47 +69,6 @@ public class FrontendHandlerImpl implements FrontendHandler {
 
     @Override
     public void devServer(Arguments.FrontendDevServerArgs args, Output.YesOrError output) throws Exception {
-        AtomicBoolean alive = new AtomicBoolean(true);
-        String localLibAdamaJSPath = "".equals(args.localLibadamaPath) ? null : args.localLibadamaPath;
-        File localLibAdamaJSFile = null;
-        if (localLibAdamaJSPath != null) {
-            localLibAdamaJSFile = new File(localLibAdamaJSPath);
-            if (!(localLibAdamaJSFile.exists() && localLibAdamaJSFile.isDirectory())) {
-                throw new Exception("--local-libadama-path was provided but the directory doesn't exist (or is a file)");
-            }
-        }
-        TerminalIO terminal = new TerminalIO();
-        DevBoxServices.install((line) -> terminal.info(line));
-        DevBoxAdamaMicroVerse verse = null;
-        if (args.microverse != null) {
-            File microverseDef = new File(args.microverse);
-            if (microverseDef.exists() && microverseDef.isFile()) {
-                ObjectNode defn = Json.parseJsonObject(Files.readString(microverseDef.toPath()));
-                verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn);
-                if (verse == null) {
-                    terminal.notice("microverse: '" + args.microverse + "' failed, using production");
-                }
-            } else {
-                terminal.notice("microverse: '" + args.microverse + "' is not present, using production");
-            }
-        }
-        AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
-        try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), localLibAdamaJSPath != null, (b) -> bundle.set(b))) {
-            WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
-            terminal.notice("Starting Webserver");
-            DevBoxServiceBase base = new DevBoxServiceBase(terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, verse);
-            Thread webServerThread = base.start();
-            while (alive.get()) {
-                String ln = terminal.readline().trim();
-                if ("kill".equalsIgnoreCase(ln) || "exit".equalsIgnoreCase(ln) || "quit".equalsIgnoreCase(ln) || "q".equalsIgnoreCase(ln)) {
-                    terminal.notice("Lowering alive");
-                    alive.set(false);
-                    webServerThread.interrupt();
-                    if (verse != null) {
-                        verse.shutdown();
-                    }
-                }
-            }
-        }
+        DevBoxStart.start(args);
     }
 }
