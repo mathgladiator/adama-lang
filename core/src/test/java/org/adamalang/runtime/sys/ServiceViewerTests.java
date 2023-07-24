@@ -46,15 +46,16 @@ public class ServiceViewerTests {
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      Runnable latch1 = streamback.latchAt(2);
-      Runnable latch2 = streamback.latchAt(3);
+      Runnable latch1 = streamback.latchAt(3);
+      Runnable latch2 = streamback.latchAt(4);
       service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{\"x\":42}", null, streamback);
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
-      Assert.assertEquals("{\"data\":{\"my_x\":42},\"seq\":4}", streamback.get(1));
+      Assert.assertEquals("{\"view-state-filter\":[\"x\"]}", streamback.get(1));
+      Assert.assertEquals("{\"data\":{\"my_x\":42},\"seq\":4}", streamback.get(2));
       streamback.get().update("{\"x\":5050}");
       latch2.run();
-      Assert.assertEquals("{\"data\":{\"my_x\":5050},\"seq\":5}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"my_x\":5050},\"seq\":5}", streamback.get(3));
     } finally {
       service.shutdown();
     }
