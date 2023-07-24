@@ -31,8 +31,6 @@ public class Linter {
   }
 
   public static ArrayList<String> compare(String reflectionFrom, String reflectionTo) {
-    System.err.println(reflectionFrom);
-    System.err.println(reflectionTo);
     Linter linter = new Linter(reflectionFrom, reflectionTo);
     linter.start();
     return linter.diagnostics;
