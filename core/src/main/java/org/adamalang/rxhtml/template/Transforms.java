@@ -25,6 +25,8 @@ public class Transforms {
         return "function(x) { return ('' + x).toLowerCase(); }";
       default:
         return "function(x) { return x; }";
+      case "format_date_usa":
+        return "$.fdusa";
     }
   }
 }

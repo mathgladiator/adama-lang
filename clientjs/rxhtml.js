@@ -1756,6 +1756,14 @@ var RxHTML = (function () {
       });
     };
   };
+  // transform = format_date_usa
+
+  self.fdusa = function(str) {
+    // TODO: detect date-time --> convert
+    // TODO: detect just data -> convert
+    // TODO: log a warning and return the string
+    return "USA[" + str + "]";
+  };
 
   var commonPut = function (form, state, identityName, rxobj, urlfactory) {
     // WIP
