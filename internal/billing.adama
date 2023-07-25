@@ -6,9 +6,16 @@
 }
 
 public principal owner;
+public string email;
 
-@construct {
-  owner = @who;
+message Cons {
+  principal owner;
+  string email;
+}
+
+@construct (Cons c) {
+  owner = c.owner;
+  email = c.email;
 }
 
 @connected {
