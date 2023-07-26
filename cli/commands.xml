@@ -691,6 +691,12 @@
             <arg name="rxhtml-path" default="." />
             <arg name="output" default="200.html" />
         </command>
+        <command name="study-css">
+            <documentation>
+                Tool to study CSS
+            </documentation>
+            <arg name="input" default="style.css" />
+        </command>
     </group>
 
     <command name="kickstart" interactive="true">
