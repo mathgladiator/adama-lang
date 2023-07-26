@@ -20,17 +20,17 @@ public class KeyMapTests {
     KeyMap km = new KeyMap();
     {
       Key k1 = new Key("space", "key");
-      MapKey mk1 = km.inventAndApply(k1);
+      MapKey mk1 = km.inventAndApply(k1, 1);
       Assert.assertEquals(1, mk1.id);
       Assert.assertEquals(1, (int) km.get(k1));
-      Assert.assertNull(km.inventAndApply(k1));
+      Assert.assertNull(km.inventAndApply(k1, 1));
     }
     km.apply(new DelKey(new Key("space", "del")));
     km.apply(new DelKey(new Key("space", "key")));
     km.apply(new MapKey(new Key("s", "k"), 42));
     {
       Key k1 = new Key("space", "key");
-      MapKey mk1 = km.inventAndApply(k1);
+      MapKey mk1 = km.inventAndApply(k1, 1);
       Assert.assertEquals(43, mk1.id);
       Assert.assertEquals(43, (int) km.get(k1));
     }

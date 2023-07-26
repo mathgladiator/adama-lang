@@ -32,7 +32,7 @@ public class DevCoreServiceFactory {
   private final AtomicBoolean alive;
   private final SimpleExecutor caravanExecutor;
   private final Thread flusher;
-  private final CaravanDataService dataService;
+  public final CaravanDataService dataService;
   public final DeploymentFactoryBase base;
   public final CoreService service;
 

@@ -141,8 +141,6 @@ public class CoreService implements Deliverer, Queryable {
           callback.failure(ex);
         }
       });
-    } else if ("dump-datastore".equals(query.get("method"))) {
-      callback.success("{\"result\":\"TODO\"}");
     } else {
       callback.failure(new ErrorCodeException(ErrorCodes.QUERY_MADE_NO_SENSE));
     }

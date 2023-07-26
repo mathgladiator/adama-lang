@@ -68,6 +68,10 @@ public class Index {
     metrics.items_over_onehundredk.set(over_100K);
   }
 
+  public Set<Long> list() {
+    return index.keySet();
+  }
+
   /** does the index contain the given id */
   public boolean exists(long id) {
     return index.containsKey(id);

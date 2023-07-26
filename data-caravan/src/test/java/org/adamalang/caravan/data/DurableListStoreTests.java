@@ -34,9 +34,9 @@ public class DurableListStoreTests {
       DurableListStore store = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage"), testRoot, 64 * 1024,  64, 1024);
       AtomicInteger count = new AtomicInteger(0);
       Runnable event = () -> { count.incrementAndGet(); };
-      Assert.assertFalse(store.exists(42));
+      Assert.assertFalse(store.exists(new Key("s", "42"), 42));
       store.append(new Key("s", "42"), 42, "XYZ".getBytes(StandardCharsets.UTF_8), 0, 42L, event);
-      Assert.assertTrue(store.exists(42));
+      Assert.assertTrue(store.exists(new Key("s", "42"), 42));
       for (int k = 0 ; k < 100; k++) {
         store.append(new Key("s", "1"), 1, ("K:" + k).getBytes(StandardCharsets.UTF_8), k + 1, 100L, event);
       }
@@ -46,7 +46,7 @@ public class DurableListStoreTests {
         stream.assertIs("[0=XYZ/0:42]FINISHED");
       }
       store.delete(new Key("s", "42"), 42, event);
-      Assert.assertFalse(store.exists(42));
+      Assert.assertFalse(store.exists(new Key("s", "42"), 42));
       {
         MockByteArrayStream stream = new MockByteArrayStream();
         store.read(new Key("s", "1"), 1, stream);
@@ -156,7 +156,7 @@ public class DurableListStoreTests {
       Runnable event = () -> {
         count.incrementAndGet();
       };
-      Assert.assertFalse(store.exists(42));
+      Assert.assertFalse(store.exists(new Key("s", "42"), 42));
       ArrayList<byte[]> batch1 = new ArrayList<>();
       batch1.add(encode("XYZ"));
       for (int k = 0; k < 100; k++) {
@@ -229,9 +229,9 @@ public class DurableListStoreTests {
         }
 
         store.trim(new Key("s", "2"), 2, 5, event);
-        Assert.assertTrue(store.exists(3));
+        Assert.assertTrue(store.exists(new Key("s", "3"), 3));
         store.delete(new Key("s", "3"), 3, event);
-        Assert.assertFalse(store.exists(3));
+        Assert.assertFalse(store.exists(new Key("s", "3"), 3));
         store.flush(false);
         store.shutdown();
       }
@@ -254,7 +254,7 @@ public class DurableListStoreTests {
           store.read(new Key("s", "2"), 2, stream);
           stream.assertIs("[0=K:95/10:1024][1=K:96/10:1024][2=K:97/10:1024][3=K:98/10:1024][4=K:99/10:1024]FINISHED");
         }
-        Assert.assertFalse(store.exists(3));
+        Assert.assertFalse(store.exists(new Key("s", "3"), 3));
         store.flush(true);
         store.shutdown();
       }

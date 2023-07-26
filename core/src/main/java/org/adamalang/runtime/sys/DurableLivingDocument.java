@@ -254,6 +254,10 @@ public class DurableLivingDocument implements Queryable {
     writer.writeString(key.key);
     writer.writeObjectFieldIntro("size");
     writer.writeInteger(size.get());
+    writer.writeObjectFieldIntro("seq");
+    writer.writeInteger(document.__getSeq());
+    writer.writeObjectFieldIntro("cost");
+    writer.writeInteger(document.__getCodeCost());
     writer.endObject();
     callback.success(writer.toString());
   }

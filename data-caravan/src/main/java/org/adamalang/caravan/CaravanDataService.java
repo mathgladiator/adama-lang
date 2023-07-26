@@ -17,7 +17,9 @@ import org.adamalang.caravan.contracts.KeyToIdService;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.events.*;
 import org.adamalang.common.*;
+import org.adamalang.common.cache.CacheEntry;
 import org.adamalang.runtime.data.*;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
@@ -192,6 +195,49 @@ public class CaravanDataService implements ArchivingDataService {
     }
   }
 
+  public void diagnostics(Callback<String> callback) {
+    executor.execute(new NamedRunnable("diagnostics") {
+      @Override
+      public void execute() throws Exception {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.beginObject();
+        {
+          writer.writeObjectFieldIntro("cache");
+          writer.beginObject();
+          for (Map.Entry<Long, LocalCache> entry : cache.entrySet()) {
+            writer.writeObjectFieldIntro(entry.getKey());
+            writer.beginObject();
+            writer.writeObjectFieldIntro("seq");
+            writer.writeInteger(entry.getValue().seq());
+            writer.endObject();
+          }
+          writer.endObject();
+        }
+        {
+          writer.writeObjectFieldIntro("working-set");
+          writer.beginObject();
+          writer.writeObjectFieldIntro("index");
+          writer.beginArray();
+          for (long id : store.listIndex()) {
+            writer.writeLong(id);
+          }
+          writer.endArray();
+          writer.writeObjectFieldIntro("keys");
+          writer.beginObject();
+          for (Map.Entry<Key, Integer> et : store.map().entrySet()) {
+            writer.writeObjectFieldIntro(et.getKey().space + "/" + et.getKey().key);
+            writer.writeInteger(et.getValue());
+          }
+          writer.endObject();
+          writer.endObject();
+        }
+        writer.endObject();
+        callback.success(writer.toString());
+      }
+    });
+  }
+
+
   /** execute with the translation service and jump into the executor */
   private <T> void execute(String name, Key key, boolean load, Callback<T> callback, BiConsumer<Long, LocalCache> action) {
     keyToIdService.translate(key, new Callback<Long>() {
@@ -314,7 +360,7 @@ public class CaravanDataService implements ArchivingDataService {
     EventCodec.write(buf, change);
 
     execute("initialize", key, false, callback, (id, cached) -> {
-      if (cached != null || store.exists(id)) {
+      if (cached != null || store.exists(key, id)) {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
         return;
       }

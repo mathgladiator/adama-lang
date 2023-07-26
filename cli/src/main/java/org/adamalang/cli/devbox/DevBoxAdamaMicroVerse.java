@@ -11,6 +11,7 @@ package org.adamalang.cli.devbox;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.contracts.KeyToIdService;
 import org.adamalang.cli.implementations.CodeHandlerImpl;
 import org.adamalang.common.Callback;
@@ -34,6 +35,7 @@ public class DevBoxAdamaMicroVerse {
   private final TerminalIO io;
   private final AtomicBoolean alive;
   public final DevCoreServiceFactory factory;
+  public final CaravanDataService dataService;
   public final CoreService service;
   public final ArrayList<LocalSpaceDefn> spaces;
   private final WatchService watchService;
@@ -126,6 +128,7 @@ public class DevBoxAdamaMicroVerse {
     this.io = io;
     this.alive = alive;
     this.factory = factory;
+    this.dataService = factory.dataService;
     this.service = factory.service;
     this.domainKeyToUse = domainKeyToUse;
     this.spaces = spaces;

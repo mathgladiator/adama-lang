@@ -14,14 +14,19 @@ import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.cli.Config;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.data.ManagedDataService;
 import org.adamalang.runtime.data.managed.Base;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 public class CaravanInit {
+  private static final Logger LOGGER = LoggerFactory.getLogger(CaravanInit.class);
   private final SimpleExecutor caravanExecutor;
   private final SimpleExecutor managedExecutor;
   public final ManagedDataService service;
@@ -41,16 +46,28 @@ public class CaravanInit {
     CaravanDataService caravanDataService = new CaravanDataService(new CaravanMetrics(init.metricsFactory), init.s3, new FinderServiceToKeyToIdService(init.finder), store, caravanExecutor);
     Base managedBase = new Base(init.finder, caravanDataService, init.s3, init.region, init.machine, managedExecutor, 2 * 60 * 1000);
     this.service = new ManagedDataService(managedBase);
-    this.flusher = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        while (init.alive.get()) {
-          try {
-            Thread.sleep(0, 800000);
-            caravanDataService.flush(false).await(1000, TimeUnit.MILLISECONDS);
-          } catch (InterruptedException ie) {
-            return;
+    this.flusher = new Thread(() -> {
+      int diagnostics = 0;
+      while (init.alive.get()) {
+        try {
+          if (diagnostics-- < 0) {
+            diagnostics = 1000 * 60 * 2;
+            caravanDataService.diagnostics(new Callback<String>() {
+              @Override
+              public void success(String value) {
+                LOGGER.error("caravan-dump: " + value);
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                LOGGER.error("failed-caravan-dump:" + ex.code);
+              }
+            });
           }
+          Thread.sleep(0, 800000);
+          caravanDataService.flush(false).await(1000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException ie) {
+          return;
         }
       }
     });

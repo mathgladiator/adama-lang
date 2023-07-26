@@ -24,6 +24,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class DurableListStore {
   private static final Logger LOGGER = LoggerFactory.getLogger(DurableListStore.class);
@@ -100,6 +102,16 @@ public class DurableListStore {
     metrics.free_storage_available.set((int) (report.getFreeBytesAvailable() / 1000000L));
     metrics.alarm_storage_over_80_percent.set(report.alarm(0.2) ? 1 : 0);
     this.index.report(metrics);
+  }
+
+  /** return a list of ids */
+  public Set<Long> listIndex() {
+    return index.list();
+  }
+
+  /** return a list of keys */
+  public Map<Key, Integer> map() {
+    return keymap.copy();
   }
 
   /** internal: load and commit the data from the write-ahead log */
@@ -214,17 +226,15 @@ public class DurableListStore {
     }
   }
 
-  /*
-  private int mapKeyToLocalId(Key key) {
+  private int mapKeyToLocalId(Key key, long id) {
     Integer result = keymap.get(key);
-    if (result != null) {
-      MapKey mk = keymap.inventAndApply(key);
+    if (result == null) {
+      MapKey mk = keymap.inventAndApply(key, (int) id);
       mk.write(buffer);
       return mk.id;
     }
     return result;
   }
-  */
 
   /** append a byte array to the given id */
   public Integer append(Key key, long id, ArrayList<byte[]> batch, int seq, long assetBytes, Runnable notification) {
@@ -248,7 +258,7 @@ public class DurableListStore {
 
     // walk the regions allocated and the bytes
     int lastSize = -1;
-    // int localId = mapKeyToLocalId(key);
+    int localId = mapKeyToLocalId(key, id);
     for (RegionByteArrayPairing pairing : wheres) {
       metrics.appends.run();
       RestoreWalker walker = new RestoreWalker();
@@ -313,7 +323,7 @@ public class DurableListStore {
     this.notifications.add(notification);
     storage.write(where, bytes);
     int size = index.append(id, new AnnotatedRegion(where.position, where.size, seq, assetBytes));
-    // int localId = mapKeyToLocalId(key);
+    int localId = mapKeyToLocalId(key, id);
     new Append(id, where.position, bytes, seq, assetBytes).write(buffer);
     if (buffer.writerIndex() > flushCutOffBytes) {
       // the buffer is full, so flush it
@@ -325,6 +335,7 @@ public class DurableListStore {
   /** read the given object by scanning all appends */
   public void read(Key key, long id, ByteArrayStream streamback) throws Exception {
     Iterator<AnnotatedRegion> it = index.get(id);
+    Integer localId = keymap.get(key);
     int at = 0;
     while (it.hasNext()) {
       metrics.reads.run();
@@ -339,6 +350,8 @@ public class DurableListStore {
   /** remove the $count appends from the head of the object */
   public boolean trim(Key key, long id, int maxSize, Runnable notification) {
     if (maxSize > 0) {
+      Integer localId = keymap.get(key);
+      // TODO: use the local id
       ArrayList<AnnotatedRegion> regions = index.trim(id, maxSize);
       if (regions != null && regions.size() > 0) {
         this.notifications.add(notification);
@@ -365,11 +378,9 @@ public class DurableListStore {
       for (Region region : regions) {
         heap.free(region);
       }
-      /*
       DelKey dk = new DelKey(key);
       keymap.apply(dk);
       dk.write(buffer);
-      */
       new Delete(id).write(buffer);
       this.notifications.add(notification);
       if (buffer.writerIndex() > flushCutOffBytes) {
@@ -382,8 +393,8 @@ public class DurableListStore {
   }
 
   /** does the given id exist within the system */
-  public boolean exists(long id) {
-    return index.exists(id);
+  public boolean exists(Key key, long id) {
+    return index.exists(id) || keymap.exists(key);
   }
 
   public void shutdown() throws IOException {

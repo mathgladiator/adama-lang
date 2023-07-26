@@ -12,8 +12,7 @@ import org.adamalang.caravan.entries.DelKey;
 import org.adamalang.caravan.entries.MapKey;
 import org.adamalang.runtime.data.Key;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class KeyMap {
   private final HashMap<Key, Integer> forward;
@@ -46,17 +45,26 @@ public class KeyMap {
     return forward.get(key);
   }
 
-  public MapKey inventAndApply(Key key) {
+  public boolean exists(Key key) {
+    return forward.containsKey(key);
+  }
+
+  public TreeMap<Key, Integer> copy() {
+    return new TreeMap<>(forward);
+  }
+
+  public MapKey inventAndApply(Key key, int suggestion) {
     if (forward.containsKey(key)) {
       return null;
     }
+    int id = suggestion;
     while (true) {
-      int id = ++idgen;
       if (!reverse.containsKey(id)) {
         MapKey result = new MapKey(key, id);
         apply(result);
         return result;
       }
+      id = ++idgen;
     }
   }
 }

@@ -10,13 +10,12 @@ package org.adamalang.cli.devbox;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.router.Arguments;
-import org.adamalang.common.ConfigObject;
-import org.adamalang.common.Json;
-import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.*;
 import org.adamalang.web.service.WebConfig;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -91,6 +90,7 @@ public class DevBoxStart {
             String file = command.argAt(2);
             try {
               String json = Files.readString(new File(file).toPath());
+              terminal.error("TODO");
             } catch (Exception ex) {
               terminal.error("failed loading: " + ex.getMessage());
             }
@@ -103,6 +103,49 @@ public class DevBoxStart {
             String space = command.argAt(0);
             String key = command.argAt(1);
             String file = command.argAt(2);
+            terminal.error("TODO");
+          } else {
+            terminal.notice("save $space $key $file");
+          }
+        }
+        if (command.is("deltas")) {
+          if (command.requireArg(1)) {
+            String space = command.argAt(0);
+            String key = command.argAt(1);
+            terminal.error("TODO");
+          } else {
+            terminal.notice("deltas $space $key count");
+          }
+        }
+        if (command.is("diagnostics")) {
+          verse.dataService.diagnostics(new Callback<String>() {
+            @Override
+            public void success(String value) {
+              terminal.info(value);
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              terminal.error("failed to get diagnostics:" + ex.code);
+            }
+          });
+        }
+        if (command.is("query")) {
+          if (command.requireArg(1)) {
+            TreeMap<String, String> query = new TreeMap<>();
+            query.put("space", command.argAt(0));
+            query.put("key", command.argAt(1));
+            verse.service.query(query, new Callback<>() {
+              @Override
+              public void success(String value) {
+                terminal.notice(value);
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                terminal.error("failed to query:" + ex.code);
+              }
+            });
           } else {
             terminal.notice("load $space $key $file");
           }
