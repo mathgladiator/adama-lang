@@ -61,8 +61,8 @@ public class DevBoxStart {
       DevBoxServiceBase base = new DevBoxServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, verse);
       Thread webServerThread = base.start();
       while (alive.get()) {
-        String ln = terminal.readline().trim();
-        if ("kill".equalsIgnoreCase(ln) || "exit".equalsIgnoreCase(ln) || "quit".equalsIgnoreCase(ln) || "q".equalsIgnoreCase(ln)) {
+        Command command = Command.parse(terminal.readline().trim());
+        if (command.is("kill", "exit", "quit", "q", "exut")) {
           terminal.notice("lowering alive");
           alive.set(false);
           webServerThread.interrupt();
@@ -71,16 +71,41 @@ public class DevBoxStart {
           }
           base.shutdown();
         }
-        if ("help".equalsIgnoreCase(ln) || "h".equals(ln)) {
+        if (command.is("help", "h", "?")) {
           terminal.info("Wouldn't it be great if there was some like... help here?");
         }
-        if ("slow-updates".equalsIgnoreCase(ln)) {
-          terminal.notice("slowing down view updates by 5 seconds");
-          control.slowViewerStateUpdates.set(true);
+        if (command.is("viewer-updates")) {
+          if (command.argIs(0, "slow")) {
+            terminal.notice("slowing down view updates by 5 seconds");
+            control.slowViewerStateUpdates.set(true);
+          }
+          if (command.argIs(0, "fast")) {
+            terminal.notice("normalizing view update speed");
+            control.slowViewerStateUpdates.set(false);
+          }
         }
-        if ("fast-updates".equalsIgnoreCase(ln)) {
-          terminal.notice("normalizing view update speed");
-          control.slowViewerStateUpdates.set(false);
+        if (command.is("load")) {
+          if (command.requireArg(2)) {
+            String space = command.argAt(0);
+            String key = command.argAt(1);
+            String file = command.argAt(2);
+            try {
+              String json = Files.readString(new File(file).toPath());
+            } catch (Exception ex) {
+              terminal.error("failed loading: " + ex.getMessage());
+            }
+          } else {
+            terminal.notice("load $space $key $file");
+          }
+        }
+        if (command.is("save")) {
+          if (command.requireArg(2)) {
+            String space = command.argAt(0);
+            String key = command.argAt(1);
+            String file = command.argAt(2);
+          } else {
+            terminal.notice("load $space $key $file");
+          }
         }
       }
     }
