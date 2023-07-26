@@ -11,6 +11,11 @@ package org.adamalang.cli.devbox;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.common.*;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.RemoteDocumentUpdate;
+import org.adamalang.runtime.data.UpdateType;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.web.service.WebConfig;
 
 import java.io.File;
@@ -83,14 +88,45 @@ public class DevBoxStart {
             control.slowViewerStateUpdates.set(false);
           }
         }
-        if (command.is("load")) {
+        if (command.is("delete")) {
+          if (command.requireArg(1)) {
+            String space = command.argAt(0);
+            String key = command.argAt(1);
+            verse.service.delete(new CoreRequestContext(new NtPrincipal("terminal", "overlord"), "cli", "127.0.0.1", key), new Key(space, key), new Callback<Void>() {
+              @Override
+              public void success(Void value) {
+                terminal.info(space + "/" + key + " deleted");
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                terminal.error("failed delete:" + ex.code);
+              }
+            });
+          } else {
+            terminal.notice("delete $space $key");
+          }
+        }
+        if (command.is("init")) {
           if (command.requireArg(2)) {
             String space = command.argAt(0);
             String key = command.argAt(1);
             String file = command.argAt(2);
             try {
-              String json = Files.readString(new File(file).toPath());
-              terminal.error("TODO");
+              ObjectNode parsed = Json.parseJsonObject(Files.readString(new File(file).toPath()));
+              parsed.put("__seq", 1);
+              RemoteDocumentUpdate update = new RemoteDocumentUpdate(0, 1, NtPrincipal.NO_ONE, "{}", parsed.toString(), "{}", true, 0, 0, UpdateType.Internal);
+              verse.dataService.initialize(new Key(space, key), update, new Callback<Void>() {
+                @Override
+                public void success(Void value) {
+                  terminal.info("restored data");
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  terminal.error("failed restoring:" + ex.code);
+                }
+              });
             } catch (Exception ex) {
               terminal.error("failed loading: " + ex.getMessage());
             }
@@ -103,15 +139,30 @@ public class DevBoxStart {
             String space = command.argAt(0);
             String key = command.argAt(1);
             String file = command.argAt(2);
-            terminal.error("TODO");
+            verse.service.saveCustomerBackup(new Key(space, key), new Callback<String>() {
+              @Override
+              public void success(String value) {
+                try {
+                  Files.writeString(new File(file).toPath(), value);
+                } catch (Exception ex) {
+                  terminal.error("failed save: " + ex.getMessage());
+                }
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                terminal.error("failed save from service:" + ex.code);
+              }
+            });
           } else {
             terminal.notice("save $space $key $file");
           }
         }
         if (command.is("deltas")) {
-          if (command.requireArg(1)) {
+          if (command.requireArg(2)) {
             String space = command.argAt(0);
             String key = command.argAt(1);
+            String count = command.argAt(2);
             terminal.error("TODO");
           } else {
             terminal.notice("deltas $space $key count");

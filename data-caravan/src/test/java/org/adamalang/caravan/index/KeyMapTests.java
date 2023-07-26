@@ -30,7 +30,7 @@ public class KeyMapTests {
     km.apply(new MapKey(new Key("s", "k"), 42));
     {
       Key k1 = new Key("space", "key");
-      MapKey mk1 = km.inventAndApply(k1, 1);
+      MapKey mk1 = km.inventAndApply(k1, 42);
       Assert.assertEquals(43, mk1.id);
       Assert.assertEquals(43, (int) km.get(k1));
     }

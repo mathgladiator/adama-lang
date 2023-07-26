@@ -811,7 +811,7 @@ public class DurableLivingDocument implements Queryable {
   }
 
   public void delete(CoreRequestContext context, Callback<Void> callbackRaw) {
-    Callback<Void> callback = base.metrics.document_send.wrap(callbackRaw);
+    Callback<Void> callback = base.metrics.document_delete.wrap(callbackRaw);
     final var writer = forgeWithContext("delete", context);
     writer.endObject();
     ingest(context.who, writer.toString(), new Callback<>() {

@@ -16,6 +16,7 @@ import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
@@ -144,6 +145,22 @@ public class CoreService implements Deliverer, Queryable {
     } else {
       callback.failure(new ErrorCodeException(ErrorCodes.QUERY_MADE_NO_SENSE));
     }
+  }
+
+  public void saveCustomerBackup(Key key, Callback<String> callback) {
+    load(key, new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument doc) {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        doc.document().__dump(writer);
+        callback.success(writer.toString());
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   private void load(Key key, Callback<DurableLivingDocument> callbackReal) {
