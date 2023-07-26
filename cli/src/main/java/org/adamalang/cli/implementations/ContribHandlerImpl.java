@@ -29,6 +29,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ContribHandlerImpl implements ContribHandler {
   private static void copyrightScan(File root) throws Exception {
@@ -42,9 +44,9 @@ public class ContribHandlerImpl implements ContribHandler {
           int end = code.indexOf("*/");
           String newCode = null;
           if (start >= 0 && start <= 5 && end > start) {
-            newCode = DefaultCopyright.COPYRIGHT_FILE_PREFIX + code.substring(end + 2).trim() + "\n";
+            newCode = DefaultCopyright.COPYRIGHT_FILE_PREFIX + code.substring(end + 2).trim().replaceAll(Pattern.quote("\r"), Matcher.quoteReplacement("")) + "\n";
           } else {
-            newCode = DefaultCopyright.COPYRIGHT_FILE_PREFIX + code.trim() + "\n";
+            newCode = DefaultCopyright.COPYRIGHT_FILE_PREFIX + code.trim().replaceAll(Pattern.quote("\r"), Matcher.quoteReplacement("")) + "\n";
           }
           if (!code.equals(newCode)) {
             Files.writeString(f.toPath(), newCode);

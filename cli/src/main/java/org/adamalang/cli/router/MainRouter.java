@@ -701,6 +701,16 @@ public class MainRouter {
                frontendHandler.rxhtml(frontendArgs, out);
                return 0;
             }
+            case "set-local-libadama-path": {
+              FrontendSetLocalLibadamaPathArgs frontendArgs = FrontendSetLocalLibadamaPathArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendSetLocalLibadamaPathArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.setLocalLibadamaPath(frontendArgs, out);
+               return 0;
+            }
             case "--help":
             case "-h":
             case "help": {

@@ -71,4 +71,12 @@ public class FrontendHandlerImpl implements FrontendHandler {
     public void devServer(Arguments.FrontendDevServerArgs args, Output.YesOrError output) throws Exception {
         DevBoxStart.start(args);
     }
+
+    @Override
+    public void setLocalLibadamaPath(Arguments.FrontendSetLocalLibadamaPathArgs args, Output.YesOrError output) throws Exception {
+        args.config.manipulate((node) -> {
+            node.put("local-libadama-path-default", args.localLibadamaPath);
+        });
+        output.out();
+    }
 }

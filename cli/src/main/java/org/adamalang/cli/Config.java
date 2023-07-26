@@ -66,6 +66,14 @@ public class Config {
     return node.textValue();
   }
 
+  public String get_nullable_string(String field) {
+    JsonNode node = read().get(field);
+    if (node == null || node.isNull()) {
+      return null;
+    }
+    return node.textValue();
+  }
+
   public ObjectNode read() {
     return cache;
   }

@@ -671,11 +671,17 @@
         </command>
         <command name="dev-server">
             <documentation>
-               Host the working directory as a webserver
+                Host the working directory as a webserver
             </documentation>
             <arg name="rxhtml-path" default="." />
             <arg name="asset-path" default="." />
             <arg name="microverse" default="local.verse.json" />
+            <arg name="local-libadama-path" />
+        </command>
+        <command name="set-local-libadama-path">
+            <documentation>
+                Update your config to have a local-libadama-path-default which will be used in 'dev-server' when --local-libadama-path is not specified.
+            </documentation>
             <arg name="local-libadama-path" default="null" />
         </command>
         <command name="make-200">

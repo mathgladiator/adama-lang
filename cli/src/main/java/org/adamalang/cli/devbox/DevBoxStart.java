@@ -27,6 +27,9 @@ public class DevBoxStart {
     AtomicBoolean alive = new AtomicBoolean(true);
     String localLibAdamaJSPath = "".equals(args.localLibadamaPath) ? null : args.localLibadamaPath;
     File localLibAdamaJSFile = null;
+    if (localLibAdamaJSPath == null) {
+      localLibAdamaJSPath = args.config.get_nullable_string("local-libadama-path-default");
+    }
     if (localLibAdamaJSPath != null) {
       localLibAdamaJSFile = new File(localLibAdamaJSPath);
       if (!(localLibAdamaJSFile.exists() && localLibAdamaJSFile.isDirectory())) {

@@ -16,4 +16,5 @@ public interface FrontendHandler {
   void edhtml(FrontendEdhtmlArgs args, YesOrError output) throws Exception;
   void make200(FrontendMake200Args args, YesOrError output) throws Exception;
   void rxhtml(FrontendRxhtmlArgs args, YesOrError output) throws Exception;
+  void setLocalLibadamaPath(FrontendSetLocalLibadamaPathArgs args, YesOrError output) throws Exception;
 }
