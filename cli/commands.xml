@@ -678,7 +678,7 @@
             <arg name="microverse" default="local.verse.json" />
             <arg name="local-libadama-path" default="null" />
         </command>
-        <command name="set-local-libadama-path">
+        <command name="set-libadama">
             <documentation>
                 Update your config to have a local-libadama-path-default which will be used in 'dev-server' when --local-libadama-path is not specified.
             </documentation>

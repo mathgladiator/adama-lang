@@ -3378,11 +3378,11 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
 		}
 	}
-	public static class FrontendSetLocalLibadamaPathArgs {
+	public static class FrontendSetLibadamaArgs {
 		public Config config;
 		public String localLibadamaPath = null;
-		public static FrontendSetLocalLibadamaPathArgs from(String[] args, int start) {
-			FrontendSetLocalLibadamaPathArgs returnArgs = new FrontendSetLocalLibadamaPathArgs();
+		public static FrontendSetLibadamaArgs from(String[] args, int start) {
+			FrontendSetLibadamaArgs returnArgs = new FrontendSetLibadamaArgs();
 			try {
 				returnArgs.config = new Config(args);
 			} catch (Exception er) {
@@ -3421,7 +3421,7 @@ public class Arguments {
 		public static void help() {
 			System.out.println(Util.prefix("Update your config to have a local-libadama-path-default which will be used in 'dev-server' when --local-libadama-path is not specified.", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama frontend set-local-libadama-path", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println("    " + Util.prefix("adama frontend set-libadama", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White) + " : The path to the libadama.js source code for direct linkage.");
 		}
