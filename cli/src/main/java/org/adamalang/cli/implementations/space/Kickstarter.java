@@ -22,7 +22,7 @@ public class Kickstarter {
   public final Connection connection;
   public final String identity;
   private String space;
-  private String template;
+  private final String template;
 
   public Kickstarter(Config config, Connection connection) {
     this.config = config;
@@ -30,6 +30,19 @@ public class Kickstarter {
     this.identity = config.get_string("identity", null);
     this.space = null;
     this.template = null;
+  }
+
+  public void flow() {
+    intro();
+    Kickstarter.askTemplate();
+    askSpaceName();
+    if (space == null) {
+      System.out.print(Util.prefix("Failed to get space name resolved", Util.ANSI.Red));
+    }
+    // TODO: download plan, shred to directory
+    // TODO: download rxhtml, shred into pages?
+    // TODO: setup the verse
+    // TODO: setup the .gitignore
   }
 
   public void intro() {
@@ -40,6 +53,13 @@ public class Kickstarter {
     System.out.println("seed the project");
     System.out.println();
 
+  }
+
+  public static void askTemplate() {
+    // TODO: list templates from production
+    System.out.print("Template: ");
+    String template = System.console().readLine();
+    // TODO: validate
   }
 
   public void askSpaceName() {
@@ -78,26 +98,5 @@ public class Kickstarter {
         }
       }
     }
-  }
-
-  public static void askTemplate() {
-    // TODO: list templates from production
-    System.out.print("Template: ");
-    String template = System.console().readLine();
-    // TODO: validate
-  }
-
-  public void flow() {
-    intro();
-    Kickstarter.askTemplate();
-    askSpaceName();
-    if (space == null) {
-      System.out.print(Util.prefix("Failed to get space name resolved", Util.ANSI.Red));
-      return;
-    }
-    // TODO: download plan, shred to directory
-    // TODO: download rxhtml, shred into pages?
-    // TODO: setup the verse
-    // TODO: setup the .gitignore
   }
 }

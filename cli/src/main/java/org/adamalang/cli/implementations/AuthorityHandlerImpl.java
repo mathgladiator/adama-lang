@@ -25,132 +25,132 @@ import java.nio.file.Files;
 import java.security.PrivateKey;
 
 public class AuthorityHandlerImpl implements AuthorityHandler {
-    private static File ensureFileDoesNotExist(String filename) throws Exception {
-        File file = new File(filename);
-        if (file.exists()) {
-            throw new Exception(filename + " already exists, refusing to create");
-        }
-        return file;
-    }
+  @Override
+  public void appendLocal(Arguments.AuthorityAppendLocalArgs args, Output.YesOrError output) throws Exception {
+    File newPrivateKeyFile = ensureFileDoesNotExist(args.priv);
+    File existingKeystoreFile = new File(args.keystore);
+    append(args.authority, existingKeystoreFile, newPrivateKeyFile);
+    output.out();
+  }
 
-    @Override
-    public void create(Arguments.AuthorityCreateArgs args, Output.JsonOrError output) throws Exception {
-        String identity = args.config.get_string("identity", null);
-        try (WebSocketClient client = new WebSocketClient(args.config)) {
-            try (Connection connection = client.open()) {
-                ObjectNode request = Json.newJsonObject();
-                request.put("method", "authority/create");
-                request.put("identity", identity);
-                output.add(connection.execute(request));
-                output.out();
-            }
-        }
-    }
-
-    @Override
-    public void set(Arguments.AuthoritySetArgs args, Output.YesOrError output) throws Exception {
-        String identity = args.config.get_string("identity", null);
-        String keystoreJson = Files.readString(new File(args.keystore).toPath());
-        ValidateKeystore.validate(Json.parseJsonObject(keystoreJson));
-        try (WebSocketClient client = new WebSocketClient(args.config)) {
-            try (Connection connection = client.open()) {
-                ObjectNode request = Json.newJsonObject();
-                request.put("method", "authority/set");
-                request.put("identity", identity);
-                request.put("authority", args.authority);
-                request.set("key-store", Json.parseJsonObject(keystoreJson));
-                connection.execute(request);
-                output.out();
-            }
-        }
-    }
-
-    @Override
-    public void get(Arguments.AuthorityGetArgs args, Output.YesOrError output) throws Exception {
-        String identity = args.config.get_string("identity", null);
-        ensureFileDoesNotExist(args.keystore);
-        try (WebSocketClient client = new WebSocketClient(args.config)) {
-            try (Connection connection = client.open()) {
-                ObjectNode request = Json.newJsonObject();
-                request.put("method", "authority/get");
-                request.put("identity", identity);
-                request.put("authority", args.authority);
-                ObjectNode response = connection.execute(request);
-                Files.writeString(new File(args.keystore).toPath(), response.get("keystore").toString());
-                output.out();
-            }
-        }
-    }
-
-    @Override
-    public void destroy(Arguments.AuthorityDestroyArgs args, Output.YesOrError output) throws Exception {
-        String identity = args.config.get_string("identity", null);
-        try (WebSocketClient client = new WebSocketClient(args.config)) {
-            try (Connection connection = client.open()) {
-                ObjectNode request = Json.newJsonObject();
-                request.put("method", "authority/destroy");
-                request.put("identity", identity);
-                request.put("authority", args.authority);
-                connection.execute(request);
-                output.out();
-            }
-        }
-    }
-
-    @Override
-    public void list(Arguments.AuthorityListArgs args, Output.JsonOrError output) throws Exception {
-        String identity = args.config.get_string("identity", null);
-        try (WebSocketClient client = new WebSocketClient(args.config)) {
-            try (Connection connection = client.open()) {
-                ObjectNode request = Json.newJsonObject();
-                request.put("method", "authority/list");
-                request.put("identity", identity);
-                connection.stream(request, (cId, item) -> {
-                    output.add(item);
-                });
-                output.out();
-            }
-        }
-    }
-
-    private void append(String authority, File keystoreFile, File keyFile) throws Exception {
-        Keystore keystore = Keystore.parse(Files.readString(keystoreFile.toPath()));
-        String privateKeyFile = keystore.generate(authority);
-        Files.writeString(keyFile.toPath(), privateKeyFile);
-        Files.writeString(keystoreFile.toPath(), keystore.persist());
-    }
-
-    @Override
-    public void createLocal(Arguments.AuthorityCreateLocalArgs args, Output.YesOrError output) throws Exception {
-        File newPrivateKeyFile = ensureFileDoesNotExist(args.priv);
-        File newKeystoreFile = ensureFileDoesNotExist(args.keystore);
-        Files.writeString(newKeystoreFile.toPath(), "{}");
-        append(args.authority, newKeystoreFile, newPrivateKeyFile);
+  @Override
+  public void create(Arguments.AuthorityCreateArgs args, Output.JsonOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "authority/create");
+        request.put("identity", identity);
+        output.add(connection.execute(request));
         output.out();
+      }
     }
+  }
 
-    @Override
-    public void appendLocal(Arguments.AuthorityAppendLocalArgs args, Output.YesOrError output) throws Exception {
-        File newPrivateKeyFile = ensureFileDoesNotExist(args.priv);
-        File existingKeystoreFile = new File(args.keystore);
-        append(args.authority, existingKeystoreFile, newPrivateKeyFile);
-        output.out();
-    }
+  @Override
+  public void createLocal(Arguments.AuthorityCreateLocalArgs args, Output.YesOrError output) throws Exception {
+    File newPrivateKeyFile = ensureFileDoesNotExist(args.priv);
+    File newKeystoreFile = ensureFileDoesNotExist(args.keystore);
+    Files.writeString(newKeystoreFile.toPath(), "{}");
+    append(args.authority, newKeystoreFile, newPrivateKeyFile);
+    output.out();
+  }
 
-    @Override
-    public void sign(Arguments.AuthoritySignArgs args, Output.JsonOrError output) throws Exception {
-        ObjectNode keyNode = Json.parseJsonObject(Files.readString(new File(args.key).toPath()));
-        String authority = keyNode.get("authority").textValue();
-        PrivateKey signingKey = Keystore.parsePrivateKey(keyNode);
-        String token = Jwts.builder().setSubject(args.agent).setIssuer(authority).signWith(signingKey).compact();
-        ObjectNode tokenBundle = Json.newJsonObject();
-        tokenBundle.put("token", token);
-        output.add(tokenBundle);
-        if (args.validate != null) {
-            Keystore keystore = Keystore.parse(Files.readString(new File(args.validate).toPath()));
-            NtPrincipal who = keystore.validate(authority, token);
-            tokenBundle.put("validated", true);
-        }
+  @Override
+  public void destroy(Arguments.AuthorityDestroyArgs args, Output.YesOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "authority/destroy");
+        request.put("identity", identity);
+        request.put("authority", args.authority);
+        connection.execute(request);
         output.out();
+      }
     }
+  }
+
+  @Override
+  public void get(Arguments.AuthorityGetArgs args, Output.YesOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    ensureFileDoesNotExist(args.keystore);
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "authority/get");
+        request.put("identity", identity);
+        request.put("authority", args.authority);
+        ObjectNode response = connection.execute(request);
+        Files.writeString(new File(args.keystore).toPath(), response.get("keystore").toString());
+        output.out();
+      }
+    }
+  }
+
+  private static File ensureFileDoesNotExist(String filename) throws Exception {
+    File file = new File(filename);
+    if (file.exists()) {
+      throw new Exception(filename + " already exists, refusing to create");
+    }
+    return file;
+  }
+
+  @Override
+  public void list(Arguments.AuthorityListArgs args, Output.JsonOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "authority/list");
+        request.put("identity", identity);
+        connection.stream(request, (cId, item) -> {
+          output.add(item);
+        });
+        output.out();
+      }
+    }
+  }
+
+  @Override
+  public void set(Arguments.AuthoritySetArgs args, Output.YesOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    String keystoreJson = Files.readString(new File(args.keystore).toPath());
+    ValidateKeystore.validate(Json.parseJsonObject(keystoreJson));
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "authority/set");
+        request.put("identity", identity);
+        request.put("authority", args.authority);
+        request.set("key-store", Json.parseJsonObject(keystoreJson));
+        connection.execute(request);
+        output.out();
+      }
+    }
+  }
+
+  @Override
+  public void sign(Arguments.AuthoritySignArgs args, Output.JsonOrError output) throws Exception {
+    ObjectNode keyNode = Json.parseJsonObject(Files.readString(new File(args.key).toPath()));
+    String authority = keyNode.get("authority").textValue();
+    PrivateKey signingKey = Keystore.parsePrivateKey(keyNode);
+    String token = Jwts.builder().setSubject(args.agent).setIssuer(authority).signWith(signingKey).compact();
+    ObjectNode tokenBundle = Json.newJsonObject();
+    tokenBundle.put("token", token);
+    output.add(tokenBundle);
+    if (args.validate != null) {
+      Keystore keystore = Keystore.parse(Files.readString(new File(args.validate).toPath()));
+      NtPrincipal who = keystore.validate(authority, token);
+      tokenBundle.put("validated", true);
+    }
+    output.out();
+  }
+
+  private void append(String authority, File keystoreFile, File keyFile) throws Exception {
+    Keystore keystore = Keystore.parse(Files.readString(keystoreFile.toPath()));
+    String privateKeyFile = keystore.generate(authority);
+    Files.writeString(keyFile.toPath(), privateKeyFile);
+    Files.writeString(keystoreFile.toPath(), keystore.persist());
+  }
 }

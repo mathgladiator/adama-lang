@@ -14,13 +14,9 @@ import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.ContribHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.DefaultCopyright;
-import org.adamalang.common.ProtectedUUID;
 import org.adamalang.common.codec.CodecCodeGen;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerMessage;
-import org.adamalang.runtime.natives.NtDate;
-import org.adamalang.runtime.natives.NtDateTime;
-import org.adamalang.runtime.stdlib.LibDate;
 import org.adamalang.support.GenerateLanguageTests;
 import org.adamalang.support.GenerateTemplateTests;
 import org.adamalang.web.service.BundleJavaScript;
@@ -71,15 +67,6 @@ public class ContribHandlerImpl implements ContribHandler {
   }
 
   @Override
-  public void version(Arguments.ContribVersionArgs args, Output.YesOrError output) throws Exception {
-    String versionCode = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-    System.out.println(Util.prefix("Generating a version number: " + versionCode, Util.ANSI.Cyan));
-    String versionFile = "package org.adamalang.common;\n" + "\n" + "public class Platform {\n" + "  public static String VERSION = \"" + versionCode + "\";\n" + "}\n";
-    Files.writeString(new File("common/src/main/java/org/adamalang/common/Platform.java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + versionFile);
-    output.out();
-  }
-
-  @Override
   public void makeApi(Arguments.ContribMakeApiArgs args, Output.YesOrError output) throws Exception {
     System.out.println(Util.prefix("Assembling Public API", Util.ANSI.Cyan));
     org.adamalang.apikit.Tool.build("saas/api.xml", new File("."));
@@ -123,6 +110,15 @@ public class ContribHandlerImpl implements ContribHandler {
   public void testsRxhtml(Arguments.ContribTestsRxhtmlArgs args, Output.YesOrError output) throws Exception {
     System.out.println(Util.prefix("Generating RxHTML Tests", Util.ANSI.Cyan));
     GenerateTemplateTests.generate(args.input, args.output);
+    output.out();
+  }
+
+  @Override
+  public void version(Arguments.ContribVersionArgs args, Output.YesOrError output) throws Exception {
+    String versionCode = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+    System.out.println(Util.prefix("Generating a version number: " + versionCode, Util.ANSI.Cyan));
+    String versionFile = "package org.adamalang.common;\n" + "\n" + "public class Platform {\n" + "  public static String VERSION = \"" + versionCode + "\";\n" + "}\n";
+    Files.writeString(new File("common/src/main/java/org/adamalang/common/Platform.java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + versionFile);
     output.out();
   }
 }

@@ -20,67 +20,67 @@ import java.io.File;
 import java.nio.file.Files;
 
 public class DomainHandlerImpl implements DomainHandler {
-    @Override
-    public void map(Arguments.DomainMapArgs args, Output.YesOrError output) throws Exception {
-        String identity = args.config.get_string("identity", null);
-        String autoStr = args.auto.toLowerCase();
-        boolean automatic = "true".equals(autoStr) || "yes".equals(autoStr) || args.cert == null;
-        final String cert;
-        if (!automatic) {
-            cert = Files.readString(new File(args.cert).toPath());
+  @Override
+  public void list(Arguments.DomainListArgs args, Output.JsonOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "domain/list");
+        request.put("identity", identity);
+        connection.stream(request, (_k, item) -> {
+          output.add(item);
+        });
+        output.out();
+      }
+    }
+  }
+
+  @Override
+  public void map(Arguments.DomainMapArgs args, Output.YesOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    String autoStr = args.auto.toLowerCase();
+    boolean automatic = "true".equals(autoStr) || "yes".equals(autoStr) || args.cert == null;
+    final String cert;
+    if (!automatic) {
+      cert = Files.readString(new File(args.cert).toPath());
+    } else {
+      cert = null;
+    }
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        if (args.key != null) {
+          request.put("method", "domain/map-document");
+          request.put("key", args.key);
+          request.put("route", "true".equals(args.route));
         } else {
-            cert = null;
+          request.put("method", "domain/map");
         }
-        try (WebSocketClient client = new WebSocketClient(args.config)) {
-            try (Connection connection = client.open()) {
-                ObjectNode request = Json.newJsonObject();
-                if (args.key != null) {
-                    request.put("method", "domain/map-document");
-                    request.put("key", args.key);
-                    request.put("route", "true".equals(args.route));
-                } else {
-                    request.put("method", "domain/map");
-                }
-                request.put("identity", identity);
-                request.put("domain", args.domain);
-                request.put("space", args.space);
-                if (cert != null) {
-                    request.put("certificate", cert);
-                }
-                connection.execute(request);
-                output.out();
-            }
+        request.put("identity", identity);
+        request.put("domain", args.domain);
+        request.put("space", args.space);
+        if (cert != null) {
+          request.put("certificate", cert);
         }
+        connection.execute(request);
+        output.out();
+      }
     }
+  }
 
-    @Override
-    public void list(Arguments.DomainListArgs args, Output.JsonOrError output) throws Exception {
-        String identity = args.config.get_string("identity", null);
-        try (WebSocketClient client = new WebSocketClient(args.config)) {
-            try (Connection connection = client.open()) {
-                ObjectNode request = Json.newJsonObject();
-                request.put("method", "domain/list");
-                request.put("identity", identity);
-                connection.stream(request, (_k, item) -> {
-                    output.add(item);
-                });
-                output.out();
-            }
-        }
+  @Override
+  public void unmap(Arguments.DomainUnmapArgs args, Output.YesOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "domain/unmap");
+        request.put("identity", identity);
+        request.put("domain", args.domain);
+        connection.execute(request);
+        output.out();
+      }
     }
-
-    @Override
-    public void unmap(Arguments.DomainUnmapArgs args, Output.YesOrError output) throws Exception {
-        String identity = args.config.get_string("identity", null);
-        try (WebSocketClient client = new WebSocketClient(args.config)) {
-            try (Connection connection = client.open()) {
-                ObjectNode request = Json.newJsonObject();
-                request.put("method", "domain/unmap");
-                request.put("identity", identity);
-                request.put("domain", args.domain);
-                connection.execute(request);
-                output.out();
-            }
-        }
-    }
+  }
 }

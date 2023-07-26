@@ -18,21 +18,21 @@ import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.Json;
 
 public class AccountHandlerImpl implements AccountHandler {
-    @Override
-    public void setPassword(Arguments.AccountSetPasswordArgs args, Output.YesOrError output) throws Exception {
-        Config config = args.config;
-        System.out.print("Password:");
-        String password = new String(System.console().readPassword());
-        String identity = config.get_string("identity", null);
-        try (WebSocketClient client = new WebSocketClient(config)) {
-            try (Connection connection = client.open()) {
-                ObjectNode request = Json.newJsonObject();
-                request.put("method", "account/set-password");
-                request.put("identity", identity);
-                request.put("password", password);
-                connection.execute(request);
-                output.out();
-            }
-        }
+  @Override
+  public void setPassword(Arguments.AccountSetPasswordArgs args, Output.YesOrError output) throws Exception {
+    Config config = args.config;
+    System.out.print("Password:");
+    String password = new String(System.console().readPassword());
+    String identity = config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "account/set-password");
+        request.put("identity", identity);
+        request.put("password", password);
+        connection.execute(request);
+        output.out();
+      }
     }
+  }
 }
