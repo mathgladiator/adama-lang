@@ -27,16 +27,18 @@ public class DevBoxStart {
     AtomicBoolean alive = new AtomicBoolean(true);
     String localLibAdamaJSPath = "".equals(args.localLibadamaPath) ? null : args.localLibadamaPath;
     File localLibAdamaJSFile = null;
+    TerminalIO terminal = new TerminalIO();
     if (localLibAdamaJSPath == null) {
       localLibAdamaJSPath = args.config.get_nullable_string("local-libadama-path-default");
+      terminal.info("using 'local-libadama-path-default' from config to pull Adama javascript from");
     }
     if (localLibAdamaJSPath != null) {
       localLibAdamaJSFile = new File(localLibAdamaJSPath);
       if (!(localLibAdamaJSFile.exists() && localLibAdamaJSFile.isDirectory())) {
-        throw new Exception("--local-libadama-path was provided but the directory doesn't exist (or is a file)");
+        terminal.error("--local-libadama-path was provided but the directory doesn't exist (or is a file)");
+        localLibAdamaJSFile = null;
       }
     }
-    TerminalIO terminal = new TerminalIO();
     DevBoxServices.install(offload, (line) -> terminal.info(line));
     DevBoxAdamaMicroVerse verse = null;
     if (args.microverse != null) {
@@ -45,22 +47,23 @@ public class DevBoxStart {
         ObjectNode defn = Json.parseJsonObject(Files.readString(microverseDef.toPath()));
         verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn);
         if (verse == null) {
-          terminal.notice("microverse: '" + args.microverse + "' failed, using production");
+          terminal.error("microverse: '" + args.microverse + "' failed, using production");
         }
       } else {
-        terminal.notice("microverse: '" + args.microverse + "' is not present, using production");
+        terminal.error("microverse: '" + args.microverse + "' is not present, using production");
       }
     }
+    terminal.info("starting up");
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
     try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), localLibAdamaJSPath != null, (b) -> bundle.set(b))) {
       WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
-      terminal.notice("Starting Webserver");
+      terminal.notice("starting webserver");
       DevBoxServiceBase base = new DevBoxServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, verse);
       Thread webServerThread = base.start();
       while (alive.get()) {
         String ln = terminal.readline().trim();
         if ("kill".equalsIgnoreCase(ln) || "exit".equalsIgnoreCase(ln) || "quit".equalsIgnoreCase(ln) || "q".equalsIgnoreCase(ln)) {
-          terminal.notice("Lowering alive");
+          terminal.notice("lowering alive");
           alive.set(false);
           webServerThread.interrupt();
           if (verse != null) {
@@ -68,11 +71,13 @@ public class DevBoxStart {
           }
           base.shutdown();
         }
+        if ("help".equalsIgnoreCase(ln) || "h".equals(ln)) {
+          terminal.info("Wouldn't it be great if there was some like... help here?");
+        }
         if ("slow-updates".equalsIgnoreCase(ln)) {
           terminal.notice("slowing down view updates by 5 seconds");
           control.slowViewerStateUpdates.set(true);
         }
-
         if ("fast-updates".equalsIgnoreCase(ln)) {
           terminal.notice("normalizing view update speed");
           control.slowViewerStateUpdates.set(false);
