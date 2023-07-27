@@ -237,6 +237,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="target" type="string" short="tg">
+        <documentation>
+            A target is a combination of ip address and port.
+        </documentation>
+    </arg-definition>
+
     <!-- groups collect commands -->
     <group name="space" alt-name="spaces">
         <documentation>
@@ -744,6 +750,12 @@
             <documentation>
                 Produce dashboards for prometheus.
             </documentation>
+        </command>
+        <command name="probe">
+            <documentation>
+                Connect to the local Adama instance
+            </documentation>
+            <arg name="target" default="127.0.0.1:8003" />
         </command>
     </group>
 

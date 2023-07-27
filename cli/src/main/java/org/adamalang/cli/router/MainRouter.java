@@ -790,6 +790,16 @@ public class MainRouter {
                servicesHandler.overlord(servicesArgs, out);
                return 0;
             }
+            case "probe": {
+              ServicesProbeArgs servicesArgs = ServicesProbeArgs.from(args, 2);
+              if (servicesArgs == null) {
+                ServicesProbeArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               servicesHandler.probe(servicesArgs, out);
+               return 0;
+            }
             case "solo": {
               ServicesSoloArgs servicesArgs = ServicesSoloArgs.from(args, 2);
               if (servicesArgs == null) {

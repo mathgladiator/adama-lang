@@ -189,6 +189,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("dashboards", 15), Util.ANSI.Green) + "Produce dashboards for prometheus.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("frontend", 15), Util.ANSI.Green) + "Spin up a WebSocket front-end node");
     System.out.println("    " + Util.prefix(Util.justifyLeft("overlord", 15), Util.ANSI.Green) + "Spin up the cluster overlord");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("probe", 15), Util.ANSI.Green) + "Connect to the local Adama instance");
     System.out.println("    " + Util.prefix(Util.justifyLeft("solo", 15), Util.ANSI.Green) + "Spin up a solo machine");
   }
 }

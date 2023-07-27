@@ -261,6 +261,63 @@ public class InstanceClient implements AutoCloseable {
     });
   }
 
+  public static class ProbeResponse {
+    public final String json;
+    public final String[] errors;
+
+    public ProbeResponse(String json, String[] errors) {
+      this.json = json;
+      this.errors = errors;
+    }
+  }
+
+  public void probe(String command, String[] args, Callback<ProbeResponse> callback) {
+   executor.execute(new NamedRunnable("execute-" + command) {
+     @Override
+     public void execute() throws Exception {
+       client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_PROBE_TIMEOUT, ErrorCodes.ADAMA_NET_PROBE_REJECTED, metrics.client_webget.start()) {
+         @Override
+         protected void executeNow(ChannelClient client) {
+           client.open(new ServerCodec.StreamProbe() {
+             @Override
+             public void handle(ServerMessage.ProbeCommandResponse payload) {
+               callback.success(new ProbeResponse(payload.json, payload.errors));
+             }
+
+             @Override
+             public void completed() {
+             }
+
+             @Override
+             public void error(int errorCode) {
+               callback.failure(new ErrorCodeException(errorCode));
+             }
+           }, new CallbackByteStreamWriter(callback) {
+             @Override
+             public void write(ByteStream stream) {
+               int est = command.length() + 32;
+               for(String arg : args) {
+                 est += arg.length() + 16;
+               }
+               ByteBuf toWrite = stream.create(est);
+               ClientMessage.ProbeCommandRequest request = new ClientMessage.ProbeCommandRequest();
+               request.command = command;
+               request.args = args;
+               ClientCodec.write(toWrite, request);
+               stream.next(toWrite);
+             }
+           });
+         }
+
+         @Override
+         protected void failure(int code) {
+           callback.failure(new ErrorCodeException(code));
+         }
+       });
+     }
+   });
+  }
+
   public void webGet(String space, String key, WebGet request, Callback<WebResponse> callback) {
     executor.execute(new NamedRunnable("execute-web-get") {
       @Override

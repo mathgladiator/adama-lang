@@ -12,6 +12,7 @@ import org.adamalang.api.ApiMetrics;
 import org.adamalang.caravan.CaravanMetrics;
 import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.cli.Config;
+import org.adamalang.cli.probe.ProbeStart;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.ServicesHandler;
 import org.adamalang.cli.runtime.Output;
@@ -36,6 +37,12 @@ import org.adamalang.web.service.WebMetrics;
 import java.io.File;
 
 public class ServicesHandlerImpl implements ServicesHandler {
+
+  @Override
+  public void probe(Arguments.ServicesProbeArgs args, Output.YesOrError output) throws Exception {
+    new ProbeStart(args.target).run();
+  }
+
   @Override
   public void auto(Arguments.ServicesAutoArgs args, Output.YesOrError output) throws Exception {
     Config config = args.config;

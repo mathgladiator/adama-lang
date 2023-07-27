@@ -45,6 +45,7 @@ import org.adamalang.net.codec.ClientMessage.ScanDeployment;
 import org.adamalang.net.codec.ClientMessage.ReflectRequest;
 import org.adamalang.net.codec.ClientMessage.DeleteRequest;
 import org.adamalang.net.codec.ClientMessage.CreateRequest;
+import org.adamalang.net.codec.ClientMessage.ProbeCommandRequest;
 import org.adamalang.net.codec.ClientMessage.PingRequest;
 
 public class ClientCodec {
@@ -111,6 +112,8 @@ public class ClientCodec {
     public abstract void handle(DeleteRequest payload);
 
     public abstract void handle(CreateRequest payload);
+
+    public abstract void handle(ProbeCommandRequest payload);
 
     public abstract void handle(PingRequest payload);
 
@@ -219,6 +222,9 @@ public class ClientCodec {
         case 12523:
           handle(readBody_12523(buf, new CreateRequest()));
           return;
+        case 1017:
+          handle(readBody_1017(buf, new ProbeCommandRequest()));
+          return;
         case 24321:
           handle(readBody_24321(buf, new PingRequest()));
           return;
@@ -258,6 +264,7 @@ public class ClientCodec {
     public void handle(ReflectRequest payload);
     public void handle(DeleteRequest payload);
     public void handle(CreateRequest payload);
+    public void handle(ProbeCommandRequest payload);
     public void handle(PingRequest payload);
   }
 
@@ -355,6 +362,9 @@ public class ClientCodec {
         return;
       case 12523:
         handler.handle(readBody_12523(buf, new CreateRequest()));
+        return;
+      case 1017:
+        handler.handle(readBody_1017(buf, new ProbeCommandRequest()));
         return;
       case 24321:
         handler.handle(readBody_24321(buf, new PingRequest()));
@@ -992,6 +1002,21 @@ public class ClientCodec {
     return o;
   }
 
+  public static ProbeCommandRequest read_ProbeCommandRequest(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 1017:
+        return readBody_1017(buf, new ProbeCommandRequest());
+    }
+    return null;
+  }
+
+
+  private static ProbeCommandRequest readBody_1017(ByteBuf buf, ProbeCommandRequest o) {
+    o.command = Helper.readString(buf);
+    o.args = Helper.readStringArray(buf);
+    return o;
+  }
+
   public static PingRequest read_PingRequest(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 24321:
@@ -1397,6 +1422,16 @@ public class ClientCodec {
     Helper.writeString(buf, o.authority);;
     Helper.writeString(buf, o.origin);;
     Helper.writeString(buf, o.ip);;
+  }
+
+  public static void write(ByteBuf buf, ProbeCommandRequest o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(1017);
+    Helper.writeString(buf, o.command);;
+    Helper.writeStringArray(buf, o.args);;
   }
 
   public static void write(ByteBuf buf, PingRequest o) {

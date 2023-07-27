@@ -23,6 +23,15 @@ public class ClientMessage {
   public static class PingRequest {
   }
 
+  @TypeId(1017)
+  @Flow("Server")
+  public static class ProbeCommandRequest {
+    @FieldOrder(1)
+    public String command;
+    @FieldOrder(2)
+    public String[] args;
+  }
+
   @TypeId(12523)
   @Flow("Server")
   public static class CreateRequest {

@@ -3644,6 +3644,54 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama services overlord", Util.ANSI.Green));
 		}
 	}
+	public static class ServicesProbeArgs {
+		public Config config;
+		public String target = "127.0.0.1:8003";
+		public static ServicesProbeArgs from(String[] args, int start) {
+			ServicesProbeArgs returnArgs = new ServicesProbeArgs();
+			try {
+				returnArgs.config = new Config(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-tg":
+					case "--target": {
+						if (k+1 < args.length) {
+							returnArgs.target = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			return returnArgs;
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Connect to the local Adama instance", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama services probe", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-tg, --target", Util.ANSI.Green) + " " + Util.prefix("<target>", Util.ANSI.White) + " : A target is a combination of ip address and port.");
+		}
+	}
 	public static class ServicesSoloArgs {
 		public Config config;
 		public static ServicesSoloArgs from(String[] args, int start) {

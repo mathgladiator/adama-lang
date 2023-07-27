@@ -20,6 +20,15 @@ public class ServerMessage {
   public static class PingResponse {
   }
 
+  @TypeId(1018)
+  @Flow("Probe")
+  public static class ProbeCommandResponse {
+    @FieldOrder(1)
+    public String json;
+    @FieldOrder(2)
+    public String[] errors;
+  }
+
   @TypeId(12524)
   @Flow("Creation")
   public static class CreateResponse {

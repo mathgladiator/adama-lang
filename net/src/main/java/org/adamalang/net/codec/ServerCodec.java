@@ -33,6 +33,7 @@ import org.adamalang.net.codec.ServerMessage.ScanDeploymentResponse;
 import org.adamalang.net.codec.ServerMessage.ReflectResponse;
 import org.adamalang.net.codec.ServerMessage.DeleteResponse;
 import org.adamalang.net.codec.ServerMessage.CreateResponse;
+import org.adamalang.net.codec.ServerMessage.ProbeCommandResponse;
 import org.adamalang.net.codec.ServerMessage.PingResponse;
 
 public class ServerCodec {
@@ -287,6 +288,41 @@ public class ServerCodec {
         return;
       case 12546:
         handler.handle(readBody_12546(buf, new StreamStatus()));
+        return;
+    }
+  }
+
+
+  public static abstract class StreamProbe implements ByteStream {
+    public abstract void handle(ProbeCommandResponse payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 1018:
+          handle(readBody_1018(buf, new ProbeCommandResponse()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerProbe {
+    public void handle(ProbeCommandResponse payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerProbe handler) {
+    switch (buf.readIntLE()) {
+      case 1018:
+        handler.handle(readBody_1018(buf, new ProbeCommandResponse()));
         return;
     }
   }
@@ -957,6 +993,21 @@ public class ServerCodec {
     return o;
   }
 
+  public static ProbeCommandResponse read_ProbeCommandResponse(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 1018:
+        return readBody_1018(buf, new ProbeCommandResponse());
+    }
+    return null;
+  }
+
+
+  private static ProbeCommandResponse readBody_1018(ByteBuf buf, ProbeCommandResponse o) {
+    o.json = Helper.readString(buf);
+    o.errors = Helper.readStringArray(buf);
+    return o;
+  }
+
   public static PingResponse read_PingResponse(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 24322:
@@ -1169,6 +1220,16 @@ public class ServerCodec {
       return;
     }
     buf.writeIntLE(12524);
+  }
+
+  public static void write(ByteBuf buf, ProbeCommandResponse o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(1018);
+    Helper.writeString(buf, o.json);;
+    Helper.writeStringArray(buf, o.errors);;
   }
 
   public static void write(ByteBuf buf, PingResponse o) {

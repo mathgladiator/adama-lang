@@ -17,5 +17,6 @@ public interface ServicesHandler {
   void dashboards(ServicesDashboardsArgs args, YesOrError output) throws Exception;
   void frontend(ServicesFrontendArgs args, YesOrError output) throws Exception;
   void overlord(ServicesOverlordArgs args, YesOrError output) throws Exception;
+  void probe(ServicesProbeArgs args, YesOrError output) throws Exception;
   void solo(ServicesSoloArgs args, YesOrError output) throws Exception;
 }

@@ -711,6 +711,16 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   }
 
   @Override
+  public void handle(ClientMessage.ProbeCommandRequest payload) {
+    ByteBuf buf = upstream.create(0);
+    ServerMessage.ProbeCommandResponse response = new ServerMessage.ProbeCommandResponse();
+    response.json = "{\"nope\"}";
+    ServerCodec.write(buf, response);
+    upstream.next(buf);
+    upstream.completed();
+  }
+
+  @Override
   public void onSetupComplete(CoreStream stream) {
     this.stream = stream;
   }
