@@ -12,25 +12,36 @@ import io.netty.buffer.ByteBuf;
 import org.adamalang.caravan.contracts.WALEntry;
 import org.adamalang.caravan.index.Heap;
 import org.adamalang.caravan.index.Index;
+import org.adamalang.caravan.index.KeyMap;
 
 public class OrganizationSnapshot implements WALEntry {
   private final Heap heap;
   private final Index index;
+  private final KeyMap keymap;
 
-  public OrganizationSnapshot(Heap heap, Index index) {
+  public OrganizationSnapshot(Heap heap, Index index, KeyMap keymap) {
     this.heap = heap;
     this.index = index;
+    this.keymap = keymap;
   }
 
-  public static void populateAfterTypeId(ByteBuf buf, Heap heap, Index index) {
+  @Deprecated
+  public static void populateAfterTypeId_OLD(ByteBuf buf, Heap heap, Index index) {
     heap.load(buf);
     index.load(buf);
   }
 
+  public static void populateAfterTypeId(ByteBuf buf, Heap heap, Index index, KeyMap keymap) {
+    heap.load(buf);
+    index.load(buf);
+    keymap.load(buf);
+  }
+
   @Override
   public void write(ByteBuf buf) {
-    buf.writeByte(0x55);
+    buf.writeByte(0x57);
     heap.snapshot(buf);
     index.snapshot(buf);
+    keymap.snapshot(buf);
   }
 }

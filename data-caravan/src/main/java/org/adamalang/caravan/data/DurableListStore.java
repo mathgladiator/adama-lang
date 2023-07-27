@@ -142,8 +142,11 @@ public class DurableListStore {
                 heap.free(region);
               }
               break;
-            case 0x55: // snapshot
-              OrganizationSnapshot.populateAfterTypeId(buf, heap, index);
+            case 0x55: // snapshot with just heap and index
+              OrganizationSnapshot.populateAfterTypeId_OLD(buf, heap, index);
+              break;
+            case 0x57: // snapshot
+              OrganizationSnapshot.populateAfterTypeId(buf, heap, index, keymap);
               break;
             case 0x13: // trim
               Trim trim = Trim.readAfterTypeId(buf);
@@ -172,7 +175,7 @@ public class DurableListStore {
     File newWalFile = new File(walRoot, "WAL.NEW-" + System.currentTimeMillis());
     DataOutputStream newOutput = new DataOutputStream(new FileOutputStream(newWalFile));
     ByteBuf first = Unpooled.buffer();
-    new OrganizationSnapshot(heap, index).write(first);
+    new OrganizationSnapshot(heap, index, keymap).write(first);
     writePage(newOutput, first);
     newOutput.flush();
     newOutput.close();

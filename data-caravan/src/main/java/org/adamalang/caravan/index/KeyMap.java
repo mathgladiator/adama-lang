@@ -8,10 +8,12 @@
  */
 package org.adamalang.caravan.index;
 
+import io.netty.buffer.ByteBuf;
 import org.adamalang.caravan.entries.DelKey;
 import org.adamalang.caravan.entries.MapKey;
 import org.adamalang.runtime.data.Key;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class KeyMap {
@@ -66,5 +68,49 @@ public class KeyMap {
       }
       id = ++idgen;
     }
+  }
+
+  /** take a snapshot of the index */
+  public void snapshot(ByteBuf buf) {
+    for (Map.Entry<Key, Integer> entry : forward.entrySet()) {
+      buf.writeBoolean(true);
+      byte[] space = entry.getKey().space.getBytes(StandardCharsets.UTF_8);
+      byte[] key = entry.getKey().key.getBytes(StandardCharsets.UTF_8);
+      buf.writeIntLE(space.length);
+      buf.writeBytes(space);
+      buf.writeIntLE(key.length);
+      buf.writeBytes(key);
+      buf.writeIntLE(entry.getValue());
+    }
+    buf.writeBoolean(false);
+  }
+
+  /** load an index from a snapshot */
+  public void load(ByteBuf buf) {
+    forward.clear();
+    reverse.clear();
+    while (buf.readBoolean()) {
+      int sizeSpace = buf.readIntLE();
+      byte[] bytesSpace = new byte[sizeSpace];
+      buf.readBytes(bytesSpace);
+      int sizeKey = buf.readIntLE();
+      byte[] bytesKey = new byte[sizeKey];
+      buf.readBytes(bytesKey);
+      int id = buf.readIntLE();
+      Key key = new Key(new String(bytesSpace, StandardCharsets.UTF_8), new String(bytesKey, StandardCharsets.UTF_8));
+      forward.put(key, id);
+      reverse.put(id, key);
+    }
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("[keymap;");
+    for (Map.Entry<Key, Integer> entry : forward.entrySet()) {
+      sb.append(entry.getKey().space + "/" + entry.getKey().key + "==" + entry.getValue() + ";");
+    }
+    sb.append("]");
+    return sb.toString();
   }
 }
