@@ -36,7 +36,7 @@ public class FirstPartyServices {
     SelfClient adamaClientRaw = null;
     if (executor != null){
       // TODO: sort out a plan for variuos endpoints... OR make it part of the signature
-      MultiWebClientRetryPool pool = new MultiWebClientRetryPool(executor, webClientBase, new MultiWebClientRetryPoolMetrics(factory), new MultiWebClientRetryPoolConfig(new ConfigObject(Json.newJsonObject())), "wss://aws-us-east-2.adama-platform.com");
+      MultiWebClientRetryPool pool = new MultiWebClientRetryPool(executor, webClientBase, new MultiWebClientRetryPoolMetrics(factory), new MultiWebClientRetryPoolConfig(new ConfigObject(Json.newJsonObject())), "wss://aws-us-east-2.adama-platform.com/~s");
       adamaClientRaw = new SelfClient(pool);
     }
     final SelfClient adamaClient = adamaClientRaw;

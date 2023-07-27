@@ -32,6 +32,7 @@ public class CaravanInit {
   public final ManagedDataService service;
   public final CaravanDataService caravanDataService;
   private final Thread flusher;
+  
   public CaravanInit(CommonServiceInit init, Config config) throws Exception {
     String caravanRoot = config.get_string("caravan-root", "caravan");
     this.caravanExecutor = SimpleExecutor.create("caravan");

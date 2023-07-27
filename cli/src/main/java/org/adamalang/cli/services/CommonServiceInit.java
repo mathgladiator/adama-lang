@@ -141,7 +141,7 @@ public class CommonServiceInit {
     this.awsMetrics = new AWSMetrics(metricsFactory);
     this.s3 = new S3(webBase, awsConfig, awsMetrics);
     this.sqs = new SQS(webBase, awsConfig, awsMetrics);
-    String prefix = "logs/" + role.name + "/" + identity.ip + "/" + monitoringPort;
+    String prefix = role.name + "/" + identity.ip + "/" + monitoringPort;
     system.schedule(new NamedRunnable("archive-s3") {
       @Override
       public void execute() throws Exception {
