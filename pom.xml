@@ -27,7 +27,6 @@
         <module>errors</module>
         <module>common</module>
         <module>overlord</module>
-        <module>canary</module>
         <module>net</module>
         <module>data-caravan</module>
         <module>services</module>
