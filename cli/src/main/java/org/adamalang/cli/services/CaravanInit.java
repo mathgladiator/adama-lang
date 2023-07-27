@@ -30,6 +30,7 @@ public class CaravanInit {
   private final SimpleExecutor caravanExecutor;
   private final SimpleExecutor managedExecutor;
   public final ManagedDataService service;
+  public final CaravanDataService caravanDataService;
   private final Thread flusher;
   public CaravanInit(CommonServiceInit init, Config config) throws Exception {
     String caravanRoot = config.get_string("caravan-root", "caravan");
@@ -43,7 +44,7 @@ public class CaravanInit {
     dataRoot.mkdir();
     File storePath = new File(dataRoot, "store");
     DurableListStore store = new DurableListStore(new DiskMetrics(init.metricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
-    CaravanDataService caravanDataService = new CaravanDataService(new CaravanMetrics(init.metricsFactory), init.s3, new FinderServiceToKeyToIdService(init.finder), store, caravanExecutor);
+    this.caravanDataService = new CaravanDataService(new CaravanMetrics(init.metricsFactory), init.s3, new FinderServiceToKeyToIdService(init.finder), store, caravanExecutor);
     Base managedBase = new Base(init.finder, caravanDataService, init.s3, init.region, init.machine, managedExecutor, 2 * 60 * 1000);
     this.service = new ManagedDataService(managedBase);
     this.flusher = new Thread(() -> {

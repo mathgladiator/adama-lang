@@ -75,7 +75,7 @@ public class DevBoxStart {
           }
           base.shutdown();
         }
-        if (command.is("help", "h", "?")) {
+        if (command.is("help", "h", "?", "")) {
           terminal.info("Wouldn't it be great if there was some like... help here?");
         }
         if (command.is("viewer-updates")) {

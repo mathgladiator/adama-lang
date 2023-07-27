@@ -113,8 +113,6 @@ public class ChannelClient extends ChannelCommon {
           opened.success(new Remote(streams, id, context, () -> {
             flushFromWithinContextExecutor(context);
           }));
-        } else {
-          opened.failure(new ErrorCodeException(ErrorCodes.NET_FAILED_INITIATION));
         }
       });
       context.write(buffer);

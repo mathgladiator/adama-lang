@@ -40,7 +40,7 @@ public class ServicesHandlerImpl implements ServicesHandler {
 
   @Override
   public void probe(Arguments.ServicesProbeArgs args, Output.YesOrError output) throws Exception {
-    new ProbeStart(args.target).run();
+    new ProbeStart(args).run();
   }
 
   @Override

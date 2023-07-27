@@ -90,7 +90,7 @@ public class ManagedDataService implements DataService {
 
            (II) It actually was deleted and the network failed to return. In this case, we have a problem of leaking data.
 
-           This is OK if and only IF the finder and local storage communicate via ids which is the case for caravan.
+           This is OK if and only IF the finder and local storage communicate via ids which is the case for caravan. We can also use keys, so this can work in the new world as well.
         */
         callback.failure(ex);
       }

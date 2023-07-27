@@ -714,7 +714,39 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void handle(ClientMessage.ProbeCommandRequest payload) {
     ByteBuf buf = upstream.create(0);
     ServerMessage.ProbeCommandResponse response = new ServerMessage.ProbeCommandResponse();
-    response.json = "{\"nope\"}";
+    if ("query".equals(payload.command)) {
+      if (payload.args != null && payload.args.length == 2) {
+        TreeMap<String, String> query = new TreeMap<>();
+        query.put("space", payload.args[0]);
+        query.put("key", payload.args[1]);
+        nexus.service.query(query, new Callback<String>() {
+          @Override
+          public void success(String json) {
+            response.json = json;
+            ServerCodec.write(buf, response);
+            upstream.next(buf);
+            upstream.completed();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            response.json = "{\"error\":" + ex.code + "}";
+            ServerCodec.write(buf, response);
+            upstream.next(buf);
+            upstream.completed();
+          }
+        });
+        return;
+      } else {
+        response.json = "{}";
+        response.errors = new String[] { "query requires two args" };
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+        return;
+      }
+    }
+    response.json = "null";
     ServerCodec.write(buf, response);
     upstream.next(buf);
     upstream.completed();

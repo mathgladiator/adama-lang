@@ -78,7 +78,7 @@ public class MultiWebClientRetryPool {
 
         @Override
         public void failure(Throwable t) {
-          LOG.error("mwcr-failure", t);
+          LOG.error("mwcr-failure: {}", t.getMessage());
           metrics.failure.run();
         }
 

@@ -49,6 +49,12 @@ public class SimpleFinderCallback implements Callback<FinderService.Result> {
     Assert.assertEquals(archiveKey, value.archiveKey);
   }
 
+  public long assertSuccessAndGetId() {
+    Assert.assertEquals(1, count);
+    Assert.assertTrue(success);
+    return value.id;
+  }
+
   public void assertFailure(int code) {
     Assert.assertEquals(1, count);
     Assert.assertFalse(success);

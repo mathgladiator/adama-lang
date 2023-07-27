@@ -33,6 +33,20 @@ public class FinderOperations {
     });
   }
 
+  public static boolean exists(DataBase dataBase, long id) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT `space`, `key` FROM `" + dataBase.databaseName + "`.`directory` WHERE `id`=" + id;
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (ResultSet rs = statement.executeQuery()) {
+          while (rs.next()) {
+            return true;
+          }
+          return false;
+        }
+      }
+    });
+  }
+
   public static ArrayList<DocumentIndex> listAll(DataBase dataBase) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `space`, `key`, `created`, `updated`, `head_seq`, `archive` FROM `" + dataBase.databaseName + "`.`directory`";

@@ -3646,7 +3646,7 @@ public class Arguments {
 	}
 	public static class ServicesProbeArgs {
 		public Config config;
-		public String target = "127.0.0.1:8003";
+		public String target = "127.0.0.1:8001";
 		public static ServicesProbeArgs from(String[] args, int start) {
 			ServicesProbeArgs returnArgs = new ServicesProbeArgs();
 			try {

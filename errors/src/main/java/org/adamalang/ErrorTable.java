@@ -667,8 +667,6 @@ public class ErrorTable {
     descriptions.put(775372, "no description of error (yet)");
     names.put(716806, "NET_HANDLER_SCAN_EXCEPTION");
     descriptions.put(716806, "no description of error (yet)");
-    names.put(753699, "NET_FAILED_INITIATION");
-    descriptions.put(753699, "no description of error (yet)");
     names.put(773155, "NET_DISCONNECT");
     descriptions.put(773155, "no description of error (yet)");
     names.put(788515, "NET_SHUTTING_DOWN");
@@ -756,6 +754,10 @@ public class ErrorTable {
     descriptions.put(793779, "no description of error (yet)");
     names.put(790732, "ADAMA_NET_AUTH_REJECTED");
     descriptions.put(790732, "no description of error (yet)");
+    names.put(756928, "ADAMA_NET_PROBE_TIMEOUT");
+    descriptions.put(756928, "no description of error (yet)");
+    names.put(740544, "ADAMA_NET_PROBE_REJECTED");
+    descriptions.put(740544, "no description of error (yet)");
     names.put(769085, "ADAMA_NET_CONNECTION_DONE");
     descriptions.put(769085, "no description of error (yet)");
     retry.add(769085);

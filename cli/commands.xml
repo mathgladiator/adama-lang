@@ -755,7 +755,7 @@
             <documentation>
                 Connect to the local Adama instance
             </documentation>
-            <arg name="target" default="127.0.0.1:8003" />
+            <arg name="target" default="127.0.0.1:8001" />
         </command>
     </group>
 

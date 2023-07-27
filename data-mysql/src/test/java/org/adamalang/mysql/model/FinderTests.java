@@ -39,6 +39,7 @@ public class FinderTests {
       Installer installer = new Installer(dataBase);
       try {
         installer.install();
+        Assert.assertFalse(FinderOperations.exists(dataBase, 1));
         Finder machine = new Finder(dataBase, "region");
         ArrayList<DocumentIndex> listing;
         {
@@ -67,6 +68,13 @@ public class FinderTests {
         Assert.assertEquals(1, FinderOperations.listAll(dataBase).size());
         Assert.assertEquals(1, listing.size());
         Assert.assertEquals("key-1", listing.get(0).key);
+
+        {
+          SimpleFinderCallback cb = new SimpleFinderCallback();
+          machine.find(KEY1, cb);
+          long id = cb.assertSuccessAndGetId();
+          Assert.assertTrue(FinderOperations.exists(dataBase, id));
+        }
 
         List<GCTask> tasks = FinderOperations.produceGCTasks(dataBase);
         Assert.assertEquals(0, tasks.size());

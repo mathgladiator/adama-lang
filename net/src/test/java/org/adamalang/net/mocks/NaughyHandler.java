@@ -123,6 +123,11 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
+  public void handle(ClientMessage.ProbeCommandRequest payload) {
+    real.failure(new ErrorCodeException(-2342));
+  }
+
+  @Override
   public void handle(ClientMessage.ExecuteQuery payload) {
     real.failure(new ErrorCodeException(-1230));
   }
