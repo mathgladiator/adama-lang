@@ -24,22 +24,18 @@ public class TerminalIO {
   }
 
   public synchronized void notice(String ln) {
-    reader.printAbove(AttributedString.fromAnsi(Util.prefix("NOTICE: " + ln, Util.ANSI.Yellow)));
+    reader.printAbove(AttributedString.fromAnsi(Util.prefix("NOTICE:" + ln, Util.ANSI.Yellow)));
   }
 
   public synchronized void info(String ln) {
-    reader.printAbove(AttributedString.fromAnsi(Util.prefix("INFO: " + ln, Util.ANSI.Green)));
-  }
-
-  public synchronized void write(String ln) {
-    reader.printAbove(ln);
+    reader.printAbove(AttributedString.fromAnsi(Util.prefix("  INFO:" + ln, Util.ANSI.Green)));
   }
 
   public synchronized void error(String ln) {
-    reader.printAbove(AttributedString.fromAnsi(Util.prefix("ERROR: " + ln, Util.ANSI.Red)));
+    reader.printAbove(AttributedString.fromAnsi(Util.prefix(" ERROR:" + ln, Util.ANSI.Red)));
   }
 
   public String readline() {
-    return reader.readLine("Adama>");
+    return reader.readLine("adama>");
   }
 }
