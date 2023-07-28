@@ -12,6 +12,7 @@ import org.adamalang.common.Escaping;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -28,12 +29,14 @@ public class RxObject {
     this.attributes = new ArrayList<>();
     rxObj = env.pool.ask();
     env.writer.tab().append("var ").append(rxObj).append("=$.RX([");
+    ArrayList<String> attrToRemove = new ArrayList<>();
     boolean addedUnder = false;
     boolean _delayed = false;
     for (String attrName : names) {
       String nameToUse = attrName;
       if (nameToUse.startsWith("parameter:")) {
         nameToUse = nameToUse.substring(10);
+        attrToRemove.add(attrName);
       }
       nameToUse = nameToUse.replaceAll(Pattern.quote(":"), "_");
       if (env.element.hasAttr(attrName)) {
@@ -78,6 +81,19 @@ public class RxObject {
       }
     }
     this.delayed = _delayed;
+    for (String param : attrToRemove) {
+      env.element.removeAttr(param);
+    }
+  }
+
+  public static String[] pullParameters(Element element) {
+    ArrayList<String> params = new ArrayList<>();
+    for (Attribute attr : element.attributes()) {
+      if (attr.getKey().startsWith("parameter:")) {
+        params.add(attr.getKey());
+      }
+    }
+    return params.toArray(new String[params.size()]);
   }
 
   public void finish() {

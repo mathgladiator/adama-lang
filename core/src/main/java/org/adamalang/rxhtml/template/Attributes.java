@@ -115,13 +115,15 @@ public class Attributes {
     String childStateVar = env.pool.ask();
     String parentVar = env.pool.ask();
     String caseVar = env.pool.ask();
-    env.writer.tab().append("$.WP(").append(eVar).append(",").append(env.stateVar).append(",'").append(env.element.attr("rx:wrap"));
-    env.writer.append("',function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
+    RxObject obj = new RxObject(env, RxObject.pullParameters(env.element));
+    env.writer.tab().append("$.WP(").append(eVar).append(",").append(env.stateVar).append(",'").append(env.element.attr("rx:wrap")).append("',").append(obj.rxObj);
+    env.writer.append(",function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
     Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(parentVar));
     env.writer.tabDown().tab().append("});").newline();
     env.pool.give(caseVar);
     env.pool.give(childStateVar);
     env.pool.give(parentVar);
+    obj.finish();
   }
 
   public void _template() {

@@ -286,6 +286,7 @@ var RxHTML = (function () {
       last = parent.lastChild;
     }
   };
+  self.nuke = nuke;
 
   // HELPER: debounce the given functional when rapid function spread is expected
   var debounce = function (ms, foo) {
@@ -302,6 +303,7 @@ var RxHTML = (function () {
       }
     };
   };
+  self.debounce = debounce;
 
   // HELPER | prepare a free unsubscribe object
   var make_unsub = function () {
@@ -474,6 +476,7 @@ var RxHTML = (function () {
     for (var k = 0; k < vars.length; k++) {
       o._[vars[k]] = {};
     }
+    o.__ = function() {};
     return o;
   };
 
@@ -696,17 +699,19 @@ var RxHTML = (function () {
   };
 
   // custom event on forms; rx:success="..."
-  var fire_success = function (form) {
-    form.dispatchEvent(new Event("success"));
+  var fire_success = function (dom) {
+    dom.dispatchEvent(new Event("success"));
   };
+  self.fire_success = fire_success;
 
   // custom event on forms; rx:failed="..."
-  var fire_failure = function (form, msg) {
+  var fire_failure = function (dom, msg) {
     var e = new Event("failure");
     e.message = msg;
     console.log("FAILURE:" + msg);
-    form.dispatchEvent(e);
+    dom.dispatchEvent(e);
   };
+  self.fire_failure = fire_failure;
 
   self.aCC = function (form, state, customCommandName) {
     var signal = function (msg) {
@@ -1231,12 +1236,12 @@ var RxHTML = (function () {
   };
 
   // <... rx:wrap=const >
-  self.WP = function (dom, state, name, childMakerWithCase) {
+  self.WP = function (dom, state, name, rxobj, childMakerWithCase) {
     if (name in wrappers) {
-      wrappers[name](dom, state, childMakerWithCase, self);
+      wrappers[name](dom, state, rxobj, childMakerWithCase, self);
     } else {
       var loader = function () {
-        wrappers[name](dom, state, childMakerWithCase, self);
+        wrappers[name](dom, state, rxobj, childMakerWithCase, self);
       };
       if (name in wrappers_onload) {
         wrappers_onload[name].push(loader);
