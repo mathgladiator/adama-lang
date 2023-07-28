@@ -1524,11 +1524,15 @@ var RxHTML = (function () {
     });
   };
 
-  var bind_responder = function (co, state, cleanup) {
+  var bind_responder = function (co, state, cleanup, retry_sm) {
+    retry_sm.unexpected_errors = 0;
+    retry_sm.backoff = 1;
     return {
       next: function (payload) {
         co.debugger(payload);
         co.set_connected(true);
+        retry_sm.unexpected_errors = 0;
+        retry_sm.backoff = 1;
         if ("data" in payload.delta) {
           co.tree.update(payload.delta.data);
         }
@@ -1560,22 +1564,39 @@ var RxHTML = (function () {
         }
       },
       complete: function () {
+        // shouldn't realistically happen TODO: validate <- truth
         co.set_connected(false);
-        // TODO: signal NULL to handlers?
-      },
-      should_retry: true,
-      retry_task_name: "Document Connection:" + co.label,
-      failure: function (reason) {
-        console.log("CONNECT FAILURE:" + co.label + "::" + reason);
-        co.set_connected(false);
-        // TODO: if not authorized
-        // TODO: schedule a retry? invoke:  rxobj.__();
-        /*
-        if (false) {
-          cleanup();
-        }
-        */
         co.ptr = null;
+      },
+      failure: function (reason) {
+        // register the failure
+        co.set_connected(false);
+        co.ptr = null;
+
+        // TODO: check for reasons to cancel based on AUTH, so we can clean up
+        var authFailure = false;
+        if (authFailure) {
+          cleanup();
+          return;
+        }
+        // is it an expected error that will happen a bunch?
+        var expected_error = reason == 999;
+        // do we not know about an error that happens a bunch? if so, then let's at least try again a number of finite times.
+        var blind_retry = retry_sm.unexpected_errors < 10;
+        if (blind_retry) {
+          retry_sm.unexpected_errors++;
+        }
+        // retry on either case
+        if (expected_error || blind_retry) {
+          retry_sm.backoff = Math.ceil(Math.min(retry_sm.backoff + Math.random() * retry_sm.backoff + (blind_retry ? 100 : 1), 1000));
+          console.log("connect-failure|retrying... (" + retry_sm.backoff + "); reason=" + reason + (blind_retry ? " [blind]" : ""));
+          // TODO: need a different feedback mechanism (maybe a number under the wifi icon?)
+          window.setTimeout(function() {
+            retry_sm.go();
+          }, retry_sm.backoff);
+        } else {
+          console.log("gave up connection;" + co.label + "; reason=" + reason);
+        }
       }
     }
   };
@@ -1646,7 +1667,12 @@ var RxHTML = (function () {
       co.handlers = {};
       co.viewstate_sent = true;
       co.label = "Domain:" + domain + " [ " + rxobj.name + "]";
-      co.ptr = connection.ConnectionCreateViaDomain(identity, domain, state.view.tree.copy(), bind_responder(co, state, cleanup));
+      var retry_sm = {};
+      retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
+      retry_sm.go = function() {
+        co.ptr = connection.ConnectionCreateViaDomain(identity, domain, state.view.tree.copy(), retry_sm.responder);
+      };
+      retry_sm.go();
       co.tree.update({});
       bind(false);
     });
@@ -1684,7 +1710,13 @@ var RxHTML = (function () {
       co.handlers = {};
       co.viewstate_sent = true;
       co.label = co.space + "/" + co.key + " [ " + rxobj.name + "]";
-      co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), bind_responder(co, state, cleanup));
+
+      var retry_sm = {};
+      retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
+      retry_sm.go = function() {
+        co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), retry_sm.responder);
+      };
+      retry_sm.go();
       co.tree.update({});
       bind(false);
     });
