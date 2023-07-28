@@ -8,11 +8,28 @@
  */
 package org.adamalang.rxhtml.atl;
 
+import java.util.HashMap;
+
 public class Context {
   public final boolean is_class;
+  public final HashMap<String, Integer> freq;
 
   private Context(boolean is_class) {
     this.is_class = is_class;
+    if (is_class) {
+      freq = new HashMap<>();
+    } else {
+      freq = null;
+    }
+  }
+
+  public void cssTrack(String fragment) {
+    Integer prior = freq.get(fragment);
+    if (prior == null) {
+      freq.put(fragment, 1);
+    } else {
+      freq.put(fragment, prior + 1);
+    }
   }
 
   public static final Context makeClassContext() {

@@ -55,7 +55,7 @@ public class RxHtmlTool {
     }
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
-    return new RxHtmlResult(javascript, style.toString().trim(), shell, patterns);
+    return new RxHtmlResult(javascript, style.toString().trim(), shell, patterns, env.getCssFreq());
   }
 
   public static RxHtmlResult convertFilesToTemplateForest(List<File> files, ArrayList<UriMatcher> matchers, ShellConfig config) throws Exception {
@@ -80,6 +80,6 @@ public class RxHtmlTool {
       Root.page(env.element(element, true), defaultRedirects);
     }
     String javascript = Root.finish(env);
-    return new RxHtmlResult(javascript, style.toString().trim(), shell, patterns);
+    return new RxHtmlResult(javascript, style.toString().trim(), shell, patterns, env.getCssFreq());
   }
 }

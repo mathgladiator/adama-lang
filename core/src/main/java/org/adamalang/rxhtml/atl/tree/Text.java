@@ -45,10 +45,9 @@ public class Text implements Tree {
     String textToUse = text;
     if (context.is_class) {
       String trimmed = textToUse.trim();
+      context.cssTrack(trimmed);
       // The reason we do this is to ensure developers don't try to make a new class via concatenation as that will break future optimizers.
-      textToUse = trimmed + " ";
-
-      // TODO: context.trackClass(textToUse
+      textToUse = " " + trimmed + " ";
     }
     return "\"" + new Escaping(textToUse).go() + "\"";
   }

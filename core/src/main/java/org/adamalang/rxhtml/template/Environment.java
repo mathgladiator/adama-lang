@@ -17,6 +17,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
+import java.util.HashMap;
+
 public class Environment {
   public final Environment parent;
   public final Feedback feedback;
@@ -44,6 +46,10 @@ public class Environment {
     this.caseVar = caseVar;
     this.xmlns = xmlns;
     this.fragmentFunc = fragmentFunc;
+  }
+
+  public HashMap<String, Integer> getCssFreq() {
+    return classContext.freq;
   }
 
   public static Environment fresh(Feedback feedback) {

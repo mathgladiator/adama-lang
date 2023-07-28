@@ -112,7 +112,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
       @Override
       public void onSetupComplete(CoreStream stream) {
         streams.put(requestId, new LocalStream(key, stream));
-        io.info("connected to " + key.space + "/" +key.key);
+        io.info("adama|connected to " + key.space + "/" +key.key);
       }
 
       @Override
@@ -121,7 +121,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
       @Override
       public void next(String data) {
-        io.info("[" + key.space + "/" + key.key + "]:" + data);
+        io.info("adama|connection[" + key.space + "/" + key.key + "]:" + data);
         responder.next(Json.parseJsonObject(data));
       }
 
