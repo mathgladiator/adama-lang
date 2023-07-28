@@ -61,6 +61,9 @@ public class AmazonSES extends SimpleService {
     if (!names.contains("secret_key")) {
       error.accept("amazonses requires an 'secret_key' field (and it should be encrypted)");
     }
+    if (!names.contains("region")) {
+      error.accept("amazonses requires a 'region' field");
+    }
     sb.append("  method<AWSSES_SendRequest_").append(uniqueId).append(", AWSSES_SendResponse_").append(uniqueId).append("> send;\n");
     sb.append("}\n");
     return sb.toString();
