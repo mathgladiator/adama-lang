@@ -8,6 +8,8 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import org.adamalang.rxhtml.atl.Context;
+
 import java.util.Map;
 
 /** common interface for the tree nodes */
@@ -20,5 +22,5 @@ public interface Tree {
   String debug();
 
   /** javascript expression to build the string */
-  String js(String env);
+  String js(Context context, String env);
 }

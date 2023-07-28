@@ -8,7 +8,16 @@
  */
 package org.adamalang.rxhtml.atl;
 
-public enum Context {
-  Normal,
-  Class
+public class Context {
+  public final boolean is_class;
+
+  private Context(boolean is_class) {
+    this.is_class = is_class;
+  }
+
+  public static final Context makeClassContext() {
+    return new Context(true);
+  }
+
+  public static final Context DEFAULT = new Context(false);
 }

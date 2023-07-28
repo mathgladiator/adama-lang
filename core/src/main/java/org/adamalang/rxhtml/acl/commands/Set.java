@@ -45,7 +45,7 @@ public class Set implements Command {
         StatePath pathVar = StatePath.resolve(ve.getValue(), env.stateVar);
         env.writer.tab().append("$.YS(").append(pathVar.command).append(",").append(oVar).append(",'").append(pathVar.name).append("');").newline();
       }
-      env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',function(){ return ").append(tree.js(oVar)).append(";});").newline();
+      env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',function(){ return ").append(tree.js(env.contextOf("event:" + type), oVar)).append(";});").newline();
     }
   }
 }

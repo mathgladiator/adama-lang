@@ -8,6 +8,7 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import org.adamalang.rxhtml.atl.Context;
 import org.adamalang.rxhtml.template.StatePath;
 
 import java.util.Collections;
@@ -35,7 +36,7 @@ public class Lookup implements Tree {
   }
 
   @Override
-  public String js(String env) {
+  public String js(Context context, String env) {
     return env + "['" + name + "']";
   }
 }

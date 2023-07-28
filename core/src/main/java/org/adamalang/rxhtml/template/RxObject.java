@@ -67,7 +67,7 @@ public class RxObject {
             StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);
             String subItem = env.pool.ask();
             env.writer.tab().append("$.Y2(").append(path.command).append(",").append(rxObj).append(",'").append(nameToUse).append("','").append(path.name).append("',").append("function(").append(subItem).append(") {").tabUp().newline();
-            env.writer.tab().append(rxObj).append(".").append(nameToUse).append("=").append(tree.js(subItem)).newline();
+            env.writer.tab().append(rxObj).append(".").append(nameToUse).append("=").append(tree.js(env.contextOf(attrName), subItem)).newline();
             env.writer.tab().append(rxObj).append(".__();").tabDown().newline();
             env.writer.tab().append("});").newline();
             env.pool.give(subItem);
