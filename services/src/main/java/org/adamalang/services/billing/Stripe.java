@@ -40,11 +40,16 @@ public class Stripe extends SimpleService {
   private final WebClientBase base;
   private final String apikey;
 
-  public Stripe(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base) throws ErrorCodeException {
+  public Stripe(FirstPartyMetrics metrics, WebClientBase base, String apikey) {
     super("stripe", new NtPrincipal("stripe", "service"), true);
     this.metrics = metrics;
     this.base = base;
-    this.apikey = config.getDecryptedSecret("apikey");
+    this.apikey = apikey;
+  }
+
+  public static Stripe build(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base) throws ErrorCodeException {
+    String apikey = config.getDecryptedSecret("apikey");
+    return new Stripe(metrics, base, apikey);
   }
 
   private void invoke(String httpMethod, String uri, ObjectNode request, Callback<String> callback) {

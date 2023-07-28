@@ -34,12 +34,18 @@ public class AmazonSES extends SimpleService {
   private final String region;
   private final Credential credential;
 
-  public AmazonSES(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base) throws ErrorCodeException {
+  public AmazonSES(FirstPartyMetrics metrics, WebClientBase base, Credential credential, String region) {
     super("amazonses", new NtPrincipal("amazonses", "service"), true);
     this.metrics = metrics;
-    this.credential = new Credential(config.getDecryptedSecret("access_id"), config.getDecryptedSecret("secret_key"));
-    this.region = config.getString("region", "us-east-2");
+    this.credential = credential;
+    this.region = region;
     this.base = base;
+  }
+
+  public static AmazonSES build(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base) throws ErrorCodeException {
+    Credential credential = new Credential(config.getDecryptedSecret("access_id"), config.getDecryptedSecret("secret_key"));
+    String region = config.getString("region", "us-east-2");
+    return new AmazonSES(metrics, base, credential, region);
   }
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
