@@ -83,7 +83,7 @@ public class ParserTests {
     Tree tree = Parser.parse("BLAH{nope}      many    {more}     ");
     Assert.assertEquals("[TEXT(BLAH),LOOKUP[nope],TEXT(      many    ),LOOKUP[more],TEXT(     )]", tree.debug());
     Context class_context = Context.makeClassContext();
-    Assert.assertEquals("\"BLAH \" + $X['nope'] + \"many \" + $X['more']", tree.js(class_context, "$X"));
+    Assert.assertEquals("\" BLAH \" + $X['nope'] + \" many \" + $X['more']", tree.js(class_context, "$X"));
   }
 
   @Test
