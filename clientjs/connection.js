@@ -165,7 +165,7 @@ class WebSocketAdamaConnection {
   /** private: send a raw message */
   _write(request, callback) {
     if (!this.connected) {
-      callback({ failure: 600, reason: 9999 });
+      callback({ failure: 600, reason: 999 });
       return;
     }
     this.callbacks.set(request.id, callback);
