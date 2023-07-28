@@ -68,6 +68,8 @@ var RxHTML = (function () {
         choices: {},
         bound: "",
         viewstate_sent: true,
+        viewstate_clone: "",
+        has_filter: false,
         synced: false,
         filter: {},
         vsseq: 0,
@@ -1558,6 +1560,7 @@ var RxHTML = (function () {
             filter[keys[k]] = true;
           }
           co.filter = filter;
+          co.has_filter = true;
         }
         if ('goto' in payload.delta) {
           self.goto(payload.delta.goto);
@@ -1603,7 +1606,26 @@ var RxHTML = (function () {
 
   var setup_co = function(desired, unsub, co, state) {
     var sync_tree = function () {
+      // let's copy out the tree from the viewstate
       var new_tree = state.view.tree.copy();
+
+      // if we have got a filter from the server, then let's filter
+      if (co.has_filter) {
+        // reconstruct the new view based on the intersection of the filter and the new state
+        var filtered = {};
+        for (var k in new_tree) {
+          if (co.filter[k]) {
+            filtered[k] = new_tree[k];
+          }
+        }
+        // assume the new tree
+        new_tree = filtered;
+      }
+      // if the clone (i.e. stringified version) is the same as what we last sent, then don't send anything
+      var prior_clone = JSON.stringify(new_tree);
+      if (prior_clone == co.viewstate_clone) {
+        return;
+      }
       co.viewstate_sent = false;
       co.vsseq++;
       co.sync();
@@ -1613,6 +1635,7 @@ var RxHTML = (function () {
           co.sync();
         }
       }.bind({ bound: co.vsseq });
+      co.viewstate_clone = JSON.stringify(new_tree);
       co.ptr.update(new_tree, { success: synced, failure: synced });
     };
     var bind = function (sendNow) {
@@ -1670,6 +1693,8 @@ var RxHTML = (function () {
       var retry_sm = {};
       retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
       retry_sm.go = function() {
+        // bias to nothing new
+        co.viewstate_clone = "{}";
         co.ptr = connection.ConnectionCreateViaDomain(identity, domain, state.view.tree.copy(), retry_sm.responder);
       };
       retry_sm.go();
@@ -1714,6 +1739,8 @@ var RxHTML = (function () {
       var retry_sm = {};
       retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
       retry_sm.go = function() {
+        // bias to nothing new
+        co.viewstate_clone = "{}";
         co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), retry_sm.responder);
       };
       retry_sm.go();
