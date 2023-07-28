@@ -1,0 +1,410 @@
+
+@static {
+  // anyone can create
+  create { return true; }
+}
+
+@connected {
+   // let everyone connect; sure, what can go wrong
+  return true;
+}
+
+// we build a table of publishes with who published it and when they did so
+record Publish {
+  public principal who;
+  public long when;
+  public string payload;
+}
+
+table<Publish> _publishes;
+
+// since tables are private, we expose all publishes to all connected people
+public formula publishes = iterate _publishes order by when asc;
+
+// we wrap a payload inside a message
+message PublishMessage {
+  string payload;
+}
+
+// and then open a channel to accept the publish from any connected client
+channel publish(PublishMessage message) {
+  _publishes <- {who: @who, when: Time.now(), payload: message.payload };
+
+  // At this point, we encounter a key problem with maintaining a
+  // log of publishes. Namely, the log is potentially infinite, so
+  // we have to leverage some product intelligence to reduce it to
+  // a reasonably finite set which is important for the product.
+
+  // First, we age out publishes too old (sad face)
+  (iterate _publishes
+     where when < Time.now() - 60000).delete();
+
+  // Second, we hard cap the publishes biasing younger ones
+  (iterate _publishes
+     order by when desc
+     offset 100).delete();
+}
+
+@static {
+  // anyone can create
+  create { return true; }
+  invent { return true; }
+}
+
+// we define the suit of a card
+enum Suit {
+  Clubs:1,
+  Hearts:2,
+  Spades:3,
+  Diamonds:4,
+}
+
+// the rank of a card
+enum Rank {
+  Two:2,
+  Three:3,
+  Four:4,
+  Five:5,
+  Six:6,
+  Seven:7,
+  Eight:8,
+  Nine:9,
+  Ten:10,
+  Jack:11,
+  Queen:12,
+  King:13,
+  Ace:14,
+}
+
+// where can a card be
+enum Place {
+  Deck:1,
+  Hand:2,
+  InPlay:3,
+  Taken:4
+}
+
+// model the card and its location and ownership
+record Card {
+  public int id;
+  public Suit suit;
+  public Rank rank;
+  private principal owner;
+  private int ordering;
+  private Place place;
+  private auto points = suit == Suit::Hearts ? 1 : (suit == Suit::Spades && rank==Rank::Queen ? 13 : 0);
+
+  // define a policy as to who can see the card
+  policy p {
+    // if it is in hand on in the pot, then only the owner of the card can see it
+    // the rules of hearts have cards face down
+    if (place == Place::Hand || place == Place::Taken) {
+      return @who == owner;
+    }
+    // if it is in the pot or in play, then anyone can see it
+    if (place==Place::InPlay) {
+      return true;
+    }
+    // otherwise, it is in the deck and thus not visible
+    return false;
+  }
+
+  method reset() {
+    ordering = Random.genInt();
+    owner = @no_one;
+    place = Place::Hand;
+  }
+
+  require p;
+}
+
+// the entire deck of cards
+table<Card> deck;
+
+// show the player hand (and let the privacy policy filter out by person)
+bubble hand = iterate deck where place == Place::Hand where owner == @who order by id asc;
+
+// show all cards in the pot (this would be a different way of defining hand)
+bubble my_take = iterate deck where place == Place::Taken && owner == @who;
+
+// no real constructor
+message Empty {}
+
+principal owner;
+
+record Player {
+  public int id;
+  public principal link;
+  public int points;
+  viewer_is<link> int play_order;
+}
+
+table<Player> players;
+
+@connected {
+  if ((iterate players where link==@who).size() > 0) {
+    return true;
+  }
+  if (players.size() < 4) {
+    players <- {
+      link:@who,
+      play_order: players.size(),
+      points:0
+    };
+    if (players.size() == 4) {
+      transition #setup;
+    }
+    return true;
+  }
+  return false;
+}
+
+// everyone in the game
+public auto people = iterate players order by play_order;
+
+// the players by their ordering
+public auto players_ordered = iterate players order by play_order;
+
+// are we actually playing the game?
+public bool playing = false;
+
+// how setup the game state
+#setup {
+  // build the deck
+  foreach (s in Suit::*) {
+    foreach (r in Rank::*) {
+      deck <- {rank:r, suit:s, place:Place::Deck};
+    }
+  }
+
+  // normalize the players from 0 to 3
+  int normativeOrder = 0;
+  (iterate players order by play_order asc).play_order = normativeOrder++;
+
+  // shuffle and distribute the cards
+  transition #shuffle_and_distribute;
+}
+
+enum PassingMode { Across:0, ToLeft:1, ToRight:2, None:3 }
+
+public PassingMode passing_mode;
+
+#shuffle_and_distribute {
+  // it may be useful to allow methods on a record, fuck
+  (iterate deck).reset();
+
+  // distribute cards to players
+  Player[] op = (iterate players order by play_order).toArray();
+  for (int k = 0; k < 4; k++) {
+    if (op[k] as player) {
+      (iterate deck where owner == @no_one order by ordering limit 13).owner = player.link;
+    }
+  }
+  transition #pass;
+}
+
+message CardDecision {
+  int id;
+}
+
+channel<CardDecision[]> pass_channel;
+
+// this is wanky, need arrays at a top level that are finite to help...
+principal player1;
+principal player2;
+principal player3;
+principal player4;
+
+principal current;
+
+#pass {
+  if (passing_mode == PassingMode::None) {
+    transition #start_play;
+    return;
+  }
+
+  // this is wanky as fuck, and I don't like it. We have this fundamental problem of what if there are not enough players, then how does this fail...
+  // we should consider a @fatal keyword to signal that a game is just fucked
+
+  Player[] op = (iterate players order by play_order).toArray();
+  if (op[0] as player) {
+    player1 = player.link;
+  }
+  if (op[1] as player) {
+    player2 = player.link;
+  }
+  if (op[2] as player) {
+    player3 = player.link;
+  }
+  if (op[3] as player) {
+    player4 = player.link;
+  }
+  // what does an await on no_one mean, it means the whole thing is fucked
+
+  // we really need a future array since this has some awkward stuff
+  future<maybe<CardDecision[]>> pass1 = pass_channel.choose(player1, @convert<CardDecision>(iterate deck where owner==player1), 3);
+  future<maybe<CardDecision[]>> pass2 = pass_channel.choose(player2, @convert<CardDecision>(iterate deck where owner==player2), 3);
+  future<maybe<CardDecision[]>> pass3 = pass_channel.choose(player3, @convert<CardDecision>(iterate deck where owner==player3), 3);
+  future<maybe<CardDecision[]>> pass4 = pass_channel.choose(player4, @convert<CardDecision>(iterate deck where owner==player4), 3);
+
+  // the reason we do the futures above and then await them below like this is so all players can pass at the same time.
+  // the problem at hand is that the await will consume, so non-awaited futures will cause the client to sit dumbly... this can be fixed easily I think
+  // by having the make_future<> check the stream and pre-drain the queue and allow the await to short-circuit with the provide option
+
+  if (pass1.await() as decision1) {
+  if (pass2.await() as decision2) {
+  if (pass3.await() as decision3) {
+  if (pass4.await() as decision4) {
+
+  if (passing_mode == PassingMode::ToRight) {
+    foreach (dec in decision1) {
+      (iterate deck where id == dec.id).owner = player2;
+    }
+    foreach (dec in decision2) {
+      (iterate deck where id == dec.id).owner = player3;
+    }
+    foreach (dec in decision3) {
+      (iterate deck where id == dec.id).owner = player4;
+    }
+    foreach (dec in decision4) {
+      (iterate deck where id == dec.id).owner = player1;
+    }
+  } else if (passing_mode == PassingMode::ToLeft) {
+    foreach (dec in decision1) {
+      (iterate deck where id == dec.id).owner = player4;
+    }
+    foreach (dec in decision2) {
+      (iterate deck where id == dec.id).owner = player1;
+    }
+    foreach (dec in decision3) {
+      (iterate deck where id == dec.id).owner = player2;
+    }
+    foreach (dec in decision4) {
+      (iterate deck where id == dec.id).owner = player3;
+    }
+  } else if (passing_mode == PassingMode::Across) {
+    foreach (dec in decision1) {
+      (iterate deck where id == dec.id).owner = player3;
+    }
+    foreach (dec in decision2) {
+      (iterate deck where id == dec.id).owner = player4;
+    }
+    foreach (dec in decision3) {
+      (iterate deck where id == dec.id).owner = player1;
+    }
+    foreach (dec in decision4) {
+      (iterate deck where id == dec.id).owner = player2;
+    }
+  }
+
+  }}}}
+  transition #start_play;
+}
+
+public int played = 0;
+public Suit suit_in_play;
+public bool points_played = false;
+public auto in_play = iterate deck where place == Place::InPlay order by rank desc;
+
+#start_play {
+  // no cards hae been played
+  played = 0;
+  points_played = false;
+
+  // assign a player to current
+  current = player1;
+  if ( (iterate deck where rank == Rank::Two && suit == Suit::Clubs)[0] as two_clubs) {
+    current = two_clubs.owner;
+  } // otherwise, @fatal
+
+  transition #play;
+}
+
+channel<CardDecision> single_play;
+
+// how to attribute this to a person
+
+public principal last_winner;
+
+#play {
+  list<Card> choices = iterate deck where owner == current && place == Place::Hand && rank == Rank::Two && suit == Suit::Clubs;
+  if (choices.size() == 0) {
+    choices = iterate deck where owner==current && place == Place::Hand && (
+      played == 0 && (points_played || points == 0) ||
+      played > 0 && suit_in_play == suit
+    );
+  }
+  if (choices.size() == 0) { // anything in hand
+    choices = iterate deck where owner==current && place == Place::Hand;
+  }
+  if (choices.size() == 0) {
+    transition #score;
+    return;
+  }
+  future<maybe<CardDecision>> playX = single_play.decide(current, @convert<CardDecision>(choices));
+  if (playX.await() as dec) {
+    if ((iterate deck where id == dec.id)[0] as cardPlayed) {
+      cardPlayed.place = Place::InPlay;
+      if (cardPlayed.points > 0) {
+        points_played = true;
+      }
+      if (played == 0) {
+        suit_in_play = cardPlayed.suit;
+      }
+    }
+  }
+
+  // if the number of cards played is less than 4, then next player; otherwise, decide winner of pot and award points
+
+  // TODO: need finite arrays and cyclic integers
+  if (current == player1) {
+    current = player2;
+  } else if (current == player2) {
+    current = player3;
+  } else if (current == player3) {
+    current = player4;
+  } else if (current == player4) {
+    current = player1;
+  }
+
+  if (played == 3) {
+    if ( (iterate deck where place == Place::InPlay && suit == suit_in_play order by rank desc limit 1)[0] as winner) {
+      (iterate deck where place == Place::InPlay).owner = winner.owner;
+      last_winner = winner.owner;
+    }
+    (iterate deck where place == Place::InPlay).place = Place::Taken;
+    played = 0;
+    current = last_winner;
+    if( (iterate deck where owner == current && place == Place::Hand).size() == 0) {
+      transition #score;
+      return;
+    }
+  } else {
+    played++;
+  }
+  transition #play;
+}
+
+public int points_awarded = 0;
+
+#score {
+  // award points
+  foreach(p in iterate players) {
+    int local_points = 0;
+    foreach(c in iterate deck where owner == p.link && place == Place::Taken) {
+      local_points += c.points;
+    }
+    if (local_points == 26) {
+      foreach(p2 in iterate players where link != p.link) {
+        p2.points += 26;
+        points_awarded += 26;
+      }
+    } else {
+      p.points += local_points;
+      points_awarded += local_points;
+    }
+  }
+
+  passing_mode = passing_mode.next();
+  transition #shuffle_and_distribute;
+}
