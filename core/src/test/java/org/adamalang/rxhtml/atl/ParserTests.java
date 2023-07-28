@@ -41,7 +41,6 @@ public class ParserTests {
     }
   }
 
-
   @Test
   public void simple() {
     Tree tree = Parser.parse("xyz");
