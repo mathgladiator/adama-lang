@@ -21,6 +21,7 @@ import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.entropy.SafeRandom;
 import org.adamalang.services.sms.Twilio;
+import org.adamalang.services.social.Discord;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.socket.MultiWebClientRetryPool;
 import org.adamalang.web.client.socket.MultiWebClientRetryPoolConfig;
@@ -52,7 +53,7 @@ public class FirstPartyServices {
     ServiceRegistry.add("twilio", Twilio.class, (space, configRaw) -> {
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
-        return new Twilio(metrics, config, webClientBase);
+        return Twilio.build(metrics, config, webClientBase);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-twilio", ex);
         return Service.FAILURE;
@@ -61,7 +62,7 @@ public class FirstPartyServices {
     ServiceRegistry.add("stripe", Stripe.class, (space, configRaw) -> {
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
-        return new Stripe(metrics, config, webClientBase);
+        return Stripe.build(metrics, config, webClientBase);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-stripe", ex);
         return Service.FAILURE;
@@ -70,9 +71,18 @@ public class FirstPartyServices {
     ServiceRegistry.add("amazonses", AmazonSES.class, (space, configRaw) -> {
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
-        return new AmazonSES(metrics, config, webClientBase);
+        return AmazonSES.build(metrics, config, webClientBase);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-amazonses", ex);
+        return Service.FAILURE;
+      }
+    });
+    ServiceRegistry.add("discord", Discord.class, (space, configRaw) -> {
+      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
+      try {
+        return Discord.build(metrics, config, webClientBase);
+      } catch (ErrorCodeException ex) {
+        LOGGER.error("failed-discord", ex);
         return Service.FAILURE;
       }
     });

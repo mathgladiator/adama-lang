@@ -87,6 +87,7 @@ public class ServiceConfig {
     String publicKey = parts[1];
     String privateKey;
     try {
+      // Secrets.getPrivateKey is synchronous, and this is a problem for "globalization"
       privateKey = MasterKey.decrypt(masterKey, Secrets.getPrivateKey(dataBase, space, keyId));
     } catch (Exception ex) {
       throw ErrorCodeException.detectOrWrap(ErrorCodes.SERVICE_CONFIG_BAD_ENCRYPT_STRING_FAILED_SECRET_KEY_LOOKUP, ex, EXLOGGER);
