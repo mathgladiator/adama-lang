@@ -154,7 +154,7 @@ public class Attributes {
           env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
           env.writer.tab().append(oVar).append(".__dom = ").append(eVar).append(";").newline();
           env.writer.tab().append("var ").append(computeFoo).append(" = (function() {").tabUp().newline();
-          writeDomSetter("this.__dom", attr.getKey(), tree.js("this"));
+          writeDomSetter("this.__dom", attr.getKey(), tree.js(env.contextOf(attr.getKey()), "this"));
           env.writer.tabDown().tab().append("}).bind(").append(oVar).append(");").newline();
           for (Map.Entry<String, String> ve : vars.entrySet()) {
             StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);
@@ -165,7 +165,7 @@ public class Attributes {
           env.writer.tab().append(computeFoo).append("();").newline();
           env.writer.tabDown().tab().append("}").newline();
         } else {
-          writeDomSetter(eVar, attr.getKey(), tree.js("this"));
+          writeDomSetter(eVar, attr.getKey(), tree.js(env.contextOf(attr.getKey()), "this"));
         }
       } else {
         writeDomSetter(eVar, attr.getKey(), "true");

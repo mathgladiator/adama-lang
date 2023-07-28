@@ -8,6 +8,8 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import org.adamalang.rxhtml.atl.Context;
+
 import java.util.Collections;
 import java.util.Map;
 
@@ -24,7 +26,7 @@ public class Empty implements Tree {
   }
 
   @Override
-  public String js(String env) {
+  public String js(Context context, String env) {
     return "\"\"";
   }
 }

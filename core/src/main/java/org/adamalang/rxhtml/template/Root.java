@@ -70,7 +70,7 @@ public class Root {
             }
           }
           if (hasAll) {
-            pullArgs = "$.aRDp(" + stateVar + ", function(vs) { return " + tree.js("vs") + "; });";
+            pullArgs = "$.aRDp(" + stateVar + ", function(vs) { return " + tree.js(env.contextOf("initial-view-state"), "vs") + "; });";
           }
         }
       }

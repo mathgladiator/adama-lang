@@ -8,6 +8,9 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import org.adamalang.common.Escaping;
+import org.adamalang.rxhtml.atl.Context;
+
 import java.util.Collections;
 import java.util.Map;
 
@@ -29,8 +32,24 @@ public class Text implements Tree {
     return "TEXT(" + text + ")";
   }
 
+  /** silly optimization for empty strings and classes */
+  public boolean skip(Context context) {
+    if (context.is_class) {
+      return text.trim().length() == 0;
+    }
+    return false;
+  }
+
   @Override
-  public String js(String env) {
-    return "\"" + text.replaceAll("[\n|\r]", "") + "\""; // BIG TODO: escaping
+  public String js(Context context, String env) {
+    String textToUse = text;
+    if (context.is_class) {
+      String trimmed = textToUse.trim();
+      // The reason we do this is to ensure developers don't try to make a new class via concatenation as that will break future optimizers.
+      textToUse = trimmed + " ";
+
+      // TODO: context.trackClass(textToUse
+    }
+    return "\"" + new Escaping(textToUse).go() + "\"";
   }
 }

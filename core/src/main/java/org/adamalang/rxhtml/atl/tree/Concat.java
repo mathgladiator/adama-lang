@@ -8,6 +8,8 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import org.adamalang.rxhtml.atl.Context;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -41,12 +43,18 @@ public class Concat implements Tree {
   }
 
   @Override
-  public String js(String env) {
+  public String js(Context context, String env) {
     StringBuilder sb = new StringBuilder();
-    sb.append(children[0].js(env));
+    sb.append(children[0].js(context, env));
     for (int k = 1; k < children.length; k++) {
-      sb.append(" + ");
-      sb.append(children[k].js(env));
+      boolean skip = false;
+      if (children[k] instanceof Text) {
+        skip = ((Text) children[k]).skip(context);
+      }
+      if (!skip) {
+        sb.append(" + ");
+        sb.append(children[k].js(context, env));
+      }
     }
     return sb.toString();
   }

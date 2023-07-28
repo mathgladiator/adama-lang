@@ -8,6 +8,8 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import org.adamalang.rxhtml.atl.Context;
+
 import java.util.Map;
 
 /** Negate a node (i.e. not for boolean) */
@@ -29,7 +31,7 @@ public class Negate implements Tree {
   }
 
   @Override
-  public String js(String env) {
-    return "!(" + value.js(env) + ")";
+  public String js(Context context, String env) {
+    return "!(" + value.js(context, env) + ")";
   }
 }

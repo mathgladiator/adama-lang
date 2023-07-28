@@ -8,6 +8,8 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import org.adamalang.rxhtml.atl.Context;
+
 import java.util.Map;
 
 /** a simple way of doing string equality */
@@ -31,7 +33,7 @@ public class Equals implements Tree {
   }
 
   @Override
-  public String js(String env) {
-    return "(" + tree.js(env) + "=='" + value + "')";
+  public String js(Context context, String env) {
+    return "(" + tree.js(context, env) + "=='" + value + "')";
   }
 }

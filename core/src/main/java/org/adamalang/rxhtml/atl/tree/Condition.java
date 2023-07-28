@@ -8,6 +8,8 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import org.adamalang.rxhtml.atl.Context;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -38,7 +40,7 @@ public class Condition implements Tree {
   }
 
   @Override
-  public String js(String env) {
-    return "((" + guard.js(env) + ") ? (" + branchTrue.js(env) + ") : (" + branchFalse.js(env) + "))";
+  public String js(Context context, String env) {
+    return "((" + guard.js(context, env) + ") ? (" + branchTrue.js(context, env) + ") : (" + branchFalse.js(context, env) + "))";
   }
 }
