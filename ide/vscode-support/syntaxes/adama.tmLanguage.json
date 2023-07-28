@@ -2,43 +2,62 @@
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Adama",
 	"patterns": [
+		{ "include": "#comment_block" },
+		{ "include": "#comment_line" },
+		{ "include": "#entities" },
 		{ "include": "#keywords" },
 		{ "include": "#strings" },
 		{ "include": "#labels" },
-		{ "include": "#constants" },
-		{ "include": "#variables" },
-		{ "include": "#entities" },
-		{ "include": "#comment_block" }
+		{ "include": "#constants" }
 	],
 	"repository": {
+		
+		"comment_block": {
+			"name": "comment.block.adama",
+			"begin": "/\\*",
+			"end": "\\*/"
+		},
+		"comment_line": {
+			"name": "comment.line.adama",
+			"match": "//.*"
+		},
+		
+		"entities": {
+			"name": "entity.name.type.adama",
+			"match": ""
+		},
+		
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.adama",
-				"match": "\\b(if|while|for|return|abort|block|break|continue|for|do|foreach|transition|preempt|invoke)\\b"
+				"match": "\\b(if|while|for|return|abort|block|break|continue|for|do|foreach|transition|preempt|invoke|maximum_history|delete_on_close|include|link|authorize|rpc|as)\\b"
 			},{
 				"name": "keyword.other.adama",
-				"match": "\\b(function|procedure|method|dispatch|import)\\b"
+				"match": "\\b(function|procedure|method|put|options|delete|dispatch|import|create|invent|send|offset|require|open|index|var)\\b"
 			},{
 				"name": "entity.name.type.adama",
-				"match": "\\b(record|message|int|bool|double|long|string|client|table|list|maybe|enum|future|channel|map)\\b"
+				"match": "\\b(record|message|int|bool|double|long|string|client|table|list|maybe|enum|future|channel|map|dynamic|complex|date|datetime|time|timespan|label|pair|tuple)\\b"
 			},{
 				"name": "keyword.privacy.adama",
-				"match": "\\b(public|private|viewer_is|use_policy|policy|bubble)\\b"
+				"match": "\\b(public|private|viewer_is|use_policy|policy|secured|bubble|password|view|service)\\b"
 			},{
 				"name": "keyword.auto.adama",
 				"match": "\\b(formula|let|auto)\\b"
 			},{
 				"name": "keyword.linq.adama",
-				"match": "\\b(iterate|where|shuffle|order|reduce|via|limit|by|asc|desc)\\b"
+				"match": "\\b(iterate|where|where_as|shuffle|order|reduce|via|limit|by|asc|desc)\\b"
 			},{
 				"name": "keyword.other.adama",
-				"match": "@construct|@connected|@disconnected|@pump|@convert|@maybe|@step"
+				"match": "@(construct|connected|disconnected|self|pump|convert|blocked|maybe|lambda|stable|step|pair|who|static|web|load|delete|attached|can_attach|context|timespan|time|date|parameters|headers|datetime|i|viewer|default|forward|nothing|null)"
 			},{
 				"name": "keyword.modifiers.adama",
-				"match": "\\b(readonly)\\b"
+				"match": "\\b(readonly|aborts|viewer)\\b"
 			},{
 				"name": "keyword.testing.adama",
 				"match": "\\b(assert|test)\\b"
+			},{
+				"name": "constant.character.escape.adama",
+				"match": "\\\\(n|t|r|\"|\\\\)"
 			}]
 		},
 		"strings": {
@@ -54,24 +73,11 @@
 		},
 		"labels": {
 			"name": "string.quoted.double.adama",
-			"match": "#[0-9a-zA-Z]*"
+			"match": "#\\S+"
 		},
 		"constants": {
 			"name": "constant.numeric.adama",
 			"match": "true|false|@no_one|[0-9][0-9eE\\.]*"
-		},
-		"variables": {
-			"name": "variable.adama",
-			"match": "[a-z][A-Za-z0-9]*"
-		},
-		"entities": {
-			"name": "entity.name.type.adama",
-			"match": "[A-Z][A-Za-z0-9]*"
-		},
-		"comment_block": {
-			"name": "comment.block.adama",
-			"begin": "/\\*",
-			"end": "\\*/"
 		}
 	},
 	"scopeName": "source.adama"

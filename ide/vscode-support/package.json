@@ -43,7 +43,7 @@
                     "adama"
                 ],
                 "extensions": [
-                    ".a"
+                    ".adama"
                 ],
                 "configuration": "./language-configuration.json"
             }
