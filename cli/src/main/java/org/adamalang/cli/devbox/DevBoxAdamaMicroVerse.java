@@ -106,20 +106,20 @@ public class DevBoxAdamaMicroVerse {
           String plan = defn.bundle();
           if (!defn.lastDeployedPlan.equals(plan)) {
             long start = System.currentTimeMillis();
-            io.notice("Validating:" + defn.spaceName);
+            io.notice("adama|validating: " + defn.spaceName);
             if (CodeHandlerImpl.sharedValidatePlan(plan)) {
-              io.notice("Deploying:" + defn.spaceName);
+              io.notice("adama|deploying: " + defn.spaceName);
               defn.base.deploy(defn.spaceName, new DeploymentPlan(plan, (t, ec) -> {
-                io.error("DeployIssue[Code-" + ec + "]: " + t.getMessage());
+                io.error("adama|deployment-issue[Code-" + ec + "]: " + t.getMessage());
               }));
               defn.lastDeployedPlan = plan;
-              io.notice("Deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
+              io.notice("adama|deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
             } else {
-              io.error("Failed to validate: '" + defn.spaceName + "'");
+              io.error("adama|failure: " + defn.spaceName);
             }
           }
         } catch (Exception ex) {
-          io.error("Failed to bundle: '" + defn.spaceName + "'; reason=" + ex.getMessage());
+          io.error("adama|failed-bundling: " + defn.spaceName + "; reason=" + ex.getMessage());
         }
       }
   }
@@ -224,7 +224,7 @@ public class DevBoxAdamaMicroVerse {
 
     JsonNode spacesNode = defn.get("spaces");
     if (spacesNode == null || !spacesNode.isArray()) {
-      io.notice("the microverse lacked a spaces array");
+      io.notice("verse|lacked a spaces array in microverse config");
       return null;
     }
     WatchService watchService = FileSystems.getDefault().newWatchService();
@@ -243,7 +243,7 @@ public class DevBoxAdamaMicroVerse {
     }
 
     if (domainKeyToUse != null) {
-      io.notice("mapping host to :" + domainKeyToUse.space + "/" + domainKeyToUse.key);
+      io.notice("verse|mapping host to use:" + domainKeyToUse.space + "/" + domainKeyToUse.key);
     }
     return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse);
   }

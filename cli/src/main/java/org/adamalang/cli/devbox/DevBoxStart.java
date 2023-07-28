@@ -34,12 +34,12 @@ public class DevBoxStart {
     TerminalIO terminal = new TerminalIO();
     if (localLibAdamaJSPath == null) {
       localLibAdamaJSPath = args.config.get_nullable_string("local-libadama-path-default");
-      terminal.info("using 'local-libadama-path-default' from config to pull Adama javascript from");
+      terminal.info("js|using 'local-libadama-path-default' from config to pull Adama javascript from");
     }
     if (localLibAdamaJSPath != null) {
       localLibAdamaJSFile = new File(localLibAdamaJSPath);
       if (!(localLibAdamaJSFile.exists() && localLibAdamaJSFile.isDirectory())) {
-        terminal.error("--local-libadama-path was provided but the directory doesn't exist (or is a file)");
+        terminal.error("js|--local-libadama-path was provided but the directory doesn't exist (or is a file)");
         localLibAdamaJSFile = null;
       }
     }
@@ -51,23 +51,23 @@ public class DevBoxStart {
         ObjectNode defn = Json.parseJsonObject(Files.readString(microverseDef.toPath()));
         verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn);
         if (verse == null) {
-          terminal.error("microverse: '" + args.microverse + "' failed, using production");
+          terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
         }
       } else {
-        terminal.error("microverse: '" + args.microverse + "' is not present, using production");
+        terminal.error("verse|microverse: '" + args.microverse + "' is not present, using production");
       }
     }
-    terminal.info("starting up");
+    terminal.info("devbox|starting up");
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
     try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), localLibAdamaJSPath != null, (b) -> bundle.set(b))) {
       WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
-      terminal.notice("starting webserver");
+      terminal.notice("devbox|starting webserver");
       DevBoxServiceBase base = new DevBoxServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, verse);
       Thread webServerThread = base.start();
       while (alive.get()) {
         Command command = Command.parse(terminal.readline().trim());
         if (command.is("kill", "exit", "quit", "q", "exut")) {
-          terminal.notice("lowering alive");
+          terminal.notice("devbox|killing");
           alive.set(false);
           webServerThread.interrupt();
           if (verse != null) {
@@ -80,11 +80,11 @@ public class DevBoxStart {
         }
         if (command.is("viewer-updates")) {
           if (command.argIs(0, "slow")) {
-            terminal.notice("slowing down view updates by 5 seconds");
+            terminal.notice("devbox|slowing down view updates by 5 seconds");
             control.slowViewerStateUpdates.set(true);
           }
           if (command.argIs(0, "fast")) {
-            terminal.notice("normalizing view update speed");
+            terminal.notice("devbox|normalizing view update speed");
             control.slowViewerStateUpdates.set(false);
           }
         }
@@ -119,7 +119,7 @@ public class DevBoxStart {
               verse.dataService.initialize(new Key(space, key), update, new Callback<Void>() {
                 @Override
                 public void success(Void value) {
-                  terminal.info("restored data");
+                  terminal.info("init:loaded");
                 }
 
                 @Override
@@ -172,7 +172,7 @@ public class DevBoxStart {
           verse.dataService.diagnostics(new Callback<String>() {
             @Override
             public void success(String value) {
-              terminal.info(value);
+              terminal.info("diagnostics|" + value);
             }
 
             @Override
@@ -189,12 +189,12 @@ public class DevBoxStart {
             verse.service.query(query, new Callback<>() {
               @Override
               public void success(String value) {
-                terminal.notice(value);
+                terminal.notice("query-result|" + value);
               }
 
               @Override
               public void failure(ErrorCodeException ex) {
-                terminal.error("failed to query:" + ex.code);
+                terminal.error("query|failed to query:" + ex.code);
               }
             });
           } else {

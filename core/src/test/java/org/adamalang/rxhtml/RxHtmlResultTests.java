@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RxHtmlResultTests {
   @Test
@@ -21,7 +22,7 @@ public class RxHtmlResultTests {
     ArrayList<String> patterns = new ArrayList<>();
     patterns.add("/hi/there");
     patterns.add("/hi/$name/ok");
-    RxHtmlResult result = new RxHtmlResult("js", "css", new Shell(ShellConfig.start().end()), patterns);
+    RxHtmlResult result = new RxHtmlResult("js", "css", new Shell(ShellConfig.start().end()), patterns, new HashMap<>());
     Assert.assertFalse(result.test("/"));
     Assert.assertFalse(result.test("/hi"));
     Assert.assertFalse(result.test("/hi/nope"));

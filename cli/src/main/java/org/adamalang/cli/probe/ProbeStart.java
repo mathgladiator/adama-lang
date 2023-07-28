@@ -80,7 +80,7 @@ public class ProbeStart {
             @Override
             public void success(InstanceClient.ProbeResponse value) {
               if (value.errors != null && value.errors.length > 0) {
-                terminal.notice(value.json);
+                terminal.notice("response|" + value.json);
                 for (String err : value.errors) {
                   terminal.error(err);
                 }

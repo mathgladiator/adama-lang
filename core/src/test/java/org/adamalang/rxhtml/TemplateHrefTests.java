@@ -28,7 +28,7 @@ public class TemplateHrefTests extends BaseRxHtmlTest {
     gold.append("\n    $.ASRC(c,\"/image.png\");");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('div');");
-    gold.append("\n    $.ACLASS(c,\"someclass\");");
+    gold.append("\n    $.ACLASS(c,\" someclass \");");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -47,7 +47,7 @@ public class TemplateHrefTests extends BaseRxHtmlTest {
     gold.append("\n    $.ASRC(c,\"/image.png\");");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('div');");
-    gold.append("\n    $.ACLASS(c,\"someclass\");");
+    gold.append("\n    $.ACLASS(c,\" someclass \");");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

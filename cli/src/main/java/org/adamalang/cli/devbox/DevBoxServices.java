@@ -40,14 +40,14 @@ public class DevBoxServices {
 
     @Override
     public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
-      logger.accept("Service[AmazonSES/ " + space+ "]::" + method + "(" + request + ")");
+      logger.accept("devservices|service[AmazonSES/ " + space+ "]::" + method + "(" + request + ")");
       callback.success("{}");
     }
   }
 
   public static void install(SimpleExecutor executor, Consumer<String> logger) {
     FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null, null);
-    logger.accept("Installing DevBox Override Services");
+    logger.accept("devservices|installing overrides");
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw) -> new DevBoxAmazonSES(space, logger));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw) -> new SafeRandom(executor));
     // TODO: Stripe?

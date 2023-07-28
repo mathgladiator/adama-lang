@@ -8,6 +8,8 @@
  */
 package org.adamalang.cli.devbox;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.web.UriMatcher;
@@ -21,6 +23,7 @@ import java.io.File;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -131,16 +134,31 @@ public class RxHTMLScanner implements AutoCloseable {
           try {
             do {
               again.set(false);
-              io.notice("RxHTML rebuilt");
               ArrayList<UriMatcher> matchers = new ArrayList<>();
               Feedback feedback = new Feedback() {
                 @Override
                 public void warn(Element element, String warning) {
-                  io.notice("Element Warning:" + warning);
+                  io.notice("rxhtml|warning:" + warning);
+                  io.notice("rxhtml|" + element.html());
                 }
               };
               RxHtmlResult updated = RxHtmlTool.convertFilesToTemplateForest(rxhtml(scanRoot), matchers, ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
+              ObjectNode freq = Json.newJsonObject();
+              int opportunity = 0;
+              for (Map.Entry<String, Integer> e : updated.cssFreq.entrySet()) {
+                freq.put(e.getKey(), e.getValue());
+                if (e.getKey().length() > 3) { // assume we compact to a [a-z][a-z0-9]{2} namespace (26 * 36 * 36 = 33696 classes)
+                  opportunity += (e.getValue().intValue() * (e.getKey().length() - 3));
+                }
+              }
               onBuilt.accept(new RxHTMLBundle(matchers, updated.shell.makeShell(updated), updated.javascript, updated.style));
+              io.notice("rxhtml|rebuilt; javascript-size=" + updated.javascript.length());
+              try {
+                Files.writeString(new File("css.freq.json").toPath(), freq.toPrettyString());
+                io.info("rxhtml|css.freq.json built; opportunity=" + opportunity + " bytes");
+              } catch (Exception ex) {
+                io.error("rxhtml|css.freq.json failed to be built");
+              }
             } while (again.get());
           } finally {
             scheduled.set(false);
