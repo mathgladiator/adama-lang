@@ -8,7 +8,7 @@
  */
 package org.adamalang;
 
-import org.adamalang.transforms.results.Keystore;
+import org.adamalang.runtime.security.Keystore;
 import org.junit.Assert;
 import org.junit.Test;
 

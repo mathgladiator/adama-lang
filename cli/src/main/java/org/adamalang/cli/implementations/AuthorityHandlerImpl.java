@@ -17,7 +17,7 @@ import org.adamalang.cli.router.AuthorityHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.Json;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.transforms.results.Keystore;
+import org.adamalang.runtime.security.Keystore;
 import org.adamalang.validators.ValidateKeystore;
 
 import java.io.File;

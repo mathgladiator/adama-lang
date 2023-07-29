@@ -11,7 +11,7 @@ package org.adamalang;
 import io.jsonwebtoken.Jwts;
 import org.adamalang.common.Json;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.transforms.results.Keystore;
+import org.adamalang.runtime.security.Keystore;
 import org.junit.Assert;
 import org.junit.Test;
 
