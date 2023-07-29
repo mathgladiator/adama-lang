@@ -255,6 +255,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       String space = null;
       String key = null;
       String channel = null;
+      String domain = null;
       HashMap<String, String> message_parts = new HashMap<>();
       for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
         switch (data.getHttpDataType()) {
@@ -272,6 +273,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                 break;
               case "channel":
                 channel = attribute.getValue();
+                break;
+              case "domain":
+                domain = attribute.getValue();
                 break;
               default: {
                 if (attribute.getName().startsWith("message_")) {
@@ -291,6 +295,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         }
       }
       ConnectionContext context = ConnectionContextFactory.of(ctx, req.headers());
+      if (domain != null) {
+        // TODO: look up the key
+      }
       if (identity != null && space != null && key != null) {
         Key uploadKey = new Key(space, key);
         // TODO Need a multi-latch to report success

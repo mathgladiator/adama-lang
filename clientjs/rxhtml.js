@@ -1332,13 +1332,17 @@ var RxHTML = (function () {
   };
 
   // API | Run the page in the given place
-  self.run = function (where, path, push) {
+  self.run = function (where, rawPath, push) {
+    var path = rawPath;
+    while (path.endsWith("/") && path != "/") {
+      path = path.substring(0, path.length - 1);
+    }
     for (conKey in connections) {
       connections[conKey].tree.nuke();
       connections[conKey].nuke();
     }
     var parts = (path.startsWith("/") ? path.substring(1) : path).split("/");
-    var init = { "__session_id": "R" + Math.random() };
+    var init = {};
     var foo = route(parts, 0, router, init);
     nuke(where);
     if (foo != null) {
@@ -1796,10 +1800,57 @@ var RxHTML = (function () {
     form.target = iframeTarget.name;
   };
 
+  self.aDUP = function (form, state, identityName, rxobj) {
+    var idLookup = self.ID(identityName, function () { return rxobj.rx_forward; }); // TODO: make rxvar
+    if (idLookup.abort) {
+      return;
+    }
+    form.action = "https://aws-us-east-2.adama-platform.com/~upload";
+    form.method = "post";
+    form.enctype = "multipart/form-data";
+    {
+      var identityInput = document.createElement("input");
+      identityInput.type = "hidden";
+      identityInput.name = "identity";
+      identityInput.value = idLookup.identity;
+      form.appendChild(identityInput);
+    }
+    {
+      var domainInput = document.createElement("input");
+      domainInput.type = "hidden";
+      domainInput.name = "domain";
+      domainInput.value = location.hostname;
+      form.appendChild(domainInput);
+    }
+    var iframeTarget = document.createElement("iframe");
+    iframeTarget.name = "UPLOAD_" + Math.random();
+    iframeTarget.width = "1";
+    iframeTarget.height = "1";
+    form.appendChild(iframeTarget);
+    form.target = iframeTarget.name;
+  };
+
   // RUNTIME | rx:action=domain:sign-in
   self.adDSO = function (form, state, identityName, rxobj) {
-
+    rxobj.__ = function () { };
+    form.onsubmit = function (evt) {
+      evt.preventDefault();
+      var req = get_form(form, true);
+      connection.DocumentAuthorizeDomain(location.hostname, req.username, req.password, {
+        success: function (payload) {
+          identities[identityName] = payload.identity;
+          localStorage.setItem("identity_" + identityName, payload.identity);
+          // TODO: blow away connections
+          self.goto(rxobj.rx_forward);
+          fire_success(form);
+        },
+        failure: function (reason) {
+          fire_failure(form, "Failed signing into document:" + reason);
+        }
+      });
+    };
   }
+
   // RUNTIME | rx:action=document:sign-in
   self.aDSO = function (form, state, identityName, rxobj) {
     rxobj.__ = function () { };

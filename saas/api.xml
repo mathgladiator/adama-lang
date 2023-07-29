@@ -498,6 +498,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="route" type="boolean">
+        <documentation>
+            Does the domain route GET to the document or the space.
+        </documentation>
+    </field-definition>
+
     <responder name="asset-key">
         <field name="asset-key"/>
     </responder>
@@ -891,6 +897,8 @@
     <responder name="domain-listing" stream="true">
         <field name="domain" />
         <field name="space" />
+        <field name="key" />
+        <field name="route" />
     </responder>
 
     <method name="domain/list" responder="domain-listing">

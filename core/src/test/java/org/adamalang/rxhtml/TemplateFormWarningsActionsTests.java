@@ -35,6 +35,7 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     issues.append("\nWARNING:The input 'keyx' is excessive.");
     issues.append("\nWARNING:Failed to find an input for 'space'");
     issues.append("\nWARNING:Failed to find an input for 'key'");
+    issues.append("\nWARNING:Failed to find an input for 'files'");
     return issues.toString();
   }
   @Override

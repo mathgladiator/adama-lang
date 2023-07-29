@@ -16,10 +16,14 @@ public class ClientDomainListingResponse {
   public final ObjectNode _original;
   public final String domain;
   public final String space;
+  public final String key;
+  public final Boolean route;
 
   public ClientDomainListingResponse(ObjectNode response) {
     this._original = response;
     this.domain = Json.readString(response, "domain");
     this.space = Json.readString(response, "space");
+    this.key = Json.readString(response, "key");
+    this.route = Json.readBool(response, "route");
   }
 }

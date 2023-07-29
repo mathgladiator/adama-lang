@@ -251,7 +251,8 @@ public class Attributes {
     }, "email", "password", "remember");
   }
 
-  private void check_action_document_sign_in() {
+  private void check_action_document_sign_in(boolean domain) {
+    String[] checks = domain ? new String[] { "username", "password", "remember" } :  new String[] { "username", "password", "space", "key", "remember" };
     walkAndValidateAndCheck(env, (el) -> {
       String name = el.attr("name");
       String type = el.attr("type");
@@ -264,11 +265,13 @@ public class Attributes {
       if ("username".equals(name)) {
         return true;
       }
-      if ("space".equals(name)) {
-        return true;
-      }
-      if ("key".equals(name)) {
-        return true;
+      if (!domain) {
+        if ("space".equals(name)) {
+          return true;
+        }
+        if ("key".equals(name)) {
+          return true;
+        }
       }
       if ("remember".equals(name)) {
         return true;
@@ -278,25 +281,34 @@ public class Attributes {
       }
       env.feedback.warn(el, "The input '" + name + "' is excessive.");
       return false;
-    }, "username", "password", "space", "key", "remember");
+    }, checks);
   }
 
-  private void check_action_upload() {
+  private void check_action_upload(boolean domain) {
+    String[] checks = domain ? new String[] { "files" } :  new String[] { "space", "key", "files" };
     walkAndValidateAndCheck(env, (el) -> {
       String name = el.attr("name");
       String type = el.attr("type");
       if ("space".equals(name)) {
         return true;
       }
-      if ("key".equals(name)) {
-        return true;
+      if (!domain) {
+        if ("key".equals(name)) {
+          return true;
+        }
       }
       if ("submit".equals(type)) {
         return true;
       }
+      if ("files".equals(name)) {
+        return true;
+      }
+      if ("channel".equals(name)) {
+        return true;
+      }
       env.feedback.warn(el, "The input '" + name + "' is excessive.");
       return false;
-    }, "space", "key");
+    }, checks);
   }
 
   private void check_action_sign_up() {
@@ -350,7 +362,7 @@ public class Attributes {
     boolean documentPut = "document:put".equalsIgnoreCase(action);
     boolean domainDocumentPut = "domain:put".equalsIgnoreCase(action);
     if (isSignIn || isDomainSignIn) { // sign in as an Adama user
-      check_action_document_sign_in();
+      check_action_document_sign_in(isDomainSignIn);
       if (!env.element.hasAttr("rx:forward")) {
         env.element.attr("rx:forward", "/");
       }
@@ -392,9 +404,18 @@ public class Attributes {
           .append("');").newline();
     } else if ("adama:upload-asset".equalsIgnoreCase(action)) { // upload an asset
       convertFailureVariableToEvents(env.element, "asset_upload_failed");
-      check_action_upload();
+      check_action_upload(false);
       RxObject obj = new RxObject(env, "rx:forward");
       env.writer.tab().append("$.aUP(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'").append(env.val("rx:identity", "default")) //
+          .append("',").append(obj.rxObj) //
+          .append(");").newline();
+    } else if ("domain:upload-asset".equalsIgnoreCase(action)) { // upload an asset
+      convertFailureVariableToEvents(env.element, "asset_upload_failed");
+      check_action_upload(true);
+      RxObject obj = new RxObject(env, "rx:forward");
+      env.writer.tab().append("$.aDUP(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(env.val("rx:identity", "default")) //
           .append("',").append(obj.rxObj) //

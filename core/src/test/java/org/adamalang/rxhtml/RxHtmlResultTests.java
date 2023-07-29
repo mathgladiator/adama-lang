@@ -24,11 +24,16 @@ public class RxHtmlResultTests {
     patterns.add("/hi/$name/ok");
     RxHtmlResult result = new RxHtmlResult("js", "css", new Shell(ShellConfig.start().end()), patterns, new HashMap<>());
     Assert.assertFalse(result.test("/"));
+    Assert.assertFalse(result.test("///"));
+    Assert.assertFalse(result.test("/////"));
     Assert.assertFalse(result.test("/hi"));
+    Assert.assertFalse(result.test("/hi/"));
     Assert.assertFalse(result.test("/hi/nope"));
+    Assert.assertFalse(result.test("/hi/nope/"));
     Assert.assertTrue(result.test("/hi/there"));
     Assert.assertFalse(result.test("/hi/xyz/nope"));
     Assert.assertTrue(result.test("/hi/xyz/ok"));
+    Assert.assertTrue(result.test("/hi/xyz/ok//"));
     result.toString();
   }
 }

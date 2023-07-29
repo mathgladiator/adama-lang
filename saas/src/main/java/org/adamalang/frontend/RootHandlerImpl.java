@@ -408,7 +408,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         for (Domain domain : Domains.list(nexus.database, request.who.id)) {
-          responder.next(domain.domain, domain.space);
+          responder.next(domain.domain, domain.space, domain.key, domain.routeKey);
         }
         responder.finish();
       } else {

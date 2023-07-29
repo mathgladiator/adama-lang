@@ -81,26 +81,4 @@ public class RxHtmlTool {
     String javascript = Root.finish(env);
     return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq());
   }
-
-  public static RxHtmlResult convertFilesToTemplateForest(List<File> files, ArrayList<UriMatcher> matchers, ShellConfig config) throws Exception {
-    Environment env = Environment.fresh(config.feedback);
-    String bundled = Bundler.bundle(files);
-    Shell shell = new Shell(config);
-    ArrayList<String> patterns = new ArrayList<>();
-    Document document = Jsoup.parse(bundled, "UTF-8");
-    Root.start(env, buildCustomJavaScript(document));
-    String style = buildInternStyle(document);
-    shell.scan(document);
-    ArrayList<String> defaultRedirects = getDefaultRedirect(document);
-    for (Element element : document.getElementsByTag("template")) {
-      Root.template(env.element(element, true));
-    }
-    for (Element element : document.getElementsByTag("page")) {
-      matchers.add(RxHtmlToAdama.uriOf(element.attr("uri")).matcher());
-      patterns.add(element.attr("uri"));
-      Root.page(env.element(element, true), defaultRedirects);
-    }
-    String javascript = Root.finish(env);
-    return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq());
-  }
 }
