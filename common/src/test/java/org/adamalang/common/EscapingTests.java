@@ -48,4 +48,12 @@ public class EscapingTests {
   public void slash() {
     Assert.assertEquals("a \\\\ b", new Escaping("a \\ b").switchQuotes().go());
   }
+  @Test
+  public void keeplash() {
+    Assert.assertEquals("a \\ b", new Escaping("a \\ b").keepSlashes().go());
+  }
+  @Test
+  public void killnewlines() {
+    Assert.assertEquals("a  b", new Escaping("a \n b").removeNewLines().go());
+  }
 }
