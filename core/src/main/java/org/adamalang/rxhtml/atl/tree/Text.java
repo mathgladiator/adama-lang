@@ -49,6 +49,6 @@ public class Text implements Tree {
       // The reason we do this is to ensure developers don't try to make a new class via concatenation as that will break future optimizers.
       textToUse = " " + trimmed + " ";
     }
-    return "\"" + new Escaping(textToUse).go() + "\"";
+    return "\"" + new Escaping(textToUse).removeNewLines().keepSlashes().go() + "\"";
   }
 }

@@ -17,6 +17,8 @@ public class Escaping {
   private boolean escapeSingleQuote = false;
   private boolean removeReturns = true;
   private boolean escapeReturns = true;
+  private boolean keepSlashes = false;
+  private boolean removeNewLines = false;
 
   public Escaping(String str) {
     this.str = str;
@@ -38,6 +40,16 @@ public class Escaping {
     return this;
   }
 
+  public Escaping keepSlashes() {
+    this.keepSlashes = true;
+    return this;
+  }
+
+  public Escaping removeNewLines() {
+    this.removeNewLines = true;
+    return this;
+  }
+
   public String go() {
     StringBuilder result = new StringBuilder();
     PrimitiveIterator.OfInt it = str.codePoints().iterator();
@@ -45,10 +57,16 @@ public class Escaping {
       int cp = it.nextInt();
       switch (cp) {
         case '\n':
-          result.append("\\n");
+          if (!removeNewLines) {
+            result.append("\\n");
+          }
           break;
         case '\\':
-          result.append("\\\\");
+          if (keepSlashes) {
+            result.append("\\");
+          } else {
+            result.append("\\\\");
+          }
           break;
         case '"':
           if (escapeDoubleQuote) {
