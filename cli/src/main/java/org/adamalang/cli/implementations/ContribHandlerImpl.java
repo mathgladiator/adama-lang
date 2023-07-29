@@ -14,6 +14,7 @@ import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.ContribHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.DefaultCopyright;
+import org.adamalang.common.Escaping;
 import org.adamalang.common.codec.CodecCodeGen;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerMessage;
@@ -24,7 +25,9 @@ import org.adamalang.web.service.BundleJavaScript;
 import java.io.File;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -119,6 +122,31 @@ public class ContribHandlerImpl implements ContribHandler {
     System.out.println(Util.prefix("Generating a version number: " + versionCode, Util.ANSI.Cyan));
     String versionFile = "package org.adamalang.common;\n" + "\n" + "public class Platform {\n" + "  public static String VERSION = \"" + versionCode + "\";\n" + "}\n";
     Files.writeString(new File("common/src/main/java/org/adamalang/common/Platform.java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + versionFile);
+    output.out();
+  }
+
+  @Override
+  public void strTemp(Arguments.ContribStrTempArgs args, Output.YesOrError output) throws Exception {
+    System.out.println(Util.prefix("Converting string templates to code!", Util.ANSI.Cyan));
+    for (File template : new File("core/string_templates").listFiles()) {
+      String str = Files.readString(template.toPath());
+      String[] parts = template.getName().replaceAll("[\\.-]", "_").split(Pattern.quote("_"));
+      for (int k = 0; k < parts.length; k++) {
+        parts[k] = parts[k].substring(0, 1).toUpperCase(Locale.ENGLISH) + parts[k].substring(1).toLowerCase(Locale.ENGLISH);
+      }
+      String name = String.join("", parts);
+      StringBuilder java = new StringBuilder();
+      java.append("package org.adamalang.runtime.stdlib.intern;\n");
+      java.append("\n");
+      java.append("import org.adamalang.common.template.Parser;\n");
+      java.append("import org.adamalang.common.template.tree.T;\n");
+      java.append("\n");
+      java.append("public class Template").append(name).append(" {\n");
+      java.append("  public static final String VALUE = \"").append(new Escaping(str).go()).append("\";\n");
+      java.append("  public static final T TEMPLATE = Parser.parse(VALUE);\n");
+      java.append("}\n");
+      Files.writeString(new File("core/src/main/java/org/adamalang/runtime/stdlib/intern/Template" + name + ".java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + java.toString());
+    }
     output.out();
   }
 }

@@ -447,6 +447,16 @@ public class MainRouter {
                contribHandler.makeEt(contribArgs, out);
                return 0;
             }
+            case "str-temp": {
+              ContribStrTempArgs contribArgs = ContribStrTempArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribStrTempArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.strTemp(contribArgs, out);
+               return 0;
+            }
             case "tests-adama": {
               ContribTestsAdamaArgs contribArgs = ContribTestsAdamaArgs.from(args, 2);
               if (contribArgs == null) {

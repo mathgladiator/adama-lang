@@ -541,6 +541,11 @@
                 Sprinkle the copyright everywhere.
             </documentation>
         </command>
+        <command name="str-temp">
+            <documentation>
+                Generate string templates
+            </documentation>
+        </command>
         <command name="version">
             <documentation>
                 Create the version number for the platform

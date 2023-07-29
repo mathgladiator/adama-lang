@@ -48,6 +48,7 @@ public class GlobalObjectPool {
     pool.add(GlobalFactory.makeGlobal("Adama", LibAdama.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Date", LibDate.class, pool.extensions));
+    pool.add(GlobalFactory.makeGlobal("Templates", LibTemplates.class, pool.extensions));
 
     final var client = new TyNativeGlobalObject("Client", null, false);
     client.setParentOverride(GlobalFactory.makeGlobal("Client", LibPrincipal.class, pool.extensions));
