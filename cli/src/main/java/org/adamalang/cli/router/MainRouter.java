@@ -721,6 +721,16 @@ public class MainRouter {
                frontendHandler.studyCss(frontendArgs, out);
                return 0;
             }
+            case "wrap-css": {
+              FrontendWrapCssArgs frontendArgs = FrontendWrapCssArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendWrapCssArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.wrapCss(frontendArgs, out);
+               return 0;
+            }
             case "--help":
             case "-h":
             case "help": {

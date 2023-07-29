@@ -697,6 +697,13 @@
             <arg name="rxhtml-path" default="." />
             <arg name="output" default="200.html" />
         </command>
+        <command name="wrap-css">
+            <documentation>
+                Wrap a CSS file in a rx.html script to be picked up during build
+            </documentation>
+            <arg name="input" default="style.css" />
+            <arg name="output" default="css.rx.html" />
+        </command>
         <command name="study-css">
             <documentation>
                 Tool to study CSS

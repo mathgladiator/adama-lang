@@ -16,12 +16,13 @@ The current story for developers is "meh", so these items help improve and moder
 | lib-react             |     | library to use Adama with React                                                                                                                                          |
 | lib-vue               |     | library to use Adama with Vue                                                                                                                                            |
 | lib-svelte            |     | library to use Adama with svelte                                                                                                                                         |
-| js-client-retry       |     | Individual retries per document                                                                                                                                          |
+| js-client-retry       | X   | Individual retries per document                                                                                                                                          |
 
 ## Documentation
 
 | project              | IP  | description                                                                                        |
 |----------------------|-----|----------------------------------------------------------------------------------------------------|
+| devbox               |     | Improve the local developer experience                                                             |
 | kickoff demos        | X   | See [https://asciinema.org/](https://asciinema.org/) for more information                          |
 | client-walk          |     | A detailed walkthough about how to use the client library, the expectations, and core APIs         |
 | improve overview     |     | Make the overview easier to understand, more details, etc                                          |
@@ -156,7 +157,8 @@ Adama is a service.
 | adama-actor             |     | implement Adama as a special first class service                                                                                                                                                                                                                                                                   |
 | twilio-service          |     | implement twilio as a first party service                                                                                                                                                                                                                                                                          |
 | stripe-service          | X   | implement stripe as a first party service                                                                                                                                                                                                                                                                          |
-| BUG: doc-ids            |     | need to make the relationship between document id and key/space ironclad on adama service; it's possible to resurrect old data due to id resurrection                                                                                                                                                              |
+| discord-service         |     | implement discord as a first party service                                                                                                                                                                                                                                                                         |
+| BUG: doc-ids            | X   | need to make the relationship between document id and key/space ironclad on adama service; it's possible to resurrect old data due to id resurrection                                                                                                                                                              |
 | results-stream          |     | figure out how to ensure deliveries can overwrite prior entries                                                                                                                                                                                                                                                    |
 
 ## Infrastructure - Web
@@ -164,7 +166,6 @@ Adama is a web host provider of sorts!
 
 | project                 | IP  | milestones/description                                                                     |
 |-------------------------|-----|--------------------------------------------------------------------------------------------|
-| web-async put           | X   | allow PUTs to contain async calls                                                          |
 | web-async delete        |     | allow DELETEs to contain async calls                                                       |
 | web-async get           |     | allow GETs to contain async calls                                                          |
 | request caching         |     | respect the cache_ttl_ms                                                                   |
@@ -192,7 +193,7 @@ RxHTML is a small set of extensions to allow HTML to be dynamic on the fly. The 
 | project       | IP  | milestones/description                                                                         |
 |---------------|-----|------------------------------------------------------------------------------------------------|
 | headwindcss   |     | Port tailwindcss to Java for vertical control                                                  |
-| components    |     | Bring clarity for single javascript extentions for new controls                                |
+| components    | X   | Bring clarity for single javascript extentions for new controls                                |
 | time          |     | Custom component for selecting a time of day (Blocked on *components* model)                   |
 | date          |     | Custom component for selecting a date or a date range (Blocked on *components* model)          |
 | color         |     | Custom component for selecting a color (Blocked on *components* model)                         |
