@@ -84,6 +84,12 @@ public class FrontendHandlerImpl implements FrontendHandler {
   }
 
   @Override
+  public void wrapCss(Arguments.FrontendWrapCssArgs args, Output.YesOrError output) throws Exception {
+    String css = Files.readString(new File(args.input).toPath());
+    Files.writeString(new File(args.output).toPath(), "<forest><style>\n" + css + "\n</style></forest>");
+  }
+
+  @Override
   public void studyCss(Arguments.FrontendStudyCssArgs args, Output.YesOrError output) throws Exception {
     final CascadingStyleSheet css = CSSReader.readFromFile(new File(args.input), StandardCharsets.UTF_8, ECSSVersion.CSS30);
     StringBuilder constant = new StringBuilder();

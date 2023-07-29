@@ -16,8 +16,13 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Root {
-  public static void start(Environment env) {
+  public static void start(Environment env, String custom) {
     env.writer.append("(function($){").tabUp().newline();
+    if (custom.length() > 0) {
+      env.writer.append("/** BEGIN CUSTOM **/").newline();
+      env.writer.append(custom).newline();;
+      env.writer.append("/** END CUSTOM **/").newline();;
+    }
   }
 
   public static void template(Environment env) {

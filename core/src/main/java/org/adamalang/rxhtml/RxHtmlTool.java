@@ -12,7 +12,6 @@ import org.adamalang.common.web.UriMatcher;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.Shell;
-import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,20 +33,45 @@ public class RxHtmlTool {
     return defaults;
   }
 
+  private static String buildInternStyle(Document document) {
+    ArrayList<Element> axe = new ArrayList<>();
+    StringBuilder style = new StringBuilder();
+    for (Element element : document.getElementsByTag("style")) {
+      style.append(element.html().trim()).append(" ");
+      axe.add(element);
+    }
+    for (Element toAxe : axe) {
+      toAxe.remove();
+    }
+    return style.toString().trim();
+  }
+
+  private static String buildCustomJavaScript(Document document) {
+    StringBuilder customjs = new StringBuilder();
+    ArrayList<Element> axe = new ArrayList<>();
+    for (Element element : document.getElementsByTag("script")) {
+      if (element.hasAttr("is-custom")) {
+        customjs.append(element.html().trim());
+        axe.add(element);
+      }
+    }
+    for (Element toAxe : axe) {
+      toAxe.remove();
+    }
+    return customjs.toString();
+  }
+
   public static RxHtmlResult convertStringToTemplateForest(String str, ShellConfig config) {
     Environment env = Environment.fresh(config.feedback);
-    Root.start(env);
     Document document = Jsoup.parse(str);
+    Root.start(env, buildCustomJavaScript(document));
+    String style = buildInternStyle(document);
     ArrayList<String> defaultRedirects = getDefaultRedirect(document);
-    StringBuilder style = new StringBuilder();
     Shell shell = new Shell(config);
     shell.scan(document);
     ArrayList<String> patterns = new ArrayList<>();
     for (Element element : document.getElementsByTag("template")) {
       Root.template(env.element(element, true));
-    }
-    for (Element element : document.getElementsByTag("style")) {
-      style.append(element.html()).append(" ");
     }
     for (Element element : document.getElementsByTag("page")) {
       patterns.add(element.attr("uri"));
@@ -55,24 +79,21 @@ public class RxHtmlTool {
     }
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
-    return new RxHtmlResult(javascript, style.toString().trim(), shell, patterns, env.getCssFreq());
+    return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq());
   }
 
   public static RxHtmlResult convertFilesToTemplateForest(List<File> files, ArrayList<UriMatcher> matchers, ShellConfig config) throws Exception {
     Environment env = Environment.fresh(config.feedback);
     String bundled = Bundler.bundle(files);
-    Root.start(env);
     Shell shell = new Shell(config);
-    StringBuilder style = new StringBuilder();
     ArrayList<String> patterns = new ArrayList<>();
     Document document = Jsoup.parse(bundled, "UTF-8");
+    Root.start(env, buildCustomJavaScript(document));
+    String style = buildInternStyle(document);
     shell.scan(document);
     ArrayList<String> defaultRedirects = getDefaultRedirect(document);
     for (Element element : document.getElementsByTag("template")) {
       Root.template(env.element(element, true));
-    }
-    for (Element element : document.getElementsByTag("style")) {
-      style.append(element.html()).append(" ");
     }
     for (Element element : document.getElementsByTag("page")) {
       matchers.add(RxHtmlToAdama.uriOf(element.attr("uri")).matcher());
@@ -80,6 +101,6 @@ public class RxHtmlTool {
       Root.page(env.element(element, true), defaultRedirects);
     }
     String javascript = Root.finish(env);
-    return new RxHtmlResult(javascript, style.toString().trim(), shell, patterns, env.getCssFreq());
+    return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq());
   }
 }
