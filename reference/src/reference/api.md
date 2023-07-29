@@ -751,6 +751,8 @@ connection.DomainList(identity, {
   next: function(payload) {
     // payload.domain
     // payload.space
+    // payload.key
+    // payload.route
   },
   complete: function() {
   },
@@ -765,6 +767,8 @@ connection.DomainList(identity, {
 | --- | --- | --- |
 | domain | String | A domain name. |
 | space | String | A space which is a collection of documents with a common Adama schema. |
+| key | String | The key. |
+| route | Boolean | Does the domain route GET to the document or the space. |
 
 ## Method: DomainUnmap
 Unmap a domain

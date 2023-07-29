@@ -137,12 +137,9 @@ public class DevBoxServiceBase implements ServiceBase {
         }
 
         // lame version for now, need to build a routable tree with type biases if this ever becomes a mainline
-        for (UriMatcher matcher : current.matchers) {
-          boolean result = matcher.matches(uri);
-          if (result) {
-            callback.success(new HttpResult("text/html", current.shell.getBytes(), false));
-            return;
-          }
+        if (current.result.test(uri)) {
+          callback.success(new HttpResult("text/html", current.shell.getBytes(), false));
+          return;
         }
         if (uri.endsWith("/")) {
           uri += "index.html";
@@ -159,7 +156,6 @@ public class DevBoxServiceBase implements ServiceBase {
           callback.failure(new ErrorCodeException(500));
         }
       }
-
 
       private Callback<WebResponse> route(SpaceKeyRequest skr, Callback<HttpResult> callback) {
         return new Callback<>() {
@@ -195,7 +191,12 @@ public class DevBoxServiceBase implements ServiceBase {
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         if (verse != null) {
           // TODO: differiate between a document/domain put
-          SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
+          final SpaceKeyRequest skr;
+          if (verse != null && verse.domainKeyToUse != null) {
+            skr = new SpaceKeyRequest(verse.domainKeyToUse.space, verse.domainKeyToUse.key, uri);
+          } else {
+            skr = SpaceKeyRequest.parse(uri);
+          }
           Key key = new Key(skr.space, skr.key);
           WebPut webPut = new WebPut(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson), body);
           verse.service.webPut(key, webPut, route(skr, callback));

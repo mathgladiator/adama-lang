@@ -34,7 +34,12 @@ public class RxHtmlResult {
     this.cssFreq = cssFreq;
   }
 
-  public boolean test(String uri) {
+  public boolean test(String rawUri) {
+    String uri = rawUri;
+    // truncate a trailing "/"
+    while (uri.length() > 1 && uri.endsWith("/")) {
+      uri = uri.substring(0, uri.length() - 1);
+    }
     WebPath test = new WebPath(uri);
     for (WebPath path : paths) {
       if (test.size() == path.size()) {

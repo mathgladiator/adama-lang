@@ -13,6 +13,7 @@ import org.adamalang.common.Json;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.web.UriMatcher;
+import org.adamalang.rxhtml.Bundler;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
@@ -113,13 +114,13 @@ public class RxHTMLScanner implements AutoCloseable {
   }
 
   public class RxHTMLBundle {
-    public final ArrayList<UriMatcher> matchers;
+    public final RxHtmlResult result;
     public final String shell;
     public final String forestJavaScript;
     public final String forestStyle;
 
-    public RxHTMLBundle(ArrayList<UriMatcher> matchers, String shell, String forestJavaScript, String forestStyle) {
-      this.matchers = matchers;
+    public RxHTMLBundle(RxHtmlResult result, String shell, String forestJavaScript, String forestStyle) {
+      this.result = result;
       this.shell = shell;
       this.forestJavaScript = forestJavaScript;
       this.forestStyle = forestStyle;
@@ -134,7 +135,6 @@ public class RxHTMLScanner implements AutoCloseable {
           try {
             do {
               again.set(false);
-              ArrayList<UriMatcher> matchers = new ArrayList<>();
               Feedback feedback = new Feedback() {
                 @Override
                 public void warn(Element element, String warning) {
@@ -142,7 +142,7 @@ public class RxHTMLScanner implements AutoCloseable {
                   io.notice("rxhtml|" + element.html());
                 }
               };
-              RxHtmlResult updated = RxHtmlTool.convertFilesToTemplateForest(rxhtml(scanRoot), matchers, ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
+              RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtml(scanRoot)), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
               ObjectNode freq = Json.newJsonObject();
               int opportunity = 0;
               for (Map.Entry<String, Integer> e : updated.cssFreq.entrySet()) {
@@ -151,7 +151,7 @@ public class RxHTMLScanner implements AutoCloseable {
                   opportunity += (e.getValue().intValue() * (e.getKey().length() - 3));
                 }
               }
-              onBuilt.accept(new RxHTMLBundle(matchers, updated.shell.makeShell(updated), updated.javascript, updated.style));
+              onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(updated), updated.javascript, updated.style));
               io.notice("rxhtml|rebuilt; javascript-size=" + updated.javascript.length());
               try {
                 Files.writeString(new File("css.freq.json").toPath(), freq.toPrettyString());

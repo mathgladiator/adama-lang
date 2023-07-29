@@ -15,6 +15,12 @@
             <input name="remember" type="checkbox" />
             <input type="submit" />
         </form>
+        <form rx:action="domain:sign-in" rx:failure-variable="docnope" rx:forward="/w00t">
+            <input name="username" type="username" />
+            <input name="password" type="password" />
+            <input name="remember" type="checkbox" />
+            <input type="submit" />
+        </form>
         <form rx:action="document:put" rx:failure="raise:fail te:msg">
             <input type="submit" />
         </form>
@@ -42,12 +48,19 @@
         <form rx:action="adama:upload-asset">
             <input name="space" />
             <input name="key" />
+            <input name="files" />
+            <input type="submit" />
+        </form>
+
+        <form rx:action="domain:upload-asset">
+            <input name="files" />
             <input type="submit" />
         </form>
 
         <form rx:action="adama:upload-asset" rx:success="reset">
             <input name="space" />
             <input name="key" />
+            <input name="files" />
             <input type="submit" />
         </form>
     </page>
