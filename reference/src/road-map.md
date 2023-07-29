@@ -7,7 +7,7 @@ The current story for developers is "meh", so these items help improve and moder
 
 | project               | IP  | milestones/description                                                                                                                                                   |
 |-----------------------|-----|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| vs code extension     | X   | (1.) Syntax highlighting, (2.) Language server protocol (LSP) - local, (3) LSP - cloud, (4) new ".adama.deploy" file to have 1-click shipping                            |
+| vs code extension     | X   | (1.) Syntax highlighting, (2.) Language server protocol (LSP) - local                                                                                                    |
 | sublime extension     |     | Since sublime is so fast, try to get core Adama language support for syntax highlighting                                                                                 |                                                                                                     
 | Android client        |     | (1) Write a simplified web-socket interface, (2) implement interface with OkHttp, (3) update apikit code generator to produce a SDK talking to the web socket interface. |
 | iOS client            |     | (1) Write a simplified web-socket interface, (2) implement interface with ?, (3) update apikit code generator to produce a SDK talking to the web socket interface.      |
