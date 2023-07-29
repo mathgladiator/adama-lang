@@ -44,6 +44,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("delete", 15), Util.ANSI.Green) + "Deletes an empty space");
     System.out.println("    " + Util.prefix(Util.justifyLeft("deploy", 15), Util.ANSI.Green) + "Deploy a plan to a space");
     System.out.println("    " + Util.prefix(Util.justifyLeft("developers", 15), Util.ANSI.Green) + "List developers for the given space");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("encrypt-priv", 15), Util.ANSI.Green) + "Encrypt a private key to store within code");
     System.out.println("    " + Util.prefix(Util.justifyLeft("encrypt-secret", 15), Util.ANSI.Green) + "Encrypt a secret to store within code");
     System.out.println("    " + Util.prefix(Util.justifyLeft("generate-key", 15), Util.ANSI.Green) + "Generate a server-side key to use for storing secrets");
     System.out.println("    " + Util.prefix(Util.justifyLeft("get", 15), Util.ANSI.Green) + "Get a space's plan");

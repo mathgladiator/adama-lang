@@ -27,6 +27,7 @@ import org.adamalang.services.FirstPartyServices;
 import java.io.File;
 import java.nio.file.Files;
 import java.security.KeyPair;
+import java.util.function.Supplier;
 
 public class SpaceHandlerImpl implements SpaceHandler {
 
@@ -90,15 +91,13 @@ public class SpaceHandlerImpl implements SpaceHandler {
     output.out();
   }
 
-  @Override
-  public void encryptSecret(Arguments.SpaceEncryptSecretArgs args, Output.YesOrError output) throws Exception {
-    Config config = args.config;
+  private static void encrypt(Config config, String space, Supplier<String> secretSupplier, Output.YesOrError output) throws Exception {
     ObjectNode keys = config.get_or_create_child("space-keys");
-    if (!keys.has(args.space)) {
+    if (!keys.has(space)) {
       System.err.println("Config doesn't have space-keys configured; we lack the public key for the space!");
       return;
     }
-    ObjectNode response = (ObjectNode) keys.get(args.space);
+    ObjectNode response = (ObjectNode) keys.get(space);
     String publicKey = response.get("publicKey").textValue();
     int keyId = response.get("keyId").intValue();
 
@@ -107,8 +106,7 @@ public class SpaceHandlerImpl implements SpaceHandler {
         PublicPrivateKeyPartnership.keyPairFrom(publicKey, //
             PublicPrivateKeyPartnership.privateKeyOf(ephemeral))); //
 
-    System.out.print(Util.prefix("Secret/Token:", Util.ANSI.Red));
-    String secret = new String(System.console().readPassword());
+    String secret = secretSupplier.get();
     String cipher = PublicPrivateKeyPartnership.encrypt(sharedSecret, secret);
     String encrypted = keyId + ";" + PublicPrivateKeyPartnership.publicKeyOf(ephemeral) + ";" + cipher;
     System.out.println("Encrypted Secret:");
@@ -116,6 +114,25 @@ public class SpaceHandlerImpl implements SpaceHandler {
     System.out.println(encrypted);
     System.out.println("------------------");
     output.out();
+  }
+
+  @Override
+  public void encryptSecret(Arguments.SpaceEncryptSecretArgs args, Output.YesOrError output) throws Exception {
+    encrypt(args.config, args.space, () -> {
+      System.out.print(Util.prefix("Secret/Token:", Util.ANSI.Red));
+      return new String(System.console().readPassword());
+    }, output);
+  }
+
+  @Override
+  public void encryptPriv(Arguments.SpaceEncryptPrivArgs args, Output.YesOrError output) throws Exception {
+    encrypt(args.config, args.space, () -> {
+      try {
+        return Files.readString(new File(args.priv).toPath());
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    }, output);
   }
 
   @Override
