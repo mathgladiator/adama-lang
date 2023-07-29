@@ -75,6 +75,16 @@ public class MainRouter {
                spaceHandler.developers(spaceArgs, out);
                return 0;
             }
+            case "encrypt-priv": {
+              SpaceEncryptPrivArgs spaceArgs = SpaceEncryptPrivArgs.from(args, 2);
+              if (spaceArgs == null) {
+                SpaceEncryptPrivArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               spaceHandler.encryptPriv(spaceArgs, out);
+               return 0;
+            }
             case "encrypt-secret": {
               SpaceEncryptSecretArgs spaceArgs = SpaceEncryptSecretArgs.from(args, 2);
               if (spaceArgs == null) {

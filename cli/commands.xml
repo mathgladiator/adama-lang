@@ -360,6 +360,14 @@
             </documentation>
             <arg name="space" />
         </command>
+
+        <command name="encrypt-priv">
+            <documentation>
+                Encrypt a private key to store within code
+            </documentation>
+            <arg name="space" />
+            <arg name="priv" default="private.key.json" />
+        </command>
     </group>
 
     <group name="authority">
