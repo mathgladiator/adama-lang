@@ -114,6 +114,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-cli", 15), Util.ANSI.Green) + "Generate the command line router");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-codec", 15), Util.ANSI.Green) + "Generates the networking codec");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-et", 15), Util.ANSI.Green) + "Generates the error table which provides useful insight to issues");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("str-temp", 15), Util.ANSI.Green) + "Generate string templates");
     System.out.println("    " + Util.prefix(Util.justifyLeft("tests-adama", 15), Util.ANSI.Green) + "Generate tests for Adama Language.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("tests-rxhtml", 15), Util.ANSI.Green) + "Generate tests for RxHTML.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("version", 15), Util.ANSI.Green) + "Create the version number for the platform");
