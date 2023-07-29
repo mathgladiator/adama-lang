@@ -28,7 +28,7 @@ import org.adamalang.mysql.model.Secrets;
 import org.adamalang.mysql.model.Users;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.transforms.results.AuthenticatedUser;
-import org.adamalang.transforms.results.Keystore;
+import org.adamalang.runtime.security.Keystore;
 import org.adamalang.web.io.ConnectionContext;
 
 import java.security.KeyFactory;

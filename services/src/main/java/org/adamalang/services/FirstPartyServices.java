@@ -20,6 +20,7 @@ import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.entropy.SafeRandom;
+import org.adamalang.services.security.IdentitySigner;
 import org.adamalang.services.sms.Twilio;
 import org.adamalang.services.social.Discord;
 import org.adamalang.web.client.WebClientBase;
@@ -83,6 +84,15 @@ public class FirstPartyServices {
         return Discord.build(metrics, config, webClientBase);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-discord", ex);
+        return Service.FAILURE;
+      }
+    });
+    ServiceRegistry.add("identitysigner", IdentitySigner.class, (space, configRaw) -> {
+      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
+      try {
+        return IdentitySigner.build(metrics, config, executor);
+      } catch (ErrorCodeException ex) {
+        LOGGER.error("failed-identitysigner", ex);
         return Service.FAILURE;
       }
     });

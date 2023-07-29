@@ -9,10 +9,8 @@
 package org.adamalang.validators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Validators;
-import org.adamalang.transforms.results.Keystore;
+import org.adamalang.runtime.security.Keystore;
 
 public class ValidateKeystore {
   public static void validate(ObjectNode node) throws ErrorCodeException {

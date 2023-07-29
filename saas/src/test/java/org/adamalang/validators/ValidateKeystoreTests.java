@@ -9,7 +9,7 @@
 package org.adamalang.validators;
 
 import org.adamalang.common.Json;
-import org.adamalang.transforms.results.Keystore;
+import org.adamalang.runtime.security.Keystore;
 import org.junit.Test;
 
 public class ValidateKeystoreTests {
