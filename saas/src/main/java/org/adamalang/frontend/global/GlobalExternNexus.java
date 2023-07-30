@@ -6,11 +6,13 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.extern;
+package org.adamalang.frontend.global;
 
 import org.adamalang.api.GlobalApiMetrics;
 import org.adamalang.api.RegionApiMetrics;
 import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.extern.Email;
+import org.adamalang.extern.SignalControl;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
@@ -22,7 +24,7 @@ import org.adamalang.web.io.JsonLogger;
 import java.io.File;
 import java.security.PrivateKey;
 
-public class ExternNexus {
+public class GlobalExternNexus {
   public final FrontendConfig config;
   public final Email email;
   public final DataBase database;
@@ -41,7 +43,7 @@ public class ExternNexus {
   public final String[] superPublicKeys;
   public final SignalControl signalControl;
 
-  public ExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys, SignalControl signalControl) {
+  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys, SignalControl signalControl) {
     this.config = config;
     this.email = email;
     this.database = database;
