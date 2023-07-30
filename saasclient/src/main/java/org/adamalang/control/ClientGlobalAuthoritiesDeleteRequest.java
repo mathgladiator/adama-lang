@@ -6,8 +6,10 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.control;
 
-public class Platform {
-  public static String VERSION = "20230730060121";
+/** generated request type for global/authorities/delete */
+public class ClientGlobalAuthoritiesDeleteRequest {
+  public Integer owner;
+  public String authority;
 }

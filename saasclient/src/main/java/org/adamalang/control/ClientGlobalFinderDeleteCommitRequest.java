@@ -6,8 +6,12 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.control;
 
-public class Platform {
-  public static String VERSION = "20230730060121";
+/** generated request type for global/finder/delete/commit */
+public class ClientGlobalFinderDeleteCommitRequest {
+  public String space;
+  public String key;
+  public String region;
+  public String machine;
 }

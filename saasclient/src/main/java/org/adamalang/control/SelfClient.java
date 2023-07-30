@@ -62,10 +62,21 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientVoidResponse(obj), callback);
   }
 
-  /** global/finder/delete */
-  public void globalFinderDelete(ClientGlobalFinderDeleteRequest request, Callback<ClientVoidResponse> callback) {
+  /** global/finder/delete/mark */
+  public void globalFinderDeleteMark(ClientGlobalFinderDeleteMarkRequest request, Callback<ClientVoidResponse> callback) {
     ObjectNode node = Json.newJsonObject();
-    node.put("method", "global/finder/delete");
+    node.put("method", "global/finder/delete/mark");
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestResponse(node, (obj) -> new ClientVoidResponse(obj), callback);
+  }
+
+  /** global/finder/delete/commit */
+  public void globalFinderDeleteCommit(ClientGlobalFinderDeleteCommitRequest request, Callback<ClientVoidResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/finder/delete/commit");
     node.put("space", request.space);
     node.put("key", request.key);
     node.put("region", request.region);
@@ -92,5 +103,57 @@ private final MultiWebClientRetryPool pool;
     node.put("region", request.region);
     node.put("machine", request.machine);
     pool.requestStream(node, (obj) -> new ClientKeyidResponse(obj), streamback);
+  }
+
+  /** global/authorities/create */
+  public void globalAuthoritiesCreate(ClientGlobalAuthoritiesCreateRequest request, Callback<ClientAuthorityResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/authorities/create");
+    node.put("owner", request.owner);
+    pool.requestResponse(node, (obj) -> new ClientAuthorityResponse(obj), callback);
+  }
+
+  /** global/authorities/set */
+  public void globalAuthoritiesSet(ClientGlobalAuthoritiesSetRequest request, Callback<ClientVoidResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/authorities/set");
+    node.put("owner", request.owner);
+    node.put("authority", request.authority);
+    node.put("keystore", request.keystore);
+    pool.requestResponse(node, (obj) -> new ClientVoidResponse(obj), callback);
+  }
+
+  /** global/authorities/get/public */
+  public void globalAuthoritiesGetPublic(ClientGlobalAuthoritiesGetPublicRequest request, Callback<ClientKeystoreResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/authorities/get/public");
+    node.put("authority", request.authority);
+    pool.requestResponse(node, (obj) -> new ClientKeystoreResponse(obj), callback);
+  }
+
+  /** global/authorities/get/protected */
+  public void globalAuthoritiesGetProtected(ClientGlobalAuthoritiesGetProtectedRequest request, Callback<ClientKeystoreResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/authorities/get/protected");
+    node.put("owner", request.owner);
+    node.put("authority", request.authority);
+    pool.requestResponse(node, (obj) -> new ClientKeystoreResponse(obj), callback);
+  }
+
+  /** global/authorities/list */
+  public void globalAuthoritiesList(ClientGlobalAuthoritiesListRequest request, Stream<ClientAuthorityListResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/authorities/list");
+    node.put("owner", request.owner);
+    pool.requestStream(node, (obj) -> new ClientAuthorityListResponse(obj), streamback);
+  }
+
+  /** global/authorities/delete */
+  public void globalAuthoritiesDelete(ClientGlobalAuthoritiesDeleteRequest request, Callback<ClientVoidResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "global/authorities/delete");
+    node.put("owner", request.owner);
+    node.put("authority", request.authority);
+    pool.requestResponse(node, (obj) -> new ClientVoidResponse(obj), callback);
   }
 }
