@@ -692,7 +692,7 @@
             <documentation>
                 Host the working directory as a webserver
             </documentation>
-            <arg name="rxhtml-path" default="." />
+            <arg name="rxhtml-path" default="frontend" />
             <arg name="asset-path" default="." />
             <arg name="microverse" default="local.verse.json" />
             <arg name="local-libadama-path" default="null" />
@@ -709,6 +709,13 @@
             </documentation>
             <arg name="rxhtml-path" default="." />
             <arg name="output" default="200.html" />
+        </command>
+        <command name="bundle">
+            <documentation>
+                Bundle many *.rx.html into one big one.
+            </documentation>
+            <arg name="rxhtml-path" default="frontend" />
+            <arg name="output" default="frontend.rx.html" />
         </command>
         <command name="wrap-css">
             <documentation>
