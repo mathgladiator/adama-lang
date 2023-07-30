@@ -20,7 +20,10 @@ public class AssembleNexus {
     TreeMap<String, Transform> services = new TreeMap<>();
     for (Map.Entry<String, ParameterDefinition> entry : parameters.entrySet()) {
       if (entry.getValue().transform != null) {
-        services.put(entry.getKey(), entry.getValue().transform);
+        String limitTo = entry.getValue().limitToPrefix;
+        if (!limitTo.equals(prefix)) {
+          services.put(entry.getKey(), entry.getValue().transform);
+        }
       }
     }
 

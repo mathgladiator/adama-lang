@@ -18,6 +18,7 @@ import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
 import org.adamalang.transforms.global.GlobalDomainResolver;
+import org.adamalang.transforms.global.GlobalPerSessionAuthenticator;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.contracts.*;
 import org.adamalang.web.io.ConnectionContext;
@@ -40,7 +41,7 @@ public class BootstrapGlobalServiceBase {
       @Override
       public ServiceConnection establish(ConnectionContext context) {
         return new ServiceConnection() {
-          final Session session = new Session(new PerSessionAuthenticator(extern.database, extern.masterKey, context, extern.superPublicKeys));
+          final Session session = new Session(new GlobalPerSessionAuthenticator(extern.database, extern.masterKey, context, extern.superPublicKeys));
           final GlobalConnectionNexus globalNexus =
               new GlobalConnectionNexus(extern.accessLogger, //
                   extern.globalApiMetrics, //
@@ -55,8 +56,7 @@ public class BootstrapGlobalServiceBase {
                   extern.regionApiMetrics, //
                   executors[randomExecutorIndex.nextInt(executors.length)], //
                   domainResolver, //
-                  session.authenticator, //
-                  spacePolicyLocator); //
+                  session.authenticator); //
           final GlobalConnectionRouter globalRouter = new GlobalConnectionRouter(session, globalNexus, globalControlHandler);
           final RegionConnectionRouter regionRouter = new RegionConnectionRouter(session, regionNexus, globalDataHandler);
 
