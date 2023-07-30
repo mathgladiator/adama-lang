@@ -22,12 +22,14 @@ public class AssembleTests {
     {
       StringBuilder sb = new StringBuilder();
       sb.append("package ").append(packageName).append(";\n\n");
-      sb.append("import com.fasterxml.jackson.databind.node.ObjectNode;\n");
-      sb.append("import org.adamalang.TestFrontEnd;\n");
-      sb.append("import org.adamalang.common.Json;\n");
-      sb.append("import org.junit.Assert;\n");
-      sb.append("import org.junit.Test;\n\n");
-      sb.append("import java.util.Iterator;\n\n");
+      if ("org.adamalang.api".equals(packageName)) {
+        sb.append("import com.fasterxml.jackson.databind.node.ObjectNode;\n");
+        sb.append("import org.adamalang.TestFrontEnd;\n");
+        sb.append("import org.adamalang.common.Json;\n");
+        sb.append("import org.junit.Assert;\n");
+        sb.append("import org.junit.Test;\n\n");
+        sb.append("import java.util.Iterator;\n\n");
+      }
       sb.append("public class GeneratedMissingParameterTest {\n");
       if ("org.adamalang.api".equals(packageName)) { // TODO: this is super lame, but need to sort out split APIs
         sb.append("  @Test\n");
