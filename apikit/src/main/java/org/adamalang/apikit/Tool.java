@@ -104,7 +104,7 @@ public class Tool {
 
   public static void main(String[] args) throws Exception {
     build("saas/api.xml", new File("."));
-    build("saas/control.xml", new File("."));
+    build("plane/control.xml", new File("."));
   }
 
 }

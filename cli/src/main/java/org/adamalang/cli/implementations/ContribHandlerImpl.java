@@ -74,7 +74,7 @@ public class ContribHandlerImpl implements ContribHandler {
     System.out.println(Util.prefix("Assembling Public API", Util.ANSI.Cyan));
     org.adamalang.apikit.Tool.build("saas/api.xml", new File("."));
     System.out.println(Util.prefix("Assembling Global Control Plane API", Util.ANSI.Cyan));
-    org.adamalang.apikit.Tool.build("saas/control.xml", new File("."));
+    org.adamalang.apikit.Tool.build("plane/control.xml", new File("."));
     output.out();
   }
 
