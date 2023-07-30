@@ -19,13 +19,13 @@ import java.util.regex.Pattern;
 
 public class AssembleRequestTypes {
 
-  public static Map<String, String> make(String packageName, Method[] methods) throws Exception {
+  public static Map<String, String> make(String packageName, String sessionImport, Method[] methods) throws Exception {
     TreeMap<String, String> files = new TreeMap<>();
     for (Method method : methods) {
       { // server
         StringBuilder java = new StringBuilder();
         java.append("package ").append(packageName).append(";\n\n");
-        for (String imp : method.imports()) {
+        for (String imp : method.imports(sessionImport)) {
           java.append("import ").append(imp).append(";\n");
         }
 

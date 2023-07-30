@@ -8,14 +8,12 @@
  */
 package org.adamalang.transforms;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Json;
-import org.adamalang.connection.Session;
+import org.adamalang.frontend.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
 import org.junit.Assert;

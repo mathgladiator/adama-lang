@@ -20,7 +20,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
 import org.adamalang.common.keys.SigningKeyPair;
-import org.adamalang.connection.Session;
+import org.adamalang.frontend.Session;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Authorities;
 import org.adamalang.mysql.model.Hosts;

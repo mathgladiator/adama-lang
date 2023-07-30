@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
-import org.adamalang.connection.Session;
+import org.adamalang.frontend.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateSpace;

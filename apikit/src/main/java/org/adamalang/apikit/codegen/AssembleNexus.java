@@ -28,7 +28,6 @@ public class AssembleNexus {
     for (Transform service : services.values()) {
       imps.add(service.service);
     }
-    imps.add("org.adamalang.connection.Session");
     imps.add("org.adamalang.common.SimpleExecutor");
     imps.add("org.adamalang.web.io.JsonLogger;");
 

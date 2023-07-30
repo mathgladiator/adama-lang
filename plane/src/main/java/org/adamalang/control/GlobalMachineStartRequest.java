@@ -9,34 +9,34 @@
 package org.adamalang.control;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.Session;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
-import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
-/** Find the host for a given document */
-public class GlobalFinderFindRequest {
-  public final String space;
-  public final String key;
+/** Start the service up */
+public class GlobalMachineStartRequest {
+  public final String machineIdentity;
+  public final String role;
 
-  public GlobalFinderFindRequest(final String space, final String key) {
-    this.space = space;
-    this.key = key;
+  public GlobalMachineStartRequest(final String machineIdentity, final String role) {
+    this.machineIdentity = machineIdentity;
+    this.role = role;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<GlobalFinderFindRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<GlobalMachineStartRequest> callback) {
     try {
-      final String space = request.getStringNormalize("space", true, 9003);
-      final String key = request.getString("key", true, 9004);
-      nexus.executor.execute(new NamedRunnable("globalfinderfind-success") {
+      final String machineIdentity = request.getString("machine-identity", true, 9001);
+      final String role = request.getString("role", true, 9002);
+      nexus.executor.execute(new NamedRunnable("globalmachinestart-success") {
         @Override
         public void execute() throws Exception {
-           callback.success(new GlobalFinderFindRequest(space, key));
+           callback.success(new GlobalMachineStartRequest(machineIdentity, role));
         }
       });
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(new NamedRunnable("globalfinderfind-error") {
+      nexus.executor.execute(new NamedRunnable("globalmachinestart-error") {
         @Override
         public void execute() throws Exception {
           callback.failure(ece);
@@ -46,7 +46,5 @@ public class GlobalFinderFindRequest {
   }
 
   public void logInto(ObjectNode _node) {
-    _node.put("space", space);
-    _node.put("key", key);
   }
 }

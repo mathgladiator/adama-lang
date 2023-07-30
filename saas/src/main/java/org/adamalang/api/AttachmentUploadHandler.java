@@ -9,7 +9,7 @@
 package org.adamalang.api;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.connection.Session;
+import org.adamalang.frontend.Session;
 
 public interface AttachmentUploadHandler {
   public void bind();

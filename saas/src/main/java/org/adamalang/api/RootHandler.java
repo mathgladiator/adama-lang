@@ -8,7 +8,7 @@
  */
 package org.adamalang.api;
 
-import org.adamalang.connection.Session;
+import org.adamalang.frontend.Session;
 
 public interface RootHandler {
   public void handle(Session session, InitSetupAccountRequest request, SimpleResponder responder);

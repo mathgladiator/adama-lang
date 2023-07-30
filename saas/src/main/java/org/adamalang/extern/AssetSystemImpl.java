@@ -10,7 +10,7 @@ package org.adamalang.extern;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.connection.Session;
+import org.adamalang.frontend.Session;
 import org.adamalang.extern.aws.S3;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;

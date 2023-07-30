@@ -9,7 +9,6 @@
 package org.adamalang.control;
 
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.connection.Session;
 import org.adamalang.web.io.JsonLogger;;
 
 public class ConnectionNexus {

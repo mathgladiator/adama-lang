@@ -8,7 +8,7 @@
  */
 package org.adamalang.control;
 
-import org.adamalang.connection.Session;
+import org.adamalang.Session;
 
 public interface RootHandler {
   public void handle(Session session, GlobalMachineStartRequest request, MachineStartResponder responder);

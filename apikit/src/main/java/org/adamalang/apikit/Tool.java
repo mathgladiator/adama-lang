@@ -44,6 +44,7 @@ public class Tool {
     String clientOutputPathStr = DocumentHelper.attribute(api, "client-output-path");
     String testOutputPathStr = DocumentHelper.attribute(api, "test-output-path");
     String packageName = DocumentHelper.attribute(api, "package");
+    String sessionImport = DocumentHelper.attribute(api, "session-import");
     String docsFile = api.getAttribute("docs");
     String clientFileJs = api.getAttribute("clientjs");
     Map<String, ParameterDefinition> parameters = ParameterDefinition.buildMap(doc);
@@ -52,11 +53,11 @@ public class Tool {
     Method[] methods = Method.methodsOf(doc, parameters, responders);
     String nexus = AssembleNexus.make(packageName, parameters);
     String devbox = AssembleDevBox.make(packageName, methods);
-    Map<String, String> requestsFiles = AssembleRequestTypes.make(packageName, methods);
+    Map<String, String> requestsFiles = AssembleRequestTypes.make(packageName, sessionImport, methods);
     Map<String, String> responderFiles = AssembleResponders.make(packageName, responders);
-    Map<String, String> handlerFiles = AssembleHandlers.make(packageName, methods);
+    Map<String, String> handlerFiles = AssembleHandlers.make(packageName, sessionImport, methods);
     Map<String, String> javaClientFiles = AssembleJavaClient.make(packageName, responders, methods);
-    String router = AssembleConnectionRouter.make(packageName, methods);
+    String router = AssembleConnectionRouter.make(packageName, sessionImport, methods);
     String metrics = AssembleMetrics.make(packageName, methods);
     File outputPath = new File(root, outputPathStr);
     File clientOutputPath = new File(clientOutputPathStr);
