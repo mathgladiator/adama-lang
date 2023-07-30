@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.transforms;
+package org.adamalang.transforms.global;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,6 +14,7 @@ import io.jsonwebtoken.security.Keys;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.frontend.Session;
+import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
 import org.junit.Assert;
@@ -24,17 +25,17 @@ import java.util.Base64;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class PerSessionAuthenticatorTests {
+public class GlobalPerSessionAuthenticatorTests {
   @Test
   public void tokenParsing() {
     try {
-      new PerSessionAuthenticator.ParsedToken("{}");
+      new GlobalPerSessionAuthenticator.ParsedToken("{}");
       Assert.fail();
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(995342, ece.code);
     }
     try {
-      new PerSessionAuthenticator.ParsedToken("x.x.x");
+      new GlobalPerSessionAuthenticator.ParsedToken("x.x.x");
       Assert.fail();
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(908303, ece.code);
@@ -49,7 +50,7 @@ public class PerSessionAuthenticatorTests {
 
   @Test
   public void anonymous() throws Exception {
-    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(null, "masterkey", new ConnectionContext("a", "b", "c", "D"), new String[] {});
+    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, "masterkey", new ConnectionContext("a", "b", "c", "D"), new String[] {});
     Assert.assertEquals("D", authenticator.assetKey());
     authenticator.updateAssetKey("E");
     Assert.assertEquals("E", authenticator.assetKey());
@@ -76,7 +77,7 @@ public class PerSessionAuthenticatorTests {
     KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
     String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
     String token = Jwts.builder().setSubject("super").setIssuer("super").signWith(pair.getPrivate()).compact();
-    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(null, "masterkey", new ConnectionContext("a", "b", "c", "D"), new String[] { publicKey });
+    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, "masterkey", new ConnectionContext("a", "b", "c", "D"), new String[] { publicKey });
     CountDownLatch latch = new CountDownLatch(1);
     authenticator.execute(new Session(authenticator), token, new Callback<AuthenticatedUser>() {
       @Override

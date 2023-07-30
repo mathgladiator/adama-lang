@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.extern;
+package org.adamalang.frontend.global;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
@@ -19,6 +19,7 @@ import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.transforms.PerSessionAuthenticator;
+import org.adamalang.transforms.global.GlobalPerSessionAuthenticator;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.assets.AssetStream;
@@ -29,13 +30,13 @@ import org.adamalang.web.io.ConnectionContext;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a concrete implementation of the asset system */
-public class AssetSystemImpl implements AssetSystem {
+public class GlobalAssetSystemImpl implements AssetSystem {
   public final DataBase database;
   public final String masterKey;
   public final MultiRegionClient adama;
   public final S3 s3;
 
-  public AssetSystemImpl(DataBase database, String masterKey, MultiRegionClient adama, S3 s3) {
+  public GlobalAssetSystemImpl(DataBase database, String masterKey, MultiRegionClient adama, S3 s3) {
     this.database = database;
     this.masterKey = masterKey;
     this.adama = adama;
@@ -55,7 +56,7 @@ public class AssetSystemImpl implements AssetSystem {
 
   @Override
   public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, String channel, String message, Callback<Integer> callback) {
-    PerSessionAuthenticator authenticator = new PerSessionAuthenticator(database, masterKey, context, new String[] {});
+    PerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(database, masterKey, context, new String[] {});
     authenticator.execute(new Session(authenticator), identity, new Callback<AuthenticatedUser>() {
       @Override
       public void success(AuthenticatedUser who) {

@@ -39,18 +39,11 @@ import java.util.Base64;
 import java.util.regex.Pattern;
 
 /** This is a per session Authenticator. This is in 1:1 correspondence to a session/connection */
-public class PerSessionAuthenticator {
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(PerSessionAuthenticator.class);
-  private final DataBase database;
-  private final String masterKey;
-  private ConnectionContext defaultContext;
-  private final String[] superKeys;
+public abstract class PerSessionAuthenticator {
+  protected ConnectionContext defaultContext;
 
-  public PerSessionAuthenticator(DataBase database, String masterKey, ConnectionContext defaultContext, String[] superKeys) {
-    this.database = database;
-    this.masterKey = masterKey;
+  public PerSessionAuthenticator(ConnectionContext defaultContext) {
     this.defaultContext = defaultContext;
-    this.superKeys = superKeys;
   }
 
   /** get the origin */
@@ -108,118 +101,7 @@ public class PerSessionAuthenticator {
     return kf.generatePublic(spec);
   }
 
-  /** authenticate */
-  public void execute(Session session, String identity, Callback<AuthenticatedUser> callback) {
-    AuthenticatedUser cacheHit = session.identityCache.get(identity);
-    if (cacheHit != null) {
-      // TODO: come up with a cache invalidation scheme
-      callback.success(cacheHit);
-      return;
-    }
-    try {
-      if (identity.startsWith("anonymous:")) {
-        String agent = identity.substring("anonymous:".length());
-        callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Anonymous, -1, new NtPrincipal(agent, "anonymous"), defaultContext, false));
-        return;
-      }
-
-      ParsedToken parsedToken = new ParsedToken(identity);
-      if (parsedToken.iss.startsWith("doc/")) {
-        try {
-          String[] docSpaceKey = parsedToken.iss.split(Pattern.quote("/"));
-          SigningKeyPair skp = Secrets.getOrCreateDocumentSigningKey(database, masterKey, docSpaceKey[1], docSpaceKey[2]);
-          skp.validateTokenThrows(identity);
-          NtPrincipal who = new NtPrincipal(parsedToken.sub, parsedToken.iss);
-          AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Document, -1, who, defaultContext, false);
-          callback.success(user);
-        } catch (Exception ex) {
-          callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_DOC_AUTHENTICATE));
-        }
-        return;
-      }
-
-      if ("host".equals(parsedToken.iss)) {
-        PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(database, parsedToken.key_id));
-        Jwts.parserBuilder()
-            .setSigningKey(publicKey)
-            .requireIssuer("host")
-            .build()
-            .parseClaimsJws(identity);
-        ConnectionContext context = new ConnectionContext(parsedToken.proxy_origin, parsedToken.proxy_ip, parsedToken.proxy_useragent, parsedToken.proxy_asset_key);
-        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_source, parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context, true);
-        session.identityCache.put(identity, user);
-        callback.success(user);
-        return;
-      }
-
-      if ("internal".equals(parsedToken.iss)) {
-        PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(database, parsedToken.key_id));
-        Jwts.parserBuilder()
-            .setSigningKey(publicKey)
-            .requireIssuer("internal")
-            .build()
-            .parseClaimsJws(identity);
-        ConnectionContext context = new ConnectionContext("::adama", "0.0.0.0", "", null);
-        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_source, parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context, true);
-        session.identityCache.put(identity, user);
-        callback.success(user);
-        return;
-      }
-
-      if ("super".equals(parsedToken.iss)) {
-        for (String publicKey64 : superKeys) {
-          PublicKey publicKey = decodePublicKey(publicKey64);
-          try {
-            Jwts.parserBuilder()
-                .setSigningKey(publicKey)
-                .requireIssuer("super")
-                .build()
-                .parseClaimsJws(identity);
-            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Super, 0, new NtPrincipal("super", "super"), defaultContext, false);
-            session.identityCache.put(identity, user);
-            callback.success(user);
-            return;
-          } catch (Exception ex) {
-            ex.printStackTrace();
-            // move on
-          }
-        }
-        callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_SUPER_AUTHENTICATE));
-        return;
-      }
-      if ("adama".equals(parsedToken.iss)) {
-        int userId = Integer.parseInt(parsedToken.sub);
-        for (String publicKey64 : Users.listKeys(database, userId)) {
-          PublicKey publicKey = decodePublicKey(publicKey64);
-          try {
-            Jwts.parserBuilder()
-                .setSigningKey(publicKey)
-                .requireIssuer("adama")
-                .build()
-                .parseClaimsJws(identity);
-            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, userId, new NtPrincipal("" + userId, "adama"), defaultContext, false);
-            session.identityCache.put(identity, user);
-            callback.success(user);
-            return;
-          } catch (Exception ex) {
-            // move on
-          }
-        }
-        callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_FINDING_DEVELOPER_KEY));
-        return;
-      }
-
-      // otherwise, try a keystore by the authority presented
-      String keystoreJson = Authorities.getKeystoreInternal(database, parsedToken.iss);
-      Keystore keystore = Keystore.parse(keystoreJson);
-      NtPrincipal who = keystore.validate(parsedToken.iss, identity);
-      AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who, defaultContext, false);
-      session.identityCache.put(identity, user);
-      callback.success(user);
-    } catch (Exception ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.AUTH_UNKNOWN_EXCEPTION, ex, LOGGER));
-    }
-  }
+  public abstract void execute(Session session, String identity, Callback<AuthenticatedUser> callback);
 
   /** a pre-validated parsed token; we parse to find which keys to look up */
   public static class ParsedToken {

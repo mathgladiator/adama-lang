@@ -29,8 +29,9 @@ public class ParameterDefinition {
   public final int errorCodeIfMissing;
   public final HashSet<String> skipTransformOnMethods;
   public final boolean logged;
+  public final String limitToPrefix;
 
-  public ParameterDefinition(final String name, Type type, boolean optional, boolean normalize, Transform transform, Validator validator, String documentation, int errorCodeIfMissing, final HashSet<String> skipTransformOnMethods, boolean logged) {
+  public ParameterDefinition(final String name, Type type, boolean optional, boolean normalize, Transform transform, Validator validator, String documentation, int errorCodeIfMissing, final HashSet<String> skipTransformOnMethods, boolean logged, String limitToPrefix) {
     this.name = name;
     this.camelName = Common.camelize(name, true);
     this.type = type;
@@ -42,6 +43,7 @@ public class ParameterDefinition {
     this.errorCodeIfMissing = errorCodeIfMissing;
     this.skipTransformOnMethods = skipTransformOnMethods;
     this.logged = logged;
+    this.limitToPrefix = limitToPrefix;
   }
 
   public String invent() {
@@ -112,7 +114,7 @@ public class ParameterDefinition {
       Validator validator = null;
       HashSet<String> skipTransforms = new HashSet<>();
       int errorCodeIfMissing = Integer.parseInt(rawMissingErrorCode);
-
+      String limitToPrefix = "";
       NodeList children = node.getChildNodes();
       for (int j = 0; j < children.getLength(); j++) {
         Node childNode = children.item(j);
@@ -142,6 +144,7 @@ public class ParameterDefinition {
               }
               skipTransforms.add(methodOn);
             } else {
+              limitToPrefix = Common.camelize(scopeToSkip);
               transformMethodsOfScope(document, scopeToSkip, skipTransforms);
             }
           }
@@ -175,7 +178,7 @@ public class ParameterDefinition {
       if (errorCodeIfMissing == 0 && !optional) {
         throw new Exception("non-optional parameter is missing non-zero error code:" + name);
       }
-      ParameterDefinition definition = new ParameterDefinition(name, type, optional, normalize, transform, validator, documentation, errorCodeIfMissing, skipTransforms, logged);
+      ParameterDefinition definition = new ParameterDefinition(name, type, optional, normalize, transform, validator, documentation, errorCodeIfMissing, skipTransforms, logged, limitToPrefix);
       if (parameters.containsKey(name)) {
         throw new Exception("parameter already defined: " + name);
       }
