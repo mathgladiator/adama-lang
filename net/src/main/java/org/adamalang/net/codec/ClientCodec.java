@@ -22,14 +22,6 @@ import org.adamalang.net.codec.ClientMessage.WebOptions;
 import org.adamalang.net.codec.ClientMessage.WebPut;
 import org.adamalang.net.codec.ClientMessage.WebGet;
 import org.adamalang.net.codec.ClientMessage.Header;
-import org.adamalang.net.codec.ClientMessage.ProxyClose;
-import org.adamalang.net.codec.ClientMessage.ProxySnapshot;
-import org.adamalang.net.codec.ClientMessage.ProxyDelete;
-import org.adamalang.net.codec.ClientMessage.ProxyCompute;
-import org.adamalang.net.codec.ClientMessage.ProxyPatch;
-import org.adamalang.net.codec.ClientMessage.ProxyInitialize;
-import org.adamalang.net.codec.ClientMessage.RemoteDocumentUpdateItem;
-import org.adamalang.net.codec.ClientMessage.ProxyGet;
 import org.adamalang.net.codec.ClientMessage.RequestInventoryHeartbeat;
 import org.adamalang.net.codec.ClientMessage.RequestHeat;
 import org.adamalang.net.codec.ClientMessage.StreamAttach;
@@ -46,6 +38,7 @@ import org.adamalang.net.codec.ClientMessage.ReflectRequest;
 import org.adamalang.net.codec.ClientMessage.DeleteRequest;
 import org.adamalang.net.codec.ClientMessage.CreateRequest;
 import org.adamalang.net.codec.ClientMessage.ProbeCommandRequest;
+import org.adamalang.net.codec.ClientMessage.FindRequest;
 import org.adamalang.net.codec.ClientMessage.PingRequest;
 
 public class ClientCodec {
@@ -68,20 +61,6 @@ public class ClientCodec {
     public abstract void handle(WebPut payload);
 
     public abstract void handle(WebGet payload);
-
-    public abstract void handle(ProxyClose payload);
-
-    public abstract void handle(ProxySnapshot payload);
-
-    public abstract void handle(ProxyDelete payload);
-
-    public abstract void handle(ProxyCompute payload);
-
-    public abstract void handle(ProxyPatch payload);
-
-    public abstract void handle(ProxyInitialize payload);
-
-    public abstract void handle(ProxyGet payload);
 
     public abstract void handle(RequestInventoryHeartbeat payload);
 
@@ -114,6 +93,8 @@ public class ClientCodec {
     public abstract void handle(CreateRequest payload);
 
     public abstract void handle(ProbeCommandRequest payload);
+
+    public abstract void handle(FindRequest payload);
 
     public abstract void handle(PingRequest payload);
 
@@ -155,27 +136,6 @@ public class ClientCodec {
           return;
         case 1721:
           handle(readBody_1721(buf, new WebGet()));
-          return;
-        case 9015:
-          handle(readBody_9015(buf, new ProxyClose()));
-          return;
-        case 9013:
-          handle(readBody_9013(buf, new ProxySnapshot()));
-          return;
-        case 9011:
-          handle(readBody_9011(buf, new ProxyDelete()));
-          return;
-        case 9009:
-          handle(readBody_9009(buf, new ProxyCompute()));
-          return;
-        case 9007:
-          handle(readBody_9007(buf, new ProxyPatch()));
-          return;
-        case 9005:
-          handle(readBody_9005(buf, new ProxyInitialize()));
-          return;
-        case 9001:
-          handle(readBody_9001(buf, new ProxyGet()));
           return;
         case 7231:
           handle(readBody_7231(buf, new RequestInventoryHeartbeat()));
@@ -225,6 +185,9 @@ public class ClientCodec {
         case 1017:
           handle(readBody_1017(buf, new ProbeCommandRequest()));
           return;
+        case 9001:
+          handle(readBody_9001(buf, new FindRequest()));
+          return;
         case 24321:
           handle(readBody_24321(buf, new PingRequest()));
           return;
@@ -242,13 +205,6 @@ public class ClientCodec {
     public void handle(WebOptions payload);
     public void handle(WebPut payload);
     public void handle(WebGet payload);
-    public void handle(ProxyClose payload);
-    public void handle(ProxySnapshot payload);
-    public void handle(ProxyDelete payload);
-    public void handle(ProxyCompute payload);
-    public void handle(ProxyPatch payload);
-    public void handle(ProxyInitialize payload);
-    public void handle(ProxyGet payload);
     public void handle(RequestInventoryHeartbeat payload);
     public void handle(RequestHeat payload);
     public void handle(StreamAttach payload);
@@ -265,6 +221,7 @@ public class ClientCodec {
     public void handle(DeleteRequest payload);
     public void handle(CreateRequest payload);
     public void handle(ProbeCommandRequest payload);
+    public void handle(FindRequest payload);
     public void handle(PingRequest payload);
   }
 
@@ -296,27 +253,6 @@ public class ClientCodec {
         return;
       case 1721:
         handler.handle(readBody_1721(buf, new WebGet()));
-        return;
-      case 9015:
-        handler.handle(readBody_9015(buf, new ProxyClose()));
-        return;
-      case 9013:
-        handler.handle(readBody_9013(buf, new ProxySnapshot()));
-        return;
-      case 9011:
-        handler.handle(readBody_9011(buf, new ProxyDelete()));
-        return;
-      case 9009:
-        handler.handle(readBody_9009(buf, new ProxyCompute()));
-        return;
-      case 9007:
-        handler.handle(readBody_9007(buf, new ProxyPatch()));
-        return;
-      case 9005:
-        handler.handle(readBody_9005(buf, new ProxyInitialize()));
-        return;
-      case 9001:
-        handler.handle(readBody_9001(buf, new ProxyGet()));
         return;
       case 7231:
         handler.handle(readBody_7231(buf, new RequestInventoryHeartbeat()));
@@ -366,43 +302,11 @@ public class ClientCodec {
       case 1017:
         handler.handle(readBody_1017(buf, new ProbeCommandRequest()));
         return;
+      case 9001:
+        handler.handle(readBody_9001(buf, new FindRequest()));
+        return;
       case 24321:
         handler.handle(readBody_24321(buf, new PingRequest()));
-        return;
-    }
-  }
-
-
-  public static abstract class StreamPatchItem implements ByteStream {
-    public abstract void handle(RemoteDocumentUpdateItem payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      return Unpooled.buffer();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 9003:
-          handle(readBody_9003(buf, new RemoteDocumentUpdateItem()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerPatchItem {
-    public void handle(RemoteDocumentUpdateItem payload);
-  }
-
-  public static void route(ByteBuf buf, HandlerPatchItem handler) {
-    switch (buf.readIntLE()) {
-      case 9003:
-        handler.handle(readBody_9003(buf, new RemoteDocumentUpdateItem()));
         return;
     }
   }
@@ -627,142 +531,6 @@ public class ClientCodec {
   private static Header readBody_1722(ByteBuf buf, Header o) {
     o.key = Helper.readString(buf);
     o.value = Helper.readString(buf);
-    return o;
-  }
-
-  public static ProxyClose read_ProxyClose(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 9015:
-        return readBody_9015(buf, new ProxyClose());
-    }
-    return null;
-  }
-
-
-  private static ProxyClose readBody_9015(ByteBuf buf, ProxyClose o) {
-    o.space = Helper.readString(buf);
-    o.key = Helper.readString(buf);
-    return o;
-  }
-
-  public static ProxySnapshot read_ProxySnapshot(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 9013:
-        return readBody_9013(buf, new ProxySnapshot());
-    }
-    return null;
-  }
-
-
-  private static ProxySnapshot readBody_9013(ByteBuf buf, ProxySnapshot o) {
-    o.space = Helper.readString(buf);
-    o.key = Helper.readString(buf);
-    o.seq = buf.readIntLE();
-    o.history = buf.readIntLE();
-    o.document = Helper.readString(buf);
-    o.assetBytes = buf.readLongLE();
-    return o;
-  }
-
-  public static ProxyDelete read_ProxyDelete(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 9011:
-        return readBody_9011(buf, new ProxyDelete());
-    }
-    return null;
-  }
-
-
-  private static ProxyDelete readBody_9011(ByteBuf buf, ProxyDelete o) {
-    o.space = Helper.readString(buf);
-    o.key = Helper.readString(buf);
-    return o;
-  }
-
-  public static ProxyCompute read_ProxyCompute(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 9009:
-        return readBody_9009(buf, new ProxyCompute());
-    }
-    return null;
-  }
-
-
-  private static ProxyCompute readBody_9009(ByteBuf buf, ProxyCompute o) {
-    o.space = Helper.readString(buf);
-    o.key = Helper.readString(buf);
-    o.method = buf.readIntLE();
-    o.seq = buf.readIntLE();
-    return o;
-  }
-
-  public static ProxyPatch read_ProxyPatch(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 9007:
-        return readBody_9007(buf, new ProxyPatch());
-    }
-    return null;
-  }
-
-
-  private static ProxyPatch readBody_9007(ByteBuf buf, ProxyPatch o) {
-    o.space = Helper.readString(buf);
-    o.key = Helper.readString(buf);
-    o.patches = Helper.readArray(buf, (n) -> new RemoteDocumentUpdateItem[n], () -> read_RemoteDocumentUpdateItem(buf));
-    return o;
-  }
-
-  public static ProxyInitialize read_ProxyInitialize(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 9005:
-        return readBody_9005(buf, new ProxyInitialize());
-    }
-    return null;
-  }
-
-
-  private static ProxyInitialize readBody_9005(ByteBuf buf, ProxyInitialize o) {
-    o.space = Helper.readString(buf);
-    o.key = Helper.readString(buf);
-    o.initial = read_RemoteDocumentUpdateItem(buf);
-    return o;
-  }
-
-  public static RemoteDocumentUpdateItem read_RemoteDocumentUpdateItem(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 9003:
-        return readBody_9003(buf, new RemoteDocumentUpdateItem());
-    }
-    return null;
-  }
-
-
-  private static RemoteDocumentUpdateItem readBody_9003(ByteBuf buf, RemoteDocumentUpdateItem o) {
-    o.agent = Helper.readString(buf);
-    o.authority = Helper.readString(buf);
-    o.seq_begin = buf.readIntLE();
-    o.seq_end = buf.readIntLE();
-    o.request = Helper.readString(buf);
-    o.redo = Helper.readString(buf);
-    o.undo = Helper.readString(buf);
-    o.active = buf.readBoolean();
-    o.delay = buf.readIntLE();
-    o.dAssetBytes = buf.readLongLE();
-    return o;
-  }
-
-  public static ProxyGet read_ProxyGet(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 9001:
-        return readBody_9001(buf, new ProxyGet());
-    }
-    return null;
-  }
-
-
-  private static ProxyGet readBody_9001(ByteBuf buf, ProxyGet o) {
-    o.space = Helper.readString(buf);
-    o.key = Helper.readString(buf);
     return o;
   }
 
@@ -1017,6 +785,21 @@ public class ClientCodec {
     return o;
   }
 
+  public static FindRequest read_FindRequest(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 9001:
+        return readBody_9001(buf, new FindRequest());
+    }
+    return null;
+  }
+
+
+  private static FindRequest readBody_9001(ByteBuf buf, FindRequest o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    return o;
+  }
+
   public static PingRequest read_PingRequest(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 24321:
@@ -1165,102 +948,6 @@ public class ClientCodec {
     buf.writeIntLE(1722);
     Helper.writeString(buf, o.key);;
     Helper.writeString(buf, o.value);;
-  }
-
-  public static void write(ByteBuf buf, ProxyClose o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(9015);
-    Helper.writeString(buf, o.space);;
-    Helper.writeString(buf, o.key);;
-  }
-
-  public static void write(ByteBuf buf, ProxySnapshot o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(9013);
-    Helper.writeString(buf, o.space);;
-    Helper.writeString(buf, o.key);;
-    buf.writeIntLE(o.seq);
-    buf.writeIntLE(o.history);
-    Helper.writeString(buf, o.document);;
-    buf.writeLongLE(o.assetBytes);
-  }
-
-  public static void write(ByteBuf buf, ProxyDelete o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(9011);
-    Helper.writeString(buf, o.space);;
-    Helper.writeString(buf, o.key);;
-  }
-
-  public static void write(ByteBuf buf, ProxyCompute o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(9009);
-    Helper.writeString(buf, o.space);;
-    Helper.writeString(buf, o.key);;
-    buf.writeIntLE(o.method);
-    buf.writeIntLE(o.seq);
-  }
-
-  public static void write(ByteBuf buf, ProxyPatch o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(9007);
-    Helper.writeString(buf, o.space);;
-    Helper.writeString(buf, o.key);;
-    Helper.writeArray(buf, o.patches, (item) -> write(buf, item));
-  }
-
-  public static void write(ByteBuf buf, ProxyInitialize o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(9005);
-    Helper.writeString(buf, o.space);;
-    Helper.writeString(buf, o.key);;
-    write(buf, o.initial);;
-  }
-
-  public static void write(ByteBuf buf, RemoteDocumentUpdateItem o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(9003);
-    Helper.writeString(buf, o.agent);;
-    Helper.writeString(buf, o.authority);;
-    buf.writeIntLE(o.seq_begin);
-    buf.writeIntLE(o.seq_end);
-    Helper.writeString(buf, o.request);;
-    Helper.writeString(buf, o.redo);;
-    Helper.writeString(buf, o.undo);;
-    buf.writeBoolean(o.active);
-    buf.writeIntLE(o.delay);
-    buf.writeLongLE(o.dAssetBytes);
-  }
-
-  public static void write(ByteBuf buf, ProxyGet o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(9001);
-    Helper.writeString(buf, o.space);;
-    Helper.writeString(buf, o.key);;
   }
 
   public static void write(ByteBuf buf, RequestInventoryHeartbeat o) {
@@ -1432,6 +1119,16 @@ public class ClientCodec {
     buf.writeIntLE(1017);
     Helper.writeString(buf, o.command);;
     Helper.writeStringArray(buf, o.args);;
+  }
+
+  public static void write(ByteBuf buf, FindRequest o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(9001);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
   }
 
   public static void write(ByteBuf buf, PingRequest o) {

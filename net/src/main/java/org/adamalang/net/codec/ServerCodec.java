@@ -17,9 +17,6 @@ import org.adamalang.net.codec.ServerMessage.DirectSendResponse;
 import org.adamalang.net.codec.ServerMessage.QueryResult;
 import org.adamalang.net.codec.ServerMessage.AuthResponse;
 import org.adamalang.net.codec.ServerMessage.WebResponseNet;
-import org.adamalang.net.codec.ServerMessage.ProxyLocalDataChange;
-import org.adamalang.net.codec.ServerMessage.ProxyIntResponse;
-import org.adamalang.net.codec.ServerMessage.ProxyVoidResponse;
 import org.adamalang.net.codec.ServerMessage.InventoryHeartbeat;
 import org.adamalang.net.codec.ServerMessage.HeatPayload;
 import org.adamalang.net.codec.ServerMessage.StreamSeqResponse;
@@ -34,6 +31,7 @@ import org.adamalang.net.codec.ServerMessage.ReflectResponse;
 import org.adamalang.net.codec.ServerMessage.DeleteResponse;
 import org.adamalang.net.codec.ServerMessage.CreateResponse;
 import org.adamalang.net.codec.ServerMessage.ProbeCommandResponse;
+import org.adamalang.net.codec.ServerMessage.FindResponse;
 import org.adamalang.net.codec.ServerMessage.PingResponse;
 
 public class ServerCodec {
@@ -103,6 +101,41 @@ public class ServerCodec {
     switch (buf.readIntLE()) {
       case 12524:
         handler.handle(readBody_12524(buf, new CreateResponse()));
+        return;
+    }
+  }
+
+
+  public static abstract class StreamFinder implements ByteStream {
+    public abstract void handle(FindResponse payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 9001:
+          handle(readBody_9001(buf, new FindResponse()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerFinder {
+    public void handle(FindResponse payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerFinder handler) {
+    switch (buf.readIntLE()) {
+      case 9001:
+        handler.handle(readBody_9001(buf, new FindResponse()));
         return;
     }
   }
@@ -363,41 +396,6 @@ public class ServerCodec {
   }
 
 
-  public static abstract class StreamProxyLocalDataChange implements ByteStream {
-    public abstract void handle(ProxyLocalDataChange payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      return Unpooled.buffer();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 9006:
-          handle(readBody_9006(buf, new ProxyLocalDataChange()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerProxyLocalDataChange {
-    public void handle(ProxyLocalDataChange payload);
-  }
-
-  public static void route(ByteBuf buf, HandlerProxyLocalDataChange handler) {
-    switch (buf.readIntLE()) {
-      case 9006:
-        handler.handle(readBody_9006(buf, new ProxyLocalDataChange()));
-        return;
-    }
-  }
-
-
   public static abstract class StreamDirect implements ByteStream {
     public abstract void handle(DirectSendResponse payload);
 
@@ -433,41 +431,6 @@ public class ServerCodec {
   }
 
 
-  public static abstract class StreamProxyIntResponse implements ByteStream {
-    public abstract void handle(ProxyIntResponse payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      return Unpooled.buffer();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 9004:
-          handle(readBody_9004(buf, new ProxyIntResponse()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerProxyIntResponse {
-    public void handle(ProxyIntResponse payload);
-  }
-
-  public static void route(ByteBuf buf, HandlerProxyIntResponse handler) {
-    switch (buf.readIntLE()) {
-      case 9004:
-        handler.handle(readBody_9004(buf, new ProxyIntResponse()));
-        return;
-    }
-  }
-
-
   public static abstract class StreamWeb implements ByteStream {
     public abstract void handle(WebResponseNet payload);
 
@@ -498,41 +461,6 @@ public class ServerCodec {
     switch (buf.readIntLE()) {
       case 1721:
         handler.handle(readBody_1721(buf, new WebResponseNet()));
-        return;
-    }
-  }
-
-
-  public static abstract class StreamProxyVoidResponse implements ByteStream {
-    public abstract void handle(ProxyVoidResponse payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      return Unpooled.buffer();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 9002:
-          handle(readBody_9002(buf, new ProxyVoidResponse()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerProxyVoidResponse {
-    public void handle(ProxyVoidResponse payload);
-  }
-
-  public static void route(ByteBuf buf, HandlerProxyVoidResponse handler) {
-    switch (buf.readIntLE()) {
-      case 9002:
-        handler.handle(readBody_9002(buf, new ProxyVoidResponse()));
         return;
     }
   }
@@ -767,49 +695,6 @@ public class ServerCodec {
     return o;
   }
 
-  public static ProxyLocalDataChange read_ProxyLocalDataChange(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 9006:
-        return readBody_9006(buf, new ProxyLocalDataChange());
-    }
-    return null;
-  }
-
-
-  private static ProxyLocalDataChange readBody_9006(ByteBuf buf, ProxyLocalDataChange o) {
-    o.patch = Helper.readString(buf);
-    o.reads = buf.readIntLE();
-    o.seq = buf.readIntLE();
-    return o;
-  }
-
-  public static ProxyIntResponse read_ProxyIntResponse(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 9004:
-        return readBody_9004(buf, new ProxyIntResponse());
-    }
-    return null;
-  }
-
-
-  private static ProxyIntResponse readBody_9004(ByteBuf buf, ProxyIntResponse o) {
-    o.value = buf.readIntLE();
-    return o;
-  }
-
-  public static ProxyVoidResponse read_ProxyVoidResponse(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 9002:
-        return readBody_9002(buf, new ProxyVoidResponse());
-    }
-    return null;
-  }
-
-
-  private static ProxyVoidResponse readBody_9002(ByteBuf buf, ProxyVoidResponse o) {
-    return o;
-  }
-
   public static InventoryHeartbeat read_InventoryHeartbeat(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 7232:
@@ -1008,6 +893,24 @@ public class ServerCodec {
     return o;
   }
 
+  public static FindResponse read_FindResponse(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 9001:
+        return readBody_9001(buf, new FindResponse());
+    }
+    return null;
+  }
+
+
+  private static FindResponse readBody_9001(ByteBuf buf, FindResponse o) {
+    o.id = buf.readLongLE();
+    o.location = buf.readIntLE();
+    o.archive = Helper.readString(buf);
+    o.region = Helper.readString(buf);
+    o.machine = Helper.readString(buf);
+    return o;
+  }
+
   public static PingResponse read_PingResponse(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 24322:
@@ -1074,34 +977,6 @@ public class ServerCodec {
     buf.writeBoolean(o.cors);
     buf.writeIntLE(o.cache_ttl_seconds);
     Helper.writeString(buf, o.asset_transform);;
-  }
-
-  public static void write(ByteBuf buf, ProxyLocalDataChange o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(9006);
-    Helper.writeString(buf, o.patch);;
-    buf.writeIntLE(o.reads);
-    buf.writeIntLE(o.seq);
-  }
-
-  public static void write(ByteBuf buf, ProxyIntResponse o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(9004);
-    buf.writeIntLE(o.value);
-  }
-
-  public static void write(ByteBuf buf, ProxyVoidResponse o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(9002);
   }
 
   public static void write(ByteBuf buf, InventoryHeartbeat o) {
@@ -1230,6 +1105,19 @@ public class ServerCodec {
     buf.writeIntLE(1018);
     Helper.writeString(buf, o.json);;
     Helper.writeStringArray(buf, o.errors);;
+  }
+
+  public static void write(ByteBuf buf, FindResponse o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(9001);
+    buf.writeLongLE(o.id);
+    buf.writeIntLE(o.location);
+    Helper.writeString(buf, o.archive);;
+    Helper.writeString(buf, o.region);;
+    Helper.writeString(buf, o.machine);;
   }
 
   public static void write(ByteBuf buf, PingResponse o) {

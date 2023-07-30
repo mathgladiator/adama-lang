@@ -13,7 +13,6 @@ import org.adamalang.common.*;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.net.client.contracts.*;
-import org.adamalang.net.client.proxy.ProxyDataService;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.net.client.sm.ConnectionBase;
@@ -59,20 +58,6 @@ public class Client {
         stream.accept(target);
       }
     }, 3));
-  }
-
-  public void getProxy(String target, Callback<ProxyDataService> callback) {
-    clientFinder.find(target, new Callback<InstanceClient>() {
-      @Override
-      public void success(InstanceClient value) {
-        callback.success(value.getProxy());
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    });
   }
 
   public void waitForCapacity(String space, int timeout, Consumer<Boolean> done) {

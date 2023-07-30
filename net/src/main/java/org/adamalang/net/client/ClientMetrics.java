@@ -20,6 +20,7 @@ public class ClientMetrics {
   public final ItemActionMonitor client_delete;
   public final ItemActionMonitor client_auth;
   public final ItemActionMonitor client_webget;
+  public final ItemActionMonitor client_find;
   public final ItemActionMonitor client_probe;
   public final ItemActionMonitor client_weboptions;
   public final ItemActionMonitor client_webput;
@@ -84,6 +85,7 @@ public class ClientMetrics {
     client_directsend = factory.makeItemActionMonitor("client_directsend");
     client_delete = factory.makeItemActionMonitor("client_delete");
     client_auth = factory.makeItemActionMonitor("client_auth");
+    client_find = factory.makeItemActionMonitor("client_find");
     client_webget = factory.makeItemActionMonitor("client_webget");
     client_webput = factory.makeItemActionMonitor("client_webput");
     client_weboptions = factory.makeItemActionMonitor("client_weboptions");

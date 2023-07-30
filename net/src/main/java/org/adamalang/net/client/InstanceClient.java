@@ -24,11 +24,12 @@ import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.client.contracts.impl.CallbackByteStreamInfo;
 import org.adamalang.net.client.contracts.impl.CallbackByteStreamWriter;
-import org.adamalang.net.client.proxy.ProxyDataService;
 import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
+import org.adamalang.runtime.data.FinderService;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
@@ -55,7 +56,6 @@ public class InstanceClient implements AutoCloseable {
   private final AtomicBoolean alive;
   private final ItemQueue<ChannelClient> client;
   private final ClientConfig config;
-  private final ProxyDataService proxy;
   private int backoff;
 
   public InstanceClient(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor, ExceptionLogger logger) throws Exception {
@@ -71,12 +71,7 @@ public class InstanceClient implements AutoCloseable {
     this.logger = logger;
     this.alive = new AtomicBoolean(true);
     this.backoff = 1;
-    this.proxy = new ProxyDataService(metrics, client);
     retryConnection();
-  }
-
-  public ProxyDataService getProxy() {
-    return proxy;
   }
 
   private void retryConnection() {
@@ -247,6 +242,52 @@ public class InstanceClient implements AutoCloseable {
                 auth.origin = origin;
                 auth.ip = ip;
                 ClientCodec.write(toWrite, auth);
+                stream.next(toWrite);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
+  public void find(Key key, Callback<FinderService.Result> callback) {
+    executor.execute(new NamedRunnable("client-find") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_FIND_TIMEOUT, ErrorCodes.ADAMA_NET_FIND_REJECTED, metrics.client_find.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamFinder() {
+              @Override
+              public void handle(ServerMessage.FindResponse payload) {
+                callback.success(new FinderService.Result(payload.id, FinderService.Location.fromType(payload.location), payload.region, payload.machine, payload.archive));
+              }
+
+              @Override
+              public void completed() {
+
+              }
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+
+              }
+            }, new CallbackByteStreamWriter(callback) {
+              @Override
+              public void write(ByteStream stream) {
+                int est = key.space.length() + key.key.length() + 40;
+                ByteBuf toWrite = stream.create(est);
+                ClientMessage.FindRequest request = new ClientMessage.FindRequest();
+                request.space = key.space;
+                request.key = key.key;
+                ClientCodec.write(toWrite, request);
                 stream.next(toWrite);
               }
             });
