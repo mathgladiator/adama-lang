@@ -11,7 +11,7 @@ package org.adamalang.transforms;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
-import org.adamalang.connection.Session;
+import org.adamalang.frontend.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Spaces;

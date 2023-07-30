@@ -9,34 +9,31 @@
 package org.adamalang.control;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.Session;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
-import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
-/** Deletes an authority */
-public class GlobalAuthoritiesDeleteRequest {
-  public final Integer owner;
+/** Get an authority */
+public class GlobalAuthoritiesGetPublicRequest {
   public final String authority;
 
-  public GlobalAuthoritiesDeleteRequest(final Integer owner, final String authority) {
-    this.owner = owner;
+  public GlobalAuthoritiesGetPublicRequest(final String authority) {
     this.authority = authority;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<GlobalAuthoritiesDeleteRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<GlobalAuthoritiesGetPublicRequest> callback) {
     try {
-      final Integer owner = request.getInteger("owner", true, 9010);
       final String authority = request.getString("authority", true, 9011);
-      nexus.executor.execute(new NamedRunnable("globalauthoritiesdelete-success") {
+      nexus.executor.execute(new NamedRunnable("globalauthoritiesgetpublic-success") {
         @Override
         public void execute() throws Exception {
-           callback.success(new GlobalAuthoritiesDeleteRequest(owner, authority));
+           callback.success(new GlobalAuthoritiesGetPublicRequest(authority));
         }
       });
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(new NamedRunnable("globalauthoritiesdelete-error") {
+      nexus.executor.execute(new NamedRunnable("globalauthoritiesgetpublic-error") {
         @Override
         public void execute() throws Exception {
           callback.failure(ece);
@@ -46,7 +43,6 @@ public class GlobalAuthoritiesDeleteRequest {
   }
 
   public void logInto(ObjectNode _node) {
-    _node.put("owner", owner);
     _node.put("authority", authority);
   }
 }

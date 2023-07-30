@@ -110,12 +110,12 @@ public class Method {
     return methodsArrayList.toArray(new Method[methodsArrayList.size()]);
   }
 
-  public TreeSet<String> imports() {
+  public TreeSet<String> imports(String sessionImport) {
     TreeSet<String> set = new TreeSet<>();
     set.add("org.adamalang.common.ErrorCodeException");
     set.add("org.adamalang.web.io.*");
     set.add("org.adamalang.common.Callback");
-    set.add("org.adamalang.connection.Session");
+    set.add(sessionImport);
     set.add("org.adamalang.common.NamedRunnable");
     set.add("com.fasterxml.jackson.databind.node.ObjectNode");
 

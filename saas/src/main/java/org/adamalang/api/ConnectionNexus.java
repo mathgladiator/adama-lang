@@ -9,7 +9,6 @@
 package org.adamalang.api;
 
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.connection.Session;
 import org.adamalang.transforms.DomainResolver;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.SpacePolicyLocator;

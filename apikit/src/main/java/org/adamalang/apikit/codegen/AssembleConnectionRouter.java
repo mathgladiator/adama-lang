@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Locale;
 
 public class AssembleConnectionRouter {
-  public static String make(String packageName, Method[] methods) {
+  public static String make(String packageName, String sessionImport,  Method[] methods) {
     HashMap<String, ArrayList<Method>> methodsBySubHandler = AssembleHandlers.shred(methods);
     HashSet<String> subHandlers = new HashSet<>(methodsBySubHandler.keySet());
 
@@ -27,7 +27,7 @@ public class AssembleConnectionRouter {
     router.append("import com.fasterxml.jackson.databind.node.ObjectNode;\n");
     router.append("import org.adamalang.common.*;\n");
     router.append("import org.adamalang.common.metrics.*;\n");
-    router.append("import org.adamalang.connection.*;\n");
+    router.append("import " + sessionImport + ";\n");
     router.append("import org.adamalang.web.io.*;\n");
     router.append("import org.adamalang.ErrorCodes;\n");
     router.append("\n");

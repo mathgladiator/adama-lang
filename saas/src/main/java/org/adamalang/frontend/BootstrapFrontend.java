@@ -12,7 +12,6 @@ import org.adamalang.api.ConnectionNexus;
 import org.adamalang.api.ConnectionRouter;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.SimpleExecutorFactory;
-import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.transforms.DomainResolver;
 import org.adamalang.transforms.PerSessionAuthenticator;

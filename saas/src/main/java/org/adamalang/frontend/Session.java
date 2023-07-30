@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.connection;
+package org.adamalang.frontend;
 
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.results.AuthenticatedUser;

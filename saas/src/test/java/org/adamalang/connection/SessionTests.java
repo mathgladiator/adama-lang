@@ -8,6 +8,7 @@
  */
 package org.adamalang.connection;
 
+import org.adamalang.frontend.Session;
 import org.junit.Assert;
 import org.junit.Test;
 

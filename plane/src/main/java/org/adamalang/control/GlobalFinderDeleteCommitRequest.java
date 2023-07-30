@@ -9,10 +9,10 @@
 package org.adamalang.control;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.Session;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
-import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
 /** Delete the document from the finder */

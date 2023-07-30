@@ -12,7 +12,7 @@ package org.adamalang.api;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.*;
-import org.adamalang.connection.*;
+import org.adamalang.frontend.Session;
 import org.adamalang.web.io.*;
 import org.adamalang.ErrorCodes;
 

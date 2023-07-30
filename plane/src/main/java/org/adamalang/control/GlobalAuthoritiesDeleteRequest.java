@@ -9,34 +9,34 @@
 package org.adamalang.control;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.Session;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
-import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
-/** Start the service up */
-public class GlobalMachineStartRequest {
-  public final String machineIdentity;
-  public final String role;
+/** Deletes an authority */
+public class GlobalAuthoritiesDeleteRequest {
+  public final Integer owner;
+  public final String authority;
 
-  public GlobalMachineStartRequest(final String machineIdentity, final String role) {
-    this.machineIdentity = machineIdentity;
-    this.role = role;
+  public GlobalAuthoritiesDeleteRequest(final Integer owner, final String authority) {
+    this.owner = owner;
+    this.authority = authority;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<GlobalMachineStartRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<GlobalAuthoritiesDeleteRequest> callback) {
     try {
-      final String machineIdentity = request.getString("machine-identity", true, 9001);
-      final String role = request.getString("role", true, 9002);
-      nexus.executor.execute(new NamedRunnable("globalmachinestart-success") {
+      final Integer owner = request.getInteger("owner", true, 9010);
+      final String authority = request.getString("authority", true, 9011);
+      nexus.executor.execute(new NamedRunnable("globalauthoritiesdelete-success") {
         @Override
         public void execute() throws Exception {
-           callback.success(new GlobalMachineStartRequest(machineIdentity, role));
+           callback.success(new GlobalAuthoritiesDeleteRequest(owner, authority));
         }
       });
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(new NamedRunnable("globalmachinestart-error") {
+      nexus.executor.execute(new NamedRunnable("globalauthoritiesdelete-error") {
         @Override
         public void execute() throws Exception {
           callback.failure(ece);
@@ -46,5 +46,7 @@ public class GlobalMachineStartRequest {
   }
 
   public void logInto(ObjectNode _node) {
+    _node.put("owner", owner);
+    _node.put("authority", authority);
   }
 }

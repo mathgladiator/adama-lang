@@ -9,37 +9,31 @@
 package org.adamalang.control;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.Session;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
-import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
-/** Set the keystore for an authority */
-public class GlobalAuthoritiesSetRequest {
+/** Create a new authority */
+public class GlobalAuthoritiesCreateRequest {
   public final Integer owner;
-  public final String authority;
-  public final String keystore;
 
-  public GlobalAuthoritiesSetRequest(final Integer owner, final String authority, final String keystore) {
+  public GlobalAuthoritiesCreateRequest(final Integer owner) {
     this.owner = owner;
-    this.authority = authority;
-    this.keystore = keystore;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<GlobalAuthoritiesSetRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<GlobalAuthoritiesCreateRequest> callback) {
     try {
       final Integer owner = request.getInteger("owner", true, 9010);
-      final String authority = request.getString("authority", true, 9011);
-      final String keystore = request.getString("keystore", true, 9012);
-      nexus.executor.execute(new NamedRunnable("globalauthoritiesset-success") {
+      nexus.executor.execute(new NamedRunnable("globalauthoritiescreate-success") {
         @Override
         public void execute() throws Exception {
-           callback.success(new GlobalAuthoritiesSetRequest(owner, authority, keystore));
+           callback.success(new GlobalAuthoritiesCreateRequest(owner));
         }
       });
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(new NamedRunnable("globalauthoritiesset-error") {
+      nexus.executor.execute(new NamedRunnable("globalauthoritiescreate-error") {
         @Override
         public void execute() throws Exception {
           callback.failure(ece);
@@ -50,6 +44,5 @@ public class GlobalAuthoritiesSetRequest {
 
   public void logInto(ObjectNode _node) {
     _node.put("owner", owner);
-    _node.put("authority", authority);
   }
 }

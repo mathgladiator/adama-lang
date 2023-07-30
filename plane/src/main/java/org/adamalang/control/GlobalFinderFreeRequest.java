@@ -9,40 +9,40 @@
 package org.adamalang.control;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.Session;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
-import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
-/** Delete the document from the finder */
-public class GlobalFinderDeleteMarkRequest {
+/** Free the binding from the given machine and region */
+public class GlobalFinderFreeRequest {
   public final String space;
   public final String key;
   public final String region;
   public final String machine;
 
-  public GlobalFinderDeleteMarkRequest(final String space, final String key, final String region, final String machine) {
+  public GlobalFinderFreeRequest(final String space, final String key, final String region, final String machine) {
     this.space = space;
     this.key = key;
     this.region = region;
     this.machine = machine;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<GlobalFinderDeleteMarkRequest> callback) {
+  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<GlobalFinderFreeRequest> callback) {
     try {
       final String space = request.getStringNormalize("space", true, 9003);
       final String key = request.getString("key", true, 9004);
       final String region = request.getString("region", true, 9006);
       final String machine = request.getString("machine", true, 9005);
-      nexus.executor.execute(new NamedRunnable("globalfinderdeletemark-success") {
+      nexus.executor.execute(new NamedRunnable("globalfinderfree-success") {
         @Override
         public void execute() throws Exception {
-           callback.success(new GlobalFinderDeleteMarkRequest(space, key, region, machine));
+           callback.success(new GlobalFinderFreeRequest(space, key, region, machine));
         }
       });
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(new NamedRunnable("globalfinderdeletemark-error") {
+      nexus.executor.execute(new NamedRunnable("globalfinderfree-error") {
         @Override
         public void execute() throws Exception {
           callback.failure(ece);

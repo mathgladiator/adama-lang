@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class AssembleHandlers {
 
-  public static Map<String, String> make(String packageName, Method[] methods) throws Exception {
+  public static Map<String, String> make(String packageName, String sessionImport, Method[] methods) throws Exception {
     HashMap<String, ArrayList<Method>> byHandler = shred(methods);
     Map<String, String> files = new HashMap<>();
     for (Map.Entry<String, ArrayList<Method>> entry : byHandler.entrySet()) {
@@ -27,7 +27,7 @@ public class AssembleHandlers {
       if (!root.equals("Root")) {
         java.append("import com.fasterxml.jackson.databind.node.ObjectNode;\n");
       }
-      java.append("import org.adamalang.connection.Session;\n");
+      java.append("import " + sessionImport + ";\n");
       java.append("\n");
       java.append("public interface ").append(root).append("Handler {\n");
       if (!root.equals("Root")) {

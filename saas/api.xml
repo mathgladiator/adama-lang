@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<api output-path="./saas/src/main/java/org/adamalang/api" test-output-path="./saas/src/test/java/org/adamalang/api" package="org.adamalang.api" docs="./reference/src/reference/api.md" client-output-path="./saasclient/src/main/java/org/adamalang/api" clientjs="./clientjs/connection.js">
+<api output-path="./saas/src/main/java/org/adamalang/api" test-output-path="./saas/src/test/java/org/adamalang/api" package="org.adamalang.api" docs="./reference/src/reference/api.md" client-output-path="./saasclient/src/main/java/org/adamalang/api" clientjs="./clientjs/connection.js" session-import="org.adamalang.frontend.Session">
     <parameter-definition name="identity" type="string" missing-error="458759">
         <documentation>
             Identity is a token to authenticate a user.
