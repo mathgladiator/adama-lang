@@ -43,7 +43,18 @@ public class MultiWebClientRetryPoolTests {
       runnable.waitForReady(1000);
       MultiWebClientRetryPoolMetrics metrics = new MultiWebClientRetryPoolMetrics(new NoOpMetricsFactory());
       MultiWebClientRetryPoolConfig config = new MultiWebClientRetryPoolConfig(new ConfigObject(Json.newJsonObject()));
-      MultiWebClientRetryPool pool = new MultiWebClientRetryPool(executor, webbase, metrics, config, "http://localhost:16000/~s");
+      MultiWebClientRetryPool pool = new MultiWebClientRetryPool(executor, webbase, metrics, config, (connection, callback) -> connection.requestResponse(Json.parseJsonObject("{\"method\":\"auth\"}"), (r) -> (Boolean) (r.get("result").asBoolean()), new Callback<Boolean>() {
+        @Override
+        public void success(Boolean value) {
+          System.out.println("auth check: " + value);
+          callback.success(null);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      }), "http://localhost:16000/~s");
       try {
         CountDownLatch latch = new CountDownLatch(2);
         CountDownLatch failure = new CountDownLatch(1);
