@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 public class Tool {
   public static void build(String inputXmlFile, File root) throws Exception {
@@ -40,6 +41,7 @@ public class Tool {
     DocumentBuilder builder = factory.newDocumentBuilder();
     Document doc = builder.parse(input);
     Element api = DocumentHelper.first(doc.getElementsByTagName("api"), "root api node");
+    TreeSet<String> scopes = Isolate.scopesOf(doc);
     String outputPathStr = DocumentHelper.attribute(api, "output-path");
     String clientOutputPathStr = DocumentHelper.attribute(api, "client-output-path");
     String testOutputPathStr = DocumentHelper.attribute(api, "test-output-path");
@@ -104,7 +106,6 @@ public class Tool {
 
   public static void main(String[] args) throws Exception {
     build("saas/api.xml", new File("."));
-    build("plane/control.xml", new File("."));
   }
 
 }

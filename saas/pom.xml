@@ -32,11 +32,6 @@
             <version>MAIN</version>
         </dependency>
         <dependency>
-            <groupId>org.adamalang</groupId>
-            <artifactId>plane</artifactId>
-            <version>MAIN</version>
-        </dependency>
-        <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
             <version>1.7</version>

@@ -601,21 +601,21 @@
         <field name="chunk_request_size"/>
     </responder>
 
-    <method name="init/setup-account" responder="simple">
+    <method name="init/setup-account" responder="simple" scope="global">
         <parameter name="email"/>
         <documentation>
             This initiates developer machine via email verification.
         </documentation>
     </method>
 
-    <method name="init/convert-google-user" responder="initiation">
+    <method name="init/convert-google-user" responder="initiation" scope="global">
         <parameter name="access-token"/>
         <documentation>
             The converts and validates a google token into an Adama token.
         </documentation>
     </method>
 
-    <method name="init/complete-account" responder="initiation">
+    <method name="init/complete-account" responder="initiation" scope="global">
         <parameter name="email"/>
         <parameter name="revoke"/>
         <parameter name="code"/>
@@ -631,7 +631,7 @@
         </documentation>
     </method>
 
-    <method name="account/set-password" responder="simple">
+    <method name="account/set-password" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="password"/>
         <documentation>
@@ -677,7 +677,7 @@
         <field name="password-hash"/>
     </responder>
 
-    <method name="account/get-payment-plan" responder="payment">
+    <method name="account/get-payment-plan" responder="payment" scope="global">
         <parameter name="identity"/>
         <documentation>
             Get the payment plan information for the developer.
@@ -693,7 +693,7 @@
     </method>
     -->
 
-    <method name="account/login" responder="initiation">
+    <method name="account/login" responder="initiation" scope="global">
         <parameter name="email"/>
         <parameter name="password"/>
         <documentation>
@@ -701,21 +701,21 @@
         </documentation>
     </method>
 
-    <method name="probe" responder="simple">
+    <method name="probe" responder="simple" scope="global">
         <parameter name="identity"/>
         <documentation>
             This is useful to validate an identity without executing anything.
         </documentation>
     </method>
 
-    <method name="authority/create" responder="claim-result">
+    <method name="authority/create" responder="claim-result" scope="global">
         <parameter name="identity"/>
         <documentation>
             Create an authority. See [Authentication](/reference/auth.md) for more details.
         </documentation>
     </method>
 
-    <method name="authority/set" responder="simple">
+    <method name="authority/set" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="authority"/>
         <parameter name="key-store"/>
@@ -724,7 +724,7 @@
         </documentation>
     </method>
 
-    <method name="authority/get" responder="keystore">
+    <method name="authority/get" responder="keystore" scope="global">
         <parameter name="identity"/>
         <parameter name="authority"/>
         <documentation>
@@ -732,14 +732,14 @@
         </documentation>
     </method>
 
-    <method name="authority/list" responder="authority-listing">
+    <method name="authority/list" responder="authority-listing" scope="global">
         <parameter name="identity"/>
         <documentation>
             List authorities for the given developer.
         </documentation>
     </method>
 
-    <method name="authority/destroy" responder="simple">
+    <method name="authority/destroy" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="authority"/>
         <documentation>
@@ -749,7 +749,7 @@
         </documentation>
     </method>
 
-    <method name="space/create" responder="simple">
+    <method name="space/create" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="template"/>
@@ -758,7 +758,7 @@
         </documentation>
     </method>
 
-    <method name="space/generate-key" responder="key-pair">
+    <method name="space/generate-key" responder="key-pair" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -772,7 +772,7 @@
         </documentation>
     </method>
 
-    <method name="space/usage" responder="billing-usage">
+    <method name="space/usage" responder="billing-usage" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="limit"/>
@@ -781,7 +781,7 @@
         </documentation>
     </method>
 
-    <method name="space/get" responder="plan">
+    <method name="space/get" responder="plan" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -789,7 +789,7 @@
         </documentation>
     </method>
 
-    <method name="space/set" responder="simple">
+    <method name="space/set" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="plan"/>
@@ -798,7 +798,7 @@
         </documentation>
     </method>
 
-    <method name="space/redeploy-kick" responder="simple">
+    <method name="space/redeploy-kick" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -806,7 +806,7 @@
         </documentation>
     </method>
 
-    <method name="space/set-rxhtml" responder="simple">
+    <method name="space/set-rxhtml" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="rxhtml"/>
@@ -815,7 +815,7 @@
         </documentation>
     </method>
 
-    <method name="space/get-rxhtml" responder="rxhtml">
+    <method name="space/get-rxhtml" responder="rxhtml" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -823,7 +823,7 @@
         </documentation>
     </method>
 
-    <method name="space/delete" responder="simple">
+    <method name="space/delete" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -834,7 +834,7 @@
         </documentation>
     </method>
 
-    <method name="space/set-role" responder="simple">
+    <method name="space/set-role" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="email"/>
@@ -846,7 +846,7 @@
         </documentation>
     </method>
 
-    <method name="space/list-developers" responder="developer">
+    <method name="space/list-developers" responder="developer" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -854,7 +854,7 @@
         </documentation>
     </method>
 
-    <method name="space/reflect" responder="reflection" devbox="true">
+    <method name="space/reflect" responder="reflection" devbox="true" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -863,7 +863,7 @@
         </documentation>
     </method>
 
-    <method name="space/list" responder="space-listing">
+    <method name="space/list" responder="space-listing" scope="global">
         <parameter name="identity"/>
         <parameter name="marker"/>
         <parameter name="limit"/>
@@ -872,7 +872,7 @@
         </documentation>
     </method>
 
-    <method name="domain/map" responder="simple">
+    <method name="domain/map" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="space"/>
@@ -882,7 +882,7 @@
         </documentation>
     </method>
 
-    <method name="domain/map-document" responder="simple">
+    <method name="domain/map-document" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="space"/>
@@ -894,21 +894,21 @@
         </documentation>
     </method>
 
-    <responder name="domain-listing" stream="true">
+    <responder name="domain-listing" stream="true" scope="global">
         <field name="domain" />
         <field name="space" />
         <field name="key" />
         <field name="route" />
     </responder>
 
-    <method name="domain/list" responder="domain-listing">
+    <method name="domain/list" responder="domain-listing" scope="global">
         <parameter name="identity"/>
         <documentation>
             List the domains for the given developer
         </documentation>
     </method>
 
-    <method name="domain/unmap" responder="simple">
+    <method name="domain/unmap" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <documentation>
@@ -916,7 +916,7 @@
         </documentation>
     </method>
 
-    <method name="domain/get" responder="domain-policy">
+    <method name="domain/get" responder="domain-policy" scope="global">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <documentation>
@@ -924,7 +924,7 @@
         </documentation>
     </method>
 
-    <method name="document/authorize" responder="initiation" devbox="true">
+    <method name="document/authorize" responder="initiation" devbox="true" scope="global">
         <parameter name="space"/>
         <parameter name="key"/>
         <parameter name="username"/>
@@ -934,7 +934,7 @@
         </documentation>
     </method>
 
-    <method name="document/authorize-domain" responder="initiation" devbox="true">
+    <method name="document/authorize-domain" responder="initiation" devbox="true" scope="global">
         <parameter name="domain"/>
         <parameter name="username"/>
         <parameter name="password"/>
@@ -943,7 +943,7 @@
         </documentation>
     </method>
 
-    <method name="document/create" responder="simple">
+    <method name="document/create" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -956,7 +956,7 @@
         </documentation>
     </method>
 
-    <method name="document/delete" responder="simple">
+    <method name="document/delete" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -965,7 +965,7 @@
         </documentation>
     </method>
 
-    <method name="document/list" responder="key-listing">
+    <method name="document/list" responder="key-listing" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="marker"/>
@@ -975,7 +975,7 @@
         </documentation>
     </method>
 
-    <method name="message/direct-send" responder="seq">
+    <method name="message/direct-send" responder="seq" scope="region">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -987,7 +987,7 @@
         </documentation>
     </method>
 
-    <method name="message/direct-send-once" responder="seq">
+    <method name="message/direct-send-once" responder="seq" scope="region">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -999,7 +999,7 @@
         </documentation>
     </method>
 
-    <method name="connection/create" responder="data" create="document-stream" devbox="true">
+    <method name="connection/create" responder="data" create="document-stream" devbox="true" scope="region">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1009,7 +1009,7 @@
         </documentation>
     </method>
 
-    <method name="connection/create-via-domain" responder="data" create="document-stream" devbox="true">
+    <method name="connection/create-via-domain" responder="data" create="document-stream" devbox="true" scope="region">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="viewer-state"/>
@@ -1018,7 +1018,7 @@
         </documentation>
     </method>
 
-    <method name="connection/send" responder="seq" handler="document-stream" find-by="connection" error-find-by="457745" devbox="true">
+    <method name="connection/send" responder="seq" handler="document-stream" find-by="connection" error-find-by="457745" devbox="true" scope="region">
         <parameter name="connection"/>
         <parameter name="channel"/>
         <parameter name="message"/>
@@ -1027,7 +1027,7 @@
         </documentation>
     </method>
 
-    <method name="connection/password" responder="seq" handler="document-stream" find-by="connection" error-find-by="462832" devbox="true">
+    <method name="connection/password" responder="seq" handler="document-stream" find-by="connection" error-find-by="462832" devbox="true" scope="region">
         <parameter name="connection"/>
         <parameter name="username"/>
         <parameter name="password"/>
@@ -1037,7 +1037,7 @@
         </documentation>
     </method>
 
-    <method name="connection/send-once" responder="seq" handler="document-stream" find-by="connection" error-find-by="410619" devbox="true">
+    <method name="connection/send-once" responder="seq" handler="document-stream" find-by="connection" error-find-by="410619" devbox="true" scope="region">
         <parameter name="connection"/>
         <parameter name="channel"/>
         <parameter name="dedupe"/>
@@ -1047,14 +1047,14 @@
         </documentation>
     </method>
 
-    <method name="connection/can-attach" responder="yes" handler="document-stream" find-by="connection" error-find-by="494559" devbox="true">
+    <method name="connection/can-attach" responder="yes" handler="document-stream" find-by="connection" error-find-by="494559" devbox="true" scope="region">
         <parameter name="connection"/>
         <documentation>
             Ask whether the connection can have attachments attached.
         </documentation>
     </method>
 
-    <method name="connection/attach" responder="seq" handler="document-stream" find-by="connection" error-find-by="442363" devbox="true">
+    <method name="connection/attach" responder="seq" handler="document-stream" find-by="connection" error-find-by="442363" devbox="true" scope="region">
         <parameter name="connection"/>
         <parameter name="asset-id"/>
         <parameter name="filename"/>
@@ -1069,7 +1069,7 @@
         </documentation>
     </method>
 
-    <method name="connection/update" responder="simple" handler="document-stream" find-by="connection" error-find-by="438302" devbox="true">
+    <method name="connection/update" responder="simple" handler="document-stream" find-by="connection" error-find-by="438302" devbox="true" scope="region">
         <parameter name="connection"/>
         <parameter name="viewer-state"/>
         <documentation>
@@ -1080,14 +1080,14 @@
         </documentation>
     </method>
 
-    <method name="connection/end" responder="simple" handler="document-stream" find-by="connection" error-find-by="474128" destroy="true" devbox="true">
+    <method name="connection/end" responder="simple" handler="document-stream" find-by="connection" error-find-by="474128" destroy="true" devbox="true" scope="region">
         <parameter name="connection"/>
         <documentation>
             Disconnect from the document.
         </documentation>
     </method>
 
-    <method name="documents/hash-password" responder="hashed-password" devbox="true">
+    <method name="documents/hash-password" responder="hashed-password" devbox="true" scope="region">
         <parameter name="password"/>
         <documentation>
             For documents that want to hold secrets, then these secrets should not be stored plaintext.
@@ -1097,7 +1097,7 @@
     </method>
 
     <!-- cross region replication
-    <method name="replication/create" responder="replica" create="replication-stream">
+    <method name="replication/create" responder="replica" create="replication-stream" scope="region">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1106,7 +1106,7 @@
         </documentation>
     </method>
 
-    <method name="replication/end" responder="simple" handler="replication-stream" find-by="connection" error-find-by="445438" destroy="true">
+    <method name="replication/end" responder="simple" handler="replication-stream" find-by="connection" error-find-by="445438" destroy="true" scope="region">
         <parameter name="connection"/>
         <documentation>
             Stop replicating data
@@ -1115,7 +1115,7 @@
     -->
 
     <!-- massive scale reading
-    <method name="observation/create" responder="data" create="observe-stream">
+    <method name="observation/create" responder="data" create="observe-stream" scope="region">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1124,7 +1124,7 @@
         </documentation>
     </method>
 
-    <method name="connection/funnel" responder="seq" handler="observe-stream" find-by="connection" error-find-by="451582">
+    <method name="connection/funnel" responder="seq" handler="observe-stream" find-by="connection" error-find-by="451582" scope="region">
         <parameter name="connection"/>
         <parameter name="channel"/>
         <parameter name="message"/>
@@ -1133,7 +1133,7 @@
         </documentation>
     </method>
 
-    <method name="observation/end" responder="simple" handler="observe-stream" find-by="connection" error-find-by="439295" destroy="true">
+    <method name="observation/end" responder="simple" handler="observe-stream" find-by="connection" error-find-by="439295" destroy="true" scope="region">
         <parameter name="connection"/>
         <documentation>
             Disconnect from the observation.
@@ -1141,7 +1141,7 @@
     </method>
     -->
 
-    <method name="configure/make-or-get-asset-key" responder="asset-key">
+    <method name="configure/make-or-get-asset-key" responder="asset-key" scope="global">
         <documentation>
             Here, we ask if the connection if it has an asset key already.
             If not, then it will generate one and send it along.
@@ -1151,7 +1151,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/start" responder="progress" create="attachment-upload">
+    <method name="attachment/start" responder="progress" create="attachment-upload" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1162,7 +1162,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="477201">
+    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="477201" scope="global">
         <parameter name="upload"/>
         <parameter name="chunk-md5"/>
         <parameter name="base64-bytes"/>
@@ -1171,7 +1171,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/finish" responder="asset-id" handler="attachment-upload" find-by="upload" error-find-by="478227" destroy="true">
+    <method name="attachment/finish" responder="asset-id" handler="attachment-upload" find-by="upload" error-find-by="478227" destroy="true" scope="global">
         <parameter name="upload"/>
         <documentation>
             Finishing uploading the attachment upload.
@@ -1195,7 +1195,7 @@
         <field name="timestamp" />
     </responder>
 
-    <method name="super/check-in" responder="simple">
+    <method name="super/check-in" responder="simple" scope="super">
         <parameter name="identity"/>
         <documentation>
             The super agent periodically checks in.
@@ -1205,7 +1205,7 @@
     </method>
 
 
-    <method name="super/list-automatic-domains" responder="automatic-domain-listing">
+    <method name="super/list-automatic-domains" responder="automatic-domain-listing" scope="super">
         <parameter name="identity"/>
         <parameter name="timestamp"/>
         <documentation>
@@ -1213,7 +1213,7 @@
         </documentation>
     </method>
 
-    <method name="super/set-domain-certificate" responder="simple">
+    <method name="super/set-domain-certificate" responder="simple" scope="super">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="certificate"/>

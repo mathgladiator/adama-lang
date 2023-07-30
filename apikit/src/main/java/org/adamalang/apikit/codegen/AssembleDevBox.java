@@ -8,7 +8,6 @@
  */
 package org.adamalang.apikit.codegen;
 
-import org.adamalang.apikit.model.Common;
 import org.adamalang.apikit.model.Method;
 import org.adamalang.apikit.model.ParameterDefinition;
 
