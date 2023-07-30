@@ -32,7 +32,6 @@
         <module>services</module>
         <module>clikit</module>
         <module>saasclient</module>
-        <module>plane</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
