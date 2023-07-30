@@ -24,6 +24,7 @@ import org.adamalang.services.security.IdentitySigner;
 import org.adamalang.services.sms.Twilio;
 import org.adamalang.services.social.Discord;
 import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.socket.ConnectionReady;
 import org.adamalang.web.client.socket.MultiWebClientRetryPool;
 import org.adamalang.web.client.socket.MultiWebClientRetryPoolConfig;
 import org.adamalang.web.client.socket.MultiWebClientRetryPoolMetrics;
@@ -38,7 +39,7 @@ public class FirstPartyServices {
     SelfClient adamaClientRaw = null;
     if (executor != null){
       // TODO: sort out a plan for variuos endpoints... OR make it part of the signature
-      MultiWebClientRetryPool pool = new MultiWebClientRetryPool(executor, webClientBase, new MultiWebClientRetryPoolMetrics(factory), new MultiWebClientRetryPoolConfig(new ConfigObject(Json.newJsonObject())), "wss://aws-us-east-2.adama-platform.com/~s");
+      MultiWebClientRetryPool pool = new MultiWebClientRetryPool(executor, webClientBase, new MultiWebClientRetryPoolMetrics(factory), new MultiWebClientRetryPoolConfig(new ConfigObject(Json.newJsonObject())), ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
       adamaClientRaw = new SelfClient(pool);
     }
     final SelfClient adamaClient = adamaClientRaw;

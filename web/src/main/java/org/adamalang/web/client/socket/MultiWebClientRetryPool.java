@@ -35,12 +35,14 @@ public class MultiWebClientRetryPool {
   private final String endpoint;
   private final SimpleExecutor executor;
   private final WebSocketPoolEndpoint[] connections;
+  private final ConnectionReady ready;
 
-  public MultiWebClientRetryPool(SimpleExecutor executor, WebClientBase base, MultiWebClientRetryPoolMetrics metrics, MultiWebClientRetryPoolConfig config, String endpoint) {
+  public MultiWebClientRetryPool(SimpleExecutor executor, WebClientBase base, MultiWebClientRetryPoolMetrics metrics, MultiWebClientRetryPoolConfig config, ConnectionReady ready, String endpoint) {
     this.executor = executor;
     this.base = base;
     this.metrics = metrics;
     this.config = config;
+    this.ready = ready;
     this.endpoint = endpoint;
     this.rng = new Random();
     this.alive = new AtomicBoolean(true);
@@ -64,7 +66,18 @@ public class MultiWebClientRetryPool {
           executor.execute(new NamedRunnable("connected") {
             @Override
             public void execute() throws Exception {
-              queue.ready(connection);
+              ready.test(connection, new Callback<>() {
+                @Override
+                public void success(Void value) {
+                  queue.ready(connection);
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  failure(ex);
+                  connection.close();
+                }
+              });
             }
           });
         }

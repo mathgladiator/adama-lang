@@ -34,6 +34,11 @@ public class MockServiceBase implements ServiceBase {
       public void execute(JsonRequest request, JsonResponder responder) {
         try {
           switch (request.method()) {
+            case "auth": {
+              System.out.println("authentication");
+              responder.finish("{\"result\":true}");
+              return;
+            }
             case "cake":
             {
               responder.stream("{\"boss\":1}");
