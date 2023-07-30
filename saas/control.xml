@@ -51,6 +51,11 @@
             Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--'
         </documentation>
     </parameter-definition>
+    <field-definition name="space" type="string">
+        <documentation>
+            The space of a document
+        </documentation>
+    </field-definition>
 
     <parameter-definition name="key" type="string" missing-error="9004" logged="true">
         <documentation>
@@ -60,68 +65,53 @@
             Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation
         </documentation>
     </parameter-definition>
+    <field-definition name="key" type="string">
+        <documentation>
+            The key of a document
+        </documentation>
+    </field-definition>
 
     <parameter-definition name="machine" type="string" missing-error="9005" logged="true">
         <documentation>
             The machine to bind too
         </documentation>
     </parameter-definition>
-
     <parameter-definition name="region" type="string" missing-error="9006" logged="true">
         <documentation>
             The region to bind too
         </documentation>
     </parameter-definition>
-
     <parameter-definition name="archive-key" type="string" missing-error="9007" logged="true">
         <documentation>
             The archive key to bind too
         </documentation>
     </parameter-definition>
 
-
     <field-definition name="id" type="long">
         <documentation>
             a long id
         </documentation>
     </field-definition>
-
     <field-definition name="location-type" type="int">
         <documentation>
             Information about the found results
         </documentation>
     </field-definition>
-
     <field-definition name="archive" type="string">
         <documentation>
             The archive containing the backup of the document
         </documentation>
     </field-definition>
-
     <field-definition name="region" type="string">
         <documentation>
             The region where the document exists
         </documentation>
     </field-definition>
-
     <field-definition name="machine" type="string">
         <documentation>
             The machine the document is located on
         </documentation>
     </field-definition>
-
-    <field-definition name="space" type="string">
-        <documentation>
-
-        </documentation>
-    </field-definition>
-
-    <field-definition name="key" type="string">
-        <documentation>
-
-        </documentation>
-    </field-definition>
-
     <responder name="void">
     </responder>
 
@@ -146,7 +136,6 @@
         <parameter name="space" />
         <parameter name="key" />
     </method>
-
     <method name="global/finder/findbind" responder="found">
         <documentation>
             Find the host, and if not bound then take possession
@@ -156,7 +145,6 @@
         <parameter name="region" />
         <parameter name="machine" />
     </method>
-
     <method name="global/finder/free" responder="void">
         <documentation>
             Free the binding from the given machine and region
@@ -166,8 +154,7 @@
         <parameter name="region" />
         <parameter name="machine" />
     </method>
-
-    <method name="global/finder/delete" responder="void">
+    <method name="global/finder/delete/mark" responder="void">
         <documentation>
             Delete the document from the finder
         </documentation>
@@ -176,7 +163,15 @@
         <parameter name="region" />
         <parameter name="machine" />
     </method>
-
+    <method name="global/finder/delete/commit" responder="void">
+        <documentation>
+            Delete the document from the finder
+        </documentation>
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="region" />
+        <parameter name="machine" />
+    </method>
     <method name="global/finder/back-up" responder="void">
         <documentation>
             Set the archive key
@@ -187,7 +182,6 @@
         <parameter name="machine" />
         <parameter name="archive-key" />
     </method>
-
     <method name="global/finder/list" responder="keyid">
         <documentation>
             List the keys on the given machine
@@ -196,5 +190,85 @@
         <parameter name="machine" />
     </method>
 
+    <parameter-definition name="owner" type="int" missing-error="9010" logged="true">
+        <documentation>
+            The owner of the item
+        </documentation>
+    </parameter-definition>
+    <parameter-definition name="authority" type="string" missing-error="9011" logged="true">
+        <documentation>
+            The name of a keystore
+        </documentation>
+    </parameter-definition>
+    <parameter-definition name="keystore" type="string" missing-error="9012" logged="false">
+        <documentation>
+            A bunch of public keys
+        </documentation>
+    </parameter-definition>
+
+    <field-definition name="authority" type="string">
+        <documentation>
+            The name of a keystore
+        </documentation>
+    </field-definition>
+    <field-definition name="keystore" type="string">
+        <documentation>
+            A bunch of public keys
+        </documentation>
+    </field-definition>
+
+    <responder name="authority">
+        <field name="authority" />
+    </responder>
+    <responder name="authority-list" stream="true">
+        <field name="authority" />
+    </responder>
+    <responder name="keystore">
+        <field name="keystore" />
+    </responder>
+    <responder name="keystore">
+        <field name="keystore" />
+    </responder>
+
+    <method name="global/authorities/create" responder="authority">
+        <documentation>
+            Create a new authority
+        </documentation>
+        <parameter name="owner" />
+    </method>
+    <method name="global/authorities/set" responder="void">
+        <documentation>
+            Set the keystore for an authority
+        </documentation>
+        <parameter name="owner" />
+        <parameter name="authority" />
+        <parameter name="keystore" />
+    </method>
+    <method name="global/authorities/get/public" responder="keystore">
+        <documentation>
+            Get an authority
+        </documentation>
+        <parameter name="authority" />
+    </method>
+    <method name="global/authorities/get/protected" responder="keystore">
+        <documentation>
+            Get an authority
+        </documentation>
+        <parameter name="owner" />
+        <parameter name="authority" />
+    </method>
+    <method name="global/authorities/list" responder="authority-list">
+        <documentation>
+            Get an authority
+        </documentation>
+        <parameter name="owner" />
+    </method>
+    <method name="global/authorities/delete" responder="void">
+        <documentation>
+            Deletes an authority
+        </documentation>
+        <parameter name="owner" />
+        <parameter name="authority" />
+    </method>
 
 </api>

@@ -123,11 +123,29 @@ public class ConnectionRouter {
                 }
               });
             } return;
-            case "global/finder/delete": {
-              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalFinderDelete.start();
-              GlobalFinderDeleteRequest.resolve(session, nexus, request, new Callback<>() {
+            case "global/finder/delete/mark": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalFinderDeleteMark.start();
+              GlobalFinderDeleteMarkRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
-                public void success(GlobalFinderDeleteRequest resolved) {
+                public void success(GlobalFinderDeleteMarkRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new VoidResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/finder/delete/commit": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalFinderDeleteCommit.start();
+              GlobalFinderDeleteCommitRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalFinderDeleteCommitRequest resolved) {
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new VoidResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -166,6 +184,114 @@ public class ConnectionRouter {
                 public void success(GlobalFinderListRequest resolved) {
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new KeyidResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/authorities/create": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalAuthoritiesCreate.start();
+              GlobalAuthoritiesCreateRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalAuthoritiesCreateRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new AuthorityResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/authorities/set": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalAuthoritiesSet.start();
+              GlobalAuthoritiesSetRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalAuthoritiesSetRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new VoidResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/authorities/get/public": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalAuthoritiesGetPublic.start();
+              GlobalAuthoritiesGetPublicRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalAuthoritiesGetPublicRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new KeystoreResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/authorities/get/protected": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalAuthoritiesGetProtected.start();
+              GlobalAuthoritiesGetProtectedRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalAuthoritiesGetProtectedRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new KeystoreResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/authorities/list": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalAuthoritiesList.start();
+              GlobalAuthoritiesListRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalAuthoritiesListRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new AuthorityListResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "global/authorities/delete": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_GlobalAuthoritiesDelete.start();
+              GlobalAuthoritiesDeleteRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(GlobalAuthoritiesDeleteRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new VoidResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {

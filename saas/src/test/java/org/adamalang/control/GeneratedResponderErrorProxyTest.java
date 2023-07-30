@@ -36,10 +36,13 @@ public class GeneratedResponderErrorProxyTest {
         errorCount.addAndGet(ex.code);
       }
     };
-    new FoundResponder(responder).error(new ErrorCodeException(1));
-    new KeyidResponder(responder).error(new ErrorCodeException(2));
-    new MachineStartResponder(responder).error(new ErrorCodeException(3));
-    new VoidResponder(responder).error(new ErrorCodeException(4));
-    Assert.assertEquals(10, errorCount.get());
+    new AuthorityResponder(responder).error(new ErrorCodeException(1));
+    new AuthorityListResponder(responder).error(new ErrorCodeException(2));
+    new FoundResponder(responder).error(new ErrorCodeException(3));
+    new KeyidResponder(responder).error(new ErrorCodeException(4));
+    new KeystoreResponder(responder).error(new ErrorCodeException(5));
+    new MachineStartResponder(responder).error(new ErrorCodeException(6));
+    new VoidResponder(responder).error(new ErrorCodeException(7));
+    Assert.assertEquals(28, errorCount.get());
   }
 }

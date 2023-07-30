@@ -19,11 +19,25 @@ public interface RootHandler {
 
   public void handle(Session session, GlobalFinderFreeRequest request, VoidResponder responder);
 
-  public void handle(Session session, GlobalFinderDeleteRequest request, VoidResponder responder);
+  public void handle(Session session, GlobalFinderDeleteMarkRequest request, VoidResponder responder);
+
+  public void handle(Session session, GlobalFinderDeleteCommitRequest request, VoidResponder responder);
 
   public void handle(Session session, GlobalFinderBackUpRequest request, VoidResponder responder);
 
   public void handle(Session session, GlobalFinderListRequest request, KeyidResponder responder);
+
+  public void handle(Session session, GlobalAuthoritiesCreateRequest request, AuthorityResponder responder);
+
+  public void handle(Session session, GlobalAuthoritiesSetRequest request, VoidResponder responder);
+
+  public void handle(Session session, GlobalAuthoritiesGetPublicRequest request, KeystoreResponder responder);
+
+  public void handle(Session session, GlobalAuthoritiesGetProtectedRequest request, KeystoreResponder responder);
+
+  public void handle(Session session, GlobalAuthoritiesListRequest request, AuthorityListResponder responder);
+
+  public void handle(Session session, GlobalAuthoritiesDeleteRequest request, VoidResponder responder);
 
   public void disconnect();
 
