@@ -35,7 +35,7 @@ public class DocumentDeleteRequest {
     this.key = key;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<DocumentDeleteRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<DocumentDeleteRequest> callback) {
     try {
       final BulkLatch<DocumentDeleteRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);

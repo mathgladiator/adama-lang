@@ -37,7 +37,7 @@ public class InitCompleteAccountRequest {
     this.code = code;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<InitCompleteAccountRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<InitCompleteAccountRequest> callback) {
     try {
       final BulkLatch<InitCompleteAccountRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String email = request.getString("email", true, 473103);

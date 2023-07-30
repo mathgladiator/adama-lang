@@ -37,7 +37,7 @@ public class ConnectionAttachRequest {
     this.digestSha384 = digestSha384;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<ConnectionAttachRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<ConnectionAttachRequest> callback) {
     try {
       final Long connection = request.getLong("connection", true, 405505);
       final String assetId = request.getString("asset-id", true, 476156);

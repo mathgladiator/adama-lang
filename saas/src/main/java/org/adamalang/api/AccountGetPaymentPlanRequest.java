@@ -26,7 +26,7 @@ public class AccountGetPaymentPlanRequest {
     this.who = who;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AccountGetPaymentPlanRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<AccountGetPaymentPlanRequest> callback) {
     try {
       final BulkLatch<AccountGetPaymentPlanRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);

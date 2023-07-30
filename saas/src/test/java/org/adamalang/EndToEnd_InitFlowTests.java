@@ -17,8 +17,6 @@ public class EndToEnd_InitFlowTests {
   @Test
   public void flow() throws Exception {
     try (TestFrontEnd fe = new TestFrontEnd()) {
-      Iterator<String> c0 = fe.execute("{}");
-      Assert.assertEquals("ERROR:233120", c0.next());
       String devIdentityNuked = fe.setupDevIdentity();
       String devIdentity = fe.generateIdentity("x@x.com", true);
       Iterator<String> c3 =

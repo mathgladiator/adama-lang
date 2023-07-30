@@ -31,7 +31,7 @@ public class DomainUnmapRequest {
     this.resolvedDomain = resolvedDomain;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<DomainUnmapRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<DomainUnmapRequest> callback) {
     try {
       final BulkLatch<DomainUnmapRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);

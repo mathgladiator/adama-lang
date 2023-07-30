@@ -31,7 +31,7 @@ public class ConnectionSendOnceRequest {
     this.message = message;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<ConnectionSendOnceRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<ConnectionSendOnceRequest> callback) {
     try {
       final Long connection = request.getLong("connection", true, 405505);
       final String channel = request.getString("channel", true, 454659);

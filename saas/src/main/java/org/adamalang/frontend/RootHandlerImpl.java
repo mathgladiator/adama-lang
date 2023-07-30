@@ -50,7 +50,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
-public class RootHandlerImpl implements RootHandler {
+public class RootHandlerImpl implements RootGlobalHandler, RootRegionHandler {
   private static final Logger LOG = LoggerFactory.getLogger(RootHandlerImpl.class);
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LOG);
   private final ExternNexus nexus;

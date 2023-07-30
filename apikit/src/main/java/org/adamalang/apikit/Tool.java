@@ -10,10 +10,7 @@ package org.adamalang.apikit;
 
 import org.adamalang.apikit.codegen.*;
 import org.adamalang.apikit.docgen.AssembleAPIDocs;
-import org.adamalang.apikit.model.FieldDefinition;
-import org.adamalang.apikit.model.Method;
-import org.adamalang.apikit.model.ParameterDefinition;
-import org.adamalang.apikit.model.Responder;
+import org.adamalang.apikit.model.*;
 import org.adamalang.common.DefaultCopyright;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -49,18 +46,29 @@ public class Tool {
     String sessionImport = DocumentHelper.attribute(api, "session-import");
     String docsFile = api.getAttribute("docs");
     String clientFileJs = api.getAttribute("clientjs");
-    Map<String, ParameterDefinition> parameters = ParameterDefinition.buildMap(doc);
+    HashMap<String, String> apiOutput = new HashMap<>();
     Map<String, FieldDefinition> fields = FieldDefinition.buildMap(doc);
+    Map<String, ParameterDefinition> parameters = ParameterDefinition.buildMap(doc);
     Map<String, Responder> responders = Responder.respondersOf(doc, fields);
     Method[] methods = Method.methodsOf(doc, parameters, responders);
-    String nexus = AssembleNexus.make(packageName, parameters);
-    String devbox = AssembleDevBox.make(packageName, methods);
-    Map<String, String> requestsFiles = AssembleRequestTypes.make(packageName, sessionImport, methods);
-    Map<String, String> responderFiles = AssembleResponders.make(packageName, responders);
     Map<String, String> handlerFiles = AssembleHandlers.make(packageName, sessionImport, methods);
     Map<String, String> javaClientFiles = AssembleJavaClient.make(packageName, responders, methods);
-    String router = AssembleConnectionRouter.make(packageName, sessionImport, methods);
-    String metrics = AssembleMetrics.make(packageName, methods);
+    String devbox = AssembleDevBox.make(packageName, methods);
+    for (String scope : scopes) {
+      String scopePrefix = Common.camelize(scope);
+      Map<String, ParameterDefinition> isolatedParameters = Isolate.scopeParameters(doc, parameters, scope);
+      String nexus = AssembleNexus.make(packageName, scopePrefix, isolatedParameters);
+      Method[] scopedMethods = Isolate.scopeMethods(methods, scope);
+      String router = AssembleConnectionRouter.make(packageName, sessionImport, scopePrefix, scopedMethods);
+      String metrics = AssembleMetrics.make(packageName, scopePrefix, scopedMethods);
+
+      apiOutput.put(scopePrefix + "ConnectionNexus.java", nexus);
+      apiOutput.put(scopePrefix + "ConnectionRouter.java", router);
+      apiOutput.put(scopePrefix + "ApiMetrics.java", metrics);
+    }
+    Map<String, String> requestsFiles = AssembleRequestTypes.make(packageName, sessionImport, methods);
+    Map<String, String> responderFiles = AssembleResponders.make(packageName, responders);
+
     File outputPath = new File(root, outputPathStr);
     File clientOutputPath = new File(clientOutputPathStr);
     outputPath.mkdirs();
@@ -73,11 +81,7 @@ public class Tool {
       throw new Exception("test output path failed to be created");
     }
 
-    HashMap<String, String> apiOutput = new HashMap<>();
     apiOutput.put("DevBoxRouter.java", devbox);
-    apiOutput.put("ConnectionNexus.java", nexus);
-    apiOutput.put("ConnectionRouter.java", router);
-    apiOutput.put("ApiMetrics.java", metrics);
     apiOutput.putAll(requestsFiles);
     apiOutput.putAll(responderFiles);
     apiOutput.putAll(handlerFiles);
@@ -99,7 +103,7 @@ public class Tool {
       diskWrites.put(new File(root, clientFileJs), clientJs);
     }
     for (Map.Entry<String, String> javaClient : javaClientFiles.entrySet()) {
-      diskWrites.put(new File(clientOutputPath, javaClient.getKey()), javaClient.getValue());
+      diskWrites.put(new File(clientOutputPath, javaClient.getKey()), DefaultCopyright.COPYRIGHT_FILE_PREFIX + javaClient.getValue());
     }
     return diskWrites;
   }

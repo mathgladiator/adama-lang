@@ -8,7 +8,8 @@
  */
 package org.adamalang.cli.implementations;
 
-import org.adamalang.api.ApiMetrics;
+import org.adamalang.api.GlobalApiMetrics;
+import org.adamalang.api.RegionApiMetrics;
 import org.adamalang.caravan.CaravanMetrics;
 import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.cli.Config;
@@ -79,7 +80,8 @@ public class ServicesHandlerImpl implements ServicesHandler {
     new WebMetrics(metricsFactory);
     metricsFactory.page("api", "Public API");
     new FrontendMetrics(metricsFactory);
-    new ApiMetrics(metricsFactory);
+    new GlobalApiMetrics(metricsFactory);
+    new RegionApiMetrics(metricsFactory);
     metricsFactory.page("client", "Web to Adama");
     new ClientMetrics(metricsFactory);
     metricsFactory.page("server", "Adama Service");

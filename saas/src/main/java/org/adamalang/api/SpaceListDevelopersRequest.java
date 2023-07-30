@@ -32,7 +32,7 @@ public class SpaceListDevelopersRequest {
     this.policy = policy;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceListDevelopersRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<SpaceListDevelopersRequest> callback) {
     try {
       final BulkLatch<SpaceListDevelopersRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);

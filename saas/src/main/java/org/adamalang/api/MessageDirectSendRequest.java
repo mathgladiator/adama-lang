@@ -43,7 +43,7 @@ public class MessageDirectSendRequest {
     this.message = message;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<MessageDirectSendRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<MessageDirectSendRequest> callback) {
     try {
       final BulkLatch<MessageDirectSendRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);

@@ -27,7 +27,7 @@ public class AttachmentAppendRequest {
     this.base64Bytes = base64Bytes;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AttachmentAppendRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<AttachmentAppendRequest> callback) {
     try {
       final Long upload = request.getLong("upload", true, 409609);
       final String chunkMd5 = request.getString("chunk-md5", true, 462859);

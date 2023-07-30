@@ -30,7 +30,7 @@ public class SpaceListRequest {
     this.limit = limit;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceListRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<SpaceListRequest> callback) {
     try {
       final BulkLatch<SpaceListRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);

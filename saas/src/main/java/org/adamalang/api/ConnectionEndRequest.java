@@ -23,7 +23,7 @@ public class ConnectionEndRequest {
     this.connection = connection;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<ConnectionEndRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<ConnectionEndRequest> callback) {
     try {
       final Long connection = request.getLong("connection", true, 405505);
       nexus.executor.execute(new NamedRunnable("connectionend-success") {

@@ -23,7 +23,7 @@ public class AttachmentFinishRequest {
     this.upload = upload;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AttachmentFinishRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<AttachmentFinishRequest> callback) {
     try {
       final Long upload = request.getLong("upload", true, 409609);
       nexus.executor.execute(new NamedRunnable("attachmentfinish-success") {

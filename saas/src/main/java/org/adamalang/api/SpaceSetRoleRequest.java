@@ -41,7 +41,7 @@ public class SpaceSetRoleRequest {
     this.role = role;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceSetRoleRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<SpaceSetRoleRequest> callback) {
     try {
       final BulkLatch<SpaceSetRoleRequest> _latch = new BulkLatch<>(nexus.executor, 3, callback);
       final String identity = request.getString("identity", true, 458759);

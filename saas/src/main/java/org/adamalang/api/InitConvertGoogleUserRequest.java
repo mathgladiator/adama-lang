@@ -24,7 +24,7 @@ public class InitConvertGoogleUserRequest {
     this.accessToken = accessToken;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<InitConvertGoogleUserRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<InitConvertGoogleUserRequest> callback) {
     try {
       final String accessToken = request.getString("access-token", true, 407544);
       ValidateToken.validate(accessToken);

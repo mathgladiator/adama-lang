@@ -26,7 +26,7 @@ public class EndToEnd_AttachTests {
   public void cantAttach() throws Exception {
     try (TestFrontEnd fe = new TestFrontEnd()) {
       Iterator<String> c0 = fe.execute("{}");
-      Assert.assertEquals("ERROR:233120", c0.next());
+      Assert.assertEquals("ERROR:213708", c0.next());
       String devIdentity = fe.setupDevIdentity();
       Iterator<String> c3 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/create\",\"space\":\"newspace\"}");
       Assert.assertEquals("FINISH:{}", c3.next());

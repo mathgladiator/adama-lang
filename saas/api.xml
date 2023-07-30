@@ -924,7 +924,7 @@
         </documentation>
     </method>
 
-    <method name="document/authorize" responder="initiation" devbox="true" scope="global">
+    <method name="document/authorize" responder="initiation" devbox="true" scope="region">
         <parameter name="space"/>
         <parameter name="key"/>
         <parameter name="username"/>
@@ -934,7 +934,7 @@
         </documentation>
     </method>
 
-    <method name="document/authorize-domain" responder="initiation" devbox="true" scope="global">
+    <method name="document/authorize-domain" responder="initiation" devbox="true" scope="region">
         <parameter name="domain"/>
         <parameter name="username"/>
         <parameter name="password"/>
@@ -943,7 +943,7 @@
         </documentation>
     </method>
 
-    <method name="document/create" responder="simple" scope="global">
+    <method name="document/create" responder="simple" scope="region">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -956,7 +956,7 @@
         </documentation>
     </method>
 
-    <method name="document/delete" responder="simple" scope="global">
+    <method name="document/delete" responder="simple" scope="region">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1151,7 +1151,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/start" responder="progress" create="attachment-upload" scope="global">
+    <method name="attachment/start" responder="progress" create="attachment-upload" scope="region">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1162,7 +1162,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="477201" scope="global">
+    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="477201" scope="region">
         <parameter name="upload"/>
         <parameter name="chunk-md5"/>
         <parameter name="base64-bytes"/>
@@ -1171,7 +1171,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/finish" responder="asset-id" handler="attachment-upload" find-by="upload" error-find-by="478227" destroy="true" scope="global">
+    <method name="attachment/finish" responder="asset-id" handler="attachment-upload" find-by="upload" error-find-by="478227" destroy="true" scope="region">
         <parameter name="upload"/>
         <documentation>
             Finishing uploading the attachment upload.
@@ -1195,7 +1195,7 @@
         <field name="timestamp" />
     </responder>
 
-    <method name="super/check-in" responder="simple" scope="super">
+    <method name="super/check-in" responder="simple" scope="global">
         <parameter name="identity"/>
         <documentation>
             The super agent periodically checks in.
@@ -1205,7 +1205,7 @@
     </method>
 
 
-    <method name="super/list-automatic-domains" responder="automatic-domain-listing" scope="super">
+    <method name="super/list-automatic-domains" responder="automatic-domain-listing" scope="global">
         <parameter name="identity"/>
         <parameter name="timestamp"/>
         <documentation>
@@ -1213,7 +1213,7 @@
         </documentation>
     </method>
 
-    <method name="super/set-domain-certificate" responder="simple" scope="super">
+    <method name="super/set-domain-certificate" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="certificate"/>

@@ -28,7 +28,7 @@ public class AccountSetPasswordRequest {
     this.password = password;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AccountSetPasswordRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<AccountSetPasswordRequest> callback) {
     try {
       final BulkLatch<AccountSetPasswordRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);
