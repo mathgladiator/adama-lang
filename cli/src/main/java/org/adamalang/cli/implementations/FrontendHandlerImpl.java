@@ -59,6 +59,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
     Generate.execute(state);
     Stamp.execute(state);
     Files.writeString(state.output.toPath(), state.finish());
+    output.out();
   }
 
   @Override
@@ -67,6 +68,16 @@ public class FrontendHandlerImpl implements FrontendHandler {
     aggregateFiles(new File(args.rxhtmlPath), files);
     RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files),  ShellConfig.start().withFeedback((element, warning) -> System.err.println(warning)).end());
     Files.writeString(new File(args.output).toPath(), updated.shell.makeShell(updated));
+    output.out();
+  }
+
+  @Override
+  public void bundle(Arguments.FrontendBundleArgs args, Output.YesOrError output) throws Exception {
+    ArrayList<File> files = new ArrayList<>();
+    aggregateFiles(new File(args.rxhtmlPath), files);
+    String result = Bundler.bundle(files);
+    Files.writeString(new File(args.output).toPath(), result);
+    output.out();
   }
 
   @Override
@@ -74,6 +85,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
     ArrayList<File> files = new ArrayList<>();
     aggregateFiles(new File(args.input), files);
     Files.writeString(new File(args.output).toPath(), RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files), ShellConfig.start().withFeedback((element, warning) -> System.err.println(warning)).end()).javascript);
+    output.out();
   }
 
   @Override
@@ -88,6 +100,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
   public void wrapCss(Arguments.FrontendWrapCssArgs args, Output.YesOrError output) throws Exception {
     String css = Files.readString(new File(args.input).toPath());
     Files.writeString(new File(args.output).toPath(), "<forest><style>\n" + css + "\n</style></forest>");
+    output.out();
   }
 
   @Override
@@ -99,5 +112,6 @@ public class FrontendHandlerImpl implements FrontendHandler {
     Files.writeString(new File("css.style.txt").toPath(), study);
     Files.writeString(new File("css.style.constants.txt").toPath(), constant.toString());
     Files.writeString(new File("css.style.db.json").toPath(), db.toPrettyString());
+    output.out();
   }
 }

@@ -73,6 +73,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"domain", "map", "--help"});
     Main.testMain(new String[]{"domain", "unmap", "--help"});
     Main.testMain(new String[]{"frontend", "--help"});
+    Main.testMain(new String[]{"frontend", "bundle", "--help"});
     Main.testMain(new String[]{"frontend", "dev-server", "--help"});
     Main.testMain(new String[]{"frontend", "edhtml", "--help"});
     Main.testMain(new String[]{"frontend", "make-200", "--help"});

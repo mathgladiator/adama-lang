@@ -681,6 +681,16 @@ public class MainRouter {
             return 1;
           }
           switch (args[1]) {
+            case "bundle": {
+              FrontendBundleArgs frontendArgs = FrontendBundleArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendBundleArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.bundle(frontendArgs, out);
+               return 0;
+            }
             case "dev-server": {
               FrontendDevServerArgs frontendArgs = FrontendDevServerArgs.from(args, 2);
               if (frontendArgs == null) {

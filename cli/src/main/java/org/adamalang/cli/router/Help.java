@@ -170,6 +170,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("--config", 15), Util.ANSI.Green) + "Supplies a config file path other than the default (~/.adama)");
     System.out.println();
     System.out.println(Util.prefix("FRONTENDSUBCOMMAND:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix(Util.justifyLeft("bundle", 15), Util.ANSI.Green) + "Bundle many *.rx.html into one big one.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("dev-server", 15), Util.ANSI.Green) + "Host the working directory as a webserver");
     System.out.println("    " + Util.prefix(Util.justifyLeft("edhtml", 15), Util.ANSI.Green) + "Compile an edhtml build instruction file");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-200", 15), Util.ANSI.Green) + "Create a 200.html");

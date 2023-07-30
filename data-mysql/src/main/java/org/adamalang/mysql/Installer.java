@@ -49,6 +49,7 @@ public class Installer {
             "  `region` VARCHAR(64) NOT NULL," + //
             "  `machine` VARCHAR(512) NOT NULL," + //
             "  `archive` VARCHAR(512) NOT NULL," + //
+            "  `deleted` BOOLEAN DEFAULT FALSE," + //
             "  `delta_bytes` BIGINT UNSIGNED NOT NULL," + //
             "  `asset_bytes` BIGINT UNSIGNED NOT NULL," + //
             "  PRIMARY KEY (`id`)," + //
