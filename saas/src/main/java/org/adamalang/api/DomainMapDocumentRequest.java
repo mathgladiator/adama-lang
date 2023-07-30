@@ -44,7 +44,7 @@ public class DomainMapDocumentRequest {
     this.certificate = certificate;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<DomainMapDocumentRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<DomainMapDocumentRequest> callback) {
     try {
       final BulkLatch<DomainMapDocumentRequest> _latch = new BulkLatch<>(nexus.executor, 3, callback);
       final String identity = request.getString("identity", true, 458759);

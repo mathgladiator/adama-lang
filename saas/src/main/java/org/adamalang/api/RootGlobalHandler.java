@@ -10,7 +10,7 @@ package org.adamalang.api;
 
 import org.adamalang.frontend.Session;
 
-public interface RootHandler {
+public interface RootGlobalHandler {
   public void handle(Session session, InitSetupAccountRequest request, SimpleResponder responder);
 
   public void handle(Session session, InitConvertGoogleUserRequest request, InitiationResponder responder);
@@ -71,29 +71,9 @@ public interface RootHandler {
 
   public void handle(Session session, DomainGetRequest request, DomainPolicyResponder responder);
 
-  public void handle(Session session, DocumentAuthorizeRequest request, InitiationResponder responder);
-
-  public void handle(Session session, DocumentAuthorizeDomainRequest request, InitiationResponder responder);
-
-  public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder);
-
-  public void handle(Session session, DocumentDeleteRequest request, SimpleResponder responder);
-
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder);
 
-  public void handle(Session session, MessageDirectSendRequest request, SeqResponder responder);
-
-  public void handle(Session session, MessageDirectSendOnceRequest request, SeqResponder responder);
-
-  public DocumentStreamHandler handle(Session session, ConnectionCreateRequest request, DataResponder responder);
-
-  public DocumentStreamHandler handle(Session session, ConnectionCreateViaDomainRequest request, DataResponder responder);
-
-  public void handle(Session session, DocumentsHashPasswordRequest request, HashedPasswordResponder responder);
-
   public void handle(Session session, ConfigureMakeOrGetAssetKeyRequest request, AssetKeyResponder responder);
-
-  public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder responder);
 
   public void handle(Session session, SuperCheckInRequest request, SimpleResponder responder);
 
@@ -103,4 +83,46 @@ public interface RootHandler {
 
   public void disconnect();
 
+  public static boolean test(String method) {
+    switch (method) {
+      case "init/setup-account":
+      case "init/convert-google-user":
+      case "init/complete-account":
+      case "account/set-password":
+      case "account/get-payment-plan":
+      case "account/login":
+      case "probe":
+      case "authority/create":
+      case "authority/set":
+      case "authority/get":
+      case "authority/list":
+      case "authority/destroy":
+      case "space/create":
+      case "space/generate-key":
+      case "space/usage":
+      case "space/get":
+      case "space/set":
+      case "space/redeploy-kick":
+      case "space/set-rxhtml":
+      case "space/get-rxhtml":
+      case "space/delete":
+      case "space/set-role":
+      case "space/list-developers":
+      case "space/reflect":
+      case "space/list":
+      case "domain/map":
+      case "domain/map-document":
+      case "domain/list":
+      case "domain/unmap":
+      case "domain/get":
+      case "document/list":
+      case "configure/make-or-get-asset-key":
+      case "super/check-in":
+      case "super/list-automatic-domains":
+      case "super/set-domain-certificate":
+        return true;
+      default:
+        return false;
+    }
+  }
 }

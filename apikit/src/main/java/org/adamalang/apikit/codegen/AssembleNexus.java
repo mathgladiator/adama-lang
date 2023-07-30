@@ -16,7 +16,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class AssembleNexus {
-  public static String make(String packageName, Map<String, ParameterDefinition> parameters) {
+  public static String make(String packageName, String prefix, Map<String, ParameterDefinition> parameters) {
     TreeMap<String, Transform> services = new TreeMap<>();
     for (Map.Entry<String, ParameterDefinition> entry : parameters.entrySet()) {
       if (entry.getValue().transform != null) {
@@ -37,15 +37,15 @@ public class AssembleNexus {
       nexus.append("import ").append(imp).append(";\n");
     }
     nexus.append("\n");
-    nexus.append("public class ConnectionNexus {\n");
+    nexus.append("public class ").append(prefix).append("ConnectionNexus {\n");
     nexus.append("  public final JsonLogger logger;\n");
-    nexus.append("  public final ApiMetrics metrics;\n");
+    nexus.append("  public final ").append(prefix).append("ApiMetrics metrics;\n");
     nexus.append("  public final SimpleExecutor executor;\n");
     for (Transform service : services.values()) {
       nexus.append("  public final ").append(service.shortServiceName).append(" ").append(service.fieldInputName).append(";\n");
     }
     nexus.append("\n");
-    nexus.append("  public ConnectionNexus(JsonLogger logger, ApiMetrics metrics, SimpleExecutor executor");
+    nexus.append("  public ").append(prefix).append("ConnectionNexus(JsonLogger logger, ").append(prefix).append("ApiMetrics metrics, SimpleExecutor executor");
     for (Transform service : services.values()) {
       nexus.append(", ").append(service.shortServiceName).append(" ").append(service.fieldInputName);
     }

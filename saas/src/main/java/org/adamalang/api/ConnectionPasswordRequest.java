@@ -29,7 +29,7 @@ public class ConnectionPasswordRequest {
     this.new_password = new_password;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<ConnectionPasswordRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<ConnectionPasswordRequest> callback) {
     try {
       final Long connection = request.getLong("connection", true, 405505);
       final String username = request.getString("username", true, 458737);

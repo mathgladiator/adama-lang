@@ -11,13 +11,13 @@ package org.adamalang.apikit.codegen;
 import org.adamalang.apikit.model.Method;
 
 public class AssembleMetrics {
-  public static String make(String packageName, Method[] methods) {
+  public static String make(String packageName, String prefix, Method[] methods) {
     StringBuilder metrics = new StringBuilder();
     metrics.append("package ").append(packageName).append(";\n\n");
     metrics.append("\n");
     metrics.append("import org.adamalang.common.metrics.*;\n");
     metrics.append("\n");
-    metrics.append("public class ApiMetrics {\n");
+    metrics.append("public class ").append(prefix).append("ApiMetrics {\n");
     for (Method method : methods) {
       if (method.create != null) {
         metrics.append("  public final StreamMonitor monitor_");
@@ -27,7 +27,7 @@ public class AssembleMetrics {
       metrics.append(method.camelName).append(";\n");
     }
     metrics.append("\n");
-    metrics.append("  public ApiMetrics(MetricsFactory factory) {\n");
+    metrics.append("  public ").append(prefix).append("ApiMetrics(MetricsFactory factory) {\n");
     for (Method method : methods) {
       metrics.append("    this.monitor_").append(method.camelName);
       if (method.create != null) {

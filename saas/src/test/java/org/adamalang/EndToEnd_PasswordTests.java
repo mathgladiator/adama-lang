@@ -20,8 +20,6 @@ public class EndToEnd_PasswordTests {
     try (TestFrontEnd fe = new TestFrontEnd()) {
       final String devIdentity;
       {
-        Iterator<String> c0 = fe.execute("{}");
-        Assert.assertEquals("ERROR:233120", c0.next());
         devIdentity = fe.generateIdentity("x@x.com", true);
         Iterator<String> c3 = fe.execute("{\"id\":3,\"method\":\"probe\",\"identity\":\"" + devIdentity + "\"}");
         Assert.assertEquals("FINISH:{}", c3.next());

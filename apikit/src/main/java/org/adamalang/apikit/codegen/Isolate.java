@@ -8,11 +8,13 @@
  */
 package org.adamalang.apikit.codegen;
 
+import org.adamalang.apikit.model.Method;
 import org.adamalang.apikit.model.ParameterDefinition;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -28,7 +30,7 @@ public class Isolate {
         throw new RuntimeException(node.getAttribute("name") + " lacks a scope attribute");
       }
       String scope = node.getAttribute("scope");
-      if (!(scope.equals("global") || scope.equals("region") || scope.equals("super"))) {
+      if (!(scope.equals("global") || scope.equals("region"))) {
         throw new RuntimeException("unknown scope:[" + scope + "]");
       }
       scopes.add(scope);
@@ -51,6 +53,16 @@ public class Isolate {
       }
     }
     return scoped;
+  }
+
+  public static Method[] scopeMethods(Method[] methods, String scope) {
+    ArrayList<Method> next = new ArrayList<>();
+    for (Method method : methods) {
+      if (scope.equals(method.scope)) {
+        next.add(method);
+      }
+    }
+    return next.toArray(new Method[next.size()]);
   }
 
 

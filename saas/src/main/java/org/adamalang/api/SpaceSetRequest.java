@@ -35,7 +35,7 @@ public class SpaceSetRequest {
     this.plan = plan;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceSetRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<SpaceSetRequest> callback) {
     try {
       final BulkLatch<SpaceSetRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);

@@ -34,7 +34,7 @@ public class SpaceUsageRequest {
     this.limit = limit;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceUsageRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<SpaceUsageRequest> callback) {
     try {
       final BulkLatch<SpaceUsageRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);

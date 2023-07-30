@@ -28,7 +28,7 @@ public class SuperListAutomaticDomainsRequest {
     this.timestamp = timestamp;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SuperListAutomaticDomainsRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<SuperListAutomaticDomainsRequest> callback) {
     try {
       final BulkLatch<SuperListAutomaticDomainsRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);

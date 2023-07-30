@@ -8,7 +8,8 @@
  */
 package org.adamalang.extern;
 
-import org.adamalang.api.ApiMetrics;
+import org.adamalang.api.GlobalApiMetrics;
+import org.adamalang.api.RegionApiMetrics;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.frontend.FrontendMetrics;
@@ -25,7 +26,8 @@ public class ExternNexus {
   public final FrontendConfig config;
   public final Email email;
   public final DataBase database;
-  public final ApiMetrics metrics;
+  public final GlobalApiMetrics globalApiMetrics;
+  public final RegionApiMetrics regionApiMetrics;
   public final File attachmentRoot;
   public final JsonLogger accessLogger;
   public final String masterKey;
@@ -43,7 +45,8 @@ public class ExternNexus {
     this.config = config;
     this.email = email;
     this.database = database;
-    this.metrics = new ApiMetrics(metricsFactory);
+    this.globalApiMetrics = new GlobalApiMetrics(metricsFactory);
+    this.regionApiMetrics = new RegionApiMetrics(metricsFactory);
     this.frontendMetrics = new FrontendMetrics(metricsFactory);
     this.attachmentRoot = attachmentRoot;
     this.accessLogger = accessLogger;

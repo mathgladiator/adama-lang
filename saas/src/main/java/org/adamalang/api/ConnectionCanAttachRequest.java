@@ -23,7 +23,7 @@ public class ConnectionCanAttachRequest {
     this.connection = connection;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<ConnectionCanAttachRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<ConnectionCanAttachRequest> callback) {
     try {
       final Long connection = request.getLong("connection", true, 405505);
       nexus.executor.execute(new NamedRunnable("connectioncanattach-success") {

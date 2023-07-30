@@ -37,7 +37,7 @@ public class ConnectionCreateRequest {
     this.viewerState = viewerState;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<ConnectionCreateRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<ConnectionCreateRequest> callback) {
     try {
       final BulkLatch<ConnectionCreateRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);

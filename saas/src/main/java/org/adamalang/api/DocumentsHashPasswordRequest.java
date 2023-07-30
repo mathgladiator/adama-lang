@@ -25,7 +25,7 @@ public class DocumentsHashPasswordRequest {
     this.password = password;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<DocumentsHashPasswordRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<DocumentsHashPasswordRequest> callback) {
     try {
       final String password = request.getString("password", true, 465917);
       nexus.executor.execute(new NamedRunnable("documentshashpassword-success") {

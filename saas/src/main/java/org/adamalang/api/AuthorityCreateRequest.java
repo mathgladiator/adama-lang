@@ -26,7 +26,7 @@ public class AuthorityCreateRequest {
     this.who = who;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AuthorityCreateRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<AuthorityCreateRequest> callback) {
     try {
       final BulkLatch<AuthorityCreateRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);

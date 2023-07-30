@@ -28,7 +28,7 @@ public class AccountLoginRequest {
     this.password = password;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AccountLoginRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<AccountLoginRequest> callback) {
     try {
       final BulkLatch<AccountLoginRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String email = request.getString("email", true, 473103);

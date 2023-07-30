@@ -39,7 +39,7 @@ public class AttachmentStartRequest {
     this.contentType = contentType;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AttachmentStartRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<AttachmentStartRequest> callback) {
     try {
       final BulkLatch<AttachmentStartRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);

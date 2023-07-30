@@ -96,7 +96,7 @@ public class AssembleJavaClient {
         requestType.append("}\n");
         files.put("Client" + method.camelName + "Request.java", requestType.toString());
       }
-      if (!"Root".equals(method.handler)) {
+      if (!method.handler.startsWith("Root")) {
         handlers.add(method.handler);
       }
     }
@@ -124,12 +124,12 @@ public class AssembleJavaClient {
 
   private static void buildHandler(StringBuilder client, String handler, Method[] methods, boolean hasDirectConnection) {
     for (Method method : methods) {
-      if (handler.equals(method.handler)) {
+      if (handler.equals(method.handler) || handler.startsWith("Root") && method.handler.startsWith("Root")) {
         client.append("\n");
         client.append("  /** ").append(method.name).append(" */\n");
 
         String methodName = method.camelName2;
-        if (!method.handler.equals("Root")) {
+        if (!method.handler.startsWith("Root")) {
           methodName = Common.camelize(method.name.substring(method.name.indexOf('/') + 1), true);
         }
 

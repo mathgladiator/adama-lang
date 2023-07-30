@@ -8,8 +8,8 @@
  */
 package org.adamalang.frontend;
 
-import org.adamalang.api.ConnectionNexus;
-import org.adamalang.api.ConnectionRouter;
+import org.adamalang.api.*;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.SimpleExecutorFactory;
 import org.adamalang.extern.ExternNexus;
@@ -39,19 +39,36 @@ public class BootstrapFrontend {
       public ServiceConnection establish(ConnectionContext context) {
         return new ServiceConnection() {
           final Session session = new Session(new PerSessionAuthenticator(extern.database, extern.masterKey, context, extern.superPublicKeys));
-          final ConnectionNexus nexus =
-              new ConnectionNexus(extern.accessLogger, //
-                  extern.metrics, //
+          final GlobalConnectionNexus globalNexus =
+              new GlobalConnectionNexus(extern.accessLogger, //
+                  extern.globalApiMetrics, //
                   executors[randomExecutorIndex.nextInt(executors.length)], //
                   domainResolver, //
                   userIdResolver, //
                   session.authenticator, //
                   spacePolicyLocator); //
-          final ConnectionRouter router = new ConnectionRouter(session, nexus, handler);
+
+          final RegionConnectionNexus regionNexus =
+              new RegionConnectionNexus(extern.accessLogger, //
+                  extern.regionApiMetrics, //
+                  executors[randomExecutorIndex.nextInt(executors.length)], //
+                  domainResolver, //
+                  session.authenticator, //
+                  spacePolicyLocator); //
+          final GlobalConnectionRouter globalRouter = new GlobalConnectionRouter(session, globalNexus, handler);
+          final RegionConnectionRouter regionRouter = new RegionConnectionRouter(session, regionNexus, handler);
 
           @Override
           public void execute(JsonRequest request, JsonResponder responder) {
-            router.route(request, responder);
+            try {
+              if (RootGlobalHandler.test(request.method())) {
+                globalRouter.route(request, responder);
+              } else {
+                regionRouter.route(request, responder);
+              }
+            } catch (ErrorCodeException ex) {
+              responder.error(ex);
+            }
           }
 
           @Override
@@ -61,7 +78,8 @@ public class BootstrapFrontend {
 
           @Override
           public void kill() {
-            router.disconnect();
+            globalRouter.disconnect();
+            regionRouter.disconnect();
           }
         };
       }

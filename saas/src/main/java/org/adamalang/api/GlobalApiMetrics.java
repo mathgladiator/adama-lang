@@ -11,7 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.metrics.*;
 
-public class ApiMetrics {
+public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_InitSetupAccount;
   public final RequestResponseMonitor monitor_InitConvertGoogleUser;
   public final RequestResponseMonitor monitor_InitCompleteAccount;
@@ -42,32 +42,13 @@ public class ApiMetrics {
   public final RequestResponseMonitor monitor_DomainList;
   public final RequestResponseMonitor monitor_DomainUnmap;
   public final RequestResponseMonitor monitor_DomainGet;
-  public final RequestResponseMonitor monitor_DocumentAuthorize;
-  public final RequestResponseMonitor monitor_DocumentAuthorizeDomain;
-  public final RequestResponseMonitor monitor_DocumentCreate;
-  public final RequestResponseMonitor monitor_DocumentDelete;
   public final RequestResponseMonitor monitor_DocumentList;
-  public final RequestResponseMonitor monitor_MessageDirectSend;
-  public final RequestResponseMonitor monitor_MessageDirectSendOnce;
-  public final StreamMonitor monitor_ConnectionCreate;
-  public final StreamMonitor monitor_ConnectionCreateViaDomain;
-  public final RequestResponseMonitor monitor_ConnectionSend;
-  public final RequestResponseMonitor monitor_ConnectionPassword;
-  public final RequestResponseMonitor monitor_ConnectionSendOnce;
-  public final RequestResponseMonitor monitor_ConnectionCanAttach;
-  public final RequestResponseMonitor monitor_ConnectionAttach;
-  public final RequestResponseMonitor monitor_ConnectionUpdate;
-  public final RequestResponseMonitor monitor_ConnectionEnd;
-  public final RequestResponseMonitor monitor_DocumentsHashPassword;
   public final RequestResponseMonitor monitor_ConfigureMakeOrGetAssetKey;
-  public final StreamMonitor monitor_AttachmentStart;
-  public final RequestResponseMonitor monitor_AttachmentAppend;
-  public final RequestResponseMonitor monitor_AttachmentFinish;
   public final RequestResponseMonitor monitor_SuperCheckIn;
   public final RequestResponseMonitor monitor_SuperListAutomaticDomains;
   public final RequestResponseMonitor monitor_SuperSetDomainCertificate;
 
-  public ApiMetrics(MetricsFactory factory) {
+  public GlobalApiMetrics(MetricsFactory factory) {
     this.monitor_InitSetupAccount = factory.makeRequestResponseMonitor("init/setup-account");
     this.monitor_InitConvertGoogleUser = factory.makeRequestResponseMonitor("init/convert-google-user");
     this.monitor_InitCompleteAccount = factory.makeRequestResponseMonitor("init/complete-account");
@@ -98,27 +79,8 @@ public class ApiMetrics {
     this.monitor_DomainList = factory.makeRequestResponseMonitor("domain/list");
     this.monitor_DomainUnmap = factory.makeRequestResponseMonitor("domain/unmap");
     this.monitor_DomainGet = factory.makeRequestResponseMonitor("domain/get");
-    this.monitor_DocumentAuthorize = factory.makeRequestResponseMonitor("document/authorize");
-    this.monitor_DocumentAuthorizeDomain = factory.makeRequestResponseMonitor("document/authorize-domain");
-    this.monitor_DocumentCreate = factory.makeRequestResponseMonitor("document/create");
-    this.monitor_DocumentDelete = factory.makeRequestResponseMonitor("document/delete");
     this.monitor_DocumentList = factory.makeRequestResponseMonitor("document/list");
-    this.monitor_MessageDirectSend = factory.makeRequestResponseMonitor("message/direct-send");
-    this.monitor_MessageDirectSendOnce = factory.makeRequestResponseMonitor("message/direct-send-once");
-    this.monitor_ConnectionCreate = factory.makeStreamMonitor("connection/create");
-    this.monitor_ConnectionCreateViaDomain = factory.makeStreamMonitor("connection/create-via-domain");
-    this.monitor_ConnectionSend = factory.makeRequestResponseMonitor("connection/send");
-    this.monitor_ConnectionPassword = factory.makeRequestResponseMonitor("connection/password");
-    this.monitor_ConnectionSendOnce = factory.makeRequestResponseMonitor("connection/send-once");
-    this.monitor_ConnectionCanAttach = factory.makeRequestResponseMonitor("connection/can-attach");
-    this.monitor_ConnectionAttach = factory.makeRequestResponseMonitor("connection/attach");
-    this.monitor_ConnectionUpdate = factory.makeRequestResponseMonitor("connection/update");
-    this.monitor_ConnectionEnd = factory.makeRequestResponseMonitor("connection/end");
-    this.monitor_DocumentsHashPassword = factory.makeRequestResponseMonitor("documents/hash-password");
     this.monitor_ConfigureMakeOrGetAssetKey = factory.makeRequestResponseMonitor("configure/make-or-get-asset-key");
-    this.monitor_AttachmentStart = factory.makeStreamMonitor("attachment/start");
-    this.monitor_AttachmentAppend = factory.makeRequestResponseMonitor("attachment/append");
-    this.monitor_AttachmentFinish = factory.makeRequestResponseMonitor("attachment/finish");
     this.monitor_SuperCheckIn = factory.makeRequestResponseMonitor("super/check-in");
     this.monitor_SuperListAutomaticDomains = factory.makeRequestResponseMonitor("super/list-automatic-domains");
     this.monitor_SuperSetDomainCertificate = factory.makeRequestResponseMonitor("super/set-domain-certificate");

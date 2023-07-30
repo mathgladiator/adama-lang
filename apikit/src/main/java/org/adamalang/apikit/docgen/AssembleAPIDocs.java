@@ -34,7 +34,7 @@ public class AssembleAPIDocs {
     }
     markdown.append("\n");
     for (Method method : methods) {
-      boolean specialHandler = !"Root".equals(method.handler);
+      boolean specialHandler = !method.handler.startsWith("Root");
       markdown.append("\n## Method: ").append(method.camelName).append("\n");
       for (String ln : method.documentation.trim().split(Pattern.quote("\n"))) {
         markdown.append(ln.trim()).append("\n");

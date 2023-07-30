@@ -30,7 +30,7 @@ public class AuthorityDestroyRequest {
     this.authority = authority;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<AuthorityDestroyRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<AuthorityDestroyRequest> callback) {
     try {
       final BulkLatch<AuthorityDestroyRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);

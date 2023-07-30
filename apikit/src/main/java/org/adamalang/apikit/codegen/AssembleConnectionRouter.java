@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Locale;
 
 public class AssembleConnectionRouter {
-  public static String make(String packageName, String sessionImport,  Method[] methods) {
+  public static String make(String packageName, String sessionImport, String prefix,  Method[] methods) {
     HashMap<String, ArrayList<Method>> methodsBySubHandler = AssembleHandlers.shred(methods);
     HashSet<String> subHandlers = new HashSet<>(methodsBySubHandler.keySet());
 
@@ -34,23 +34,23 @@ public class AssembleConnectionRouter {
     router.append("import java.util.HashMap;\n");
     router.append("import java.util.Map;\n");
     router.append("\n");
-    router.append("public class ConnectionRouter {\n");
+    router.append("public class ").append(prefix).append("ConnectionRouter {\n");
     router.append("  public final Session session;\n");
-    router.append("  public final ConnectionNexus nexus;\n");
-    router.append("  public final RootHandler handler;\n");
+    router.append("  public final ").append(prefix).append("ConnectionNexus nexus;\n");
+    router.append("  public final Root").append(prefix).append("Handler handler;\n");
 
     for (String subHandler : subHandlers) {
-      if (!"Root".equals(subHandler)) {
+      if (!subHandler.startsWith("Root")) {
         router.append("  public final HashMap<Long, ").append(subHandler).append("Handler> inflight").append(subHandler).append(";\n");
       }
     }
     router.append("\n");
-    router.append("  public ConnectionRouter(Session session, ConnectionNexus nexus, RootHandler handler) {\n");
+    router.append("  public ").append(prefix).append("ConnectionRouter(Session session, ").append(prefix).append("ConnectionNexus nexus, Root").append(prefix).append("Handler handler) {\n");
     router.append("    this.session = session;\n");
     router.append("    this.nexus = nexus;\n");
     router.append("    this.handler = handler;\n");
     for (String subHandler : subHandlers) {
-      if (!"Root".equals(subHandler)) {
+      if (!subHandler.startsWith("Root")) {
         router.append("    this.inflight").append(subHandler).append(" = new HashMap<>();\n");
       }
     }
@@ -61,7 +61,7 @@ public class AssembleConnectionRouter {
     router.append("      @Override\n");
     router.append("      public void execute() throws Exception {\n");
     for (String subHandler : subHandlers) {
-      if (!"Root".equals(subHandler)) {
+      if (!subHandler.startsWith("Root")) {
         router.append("        for (Map.Entry<Long, ").append(subHandler).append("Handler> entry : inflight").append(subHandler).append(".entrySet()) {\n");
         router.append("          entry.getValue().disconnect(entry.getKey());\n");
         router.append("        }\n");

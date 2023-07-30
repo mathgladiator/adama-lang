@@ -32,7 +32,7 @@ public class SpaceGetRxhtmlRequest {
     this.policy = policy;
   }
 
-  public static void resolve(Session session, ConnectionNexus nexus, JsonRequest request, Callback<SpaceGetRxhtmlRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<SpaceGetRxhtmlRequest> callback) {
     try {
       final BulkLatch<SpaceGetRxhtmlRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
