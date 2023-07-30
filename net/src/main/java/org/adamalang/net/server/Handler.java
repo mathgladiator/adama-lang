@@ -104,78 +104,11 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     completed();
   }
 
-  public Callback<Integer> respondViaInteger() {
-    return new Callback<Integer>() {
-      @Override
-      public void success(Integer value) {
-        ServerMessage.ProxyIntResponse response = new ServerMessage.ProxyIntResponse();
-        response.value = value;
-        ByteBuf buf = upstream.create(8);
-        ServerCodec.write(buf, response);
-        upstream.next(buf);
-        upstream.completed();
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        upstream.error(ex.code);
-      }
-    };
-  }
-
-  public Callback<Void> respondViaVoid() {
-    return new Callback<Void>() {
-      @Override
-      public void success(Void value) {
-        ServerMessage.ProxyVoidResponse response = new ServerMessage.ProxyVoidResponse();
-        ByteBuf buf = upstream.create(8);
-        ServerCodec.write(buf, response);
-        upstream.next(buf);
-        upstream.completed();
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        upstream.error(ex.code);
-      }
-    };
-  }
-
-  public Callback<LocalDocumentChange> respondViaLocalDataChange() {
-    return new Callback<LocalDocumentChange>() {
-      @Override
-      public void success(LocalDocumentChange value) {
-        ServerMessage.ProxyLocalDataChange response = ServerMessage.ProxyLocalDataChange.copyFrom(value);
-        ByteBuf buf = upstream.create(8);
-        ServerCodec.write(buf, response);
-        upstream.next(buf);
-        upstream.completed();
-
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        upstream.error(ex.code);
-      }
-    };
-  }
-
   @Override
-  public void handle(ClientMessage.ProxySnapshot payload) {
-    Key key = new Key(payload.space, payload.key);
-    nexus.service.dataService.snapshot(key, new DocumentSnapshot(payload.seq, payload.document, payload.history, payload.assetBytes), respondViaInteger());
-  }
-
-  @Override
-  public void handle(ClientMessage.ProxyDelete payload) {
-    Key key = new Key(payload.space, payload.key);
-    nexus.service.dataService.delete(key, respondViaVoid());
-  }
-
-  @Override
-  public void handle(ClientMessage.ProxyCompute payload) {
-    Key key = new Key(payload.space, payload.key);
-    nexus.service.dataService.compute(key, ComputeMethod.fromType(payload.method), payload.seq, respondViaLocalDataChange());
+  public void handle(ClientMessage.FindRequest payload) {
+    // TODO: check the local finder that proxies a global finder
+    upstream.error(0);
+    upstream.completed();
   }
 
   @Override
@@ -326,34 +259,6 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
         upstream.error(ex.code);
       }
     });
-  }
-
-  @Override
-  public void handle(ClientMessage.ProxyClose payload) {
-    Key key = new Key(payload.space, payload.key);
-    nexus.service.dataService.close(key, respondViaVoid());
-  }
-
-  @Override
-  public void handle(ClientMessage.ProxyPatch payload) {
-    Key key = new Key(payload.space, payload.key);
-    RemoteDocumentUpdate[] patches = new RemoteDocumentUpdate[payload.patches.length];
-    for (int k = 0; k < patches.length; k++) {
-      patches[k] = payload.patches[k].toRemoteDocumentUpdate();
-    }
-    nexus.service.dataService.patch(key, patches, respondViaVoid());
-  }
-
-  @Override
-  public void handle(ClientMessage.ProxyInitialize payload) {
-    Key key = new Key(payload.space, payload.key);
-    nexus.service.dataService.initialize(key, payload.initial.toRemoteDocumentUpdate(), respondViaVoid());
-  }
-
-  @Override
-  public void handle(ClientMessage.ProxyGet payload) {
-    Key key = new Key(payload.space, payload.key);
-    nexus.service.dataService.get(key, respondViaLocalDataChange());
   }
 
   @Override

@@ -20,6 +20,21 @@ public class ServerMessage {
   public static class PingResponse {
   }
 
+  @TypeId(9001)
+  @Flow("Finder")
+  public static class FindResponse {
+    @FieldOrder(1)
+    public long id;
+    @FieldOrder(2)
+    public int location;
+    @FieldOrder(3)
+    public String archive;
+    @FieldOrder(4)
+    public String region;
+    @FieldOrder(5)
+    public String machine;
+  }
+
   @TypeId(1018)
   @Flow("Probe")
   public static class ProbeCommandResponse {
@@ -120,43 +135,6 @@ public class ServerMessage {
   public static class InventoryHeartbeat {
     @FieldOrder(1)
     public String[] spaces;
-  }
-
-  @TypeId(9002)
-  @Flow("ProxyVoidResponse")
-  public static class ProxyVoidResponse {
-  }
-
-  @TypeId(9004)
-  @Flow("ProxyIntResponse")
-  public static class ProxyIntResponse {
-    @FieldOrder(1)
-    public int value;
-  }
-
-  @TypeId(9006)
-  @Flow("ProxyLocalDataChange")
-  public static class ProxyLocalDataChange {
-    @FieldOrder(1)
-    public String patch;
-
-    @FieldOrder(2)
-    public int reads;
-
-    @FieldOrder(3)
-    public int seq;
-
-    public static ProxyLocalDataChange copyFrom(LocalDocumentChange change) {
-      ProxyLocalDataChange proxy = new ProxyLocalDataChange();
-      proxy.patch = change.patch;
-      proxy.reads = change.reads;
-      proxy.seq = change.seq;
-      return proxy;
-    }
-
-    public LocalDocumentChange toLocalDocumentChange() {
-      return new LocalDocumentChange(patch, reads, seq);
-    }
   }
 
   @TypeId(1721)
