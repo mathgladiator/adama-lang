@@ -9,59 +9,13 @@
 package org.adamalang.transforms;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.frontend.Session;
-import org.adamalang.extern.ExternNexus;
-import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.data.Domain;
-import org.adamalang.mysql.model.Domains;
 import org.adamalang.transforms.results.DomainWithPolicy;
-import org.adamalang.transforms.results.SpacePolicy;
 
-public class DomainResolver {
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(DomainResolver.class);
-  private final SimpleExecutor executor;
-  private final SpacePolicyLocator spacePolicyLocator;
-  private final DataBase dataBase;
-
-  public DomainResolver(SimpleExecutor executor, SpacePolicyLocator spacePolicyLocator, ExternNexus nexus) {
-    this.executor = executor;
-    this.spacePolicyLocator = spacePolicyLocator;
-    this.dataBase = nexus.database;
-  }
-
-  public void execute(Session session, String domain, Callback<DomainWithPolicy> callback) {
-    executor.execute(new NamedRunnable("resolving-domain") {
-      @Override
-      public void execute() throws Exception {
-        try {
-          Domain domainRecord = Domains.get(dataBase, domain);
-          if (domainRecord == null) {
-            callback.success(new DomainWithPolicy(null, null));
-            return;
-          }
-          if (domainRecord.space == null) {
-            callback.success(new DomainWithPolicy(domainRecord, null));
-            return;
-          }
-          spacePolicyLocator.execute(session, domainRecord.space, new Callback<>() {
-            @Override
-            public void success(SpacePolicy policy) {
-              callback.success(new DomainWithPolicy(domainRecord, policy));
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              callback.failure(ex);
-            }
-          });
-        } catch (Exception ex) {
-          callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DOMAIN_RESOLVE_UNKNOWN_EXCEPTION, ex, LOGGER));
-        }
-      }
-    });
-  }
+/** lookup a domain */
+public interface DomainResolver {
+  public void execute(Session session, String domain, Callback<DomainWithPolicy> callback);
 
   public static void logInto(DomainWithPolicy domain, ObjectNode node) {
     if (domain != null) {

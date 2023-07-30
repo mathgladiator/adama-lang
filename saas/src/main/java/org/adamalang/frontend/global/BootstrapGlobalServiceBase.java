@@ -6,17 +6,18 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.frontend;
+package org.adamalang.frontend.global;
 
 import org.adamalang.api.*;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.SimpleExecutorFactory;
-import org.adamalang.extern.ExternNexus;
+import org.adamalang.frontend.Session;
 import org.adamalang.transforms.DomainResolver;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
+import org.adamalang.transforms.global.GlobalDomainResolver;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.contracts.*;
 import org.adamalang.web.io.ConnectionContext;
@@ -25,13 +26,14 @@ import org.adamalang.web.io.JsonResponder;
 
 import java.util.Random;
 
-public class BootstrapFrontend {
-  public static ServiceBase make(ExternNexus extern, HttpHandler httpHandler) throws Exception {
+public class BootstrapGlobalServiceBase {
+  public static ServiceBase make(GlobalExternNexus extern, HttpHandler httpHandler) throws Exception {
     SimpleExecutor[] executors = SimpleExecutorFactory.DEFAULT.makeMany("saas", extern.config.threads);
     SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(SimpleExecutor.create("space-policy-locator"), extern);
     UserIdResolver userIdResolver = new UserIdResolver(SimpleExecutor.create("user-id-resolver"), extern);
-    RootHandlerImpl handler = new RootHandlerImpl(extern, spacePolicyLocator);
-    DomainResolver domainResolver = new DomainResolver(SimpleExecutor.create("domain-resolver"), spacePolicyLocator, extern);
+    GlobalControlHandler globalControlHandler = new GlobalControlHandler(extern, spacePolicyLocator);
+    GlobalDataHandler globalDataHandler = new GlobalDataHandler(extern);
+    DomainResolver domainResolver = new GlobalDomainResolver(SimpleExecutor.create("domain-resolver"), spacePolicyLocator, extern);
 
     Random randomExecutorIndex = new Random();
     return new ServiceBase() {
@@ -55,8 +57,8 @@ public class BootstrapFrontend {
                   domainResolver, //
                   session.authenticator, //
                   spacePolicyLocator); //
-          final GlobalConnectionRouter globalRouter = new GlobalConnectionRouter(session, globalNexus, handler);
-          final RegionConnectionRouter regionRouter = new RegionConnectionRouter(session, regionNexus, handler);
+          final GlobalConnectionRouter globalRouter = new GlobalConnectionRouter(session, globalNexus, globalControlHandler);
+          final RegionConnectionRouter regionRouter = new RegionConnectionRouter(session, regionNexus, globalDataHandler);
 
           @Override
           public void execute(JsonRequest request, JsonResponder responder) {

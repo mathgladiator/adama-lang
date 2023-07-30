@@ -35,8 +35,8 @@ import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.AssetUploadBody;
 import org.adamalang.web.contracts.*;
 import org.adamalang.extern.Email;
-import org.adamalang.extern.ExternNexus;
-import org.adamalang.frontend.BootstrapFrontend;
+import org.adamalang.frontend.global.GlobalExternNexus;
+import org.adamalang.frontend.global.BootstrapGlobalServiceBase;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
@@ -86,7 +86,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
   public final ConcurrentHashMap<String, CountDownLatch> emailLatch;
   public final ConcurrentHashMap<String, String> codesSentToEmail;
-  public final ExternNexus nexus;
+  public final GlobalExternNexus nexus;
   public final ServiceBase frontend;
   public final ConnectionContext context;
   public final ServiceConnection connection;
@@ -320,9 +320,9 @@ public class TestFrontEnd implements AutoCloseable, Email {
         System.err.println("domain needs certificate:" + domain);
       }
     };
-    this.nexus = new ExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, new String[] {}, signalControl);
+    this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, new String[] {}, signalControl);
 
-    this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
+    this.frontend = BootstrapGlobalServiceBase.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);
     connection = this.frontend.establish(context);
     frontend.http();

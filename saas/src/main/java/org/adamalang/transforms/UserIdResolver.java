@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.frontend.Session;
-import org.adamalang.extern.ExternNexus;
+import org.adamalang.frontend.global.GlobalExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Users;
 
@@ -21,7 +21,7 @@ public class UserIdResolver {
   private final SimpleExecutor executor;
   private final DataBase dataBase;
 
-  public UserIdResolver(SimpleExecutor executor, ExternNexus nexus) {
+  public UserIdResolver(SimpleExecutor executor, GlobalExternNexus nexus) {
     this.executor = executor;
     this.dataBase = nexus.database;
   }

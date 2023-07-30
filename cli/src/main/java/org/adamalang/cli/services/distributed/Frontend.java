@@ -15,9 +15,9 @@ import org.adamalang.cli.services.Role;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.extern.AssetSystemImpl;
 import org.adamalang.extern.Email;
-import org.adamalang.extern.ExternNexus;
+import org.adamalang.frontend.global.GlobalExternNexus;
 import org.adamalang.extern.aws.SES;
-import org.adamalang.frontend.BootstrapFrontend;
+import org.adamalang.frontend.global.BootstrapGlobalServiceBase;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.net.client.Client;
@@ -47,11 +47,11 @@ public class Frontend {
     AssetSystemImpl assets = new AssetSystemImpl(init.database, init.masterKey, adama, init.s3);
     ArrayList<String> superKeys = config.get_str_list("super-public-keys");
 
-    ExternNexus nexus = new ExternNexus(frontendConfig, email, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
+    GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, email, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
     }, init.masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), init.sqs);
     System.err.println("ExternNexus constructed");
-    ServiceBase serviceBase = BootstrapFrontend.make(nexus, http);
+    ServiceBase serviceBase = BootstrapGlobalServiceBase.make(nexus, http);
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();
     CountDownLatch latchForHeartbeat = new CountDownLatch(1);
     init.engine.createLocalApplicationHeartbeat("web", init.webConfig.port, init.monitoringPort, (hb) -> {
