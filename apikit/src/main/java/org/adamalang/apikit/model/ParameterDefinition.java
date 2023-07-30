@@ -67,6 +67,18 @@ public class ParameterDefinition {
     throw new NullPointerException();
   }
 
+  public static void transformMethodsOfScope(Document doc, String scope, HashSet<String> skipTransforms) {
+    NodeList nodes = doc.getElementsByTagName("method");
+    TreeMap<String, ParameterDefinition> scoped = new TreeMap<>();
+    for (int k = 0; k < nodes.getLength(); k++) {
+      Element node = (Element) nodes.item(k);
+      if (scope.equals(node.getAttribute("scope"))) {
+        skipTransforms.add(node.getAttribute("name"));
+      }
+    }
+  }
+
+
   public static Map<String, ParameterDefinition> buildMap(Document document) throws Exception {
     TreeMap<String, ParameterDefinition> parameters = new TreeMap<>();
     NodeList list = document.getElementsByTagName("parameter-definition");
@@ -122,11 +134,16 @@ public class ParameterDefinition {
           }
           break;
           case "skip-transform": {
-            String methodOn = childElement.getAttribute("on");
-            if (methodOn == null || "".equals(methodOn)) {
-              throw new Exception("skip-transform needs a on to identify a method");
+            String scopeToSkip = childElement.getAttribute("scope");
+            if (scopeToSkip == null || "".equals(scopeToSkip)) {
+              String methodOn = childElement.getAttribute("on");
+              if (methodOn == null || "".equals(methodOn)) {
+                throw new Exception("skip-transform needs a on to identify a method");
+              }
+              skipTransforms.add(methodOn);
+            } else {
+              transformMethodsOfScope(document, scopeToSkip, skipTransforms);
             }
-            skipTransforms.add(methodOn);
           }
           break;
           case "transform": {

@@ -155,7 +155,7 @@ public class GlobalDataHandler implements RootRegionHandler {
       responder.error(new ErrorCodeException(ErrorCodes.API_CONNECT_DOMAIN_NO_KEY_FOUND));
       return null;
     }
-    return handle(session, new ConnectionCreateRequest(request.identity, request.who, request.resolvedDomain.domain.space, request.resolvedDomain.policy, request.resolvedDomain.domain.key, request.viewerState), responder);
+    return handle(session, new ConnectionCreateRequest(request.identity, request.who, request.resolvedDomain.domain.space, request.resolvedDomain.domain.key, request.viewerState), responder);
   }
 
   @Override
