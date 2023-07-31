@@ -8,13 +8,15 @@
  */
 package org.adamalang.runtime.sys.web;
 
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtMap;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 /** represents a get request */
-public class WebGet {
+public class WebGet implements WebItem {
   public final WebContext context;
   public final String uri;
   public final NtMap<String, String> headers;
@@ -26,5 +28,29 @@ public class WebGet {
     this.headers = new NtMap<>();
     this.headers.storage.putAll(headers);
     this.parameters = parameters;
+  }
+
+  @Override
+  public void writeAsObject(JsonStreamWriter writer) {
+    writer.beginObject();
+    injectWrite(writer);
+    writer.endObject();
+  }
+
+  public void injectWrite(JsonStreamWriter writer) {
+    writer.writeObjectFieldIntro("get");
+    writer.beginObject();
+    writer.writeObjectFieldIntro("uri");
+    writer.writeString(uri);
+    writer.writeObjectFieldIntro("headers");
+    writer.beginObject();
+    for (Map.Entry<String, String> entry : headers.entries()) {
+      writer.writeObjectFieldIntro(entry.getKey());
+      writer.writeString(entry.getValue());
+    }
+    writer.endObject();
+    writer.writeObjectFieldIntro("parameters");
+    writer.writeNtDynamic(parameters);
+    writer.endObject();
   }
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /** a web delete */
-public class WebDelete {
+public class WebDelete implements WebItem {
   public final WebContext context;
   public final String uri;
   public final WebPath router;
@@ -33,41 +33,7 @@ public class WebDelete {
     this.parameters = parameters;
   }
 
-  public static WebDelete read(WebContext context, JsonStreamReader reader) {
-    String uri = null;
-    NtDynamic parameters = null;
-    TreeMap<String, String> headers = null;
-
-    if (reader.startObject()) {
-      while (reader.notEndOfObject()) {
-        final var fieldName = reader.fieldName();
-        switch (fieldName) {
-          case "uri":
-            uri = reader.readString();
-            break;
-          case "headers":
-            headers = new TreeMap<>();
-            if (reader.startObject()) {
-              while (reader.notEndOfObject()) {
-                String key = reader.fieldName();
-                headers.put(key, reader.readString());
-              }
-            }
-            break;
-          case "parameters":
-            parameters = reader.readNtDynamic();
-            break;
-        }
-      }
-    }
-
-    if (uri != null && headers != null && parameters != null) {
-      return new WebDelete(context, uri, headers, parameters);
-    }
-    return null;
-  }
-
-  public void write(JsonStreamWriter writer) {
+  public void injectWrite(JsonStreamWriter writer) {
     writer.writeObjectFieldIntro("delete");
     writer.beginObject();
     writer.writeObjectFieldIntro("uri");
@@ -81,6 +47,13 @@ public class WebDelete {
     writer.endObject();
     writer.writeObjectFieldIntro("parameters");
     writer.writeNtDynamic(parameters);
+    writer.endObject();
+  }
+
+  @Override
+  public void writeAsObject(JsonStreamWriter writer) {
+    writer.beginObject();
+    injectWrite(writer);
     writer.endObject();
   }
 }
