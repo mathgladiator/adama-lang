@@ -15,6 +15,10 @@ import org.adamalang.cli.implementations.RootHandlerImpl;
 
 public class Main {
     public static void main(String[] args) {
+        // remove \r
+        for (int k = 0; k < args.length; k++) {
+            args[k] = args[k].trim();
+        }
         RootHandler handler = new RootHandlerImpl();
         Output output = new Output(args);
         System.exit(MainRouter.route(args, handler, output));

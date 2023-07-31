@@ -34,7 +34,7 @@ public class DevBoxStart {
     TerminalIO terminal = new TerminalIO();
     if (localLibAdamaJSPath == null) {
       localLibAdamaJSPath = args.config.get_nullable_string("local-libadama-path-default");
-      terminal.info("js|using 'local-libadama-path-default' from config to pull Adama javascript from");
+      terminal.info("js|using 'local-libadama-path-default' from config to pull Adama javascript from " + localLibAdamaJSPath);
     }
     if (localLibAdamaJSPath != null) {
       localLibAdamaJSFile = new File(localLibAdamaJSPath);
