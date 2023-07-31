@@ -97,8 +97,10 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       }
       exprType.typing(environmentToUse);
       functionStyle = ((TyNativeFunctional) exprType).style;
+      boolean exceptIfWebGet = environmentToUse.state.isWeb() && environmentToUse.state.getWebMethod().equals("get");
       if (functionStyle == FunctionStyleJava.RemoteCall) {
-        if (environmentToUse.state.isReadonlyEnvironment() || environmentToUse.state.isPure()) {
+        boolean mustBeReadonly = environmentToUse.state.isReadonlyEnvironment() || environmentToUse.state.isPure();
+        if (mustBeReadonly && !exceptIfWebGet) {
           environmentToUse.document.createError(expression, String.format("Services can not be invoked in read-only or pure functional context"));
         } else if (environmentToUse.state.getCacheObject() == null) {
           environmentToUse.document.createError(expression, String.format("Remote invocation not available in this scope"));
@@ -122,7 +124,11 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
         environmentToUse.document.createError(expression, String.format("Functions with viewer can only be used from viewer states"));
       }
       if (environmentToUse.state.isReadonlyEnvironment() && !functionInstance.pure) {
-        environmentToUse.document.createError(expression, String.format("Read only methods can only call other read-only methods or pure functions"));
+        boolean serviceCallInGet = functionStyle == FunctionStyleJava.RemoteCall && exceptIfWebGet;
+        if (!serviceCallInGet) {
+          System.err.println(functionInstance.javaFunction);
+          environmentToUse.document.createError(expression, String.format("Read only methods can only call other read-only methods or pure functions"));
+        }
       }
       if (environmentToUse.state.isReactiveExpression() && !functionInstance.pure) {
         environmentToUse.document.createError(expression, String.format("Reactive expressions can only invoke pure functions"));

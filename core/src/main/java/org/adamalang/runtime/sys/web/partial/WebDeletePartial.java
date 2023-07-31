@@ -38,7 +38,7 @@ public class WebDeletePartial implements WebPartial {
   public static WebDeletePartial read(JsonStreamReader reader) {
     String uri = null;
     NtDynamic parameters = null;
-    TreeMap<String, String> headers = new TreeMap<>();
+    TreeMap<String, String> headers = null;
 
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
@@ -49,15 +49,20 @@ public class WebDeletePartial implements WebPartial {
             break;
           case "headers":
             if (reader.startObject()) {
+              headers = new TreeMap<>();
               while (reader.notEndOfObject()) {
                 String key = reader.fieldName();
                 headers.put(key, reader.readString());
               }
+            } else {
+              reader.skipValue();
             }
             break;
           case "parameters":
             parameters = reader.readNtDynamic();
             break;
+          default:
+            reader.skipValue();
         }
       }
     }

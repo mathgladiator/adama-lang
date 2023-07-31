@@ -43,8 +43,8 @@ public class WebPutPartial implements WebPartial {
             uri = reader.readString();
             break;
           case "headers":
-            headers = new TreeMap<>();
             if (reader.startObject()) {
+              headers = new TreeMap<>();
               while (reader.notEndOfObject()) {
                 String key = reader.fieldName();
                 headers.put(key, reader.readString());
