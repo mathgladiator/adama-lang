@@ -55,7 +55,7 @@ public class DefineWebGet extends Definition implements UriAction {
     Environment env = environment.scopeAsReadOnlyBoundary().scopeAsWeb("get");
     uri.extendInto(env);
     uri.typing(env);
-    return env;
+    return env.scopeWithCache("__currentWebCache");
   }
 
   public void typing(TypeCheckerRoot checker) {

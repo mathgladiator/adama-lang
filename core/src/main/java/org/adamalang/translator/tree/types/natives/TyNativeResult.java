@@ -148,7 +148,7 @@ public class TyNativeResult extends TyType implements //
       return new TyNativeFunctional("message", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("message", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("await".equals(name)) {
-      return new TyNativeFunctional("await", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("await", new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, tokenElementType), new ArrayList<>(), FunctionPaint.NORMAL)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("await", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("await", new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, tokenElementType), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("as_maybe".equals(name)) {
       return new TyNativeFunctional("as_maybe", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("as_maybe", new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, tokenElementType), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);

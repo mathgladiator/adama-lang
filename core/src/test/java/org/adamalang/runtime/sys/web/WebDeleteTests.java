@@ -35,5 +35,8 @@ public class WebDeleteTests {
     Assert.assertEquals("{\"p\":123}", clone.parameters.json);
     Assert.assertEquals("abc", clone.headers.storage.get("x"));
     Assert.assertNull(WebDeletePartial.read(new JsonStreamReader("{}")).convert(context));
+    JsonStreamWriter whole = new JsonStreamWriter();
+    delete.writeAsObject(whole);
+    Assert.assertEquals("{\"delete\":{\"uri\":\"/uri\",\"headers\":{\"x\":\"abc\"},\"parameters\":{\"p\":123}}}", whole.toString());
   }
 }

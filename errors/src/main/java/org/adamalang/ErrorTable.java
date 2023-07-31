@@ -153,6 +153,8 @@ public class ErrorTable {
     descriptions.put(146115, "no description of error (yet)");
     names.put(133308, "DOCUMENT_WEB_GET_NOT_FOUND");
     descriptions.put(133308, "no description of error (yet)");
+    names.put(128208, "DOCUMENT_WEB_GET_CANCEL");
+    descriptions.put(128208, "no description of error (yet)");
     names.put(127692, "DOCUMENT_WEB_OPTIONS_NOT_FOUND");
     descriptions.put(127692, "no description of error (yet)");
     names.put(114881, "DOCUMENT_WEB_PUT_NOT_FOUND");

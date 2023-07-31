@@ -20,10 +20,15 @@ public interface WebPartial {
     WebPartial result = null;
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
-        if ("put".equals(reader.fieldName())) {
-          result = WebPutPartial.read(reader);
-        } else {
-          reader.skipValue();
+        switch (reader.fieldName()) {
+          case "put":
+            result = WebPutPartial.read(reader);
+            break;
+          case "delete":
+            result = WebDeletePartial.read(reader);
+            break;
+          default:
+            reader.skipValue();
         }
       }
     }

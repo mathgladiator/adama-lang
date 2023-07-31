@@ -28,9 +28,7 @@ import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.mocks.MockDataObserver;
-import org.adamalang.runtime.sys.web.WebContext;
-import org.adamalang.runtime.sys.web.WebPut;
-import org.adamalang.runtime.sys.web.WebResponse;
+import org.adamalang.runtime.sys.web.*;
 import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
@@ -408,6 +406,74 @@ public class LivingDocumentTests {
     });
     gotResponse.await(1000, TimeUnit.MILLISECONDS);
     setup.document.invalidate(new RealDocumentSetup.AssertInt(4));
+    setup.assertCompare();
+  }
+
+  @Test
+  public void webdel_async_service() throws Exception {
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
+    RealDocumentSetup setup = new RealDocumentSetup(
+        "@link sample{}" +
+            "public string msg = \"Hi\";" +
+            "@connected { return true; }" +
+            "message M { string name; }" +
+            "@web delete /data {" +
+            "  var mresult = sample.echo(@who, {message: \"Hello Delete\"}).await();" +
+            "  if (mresult as result) { return {html:result.message}; }" +
+            "  return {html:\"NOPE\"};" +
+            "}",
+        "{}");
+    // String uri, TreeMap<String, String> headers, NtDynamic parameters, String bodyJson
+    WebDelete del = new WebDelete(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), "/data", new TreeMap<>(), new NtDynamic("{}"));
+    CountDownLatch gotResponse = new CountDownLatch(1);
+    setup.document.webDelete(del, new Callback<WebResponse>() {
+      @Override
+      public void success(WebResponse value) {
+        Assert.assertEquals("Hello Delete", value.body);
+        gotResponse.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        ex.printStackTrace();
+      }
+    });
+    gotResponse.await(1000, TimeUnit.MILLISECONDS);
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(4));
+    setup.assertCompare();
+  }
+
+  @Test
+  public void webget_async_service() throws Exception {
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
+    RealDocumentSetup setup = new RealDocumentSetup(
+        "@link sample{}" +
+            "public string msg = \"Hi\";" +
+            "@connected { return true; }" +
+            "message M { string name; }" +
+            "@web get /data {" +
+            "  var mresult = sample.echo(@who, {message: \"Hello Get\"}).await();" +
+            "  if (mresult as result) { return {html:result.message}; }" +
+            "  return {html:\"NOPE\"};" +
+            "}",
+        "{}");
+    // String uri, TreeMap<String, String> headers, NtDynamic parameters, String bodyJson
+    WebGet get = new WebGet(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), "/data", new TreeMap<>(), new NtDynamic("{}"));
+    CountDownLatch gotResponse = new CountDownLatch(1);
+    setup.document.document().__web_get(get, new Callback<WebResponse>() {
+      @Override
+      public void success(WebResponse value) {
+        Assert.assertEquals("Hello Get", value.body);
+        gotResponse.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        ex.printStackTrace();
+      }
+    });
+    gotResponse.await(1000, TimeUnit.MILLISECONDS);
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(3));
     setup.assertCompare();
   }
 
