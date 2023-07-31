@@ -199,12 +199,59 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.delete(KEY1, "nop", callback);
+          machine.markDelete(KEY1, "nop", callback);
           callback.assertFailure(773247);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.delete(KEY1, "targetNew", callback);
+          machine.commitDelete(KEY1, "nop", callback);
+          callback.assertFailure(787655);
+        }
+        {
+          SimpleMockCallback callback = new SimpleMockCallback();
+          machine.markDelete(KEY1, "targetNew", callback);
+          callback.assertSuccess();
+        }
+        {
+          SimpleMockCallback fauxCallback = new SimpleMockCallback();
+          machine.listDeleted("targetNew", new Callback<List<Key>>() {
+            @Override
+            public void success(List<Key> value) {
+              Assert.assertTrue(value.size() == 1);
+              fauxCallback.success(null);
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+
+            }
+          });
+          fauxCallback.assertSuccess();
+        }
+        {
+          SimpleMockCallback fauxCallback = new SimpleMockCallback();
+          machine.list("targetNew", new Callback<List<Key>>() {
+            @Override
+            public void success(List<Key> value) {
+              Assert.assertTrue(value.size() == 0);
+              fauxCallback.success(null);
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+
+            }
+          });
+          fauxCallback.assertSuccess();
+        }
+        {
+          SimpleMockCallback callback = new SimpleMockCallback();
+          machine.bind(KEY1, "targetNew", callback);
+          callback.assertFailure(667658);
+        }
+        {
+          SimpleMockCallback callback = new SimpleMockCallback();
+          machine.commitDelete(KEY1, "targetNew", callback);
           callback.assertSuccess();
         }
         listing = FinderOperations.list(dataBase, "space-1", "", 4);

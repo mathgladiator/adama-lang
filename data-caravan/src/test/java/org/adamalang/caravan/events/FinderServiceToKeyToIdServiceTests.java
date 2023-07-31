@@ -32,7 +32,7 @@ public class FinderServiceToKeyToIdServiceTests {
           return;
         }
         count.incrementAndGet();
-        callback.success(new Result(Long.parseLong(key.key), Location.Machine, "", "", ""));
+        callback.success(new Result(Long.parseLong(key.key), Location.Machine, "", "", "", false));
 
       }
 
@@ -52,12 +52,21 @@ public class FinderServiceToKeyToIdServiceTests {
       }
 
       @Override
-      public void delete(Key key, String machineOn, Callback<Void> callback) {
+      public void markDelete(Key key, String machineOn, Callback<Void> callback) {
+
+      }
+
+      @Override
+      public void commitDelete(Key key, String machineOn, Callback<Void> callback) {
 
       }
 
       @Override
       public void list(String machine, Callback<List<Key>> callback) {
+      }
+
+      @Override
+      public void listDeleted(String machine, Callback<List<Key>> callback) {
       }
     };
     FinderServiceToKeyToIdService service = new FinderServiceToKeyToIdService(real);

@@ -266,18 +266,16 @@ public class InstanceClient implements AutoCloseable {
             client.open(new ServerCodec.StreamFinder() {
               @Override
               public void handle(ServerMessage.FindResponse payload) {
-                callback.success(new FinderService.Result(payload.id, FinderService.Location.fromType(payload.location), payload.region, payload.machine, payload.archive));
+                callback.success(new FinderService.Result(payload.id, FinderService.Location.fromType(payload.location), payload.region, payload.machine, payload.archive, false));
               }
 
               @Override
               public void completed() {
-
               }
 
               @Override
               public void error(int errorCode) {
                 callback.failure(new ErrorCodeException(errorCode));
-
               }
             }, new CallbackByteStreamWriter(callback) {
               @Override

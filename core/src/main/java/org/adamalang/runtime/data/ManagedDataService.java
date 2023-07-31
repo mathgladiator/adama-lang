@@ -73,10 +73,20 @@ public class ManagedDataService implements DataService {
 
   @Override
   public void delete(Key key, Callback<Void> callback) {
-    base.finder.delete(key, base.target, new Callback<Void>() {
+    base.finder.markDelete(key, base.target, new Callback<Void>() {
       @Override
       public void success(Void value) {
-        deleteLocal(key, callback);
+        deleteLocal(key, new Callback<>() {
+          @Override
+          public void success(Void value) {
+            base.finder.commitDelete(key, base.target, callback);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
       }
 
       @Override
