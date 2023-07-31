@@ -898,7 +898,7 @@ public class DurableLivingDocument implements Queryable {
 
   public void webDelete(WebDelete delete, Callback<WebResponse> callback) {
     final var writer = forge_web("web_delete", delete.context);
-    delete.write(writer);
+    delete.injectWrite(writer);
     writer.endObject();
     ingest(delete.context.who, writer.toString(), base.metrics.document_web_delete.wrap(new Callback<LivingDocumentChange>() {
       @Override

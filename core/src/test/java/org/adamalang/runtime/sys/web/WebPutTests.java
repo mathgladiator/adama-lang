@@ -8,11 +8,13 @@
  */
 package org.adamalang.runtime.sys.web;
 
+import org.adamalang.common.Json;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.web.partial.WebPartial;
+import org.adamalang.runtime.sys.web.partial.WebPutPartial;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,12 +32,12 @@ public class WebPutTests {
     Assert.assertEquals("\"put\":{\"uri\":\"/uri\",\"headers\":{\"x\":\"abc\"},\"parameters\":{\"p\":123},\"bodyJson\":{}}", writer.toString());
     JsonStreamReader reader = new JsonStreamReader(writer.toString());
     Assert.assertEquals("put", reader.fieldName());
-    WebPut clone = WebPut.read(context, reader);
+    WebPut clone = (WebPut) WebPutPartial.read(reader).convert(context);
     Assert.assertEquals("/uri", clone.uri);
     Assert.assertEquals("{\"p\":123}", clone.parameters.json);
     Assert.assertEquals("{}", clone.bodyJson);
     Assert.assertEquals("abc", clone.headers.storage.get("x"));
-    Assert.assertNull(WebPut.read(context, new JsonStreamReader("{}")));
+    Assert.assertNull(WebPutPartial.read(new JsonStreamReader("{}")).convert(context));
   }
 
   @Test

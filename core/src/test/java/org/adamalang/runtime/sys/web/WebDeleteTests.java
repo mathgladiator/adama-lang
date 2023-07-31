@@ -12,6 +12,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.web.partial.WebDeletePartial;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,14 +26,14 @@ public class WebDeleteTests {
     headers.put("x", "abc");
     WebDelete delete = new WebDelete(context, "/uri", headers, new NtDynamic("{\"p\":123}"));
     JsonStreamWriter writer = new JsonStreamWriter();
-    delete.write(writer);
+    delete.injectWrite(writer);
     Assert.assertEquals("\"delete\":{\"uri\":\"/uri\",\"headers\":{\"x\":\"abc\"},\"parameters\":{\"p\":123}}", writer.toString());
     JsonStreamReader reader = new JsonStreamReader(writer.toString());
     Assert.assertEquals("delete", reader.fieldName());
-    WebDelete clone = WebDelete.read(context, reader);
+    WebDelete clone = (WebDelete) WebDeletePartial.read(reader).convert(context);
     Assert.assertEquals("/uri", clone.uri);
     Assert.assertEquals("{\"p\":123}", clone.parameters.json);
     Assert.assertEquals("abc", clone.headers.storage.get("x"));
-    Assert.assertNull(WebDelete.read(context, new JsonStreamReader("{}")));
+    Assert.assertNull(WebDeletePartial.read(new JsonStreamReader("{}")).convert(context));
   }
 }

@@ -31,6 +31,8 @@ import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
 import org.adamalang.runtime.remote.*;
 import org.adamalang.runtime.sys.web.*;
+import org.adamalang.runtime.sys.web.partial.WebDeletePartial;
+import org.adamalang.runtime.sys.web.partial.WebPutPartial;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.time.Instant;
@@ -1039,10 +1041,10 @@ public abstract class LivingDocument implements RxParent, Caller {
               patch = reader.skipValueIntoJson();
               break;
             case "put":
-              put = WebPut.read(new WebContext(who, origin, ip), reader);
+              put = (WebPut) WebPutPartial.read(reader).convert(new WebContext(who, origin, ip));
               break;
             case "delete":
-              delete = WebDelete.read(new WebContext(who, origin, ip), reader);
+              delete = (WebDelete) WebDeletePartial.read(reader).convert(new WebContext(who, origin, ip));
               break;
             case "delivery_id":
               delivery_id = reader.readInteger();
