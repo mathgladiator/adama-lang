@@ -88,6 +88,10 @@ public class FrontendHttpHandler implements HttpHandler {
             } catch (Exception ex) {
               callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_SECRETS_SIGNING_EXCEPTION, ex, EXLOGGER));
             }
+          } else if ("text/identity".equals(response.contentType)) {
+            ObjectNode json = Json.newJsonObject();
+            json.put("identity", response.body);
+            callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
           } else {
             if (response.asset != null) {
               callback.success(new HttpResult(skr.space, skr.key, response.asset, response.cors));

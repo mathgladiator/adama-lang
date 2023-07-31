@@ -12,3 +12,7 @@
 @web get /sign {
   return {sign:"" + 1};
 }
+
+@web get /id {
+  return {identity:"anonymous:alice"};
+}

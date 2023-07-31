@@ -91,6 +91,12 @@ public class WebResponse {
     return this;
   }
 
+  public WebResponse identity(String identity) {
+    this.contentType = "text/identity";
+    this.body = identity;
+    return this;
+  }
+
   public WebResponse js(String body) {
     this.contentType = "text/javascript";
     this.body = body;
