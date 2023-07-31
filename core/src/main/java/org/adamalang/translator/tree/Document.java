@@ -34,6 +34,7 @@ import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.structures.*;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
@@ -41,10 +42,6 @@ import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
-import org.adamalang.translator.tree.types.structures.BubbleDefinition;
-import org.adamalang.translator.tree.types.structures.FieldDefinition;
-import org.adamalang.translator.tree.types.structures.StorageSpecialization;
-import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
@@ -269,6 +266,15 @@ public class Document implements TopLevelDocumentHandler {
     services.put(ds.name.text, ds);
     defined.add(ds.name.text);
     ds.typing(typeChecker);
+  }
+
+  @Override
+  public void add(ReplicationDefinition rd) {
+    if (defined.contains(rd.name.text)) {
+      typeChecker.issueError(rd, String.format("The replication '%s' has a conflicting name.", rd.name.text));
+    }
+    defined.add(rd.name.text);
+    root.storage.addFromRoot(rd, typeChecker);
   }
 
   @Override
