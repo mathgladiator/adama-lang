@@ -18,6 +18,7 @@ public class EphemeralFuture<T> {
   private boolean cancel;
   private T result;
   private Callback<T> callback;
+  private Integer error;
 
   public EphemeralFuture() {
     this.done = false;
@@ -41,15 +42,34 @@ public class EphemeralFuture<T> {
     }
   }
 
+  public void abort(int errorCode) {
+    boolean ship;
+    synchronized (this) {
+      error = errorCode;
+      ship = callback != null && !done;
+      if (ship) {
+        done = true;
+      }
+    }
+    if (ship) {
+      callback.failure(new ErrorCodeException(errorCode));
+    }
+  }
+
   /** attach a callback */
   public void attach(Callback<T> callback) {
     boolean ship;
     boolean kill = false;
+    boolean abort = false;
     synchronized (this) {
       this.callback = callback;
       ship = callback != null && result != null && !done;
       if (cancel) {
         kill = true;
+        ship = false;
+      }
+      if (error != null) {
+        abort = true;
         ship = false;
       }
       if (ship) {
@@ -58,6 +78,9 @@ public class EphemeralFuture<T> {
     }
     if (ship) {
       callback.success(result);
+    }
+    if (abort) {
+      callback.failure(new ErrorCodeException(error));
     }
     if (kill) {
       kill();

@@ -811,7 +811,11 @@ public abstract class LivingDocument implements RxParent, Caller {
   private boolean __execute_web_get(EphemeralWebGet get) {
     try {
       __currentWebCache = get.cache;
-      get.callback.success(__get_internal(get.get));
+      try {
+        get.callback.success(__get_internal(get.get));
+      } catch (AbortMessageException ame) {
+        get.callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_GET_ABORT));
+      }
       return true;
     } catch (ComputeBlockedException cbe) {
       return false;
@@ -827,16 +831,16 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** code generated: respond to a get request */
-  protected abstract WebResponse __get_internal(WebGet __get);
+  protected abstract WebResponse __get_internal(WebGet __get) throws AbortMessageException;
 
   /** code generated: respond to a get request */
   public abstract WebResponse __options(WebGet __get);
 
   /** code generated: respond to a put request */
-  protected abstract WebResponse __put_internal(WebPut __put);
+  protected abstract WebResponse __put_internal(WebPut __put) throws AbortMessageException;
 
   /** code generated: respond to a delete request */
-  protected abstract WebResponse __delete_internal(WebDelete __delete);
+  protected abstract WebResponse __delete_internal(WebDelete __delete) throws AbortMessageException;
 
   public boolean __isConnected(final NtPrincipal __who) {
     return __clients.containsKey(__who);
@@ -1336,6 +1340,10 @@ public abstract class LivingDocument implements RxParent, Caller {
         __seq.bumpUpPre();
         __webQueue.queue(put.context, put, future, cache, delay);
         return __simple_commit(put.context.who, request, future, 0L);
+      } catch (AbortMessageException ame) {
+        __revert();
+        exception = false;
+        throw new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_PUT_ABORT);
       }
     } finally {
       if (exception) {
@@ -1371,6 +1379,10 @@ public abstract class LivingDocument implements RxParent, Caller {
         __seq.bumpUpPre();
         __webQueue.queue(del.context, del, future, cache, delay);
         return __simple_commit(del.context.who, request, future, 0L);
+      } catch (AbortMessageException ame) {
+        __revert();
+        exception = false;
+        throw new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_DELETE_ABORT);
       }
     } finally {
       if (exception) {
@@ -1623,15 +1635,27 @@ public abstract class LivingDocument implements RxParent, Caller {
             __random = new Random(seedUsed);
             if (item.item instanceof WebPut) {
               __currentWebCache = item.cache;
-              WebResponse response = __put_internal((WebPut) item.item);
-              if (item.future != null) {
-                item.future.send(response);
+              try {
+                WebResponse response = __put_internal((WebPut) item.item);
+                if (item.future != null) {
+                  item.future.send(response);
+                }
+              } catch (AbortMessageException ame) {
+                if (item.future != null) {
+                  item.future.abort(ErrorCodes.DOCUMENT_WEB_PUT_ABORT);
+                }
               }
             } else if (item.item instanceof WebDelete) {
               __currentWebCache = item.cache;
-              WebResponse response = __delete_internal((WebDelete) item.item);
-              if (item.future != null) {
-                item.future.send(response);
+              try {
+                WebResponse response = __delete_internal((WebDelete) item.item);
+                if (item.future != null) {
+                  item.future.send(response);
+                }
+              } catch (AbortMessageException ame) {
+                if (item.future != null) {
+                  item.future.abort(ErrorCodes.DOCUMENT_WEB_DELETE_ABORT);
+                }
               }
             }
             dirtyLeft--;
