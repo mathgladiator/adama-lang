@@ -31832,7 +31832,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_TupleEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS2_failure.a' failed to import due 'Cannot read field \\\"text\\\" because \\\"token\\\" is null'\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7,\"byte\":20},\"end\":{\"line\":1,\"character\":8,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS2_failure.a' failed to parse: Parser was expecting an identifier, but got end of stream instead. {Token: `<` @ (1,7) -> (1,8): Symbol}\",\"file\":\"./test_code/Parser_TupleEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got end of stream instead. {Token: `<` @ (1,7) -> (1,8): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -31872,7 +31872,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_TupleEOS3_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":12,\"byte\":25},\"end\":{\"line\":1,\"character\":13,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS3_failure.a' failed to parse: Parser was expecting one of the following symbols:,, >; instead, the parser got an end of stream. {Token: `3` @ (1,12) -> (1,13): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_TupleEOS3_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting one of the following symbols:,, >; instead, the parser got an end of stream. {Token: `3` @ (1,12) -> (1,13): NumberLiteral:NumberIsInteger}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":8,\"byte\":21},\"end\":{\"line\":1,\"character\":9,\"byte\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS3_failure.a' failed to parse: Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (1,8) -> (1,9): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_TupleEOS3_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (1,8) -> (1,9): NumberLiteral:NumberIsInteger}\",\"file\":,null}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

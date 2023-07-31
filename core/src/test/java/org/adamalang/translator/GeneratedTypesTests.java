@@ -86,7 +86,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_BadMaybe_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":18,\"byte\":31},\"end\":{\"line\":1,\"character\":26,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'int' / 'bool'\",\"file\":\"./test_code/Types_BadMaybe_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":53},\"end\":{\"line\":2,\"character\":20,\"byte\":62}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'maybe<42>' is using a type that was not found.\",\"file\":\"./test_code/Types_BadMaybe_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":18,\"byte\":60},\"end\":{\"line\":2,\"character\":20,\"byte\":62}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Types_BadMaybe_failure.a' failed to parse: Parser was expecting an identifier, but got a NumberLiteral:42 instead. {Token: `42` @ (2,18) -> (2,20): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Types_BadMaybe_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a NumberLiteral:42 instead. {Token: `42` @ (2,18) -> (2,20): NumberLiteral:NumberIsInteger}\",\"file\":,null}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
