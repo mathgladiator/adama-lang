@@ -92,6 +92,9 @@ public class Return extends Statement {
         if (consider("json", webReturnType, (ty) -> environment.rules.IsNativeMessage(ty, false))) {
           body++;
         }
+        if (consider("identity", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+          body++;
+        }
         if (consider("asset", webReturnType, (ty) -> environment.rules.IsAsset(ty, false))) {
           consider("asset_transform", webReturnType, (ty) -> environment.rules.IsString(ty, false));
           body++;
