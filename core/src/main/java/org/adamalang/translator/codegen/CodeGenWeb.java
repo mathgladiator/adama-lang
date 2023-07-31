@@ -144,7 +144,7 @@ public class CodeGenWeb {
   public static void writeWebHandlers(final StringBuilderWithTabs sb, Environment environment) {
     {
       sb.append("@Override").writeNewline();
-      sb.append("public WebResponse __get(WebGet __request) {").tabUp().writeNewline();
+      sb.append("protected WebResponse __get_internal(WebGet __request) {").tabUp().writeNewline();
       sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webGet.ready("GET");
       CodeGenWeb get = new CodeGenWeb(environment, environment.document.webGet, "get");

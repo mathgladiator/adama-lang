@@ -8,6 +8,7 @@
  */
 package org.adamalang.runtime.sys.web;
 
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtMap;
@@ -30,14 +31,6 @@ public class WebPut implements WebItem {
     this.uri = uri;
     this.parameters = parameters;
     this.bodyJson = bodyJson;
-  }
-
-  public WebPut(WebContext context, WebPut prior) {
-    this.context = context;
-    this.headers = prior.headers;
-    this.uri = prior.uri;
-    this.parameters = prior.parameters;
-    this.bodyJson = prior.bodyJson;
   }
 
   @Override
@@ -64,5 +57,9 @@ public class WebPut implements WebItem {
     writer.writeObjectFieldIntro("bodyJson");
     writer.writeNtDynamic(new NtDynamic(bodyJson));
     writer.endObject();
+  }
+
+  public JsonStreamReader body() {
+    return new JsonStreamReader(bodyJson);
   }
 }

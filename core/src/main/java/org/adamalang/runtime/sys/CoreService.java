@@ -614,13 +614,22 @@ public class CoreService implements Deliverer, Queryable {
       public void success(DurableLivingDocument document) {
         PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
         document.registerActivity();
-        WebResponse response = document.document().__get(request);
-        if (response != null) {
-          response.account(inventory);
-          callback.success(response);
-        } else {
-          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_GET_NOT_FOUND));
-        }
+        document.document().__web_get(request, new Callback<WebResponse>() {
+          @Override
+          public void success(WebResponse response) {
+            if (response != null) {
+              response.account(inventory);
+              callback.success(response);
+            } else {
+              callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_GET_NOT_FOUND));
+            }
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
       }
 
       @Override
