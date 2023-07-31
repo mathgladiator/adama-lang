@@ -20,49 +20,12 @@ import org.adamalang.transforms.results.SpacePolicy;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SpacePolicyLocator {
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(SpacePolicyLocator.class);
-  public final SimpleExecutor executor;
-  public final DataBase dataBase;
-  public final ConcurrentHashMap<String, SpacePolicy> policies;
+public interface SpacePolicyLocator {
 
-  public SpacePolicyLocator(SimpleExecutor executor, GlobalExternNexus nexus) {
-    this.executor = executor;
-    this.dataBase = nexus.database;
-    this.policies = new ConcurrentHashMap<>();
-  }
+  public void execute(Session session, String spaceName, Callback<SpacePolicy> callback);
 
   public static void logInto(SpacePolicy policy, ObjectNode node) {
     node.put("space-id", policy.id);
   }
 
-  public void execute(Session session, String spaceName, Callback<SpacePolicy> callback) {
-    SpacePolicy policy = policies.get(spaceName);
-    if (policy != null) {
-      callback.success(policy);
-      return;
-    }
-    executor.execute(new NamedRunnable("space-policy-locate") {
-      @Override
-      public void execute() throws Exception {
-        try {
-          SpaceInfo space = Spaces.getSpaceInfo(dataBase, spaceName);
-          boolean schedule = policies.putIfAbsent(spaceName, new SpacePolicy(space)) == null;
-          callback.success(policies.get(spaceName));
-          if (schedule) {
-            executor.schedule(new NamedRunnable("expire-policy") {
-              @Override
-              public void execute() throws Exception {
-                policies.remove(spaceName);
-              }
-            }, 30000);
-          }
-        } catch (Exception ex) {
-          callback.failure(
-              ErrorCodeException.detectOrWrap(
-                  ErrorCodes.SPACE_POLICY_LOCATOR_UNKNOWN_EXCEPTION, ex, LOGGER));
-        }
-      }
-    });
-  }
 }
