@@ -192,7 +192,7 @@ public class DevBoxServiceBase implements ServiceBase {
         if (verse != null) {
           // TODO: differiate between a document/domain put
           final SpaceKeyRequest skr;
-          if (verse != null && verse.domainKeyToUse != null) {
+          if (verse.domainKeyToUse != null) {
             skr = new SpaceKeyRequest(verse.domainKeyToUse.space, verse.domainKeyToUse.key, uri);
           } else {
             skr = SpaceKeyRequest.parse(uri);
