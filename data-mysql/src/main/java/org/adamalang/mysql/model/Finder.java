@@ -34,7 +34,7 @@ public class Finder implements FinderService {
   public void find(Key key, Callback<Result> callback) {
     dataBase.transact((connection) -> {
       String selectSQL = //
-          "SELECT `id`, `type`, `region`, `machine`, `archive` FROM `" + dataBase.databaseName + //
+          "SELECT `id`, `type`, `region`, `machine`, `archive`, `deleted` FROM `" + dataBase.databaseName + //
               "`.`directory` WHERE `space`=? AND `key`=?" //
           ;
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(selectSQL)) {
@@ -49,7 +49,7 @@ public class Finder implements FinderService {
             String archiveValue = rs.getString(5);
             Location location = Location.fromType(type);
             if (location != null) {
-              return new Result(id, location, region, machineValue, archiveValue);
+              return new Result(id, location, region, machineValue, archiveValue, rs.getBoolean(6));
             }
           }
         }
@@ -64,7 +64,7 @@ public class Finder implements FinderService {
       String updateIndexSQL = //
           "UPDATE `" + dataBase.databaseName + "`.`directory` " + //
               "SET `type`=" + Location.Machine.type + //
-              ", `region`=?" + ", `machine`=?" + " WHERE `space`=? AND `key`=? AND ((`machine`=? AND `region`=?) OR `type`!=" + Location.Machine.type + ")";
+              ", `region`=?" + ", `machine`=?" + " WHERE NOT `deleted` AND `space`=? AND `key`=? AND ((`machine`=? AND `region`=?) OR `type`!=" + Location.Machine.type + ")";
       try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
         statementUpdate.setString(1, region);
         statementUpdate.setString(2, machine);
@@ -133,7 +133,26 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void delete(Key key, String machineOn, Callback<Void> callback) {
+  public void markDelete(Key key, String machineOn, Callback<Void> callback) {
+    dataBase.transact((connection) -> {
+      String backupSQL = //
+          "UPDATE `" + dataBase.databaseName + "`.`directory` " + //
+              "SET `deleted`=TRUE WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + Location.Machine.type;
+      try (PreparedStatement statementUpdate = connection.prepareStatement(backupSQL)) {
+        statementUpdate.setString(1, key.space);
+        statementUpdate.setString(2, key.key);
+        statementUpdate.setString(3, machineOn);
+        statementUpdate.setString(4, region);
+        if (statementUpdate.executeUpdate() == 1) {
+          return null;
+        }
+      }
+      throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_MARK_DELETE);
+    }, dataBase.metrics.finder_backup.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_MARK_DELETE_EXCEPTION);
+  }
+
+  @Override
+  public void commitDelete(Key key, String machineOn, Callback<Void> callback) {
     dataBase.transact((connection) -> {
       String deleteSQL = //
           "DELETE FROM `" + dataBase.databaseName + "`.`directory` " + //
@@ -147,8 +166,8 @@ public class Finder implements FinderService {
           return null;
         }
       }
-      throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_DELETE);
-    }, dataBase.metrics.finder_delete.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_DELETE_EXCEPTION);
+      throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_COMMIT_DELETE);
+    }, dataBase.metrics.finder_delete.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_COMMIT_DELETE_EXCEPTION);
   }
 
   @Override
@@ -156,7 +175,31 @@ public class Finder implements FinderService {
     dataBase.transact((connection) -> {
       String selectSQL = //
           "SELECT `space`, `key` FROM `" + dataBase.databaseName + //
-              "`.`directory` WHERE `region`=? AND `machine`=? AND `type`=" + //
+              "`.`directory` WHERE `region`=? AND `machine`=? AND NOT `deleted` AND `type`=" + //
+              Location.Machine.type //
+          ;
+      try (PreparedStatement statementInsertIndex = connection.prepareStatement(selectSQL)) {
+        statementInsertIndex.setString(1, region);
+        statementInsertIndex.setString(2, machine);
+        try (ResultSet rs = statementInsertIndex.executeQuery()) {
+          ArrayList<Key> results = new ArrayList<>();
+          while (rs.next()) {
+            String space = rs.getString(1);
+            String key = rs.getString(2);
+            results.add(new Key(space, key));
+          }
+          return results;
+        }
+      }
+    }, dataBase.metrics.finder_list.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_LIST_EXCEPTION);
+  }
+
+  @Override
+  public void listDeleted(String machine, Callback<List<Key>> callback) {
+    dataBase.transact((connection) -> {
+      String selectSQL = //
+          "SELECT `space`, `key` FROM `" + dataBase.databaseName + //
+              "`.`directory` WHERE `region`=? AND `machine`=? AND `deleted` AND `type`=" + //
               Location.Machine.type //
           ;
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(selectSQL)) {

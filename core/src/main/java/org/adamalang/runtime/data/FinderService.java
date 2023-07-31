@@ -27,11 +27,17 @@ public interface FinderService {
   /** set a backup copy while still active on machine */
   void backup(Key key, BackupResult result, String machineOn, Callback<Void> callback);
 
-  /** delete the key */
-  void delete(Key key, String machineOn, Callback<Void> callback);
+  /** mark the key for deletion */
+  void markDelete(Key key, String machineOn, Callback<Void> callback);
+
+  /** signal that deletion has been completed */
+  void commitDelete(Key key, String machineOn, Callback<Void> callback);
 
   /** list all items on a host */
   void list(String machine, Callback<List<Key>> callback);
+
+  /** list all items on a host */
+  void listDeleted(String machine, Callback<List<Key>> callback);
 
   /** where a document may be */
   enum Location {
@@ -63,13 +69,15 @@ public interface FinderService {
     public final String region;
     public final String machine;
     public final String archiveKey;
+    public final boolean deleted;
 
-    public Result(long id, Location location, String region, String machine, String archiveKey) {
+    public Result(long id, Location location, String region, String machine, String archiveKey, boolean deleted) {
       this.id = id;
       this.location = location;
       this.region = region;
       this.machine = machine;
       this.archiveKey = archiveKey;
+      this.deleted = deleted;
     }
   }
 }

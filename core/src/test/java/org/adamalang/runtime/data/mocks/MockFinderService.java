@@ -16,16 +16,20 @@ import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class MockFinderService implements FinderService {
   private final HashMap<Key, Result> map;
+  private final HashSet<Key> deleted;
 
   public MockFinderService() {
     this.map = new HashMap<>();
+    this.deleted = new HashSet<>();
   }
 
   private Runnable slowFind;
@@ -79,7 +83,7 @@ public class MockFinderService implements FinderService {
     Result result = map.get(key);
     if (result != null) {
       if (result.location == Location.Archive) {
-        map.put(key, new Result(1, Location.Machine, region, machine, result.archiveKey));
+        map.put(key, new Result(1, Location.Machine, region, machine, result.archiveKey, false));
         callback.success(null);
       } else if (machine.equals(result.machine) && result.location == Location.Machine) {
         callback.success(null);
@@ -88,7 +92,7 @@ public class MockFinderService implements FinderService {
         return;
       }
     } else {
-      map.put(key, new Result(1, Location.Machine, region, machine, ""));
+      map.put(key, new Result(1, Location.Machine, region, machine, "", false));
       callback.success(null);
     }
   }
@@ -98,11 +102,11 @@ public class MockFinderService implements FinderService {
   }
 
   public void bindArchive(Key key, String archiveKey) {
-    map.put(key, new Result(1, Location.Archive, "", "", archiveKey));
+    map.put(key, new Result(1, Location.Archive, "", "", archiveKey, false));
   }
 
   public void bindOtherMachine(Key key) {
-    map.put(key, new Result(1, Location.Machine, region, "other-machine", ""));
+    map.put(key, new Result(1, Location.Machine, region, "other-machine", "", false));
   }
 
   @Override
@@ -118,7 +122,7 @@ public class MockFinderService implements FinderService {
     Result result = map.get(key);
     if (result != null) {
       if (machineOn.equals(result.machine) && result.location == Location.Machine) {
-        map.put(key, new Result(1, Location.Archive, "", "", result.archiveKey));
+        map.put(key, new Result(1, Location.Archive, "", "", result.archiveKey, false));
         callback.success(null);
       } else {
         callback.failure(new ErrorCodeException(-2));
@@ -147,7 +151,7 @@ public class MockFinderService implements FinderService {
     Result result = map.get(key);
     if (result != null) {
       if (machineOn.equals(result.machine) && result.location == Location.Machine) {
-        map.put(key, new Result(1, result.location, result.region, result.machine, backupResult.archiveKey));
+        map.put(key, new Result(1, result.location, result.region, result.machine, backupResult.archiveKey, false));
         callback.success(null);
       } else {
         callback.failure(new ErrorCodeException(-4));
@@ -159,7 +163,17 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void delete(Key key, String machineOn, Callback<Void> callback) {
+  public void markDelete(Key key, String machineOn, Callback<Void> callback) {
+    if ("fail-mark".equals(key.key)) {
+      callback.failure(new ErrorCodeException(-12389));
+      return;
+    }
+    deleted.add(key);
+    callback.success(null);
+  }
+
+  @Override
+  public void commitDelete(Key key, String machineOn, Callback<Void> callback) {
     if ("keep-finder".equals(key.key)) {
       callback.success(null);
       return;
@@ -179,5 +193,10 @@ public class MockFinderService implements FinderService {
   @Override
   public void list(String machine, Callback<List<Key>> callback) {
     callback.failure(new ErrorCodeException(-123));
+  }
+
+  @Override
+  public void listDeleted(String machine, Callback<List<Key>> callback) {
+    callback.success(new ArrayList<>(deleted));
   }
 }

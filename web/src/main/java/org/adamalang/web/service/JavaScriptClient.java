@@ -403,8 +403,9 @@ public class JavaScriptClient {
     sb.append("b2luPSJyb3VuZCIgZD0iTTguMjg4IDE1LjAzOGE1LjI1IDUuMjUgMCAwMTcuNDI0IDBNNS4xMDYgMTEu");
     sb.append("ODU2YzMuODA3LTMuODA4IDkuOTgtMy44MDggMTMuNzg4IDBNMS45MjQgOC42NzRjNS41NjUtNS41NjUg");
     sb.append("MTQuNTg3LTUuNTY1IDIwLjE1MiAwTTEyLjUzIDE4LjIybC0uNTMuNTMtLjUzLS41M2EuNzUuNzUgMCAw");
-    sb.append("MTEuMDYgMHoiIC8+PC9zdmc+XG4nfWU/cS5vbnBpbmc9ZnVuY3Rpb24oZSx0KXtULmlubmVySFRNTD1u");
-    sb.append("KDEwMDw9dD8ib3JhbmdlIjoiZ3JlZW4iKX06KFQuaW5uZXJIVE1MPW4oInJlZCIpLHEub25waW5nPWZ1");
+    sb.append("MTEuMDYgMHoiIC8+PC9zdmc+XG4nfWU/cS5vbnBpbmc9ZnVuY3Rpb24oZSx0KXtULnRpdGxlPSJjb25u");
+    sb.append("ZWN0ZWQ7IGxhdGVuY3k9Iit0KyJtcyIsVC5pbm5lckhUTUw9bigxMDA8PXQ/Im9yYW5nZSI6ImdyZWVu");
+    sb.append("Iil9OihULnRpdGxlPSJkaXNjb25uZWN0ZWQiLFQuaW5uZXJIVE1MPW4oInJlZCIpLHEub25waW5nPWZ1");
     sb.append("bmN0aW9uKGUsdCl7fSl9LFQuc3R5bGU9InBvc2l0aW9uOmZpeGVkOyBib3R0b206MHB4OyByaWdodDow");
     sb.append("cHgiLEFkYW1hLkRlYnVnZ2VyJiYoVC5vbmNsaWNrPUFkYW1hLkRlYnVnZ2VyLnRvZ2dsZSkscS5zdGFy");
     sb.append("dCgpLCIvIiksdD1mdW5jdGlvbihlKXtyZXR1cm4gZX0sbz0od2luZG93LmxvY2F0aW9uLmhvc3RuYW1l");
