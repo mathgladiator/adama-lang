@@ -452,7 +452,6 @@ public class Document implements TopLevelDocumentHandler {
       createError(position, String.format("Import failed (Parse): %s", e.getMessage()));
     } catch (final Exception e) {
       createError(position, String.format("File '%s' failed to import due '" + e.getMessage() + "'", filename));
-
     }
   }
 

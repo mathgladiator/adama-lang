@@ -1392,7 +1392,7 @@ public class Parser {
 
   public TyType native_type_base_with_behavior(final boolean readonly, final Token readonlyToken) throws AdamaLangException {
     final var behavior = readonly ? TypeBehavior.ReadOnlyNativeValue : TypeBehavior.ReadWriteNative;
-    final var token = tokens.pop();
+    final var token = id();
     switch (token.text) {
       case "bool":
         return new TyNativeBoolean(behavior, readonlyToken, token);
