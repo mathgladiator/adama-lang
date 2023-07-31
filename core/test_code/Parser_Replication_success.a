@@ -1,0 +1,5 @@
+replication<service:method> foo = {x:123};
+
+record R {
+  replication<service:method> goo = {y:42};
+}

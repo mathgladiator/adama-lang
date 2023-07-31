@@ -653,7 +653,7 @@ public class Parser {
     }
     op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service"));
+      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication"));
     }
     if (op != null) {
       switch (op.text) {
@@ -717,10 +717,26 @@ public class Parser {
         case "policy":
           final var policy = define_policy_trailer(op);
           return doc -> doc.add(policy);
+        case "replication":
+          final var replicate = define_replication(op);
+          return doc -> doc.add(replicate);
       }
     }
     final var newField = define_field_record();
     return doc -> doc.add(newField);
+  }
+
+  public ReplicationDefinition define_replication(Token op) throws AdamaLangException {
+    Token open = consumeExpectedSymbol("<");
+    Token service = id();
+    Token split = consumeExpectedSymbol(":");
+    Token method = id();
+    Token close = consumeExpectedSymbol(">");
+    Token name = id();
+    Token equals = consumeExpectedSymbol("=");
+    Expression expression = expression();
+    Token end = consumeExpectedSymbol(";");
+    return new ReplicationDefinition(op, open, service, split, method, close, name, equals, expression, end);
   }
 
   public BubbleDefinition define_bubble(final Token bubbleToken) throws AdamaLangException {
@@ -1034,7 +1050,7 @@ public class Parser {
     final var storage = new StructureStorage(StorageSpecialization.Record, false, consumeExpectedSymbol("{"));
     storage.setSelf(new TyReactiveRef(name));
     while (true) {
-      var op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index"));
+      var op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "replication"));
       while (op != null) {
         switch (op.text) {
           case "require": {
@@ -1054,8 +1070,11 @@ public class Parser {
           case "method":
             storage.add(define_method_trailer(op));
             break;
+          case "replication":
+            storage.add(define_replication(op));
+            break;
         }
-        op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index"));
+        op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "replication"));
       }
       op = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
       if (op != null) {

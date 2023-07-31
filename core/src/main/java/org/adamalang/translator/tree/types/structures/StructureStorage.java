@@ -35,6 +35,7 @@ public class StructureStorage extends DocumentPosition {
   public final TreeMap<String, BubbleDefinition> bubbles;
   public final ArrayList<Consumer<Consumer<Token>>> emissions;
   public final TreeMap<String, FieldDefinition> fields;
+  public final TreeMap<String, ReplicationDefinition> replications;
   public final ArrayList<FieldDefinition> fieldsByOrder;
   public final HashSet<String> indexSet;
   public final ArrayList<IndexDefinition> indices;
@@ -67,6 +68,7 @@ public class StructureStorage extends DocumentPosition {
     methodTypes = new HashMap<>();
     internalMethods = new HashMap<>();
     fieldsWithDefaults = new HashSet<>();
+    replications = new TreeMap<>();
     ingest(openBraceToken);
   }
 
@@ -105,6 +107,26 @@ public class StructureStorage extends DocumentPosition {
     writer.endObject();
   }
 
+  private void addCommon(ReplicationDefinition rd, FreeEnvironment fe, TypeChecker checker) {
+    emissions.add(e -> rd.emit(e));
+    ingest(rd);
+    rd.expression.free(fe);
+    checker.register(fe.free, env -> rd.typing(env.watch(Watcher.make(env, rd.variablesToWatch, rd.servicesToWatch))));
+    if (has(rd.name.text)) {
+      checker.issueError(rd, String.format("Replication '%s' was already defined", rd.name.text));
+      return;
+    }
+    replications.put(rd.name.text, rd);
+  }
+
+  public void add(final ReplicationDefinition rd) {
+    addCommon(rd, FreeEnvironment.root(), checker);
+  }
+
+  public void addFromRoot(ReplicationDefinition rd, TypeCheckerRoot rootChecker) {
+    addCommon(rd, FreeEnvironment.root(), rootChecker);
+  }
+
   public void add(final BubbleDefinition bd) {
     addCommon(bd, FreeEnvironment.root(), checker);
   }
@@ -127,7 +149,7 @@ public class StructureStorage extends DocumentPosition {
 
   /** does this record contain this field */
   public boolean has(final String name) {
-    return fields.containsKey(name) || bubbles.containsKey(name);
+    return fields.containsKey(name) || bubbles.containsKey(name) || replications.containsKey(name);
   }
 
   public void add(final DefineMethod dm) {
