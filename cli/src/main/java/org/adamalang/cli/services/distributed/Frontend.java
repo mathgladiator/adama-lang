@@ -13,7 +13,7 @@ import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.FrontendHttpHandler;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.ConfigObject;
-import org.adamalang.frontend.global.GlobalAssetSystemImpl;
+import org.adamalang.frontend.global.GlobalAssetSystem;
 import org.adamalang.extern.Email;
 import org.adamalang.frontend.global.GlobalExternNexus;
 import org.adamalang.extern.aws.SES;
@@ -44,7 +44,7 @@ public class Frontend {
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
     this.adama = init.makeGlobalClient(client);
-    GlobalAssetSystemImpl assets = new GlobalAssetSystemImpl(init.database, init.masterKey, adama, init.s3);
+    GlobalAssetSystem assets = new GlobalAssetSystem(init.database, init.masterKey, adama, init.s3);
     ArrayList<String> superKeys = config.get_str_list("super-public-keys");
 
     GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, email, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
