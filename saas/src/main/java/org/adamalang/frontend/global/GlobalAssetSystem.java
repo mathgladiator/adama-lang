@@ -30,13 +30,13 @@ import org.adamalang.web.io.ConnectionContext;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a concrete implementation of the asset system */
-public class GlobalAssetSystemImpl implements AssetSystem {
+public class GlobalAssetSystem implements AssetSystem {
   public final DataBase database;
   public final String masterKey;
   public final MultiRegionClient adama;
   public final S3 s3;
 
-  public GlobalAssetSystemImpl(DataBase database, String masterKey, MultiRegionClient adama, S3 s3) {
+  public GlobalAssetSystem(DataBase database, String masterKey, MultiRegionClient adama, S3 s3) {
     this.database = database;
     this.masterKey = masterKey;
     this.adama = adama;
