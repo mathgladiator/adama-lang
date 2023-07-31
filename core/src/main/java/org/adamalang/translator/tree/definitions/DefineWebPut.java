@@ -66,7 +66,7 @@ public class DefineWebPut extends Definition implements UriAction {
   }
 
   public Environment next(Environment environment) {
-    Environment env = environment.scopeAsWeb("put");
+    Environment env = environment.scopeAsAbortable().scopeAsWeb("put");
     uri.extendInto(env);
     env.define(messageVariable.text, messageTypeFound, false, this);
     uri.typing(env);

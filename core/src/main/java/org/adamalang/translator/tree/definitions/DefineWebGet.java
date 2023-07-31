@@ -52,7 +52,7 @@ public class DefineWebGet extends Definition implements UriAction {
   }
 
   public Environment next(Environment environment) {
-    Environment env = environment.scopeAsReadOnlyBoundary().scopeAsWeb("get");
+    Environment env = environment.scopeAsReadOnlyBoundary().scopeAsAbortable().scopeAsWeb("get");
     uri.extendInto(env);
     uri.typing(env);
     return env.scopeWithCache("__currentWebCache");

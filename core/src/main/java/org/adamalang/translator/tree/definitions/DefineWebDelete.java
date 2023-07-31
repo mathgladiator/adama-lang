@@ -52,7 +52,7 @@ public class DefineWebDelete extends Definition implements UriAction {
   }
 
   public Environment next(Environment environment) {
-    Environment env = environment.scopeAsWeb("delete");
+    Environment env = environment.scopeAsAbortable().scopeAsWeb("delete");
     uri.extendInto(env);
     uri.typing(env);
     return env.scopeWithCache("__currentWebCache");
