@@ -6,8 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.transforms.region;
 
-public class Platform {
-  public static String VERSION = "20230730210449";
+public class RegionSpacePolicyLocator {
 }

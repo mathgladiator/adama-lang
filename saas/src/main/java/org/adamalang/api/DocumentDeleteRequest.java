@@ -14,6 +14,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.frontend.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateKey;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
@@ -23,26 +24,30 @@ public class DocumentDeleteRequest {
   public final String identity;
   public final AuthenticatedUser who;
   public final String space;
+  public final SpacePolicy policy;
   public final String key;
 
-  public DocumentDeleteRequest(final String identity, final AuthenticatedUser who, final String space, final String key) {
+  public DocumentDeleteRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key) {
     this.identity = identity;
     this.who = who;
     this.space = space;
+    this.policy = policy;
     this.key = key;
   }
 
   public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<DocumentDeleteRequest> callback) {
     try {
-      final BulkLatch<DocumentDeleteRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
+      final BulkLatch<DocumentDeleteRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getStringNormalize("space", true, 461828);
       ValidateSpace.validate(space);
+      final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String key = request.getString("key", true, 466947);
       ValidateKey.validate(key);
-      _latch.with(() -> new DocumentDeleteRequest(identity, who.get(), space, key));
+      _latch.with(() -> new DocumentDeleteRequest(identity, who.get(), space, policy.get(), key));
       nexus.identityService.execute(session, identity, who);
+      nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("documentdelete-error") {
         @Override
@@ -56,6 +61,7 @@ public class DocumentDeleteRequest {
   public void logInto(ObjectNode _node) {
     org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
     _node.put("space", space);
+    org.adamalang.transforms.SpacePolicyLocator.logInto(policy, _node);
     _node.put("key", key);
   }
 }
