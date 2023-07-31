@@ -9,6 +9,7 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
+import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.async.AsyncTask;
@@ -88,6 +89,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private Deliverer __deliverer;
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
+  protected final ArrayList<EphemeralWebGet> __gets;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -137,6 +139,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __webTaskId = new RxInt32(this, 0);
     __webQueue = new WebQueue(__webTaskId);
     __currentWebCache = null;
+    __gets = new ArrayList<>();
   }
 
   /** exposed: get the document's timestamp as a date */
@@ -347,7 +350,9 @@ public abstract class LivingDocument implements RxParent, Caller {
         pv.usurp(usurper);
       }
     }
-    __code_cost = usurpingDocument.__code_cost;
+    usurpingDocument.__gets.addAll(__gets);
+    __gets.clear();
+    usurpingDocument.__code_cost = __code_cost;
   }
 
   public PrivateView __createView(final NtPrincipal __who, final Perspective perspective, AssetIdEncoder __encoder) {
@@ -786,8 +791,43 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   public abstract void __password(CoreRequestContext context, String password);
 
+  private void __drive_webget_queue() {
+    Iterator<EphemeralWebGet> it = __gets.iterator();
+    while (it.hasNext()) {
+      if (__execute_web_get(it.next())) {
+        it.remove();
+      }
+    }
+  }
+
+  public void __nukeWebGetQueue() {
+    Iterator<EphemeralWebGet> it = __gets.iterator();
+    while (it.hasNext()) {
+      it.next().callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_GET_CANCEL));
+      it.remove();
+    }
+  }
+
+  private boolean __execute_web_get(EphemeralWebGet get) {
+    try {
+      __currentWebCache = get.cache;
+      get.callback.success(__get_internal(get.get));
+      return true;
+    } catch (ComputeBlockedException cbe) {
+      return false;
+    }
+  }
+
+  public void __web_get(WebGet get, Callback<WebResponse> callback) {
+    DelayParent delay = new DelayParent();
+    RxCache cache = new RxCache(this, delay);
+    if (!__execute_web_get(new EphemeralWebGet(cache, get, callback, delay))) {
+
+    }
+  }
+
   /** code generated: respond to a get request */
-  public abstract WebResponse __get(WebGet __get);
+  protected abstract WebResponse __get_internal(WebGet __get);
 
   /** code generated: respond to a get request */
   public abstract WebResponse __options(WebGet __get);
@@ -1247,6 +1287,31 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
+  private LivingDocumentChange _transact_password(CoreRequestContext context, String password) throws ErrorCodeException {
+    final var startedTime = System.nanoTime();
+    boolean exception = true;
+    if (__monitor != null) {
+      __monitor.push("TransactionPassword");
+    }
+    try {
+      if (!__clients.containsKey(context.who)) {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NOT_CONNECTED);
+      }
+      __seq.bumpUpPre();
+      __randomizeOutOfBand();
+      __password(context, password);
+      exception = false;
+      return __simple_commit(context.who, "{\"password\":\"private\"}", null, 0L);
+    } finally {
+      if (exception) {
+        __revert();
+      }
+      if (__monitor != null) {
+        __monitor.pop(System.nanoTime() - startedTime, exception);
+      }
+    }
+  }
+
   private LivingDocumentChange __transaction_web_put(final String request, final WebPut put) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     boolean exception = true;
@@ -1282,31 +1347,6 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
-  private LivingDocumentChange _transact_password(CoreRequestContext context, String password) throws ErrorCodeException {
-    final var startedTime = System.nanoTime();
-    boolean exception = true;
-    if (__monitor != null) {
-      __monitor.push("TransactionPassword");
-    }
-    try {
-      if (!__clients.containsKey(context.who)) {
-        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NOT_CONNECTED);
-      }
-      __seq.bumpUpPre();
-      __randomizeOutOfBand();
-      __password(context, password);
-      exception = false;
-      return __simple_commit(context.who, "{\"password\":\"private\"}", null, 0L);
-    } finally {
-      if (exception) {
-        __revert();
-      }
-      if (__monitor != null) {
-        __monitor.pop(System.nanoTime() - startedTime, exception);
-      }
-    }
-  }
-
   private LivingDocumentChange __transaction_web_delete(final String request, final WebDelete del) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     boolean exception = true;
@@ -1315,10 +1355,23 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
     try {
       __seq.bumpUpPre();
+      __time.set(System.currentTimeMillis());
       __randomizeOutOfBand();
-      WebResponse response = __delete_internal(del);
-      exception = false;
-      return __simple_commit(del.context.who, request, response, 0L);
+      DelayParent delay = new DelayParent();
+      RxCache cache = new RxCache(this, delay);
+      try {
+        __currentWebCache = cache;
+        WebResponse response = __delete_internal(del);
+        exception = false;
+        return __simple_commit(del.context.who, request, response, 0L);
+      } catch (ComputeBlockedException cbe) {
+        __revert();
+        exception = false;
+        EphemeralFuture<WebResponse> future = new EphemeralFuture<>();
+        __seq.bumpUpPre();
+        __webQueue.queue(del.context, del, future, cache, delay);
+        return __simple_commit(del.context.who, request, future, 0L);
+      }
     } finally {
       if (exception) {
         __revert();
@@ -1570,8 +1623,13 @@ public abstract class LivingDocument implements RxParent, Caller {
             __random = new Random(seedUsed);
             if (item.item instanceof WebPut) {
               __currentWebCache = item.cache;
-              WebPut put = (WebPut) item.item;
-              WebResponse response = __put_internal(put);
+              WebResponse response = __put_internal((WebPut) item.item);
+              if (item.future != null) {
+                item.future.send(response);
+              }
+            } else if (item.item instanceof WebDelete) {
+              __currentWebCache = item.cache;
+              WebResponse response = __delete_internal((WebDelete) item.item);
               if (item.future != null) {
                 item.future.send(response);
               }
@@ -1579,14 +1637,15 @@ public abstract class LivingDocument implements RxParent, Caller {
             dirtyLeft--;
             item.state = WebQueueState.Remove;
             __webQueue.dirty();
+            __drive_webget_queue();
             return __invalidate_trailer(who, request, dirtyLeft > 0);
           } catch (ComputeBlockedException cbe) {
             __revert();
             __time.set(timeBackup);
-            __seq.bumpUpPre();
           }
         }
       }
+      __drive_webget_queue();
       return __invalidate_trailer(who, request, dirtyLeft > 0);
     } catch (final ComputeBlockedException blockedOn) {
       if (__preemptedStateOnNextComputeBlocked != null) {

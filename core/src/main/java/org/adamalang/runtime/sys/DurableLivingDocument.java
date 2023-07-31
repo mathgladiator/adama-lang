@@ -382,6 +382,7 @@ public class DurableLivingDocument implements Queryable {
 
   private void issueCloseWhileInExecutor(int errorCode) {
     document.__nukeViews();
+    document.__nukeWebGetQueue();
     ErrorCodeException ex = new ErrorCodeException(errorCode);
     while (pending.size() > 0) {
       pending.removeFirst().callback.failure(ex);
@@ -904,7 +905,11 @@ public class DurableLivingDocument implements Queryable {
       @Override
       public void success(LivingDocumentChange value) {
         if (value.response != null) {
-          callback.success((WebResponse) value.response);
+          if (value.response instanceof WebResponse) {
+            callback.success((WebResponse) value.response);
+          } else {
+            ((EphemeralFuture<WebResponse>) value.response).attach(callback);
+          }
         } else {
           callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_DELETE_NOT_FOUND));
         }

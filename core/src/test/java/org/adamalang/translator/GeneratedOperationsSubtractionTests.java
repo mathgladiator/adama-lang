@@ -555,7 +555,7 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(WebGet __request) {");
+    gold.append("\n  protected WebResponse __get_internal(WebGet __request) {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
     gold.append("\n  }");
@@ -4011,7 +4011,7 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(WebGet __request) {");
+    gold.append("\n  protected WebResponse __get_internal(WebGet __request) {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
     gold.append("\n  }");
@@ -4929,7 +4929,7 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public WebResponse __get(WebGet __request) {");
+    gold.append("\n  protected WebResponse __get_internal(WebGet __request) {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
     gold.append("\n  }");
