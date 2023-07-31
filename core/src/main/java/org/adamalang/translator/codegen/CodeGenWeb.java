@@ -144,7 +144,7 @@ public class CodeGenWeb {
   public static void writeWebHandlers(final StringBuilderWithTabs sb, Environment environment) {
     {
       sb.append("@Override").writeNewline();
-      sb.append("protected WebResponse __get_internal(WebGet __request) {").tabUp().writeNewline();
+      sb.append("protected WebResponse __get_internal(WebGet __request) throws AbortMessageException {").tabUp().writeNewline();
       sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webGet.ready("GET");
       CodeGenWeb get = new CodeGenWeb(environment, environment.document.webGet, "get");
@@ -157,7 +157,7 @@ public class CodeGenWeb {
     }
     {
       sb.append("@Override").writeNewline();
-      sb.append("protected WebResponse __put_internal(WebPut __request) {").tabUp().writeNewline();
+      sb.append("protected WebResponse __put_internal(WebPut __request) throws AbortMessageException {").tabUp().writeNewline();
       sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webPut.ready("PUT");
       CodeGenWeb put = new CodeGenWeb(environment, environment.document.webPut, "put");
@@ -170,7 +170,7 @@ public class CodeGenWeb {
     }
     {
       sb.append("@Override").writeNewline();
-      sb.append("protected WebResponse __delete_internal(WebDelete __request) {").tabUp().writeNewline();
+      sb.append("protected WebResponse __delete_internal(WebDelete __request) throws AbortMessageException {").tabUp().writeNewline();
       sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webDelete.ready("DELETE");
       CodeGenWeb delete = new CodeGenWeb(environment, environment.document.webDelete, "delete");

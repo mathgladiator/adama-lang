@@ -166,11 +166,11 @@ Adama is a web host provider of sorts!
 
 | project                 | IP  | milestones/description                                                                     |
 |-------------------------|-----|--------------------------------------------------------------------------------------------|
-| web-async delete        |     | allow DELETEs to contain async calls                                                       |
-| web-async get           |     | allow GETs to contain async calls                                                          |
+| web-async delete        | X   | allow DELETEs to contain async calls                                                       |
+| web-async get           | X   | allow GETs to contain async calls                                                          |
 | request caching         |     | respect the cache_ttl_ms                                                                   |
 | asset transforms        |     | implement some basic asset transforms                                                      |
-| web-abort put/delete    |     | web calls that write should support abort                                                  |
+| web-abort put/delete    | X   | web calls that write should support abort                                                  |
 | @context                |     | ensure web operations can access context                                                   |
 | web-metrics             |     | add an API for the client to emit metrics                                                  |
 | add auth for web        |     | the principal for web* is currently @no_one; it should be a valid user                     |

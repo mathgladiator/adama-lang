@@ -100,6 +100,26 @@ public class EphemeralFutureTests {
   }
 
   @Test
+  public void abort_a() {
+    EphemeralFuture future = new EphemeralFuture();
+    DumbCallback cb = new DumbCallback();
+    future.abort(123);
+    future.attach(cb);
+    Assert.assertFalse(cb.success);
+    Assert.assertEquals(123, (int) cb.code);
+  }
+
+  @Test
+  public void abort_b() {
+    EphemeralFuture future = new EphemeralFuture();
+    DumbCallback cb = new DumbCallback();
+    future.attach(cb);
+    future.abort(123);
+    Assert.assertFalse(cb.success);
+    Assert.assertEquals(123, (int) cb.code);
+  }
+
+  @Test
   public void sad_a_redun() {
     EphemeralFuture future = new EphemeralFuture();
     DumbCallback cb = new DumbCallback();
