@@ -677,17 +677,6 @@
             <arg name="input" />
             <arg name="output" />
         </command>
-        <command name="edhtml">
-            <documentation>
-                Compile an edhtml build instruction file
-            </documentation>
-            <arg name="base" default ="." />
-            <arg name="input" default="build.ed.html" />
-            <arg name="output" default="output.rx.html" />
-            <arg name="includes" default="includes" />
-            <arg name="skipuse" default="false" />
-            <arg name="gen" default="gen" />
-        </command>
         <command name="dev-server">
             <documentation>
                 Host the working directory as a webserver

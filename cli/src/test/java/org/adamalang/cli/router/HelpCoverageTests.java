@@ -75,7 +75,6 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"frontend", "--help"});
     Main.testMain(new String[]{"frontend", "bundle", "--help"});
     Main.testMain(new String[]{"frontend", "dev-server", "--help"});
-    Main.testMain(new String[]{"frontend", "edhtml", "--help"});
     Main.testMain(new String[]{"frontend", "make-200", "--help"});
     Main.testMain(new String[]{"frontend", "rxhtml", "--help"});
     Main.testMain(new String[]{"frontend", "set-libadama", "--help"});
