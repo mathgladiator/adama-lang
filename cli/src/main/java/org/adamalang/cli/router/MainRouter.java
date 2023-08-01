@@ -701,16 +701,6 @@ public class MainRouter {
                frontendHandler.devServer(frontendArgs, out);
                return 0;
             }
-            case "edhtml": {
-              FrontendEdhtmlArgs frontendArgs = FrontendEdhtmlArgs.from(args, 2);
-              if (frontendArgs == null) {
-                FrontendEdhtmlArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               frontendHandler.edhtml(frontendArgs, out);
-               return 0;
-            }
             case "make-200": {
               FrontendMake200Args frontendArgs = FrontendMake200Args.from(args, 2);
               if (frontendArgs == null) {

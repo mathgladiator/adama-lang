@@ -20,10 +20,6 @@ import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.FrontendHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.Json;
-import org.adamalang.edhtml.EdHtmlState;
-import org.adamalang.edhtml.phases.Generate;
-import org.adamalang.edhtml.phases.Stamp;
-import org.adamalang.edhtml.phases.Use;
 import org.adamalang.rxhtml.Bundler;
 import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
@@ -48,18 +44,6 @@ public class FrontendHandlerImpl implements FrontendHandler {
   @Override
   public void devServer(Arguments.FrontendDevServerArgs args, Output.YesOrError output) throws Exception {
     DevBoxStart.start(args);
-  }
-
-  @Override
-  public void edhtml(Arguments.FrontendEdhtmlArgs args, Output.YesOrError output) throws Exception {
-    EdHtmlState state = new EdHtmlState(args.base, args.input, args.output, args.includes, args.gen, "true".equals(args.skipuse));
-    if (!state.skip_use) {
-      Use.execute(state);
-    }
-    Generate.execute(state);
-    Stamp.execute(state);
-    Files.writeString(state.output.toPath(), state.finish());
-    output.out();
   }
 
   @Override
