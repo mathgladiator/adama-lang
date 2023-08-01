@@ -14,7 +14,6 @@ import org.adamalang.common.gossip.codec.GossipProtocol;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeSet;
 

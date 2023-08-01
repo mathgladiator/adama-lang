@@ -17,39 +17,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Monitors the heat on the machine and fires LoadEvents */
 public class LoadMonitor {
-  private SimpleExecutor executor;
   private final AtomicBoolean alive;
   private final Sample[] samples;
   private final ArrayList<LoadEvent> monitorCPU;
   private final ArrayList<LoadEvent> monitorMemory;
-
-  private class Sample {
-    public final double cpu;
-    public final double memory;
-
-    public Sample() {
-      this.cpu = MachineHeat.cpu();
-      this.memory = MachineHeat.memory();
-    }
-  }
-
-  public void cpu(LoadEvent e) {
-    executor.execute(new NamedRunnable("add-cpu-load-event") {
-      @Override
-      public void execute() throws Exception {
-        monitorCPU.add(e);
-      }
-    });
-  }
-
-  public void memory(LoadEvent e) {
-    executor.execute(new NamedRunnable("add-cpu-load-event") {
-      @Override
-      public void execute() throws Exception {
-        monitorMemory.add(e);
-      }
-    });
-  }
+  private final SimpleExecutor executor;
 
   public LoadMonitor(SimpleExecutor executor, AtomicBoolean alive) {
     this.executor = executor;
@@ -63,6 +35,7 @@ public class LoadMonitor {
     this.monitorMemory = new ArrayList<>();
     this.executor.schedule(new NamedRunnable("load-signal") {
       int at = 0;
+
       @Override
       public void execute() throws Exception {
         samples[at] = new Sample();
@@ -87,5 +60,33 @@ public class LoadMonitor {
         }
       }
     }, 10);
+  }
+
+  public void cpu(LoadEvent e) {
+    executor.execute(new NamedRunnable("add-cpu-load-event") {
+      @Override
+      public void execute() throws Exception {
+        monitorCPU.add(e);
+      }
+    });
+  }
+
+  public void memory(LoadEvent e) {
+    executor.execute(new NamedRunnable("add-cpu-load-event") {
+      @Override
+      public void execute() throws Exception {
+        monitorMemory.add(e);
+      }
+    });
+  }
+
+  private class Sample {
+    public final double cpu;
+    public final double memory;
+
+    public Sample() {
+      this.cpu = MachineHeat.cpu();
+      this.memory = MachineHeat.memory();
+    }
   }
 }

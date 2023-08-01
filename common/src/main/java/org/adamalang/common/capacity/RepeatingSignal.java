@@ -32,7 +32,7 @@ public class RepeatingSignal implements BoolConsumer {
       @Override
       public void execute() throws Exception {
         if (alive.get()) {
-          if((System.currentTimeMillis() - lastSent) + 1 >= freq_ms) {
+          if ((System.currentTimeMillis() - lastSent) + 1 >= freq_ms) {
             event.accept(valueToUse.get());
           }
           executor.schedule(this, freq_ms);

@@ -11,6 +11,7 @@ package org.adamalang.common.codec;
 import org.adamalang.common.DefaultCopyright;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -195,9 +196,7 @@ public class CodecCodeGen {
       throw new RuntimeException(clazz.getSimpleName() + " has no @Flow");
     }
     HashSet<String> flows = new HashSet<>();
-    for (String part : flow.value().split(Pattern.quote("|"))) {
-      flows.add(part);
-    }
+    Collections.addAll(flows, flow.value().split(Pattern.quote("|")));
     return flows;
   }
 

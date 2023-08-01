@@ -19,6 +19,7 @@ public interface ExceptionLogger {
       logger.error("exception", t);
     };
   }
+
   static ExceptionLogger FOR(Logger logger) {
     return (t, ec) -> {
       logger.error("exception", t);

@@ -8,7 +8,6 @@
  */
 package org.adamalang.common.gossip;
 
-import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.gossip.codec.GossipProtocol;
 
@@ -49,6 +48,10 @@ public class InstanceSetChain {
     }
   }
 
+  public GossipProtocol.Endpoint[] all() {
+    return current.toEndpoints();
+  }
+
   public InstanceSet find(String hash) {
     if (current.hash().equals(hash)) {
       return current;
@@ -75,10 +78,6 @@ public class InstanceSetChain {
 
   public GossipProtocol.Endpoint[] missing(InstanceSet set) {
     return current.missing(set);
-  }
-
-  public GossipProtocol.Endpoint[] all() {
-    return current.toEndpoints();
   }
 
   public Runnable pick(String id) {

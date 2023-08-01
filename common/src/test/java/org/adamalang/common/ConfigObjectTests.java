@@ -17,7 +17,7 @@ public class ConfigObjectTests {
   public void string() {
     ObjectNode root = Json.newJsonObject();
     ConfigObject config = new ConfigObject(root);
-    Assert.assertEquals(null, config.strOf("key", null));
+    Assert.assertNull(config.strOf("key", null));
     Assert.assertEquals("123", config.strOf("key", "123"));
     root.put("key", "42");
     Assert.assertEquals("42", config.strOf("key", "123"));
@@ -25,6 +25,15 @@ public class ConfigObjectTests {
     Assert.assertEquals("123", config.strOf("key", "123"));
     root.remove("key");
     Assert.assertEquals("123", config.strOf("key", "123"));
+  }
+
+  @Test
+  public void stringsOf() {
+    ObjectNode root = Json.newJsonObject();
+    root.putArray("z").add("1").add("2").add("3");
+    ConfigObject config = new ConfigObject(root);
+    Assert.assertEquals(2, config.stringsOf("key", new String[]{"x", "y"}).length);
+    Assert.assertEquals(3, config.stringsOf("z", new String[]{"x", "y"}).length);
   }
 
   @Test
@@ -81,7 +90,7 @@ public class ConfigObjectTests {
     ConfigObject config = new ConfigObject(root);
     ConfigObject child1 = config.child("key");
     ConfigObject child2 = config.child("key");
-    Assert.assertTrue(child1.node == child2.node);
+    Assert.assertSame(child1.node, child2.node);
     Assert.assertEquals(42, child1.intOf("key", 42));
     child1.node.put("key", 123);
     Assert.assertEquals(123, child2.intOf("key", 42));

@@ -11,22 +11,21 @@ package org.adamalang.common.gossip;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Collections;
-
 public class InstanceSetChainTests extends CommonTest {
   @Test
   public void flow_empty() {
     MockTime time = new MockTime();
     InstanceSetChain chain = new InstanceSetChain(time);
+    Assert.assertNull(chain.pick("xyz"));
     Assert.assertNull(chain.find("myhash"));
     InstanceSet set = chain.find(chain.current().hash());
     Assert.assertNotNull(set);
     chain.scan();
     chain.gc();
-    Assert.assertTrue(chain.missing(set).length == 0);
-    Assert.assertTrue(chain.all().length == 0);
-    Assert.assertTrue(chain.recent().length == 0);
-    Assert.assertTrue(chain.deletes().length == 0);
+    Assert.assertEquals(0, chain.missing(set).length);
+    Assert.assertEquals(0, chain.all().length);
+    Assert.assertEquals(0, chain.recent().length);
+    Assert.assertEquals(0, chain.deletes().length);
   }
 
   @Test

@@ -20,6 +20,13 @@ public class FragmentTests {
   }
 
   @Test
+  public void restore_closing_bracket() {
+    ArrayList<Fragment> fragments = Fragment.parse("Hi [");
+    Assert.assertEquals(1, fragments.size());
+    Assert.assertEquals("Text:[Hi []", fragments.get(0).toString());
+  }
+
+  @Test
   public void fragmentization_simple() {
     ArrayList<Fragment> fragments = Fragment.parse("Hi [[world]] \t\n[[person]]");
     Assert.assertEquals(4, fragments.size());

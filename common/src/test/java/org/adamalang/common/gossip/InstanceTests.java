@@ -8,7 +8,6 @@
  */
 package org.adamalang.common.gossip;
 
-import org.adamalang.common.gossip.codec.GossipProtocol;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,17 +15,7 @@ public class InstanceTests extends CommonTest {
 
   @Test
   public void flow() {
-    Instance instance =
-        new Instance(
-            newBuilder()
-                .setCounter(224)
-                .setId("id")
-                .setIp("ip")
-                .setRole("proxy")
-                .setPort(4242)
-                .setMonitoringPort(10002)
-                .build(),
-            0);
+    Instance instance = new Instance(newBuilder().setCounter(224).setId("id").setIp("ip").setRole("proxy").setPort(4242).setMonitoringPort(10002).build(), 0);
     Assert.assertEquals(224, instance.counter());
     instance.bump(12);
     Assert.assertEquals(225, instance.counter());
@@ -47,31 +36,13 @@ public class InstanceTests extends CommonTest {
     Assert.assertEquals("proxy", instance.role());
     Assert.assertEquals(10002, instance.toEndpoint().monitoringPort);
     Assert.assertEquals(0, Instance.humanizeCompare(instance, instance));
-    Instance other = new Instance(
-        newBuilder()
-            .setCounter(224)
-            .setId("id")
-            .setIp("ip2")
-            .setRole("proxy")
-            .setPort(4242)
-            .setMonitoringPort(10002)
-            .build(),
-        0);
+    Instance other = new Instance(newBuilder().setCounter(224).setId("id").setIp("ip2").setRole("proxy").setPort(4242).setMonitoringPort(10002).build(), 0);
     Assert.assertEquals(-1, Instance.humanizeCompare(instance, other));
   }
 
   @Test
   public void deletion() {
-    Instance instance =
-        new Instance(
-            newBuilder()
-                .setCounter(224)
-                .setId("id")
-                .setIp("ip")
-                .setRole("proxy")
-                .setPort(4242)
-                .build(),
-            0);
+    Instance instance = new Instance(newBuilder().setCounter(224).setId("id").setIp("ip").setRole("proxy").setPort(4242).build(), 0);
     instance.bump(100);
     Assert.assertFalse(instance.canDelete(100));
     Assert.assertFalse(instance.tooOldMustDelete(100));
@@ -91,36 +62,9 @@ public class InstanceTests extends CommonTest {
 
   @Test
   public void equals() {
-    Instance instance1 =
-        new Instance(
-            newBuilder()
-                .setCounter(224)
-                .setId("id")
-                .setIp("ip")
-                .setRole("proxy")
-                .setPort(4242)
-                .build(),
-            0);
-    Instance instance2 =
-        new Instance(
-            newBuilder()
-                .setCounter(224)
-                .setId("id")
-                .setIp("ip")
-                .setRole("proxy")
-                .setPort(4242)
-                .build(),
-            0);
-    Instance instance3 =
-        new Instance(
-            newBuilder()
-                .setCounter(224)
-                .setId("id2")
-                .setIp("ip")
-                .setRole("proxy")
-                .setPort(4242)
-                .build(),
-            0);
+    Instance instance1 = new Instance(newBuilder().setCounter(224).setId("id").setIp("ip").setRole("proxy").setPort(4242).build(), 0);
+    Instance instance2 = new Instance(newBuilder().setCounter(224).setId("id").setIp("ip").setRole("proxy").setPort(4242).build(), 0);
+    Instance instance3 = new Instance(newBuilder().setCounter(224).setId("id2").setIp("ip").setRole("proxy").setPort(4242).build(), 0);
     Assert.assertEquals(instance1, instance1);
     Assert.assertEquals(instance1, instance2);
     Assert.assertNotEquals(instance3, instance1);
@@ -131,26 +75,8 @@ public class InstanceTests extends CommonTest {
 
   @Test
   public void compare() {
-    Instance instance1 =
-        new Instance(
-            newBuilder()
-                .setCounter(224)
-                .setId("1")
-                .setIp("ip")
-                .setRole("proxy")
-                .setPort(4242)
-                .build(),
-            0);
-    Instance instance2 =
-        new Instance(
-            newBuilder()
-                .setCounter(224)
-                .setId("2")
-                .setIp("ip")
-                .setRole("proxy")
-                .setPort(4242)
-                .build(),
-            0);
+    Instance instance1 = new Instance(newBuilder().setCounter(224).setId("1").setIp("ip").setRole("proxy").setPort(4242).build(), 0);
+    Instance instance2 = new Instance(newBuilder().setCounter(224).setId("2").setIp("ip").setRole("proxy").setPort(4242).build(), 0);
     Assert.assertEquals(-1, instance1.compareTo(instance2));
     Assert.assertEquals(1, instance2.compareTo(instance1));
     Assert.assertEquals(0, instance1.compareTo(instance1));
@@ -159,26 +85,8 @@ public class InstanceTests extends CommonTest {
 
   @Test
   public void hashing() {
-    Instance instance1 =
-        new Instance(
-            newBuilder()
-                .setCounter(224)
-                .setId("id")
-                .setIp("ip")
-                .setRole("proxy")
-                .setPort(4242)
-                .build(),
-            0);
-    Instance instance2 =
-        new Instance(
-            newBuilder()
-                .setCounter(224)
-                .setId("id")
-                .setIp("ip")
-                .setRole("proxy")
-                .setPort(4242)
-                .build(),
-            0);
+    Instance instance1 = new Instance(newBuilder().setCounter(224).setId("id").setIp("ip").setRole("proxy").setPort(4242).build(), 0);
+    Instance instance2 = new Instance(newBuilder().setCounter(224).setId("id").setIp("ip").setRole("proxy").setPort(4242).build(), 0);
     Assert.assertEquals(211180553, instance1.hashCode());
     Assert.assertEquals(211180553, instance2.hashCode());
   }

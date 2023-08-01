@@ -9,8 +9,6 @@
 package org.adamalang.common.keys;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -40,17 +38,6 @@ public class SigningKeyPair {
     this.publicKey = KeyFactory.getInstance("EC").generatePublic(new X509EncodedKeySpec(publicKey));
   }
 
-  public String signDocument(String space, String key, String agent) {
-    return Jwts.builder().setSubject(agent).setIssuer("doc/" + space + "/" + key).signWith(privateKey).compact();
-  }
-
-  public void validateTokenThrows(String token) {
-    Jwts.parserBuilder()
-        .setSigningKey(publicKey)
-        .build()
-        .parseClaimsJws(token);
-  }
-
   public static String generate(String masterKey) throws Exception {
     KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
     ObjectNode localKeyFile = Json.newJsonObject();
@@ -58,5 +45,13 @@ public class SigningKeyPair {
     localKeyFile.put("private", new String(Base64.getEncoder().encode(pair.getPrivate().getEncoded())));
     localKeyFile.put("public", new String(Base64.getEncoder().encode(pair.getPublic().getEncoded())));
     return MasterKey.encrypt(masterKey, localKeyFile.toString());
+  }
+
+  public String signDocument(String space, String key, String agent) {
+    return Jwts.builder().setSubject(agent).setIssuer("doc/" + space + "/" + key).signWith(privateKey).compact();
+  }
+
+  public void validateTokenThrows(String token) {
+    Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token);
   }
 }

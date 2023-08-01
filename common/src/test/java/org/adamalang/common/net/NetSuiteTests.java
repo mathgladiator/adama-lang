@@ -22,17 +22,6 @@ import java.util.concurrent.TimeUnit;
 
 public class NetSuiteTests {
 
-  public static MachineIdentity identity() throws Exception {
-    for (String search : new String[] {"./", "../", "./grpc/"}) {
-      String candidate = search + "localhost.identity";
-      File file = new File(candidate);
-      if (file.exists()) {
-        return MachineIdentity.fromFile(candidate);
-      }
-    }
-    throw new NullPointerException("could not find identity.localhost");
-  }
-
   @Test
   public void happy() throws Exception {
     NetBase base = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity(), 2, 4);
@@ -42,14 +31,14 @@ public class NetSuiteTests {
         public ByteStream create(ByteStream upstream) {
           return new ByteStream() {
             @Override
-            public ByteBuf create(int bestGuessForSize) { // Not used on server side
-              return null;
-            }
-
-            @Override
             public void request(int bytes) {
               System.err.println("server|Request=" + bytes);
               upstream.request(bytes * 2);
+            }
+
+            @Override
+            public ByteBuf create(int bestGuessForSize) { // Not used on server side
+              return null;
             }
 
             @Override
@@ -79,19 +68,21 @@ public class NetSuiteTests {
         thread.start();
         System.err.println("Server running");
         base.connect("127.0.0.1:25001", new Lifecycle() {
+          int attemptsLeft = 3;
+
           @Override
           public void connected(ChannelClient channel) {
             System.err.println("client connected");
             channel.open(new ByteStream() {
               @Override
-              public ByteBuf create(int bestGuessForSize) {
-                return null;
-              }
-
-              @Override
               public void request(int bytes) {
                 System.err.println("client|Request=" + bytes);
                 phases.countDown();
+              }
+
+              @Override
+              public ByteBuf create(int bestGuessForSize) {
+                return null;
               }
 
               @Override
@@ -129,8 +120,6 @@ public class NetSuiteTests {
               }
             });
           }
-
-          int attemptsLeft = 3;
 
           @Override
           public void failed(ErrorCodeException ex) {
@@ -172,20 +161,31 @@ public class NetSuiteTests {
     base.waitForShutdown();
   }
 
+  public static MachineIdentity identity() throws Exception {
+    for (String search : new String[]{"./", "../", "./grpc/"}) {
+      String candidate = search + "localhost.identity";
+      File file = new File(candidate);
+      if (file.exists()) {
+        return MachineIdentity.fromFile(candidate);
+      }
+    }
+    throw new NullPointerException("could not find identity.localhost");
+  }
+
   @Test
   public void sad_remote_error() throws Exception {
     NetBase base = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity(), 2, 4);
     try {
       ServerHandle handle = base.serve(25002, upstream -> new ByteStream() {
         @Override
-        public ByteBuf create(int bestGuessForSize) { // Not used on server side
-          return null;
-        }
-
-        @Override
         public void request(int bytes) {
           System.err.println("server|Request=" + bytes);
           upstream.request(bytes * 2);
+        }
+
+        @Override
+        public ByteBuf create(int bestGuessForSize) { // Not used on server side
+          return null;
         }
 
         @Override
@@ -217,19 +217,21 @@ public class NetSuiteTests {
         thread.start();
         System.err.println("Server running");
         base.connect("127.0.0.1:25002", new Lifecycle() {
+          int attemptsLeft = 3;
+
           @Override
           public void connected(ChannelClient channel) {
             System.err.println("client connected");
             channel.open(new ByteStream() {
               @Override
-              public ByteBuf create(int bestGuessForSize) {
-                return null;
-              }
-
-              @Override
               public void request(int bytes) {
                 System.err.println("client|Request=" + bytes);
                 phases.countDown();
+              }
+
+              @Override
+              public ByteBuf create(int bestGuessForSize) {
+                return null;
               }
 
               @Override
@@ -268,8 +270,6 @@ public class NetSuiteTests {
               }
             });
           }
-
-          int attemptsLeft = 3;
 
           @Override
           public void failed(ErrorCodeException ex) {

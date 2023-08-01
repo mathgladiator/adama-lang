@@ -12,9 +12,7 @@ package org.adamalang.common.net;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.gossip.Engine;
 
 import java.util.HashMap;
@@ -22,13 +20,13 @@ import java.util.function.Consumer;
 
 /** a single connection for client side */
 public class ChannelClient extends ChannelCommon {
+  public final String host;
+  public final int port;
   private final Lifecycle lifecycle;
   private final HashMap<Integer, Consumer<Boolean>> initiations;
   private final Engine gossipEngine;
   private ChannelHandlerContext context;
   private Runnable unregister;
-  public final String host;
-  public final int port;
 
   public ChannelClient(String host, int port, Lifecycle lifecycle, Engine gossipEngine) {
     super(1, gossipEngine);
@@ -93,7 +91,9 @@ public class ChannelClient extends ChannelCommon {
       buffer.writeIntLE(id);
       initiations.put(id, (success) -> {
         if (success) {
-          exchange.start(new Remote(streams, id, context, () -> { flushFromWithinContextExecutor(context); }));
+          exchange.start(new Remote(streams, id, context, () -> {
+            flushFromWithinContextExecutor(context);
+          }));
         }
       });
       context.write(buffer);

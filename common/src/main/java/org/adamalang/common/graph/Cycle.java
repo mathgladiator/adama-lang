@@ -24,6 +24,10 @@ public class Cycle {
     this.remain = new ArrayDeque<>(graph.keySet());
   }
 
+  public static String detect(Map<String, Set<String>> graph) {
+    return new Cycle(graph).detect();
+  }
+
   private String walk(String at) {
     if (stack.contains(at)) {
       stack.push(at);
@@ -38,7 +42,7 @@ public class Cycle {
       stack.push(at);
       try {
         for (String depend : depends) {
-          String result =walk(depend);
+          String result = walk(depend);
           if (result != null) {
             return result;
           }
@@ -53,14 +57,8 @@ public class Cycle {
   private String detect() {
     if (!remain.isEmpty()) {
       String result = walk(remain.poll());
-      if (result != null) {
-        return result;
-      }
+      return result;
     }
     return null;
-  }
-
-  public static String detect(Map<String, Set<String>> graph) {
-    return new Cycle(graph).detect();
   }
 }

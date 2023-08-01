@@ -9,7 +9,6 @@
 package org.adamalang.common.net;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.gossip.EngineTests;
@@ -17,7 +16,6 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -29,6 +27,8 @@ public class NetGossipTests {
   public void flow() throws Exception {
     NetBase A = new NetBase(new NetMetrics(new NoOpMetricsFactory()), NetSuiteTests.identity(), 2, 4);
     NetBase B = new NetBase(new NetMetrics(new NoOpMetricsFactory()), NetSuiteTests.identity(), 2, 4);
+    Assert.assertTrue(A.alive());
+    Assert.assertTrue(B.alive());
     int portA = (int) (45000 + Math.random() * 2000);
 
     Engine a = A.startGossiping();

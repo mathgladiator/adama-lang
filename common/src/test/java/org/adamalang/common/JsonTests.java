@@ -73,7 +73,13 @@ public class JsonTests {
   }
 
   @Test
-  public void str_remove() {
+  public void str_remove2() {
+    Assert.assertNull(Json.readStringAndRemove(Json.parseJsonObject("{\"y\":\"1234\"}"), "x"));
+    Assert.assertEquals("true", Json.readStringAndRemove(Json.parseJsonObject("{\"x\":true}"), "x"));
+  }
+
+  @Test
+  public void str_remove1() {
     ObjectNode node = Json.parseJsonObject("{\"x\":\"1234\"}");
     Assert.assertEquals("1234", Json.readStringAndRemove(node, "x"));
     Assert.assertEquals("{}", node.toString());

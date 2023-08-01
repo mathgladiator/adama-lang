@@ -13,6 +13,17 @@ import java.util.HashMap;
 /** Generate keys within a map which are unique */
 public class HashKey {
 
+  /** produce a unique key */
+  public static String keyOf(String item, HashMap<String, String> map) {
+    String suffix = ""; // we start optimistically, assuming no suffix to reduce compute waste
+    String result = round(item, suffix, map);
+    while (result == null) {
+      suffix = Long.toString((long) (System.currentTimeMillis() * Math.random()), 16);
+      result = round(item, suffix, map);
+    }
+    return result;
+  }
+
   /** produce a unique key; single round */
   private static String round(String item, String suffix, HashMap<String, String> map) {
     String candidate = Integer.toString(Math.abs(item.hashCode()), 36) + suffix;
@@ -23,16 +34,5 @@ public class HashKey {
       }
     }
     return null;
-  }
-
-  /** produce a unique key */
-  public static String keyOf(String item, HashMap<String, String> map) {
-    String suffix = ""; // we start optimistically, assuming no suffix to reduce compute waste
-    String result = round(item, suffix, map);
-    while (result == null) {
-      suffix = Long.toString((long) (System.currentTimeMillis() * Math.random()), 16);
-      result = round(item, suffix, map);
-    }
-    return result;
   }
 }

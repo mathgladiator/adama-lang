@@ -14,26 +14,40 @@ import java.util.Map;
 
 /** URL Encoding support */
 public class URL {
-  /** should the given character (c) not be encoded */
-  public static boolean plain(int c, boolean ignoreSlashes) {
-    return c == '/' && ignoreSlashes || 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || '0' <= c && c <= '9' || c == '.' || c == '_' || c == '-' || c == '~';
+  /** encode a simple parameter map into a string */
+  public static String parameters(Map<String, String> parameters) {
+    if (parameters != null) {
+      StringBuilder sb = new StringBuilder();
+      boolean first = true;
+      for (Map.Entry<String, String> param : parameters.entrySet()) {
+        if (first) {
+          sb.append("?");
+          first = false;
+        } else {
+          sb.append("&");
+        }
+        sb.append(param.getKey()).append("=").append(URL.encode(param.getValue(), false));
+      }
+      return sb.toString();
+    }
+    return "";
   }
 
   /** urlencode the string */
   public static String encode(final String s, final boolean ignoreSlashes) {
     StringBuilder out = new StringBuilder(s.length());
-    for (int j = 0; j < s.length();) {
+    for (int j = 0; j < s.length(); ) {
       int c = s.charAt(j);
       if (plain(c, ignoreSlashes)) {
-        out.append((char)c);
+        out.append((char) c);
         j++;
       } else {
         CharArrayWriter buffer = new CharArrayWriter();
         do {
           buffer.write(c);
           if (c >= 0xD800 && c <= 0xDBFF) {
-            if ( (j+1) < s.length()) {
-              int d = s.charAt(j+1);
+            if ((j + 1) < s.length()) {
+              int d = s.charAt(j + 1);
               if (d >= 0xDC00 && d <= 0xDFFF) {
                 buffer.write(d);
                 j++;
@@ -54,22 +68,8 @@ public class URL {
     return out.toString();
   }
 
-  /** encode a simple parameter map into a string */
-  public static String parameters(Map<String, String> parameters) {
-    if (parameters != null) {
-      StringBuilder sb = new StringBuilder();
-      boolean first = true;
-      for (Map.Entry<String, String> param : parameters.entrySet()) {
-        if (first) {
-          sb.append("?");
-          first = false;
-        } else {
-          sb.append("&");
-        }
-        sb.append(param.getKey()).append("=").append(URL.encode(param.getValue(), false));
-      }
-      return sb.toString();
-    }
-    return "";
+  /** should the given character (c) not be encoded */
+  public static boolean plain(int c, boolean ignoreSlashes) {
+    return c == '/' && ignoreSlashes || 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || '0' <= c && c <= '9' || c == '.' || c == '_' || c == '-' || c == '~';
   }
 }

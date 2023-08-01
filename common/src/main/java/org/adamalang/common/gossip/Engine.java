@@ -9,7 +9,10 @@
 package org.adamalang.common.gossip;
 
 import io.netty.buffer.ByteBuf;
-import org.adamalang.common.*;
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.ProtectedUUID;
+import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.TimeSource;
 import org.adamalang.common.gossip.codec.GossipProtocol;
 import org.adamalang.common.gossip.codec.GossipProtocolCodec;
 import org.adamalang.common.net.ByteStream;
@@ -87,8 +90,8 @@ public class Engine {
         endpoint.monitoringPort = monitoringPort;
         endpoint.counter = 0;
         endpoint.created = System.currentTimeMillis();
-        GossipProtocol.Endpoint[] local = new GossipProtocol.Endpoint[] { endpoint };
-        String[] deletes = new String[] {};
+        GossipProtocol.Endpoint[] local = new GossipProtocol.Endpoint[]{endpoint};
+        String[] deletes = new String[]{};
         chain.ingest(local, deletes);
         callback.accept(chain.pick(id));
       }
@@ -108,15 +111,6 @@ public class Engine {
         consumer.accept(chain.current().targetsFor(role));
       }
     });
-  }
-
-  public void broadcastChangesWhileInExecutor() {
-    for (Map.Entry<String, ArrayList<Consumer<Collection<String>>>> entry : subscribersByApp.entrySet()) {
-      var set = chain.current().targetsFor(entry.getKey());
-      for (Consumer<Collection<String>> subscriber : entry.getValue()) {
-        subscriber.accept(set);
-      }
-    }
   }
 
   public void summarizeHtml(Consumer<String> html) {
@@ -145,15 +139,6 @@ public class Engine {
     });
   }
 
-  private void flatten() {
-    flatClients = new ChannelClient[clients.size()];
-    int at = 0;
-    for (ChannelClient client : clients.values()) {
-      flatClients[at] = client;
-      at++;
-    }
-  }
-
   public Runnable registerClient(ChannelClient client) {
     final int id;
     synchronized (clients) {
@@ -167,6 +152,147 @@ public class Engine {
         flatten();
       }
     };
+  }
+
+  private void flatten() {
+    flatClients = new ChannelClient[clients.size()];
+    int at = 0;
+    for (ChannelClient client : clients.values()) {
+      flatClients[at] = client;
+      at++;
+    }
+  }
+
+  public void ready(Runnable done) {
+    executor.execute(new NamedRunnable("ready-check") {
+      @Override
+      public void execute() throws Exception {
+        done.run();
+      }
+    });
+  }
+
+  public Exchange client() {
+    return new Exchange();
+  }
+
+  public ByteStream server(ByteStream upstream) {
+    metrics.gossip_inflight.up();
+    return new GossipProtocolCodec.StreamChatterFromClient() {
+      InstanceSet set;      @Override
+      public void completed() {
+        metrics.gossip_inflight.down();
+      }
+
+      @Override
+      public void handle(GossipProtocol.ForwardSlowGossip payload) {
+        executor.execute(new NamedRunnable("gossip-forward-slow") {
+          @Override
+          public void execute() throws Exception {
+            metrics.gossip_read_forward_slow_gossip.run();
+            boolean changed = chain.ingest(payload.all_endpoints, payload.recent_deletes);
+            GossipProtocol.ReverseSlowGossip slow = new GossipProtocol.ReverseSlowGossip();
+            slow.all_endpoints = chain.all();
+            slow.recent_deletes = chain.deletes();
+            ByteBuf buf = upstream.create(1024);
+            GossipProtocolCodec.write(buf, slow);
+            upstream.next(buf);
+            upstream.completed();
+            if (changed) {
+              broadcastChangesWhileInExecutor();
+            }
+          }
+        });
+      }      @Override
+      public void error(int errorCode) {
+        completed();
+      }
+
+      @Override
+      public void handle(GossipProtocol.ReverseHashFound payload) {
+        executor.execute(new NamedRunnable("gossip-reverse-hash-found") {
+          @Override
+          public void execute() throws Exception {
+            metrics.gossip_read_reverse_hash_found.run();
+            set.ingest(payload.counters, chain.now());
+            boolean changed = chain.ingest(payload.missing_endpoints, payload.recent_deletes);
+            GossipProtocol.ReverseQuickGossip quick = new GossipProtocol.ReverseQuickGossip();
+            quick.counters = set.counters();
+            quick.missing_endpoints = chain.missing(set);
+            quick.recent_deletes = chain.deletes();
+            ByteBuf buf = upstream.create(1024);
+            GossipProtocolCodec.write(buf, quick);
+            upstream.next(buf);
+            upstream.completed();
+            if (changed) {
+              broadcastChangesWhileInExecutor();
+            }
+          }
+        });
+      }
+
+      @Override
+      public void handle(GossipProtocol.ForwardQuickGossip payload) {
+        executor.execute(new NamedRunnable("gossip-forward-quick") {
+          @Override
+          public void execute() throws Exception {
+            metrics.gossip_read_forward_quick_gossip.run();
+            set.ingest(payload.counters, chain.now());
+            boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
+            upstream.completed();
+            if (changed) {
+              broadcastChangesWhileInExecutor();
+            }
+          }
+        });
+      }
+
+      @Override
+      public void handle(GossipProtocol.BeginGossip payload) {
+        executor.execute(new NamedRunnable("gossip-begin") {
+          @Override
+          public void execute() throws Exception {
+            metrics.gossip_read_begin_gossip.run();
+            boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
+            set = chain.find(payload.hash);
+            ByteBuf buf = upstream.create(1024);
+            if (set != null) {
+              metrics.gossip_send_hash_found.run();
+              GossipProtocol.HashFoundRequestForwardQuickGossip found = new GossipProtocol.HashFoundRequestForwardQuickGossip();
+              found.counters = set.counters();
+              found.recent_deletes = chain.deletes();
+              found.recent_endpoints = chain.missing(set);
+              GossipProtocolCodec.write(buf, found);
+            } else {
+              metrics.gossip_send_hash_not_found.run();
+              set = chain.current();
+              GossipProtocol.HashNotFoundReverseConversation notfound = new GossipProtocol.HashNotFoundReverseConversation();
+              notfound.hash = set.hash;
+              notfound.recent_endpoints = chain.recent();
+              notfound.recent_deletes = chain.deletes();
+              GossipProtocolCodec.write(buf, notfound);
+            }
+            upstream.next(buf);
+            if (changed) {
+              broadcastChangesWhileInExecutor();
+            }
+          }
+        });
+      }
+
+
+
+
+    };
+  }
+
+  public void broadcastChangesWhileInExecutor() {
+    for (Map.Entry<String, ArrayList<Consumer<Collection<String>>>> entry : subscribersByApp.entrySet()) {
+      var set = chain.current().targetsFor(entry.getKey());
+      for (Consumer<Collection<String>> subscriber : entry.getValue()) {
+        subscriber.accept(set);
+      }
+    }
   }
 
   public class Exchange extends GossipProtocolCodec.StreamChatterFromServer {
@@ -283,127 +409,5 @@ public class Engine {
     @Override
     public void error(int errorCode) {
     }
-  }
-
-  public void ready(Runnable done) {
-    executor.execute(new NamedRunnable("ready-check") {
-      @Override
-      public void execute() throws Exception {
-        done.run();
-      }
-    });
-  }
-
-  public Exchange client() {
-    return new Exchange();
-  }
-
-  public ByteStream server(ByteStream upstream) {
-    metrics.gossip_inflight.up();
-    return new GossipProtocolCodec.StreamChatterFromClient() {
-      @Override
-      public void completed() {
-        metrics.gossip_inflight.down();
-      }
-
-      @Override
-      public void error(int errorCode) {
-        completed();
-      }
-
-      @Override
-      public void handle(GossipProtocol.ForwardSlowGossip payload) {
-        executor.execute(new NamedRunnable("gossip-forward-slow") {
-          @Override
-          public void execute() throws Exception {
-            metrics.gossip_read_forward_slow_gossip.run();
-            boolean changed = chain.ingest(payload.all_endpoints, payload.recent_deletes);
-            GossipProtocol.ReverseSlowGossip slow = new GossipProtocol.ReverseSlowGossip();
-            slow.all_endpoints = chain.all();
-            slow.recent_deletes = chain.deletes();
-            ByteBuf buf = upstream.create(1024);
-            GossipProtocolCodec.write(buf, slow);
-            upstream.next(buf);
-            upstream.completed();
-            if (changed) {
-              broadcastChangesWhileInExecutor();
-            }
-          }
-        });
-      }
-
-      @Override
-      public void handle(GossipProtocol.ReverseHashFound payload) {
-        executor.execute(new NamedRunnable("gossip-reverse-hash-found") {
-          @Override
-          public void execute() throws Exception {
-            metrics.gossip_read_reverse_hash_found.run();
-            set.ingest(payload.counters, chain.now());
-            boolean changed = chain.ingest(payload.missing_endpoints, payload.recent_deletes);
-            GossipProtocol.ReverseQuickGossip quick = new GossipProtocol.ReverseQuickGossip();
-            quick.counters = set.counters();
-            quick.missing_endpoints = chain.missing(set);
-            quick.recent_deletes = chain.deletes();
-            ByteBuf buf = upstream.create(1024);
-            GossipProtocolCodec.write(buf, quick);
-            upstream.next(buf);
-            upstream.completed();
-            if (changed) {
-              broadcastChangesWhileInExecutor();
-            }
-          }
-        });
-      }
-
-      @Override
-      public void handle(GossipProtocol.ForwardQuickGossip payload) {
-        executor.execute(new NamedRunnable("gossip-forward-quick") {
-          @Override
-          public void execute() throws Exception {
-            metrics.gossip_read_forward_quick_gossip.run();
-            set.ingest(payload.counters, chain.now());
-            boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
-            upstream.completed();
-            if (changed) {
-              broadcastChangesWhileInExecutor();
-            }
-          }
-        });
-      }
-      InstanceSet set;
-
-      @Override
-      public void handle(GossipProtocol.BeginGossip payload) {
-        executor.execute(new NamedRunnable("gossip-begin") {
-          @Override
-          public void execute() throws Exception {
-            metrics.gossip_read_begin_gossip.run();
-            boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
-            set = chain.find(payload.hash);
-            ByteBuf buf = upstream.create(1024);
-            if (set != null) {
-              metrics.gossip_send_hash_found.run();
-              GossipProtocol.HashFoundRequestForwardQuickGossip found = new GossipProtocol.HashFoundRequestForwardQuickGossip();
-              found.counters = set.counters();
-              found.recent_deletes = chain.deletes();
-              found.recent_endpoints = chain.missing(set);
-              GossipProtocolCodec.write(buf, found);
-            } else {
-              metrics.gossip_send_hash_not_found.run();
-              set = chain.current();
-              GossipProtocol.HashNotFoundReverseConversation notfound = new GossipProtocol.HashNotFoundReverseConversation();
-              notfound.hash = set.hash;
-              notfound.recent_endpoints = chain.recent();
-              notfound.recent_deletes = chain.deletes();
-              GossipProtocolCodec.write(buf, notfound);
-            }
-            upstream.next(buf);
-            if (changed) {
-              broadcastChangesWhileInExecutor();
-            }
-          }
-        });
-      }
-    };
   }
 }

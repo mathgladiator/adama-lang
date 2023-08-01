@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /** This is traditional Least Recently Used cache where items in the cached are measured (i.e. memory size or storage bytes) and expire based on time. This class is not thread safe. */
 public class SyncCacheLRU<D, R extends Measurable> {
@@ -25,7 +24,6 @@ public class SyncCacheLRU<D, R extends Measurable> {
   private long measure;
 
   /**
-   *
    * @param time the time source for knowing what time it is
    * @param minSize the minimum number of items to hold within a cache (useful when a big item comes in and evicts... everything
    * @param maxSize the maximum number of items to hold in the cache
@@ -54,6 +52,12 @@ public class SyncCacheLRU<D, R extends Measurable> {
         return false;
       }
     };
+  }
+
+  /** internal: an item was removed for some reason */
+  private void removed(Map.Entry<D, CacheEntry<R>> entry) {
+    this.measure -= entry.getValue().item.measure();
+    evict.accept(entry.getKey(), entry.getValue().item);
   }
 
   /** add an item to the cache; will trigger evictions */
@@ -94,12 +98,6 @@ public class SyncCacheLRU<D, R extends Measurable> {
   /** how many items are in the cache */
   public int size() {
     return cache.size();
-  }
-
-  /** internal: an item was removed for some reason */
-  private void removed(Map.Entry<D, CacheEntry<R>> entry) {
-    this.measure -= entry.getValue().item.measure();
-    evict.accept(entry.getKey(), entry.getValue().item);
   }
 
   public void forceEvictionFromCacheNoDownstreamEviction(D key) {

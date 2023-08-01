@@ -23,10 +23,10 @@ import java.util.concurrent.TimeUnit;
 /** since both the server and client share some common things, we group them here */
 public abstract class ChannelCommon extends ChannelInboundHandlerAdapter {
   protected final HashMap<Integer, ByteStream> streams;
+  protected final Engine gossipEngine;
   private final int initialId;
   protected ScheduledFuture<?> scheduledFlush;
   private int nextId;
-  protected final Engine gossipEngine;
 
   public ChannelCommon(int initialId, Engine gossipEngine) {
     this.initialId = initialId;

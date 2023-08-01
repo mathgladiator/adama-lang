@@ -14,5 +14,5 @@ public enum FragmentType {
   Expression, //
   If, //
   IfNot, //
-  End;
+  End
 }
