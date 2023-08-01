@@ -10,6 +10,7 @@ package org.adamalang.rxhtml.atl;
 
 import org.junit.Assert;
 import org.junit.Test;
+
 public class ContextTests {
   @Test
   public void flow() {
