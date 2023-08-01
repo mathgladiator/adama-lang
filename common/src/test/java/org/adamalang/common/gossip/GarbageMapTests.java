@@ -8,8 +8,6 @@
  */
 package org.adamalang.common.gossip;
 
-import org.adamalang.common.gossip.Constants;
-import org.adamalang.common.gossip.GarbageMap;
 import org.junit.Assert;
 import org.junit.Test;
 

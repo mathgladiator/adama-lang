@@ -12,11 +12,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class CallbackTests {
 
@@ -49,13 +47,9 @@ public class CallbackTests {
     MockCallback<Integer> callback = new MockCallback<Integer>();
     callback.success(50);
     Assert.assertEquals(50, (int) callback.result);
-    Callback<Integer> t =
-        Callback.transform(
-            callback,
-            5,
-            (x) -> {
-              throw new NullPointerException();
-            });
+    Callback<Integer> t = Callback.transform(callback, 5, (x) -> {
+      throw new NullPointerException();
+    });
     t.success(10);
     Assert.assertEquals(5, callback.exception.code);
   }
@@ -66,13 +60,9 @@ public class CallbackTests {
     callback.success(50);
     Assert.assertEquals(50, (int) callback.result);
     AtomicInteger i = new AtomicInteger(0);
-    Callback<Void> t =
-        Callback.handoff(
-            callback,
-            5,
-            () -> {
-              i.set(42);
-            });
+    Callback<Void> t = Callback.handoff(callback, 5, () -> {
+      i.set(42);
+    });
     t.failure(new ErrorCodeException(15, new RuntimeException()));
     t.success(null);
     Assert.assertEquals(50, (int) callback.result);
@@ -85,13 +75,9 @@ public class CallbackTests {
     callback.success(50);
     Assert.assertEquals(50, (int) callback.result);
     AtomicInteger i = new AtomicInteger(0);
-    Callback<Void> t =
-        Callback.handoff(
-            callback,
-            5,
-            () -> {
-              throw new NullPointerException();
-            });
+    Callback<Void> t = Callback.handoff(callback, 5, () -> {
+      throw new NullPointerException();
+    });
     t.success(null);
     Assert.assertEquals(5, callback.exception.code);
   }

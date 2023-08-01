@@ -64,7 +64,7 @@ public class SyncCacheLRUTests {
     MockTime time = new MockTime();
     ArrayList<String> evictions = new ArrayList<>();
     SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 0, 10, 2, 1000, (key, val) -> evictions.add(key));
-    for (int k = 0; k < 10;  k++) {
+    for (int k = 0; k < 10; k++) {
       cache.add("k-" + k, new MeasuredString("0123456789"));
     }
     Assert.assertEquals(0, cache.size());
@@ -76,7 +76,7 @@ public class SyncCacheLRUTests {
     MockTime time = new MockTime();
     ArrayList<String> evictions = new ArrayList<>();
     SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 5, 10, 2, 1000, (key, val) -> evictions.add(key));
-    for (int k = 0; k < 10;  k++) {
+    for (int k = 0; k < 10; k++) {
       cache.add("k-" + k, new MeasuredString("0123456789"));
     }
     Assert.assertEquals(5, cache.size());
@@ -93,7 +93,7 @@ public class SyncCacheLRUTests {
     MockTime time = new MockTime();
     ArrayList<String> evictions = new ArrayList<>();
     SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 0, 100, 1024, 500, (key, val) -> evictions.add(key));
-    for (int k = 0; k < 10;  k++) {
+    for (int k = 0; k < 10; k++) {
       cache.add("k-" + k, new MeasuredString("0123456789"));
       time.currentTime += 1000;
     }
@@ -107,7 +107,7 @@ public class SyncCacheLRUTests {
     MockTime time = new MockTime();
     ArrayList<String> evictions = new ArrayList<>();
     SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 0, 100, 1024, 500, (key, val) -> evictions.add(key));
-    for (int k = 0; k < 10;  k++) {
+    for (int k = 0; k < 10; k++) {
       cache.add("k-" + k, new MeasuredString("0123456789"));
     }
     Assert.assertEquals(10, cache.size());
@@ -115,7 +115,7 @@ public class SyncCacheLRUTests {
     time.currentTime += 1000;
     cache.sweep();
     Assert.assertEquals(0, cache.size());
-    for (int k = 0; k < 10;  k++) {
+    for (int k = 0; k < 10; k++) {
       Assert.assertEquals("k-" + k, evictions.get(k));
     }
     Assert.assertEquals(0, cache.measure());

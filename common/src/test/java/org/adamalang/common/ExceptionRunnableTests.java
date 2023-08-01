@@ -14,13 +14,12 @@ import org.junit.Test;
 public class ExceptionRunnableTests {
   @Test
   public void coverageSad() {
-    ExceptionRunnable runnable =
-        new ExceptionRunnable() {
-          @Override
-          public void run() throws Exception {
-            throw new Exception();
-          }
-        };
+    ExceptionRunnable runnable = new ExceptionRunnable() {
+      @Override
+      public void run() throws Exception {
+        throw new Exception();
+      }
+    };
 
     try {
       ExceptionRunnable.TO_RUNTIME(runnable).run();
@@ -31,11 +30,11 @@ public class ExceptionRunnableTests {
 
   @Test
   public void coverageHappy() {
-    ExceptionRunnable runnable =
-        new ExceptionRunnable() {
-          @Override
-          public void run() throws Exception {}
-        };
+    ExceptionRunnable runnable = new ExceptionRunnable() {
+      @Override
+      public void run() throws Exception {
+      }
+    };
     ExceptionRunnable.TO_RUNTIME(runnable).run();
   }
 }

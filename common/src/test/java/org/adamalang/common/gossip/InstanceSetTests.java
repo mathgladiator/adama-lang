@@ -53,7 +53,7 @@ public class InstanceSetTests extends CommonTest {
     Assert.assertEquals(1, missing2.length);
     Assert.assertEquals("id-a", missing2[0].id);
     ArrayList<Integer> newCounters = new ArrayList<>();
-    set.ingest(new int[] { 1000 }, 40);
+    set.ingest(new int[]{1000}, 40);
     Assert.assertEquals("rzhcX9WgM1AwjqKNBz6eJg==", set.hash());
     Assert.assertEquals(1000, a.counter());
   }

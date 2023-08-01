@@ -25,7 +25,7 @@ public class RepeatingSignalTests {
       CountDownLatch lTrue = new CountDownLatch(5);
       CountDownLatch lFalse = new CountDownLatch(5);
       RepeatingSignal signal = new RepeatingSignal(executor, b, 10, (x) -> {
-        (x ? lTrue : lFalse).countDown();;
+        (x ? lTrue : lFalse).countDown();
       });
       Assert.assertTrue(lFalse.await(1000, TimeUnit.MILLISECONDS));
       signal.accept(true);
