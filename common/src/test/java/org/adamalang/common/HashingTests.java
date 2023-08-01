@@ -47,9 +47,7 @@ public class HashingTests {
       Hashing.forKnownAlgorithm("SHA9000!");
       Assert.fail();
     } catch (Exception ex) {
-      Assert.assertEquals(
-          "java.security.NoSuchAlgorithmException: SHA9000! MessageDigest not available",
-          ex.getMessage());
+      Assert.assertEquals("java.security.NoSuchAlgorithmException: SHA9000! MessageDigest not available", ex.getMessage());
     }
   }
 }

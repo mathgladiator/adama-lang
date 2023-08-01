@@ -15,7 +15,7 @@ public class LoadEventTests {
   @Test
   public void flow() {
     StringBuilder sb = new StringBuilder();
-    LoadEvent le = new LoadEvent(0.5, (b) -> sb.append(b ? "START": "STOP"));
+    LoadEvent le = new LoadEvent(0.5, (b) -> sb.append(b ? "START" : "STOP"));
     le.at(.4);
     le.at(.4);
     le.at(.4);

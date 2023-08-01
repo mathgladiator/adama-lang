@@ -13,13 +13,6 @@ import org.junit.Test;
 
 public class ChannelCommonTests {
 
-  public static class DemoChannel extends ChannelCommon {
-    public DemoChannel() {
-      super(1, null);
-      streams.put(3, null);
-    }
-  }
-
   @Test
   public void edges() {
     DemoChannel channel = new DemoChannel();
@@ -34,5 +27,12 @@ public class ChannelCommonTests {
     Assert.assertEquals(4194303, channel.makeId());
     Assert.assertEquals(1, channel.makeId());
     Assert.assertEquals(5, channel.makeId());
+  }
+
+  public static class DemoChannel extends ChannelCommon {
+    public DemoChannel() {
+      super(1, null);
+      streams.put(3, null);
+    }
   }
 }

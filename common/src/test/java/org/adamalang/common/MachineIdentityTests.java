@@ -70,8 +70,7 @@ public class MachineIdentityTests {
     } catch (Exception ex) {
       Assert.assertTrue(ex.getMessage().contains("trust"));
     }
-    MachineIdentity identity =
-        new MachineIdentity("{\"ip\":\"x\",\"key\":\"y\",\"cert\":\"z\",\"trust\":\"w\"}");
+    MachineIdentity identity = new MachineIdentity("{\"ip\":\"x\",\"key\":\"y\",\"cert\":\"z\",\"trust\":\"w\"}");
     identity.getCert();
     identity.getKey();
     identity.getCert();

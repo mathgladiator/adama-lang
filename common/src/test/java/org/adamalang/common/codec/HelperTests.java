@@ -17,7 +17,7 @@ public class HelperTests {
   @Test
   public void intarray() {
     ByteBuf buf = Unpooled.buffer();
-    Helper.writeIntArray(buf, new int[] { 1, 2, 4});
+    Helper.writeIntArray(buf, new int[]{1, 2, 4});
     int[] arr = Helper.readIntArray(buf);
     Assert.assertEquals(1, arr[0]);
     Assert.assertEquals(2, arr[1]);

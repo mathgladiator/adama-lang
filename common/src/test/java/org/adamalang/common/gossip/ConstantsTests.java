@@ -8,7 +8,6 @@
  */
 package org.adamalang.common.gossip;
 
-import org.adamalang.common.gossip.Constants;
 import org.junit.Test;
 
 public class ConstantsTests {

@@ -17,22 +17,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ItemActionTests {
 
-  private static ItemActionMonitor.ItemActionMonitorInstance INSTANCE = new NoOpMetricsFactory().makeItemActionMonitor("x").start();
+  private static final ItemActionMonitor.ItemActionMonitorInstance INSTANCE = new NoOpMetricsFactory().makeItemActionMonitor("x").start();
+
   @Test
   public void normal() {
     AtomicInteger x = new AtomicInteger(0);
-    ItemAction<String> action =
-        new ItemAction<>(100, 200, INSTANCE) {
-          @Override
-          protected void executeNow(String item) {
-            x.incrementAndGet();
-          }
+    ItemAction<String> action = new ItemAction<>(100, 200, INSTANCE) {
+      @Override
+      protected void executeNow(String item) {
+        x.incrementAndGet();
+      }
 
-          @Override
-          protected void failure(int code) {
-            x.addAndGet(code);
-          }
-        };
+      @Override
+      protected void failure(int code) {
+        x.addAndGet(code);
+      }
+    };
     Assert.assertTrue(action.isAlive());
     action.execute("z");
     Assert.assertFalse(action.isAlive());
@@ -42,18 +42,17 @@ public class ItemActionTests {
   @Test
   public void timeout() {
     AtomicInteger x = new AtomicInteger(0);
-    ItemAction<String> action =
-        new ItemAction<>(100, 200, INSTANCE) {
-          @Override
-          protected void executeNow(String item) {
-            x.incrementAndGet();
-          }
+    ItemAction<String> action = new ItemAction<>(100, 200, INSTANCE) {
+      @Override
+      protected void executeNow(String item) {
+        x.incrementAndGet();
+      }
 
-          @Override
-          protected void failure(int code) {
-            x.addAndGet(code);
-          }
-        };
+      @Override
+      protected void failure(int code) {
+        x.addAndGet(code);
+      }
+    };
     Assert.assertTrue(action.isAlive());
     action.killDueToTimeout();
     Assert.assertFalse(action.isAlive());
@@ -67,18 +66,17 @@ public class ItemActionTests {
   @Test
   public void rejected() {
     AtomicInteger x = new AtomicInteger(0);
-    ItemAction<String> action =
-        new ItemAction<String>(100, 1000, INSTANCE) {
-          @Override
-          protected void executeNow(String item) {
-            x.incrementAndGet();
-          }
+    ItemAction<String> action = new ItemAction<String>(100, 1000, INSTANCE) {
+      @Override
+      protected void executeNow(String item) {
+        x.incrementAndGet();
+      }
 
-          @Override
-          protected void failure(int code) {
-            x.addAndGet(code);
-          }
-        };
+      @Override
+      protected void failure(int code) {
+        x.addAndGet(code);
+      }
+    };
     Assert.assertTrue(action.isAlive());
     action.killDueToReject();
     Assert.assertFalse(action.isAlive());

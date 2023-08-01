@@ -22,28 +22,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AsyncPoolTests {
 
-  public class FauxConn {
-    public int stuff = 0;
-  }
-
-  public class ConnManager implements PoolActions<String, FauxConn> {
-    public boolean failure = false;
-
-    @Override
-    public void create(String request, Callback<FauxConn> created) {
-      if (failure) {
-        created.failure(new ErrorCodeException(-123));
-        return;
-      }
-      created.success(new FauxConn());
-    }
-
-    @Override
-    public void destroy(FauxConn item) {
-      item.stuff = -1;
-    }
-  }
-
   @Test
   public void battery_enforce_various_limits() {
     TimeSource time = new MockTime();
@@ -143,7 +121,7 @@ public class AsyncPoolTests {
       pool.get("Hello World", new Callback<PoolItem<FauxConn>>() {
         @Override
         public void success(PoolItem<FauxConn> value) {
-          value.item().stuff ++;
+          value.item().stuff++;
           value.returnToPool();
           Assert.assertTrue(value.item().stuff <= 4);
         }
@@ -165,10 +143,11 @@ public class AsyncPoolTests {
       pool.get("Hello World", new Callback<PoolItem<FauxConn>>() {
         @Override
         public void success(PoolItem<FauxConn> value) {
-          value.item().stuff ++;
+          value.item().stuff++;
           value.returnToPool();
           Assert.assertTrue(value.item().stuff <= 5);
         }
+
         @Override
         public void failure(ErrorCodeException ex) {
         }
@@ -221,6 +200,28 @@ public class AsyncPoolTests {
       alive.set(false);
     } finally {
       executor.shutdown();
+    }
+  }
+
+  public class FauxConn {
+    public int stuff = 0;
+  }
+
+  public class ConnManager implements PoolActions<String, FauxConn> {
+    public boolean failure = false;
+
+    @Override
+    public void create(String request, Callback<FauxConn> created) {
+      if (failure) {
+        created.failure(new ErrorCodeException(-123));
+        return;
+      }
+      created.success(new FauxConn());
+    }
+
+    @Override
+    public void destroy(FauxConn item) {
+      item.stuff = -1;
     }
   }
 }
