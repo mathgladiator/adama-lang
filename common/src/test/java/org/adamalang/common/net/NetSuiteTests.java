@@ -19,6 +19,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NetSuiteTests {
 
@@ -63,6 +64,7 @@ public class NetSuiteTests {
         }
       });
       try {
+        AtomicReference<ChannelClient> theClient = new AtomicReference<>();
         CountDownLatch phases = new CountDownLatch(102);
         Thread thread = new Thread(() -> handle.waitForEnd());
         thread.start();
@@ -72,6 +74,7 @@ public class NetSuiteTests {
 
           @Override
           public void connected(ChannelClient channel) {
+            theClient.set(channel);
             System.err.println("client connected");
             channel.open(new ByteStream() {
               @Override
@@ -134,6 +137,7 @@ public class NetSuiteTests {
           }
         });
         Assert.assertTrue(phases.await(2000, TimeUnit.MILLISECONDS));
+        theClient.get().close();
       } finally {
         handle.kill();
       }

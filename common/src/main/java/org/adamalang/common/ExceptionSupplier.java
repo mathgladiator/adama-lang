@@ -10,6 +10,7 @@ package org.adamalang.common;
 
 import java.util.function.Supplier;
 
+/** a supplier that may throw */
 @FunctionalInterface
 public interface ExceptionSupplier<T> {
 

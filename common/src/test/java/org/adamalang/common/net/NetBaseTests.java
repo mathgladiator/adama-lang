@@ -8,6 +8,7 @@
  */
 package org.adamalang.common.net;
 
+import org.adamalang.common.AwaitHelper;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -20,7 +21,7 @@ public class NetBaseTests {
     CountDownLatch finished = new CountDownLatch(1);
     Thread t = new Thread(() -> {
       started.countDown();
-      NetBase.standardBlockerWait(latch);
+      AwaitHelper.block(latch, 10000);
       finished.countDown();
     });
     t.start();

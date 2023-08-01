@@ -11,8 +11,8 @@ package org.adamalang.common;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+/** block the thread waiting for a latch without the interrupt exception */
 public class AwaitHelper {
-
   public static boolean block(CountDownLatch latch, int ms) {
     try {
       return latch.await(ms, TimeUnit.MILLISECONDS);

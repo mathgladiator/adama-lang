@@ -8,6 +8,7 @@
  */
 package org.adamalang.common;
 
+/** convert Exception to RuntimeException */
 @FunctionalInterface
 public interface ExceptionRunnable {
   static Runnable TO_RUNTIME(ExceptionRunnable run) {
