@@ -15,12 +15,14 @@ import org.adamalang.translator.parser.token.TokenEngine;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.regex.Matcher;
+
 public abstract class BaseRxHtmlTest {
   @Test
   public void stable() throws Exception {
     StringBuilder issuesLive = new StringBuilder();
     Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
-    String live = RxHtmlTool.convertStringToTemplateForest(source(), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end()).toString();
+    String live = RxHtmlTool.convertStringToTemplateForest(source(), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end()).toString().replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js"));
     Assert.assertEquals(gold(), live.trim());
     Assert.assertEquals(issues().trim(), issuesLive.toString().trim());
   }
