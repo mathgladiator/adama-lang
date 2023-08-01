@@ -47,6 +47,40 @@ public class LibDate {
     return new ArrayNtList<>(dates);
   }
 
+  @Extension
+  public static @HiddenType(clazz = NtDate.class) NtList<NtDate> weekViewOf(NtDate day) {
+    ArrayList<NtDate> dates = new ArrayList<>();
+
+    // convert and snap the day to the first day of the week
+    LocalDate first = day.toLocalDate();
+    first = first.minusDays((first.getDayOfWeek().getValue()) % 7); // Sunday is 7 which is really 0
+
+    { // build out the view
+      for (int k = 0; k < 7; k++) {
+        LocalDate at = first.plusDays(k);
+        dates.add(new NtDate(at.getYear(), at.getMonthValue(), at.getDayOfMonth()));
+      }
+    }
+    return new ArrayNtList<>(dates);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = NtDate.class) NtList<NtDate> neighborViewOf(NtDate day, int days) {
+    ArrayList<NtDate> dates = new ArrayList<>();
+
+    // convert and snap the day to the first day of the week
+    LocalDate at = day.toLocalDate().minusDays(days);
+
+    { // build out the view
+      for (int k = 0; k < 2 * days + 1; k++) {
+        dates.add(new NtDate(at.getYear(), at.getMonthValue(), at.getDayOfMonth()));
+        at = at.plusDays(1);
+      }
+    }
+    return new ArrayNtList<>(dates);
+  }
+
+
   public static int patternOf(boolean monday, boolean tuesday, boolean wednesday, boolean thursday, boolean friday, boolean saturday, boolean sunday) {
     int p = 0;
     if (monday) {
@@ -109,6 +143,12 @@ public class LibDate {
   public static int dayOfWeek(NtDate day) {
     // 1 = Monday, 7 = Sunday
     return day.toLocalDate().getDayOfWeek().getValue();
+  }
+
+  @Extension
+  public static String dayOfWeekEnglish(NtDate day) {
+    // 1 = Monday, 7 = Sunday
+    return day.toLocalDate().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
   }
 
   @Extension

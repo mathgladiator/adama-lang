@@ -56,6 +56,57 @@ public class LibDateTests {
   }
 
   @Test
+  public void weekViewOf_Aug1_2023() {
+    NtList<NtDate> week = LibDate.weekViewOf(new NtDate(2023, 8, 1));
+    Assert.assertEquals(7, week.size());
+    Assert.assertEquals("2023-07-30", week.lookup(0).get().toString());
+    Assert.assertEquals("2023-08-05", week.lookup(6).get().toString());
+  }
+
+  @Test
+  public void weekViewOf_Dec17_2025() {
+    NtList<NtDate> week = LibDate.weekViewOf(new NtDate(2025, 12, 17));
+    Assert.assertEquals(7, week.size());
+    Assert.assertEquals("2025-12-14", week.lookup(0).get().toString());
+    Assert.assertEquals("2025-12-20", week.lookup(6).get().toString());
+  }
+
+  @Test
+  public void weekViewOf_Jan1_2021() {
+    NtList<NtDate> week = LibDate.weekViewOf(new NtDate(2021, 1, 1));
+    Assert.assertEquals(7, week.size());
+    Assert.assertEquals("2020-12-27", week.lookup(0).get().toString());
+    Assert.assertEquals("2021-01-02", week.lookup(6).get().toString());
+  }
+
+  @Test
+  public void dayOfWeek_Aug1_2023() {
+    Assert.assertEquals("Tuesday", LibDate.dayOfWeekEnglish(new NtDate(2023, 8, 1)));
+  }
+
+  @Test
+  public void dayOfWeek_Dec17_2025() {
+    Assert.assertEquals("Wednesday", LibDate.dayOfWeekEnglish(new NtDate(2025, 12, 17)));
+  }
+
+  @Test
+  public void neighborView_Aug1_2023() {
+    NtList<NtDate> n;
+    n = LibDate.neighborViewOf(new NtDate(2023, 8, 1), 1);
+    Assert.assertEquals(3, n.size());
+    Assert.assertEquals("2023-07-31", n.lookup(0).get().toString());
+    Assert.assertEquals("2023-08-02", n.lookup(2).get().toString());
+    n = LibDate.neighborViewOf(new NtDate(2023, 8, 1), 3);
+    Assert.assertEquals(7, n.size());
+    Assert.assertEquals("2023-07-29", n.lookup(0).get().toString());
+    Assert.assertEquals("2023-08-04", n.lookup(6).get().toString());
+    n = LibDate.neighborViewOf(new NtDate(2023, 8, 1), 7);
+    Assert.assertEquals(15, n.size());
+    Assert.assertEquals("2023-07-25", n.lookup(0).get().toString());
+    Assert.assertEquals("2023-08-08", n.lookup(14).get().toString());
+  }
+
+  @Test
   public void inclusiveRange_yr() {
     NtList<NtDate> cal = LibDate.inclusiveRange(new NtDate(2024, 12, 3), new NtDate(2025, 3, 27));
     Assert.assertEquals("2024-12-03", cal.lookup(0).get().toString());
