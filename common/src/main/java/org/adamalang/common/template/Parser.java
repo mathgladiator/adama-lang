@@ -25,10 +25,15 @@ public class Parser {
     this.at = 0;
   }
 
+  /** parse the given string and return a template tree node */
+  public static T parse(String t) {
+    return new Parser(Fragment.parse(t)).pull((x) -> false);
+  }
+
   /** the actual recursive descent method (super generic) */
   private T pull(Function<Fragment, Boolean> stopAt) {
     TConcat root = new TConcat();
-    while(at < fragments.size()) {
+    while (at < fragments.size()) {
       Fragment curr = fragments.get(at);
       if (stopAt.apply(curr)) {
         at++;
@@ -55,10 +60,5 @@ public class Parser {
       }
     }
     return root;
-  }
-
-  /** parse the given string and return a template tree node */
-  public static T parse(String t) {
-    return new Parser(Fragment.parse(t)).pull((x) -> false);
   }
 }

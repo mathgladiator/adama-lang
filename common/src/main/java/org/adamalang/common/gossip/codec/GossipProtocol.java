@@ -13,22 +13,22 @@ import org.adamalang.common.codec.Flow;
 import org.adamalang.common.codec.TypeId;
 
 /**
- client picks a random known host
- (1) sends a BeginGossip with its most recent hash of its endpoint set along with a handful of recent endpoints learned about
- (2) server seeing BeginGossip will
- (a) integrate the recent endpoints
- (b) look the provided hash within the HashSetChain
- (i) if the Set was found within the server's HashSetChain
- (x) send client a HashFound with the counters and a recent set of endpoints  (completed exchange)
- (y) the client will then integrate the counters for the Set used
- (z) the client will integrate the recent endpoints if there are any
- (w) the client will then send a QuickGossip to complete the exchange
- (ii) if the Set was not found
- (x) send client a HashNotFoundReverseConversation with the most recent hash serer knows about along with recent endpoints
- (y) the client will integrate the recent endpoints if there are any
- (z) the client will search its HashSetChain for the hash
- (u) if the Set was found within the client's HashSetChain, then send a ReverseHashFound (completed exchange)
- (v) if the Set was not found, then send a SlowGossip and stop (breaking asymmetry)
+ * client picks a random known host
+ * (1) sends a BeginGossip with its most recent hash of its endpoint set along with a handful of recent endpoints learned about
+ * (2) server seeing BeginGossip will
+ * (a) integrate the recent endpoints
+ * (b) look the provided hash within the HashSetChain
+ * (i) if the Set was found within the server's HashSetChain
+ * (x) send client a HashFound with the counters and a recent set of endpoints  (completed exchange)
+ * (y) the client will then integrate the counters for the Set used
+ * (z) the client will integrate the recent endpoints if there are any
+ * (w) the client will then send a QuickGossip to complete the exchange
+ * (ii) if the Set was not found
+ * (x) send client a HashNotFoundReverseConversation with the most recent hash serer knows about along with recent endpoints
+ * (y) the client will integrate the recent endpoints if there are any
+ * (z) the client will search its HashSetChain for the hash
+ * (u) if the Set was found within the client's HashSetChain, then send a ReverseHashFound (completed exchange)
+ * (v) if the Set was not found, then send a SlowGossip and stop (breaking asymmetry)
  */
 public class GossipProtocol {
   @Flow("Raw")

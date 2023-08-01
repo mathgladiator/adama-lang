@@ -11,21 +11,21 @@ package org.adamalang.common;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NamedRunnableTests {
   @Test
   public void coverageLongName() {
     AtomicInteger x = new AtomicInteger(0);
-    NamedRunnable runnable =
-        new NamedRunnable("me", "too", "tired") {
-          @Override
-          public void execute() throws Exception {
-            if (x.incrementAndGet() == 3) {
-              throw new Exception("huh");
-            }
-          }
-        };
+    NamedRunnable runnable = new NamedRunnable("me", "too", "tired") {
+      @Override
+      public void execute() throws Exception {
+        if (x.incrementAndGet() == 3) {
+          throw new Exception("huh");
+        }
+      }
+    };
     Assert.assertEquals("me/too/tired", runnable.toString());
     runnable.run();
     runnable.run();
@@ -34,17 +34,23 @@ public class NamedRunnableTests {
   }
 
   @Test
+  public void noisy() {
+    Assert.assertFalse(NamedRunnable.noisy(new RuntimeException()));
+    Assert.assertFalse(NamedRunnable.noisy(new Exception()));
+    Assert.assertTrue(NamedRunnable.noisy(new RejectedExecutionException()));
+  }
+
+  @Test
   public void coverageSingle() {
     AtomicInteger x = new AtomicInteger(0);
-    NamedRunnable runnable =
-        new NamedRunnable("me") {
-          @Override
-          public void execute() throws Exception {
-            if (x.incrementAndGet() == 3) {
-              throw new Exception("huh");
-            }
-          }
-        };
+    NamedRunnable runnable = new NamedRunnable("me") {
+      @Override
+      public void execute() throws Exception {
+        if (x.incrementAndGet() == 3) {
+          throw new Exception("huh");
+        }
+      }
+    };
     Assert.assertEquals("me", runnable.toString());
     runnable.run();
     runnable.run();

@@ -15,5 +15,5 @@ import org.adamalang.common.template.Settings;
 public interface T {
 
   /** render the template fragment to a string builder */
-  public void render(Settings settings, JsonNode node, StringBuilder output);
+  void render(Settings settings, JsonNode node, StringBuilder output);
 }

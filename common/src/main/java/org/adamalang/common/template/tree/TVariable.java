@@ -26,7 +26,7 @@ public class TVariable implements T {
   public void render(Settings settings, JsonNode node, StringBuilder output) {
     JsonNode fetched = node.get(variable);
     if (fetched != null && fetched.isTextual()) {
-      if (settings.html && ! unescape) {
+      if (settings.html && !unescape) {
         output.append(Entities.escape(fetched.textValue()));
       } else {
         output.append(fetched.textValue());

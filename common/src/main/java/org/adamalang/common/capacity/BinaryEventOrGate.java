@@ -27,16 +27,16 @@ public class BinaryEventOrGate {
     update();
   }
 
-  public void b(Boolean value) {
-    this.b = value;
-    update();
-  }
-
   private void update() {
     boolean next = a || b;
     if (result != next) {
       this.result = next;
       event.accept(this.result);
     }
+  }
+
+  public void b(Boolean value) {
+    this.b = value;
+    update();
   }
 }

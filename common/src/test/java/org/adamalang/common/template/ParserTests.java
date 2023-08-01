@@ -16,6 +16,11 @@ import org.junit.Test;
 
 public class ParserTests {
 
+  @Test
+  public void constant() {
+    Assert.assertEquals("Hello World", eval(Parser.parse("Hello World")));
+  }
+
   public String eval(T template, String... args) {
     Settings settings = new Settings();
     ObjectNode node = new ObjectMapper().createObjectNode();
@@ -32,11 +37,6 @@ public class ParserTests {
     StringBuilder sb = new StringBuilder();
     template.render(settings, node, sb);
     return sb.toString();
-  }
-
-  @Test
-  public void constant() {
-    Assert.assertEquals("Hello World", eval(Parser.parse("Hello World")));
   }
 
   @Test

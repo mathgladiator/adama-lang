@@ -28,21 +28,33 @@ public class SimpleExecutorTests {
       public void execute() throws Exception {
 
       }
-    }, 100);
+    }, 100).run();
+    SimpleExecutor.NOW.scheduleNano(new NamedRunnable("nano") {
+      @Override
+      public void execute() throws Exception {
+
+      }
+    }, 100).run();
     SimpleExecutor.NOW.shutdown();
   }
 
   @Test
   public void create() throws Exception {
     SimpleExecutor executor = SimpleExecutor.create("base");
-    CountDownLatch latchExec = new CountDownLatch(2);
+    CountDownLatch latchExec = new CountDownLatch(3);
     executor.execute(new NamedRunnable("name") {
       @Override
       public void execute() throws Exception {
         latchExec.countDown();
       }
     });
-    executor.schedule(new NamedRunnable("name") {
+    Runnable cancel1 = executor.schedule(new NamedRunnable("name") {
+      @Override
+      public void execute() throws Exception {
+        latchExec.countDown();
+      }
+    }, 10);
+    Runnable cancel2 = executor.scheduleNano(new NamedRunnable("name") {
       @Override
       public void execute() throws Exception {
         latchExec.countDown();
@@ -50,5 +62,7 @@ public class SimpleExecutorTests {
     }, 10);
     Assert.assertTrue(latchExec.await(1000, TimeUnit.MILLISECONDS));
     Assert.assertTrue(executor.shutdown().await(1000, TimeUnit.MILLISECONDS));
+    cancel1.run();
+    cancel2.run();
   }
 }

@@ -22,16 +22,11 @@ public class Fragment {
   public Fragment(FragmentType type, String... text) {
     if (text.length == 0) {
       this.type = FragmentType.Text;
-      this.text = new String[] { "[" };
+      this.text = new String[]{"["};
       return;
     }
     this.type = type;
     this.text = text;
-  }
-
-  @Override
-  public String toString() {
-    return type + ":" + Arrays.toString(text);
   }
 
   /** parse the template */
@@ -106,27 +101,21 @@ public class Fragment {
       int cp = it.next();
       switch (state) {
         case Text: {
-          switch (cp) {
-            case '[':
-              state = State.FirstEscape;
-              break;
-            default:
-              current.append(Character.toChars(cp));
-              break;
+          if (cp == '[') {
+            state = State.FirstEscape;
+          } else {
+            current.append(Character.toChars(cp));
           }
           break;
         }
         case FirstEscape: {
           state = State.Text;
-          switch (cp) {
-            case '[':
-              cut.run();
-              results.add(scan.get());
-              break;
-            default:
-              current.append('[');
-              current.append(Character.toChars(cp));
-              break;
+          if (cp == '[') {
+            cut.run();
+            results.add(scan.get());
+          } else {
+            current.append('[');
+            current.append(Character.toChars(cp));
           }
           break;
         }
@@ -139,8 +128,12 @@ public class Fragment {
     return results;
   }
 
+  @Override
+  public String toString() {
+    return type + ":" + Arrays.toString(text);
+  }
+
   private enum State {
-    Text,
-    FirstEscape
+    Text, FirstEscape
   }
 }

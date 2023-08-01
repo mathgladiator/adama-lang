@@ -26,53 +26,6 @@ public class AsyncPool<R, S> {
   private final int maxPoolSize;
   private final int errorCodePoolTooLarge;
 
-  /** an item within the pool */
-  private class RefS implements PoolItem<S> {
-    private final Pool<RefS> pool; // the pool the item came from
-    private final S item; // the item being tracked
-    private final long created; // when we created the item
-    private int count; // the number of times we have used it
-
-    public RefS(Pool<RefS> pool, S item) {
-      this.pool = pool;
-      this.item = item;
-      this.created = time.nowMilliseconds();
-      this.count = 0;
-    }
-
-    @Override
-    public S item() {
-      return this.item;
-    }
-
-    @Override
-    public void returnToPool() {
-      executor.execute(new NamedRunnable("return-async-pool") {
-        @Override
-        public void execute() throws Exception {
-          count++;
-          if (count >= maxUsageCount) {
-            pool.bumpDown();
-            actions.destroy(item);
-          } else {
-            pool.add(RefS.this);
-          }
-        }
-      });
-    }
-
-    @Override
-    public void signalFailure() {
-      executor.execute(new NamedRunnable("failure-async-pool") {
-        @Override
-        public void execute() throws Exception {
-          pool.bumpDown();
-          actions.destroy(item);
-        }
-      });
-    }
-  }
-
   public AsyncPool(SimpleExecutor executor, TimeSource time, int maxLifetimeMilliseconds, int maxUsageCount, int maxPoolSize, int errorCodePoolTooLarge, PoolActions<R, S> actions) {
     this.executor = executor;
     this.time = time;
@@ -84,14 +37,16 @@ public class AsyncPool<R, S> {
     this.errorCodePoolTooLarge = errorCodePoolTooLarge;
   }
 
-  private Pool<RefS> poolOfWhileInExecutor(R request) {
-    Pool<RefS> pool = pools.get(request);
-    if (pool != null) {
-      return pool;
-    }
-    pool = new Pool<>();
-    pools.put(request, pool);
-    return pool;
+  public void scheduleSweeping(AtomicBoolean alive) {
+    executor.schedule(new NamedRunnable("sweep") {
+      @Override
+      public void execute() throws Exception {
+        sweep();
+        if (alive.get()) {
+          executor.schedule(this, maxLifetimeMilliseconds);
+        }
+      }
+    }, maxLifetimeMilliseconds);
   }
 
   protected int sweep() {
@@ -117,18 +72,6 @@ public class AsyncPool<R, S> {
       }
     }
     return cleaned;
-  }
-
-  public void scheduleSweeping(AtomicBoolean alive) {
-    executor.schedule(new NamedRunnable("sweep") {
-      @Override
-      public void execute() throws Exception {
-        sweep();
-        if (alive.get()) {
-          executor.schedule(this, maxLifetimeMilliseconds);
-        }
-      }
-    }, maxLifetimeMilliseconds);
   }
 
   public void get(R request, Callback<PoolItem<S>> callback) {
@@ -179,5 +122,62 @@ public class AsyncPool<R, S> {
         });
       }
     });
+  }
+
+  private Pool<RefS> poolOfWhileInExecutor(R request) {
+    Pool<RefS> pool = pools.get(request);
+    if (pool != null) {
+      return pool;
+    }
+    pool = new Pool<>();
+    pools.put(request, pool);
+    return pool;
+  }
+
+  /** an item within the pool */
+  private class RefS implements PoolItem<S> {
+    private final Pool<RefS> pool; // the pool the item came from
+    private final S item; // the item being tracked
+    private final long created; // when we created the item
+    private int count; // the number of times we have used it
+
+    public RefS(Pool<RefS> pool, S item) {
+      this.pool = pool;
+      this.item = item;
+      this.created = time.nowMilliseconds();
+      this.count = 0;
+    }
+
+    @Override
+    public S item() {
+      return this.item;
+    }
+
+    @Override
+    public void signalFailure() {
+      executor.execute(new NamedRunnable("failure-async-pool") {
+        @Override
+        public void execute() throws Exception {
+          pool.bumpDown();
+          actions.destroy(item);
+        }
+      });
+    }
+
+    @Override
+    public void returnToPool() {
+      executor.execute(new NamedRunnable("return-async-pool") {
+        @Override
+        public void execute() throws Exception {
+          count++;
+          if (count >= maxUsageCount) {
+            pool.bumpDown();
+            actions.destroy(item);
+          } else {
+            pool.add(RefS.this);
+          }
+        }
+      });
+    }
   }
 }

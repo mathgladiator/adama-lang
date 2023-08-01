@@ -59,7 +59,7 @@ public class AsyncSharedLRUCacheTests {
       async.forceEvictionFromCacheNoDownstreamEviction("Y"); // dumb
       Assert.assertTrue(allIn.await(50000, TimeUnit.MILLISECONDS));
       Assert.assertEquals(1, calls.get());
-      for(int k = 0; k < 10; k++) {
+      for (int k = 0; k < 10; k++) {
         CountDownLatch happy = new CountDownLatch(1);
         async.get("X", new Callback<MeasuredString>() {
           @Override

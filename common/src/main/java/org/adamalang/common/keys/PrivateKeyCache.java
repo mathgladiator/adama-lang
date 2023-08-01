@@ -28,8 +28,6 @@ public abstract class PrivateKeyCache {
     this.executor = executor;
   }
 
-  protected abstract PrivateKey find(SpaceKeyIdPair pair);
-
   public void get(String space, int keyId, Callback<PrivateKey> callback) {
     SpaceKeyIdPair pair = new SpaceKeyIdPair(space, keyId);
     PrivateKey immediate = keys.get(pair);
@@ -56,6 +54,8 @@ public abstract class PrivateKeyCache {
     });
   }
 
+  protected abstract PrivateKey find(SpaceKeyIdPair pair);
+
   public static class SpaceKeyIdPair {
     public final String space;
     public final int id;
@@ -66,16 +66,16 @@ public abstract class PrivateKeyCache {
     }
 
     @Override
+    public int hashCode() {
+      return Objects.hash(space, id);
+    }
+
+    @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       SpaceKeyIdPair that = (SpaceKeyIdPair) o;
       return id == that.id && Objects.equals(space, that.space);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(space, id);
     }
   }
 }

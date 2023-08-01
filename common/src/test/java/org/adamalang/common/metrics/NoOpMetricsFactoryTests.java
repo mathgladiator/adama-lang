@@ -19,6 +19,8 @@ public class NoOpMetricsFactoryTests {
   @Test
   public void coverage() {
     NoOpMetricsFactory factory = new NoOpMetricsFactory();
+    factory.page("page", "title");
+    factory.section("section");
     RequestResponseMonitor.RequestResponseMonitorInstance rr = factory.makeRequestResponseMonitor("x").start();
     rr.success();
     rr.failure(1);

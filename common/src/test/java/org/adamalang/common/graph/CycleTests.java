@@ -11,16 +11,27 @@ package org.adamalang.common.graph;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class CycleTests {
+  @Test
+  public void empty() {
+    Assert.assertNull(Cycle.detect(new HashMap<>()));
+  }
+
+  @Test
+  public void look_back() {
+    TreeMap<String, Set<String>> graph = new TreeMap<>();
+    graph.put("A", D("B", "C"));
+    graph.put("B", D("C", "Y"));
+    graph.put("X", D("Y", "Z"));
+    graph.put("Y", D("Z"));
+    Assert.assertNull(Cycle.detect(graph));
+  }
+
   private static Set<String> D(String... ds) {
     TreeSet<String> depends = new TreeSet<>();
-    for (String d : ds) {
-      depends.add(d);
-    }
+    Collections.addAll(depends, ds);
     return depends;
   }
 

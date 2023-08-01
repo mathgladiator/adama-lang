@@ -17,20 +17,20 @@ public class Hashing {
     return forKnownAlgorithm("MD5");
   }
 
-  public static MessageDigest sha384() {
-    return forKnownAlgorithm("SHA-384");
-  }
-
-  public static MessageDigest sha256() {
-    return forKnownAlgorithm("SHA-256");
-  }
-
   public static MessageDigest forKnownAlgorithm(String algorithm) {
     try {
       return MessageDigest.getInstance(algorithm);
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
+  }
+
+  public static MessageDigest sha384() {
+    return forKnownAlgorithm("SHA-384");
+  }
+
+  public static MessageDigest sha256() {
+    return forKnownAlgorithm("SHA-256");
   }
 
   public static String finishAndEncode(MessageDigest digest) {

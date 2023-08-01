@@ -25,7 +25,7 @@ public class GeneratedCodecMeTests {
       a.w = 1;
       a.z = 3.14;
       a.bbb = true;
-      a.strarr = new String[] { "A", "B", "C" };
+      a.strarr = new String[]{"A", "B", "C"};
       GeneratedCodecMe.write(buf, a);
     }
     {
@@ -58,7 +58,7 @@ public class GeneratedCodecMeTests {
       b.embed.z = 3.14;
       b.embed.bbb = false;
       b.embed.strarr = null;
-      b.arr = new CodecCodeGenTests.TestClassA[] { b.embed };
+      b.arr = new CodecCodeGenTests.TestClassA[]{b.embed};
       GeneratedCodecMe.write(buf, b);
     }
     {

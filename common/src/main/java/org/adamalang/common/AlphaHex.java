@@ -11,6 +11,7 @@ package org.adamalang.common;
 /** hexidecimal encoding using A-P rather than 0-9A-F; This allows us to stable generate identifiers based on byte[] */
 public class AlphaHex {
   private static final char[] HEX = "ABCDEFGHIJKLMNOP".toCharArray();
+
   public static String encode(byte[] bytes) {
     char[] chs = new char[bytes.length * 2];
     for (int j = 0; j < bytes.length; j++) {

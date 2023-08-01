@@ -83,6 +83,14 @@ public class Json {
     return node.booleanValue();
   }
 
+  public static Integer readInteger(ObjectNode tree, String field) {
+    Long lng = readLong(tree, field);
+    if (lng != null) {
+      return lng.intValue();
+    }
+    return null;
+  }
+
   public static Long readLong(ObjectNode tree, String field) {
     JsonNode node = tree.get(field);
     if (node == null || node.isNull()) {
@@ -97,14 +105,6 @@ public class Json {
       } catch (NumberFormatException nfe) {
         return null;
       }
-    }
-    return null;
-  }
-
-  public static Integer readInteger(ObjectNode tree, String field) {
-    Long lng = readLong(tree, field);
-    if (lng != null) {
-      return lng.intValue();
     }
     return null;
   }

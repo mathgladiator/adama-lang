@@ -8,7 +8,6 @@
  */
 package org.adamalang.common.gossip;
 
-import org.adamalang.common.gossip.EngineRole;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +19,7 @@ public class EngineRoleTests {
     Random jitter = new Random();
     for (int k = 0; k < 1000; k++) {
       Assert.assertTrue(EngineRole.computeWait(jitter, EngineRole.Node) < 301);
-      Assert.assertTrue(EngineRole.computeWait(jitter, EngineRole.SuperNode) < 15*5+1);
+      Assert.assertTrue(EngineRole.computeWait(jitter, EngineRole.SuperNode) < 15 * 5 + 1);
     }
   }
 }

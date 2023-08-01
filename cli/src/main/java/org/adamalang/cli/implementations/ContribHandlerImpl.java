@@ -16,6 +16,7 @@ import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.DefaultCopyright;
 import org.adamalang.common.Escaping;
 import org.adamalang.common.codec.CodecCodeGen;
+import org.adamalang.common.gossip.codec.GossipProtocol;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.support.GenerateLanguageTests;
@@ -91,6 +92,9 @@ public class ContribHandlerImpl implements ContribHandler {
     String server = CodecCodeGen.assembleCodec("org.adamalang.net.codec", "ServerCodec", ServerMessage.class.getDeclaredClasses());
     Files.writeString(new File("./net/src/main/java/org/adamalang/net/codec/ClientCodec.java").toPath(), client);
     Files.writeString(new File("./net/src/main/java/org/adamalang/net/codec/ServerCodec.java").toPath(), server);
+    System.out.println(Util.prefix("Creating Gossip Codec", Util.ANSI.Cyan));
+    String codec = CodecCodeGen.assembleCodec("org.adamalang.common.gossip.codec", "GossipProtocolCodec", GossipProtocol.class.getDeclaredClasses());
+    Files.writeString(new File("./common/src/main/java/org/adamalang/common/gossip/codec/GossipProtocolCodec.java").toPath(), codec);
     output.out();
   }
 
@@ -119,7 +123,7 @@ public class ContribHandlerImpl implements ContribHandler {
   public void version(Arguments.ContribVersionArgs args, Output.YesOrError output) throws Exception {
     String versionCode = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
     System.out.println(Util.prefix("Generating a version number: " + versionCode, Util.ANSI.Cyan));
-    String versionFile = "package org.adamalang.common;\n" + "\n" + "public class Platform {\n" + "  public static String VERSION = \"" + versionCode + "\";\n" + "}\n";
+    String versionFile = "package org.adamalang.common;\n" + "\n" + "public class Platform {\n" + "  public static final String VERSION = \"" + versionCode + "\";\n" + "}\n";
     Files.writeString(new File("common/src/main/java/org/adamalang/common/Platform.java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + versionFile);
     output.out();
   }

@@ -50,6 +50,11 @@ public class Escaping {
     return this;
   }
 
+  @Override
+  public String toString() {
+    return go();
+  }
+
   public String go() {
     StringBuilder result = new StringBuilder();
     PrimitiveIterator.OfInt it = str.codePoints().iterator();
@@ -96,10 +101,5 @@ public class Escaping {
       }
     }
     return result.toString();
-  }
-
-  @Override
-  public String toString() {
-    return go();
   }
 }
