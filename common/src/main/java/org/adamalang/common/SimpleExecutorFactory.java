@@ -8,6 +8,7 @@
  */
 package org.adamalang.common;
 
+/** a factory to create SimpleExecutors */
 public interface SimpleExecutorFactory {
   SimpleExecutorFactory DEFAULT = new SimpleExecutorFactory() {
     @Override

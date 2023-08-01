@@ -49,7 +49,6 @@ public class NetBase {
   private final AtomicBoolean alive;
   private final CountDownLatch killLatch;
   private final SslContext sslContext;
-  private final ArrayList<CountDownLatch> blockers;
   private final Engine engine;
 
   public NetBase(NetMetrics metrics, MachineIdentity identity, int bossThreads, int workerThreads) throws Exception {
@@ -60,7 +59,6 @@ public class NetBase {
     this.workerGroup = new NioEventLoopGroup(workerThreads);
     this.alive = new AtomicBoolean(true);
     this.killLatch = new CountDownLatch(1);
-    this.blockers = new ArrayList<>();
     this.engine = new Engine(identity.ip, metrics.gossip, TimeSource.REAL_TIME);
   }
 
@@ -169,30 +167,10 @@ public class NetBase {
     killLatch.await();
   }
 
-  public synchronized Runnable blocker() {
-    CountDownLatch latchToBlock = new CountDownLatch(1);
-    blockers.add(latchToBlock);
-    return () -> {
-      latchToBlock.countDown();
-    };
-  }
-
   public void shutdown() {
     alive.set(false);
     killLatch.countDown();
-    for (CountDownLatch blocker : blockers) {
-      standardBlockerWait(blocker);
-    }
-    blockers.clear();
     bossGroup.shutdownGracefully();
     workerGroup.shutdownGracefully();
-  }
-
-  public static void standardBlockerWait(CountDownLatch blocker) {
-    try {
-      blocker.await(10000, TimeUnit.MILLISECONDS);
-    } catch (InterruptedException ie) {
-      // ignore for now
-    }
   }
 }

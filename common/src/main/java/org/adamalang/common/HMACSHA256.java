@@ -15,8 +15,8 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
+/** HmacSHA256(key, data); https://en.wikipedia.org/wiki/HMAC */
 public class HMACSHA256 {
-  /** HmacSHA256(key, data); https://en.wikipedia.org/wiki/HMAC */
   public static byte[] of(final byte[] key, final String data) {
     try {
       final Key keySpec = new SecretKeySpec(key, "HmacSHA256");

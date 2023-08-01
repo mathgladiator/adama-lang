@@ -15,6 +15,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
+/** the identity of a machine; the ip, trust store, cert, and key */
 public class MachineIdentity {
   public final String ip;
   private final String trust;
