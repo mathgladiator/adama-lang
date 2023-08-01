@@ -9,9 +9,9 @@
 package org.adamalang.rxhtml.template;
 
 import org.adamalang.rxhtml.atl.Context;
-import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.codegen.VariablePool;
 import org.adamalang.rxhtml.codegen.Writer;
+import org.adamalang.rxhtml.template.config.Feedback;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -48,12 +48,12 @@ public class Environment {
     this.fragmentFunc = fragmentFunc;
   }
 
-  public HashMap<String, Integer> getCssFreq() {
-    return classContext.freq;
-  }
-
   public static Environment fresh(Feedback feedback) {
     return new Environment(null, Context.makeClassContext(), feedback, new Writer(), new VariablePool(), null, false, null, null, null, null, null);
+  }
+
+  public HashMap<String, Integer> getCssFreq() {
+    return classContext.freq;
   }
 
   public String val(String name, String defaultVal) {

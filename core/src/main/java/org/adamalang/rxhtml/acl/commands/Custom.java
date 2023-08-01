@@ -9,7 +9,6 @@
 package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
-import org.adamalang.rxhtml.template.StatePath;
 
 /** execute custom code */
 public class Custom implements Command {

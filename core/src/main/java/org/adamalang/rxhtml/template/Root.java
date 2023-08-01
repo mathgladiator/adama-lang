@@ -20,8 +20,8 @@ public class Root {
     env.writer.append("(function($){").tabUp().newline();
     if (custom.length() > 0) {
       env.writer.append("/** BEGIN CUSTOM **/").newline();
-      env.writer.append(custom).newline();;
-      env.writer.append("/** END CUSTOM **/").newline();;
+      env.writer.append(custom).newline();
+      env.writer.append("/** END CUSTOM **/").newline();
     }
   }
 
@@ -97,18 +97,6 @@ public class Root {
     env.pool.give(stateVar);
   }
 
-  public static class Instructions {
-    public final String javascript;
-    public final HashSet<String> depends;
-    public final String formula;
-
-    public Instructions(final String javascript, HashSet<String> depends, String formula) {
-      this.javascript = javascript;
-      this.depends = depends;
-      this.formula = formula;
-    }
-  }
-
   /** convert a raw uri to an instruction set */
   public static Instructions uri_to_instructions(String uriRaw) {
     HashSet<String> depends = new HashSet<>();
@@ -150,5 +138,17 @@ public class Root {
   public static String finish(Environment env) {
     env.writer.tabDown().tab().append("})(RxHTML);").newline();
     return env.writer.toString();
+  }
+
+  public static class Instructions {
+    public final String javascript;
+    public final HashSet<String> depends;
+    public final String formula;
+
+    public Instructions(final String javascript, HashSet<String> depends, String formula) {
+      this.javascript = javascript;
+      this.depends = depends;
+      this.formula = formula;
+    }
   }
 }

@@ -15,30 +15,6 @@ import java.util.regex.Pattern;
 
 public class Parser {
 
-  public static ArrayList<String> fragmentize(String command) {
-    ArrayList<String> fragments = new ArrayList<>();
-    String tail = command;
-    while (tail.length() > 0) {
-      int kCut = tail.indexOf(' ');
-      if (kCut > 0) {
-        int kQuote = tail.indexOf('\'');
-        if (kQuote < kCut) {
-          int kEnd = tail.indexOf('\'', kQuote + 1);
-          if (kEnd > kCut) {
-            kCut = kEnd;
-          }
-        }
-        String add = tail.substring(0, kCut).replaceAll(Pattern.quote("'"), "");
-        fragments.add(add);
-        tail = tail.substring(kCut + 1).trim();
-      } else {
-        fragments.add(tail);
-        return fragments;
-      }
-    }
-    return fragments;
-  }
-
   public static ArrayList<Command> parse(String command) {
     ArrayList<Command> commands = new ArrayList<>();
     for (String phrase : fragmentize(command)) {
@@ -74,7 +50,8 @@ public class Parser {
           }
           case "fire": {
             commands.add(new Fire(body));
-          } break;
+          }
+          break;
           case "decide": {
             String[] parts = body.split(Pattern.quote("|"));
             commands.add(new Decide(parts[0], parts.length > 1 ? parts[1] : "id", parts.length > 2 ? parts[2] : "id"));
@@ -112,13 +89,35 @@ public class Parser {
           }
         }
       } else {
-        switch (phrase) {
-          case "reset":
-            commands.add(new Reset());
-            break;
+        if ("reset".equals(phrase)) {
+          commands.add(new Reset());
         }
       }
     }
     return commands;
+  }
+
+  public static ArrayList<String> fragmentize(String command) {
+    ArrayList<String> fragments = new ArrayList<>();
+    String tail = command;
+    while (tail.length() > 0) {
+      int kCut = tail.indexOf(' ');
+      if (kCut > 0) {
+        int kQuote = tail.indexOf('\'');
+        if (kQuote < kCut) {
+          int kEnd = tail.indexOf('\'', kQuote + 1);
+          if (kEnd > kCut) {
+            kCut = kEnd;
+          }
+        }
+        String add = tail.substring(0, kCut).replaceAll(Pattern.quote("'"), "");
+        fragments.add(add);
+        tail = tail.substring(kCut + 1).trim();
+      } else {
+        fragments.add(tail);
+        return fragments;
+      }
+    }
+    return fragments;
   }
 }

@@ -8,7 +8,6 @@
  */
 package org.adamalang.rxhtml.atl;
 
-import org.adamalang.translator.parser.token.TokenEngine;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,11 +15,29 @@ import java.util.Iterator;
 
 public class TokenStreamTests {
 
+  @Test
+  public void simple_text() {
+    Iterator<TokenStream.Token> it = TokenStream.tokenize("xyz").iterator();
+    assertNextIsText(it, "xyz");
+    assertNoNext(it);
+  }
+
   private void assertNextIsText(Iterator<TokenStream.Token> it, String value) {
     Assert.assertTrue(it.hasNext());
     TokenStream.Token next = it.next();
     Assert.assertEquals(next.type, TokenStream.Type.Text);
     Assert.assertEquals(next.base, value);
+  }
+
+  public void assertNoNext(Iterator<TokenStream.Token> it) {
+    Assert.assertFalse(it.hasNext());
+  }
+
+  @Test
+  public void simple_variable() {
+    Iterator<TokenStream.Token> it = TokenStream.tokenize("{x}").iterator();
+    assertNextIsVariable(it, "x", TokenStream.Modifier.None);
+    assertNoNext(it);
   }
 
   private void assertNextIsVariable(Iterator<TokenStream.Token> it, String value, TokenStream.Modifier mod, String... transforms) {
@@ -33,36 +50,6 @@ public class TokenStreamTests {
     for (int k = 0; k < transforms.length; k++) {
       Assert.assertEquals(next.transforms[k], transforms[k]);
     }
-  }
-
-  private void assertNextIsCondition(Iterator<TokenStream.Token> it, String value, TokenStream.Modifier mod, String... transforms) {
-    Assert.assertTrue(it.hasNext());
-    TokenStream.Token next = it.next();
-    Assert.assertEquals(next.type, TokenStream.Type.Condition);
-    Assert.assertEquals(next.mod, mod);
-    Assert.assertEquals(next.base, value);
-    Assert.assertEquals(next.transforms.length, transforms.length);
-    for (int k = 0; k < transforms.length; k++) {
-      Assert.assertEquals(next.transforms[k], transforms[k]);
-    }
-  }
-
-  public void assertNoNext(Iterator<TokenStream.Token> it) {
-    Assert.assertFalse(it.hasNext());
-  }
-
-  @Test
-  public void simple_text() {
-    Iterator<TokenStream.Token> it = TokenStream.tokenize("xyz").iterator();
-    assertNextIsText(it, "xyz");
-    assertNoNext(it);
-  }
-
-  @Test
-  public void simple_variable() {
-    Iterator<TokenStream.Token> it = TokenStream.tokenize("{x}").iterator();
-    assertNextIsVariable(it, "x", TokenStream.Modifier.None);
-    assertNoNext(it);
   }
 
   @Test
@@ -98,6 +85,18 @@ public class TokenStreamTests {
     Iterator<TokenStream.Token> it = TokenStream.tokenize("[x]").iterator();
     assertNextIsCondition(it, "x", TokenStream.Modifier.None);
     assertNoNext(it);
+  }
+
+  private void assertNextIsCondition(Iterator<TokenStream.Token> it, String value, TokenStream.Modifier mod, String... transforms) {
+    Assert.assertTrue(it.hasNext());
+    TokenStream.Token next = it.next();
+    Assert.assertEquals(next.type, TokenStream.Type.Condition);
+    Assert.assertEquals(next.mod, mod);
+    Assert.assertEquals(next.base, value);
+    Assert.assertEquals(next.transforms.length, transforms.length);
+    for (int k = 0; k < transforms.length; k++) {
+      Assert.assertEquals(next.transforms[k], transforms[k]);
+    }
   }
 
   @Test

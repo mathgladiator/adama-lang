@@ -31,13 +31,14 @@ public class GenerateTemplateTests {
         if (!file.getName().endsWith(".rx.html")) {
           continue;
         }
+        boolean devMode = file.getName().startsWith("dev_");
         System.out.println("\u001b[36mTemplate:\u001b[0m" + file.getName());
         StringBuilder issues = new StringBuilder();
         Feedback feedback = (element, warning) -> {
           System.out.println("  " + warning);
           issues.append("WARNING:").append(warning).append("\n");
         };
-        String gold = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file)), ShellConfig.start().withFeedback(feedback).end()).toString();
+        String gold = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file)), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end()).toString();
         String name = file.getName().substring(0, file.getName().length() - 8).replace(Pattern.quote("."), "_");
         name = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);
         String classname = "Template" + name + "Tests";
@@ -45,6 +46,14 @@ public class GenerateTemplateTests {
         output.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
         output.append("package org.adamalang.rxhtml;\n\n");
         output.append("public class ").append(classname).append(" extends BaseRxHtmlTest {\n");
+        output.append("  @Override\n");
+        output.append("  public boolean dev() {\n");
+        if (devMode) {
+          output.append("    return true;\n");
+        } else {
+          output.append("    return false;\n");
+        }
+        output.append("  }\n");
         output.append("  @Override\n");
         output.append("  public String issues() {\n");
         TestClass.writeStringBuilder(issues.toString(), output, "issues");

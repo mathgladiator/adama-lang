@@ -8,7 +8,5 @@
  */
 package org.adamalang.rxhtml.template;
 
-import org.junit.Test;
-
 public class BaseTests {
 }

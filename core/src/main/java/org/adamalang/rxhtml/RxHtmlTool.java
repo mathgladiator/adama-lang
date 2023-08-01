@@ -8,7 +8,6 @@
  */
 package org.adamalang.rxhtml;
 
-import org.adamalang.common.web.UriMatcher;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.Shell;
@@ -17,50 +16,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
-  private static ArrayList<String> getDefaultRedirect(Document document) {
-    ArrayList<String> defaults = new ArrayList<>();
-    for (Element element : document.getElementsByTag("page")) {
-      if (element.hasAttr("default-redirect-source")) {
-        defaults.add(Root.uri_to_instructions(element.attr("uri")).formula);
-      }
-    }
-    return defaults;
-  }
-
-  private static String buildInternStyle(Document document) {
-    ArrayList<Element> axe = new ArrayList<>();
-    StringBuilder style = new StringBuilder();
-    for (Element element : document.getElementsByTag("style")) {
-      style.append(element.html().trim()).append(" ");
-      axe.add(element);
-    }
-    for (Element toAxe : axe) {
-      toAxe.remove();
-    }
-    return style.toString().trim();
-  }
-
-  private static String buildCustomJavaScript(Document document) {
-    StringBuilder customjs = new StringBuilder();
-    ArrayList<Element> axe = new ArrayList<>();
-    for (Element element : document.getElementsByTag("script")) {
-      if (element.hasAttr("is-custom")) {
-        customjs.append(element.html().trim());
-        axe.add(element);
-      }
-    }
-    for (Element toAxe : axe) {
-      toAxe.remove();
-    }
-    return customjs.toString();
-  }
-
   public static RxHtmlResult convertStringToTemplateForest(String str, ShellConfig config) {
     Environment env = Environment.fresh(config.feedback);
     Document document = Jsoup.parse(str);
@@ -80,5 +39,43 @@ public class RxHtmlTool {
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
     return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq());
+  }
+
+  private static String buildCustomJavaScript(Document document) {
+    StringBuilder customjs = new StringBuilder();
+    ArrayList<Element> axe = new ArrayList<>();
+    for (Element element : document.getElementsByTag("script")) {
+      if (element.hasAttr("is-custom")) {
+        customjs.append(element.html().trim());
+        axe.add(element);
+      }
+    }
+    for (Element toAxe : axe) {
+      toAxe.remove();
+    }
+    return customjs.toString();
+  }
+
+  private static String buildInternStyle(Document document) {
+    ArrayList<Element> axe = new ArrayList<>();
+    StringBuilder style = new StringBuilder();
+    for (Element element : document.getElementsByTag("style")) {
+      style.append(element.html().trim()).append(" ");
+      axe.add(element);
+    }
+    for (Element toAxe : axe) {
+      toAxe.remove();
+    }
+    return style.toString().trim();
+  }
+
+  private static ArrayList<String> getDefaultRedirect(Document document) {
+    ArrayList<String> defaults = new ArrayList<>();
+    for (Element element : document.getElementsByTag("page")) {
+      if (element.hasAttr("default-redirect-source")) {
+        defaults.add(Root.uri_to_instructions(element.attr("uri")).formula);
+      }
+    }
+    return defaults;
   }
 }

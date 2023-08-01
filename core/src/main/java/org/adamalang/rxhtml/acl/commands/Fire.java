@@ -19,6 +19,6 @@ public class Fire implements Command {
 
   @Override
   public void write(Environment env, String type, String eVar) {
-    env.writer.tab().append("$.onFR(").append(env.stateVar).append(",").append(eVar).append(",'") .append(type).append("','").append(channel).append("');").newline();
+    env.writer.tab().append("$.onFR(").append(env.stateVar).append(",").append(eVar).append(",'").append(type).append("','").append(channel).append("');").newline();
   }
 }

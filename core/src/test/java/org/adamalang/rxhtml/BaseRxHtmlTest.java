@@ -16,23 +16,26 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public abstract class BaseRxHtmlTest {
-  /** The issues the test is supposed to have */
-  public abstract String issues();
-
-  /** the output the test is supposed to generate */
-  public abstract String gold();
-
-  /** the source code of the template */
-  public abstract String source();
-
   @Test
   public void stable() throws Exception {
     StringBuilder issuesLive = new StringBuilder();
     Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
-    String live = RxHtmlTool.convertStringToTemplateForest(source(), ShellConfig.start().withFeedback(feedback).end()).toString();
+    String live = RxHtmlTool.convertStringToTemplateForest(source(), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end()).toString();
     Assert.assertEquals(gold(), live.trim());
     Assert.assertEquals(issues().trim(), issuesLive.toString().trim());
   }
+
+  /** test any developer mode settings */
+  public abstract boolean dev();
+
+  /** the source code of the template */
+  public abstract String source();
+
+  /** the output the test is supposed to generate */
+  public abstract String gold();
+
+  /** The issues the test is supposed to have */
+  public abstract String issues();
 
   @Test
   public void codegen() throws Exception {

@@ -10,6 +10,10 @@ package org.adamalang.rxhtml;
 
 public class TemplateTransformsTests extends BaseRxHtmlTest {
   @Override
+  public boolean dev() {
+    return false;
+  }
+  @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
     issues.append("");

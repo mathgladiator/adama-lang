@@ -34,7 +34,7 @@ public class RxHtmlToAdama {
   public static String codegen(String rxhtml) throws AdamaLangException {
     RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().end());
     StringBuilder adama = new StringBuilder();
-     for (Uri uri : assembleUrisFrom(rxhtml)) {
+    for (Uri uri : assembleUrisFrom(rxhtml)) {
       String shell = result.shell.makeShell(result);
       adama.append("@web get ").append(uri.rxhtmlPath()).append(" {\n");
       adama.append("  return {\n");

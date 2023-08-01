@@ -32,14 +32,6 @@ public class Text implements Tree {
     return "TEXT(" + text + ")";
   }
 
-  /** silly optimization for empty strings and classes */
-  public boolean skip(Context context) {
-    if (context.is_class) {
-      return text.trim().length() == 0;
-    }
-    return false;
-  }
-
   @Override
   public String js(Context context, String env) {
     String textToUse = text;
@@ -50,5 +42,13 @@ public class Text implements Tree {
       textToUse = " " + trimmed + " ";
     }
     return "\"" + new Escaping(textToUse).removeNewLines().keepSlashes().go() + "\"";
+  }
+
+  /** silly optimization for empty strings and classes */
+  public boolean skip(Context context) {
+    if (context.is_class) {
+      return text.trim().length() == 0;
+    }
+    return false;
   }
 }

@@ -73,7 +73,6 @@ public class Parser {
         return;
       case Condition:
         children.add(condition(it, token));
-        return;
     }
   }
 

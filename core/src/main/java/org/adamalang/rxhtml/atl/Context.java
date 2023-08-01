@@ -11,6 +11,7 @@ package org.adamalang.rxhtml.atl;
 import java.util.HashMap;
 
 public class Context {
+  public static final Context DEFAULT = new Context(false);
   public final boolean is_class;
   public final HashMap<String, Integer> freq;
 
@@ -23,6 +24,10 @@ public class Context {
     }
   }
 
+  public static final Context makeClassContext() {
+    return new Context(true);
+  }
+
   public void cssTrack(String fragment) {
     Integer prior = freq.get(fragment);
     if (prior == null) {
@@ -31,10 +36,4 @@ public class Context {
       freq.put(fragment, prior + 1);
     }
   }
-
-  public static final Context makeClassContext() {
-    return new Context(true);
-  }
-
-  public static final Context DEFAULT = new Context(false);
 }
