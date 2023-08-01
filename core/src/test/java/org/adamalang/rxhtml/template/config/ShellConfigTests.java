@@ -6,8 +6,16 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.rxhtml.template.config;
 
-public class Platform {
-  public static final String VERSION = "20230731210116";
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class ShellConfigTests {
+  @Test
+  public void flow() {
+    ShellConfig sc = ShellConfig.start().withFeedback(Feedback.NoOp).withUseLocalAdamaJavascript(true).end();
+    Assert.assertTrue(sc.useLocalAdamaJavascript);
+  }
 }

@@ -8,30 +8,18 @@
  */
 package org.adamalang.rxhtml.atl;
 
-import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.atl.tree.Text;
+import org.adamalang.rxhtml.atl.tree.Tree;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Map;
-import java.util.Set;
 
 public class ParserTests {
   @Test
   public void fail() {
-    String[] strs = new String[] {
-        "{xyz",
-        "[xyz",
-        "[[",
-        "[}",
-        "{]",
-        "]",
-        "|",
-        "xyz|",
-        "}",
-        "{{",
-    };
-    for (String str: strs) {
+    String[] strs = new String[]{"{xyz", "[xyz", "[[", "[}", "{]", "]", "|", "xyz|", "}", "{{",};
+    for (String str : strs) {
       try {
         Parser.parse(str);
         Assert.fail();

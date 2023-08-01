@@ -18,6 +18,10 @@ public class ShellConfig {
     this.useLocalAdamaJavascript = useLocalAdamaJavascript;
   }
 
+  public static Builder start() {
+    return new Builder();
+  }
+
   public static class Builder {
     public Feedback feedback;
     public boolean useLocalAdamaJavascript;
@@ -40,9 +44,5 @@ public class ShellConfig {
     public ShellConfig end() {
       return new ShellConfig(feedback, useLocalAdamaJavascript);
     }
-  }
-
-  public static Builder start() {
-    return new Builder();
   }
 }

@@ -8,7 +8,6 @@
  */
 package org.adamalang.rxhtml.template;
 
-import org.adamalang.common.Escaping;
 import org.adamalang.rxhtml.acl.commands.Command;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
@@ -252,7 +251,7 @@ public class Attributes {
   }
 
   private void check_action_document_sign_in(boolean domain) {
-    String[] checks = domain ? new String[] { "username", "password", "remember" } :  new String[] { "username", "password", "space", "key", "remember" };
+    String[] checks = domain ? new String[]{"username", "password", "remember"} : new String[]{"username", "password", "space", "key", "remember"};
     walkAndValidateAndCheck(env, (el) -> {
       String name = el.attr("name");
       String type = el.attr("type");
@@ -285,7 +284,7 @@ public class Attributes {
   }
 
   private void check_action_upload(boolean domain) {
-    String[] checks = domain ? new String[] { "files" } :  new String[] { "space", "key", "files" };
+    String[] checks = domain ? new String[]{"files"} : new String[]{"space", "key", "files"};
     walkAndValidateAndCheck(env, (el) -> {
       String name = el.attr("name");
       String type = el.attr("type");

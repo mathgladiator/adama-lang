@@ -15,10 +15,15 @@ import java.util.ArrayList;
 
 public class Elements {
   public static void template(Environment env) { /* no-op */ }
+
   public static void page(Environment env) { /* no-op */ }
+
   public static void shell(Environment env) { /* no-op */ }
+
   public static void style(Environment env) { /* no-op */ }
+
   public static void script(Environment env) { /* no-op */ }
+
   public static void meta(Environment env) { /* no-op */ }
 
   public static void fragment(Environment env) {
@@ -67,6 +72,18 @@ public class Elements {
     env.pool.give(childStateVar);
   }
 
+  private static String soloParent(Environment env) {
+    final String parentVar;
+    if (env.elementAlone) {
+      parentVar = env.parentVariable;
+    } else {
+      parentVar = env.pool.ask();
+      env.writer.tab().append("var ").append(parentVar).append("=$.E('div');").newline();
+      env.writer.tab().append(env.parentVariable).append(".append(").append(parentVar).append(");").newline();
+    }
+    return parentVar;
+  }
+
   public static void connection(Environment env) {
     if (!env.element.hasAttr("name")) {
       env.element.attr("name", "default");
@@ -99,42 +116,6 @@ public class Elements {
     }
   }
 
-  private static String soloParent(Environment env) {
-    final String parentVar;
-    if (env.elementAlone) {
-      parentVar = env.parentVariable;
-    } else {
-      parentVar = env.pool.ask();
-      env.writer.tab().append("var ").append(parentVar).append("=$.E('div');").newline();
-      env.writer.tab().append(env.parentVariable).append(".append(").append(parentVar).append(");").newline();
-    }
-    return parentVar;
-  }
-
-  public static void customdata(Environment env) {
-    ArrayList<String> parameters = new ArrayList<>();
-    for (Attribute attr : env.element.attributes()) {
-      if (attr.getKey().startsWith("parameter:")) {
-        parameters.add(attr.getKey());
-      }
-    }
-    RxObject obj = new RxObject(env, parameters.toArray(new String[parameters.size()]));
-    String sVar = env.pool.ask();
-    String parentVar = soloParent(env);
-
-    env.writer.tab().append("$.CUDA(") //
-        .append(parentVar) //
-        .append(",").append(env.stateVar) //
-        .append(",'").append(env.element.attr("src"))
-        .append("',").append(obj.rxObj) //
-        .append(",'").append(env.val("redirect", "/sign-in")) //
-        .append("',function(").append(sVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(sVar).parentVariable(parentVar));
-    env.writer.tabDown().tab().append("});").newline();
-    obj.finish();
-    env.pool.give(sVar);
-  }
-
   public static void pick(Environment env) {
     if (!env.element.hasAttr("name")) {
       env.element.attr("name", "default");
@@ -163,6 +144,33 @@ public class Elements {
     env.pool.give(childStateVar);
   }
 
+  public static void customdata(Environment env) {
+    ArrayList<String> parameters = new ArrayList<>();
+    for (Attribute attr : env.element.attributes()) {
+      if (attr.getKey().startsWith("parameter:")) {
+        parameters.add(attr.getKey());
+      }
+    }
+    RxObject obj = new RxObject(env, parameters.toArray(new String[parameters.size()]));
+    String sVar = env.pool.ask();
+    String parentVar = soloParent(env);
+
+    env.writer.tab().append("$.CUDA(") //
+        .append(parentVar) //
+        .append(",").append(env.stateVar) //
+        .append(",'").append(env.element.attr("src")).append("',").append(obj.rxObj) //
+        .append(",'").append(env.val("redirect", "/sign-in")) //
+        .append("',function(").append(sVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(sVar).parentVariable(parentVar));
+    env.writer.tabDown().tab().append("});").newline();
+    obj.finish();
+    env.pool.give(sVar);
+  }
+
+  public static void textarea(Environment env) {
+    input(env);
+  }
+
   public static void input(Environment env) {
     String inputVar = Base.write(env, true);
     if (env.element.hasAttr("rx:sync")) {
@@ -185,10 +193,6 @@ public class Elements {
       }
     }
     return 100;
-  }
-
-  public static void textarea(Environment env) {
-    input(env);
   }
 
   public static void select(Environment env) {

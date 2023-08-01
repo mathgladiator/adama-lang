@@ -13,13 +13,13 @@ import org.junit.Test;
 
 public class SimpleTests {
 
-  private static void drive(String rxhtml) {
-    System.err.println(RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().withFeedback((e, x) -> System.err.println(x)).end()));
-  }
-
   @Test
   public void emptyvalue() {
     drive("<template name=\"foo\">how<input checked /></template>");
+  }
+
+  private static void drive(String rxhtml) {
+    System.err.println(RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().withFeedback((e, x) -> System.err.println(x)).end()));
   }
 
   @Test

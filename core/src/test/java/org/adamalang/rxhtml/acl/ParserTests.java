@@ -8,21 +8,15 @@
  */
 package org.adamalang.rxhtml.acl;
 
-import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.acl.commands.*;
 import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.template.config.Feedback;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
 public class ParserTests {
-  private static void assertIs(Command command, String expected) {
-    Environment env = Environment.fresh(Feedback.NoOp);
-    command.write(env.stateVar("State"), "type", "DOM");
-    Assert.assertEquals(expected, env.writer.toString());
-  }
-
   @Test
   public void fragments() {
     ArrayList<String> f;
@@ -44,6 +38,12 @@ public class ParserTests {
   public void cmd_goto1() {
     Goto goto_ = (Goto) (Parser.parse("goto:/view/x-yz-{data}").get(0));
     assertIs(goto_, "var a = {};\n" + "$.YS(State,a,'data');\n" + "$.onGO(DOM,'type',State,function(){ return \"/view/x-yz-\" + a['data'];});\n");
+  }
+
+  private static void assertIs(Command command, String expected) {
+    Environment env = Environment.fresh(Feedback.NoOp);
+    command.write(env.stateVar("State"), "type", "DOM");
+    Assert.assertEquals(expected, env.writer.toString());
   }
 
   @Test

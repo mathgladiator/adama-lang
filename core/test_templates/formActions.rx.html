@@ -24,6 +24,12 @@
         <form rx:action="document:put" rx:failure="raise:fail te:msg">
             <input type="submit" />
         </form>
+        <form rx:action="document:put" rx:failure="raise:fail te:view:msg">
+            <input type="submit" />
+        </form>
+        <form rx:action="document:put" rx:failure="raise:fail te:data:msg">
+            <input type="submit" />
+        </form>
         <form rx:action="custom:foo">
             <input type="submit" />
         </form>

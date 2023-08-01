@@ -48,17 +48,15 @@ public class TokenStream {
           break;
         }
         case '}': {
-          switch (state) {
-            case PushVariable:
-              state = ScanState.Start;
-              operands.add(currentText.toString().trim());
-              currentText.setLength(0);
-              String base = operands.remove(0);
-              tokens.add(new Token(Type.Variable, base, operands.toArray(new String[operands.size()])));
-              operands.clear();
-              break;
-            default:
-              throw new UnsupportedOperationException("well, unexpected");
+          if (state == ScanState.PushVariable) {
+            state = ScanState.Start;
+            operands.add(currentText.toString().trim());
+            currentText.setLength(0);
+            String base = operands.remove(0);
+            tokens.add(new Token(Type.Variable, base, operands.toArray(new String[operands.size()])));
+            operands.clear();
+          } else {
+            throw new UnsupportedOperationException("well, unexpected");
           }
           break;
         }
@@ -81,17 +79,15 @@ public class TokenStream {
           break;
         }
         case ']': {
-          switch (state) {
-            case PushCondition:
-              state = ScanState.Start;
-              operands.add(currentText.toString().trim());
-              currentText.setLength(0);
-              String base = operands.remove(0);
-              tokens.add(new Token(Type.Condition, base, operands.toArray(new String[operands.size()])));
-              operands.clear();
-              break;
-            default:
-              throw new UnsupportedOperationException("well, unexpected");
+          if (state == ScanState.PushCondition) {
+            state = ScanState.Start;
+            operands.add(currentText.toString().trim());
+            currentText.setLength(0);
+            String base = operands.remove(0);
+            tokens.add(new Token(Type.Condition, base, operands.toArray(new String[operands.size()])));
+            operands.clear();
+          } else {
+            throw new UnsupportedOperationException("well, unexpected");
           }
           break;
         }
@@ -123,12 +119,10 @@ public class TokenStream {
       }
     }
     if (currentText.length() > 0) {
-      switch (state) {
-        case Text:
-          tokens.add(new Token(Type.Text, currentText.toString()));
-          break;
-        default:
-          throw new UnsupportedOperationException();
+      if (state == ScanState.Text) {
+        tokens.add(new Token(Type.Text, currentText.toString()));
+      } else {
+        throw new UnsupportedOperationException();
       }
     }
     return tokens;

@@ -400,11 +400,20 @@ public class DurableLivingDocument implements Queryable {
       removed.document.__removed();
       base.metrics.inflight_documents.down();
       if (getCurrentFactory().delete_on_close) {
-        base.service.delete(key, Callback.DONT_CARE_VOID);
+        executeDelete(Callback.DONT_CARE_VOID);
       } else {
         base.service.close(key, Callback.DONT_CARE_VOID);
       }
     }
+  }
+
+  private void executeDelete(Callback<Void> callback) {
+    /**
+     * the tricky thing here is for external resources like assets and replicated state.
+     * OK, so, here, we should introduce a deletion service where the FIRST thing is to simply mark for deletion.
+     * Then we have a function to do all the post delete work.
+     */
+    base.service.delete(key, callback);
   }
 
   public LivingDocumentFactory getCurrentFactory() {
@@ -649,7 +658,7 @@ public class DurableLivingDocument implements Queryable {
         }
       });
     } catch (PerformDocumentDeleteException destroy) {
-      base.service.delete(key, new Callback<>() {
+      executeDelete(new Callback<>() {
         @Override
         public void success(Void value) {
           base.executor.execute(new NamedRunnable("document-destroy-success") {

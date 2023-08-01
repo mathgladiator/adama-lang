@@ -12,7 +12,8 @@ import org.adamalang.rxhtml.template.Environment;
 
 /** Reset the form */
 public class Reset implements Command {
-  public Reset() {}
+  public Reset() {
+  }
 
   @Override
   public void write(Environment env, String type, String eVar) {
