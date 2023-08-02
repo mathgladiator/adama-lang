@@ -171,4 +171,10 @@ public class LibDate {
     LocalDate d = day.toLocalDate().plusMonths(offset);
     return new NtDate(d.getYear(), d.getMonthValue(), d.getDayOfMonth());
   }
+
+  @Extension
+  public static NtDate offsetDay(NtDate day, int offset) {
+    LocalDate d = day.toLocalDate().plusDays(offset);
+    return new NtDate(d.getYear(), d.getMonthValue(), d.getDayOfMonth());
+  }
 }
