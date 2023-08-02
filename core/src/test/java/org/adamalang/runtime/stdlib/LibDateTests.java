@@ -224,4 +224,25 @@ public class LibDateTests {
     Assert.assertEquals("2002-06-30", LibDate.offsetMonth(x, 23).toString());
     Assert.assertEquals("2002-08-31", LibDate.offsetMonth(x, 25).toString());
   }
+
+  @Test
+  public void offset_day_small() {
+    NtDate x = new NtDate(2000, 7, 31);
+    Assert.assertEquals("2000-07-30", LibDate.offsetDay(x, -1).toString());
+    Assert.assertEquals("2000-08-01", LibDate.offsetDay(x, 1).toString());
+  }
+
+  @Test
+  public void offset_day_medium() {
+    NtDate x = new NtDate(2023, 8, 1);
+    Assert.assertEquals("2023-07-25", LibDate.offsetDay(x, -7).toString());
+    Assert.assertEquals("2023-08-08", LibDate.offsetDay(x, 7).toString());
+  }
+
+  @Test
+  public void offset_day_large() {
+    NtDate x = new NtDate(2023, 8, 1);
+    Assert.assertEquals("2022-06-27", LibDate.offsetDay(x, -400).toString());
+    Assert.assertEquals("2024-09-04", LibDate.offsetDay(x, 400).toString());
+  }
 }
