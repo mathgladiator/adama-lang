@@ -12,6 +12,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class TokenStream {
+
+  private static void transferCharacter(StringBuilder currentText, int cp) {
+    currentText.append(Character.toString(cp));
+    if (cp == '\\') {
+      currentText.append(Character.toString(cp));
+    }
+  }
+
   public static ArrayList<Token> tokenize(String text) {
     ArrayList<Token> tokens = new ArrayList<>();
     StringBuilder currentText = new StringBuilder();
@@ -27,7 +35,7 @@ public class TokenStream {
             state = ScanState.Text;
           }
           cp = it.next();
-          currentText.append(Character.toString(cp));
+          transferCharacter(currentText, cp);
           break;
         case '{': {
           switch (state) {
@@ -41,9 +49,9 @@ public class TokenStream {
               state = ScanState.PushVariable;
               break;
             }
-            default: {
-              throw new UnsupportedOperationException("well, unexpected");
-            }
+            default:
+              transferCharacter(currentText, cp);
+              break;
           }
           break;
         }
@@ -56,7 +64,7 @@ public class TokenStream {
             tokens.add(new Token(Type.Variable, base, operands.toArray(new String[operands.size()])));
             operands.clear();
           } else {
-            throw new UnsupportedOperationException("well, unexpected");
+            transferCharacter(currentText, cp);
           }
           break;
         }
@@ -87,7 +95,7 @@ public class TokenStream {
             tokens.add(new Token(Type.Condition, base, operands.toArray(new String[operands.size()])));
             operands.clear();
           } else {
-            throw new UnsupportedOperationException("well, unexpected");
+            transferCharacter(currentText, cp);
           }
           break;
         }
@@ -99,7 +107,7 @@ public class TokenStream {
               currentText.setLength(0);
               break;
             default:
-              throw new UnsupportedOperationException();
+              transferCharacter(currentText, cp);
           }
           break;
         }
@@ -110,10 +118,7 @@ public class TokenStream {
               state = ScanState.Text;
             case PushVariable:
             case PushCondition:
-              currentText.append(Character.toString(cp)); // TODO: escape unicode characters
-              if (cp == '\\') {
-                currentText.append(Character.toString(cp));
-              }
+              transferCharacter(currentText, cp);
           }
         }
       }
