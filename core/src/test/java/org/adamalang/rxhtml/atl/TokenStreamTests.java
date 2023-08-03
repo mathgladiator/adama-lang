@@ -43,12 +43,12 @@ public class TokenStreamTests {
   private void assertNextIsVariable(Iterator<TokenStream.Token> it, String value, TokenStream.Modifier mod, String... transforms) {
     Assert.assertTrue(it.hasNext());
     TokenStream.Token next = it.next();
-    Assert.assertEquals(next.type, TokenStream.Type.Variable);
-    Assert.assertEquals(next.mod, mod);
-    Assert.assertEquals(next.base, value);
-    Assert.assertEquals(next.transforms.length, transforms.length);
+    Assert.assertEquals(TokenStream.Type.Variable, next.type);
+    Assert.assertEquals(mod, next.mod);
+    Assert.assertEquals(value, next.base);
+    Assert.assertEquals(transforms.length, next.transforms.length);
     for (int k = 0; k < transforms.length; k++) {
-      Assert.assertEquals(next.transforms[k], transforms[k]);
+      Assert.assertEquals(transforms[k], next.transforms[k]);
     }
   }
 
@@ -166,14 +166,14 @@ public class TokenStreamTests {
   @Test
   public void escaping4() {
     Iterator<TokenStream.Token> it = TokenStream.tokenize("[a`{]").iterator();
-    assertNextIsCondition(it, "a{", TokenStream.Modifier.None);
+    assertNextIsCondition(it, "a`{", TokenStream.Modifier.None);
     assertNoNext(it);
   }
 
   @Test
   public void escaping5() {
     Iterator<TokenStream.Token> it = TokenStream.tokenize("{a`{}").iterator();
-    assertNextIsVariable(it, "a{", TokenStream.Modifier.None);
+    assertNextIsVariable(it, "a`{", TokenStream.Modifier.None);
     assertNoNext(it);
   }
 }

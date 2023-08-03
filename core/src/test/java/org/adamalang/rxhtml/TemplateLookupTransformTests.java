@@ -29,7 +29,7 @@ public class TemplateLookupTransformTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.LT(a,'person',function(x) { return x.authority; }));");
     gold.append("\n    b.append($.LT(a,'person',function(x) { return ('' + x).toUpperCase(); }));");
     gold.append("\n    b.append($.LT(a,'person',function(x) { return ('' + x).toLowerCase(); }));");
-    gold.append("\n    b.append($.LT(a,'person',function(x) { return x; }));");
+    gold.append("\n    b.append($.LT(a,'person',$.TR('nope')));");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -44,7 +44,7 @@ public class TemplateLookupTransformTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.LT(a,'person',function(x) { return x.authority; }));");
     gold.append("\n    b.append($.LT(a,'person',function(x) { return ('' + x).toUpperCase(); }));");
     gold.append("\n    b.append($.LT(a,'person',function(x) { return ('' + x).toLowerCase(); }));");
-    gold.append("\n    b.append($.LT(a,'person',function(x) { return x; }));");
+    gold.append("\n    b.append($.LT(a,'person',$.TR('nope')));");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");

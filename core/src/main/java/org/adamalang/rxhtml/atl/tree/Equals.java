@@ -12,6 +12,7 @@ import org.adamalang.rxhtml.atl.Context;
 import org.adamalang.rxhtml.atl.Parser;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 /** a simple way of doing string equality */
 public class Equals implements Tree {
@@ -25,7 +26,10 @@ public class Equals implements Tree {
 
   @Override
   public Map<String, String> variables() {
-    return tree.variables();
+    TreeMap<String, String> union = new TreeMap<>();
+    union.putAll(tree.variables());
+    union.putAll(value.variables());
+    return union;
   }
 
   @Override

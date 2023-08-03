@@ -44,7 +44,6 @@ public class Parser {
       if (token.type == TokenStream.Type.Condition && token.base.equals(name.base)) {
         if (token.mod == TokenStream.Modifier.Else) {
           active = childrenFalse;
-          continue;
         } else if (token.mod == TokenStream.Modifier.End) {
           break;
         }

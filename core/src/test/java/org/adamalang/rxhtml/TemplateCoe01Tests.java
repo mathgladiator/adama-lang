@@ -33,6 +33,7 @@ public class TemplateCoe01Tests extends BaseRxHtmlTest {
     gold.append("\n        $.ACLASS(this.__dom,\" blad \" + (((this['c']==\" ' \" + this['id'] + \" ' \")) ? (\" block \") : (\" hidden \")));");
     gold.append("\n      }).bind(d);");
     gold.append("\n      $.Y($.pV(a),d,'c',e);");
+    gold.append("\n      $.Y(a,d,'id',e);");
     gold.append("\n      e();");
     gold.append("\n    }");
     gold.append("\n    b.append(c);");
@@ -54,6 +55,7 @@ public class TemplateCoe01Tests extends BaseRxHtmlTest {
     gold.append("\n        $.ACLASS(this.__dom,\" blad \" + (((this['c']==\" ' \" + this['id'] + \" ' \")) ? (\" block \") : (\" hidden \")));");
     gold.append("\n      }).bind(d);");
     gold.append("\n      $.Y($.pV(a),d,'c',e);");
+    gold.append("\n      $.Y(a,d,'id',e);");
     gold.append("\n      e();");
     gold.append("\n    }");
     gold.append("\n    b.append(c);");

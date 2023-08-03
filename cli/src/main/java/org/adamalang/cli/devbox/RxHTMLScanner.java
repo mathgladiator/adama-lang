@@ -19,6 +19,8 @@ import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.*;
@@ -30,6 +32,7 @@ import java.util.function.Consumer;
 
 /** this class will scan a directory for changes to .rx.html sources */
 public class RxHTMLScanner implements AutoCloseable {
+  private static final Logger LOG = LoggerFactory.getLogger(RxHTMLScanner.class);
   private final AtomicBoolean alive;
   private final TerminalIO io;
   private final File scanRoot;
@@ -142,22 +145,27 @@ public class RxHTMLScanner implements AutoCloseable {
                   io.notice("rxhtml|" + element.html());
                 }
               };
-              RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtml(scanRoot)), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
-              ObjectNode freq = Json.newJsonObject();
-              int opportunity = 0;
-              for (Map.Entry<String, Integer> e : updated.cssFreq.entrySet()) {
-                freq.put(e.getKey(), e.getValue());
-                if (e.getKey().length() > 3) { // assume we compact to a [a-z][a-z0-9]{2} namespace (26 * 36 * 36 = 33696 classes)
-                  opportunity += (e.getValue().intValue() * (e.getKey().length() - 3));
-                }
-              }
-              onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(updated), updated.javascript, updated.style));
-              io.notice("rxhtml|rebuilt; javascript-size=" + updated.javascript.length());
               try {
-                Files.writeString(new File("css.freq.json").toPath(), freq.toPrettyString());
-                io.info("rxhtml|css.freq.json built; opportunity=" + opportunity + " bytes");
+                RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtml(scanRoot)), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
+                ObjectNode freq = Json.newJsonObject();
+                int opportunity = 0;
+                for (Map.Entry<String, Integer> e : updated.cssFreq.entrySet()) {
+                  freq.put(e.getKey(), e.getValue());
+                  if (e.getKey().length() > 3) { // assume we compact to a [a-z][a-z0-9]{2} namespace (26 * 36 * 36 = 33696 classes)
+                    opportunity += (e.getValue().intValue() * (e.getKey().length() - 3));
+                  }
+                }
+                onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(updated), updated.javascript, updated.style));
+                io.notice("rxhtml|rebuilt; javascript-size=" + updated.javascript.length());
+                try {
+                  Files.writeString(new File("css.freq.json").toPath(), freq.toPrettyString());
+                  io.info("rxhtml|css.freq.json built; opportunity=" + opportunity + " bytes");
+                } catch (Exception ex) {
+                  io.error("rxhtml|css.freq.json failed to be built");
+                }
               } catch (Exception ex) {
-                io.error("rxhtml|css.freq.json failed to be built");
+                io.error("rxhtml|failed; check error log; reason=" + ex.getMessage());
+                LOG.error("rxhtml-build-failure", ex);
               }
             } while (again.get());
           } finally {
