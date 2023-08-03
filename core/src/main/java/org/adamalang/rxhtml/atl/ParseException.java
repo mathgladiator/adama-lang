@@ -8,12 +8,8 @@
  */
 package org.adamalang.rxhtml.atl;
 
-import org.junit.Test;
-
-public class COE1 {
-  @Test
-  public void test() throws Exception {
-    String txt = "blad [view:c='{id}'] block [#view:c='{id}'] hidden [/view:c='{id}']";
-    Parser.parse(txt);
+public class ParseException extends Exception {
+  public ParseException(String message) {
+    super(message);
   }
 }

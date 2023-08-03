@@ -9,13 +9,14 @@
 package org.adamalang.rxhtml.acl;
 
 import org.adamalang.rxhtml.acl.commands.*;
+import org.adamalang.rxhtml.atl.ParseException;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class Parser {
 
-  public static ArrayList<Command> parse(String command) {
+  public static ArrayList<Command> parse(String command) throws ParseException  {
     ArrayList<Command> commands = new ArrayList<>();
     for (String phrase : fragmentize(command)) {
       int kColon = phrase.indexOf(':');

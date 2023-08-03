@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 public class TokenStream {
 
-  public static ArrayList<Token> tokenize(String text) {
+  public static ArrayList<Token> tokenize(String text) throws ParseException {
     ArrayList<Token> tokens = new ArrayList<>();
     final StringBuilder currentText = new StringBuilder();
     ScanState state = ScanState.Text;
@@ -82,9 +82,17 @@ public class TokenStream {
           }
       }
     }
-    // TODO: issue a warning
-    cutText.run();
-    return tokens;
+    switch (state) {
+      case Condition:
+        throw new ParseException("condition token not closed");
+      case Variable:
+        throw new ParseException("variable token not closed");
+      case Escape:
+        throw new ParseException("big-escape (```) not closed off");
+      default:
+        cutText.run();
+        return tokens;
+    }
   }
 
   private static void transferCharacter(StringBuilder currentText, int cp) {

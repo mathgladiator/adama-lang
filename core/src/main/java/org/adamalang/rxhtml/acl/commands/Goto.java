@@ -8,6 +8,7 @@
  */
 package org.adamalang.rxhtml.acl.commands;
 
+import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.template.Environment;
@@ -18,18 +19,20 @@ import java.util.Map;
 
 /** send the view to another page within the forest */
 public class Goto implements Command {
-  public final String value;
+  public final String raw;
+  public final Tree value;
 
-  public Goto(String value) {
-    this.value = value;
+  public Goto(String value) throws ParseException {
+    this.raw = value;
+    this.value = Parser.parse(value);
   }
 
   @Override
   public void write(Environment env, String type, String eVar) {
-    Tree tree = Parser.parse(value);
-    Map<String, String> vars = tree.variables();
+
+    Map<String, String> vars = value.variables();
     if (vars.size() == 0) {
-      env.writer.tab().append("$.onGO(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(",").append(Escapes.constantOf(value)).append(");").newline();
+      env.writer.tab().append("$.onGO(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(",").append(Escapes.constantOf(raw)).append(");").newline();
     } else {
       var oVar = env.pool.ask();
       env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
@@ -37,7 +40,7 @@ public class Goto implements Command {
         StatePath pathVar = StatePath.resolve(ve.getValue(), env.stateVar);
         env.writer.tab().append("$.YS(").append(pathVar.command).append(",").append(oVar).append(",'").append(pathVar.name).append("');").newline();
       }
-      env.writer.tab().append("$.onGO(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(",function(){ return ").append(tree.js(env.contextOf("event:" + type), oVar)).append(";});").newline();
+      env.writer.tab().append("$.onGO(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(",function(){ return ").append(value.js(env.contextOf("event:" + type), oVar)).append(";});").newline();
     }
   }
 }

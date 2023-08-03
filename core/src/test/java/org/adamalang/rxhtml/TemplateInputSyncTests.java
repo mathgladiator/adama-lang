@@ -16,7 +16,7 @@ public class TemplateInputSyncTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
-    issues.append("WARNING:zoop should be a numeric value");
+    issues.append("WARNING:/:zoop should be a numeric value");
     return issues.toString();
   }
   @Override

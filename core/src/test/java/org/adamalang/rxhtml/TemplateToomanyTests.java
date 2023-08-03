@@ -16,7 +16,7 @@ public class TemplateToomanyTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
-    issues.append("WARNING:Too many incompatible rx:flags");
+    issues.append("WARNING:/:Too many incompatible rx:flags");
     return issues.toString();
   }
   @Override

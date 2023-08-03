@@ -8,6 +8,7 @@
  */
 package org.adamalang.rxhtml.acl.commands;
 
+import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.template.Environment;
@@ -20,21 +21,22 @@ import java.util.Map;
 public class Set implements Command {
   public String path;
   public String value;
+  public Tree tree;
 
-  public Set(String path, String value) {
+  public Set(String path, String value) throws ParseException {
     if (path.startsWith("view:") | path.startsWith("data:")) {
       this.path = path;
     } else {
       this.path = "view:" + path;
     }
     this.value = value;
+    this.tree = Parser.parse(value);
   }
-
 
   @Override
   public void write(Environment env, String type, String eVar) {
     StatePath pathSet = StatePath.resolve(this.path, env.stateVar);
-    Tree tree = Parser.parse(value);
+
     Map<String, String> vars = tree.variables();
     if (vars.size() == 0) {
       env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',").append(Escapes.constantOf(value)).append(");").newline();

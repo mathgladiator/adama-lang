@@ -9,6 +9,7 @@
 package org.adamalang.rxhtml.template;
 
 import org.adamalang.rxhtml.acl.commands.Command;
+import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.jsoup.nodes.Attribute;
@@ -144,27 +145,31 @@ public class Attributes {
         continue;
       }
       if (attr.hasDeclaredValue()) {
-        Tree tree = Parser.parse(attr.getValue());
-        Map<String, String> vars = tree.variables();
-        if (vars.size() > 0) {
-          var oVar = env.pool.ask();
-          var computeFoo = env.pool.ask();
-          env.writer.tab().append("{").tabUp().newline();
-          env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
-          env.writer.tab().append(oVar).append(".__dom = ").append(eVar).append(";").newline();
-          env.writer.tab().append("var ").append(computeFoo).append(" = (function() {").tabUp().newline();
-          writeDomSetter("this.__dom", attr.getKey(), tree.js(env.contextOf(attr.getKey()), "this"));
-          env.writer.tabDown().tab().append("}).bind(").append(oVar).append(");").newline();
-          for (Map.Entry<String, String> ve : vars.entrySet()) {
-            StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);
-            env.writer.tab().append("$.Y(").append(path.command).append(",").append(oVar).append(",'").append(path.name).append("',").append(computeFoo).append(");").newline();
+        try {
+          Tree tree = Parser.parse(attr.getValue());
+          Map<String, String> vars = tree.variables();
+          if (vars.size() > 0) {
+            var oVar = env.pool.ask();
+            var computeFoo = env.pool.ask();
+            env.writer.tab().append("{").tabUp().newline();
+            env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
+            env.writer.tab().append(oVar).append(".__dom = ").append(eVar).append(";").newline();
+            env.writer.tab().append("var ").append(computeFoo).append(" = (function() {").tabUp().newline();
+            writeDomSetter("this.__dom", attr.getKey(), tree.js(env.contextOf(attr.getKey()), "this"));
+            env.writer.tabDown().tab().append("}).bind(").append(oVar).append(");").newline();
+            for (Map.Entry<String, String> ve : vars.entrySet()) {
+              StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);
+              env.writer.tab().append("$.Y(").append(path.command).append(",").append(oVar).append(",'").append(path.name).append("',").append(computeFoo).append(");").newline();
+            }
+            env.pool.give(oVar);
+            env.pool.give(computeFoo);
+            env.writer.tab().append(computeFoo).append("();").newline();
+            env.writer.tabDown().tab().append("}").newline();
+          } else {
+            writeDomSetter(eVar, attr.getKey(), tree.js(env.contextOf(attr.getKey()), "this"));
           }
-          env.pool.give(oVar);
-          env.pool.give(computeFoo);
-          env.writer.tab().append(computeFoo).append("();").newline();
-          env.writer.tabDown().tab().append("}").newline();
-        } else {
-          writeDomSetter(eVar, attr.getKey(), tree.js(env.contextOf(attr.getKey()), "this"));
+        } catch (ParseException pe) {
+          env.feedback.warn(env.element, "has parser problems, attr=" + attr.getKey() + "; problem=" + pe.getMessage());
         }
       } else {
         writeDomSetter(eVar, attr.getKey(), "true");
@@ -191,10 +196,14 @@ public class Attributes {
   }
 
   public void _event(String event) {
-    env.pool.ask();
-    ArrayList<Command> commands = org.adamalang.rxhtml.acl.Parser.parse(env.element.attr("rx:" + event));
-    for (Command command : commands) {
-      command.write(env, event, eVar);
+    try {
+      ArrayList<Command> commands = org.adamalang.rxhtml.acl.Parser.parse(env.element.attr("rx:" + event));
+      env.pool.ask();
+      for (Command command : commands) {
+        command.write(env, event, eVar);
+      }
+    } catch (ParseException ex) {
+      env.feedback.warn(env.element, "event '" + event + "' has parser problems:" + ex.getMessage());
     }
   }
 

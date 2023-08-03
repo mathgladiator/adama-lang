@@ -108,6 +108,10 @@ public class Environment {
     return new Environment(this, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
   }
 
+  public Environment feedback(Feedback feedback) {
+    return new Environment(this, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+  }
+
   public Context contextOf(String attr) {
     if ("class".equals(attr)) {
       return classContext;

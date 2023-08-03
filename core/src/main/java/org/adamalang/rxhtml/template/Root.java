@@ -8,8 +8,10 @@
  */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
+import org.adamalang.rxhtml.template.config.Feedback;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,8 +31,10 @@ public class Root {
     String parentVar = env.pool.ask();
     String stateVar = env.pool.ask();
     String fragmentFunc = env.pool.ask();
-    env.writer.tab().append("$.TP('").append(env.element.attr("name")).append("', function(").append(parentVar).append(",").append(stateVar).append(",").append(fragmentFunc).append(") {").newline().tabUp();
-    Base.children(env.stateVar(stateVar).parentVariable(parentVar).fragmentFunc(fragmentFunc));
+    String name = env.element.attr("name");
+    env.writer.tab().append("$.TP('").append(name).append("', function(").append(parentVar).append(",").append(stateVar).append(",").append(fragmentFunc).append(") {").newline().tabUp();
+    Feedback feedback = env.feedback;
+    Base.children(env.stateVar(stateVar).parentVariable(parentVar).fragmentFunc(fragmentFunc).feedback((e, msg) -> feedback.warn(e, "template " + name + ":" + msg)));
     env.pool.give(parentVar);
     env.pool.give(stateVar);
     env.pool.give(fragmentFunc);
@@ -41,7 +45,8 @@ public class Root {
     String stateVar = env.pool.ask();
     String rootVar = env.pool.ask();
     Environment envToUse = env.parentVariable(rootVar).stateVar(stateVar);
-    Instructions instructions = uri_to_instructions(env.element.attr("uri"));
+    String uri = env.element.attr("uri");
+    Instructions instructions = uri_to_instructions(uri);
     env.writer.tab().append("$.PG(").append(instructions.javascript).append(", function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();
     if (env.element.hasAttr("authenticate")) {
       String identity = env.element.attr("authenticate");
@@ -60,23 +65,27 @@ public class Root {
       String pullArgs = null;
       for (String redirect : failAuthRedirects) {
         // parse the redirect
-        Tree tree = Parser.parse(redirect);
-        Map<String, String> vars = tree.variables();
-        if (vars.size() == 0) {
-          zeroArgs = "$.aRDz('" + redirect + "');";
-        } else {
-          boolean hasAll = true;
-          ArrayList<String> varsToPullFromView = new ArrayList<>();
-          for (String key : vars.keySet()) {
-            varsToPullFromView.add("'" + key + "'");
-            if (!instructions.depends.contains(key)) {
-              hasAll = false;
-              break;
+        try {
+          Tree tree = Parser.parse(redirect);
+          Map<String, String> vars = tree.variables();
+          if (vars.size() == 0) {
+            zeroArgs = "$.aRDz('" + redirect + "');";
+          } else {
+            boolean hasAll = true;
+            ArrayList<String> varsToPullFromView = new ArrayList<>();
+            for (String key : vars.keySet()) {
+              varsToPullFromView.add("'" + key + "'");
+              if (!instructions.depends.contains(key)) {
+                hasAll = false;
+                break;
+              }
+            }
+            if (hasAll) {
+              pullArgs = "$.aRDp(" + stateVar + ", function(vs) { return " + tree.js(env.contextOf("initial-view-state"), "vs") + "; });";
             }
           }
-          if (hasAll) {
-            pullArgs = "$.aRDp(" + stateVar + ", function(vs) { return " + tree.js(env.contextOf("initial-view-state"), "vs") + "; });";
-          }
+        } catch (ParseException pe) {
+          env.feedback.warn(env.element, "redirect '" + redirect + "' has parser problems; " + pe.getMessage());
         }
       }
       env.writer.tab().append("var ").append(varForAuthTest).append(" = ");
@@ -91,7 +100,8 @@ public class Root {
       env.pool.give(varForAuthTest);
 
     }
-    Base.children(envToUse);
+    Feedback prior = env.feedback;
+    Base.children(envToUse.feedback((e, msg) -> prior.warn(e, uri + ":" + msg)));
     env.writer.tabDown().tab().append("});").newline();
     env.pool.give(rootVar);
     env.pool.give(stateVar);
