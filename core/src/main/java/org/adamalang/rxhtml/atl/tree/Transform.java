@@ -9,7 +9,6 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import org.adamalang.rxhtml.atl.Context;
-import org.adamalang.rxhtml.template.Transforms;
 
 import java.util.Map;
 
@@ -36,6 +35,6 @@ public class Transform implements Tree {
 
   @Override
   public String js(Context context, String env) {
-    return "(" + Transforms.of(transform) + ")(" + base.js(context, env) + ")";
+    return "($.TR('" + transform + "'))(" + base.js(context, env) + ")";
   }
 }

@@ -1876,6 +1876,14 @@ var RxHTML = (function () {
   // transform = format_date_usa
 
   var transforms = {};
+  transforms['principal.agent'] = function(x) { return x.agent; };
+  transforms['principal.authority'] = function(x) { return x.authority; };
+  transforms['trim'] = function(x) { return ('' + x).trim(); };
+  transforms['upper'] = function(x) { return ('' + x).toUpperCase(); };
+  transforms['lower'] = function(x) { return ('' + x).toLowerCase(); };
+  transforms['is_empty_str'] = function(x) { return x == ""; };
+  transforms['is_not_empty_str'] = function(x) { return x != ""; };
+  transforms['jsonify'] = function(x) { return JSON.stringify(x); };
 
   self.RTR = function(name, transform) {
     transforms[name] = transform;
