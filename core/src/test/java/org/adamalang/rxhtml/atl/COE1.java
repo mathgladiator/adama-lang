@@ -6,8 +6,14 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.rxhtml.atl;
 
-public class Platform {
-  public static final String VERSION = "20230803135033";
+import org.junit.Test;
+
+public class COE1 {
+  @Test
+  public void test() {
+    String txt = "blad [view:c='{id}'] block [#view:c='{id}'] hidden [/view:c='{id}']";
+    Parser.parse(txt);
+  }
 }

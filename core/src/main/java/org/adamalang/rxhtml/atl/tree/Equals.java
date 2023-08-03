@@ -9,17 +9,18 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import org.adamalang.rxhtml.atl.Context;
+import org.adamalang.rxhtml.atl.Parser;
 
 import java.util.Map;
 
 /** a simple way of doing string equality */
 public class Equals implements Tree {
   public final Tree tree;
-  public final String value;
+  public final Tree value;
 
   public Equals(Tree tree, String value) {
     this.tree = tree;
-    this.value = value;
+    this.value = Parser.parse(value);
   }
 
   @Override
@@ -34,6 +35,6 @@ public class Equals implements Tree {
 
   @Override
   public String js(Context context, String env) {
-    return "(" + tree.js(context, env) + "=='" + value + "')";
+    return "(" + tree.js(context, env) + "==" + value.js(context, env) + ")";
   }
 }
