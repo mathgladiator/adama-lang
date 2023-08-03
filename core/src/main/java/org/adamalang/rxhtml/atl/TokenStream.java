@@ -13,13 +13,6 @@ import java.util.Iterator;
 
 public class TokenStream {
 
-  private static void transferCharacter(StringBuilder currentText, int cp) {
-    currentText.append(Character.toString(cp));
-    if (cp == '\\') {
-      currentText.append(Character.toString(cp));
-    }
-  }
-
   public static ArrayList<Token> tokenize(String text) {
     ArrayList<Token> tokens = new ArrayList<>();
     final StringBuilder currentText = new StringBuilder();
@@ -46,7 +39,7 @@ public class TokenStream {
       switch (state) {
         case Text:
           if (cp == '`') {
-            if(it.hasNext()) {
+            if (it.hasNext()) {
               cp = it.next();
               if (cp == '`') {
                 state = ScanState.Escape;
@@ -94,6 +87,13 @@ public class TokenStream {
     return tokens;
   }
 
+  private static void transferCharacter(StringBuilder currentText, int cp) {
+    currentText.append(Character.toString(cp));
+    if (cp == '\\') {
+      currentText.append(Character.toString(cp));
+    }
+  }
+
   private enum ScanState {
     Text(' ', Type.Text), //
     Variable('}', Type.Variable), //
@@ -102,7 +102,8 @@ public class TokenStream {
 
     public final char end;
     public final Type type;
-    private ScanState(char end, Type type) {
+
+    ScanState(char end, Type type) {
       this.end = end;
       this.type = type;
     }
