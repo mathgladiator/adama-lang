@@ -8,7 +8,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateTransformsTests extends BaseRxHtmlTest {
+public class TemplateCustomTransformsTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -29,13 +29,13 @@ public class TemplateTransformsTests extends BaseRxHtmlTest {
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
     gold.append("\n      var e = (function() {");
-    gold.append("\n        this.__dom.value=(function(x) { return x.agent; })(this['x']);");
+    gold.append("\n        this.__dom.value=($.TR('format_date_usa'))(this['x']);");
     gold.append("\n      }).bind(d);");
     gold.append("\n      $.Y(a,d,'x',e);");
     gold.append("\n      e();");
     gold.append("\n    }");
     gold.append("\n    b.append(c);");
-    gold.append("\n    b.append($.LT(a,'x',function(x) { return x.agent; }));");
+    gold.append("\n    b.append($.LT(a,'x',$.TR('format_date_usa')));");
     gold.append("\n    var c = $.E('span');");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
@@ -52,13 +52,13 @@ public class TemplateTransformsTests extends BaseRxHtmlTest {
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
     gold.append("\n      var e = (function() {");
-    gold.append("\n        this.__dom.value=(function(x) { return x.agent; })(this['x']);");
+    gold.append("\n        this.__dom.value=($.TR('format_date_usa'))(this['x']);");
     gold.append("\n      }).bind(d);");
     gold.append("\n      $.Y(a,d,'x',e);");
     gold.append("\n      e();");
     gold.append("\n    }");
     gold.append("\n    b.append(c);");
-    gold.append("\n    b.append($.LT(a,'x',function(x) { return x.agent; }));");
+    gold.append("\n    b.append($.LT(a,'x',$.TR('format_date_usa')));");
     gold.append("\n    var c = $.E('span');");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
@@ -77,8 +77,8 @@ public class TemplateTransformsTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <input value=\"{x|principal.agent}\" />");
-    source.append("\n        <lookup path=\"x\" transform=\"principal.agent\" />");
+    source.append("\n        <input value=\"{x|format_date_usa}\" />");
+    source.append("\n        <lookup path=\"x\" transform=\"format_date_usa\" />");
     source.append("\n        <span></span>");
     source.append("\n    </page>");
     source.append("\n</forest>");

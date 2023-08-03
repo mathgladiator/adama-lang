@@ -8,7 +8,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateTransformsTests extends BaseRxHtmlTest {
+public class TemplateBigAttrEscapeTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -24,19 +24,17 @@ public class TemplateTransformsTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c = $.E('input');");
-    gold.append("\n    {");
-    gold.append("\n      var d = {};");
-    gold.append("\n      d.__dom = c;");
-    gold.append("\n      var e = (function() {");
-    gold.append("\n        this.__dom.value=(function(x) { return x.agent; })(this['x']);");
-    gold.append("\n      }).bind(d);");
-    gold.append("\n      $.Y(a,d,'x',e);");
-    gold.append("\n      e();");
-    gold.append("\n    }");
+    gold.append("\n    var c = $.E('div');");
+    gold.append("\n    $.ACLASS(c,\" foo[50px] {id} \");");
+    gold.append("\n    c.append($.T(' A big escape '));");
     gold.append("\n    b.append(c);");
-    gold.append("\n    b.append($.LT(a,'x',function(x) { return x.agent; }));");
-    gold.append("\n    var c = $.E('span');");
+    gold.append("\n    var c = $.E('div');");
+    gold.append("\n    c.setAttribute('attr',\"{}\");");
+    gold.append("\n    c.append($.T(' A single escape for { '));");
+    gold.append("\n    b.append(c);");
+    gold.append("\n    var c = $.E('div');");
+    gold.append("\n    c.setAttribute('attr',\"[]\");");
+    gold.append("\n    c.append($.T(' A single escape for [ '));");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -47,19 +45,17 @@ public class TemplateTransformsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c = $.E('input');");
-    gold.append("\n    {");
-    gold.append("\n      var d = {};");
-    gold.append("\n      d.__dom = c;");
-    gold.append("\n      var e = (function() {");
-    gold.append("\n        this.__dom.value=(function(x) { return x.agent; })(this['x']);");
-    gold.append("\n      }).bind(d);");
-    gold.append("\n      $.Y(a,d,'x',e);");
-    gold.append("\n      e();");
-    gold.append("\n    }");
+    gold.append("\n    var c = $.E('div');");
+    gold.append("\n    $.ACLASS(c,\" foo[50px] {id} \");");
+    gold.append("\n    c.append($.T(' A big escape '));");
     gold.append("\n    b.append(c);");
-    gold.append("\n    b.append($.LT(a,'x',function(x) { return x.agent; }));");
-    gold.append("\n    var c = $.E('span');");
+    gold.append("\n    var c = $.E('div');");
+    gold.append("\n    c.setAttribute('attr',\"{}\");");
+    gold.append("\n    c.append($.T(' A single escape for { '));");
+    gold.append("\n    b.append(c);");
+    gold.append("\n    var c = $.E('div');");
+    gold.append("\n    c.setAttribute('attr',\"[]\");");
+    gold.append("\n    c.append($.T(' A single escape for [ '));");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -77,9 +73,15 @@ public class TemplateTransformsTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <input value=\"{x|principal.agent}\" />");
-    source.append("\n        <lookup path=\"x\" transform=\"principal.agent\" />");
-    source.append("\n        <span></span>");
+    source.append("\n        <div class=\"`` foo[50px] {id} `\">");
+    source.append("\n            A big escape");
+    source.append("\n        </div>");
+    source.append("\n        <div attr=\"`{}\">");
+    source.append("\n            A single escape for {");
+    source.append("\n        </div>");
+    source.append("\n        <div attr=\"`[]\">");
+    source.append("\n            A single escape for [");
+    source.append("\n        </div>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

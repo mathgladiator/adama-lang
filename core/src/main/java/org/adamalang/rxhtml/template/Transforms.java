@@ -12,7 +12,8 @@ import java.util.Locale;
 
 public class Transforms {
   public static String of(String transform) {
-    switch (transform.trim().toLowerCase(Locale.ROOT)) {
+    String fixed = transform.trim().toLowerCase(Locale.ROOT);
+    switch (fixed) {
       case "principal.agent":
         return "function(x) { return x.agent; }";
       case "principal.authority":
@@ -24,9 +25,7 @@ public class Transforms {
       case "lower":
         return "function(x) { return ('' + x).toLowerCase(); }";
       default:
-        return "function(x) { return x; }";
-      case "format_date_usa":
-        return "$.fdusa";
+        return "$.TR('" + transform + "')";
     }
   }
 }

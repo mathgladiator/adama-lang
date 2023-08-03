@@ -1875,12 +1875,27 @@ var RxHTML = (function () {
   };
   // transform = format_date_usa
 
-  self.fdusa = function(str) {
-    // TODO: detect date-time --> convert
-    // TODO: detect just data -> convert
-    // TODO: log a warning and return the string
-    return "USA[" + str + "]";
+  var transforms = {};
+
+  self.RTR = function(name, transform) {
+    transforms[name] = transform;
   };
+  self.registerTransform = self.RTR;
+
+  // {blah|name}
+  self.TR = function(name) {
+    if (name in transforms) {
+      return transforms[name];
+    }
+    return function(x) { return x; };
+  };
+
+  // TODO
+  var validators = {};
+  self.RV = function(name, validator) {
+    validators[name] = validator;
+  };
+  self.registerValidator = self.RV;
 
   var commonPut = function (form, state, identityName, rxobj, urlfactory) {
     // WIP

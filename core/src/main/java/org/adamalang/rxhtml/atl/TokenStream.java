@@ -22,119 +22,90 @@ public class TokenStream {
 
   public static ArrayList<Token> tokenize(String text) {
     ArrayList<Token> tokens = new ArrayList<>();
-    StringBuilder currentText = new StringBuilder();
-    ScanState state = ScanState.Start;
+    final StringBuilder currentText = new StringBuilder();
+    ScanState state = ScanState.Text;
     Iterator<Integer> it = text.codePoints().iterator();
     ArrayList<String> operands = new ArrayList<>();
 
+    Runnable cutText = () -> {
+      String result = currentText.toString();
+      if (result.length() > 0) {
+        currentText.setLength(0);
+        tokens.add(new Token(Type.Text, result));
+      }
+    };
+
+    Runnable cutOperand = () -> {
+      String result = currentText.toString().trim();
+      currentText.setLength(0);
+      operands.add(result);
+    };
+
     while (it.hasNext()) {
       int cp = it.next();
-      switch (cp) {
-        case '`':
-          if (state == ScanState.Start) {
+      switch (state) {
+        case Text:
+          if (cp == '`') {
+            if(it.hasNext()) {
+              cp = it.next();
+              if (cp == '`') {
+                state = ScanState.Escape;
+                break;
+              }
+            }
+            transferCharacter(currentText, cp);
+          } else if (cp == '[') {
+            cutText.run();
+            state = ScanState.Condition;
+          } else if (cp == '{') {
+            cutText.run();
+            state = ScanState.Variable;
+          } else {
+            transferCharacter(currentText, cp);
+          }
+          break;
+        case Escape:
+          if (cp == state.end) {
+            cutText.run();
             state = ScanState.Text;
-          }
-          cp = it.next();
-          transferCharacter(currentText, cp);
-          break;
-        case '{': {
-          switch (state) {
-            case Text: {
-              tokens.add(new Token(Type.Text, currentText.toString()));
-              currentText.setLength(0);
-              state = ScanState.PushVariable;
-              break;
-            }
-            case Start: {
-              state = ScanState.PushVariable;
-              break;
-            }
-            default:
-              transferCharacter(currentText, cp);
-              break;
-          }
-          break;
-        }
-        case '}': {
-          if (state == ScanState.PushVariable) {
-            state = ScanState.Start;
-            operands.add(currentText.toString().trim());
-            currentText.setLength(0);
-            String base = operands.remove(0);
-            tokens.add(new Token(Type.Variable, base, operands.toArray(new String[operands.size()])));
-            operands.clear();
           } else {
             transferCharacter(currentText, cp);
           }
           break;
-        }
-        case '[': {
-          switch (state) {
-            case Text: {
-              tokens.add(new Token(Type.Text, currentText.toString()));
-              currentText.setLength(0);
-              state = ScanState.PushCondition;
-              break;
+        case Condition:
+        case Variable:
+          if (cp == state.end) {
+            cutOperand.run();
+            if (operands.size() > 0) {
+              String base = operands.remove(0);
+              tokens.add(new Token(state.type, base, operands.toArray(new String[operands.size()])));
+              operands.clear();
             }
-            case Start: {
-              state = ScanState.PushCondition;
-              break;
-            }
-            default: {
-              throw new UnsupportedOperationException("well, unexpected");
-            }
-          }
-          break;
-        }
-        case ']': {
-          if (state == ScanState.PushCondition) {
-            state = ScanState.Start;
-            operands.add(currentText.toString().trim());
-            currentText.setLength(0);
-            String base = operands.remove(0);
-            tokens.add(new Token(Type.Condition, base, operands.toArray(new String[operands.size()])));
-            operands.clear();
+            state = ScanState.Text;
+          } else if (cp == '|') {
+            cutOperand.run();
           } else {
             transferCharacter(currentText, cp);
           }
-          break;
-        }
-        case '|': {
-          switch (state) {
-            case PushCondition:
-            case PushVariable:
-              operands.add(currentText.toString().trim());
-              currentText.setLength(0);
-              break;
-            default:
-              transferCharacter(currentText, cp);
-          }
-          break;
-        }
-        default: {
-          switch (state) {
-            case Start:
-            case Text:
-              state = ScanState.Text;
-            case PushVariable:
-            case PushCondition:
-              transferCharacter(currentText, cp);
-          }
-        }
       }
     }
-    if (currentText.length() > 0) {
-      if (state == ScanState.Text) {
-        tokens.add(new Token(Type.Text, currentText.toString()));
-      } else {
-        throw new UnsupportedOperationException();
-      }
-    }
+    // TODO: issue a warning
+    cutText.run();
     return tokens;
   }
 
   private enum ScanState {
-    Start, Text, PushVariable, PushCondition,
+    Text(' ', Type.Text), //
+    Variable('}', Type.Variable), //
+    Condition(']', Type.Condition), //
+    Escape('`', Type.Text); //
+
+    public final char end;
+    public final Type type;
+    private ScanState(char end, Type type) {
+      this.end = end;
+      this.type = type;
+    }
   }
 
   public enum Type {
