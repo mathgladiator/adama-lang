@@ -40,7 +40,7 @@ public class Elements {
     if (transform == null || "".equals(transform)) {
       env.writer.tab().append(env.parentVariable).append(".append($.L(").append(path.command).append(",'").append(path.name).append("'));").newline();
     } else {
-      env.writer.tab().append(env.parentVariable).append(".append($.LT(").append(path.command).append(",'").append(path.name).append("',").append(Transforms.of(transform)).append("));").newline();
+      env.writer.tab().append(env.parentVariable).append(".append($.LT(").append(path.command).append(",'").append(path.name).append("',$.TR('").append(transform).append("')));").newline();
     }
   }
 

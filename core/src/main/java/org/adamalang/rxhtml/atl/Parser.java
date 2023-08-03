@@ -35,14 +35,17 @@ public class Parser {
     }
   }
 
-  private static Tree condition(Iterator<TokenStream.Token> it, TokenStream.Token name) {
+  private static Tree condition(Iterator<TokenStream.Token> it, TokenStream.Token conditionStart) {
     ArrayList<Tree> childrenTrue = new ArrayList<>();
     ArrayList<Tree> childrenFalse = new ArrayList<>();
     ArrayList<Tree> active = childrenTrue;
+
     while (it.hasNext()) {
       TokenStream.Token token = it.next();
-      if (token.type == TokenStream.Type.Condition && token.base.equals(name.base)) {
-        if (token.mod == TokenStream.Modifier.Else) {
+      if (token.type == TokenStream.Type.Condition) {
+        if (token.mod == TokenStream.Modifier.None) {
+          route(active, it, token);
+        } else if (token.mod == TokenStream.Modifier.Else) {
           active = childrenFalse;
         } else if (token.mod == TokenStream.Modifier.End) {
           break;
@@ -51,15 +54,20 @@ public class Parser {
         route(active, it, token);
       }
     }
+
     Tree lookup;
-    if (name.base.contains("=")) {
-      String[] parts = name.base.split(Pattern.quote("="));
+    if (conditionStart.base.contains("=")) {
+      String[] parts = conditionStart.base.split(Pattern.quote("="));
       lookup = new Equals(new Lookup(parts[0].trim()), parts[1].trim());
     } else {
-      lookup = new Lookup(name.base);
+      lookup = new Lookup(conditionStart.base);
     }
-    Tree guard_lookup = wrapTransforms(lookup, name);
-    return new Condition(name.mod == TokenStream.Modifier.Not ? new Negate(guard_lookup) : guard_lookup, of(childrenTrue), of(childrenFalse));
+
+    Tree guard = wrapTransforms(lookup, conditionStart);
+    if (conditionStart.mod == TokenStream.Modifier.Not) {
+      guard = new Negate(guard);
+    }
+    return new Condition(guard, of(childrenTrue), of(childrenFalse));
   }
 
   private static void route(ArrayList<Tree> children, Iterator<TokenStream.Token> it, TokenStream.Token token) {
