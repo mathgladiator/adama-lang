@@ -9,6 +9,7 @@
 package org.adamalang.rxhtml.template;
 
 import org.adamalang.common.Escaping;
+import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.jsoup.nodes.Attribute;
@@ -40,14 +41,18 @@ public class RxObject {
       }
       nameToUse = nameToUse.replaceAll(Pattern.quote(":"), "_");
       if (env.element.hasAttr(attrName)) {
-        Tree tree = Parser.parse(env.element.attr(attrName));
-        if (tree.variables().size() > 0) {
-          if (!addedUnder) {
-            addedUnder = true;
-          } else {
-            env.writer.append(",");
+        try {
+          Tree tree = Parser.parse(env.element.attr(attrName));
+          if (tree.variables().size() > 0) {
+            if (!addedUnder) {
+              addedUnder = true;
+            } else {
+              env.writer.append(",");
+            }
+            env.writer.append("'").append(nameToUse).append("'");
           }
-          env.writer.append("'").append(nameToUse).append("'");
+        } catch (ParseException pe) {
+          env.feedback.warn(env.element, "attribute '" + attrName + "' has parser errors; " + pe.getMessage());
         }
       }
     }
@@ -60,21 +65,25 @@ public class RxObject {
       nameToUse = nameToUse.replaceAll(Pattern.quote(":"), "_");
       if (env.element.hasAttr(attrName)) {
         String value = env.element.attr(attrName);
-        Tree tree = Parser.parse(value);
-        Map<String, String> vars = tree.variables();
-        if (vars.size() > 0) {
-          for (Map.Entry<String, String> ve : vars.entrySet()) {
-            StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);
-            String subItem = env.pool.ask();
-            env.writer.tab().append("$.Y2(").append(path.command).append(",").append(rxObj).append(",'").append(nameToUse).append("','").append(path.name).append("',").append("function(").append(subItem).append(") {").tabUp().newline();
-            env.writer.tab().append(rxObj).append(".").append(nameToUse).append("=").append(tree.js(env.contextOf(attrName), subItem)).newline();
-            env.writer.tab().append(rxObj).append(".__();").tabDown().newline();
-            env.writer.tab().append("});").newline();
-            env.pool.give(subItem);
+        try {
+          Tree tree = Parser.parse(value);
+          Map<String, String> vars = tree.variables();
+          if (vars.size() > 0) {
+            for (Map.Entry<String, String> ve : vars.entrySet()) {
+              StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);
+              String subItem = env.pool.ask();
+              env.writer.tab().append("$.Y2(").append(path.command).append(",").append(rxObj).append(",'").append(nameToUse).append("','").append(path.name).append("',").append("function(").append(subItem).append(") {").tabUp().newline();
+              env.writer.tab().append(rxObj).append(".").append(nameToUse).append("=").append(tree.js(env.contextOf(attrName), subItem)).newline();
+              env.writer.tab().append(rxObj).append(".__();").tabDown().newline();
+              env.writer.tab().append("});").newline();
+              env.pool.give(subItem);
+            }
+            _delayed = true;
+          } else {
+            env.writer.tab().append(rxObj).append(".").append(nameToUse).append("='").append(new Escaping(value).switchQuotes().go()).append("';").newline();
           }
-          _delayed = true;
-        } else {
-          env.writer.tab().append(rxObj).append(".").append(nameToUse).append("='").append(new Escaping(value).switchQuotes().go()).append("';").newline();
+        } catch (ParseException pe) {
+          env.feedback.warn(env.element, "attribute '" + attrName + "' has parse exception; " + pe.getMessage());
         }
       } else {
         env.writer.tab().append(rxObj).append(".").append(nameToUse).append("=true;").newline();

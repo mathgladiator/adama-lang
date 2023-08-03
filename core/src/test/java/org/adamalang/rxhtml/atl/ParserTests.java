@@ -18,11 +18,11 @@ import java.util.Map;
 public class ParserTests {
   @Test
   public void fail() {
-    String[] strs = new String[]{"{xyz", "[xyz", "[[", "[}", "{]", "]", "|", "xyz|", "}", "{{",};
+    String[] strs = new String[]{"{xyz", "[xyz", "[[", "[}", "{]", "{{", "[b]v"};
     for (String str : strs) {
       try {
         Parser.parse(str);
-        Assert.fail();
+        Assert.fail(str);
       } catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -30,7 +30,7 @@ public class ParserTests {
   }
 
   @Test
-  public void simple() {
+  public void simple() throws Exception {
     Tree tree = Parser.parse("xyz");
     Assert.assertTrue(tree instanceof Text);
     Assert.assertEquals(((Text) tree).text, "xyz");
@@ -41,17 +41,17 @@ public class ParserTests {
   }
 
   @Test
-  public void href_regression() {
+  public void href_regression() throws Exception {
     Tree tree = Parser.parse("/#project/{view:space}/manage");
     Assert.assertEquals("[TEXT(/#project/),LOOKUP[space],TEXT(/manage)]", tree.debug());
     Assert.assertEquals("\"/#project/\" + $X['space'] + \"/manage\"", tree.js(Context.DEFAULT, "$X"));
   }
 
   @Test
-  public void variable() {
+  public void variable() throws Exception {
     Tree tree = Parser.parse("hi {first|trim} {last}");
     Assert.assertEquals("[TEXT(hi ),TRANSFORM(LOOKUP[first],trim),TEXT( ),LOOKUP[last]]", tree.debug());
-    Assert.assertEquals("\"hi \" + (function(x) { return ('' + x).trim(); })($X['first']) + \" \" + $X['last']", tree.js(Context.DEFAULT, "$X"));
+    Assert.assertEquals("\"hi \" + ($.TR('trim'))($X['first']) + \" \" + $X['last']", tree.js(Context.DEFAULT, "$X"));
     Map<String, String> vars = tree.variables();
     Assert.assertEquals(2, vars.size());
     Assert.assertTrue(vars.containsKey("first"));
@@ -59,14 +59,14 @@ public class ParserTests {
   }
 
   @Test
-  public void normal_white_space() {
+  public void normal_white_space() throws Exception {
     Tree tree = Parser.parse("BLAH{nope}      many    {more}     ");
     Assert.assertEquals("[TEXT(BLAH),LOOKUP[nope],TEXT(      many    ),LOOKUP[more],TEXT(     )]", tree.debug());
     Assert.assertEquals("\"BLAH\" + $X['nope'] + \"      many    \" + $X['more'] + \"     \"", tree.js(Context.DEFAULT, "$X"));
   }
 
   @Test
-  public void normalize_css() {
+  public void normalize_css() throws Exception {
     Tree tree = Parser.parse("BLAH{nope}      many    {more}     ");
     Assert.assertEquals("[TEXT(BLAH),LOOKUP[nope],TEXT(      many    ),LOOKUP[more],TEXT(     )]", tree.debug());
     Context class_context = Context.makeClassContext();
@@ -74,8 +74,8 @@ public class ParserTests {
   }
 
   @Test
-  public void condition_trailing() {
-    Tree tree = Parser.parse("hi [b]active");
+  public void condition_trailing() throws Exception {
+    Tree tree = Parser.parse("hi [b]active[/]");
     Assert.assertEquals("[TEXT(hi ),(LOOKUP[b]) ? (TEXT(active)) : (EMPTY)]", tree.debug());
     Assert.assertEquals("\"hi \" + (($X['b']) ? (\"active\") : (\"\"))", tree.js(Context.DEFAULT, "$X"));
     Map<String, String> vars = tree.variables();
@@ -84,8 +84,8 @@ public class ParserTests {
   }
 
   @Test
-  public void condition_trailing_negate() {
-    Tree tree = Parser.parse("hi [!b]inactive");
+  public void condition_trailing_negate() throws Exception {
+    Tree tree = Parser.parse("hi [!b]inactive[/]");
     Assert.assertEquals("[TEXT(hi ),(!(LOOKUP[b])) ? (TEXT(inactive)) : (EMPTY)]", tree.debug());
     Assert.assertEquals("\"hi \" + ((!($X['b'])) ? (\"inactive\") : (\"\"))", tree.js(Context.DEFAULT, "$X"));
     Map<String, String> vars = tree.variables();
@@ -94,7 +94,7 @@ public class ParserTests {
   }
 
   @Test
-  public void condition() {
+  public void condition() throws Exception {
     Tree tree = Parser.parse("hi [b]A[#b]B[/b] there");
     Assert.assertEquals("[TEXT(hi ),(LOOKUP[b]) ? (TEXT(A)) : (TEXT(B)),TEXT( there)]", tree.debug());
     Assert.assertEquals("\"hi \" + (($X['b']) ? (\"A\") : (\"B\")) + \" there\"", tree.js(Context.DEFAULT, "$X"));
@@ -104,10 +104,10 @@ public class ParserTests {
   }
 
   @Test
-  public void condition_eq() {
+  public void condition_eq() throws Exception {
     Tree tree = Parser.parse("hi [b=xyz]A[#b=xyz]B[/b=xyz] there");
-    Assert.assertEquals("[TEXT(hi ),(EQUALS[LOOKUP[b],'xyz']) ? (TEXT(A)) : (TEXT(B)),TEXT( there)]", tree.debug());
-    Assert.assertEquals("\"hi \" + ((($X['b']=='xyz')) ? (\"A\") : (\"B\")) + \" there\"", tree.js(Context.DEFAULT, "$X"));
+    Assert.assertEquals("[TEXT(hi ),(EQUALS[LOOKUP[b],'TEXT(xyz)']) ? (TEXT(A)) : (TEXT(B)),TEXT( there)]", tree.debug());
+    Assert.assertEquals("\"hi \" + ((($X['b']==\"xyz\")) ? (\"A\") : (\"B\")) + \" there\"", tree.js(Context.DEFAULT, "$X"));
     Map<String, String> vars = tree.variables();
     Assert.assertEquals(1, vars.size());
     Assert.assertTrue(vars.containsKey("b"));

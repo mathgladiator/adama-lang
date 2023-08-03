@@ -9,6 +9,7 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import org.adamalang.rxhtml.atl.Context;
+import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ public class Equals implements Tree {
   public final Tree tree;
   public final Tree value;
 
-  public Equals(Tree tree, String value) {
+  public Equals(Tree tree, String value) throws ParseException  {
     this.tree = tree;
     this.value = Parser.parse(value);
   }
@@ -34,7 +35,7 @@ public class Equals implements Tree {
 
   @Override
   public String debug() {
-    return "EQUALS[" + tree.debug() + ",'" + value + "']";
+    return "EQUALS[" + tree.debug() + ",'" + value.debug() + "']";
   }
 
   @Override

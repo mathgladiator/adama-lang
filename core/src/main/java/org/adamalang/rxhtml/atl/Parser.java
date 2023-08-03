@@ -35,12 +35,15 @@ public class Parser {
     }
   }
 
-  private static Tree condition(Iterator<TokenStream.Token> it, TokenStream.Token conditionStart) {
+  private static Tree condition(Iterator<TokenStream.Token> it, TokenStream.Token conditionStart) throws ParseException {
     ArrayList<Tree> childrenTrue = new ArrayList<>();
     ArrayList<Tree> childrenFalse = new ArrayList<>();
     ArrayList<Tree> active = childrenTrue;
 
-    while (it.hasNext()) {
+    while (true) {
+      if (!it.hasNext()) {
+        throw new ParseException("unclosed condition block");
+      }
       TokenStream.Token token = it.next();
       if (token.type == TokenStream.Type.Condition) {
         if (token.mod == TokenStream.Modifier.None) {
@@ -70,7 +73,7 @@ public class Parser {
     return new Condition(guard, of(childrenTrue), of(childrenFalse));
   }
 
-  private static void route(ArrayList<Tree> children, Iterator<TokenStream.Token> it, TokenStream.Token token) {
+  private static void route(ArrayList<Tree> children, Iterator<TokenStream.Token> it, TokenStream.Token token) throws ParseException {
     switch (token.type) {
       case Text:
         children.add(new Text(token.base));
@@ -83,7 +86,7 @@ public class Parser {
     }
   }
 
-  private static Tree parse(Iterator<TokenStream.Token> it) {
+  private static Tree parse(Iterator<TokenStream.Token> it) throws ParseException {
     ArrayList<Tree> children = new ArrayList<>();
     while (it.hasNext()) {
       route(children, it, it.next());
@@ -91,7 +94,7 @@ public class Parser {
     return of(children);
   }
 
-  public static Tree parse(String text) {
+  public static Tree parse(String text) throws ParseException {
     return parse(TokenStream.tokenize(text).iterator());
   }
 }
