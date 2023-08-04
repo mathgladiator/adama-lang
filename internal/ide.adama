@@ -33,8 +33,26 @@ procedure security_check(principal other) -> bool readonly {
   return (iterate _developers where who == other).size() > 0;
 }
 
+record Presence {
+  public int id;
+  public principal who;
+  public bool active;
+}
+
+table<Presence> _presence;
+
 @connected {
+  list<Presence> whom = (iterate _presence where who == @who);
+  if (whom.size() == 0) {
+    _presence <- {who:@who, active:true};
+  } else {
+    whom.active = true;
+  }
   return security_check(@who);
+}
+
+@disconnected {
+  (iterate _presence where who == @who).active = false;
 }
 
 @can_attach {
@@ -173,7 +191,6 @@ message DocumentDeleteMessage {
 channel del_document(DocumentDeleteMessage d) {
   (iterate _documents where id == d.id).delete();
 }
-
 
 record Component {
   public int id;
