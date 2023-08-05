@@ -104,11 +104,11 @@ public class Diagram {
       if (name.startsWith("_")) continue;
       TreeSet<String> depends = new TreeSet<>();
       if ("reactive_record".equals(type.get("nature").textValue())) {
-        mmd.append("    class ").append(name).append("{\n");
+        mmd.append("    class ").append(name).append(":::record{\n");
         fieldsOf(type, true, depends);
         mmd.append("    }\n");
       } else if ("native_message".equals(type.get("nature").textValue())) {
-        mmd.append("    class ").append(name).append("{\n");
+        mmd.append("    class ").append(name).append(":::message{\n");
         fieldsOf(type, false, depends);
         mmd.append("    }\n");
       }
@@ -118,10 +118,24 @@ public class Diagram {
     }
   }
 
+  private void linkChannels(ObjectNode channels) {
+    Iterator<Map.Entry<String, JsonNode>> it = channels.fields();
+    while (it.hasNext()) {
+      Map.Entry<String, JsonNode> channel = it.next();
+      String name = channel.getKey();
+      String message = channel.getValue().textValue();
+      mmd.append("    class ").append(name).append(":::channel{\n");
+      mmd.append("        +").append(message).append(" msg\n");
+      mmd.append("    }\n");
+      mmd.append("    ").append(name).append("-->Document\n");
+      mmd.append("    ").append(message).append("..>").append("").append(name).append("\n");
+    }
+  }
+
   public void process(ObjectNode reflection) {
     ObjectNode types = (ObjectNode) reflection.get("types");
     ObjectNode doc = (ObjectNode) types.get("__Root");
-    mmd.append("    class Document{\n");
+    mmd.append("    class Document:::document{\n");
     TreeSet<String> depends = new TreeSet<>();
     fieldsOf(doc, true, depends);
     mmd.append("    }\n");
@@ -134,6 +148,7 @@ public class Diagram {
     mmd.append("    }\n");
     structsOf(types);
     mmd.append("    Viewer..>Document\n");
+    linkChannels((ObjectNode) reflection.get("channels"));
   }
 
 }
