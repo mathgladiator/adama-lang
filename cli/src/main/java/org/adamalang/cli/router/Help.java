@@ -94,8 +94,9 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("--config", 15), Util.ANSI.Green) + "Supplies a config file path other than the default (~/.adama)");
     System.out.println();
     System.out.println(Util.prefix("CODESUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix(Util.justifyLeft("bundle-plan", 15), Util.ANSI.Green) + "Placeholder");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("bundle-plan", 15), Util.ANSI.Green) + "Bundle the main and imports into a single deployment plan.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("compile-file", 15), Util.ANSI.Green) + "Compiles the adama file and shows any problems");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("diagram", 15), Util.ANSI.Green) + "Convert a reflection JSON into a mermaid diagram source");
     System.out.println("    " + Util.prefix(Util.justifyLeft("lsp", 15), Util.ANSI.Green) + "Spin up a single threaded language service protocol server");
     System.out.println("    " + Util.prefix(Util.justifyLeft("reflect-dump", 15), Util.ANSI.Green) + "Compiles the adama file and dumps the reflection json");
     System.out.println("    " + Util.prefix(Util.justifyLeft("validate-plan", 15), Util.ANSI.Green) + "Validates a deployment plan (locally) for speed");

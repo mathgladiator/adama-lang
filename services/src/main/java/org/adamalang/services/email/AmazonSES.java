@@ -50,8 +50,8 @@ public class AmazonSES extends SimpleService {
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
-    sb.append("message AWSSES_SendRequest_").append(uniqueId).append(" { string from; string replyTo; string to; string subject; string text; string html; }\n");
-    sb.append("message AWSSES_SendResponse_").append(uniqueId).append(" { }\n");
+    sb.append("message _AWSSES_SendRequest").append(" { string from; string replyTo; string to; string subject; string text; string html; }\n");
+    sb.append("message _AWSSES_SendResponse").append(" { }\n");
     sb.append("service amazonses {\n");
     sb.append("  class=\"amazonses\";\n");
     sb.append("  ").append(params).append("\n");
@@ -64,7 +64,7 @@ public class AmazonSES extends SimpleService {
     if (!names.contains("region")) {
       error.accept("amazonses requires a 'region' field");
     }
-    sb.append("  method<AWSSES_SendRequest_").append(uniqueId).append(", AWSSES_SendResponse_").append(uniqueId).append("> send;\n");
+    sb.append("  method<_AWSSES_SendRequest").append(", _AWSSES_SendResponse").append("> send;\n");
     sb.append("}\n");
     return sb.toString();
   }

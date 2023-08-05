@@ -349,6 +349,16 @@ public class MainRouter {
                codeHandler.compileFile(codeArgs, out);
                return 0;
             }
+            case "diagram": {
+              CodeDiagramArgs codeArgs = CodeDiagramArgs.from(args, 2);
+              if (codeArgs == null) {
+                CodeDiagramArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               codeHandler.diagram(codeArgs, out);
+               return 0;
+            }
             case "lsp": {
               CodeLspArgs codeArgs = CodeLspArgs.from(args, 2);
               if (codeArgs == null) {

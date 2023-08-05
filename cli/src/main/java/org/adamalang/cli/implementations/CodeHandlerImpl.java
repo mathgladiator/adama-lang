@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Util;
+import org.adamalang.cli.implementations.code.Diagram;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.CodeHandler;
 import org.adamalang.cli.runtime.Output;
@@ -33,6 +34,7 @@ import org.adamalang.translator.tree.Document;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -49,6 +51,15 @@ public class CodeHandlerImpl implements CodeHandler {
     plan.put("default", "file");
     plan.putArray("plan");
     Files.writeString(new File(args.output).toPath(), plan.toPrettyString());
+    output.out();
+  }
+
+  @Override
+  public void diagram(Arguments.CodeDiagramArgs args, Output.YesOrError output) throws Exception {
+    ObjectNode reflection = Json.parseJsonObject(Files.readString(new File(args.input).toPath()));
+    Diagram diagram = new Diagram("Diagram");
+    diagram.process(reflection);
+    Files.writeString(new File(args.output).toPath(), diagram.finish());
     output.out();
   }
 

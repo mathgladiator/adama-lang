@@ -40,11 +40,11 @@ public class Adama extends SimpleService {
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
-    sb.append("message AdamaCreateDocument_").append(uniqueId).append(" { string space; string key; maybe<long> entropy; dynamic arg; }\n");
-    sb.append("message SimpleResponse_").append(uniqueId).append(" { }\n");
+    sb.append("message _AdamaCreateDocument").append(" { string space; string key; maybe<long> entropy; dynamic arg; }\n");
+    sb.append("message _SimpleResponse").append(" { }\n");
     sb.append("service adama {\n");
     sb.append("  class=\"adama\";\n");
-    sb.append("  method secured<AdamaCreateDocument_").append(uniqueId).append(", SimpleResponse_").append(uniqueId).append("> documentCreate;\n");
+    sb.append("  method secured<_AdamaCreateDocument").append(", _SimpleResponse").append("> documentCreate;\n");
     sb.append("}\n");
     return sb.toString();
   }
