@@ -16,6 +16,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
+import org.adamalang.translator.tree.privacy.PrivatePolicy;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.Watcher;
@@ -87,9 +88,11 @@ public class StructureStorage extends DocumentPosition {
         writer.writeObjectFieldIntro("type");
         fd.type.writeTypeReflectionJson(writer, ReflectionSource.Structure);
       }
+      writer.writeObjectFieldIntro("privacy");
       if (fd.policy != null) {
-        writer.writeObjectFieldIntro("privacy");
         fd.policy.writeTypeReflectionJson(writer);
+      } else {
+        writer.writeString("private");
       }
       writer.endObject();
     }

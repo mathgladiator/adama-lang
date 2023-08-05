@@ -172,13 +172,19 @@
 
     <arg-definition name="main" type="string" short="m">
         <documentation>
-            Placeholder
+            The main/primary adama file.
         </documentation>
     </arg-definition>
 
     <arg-definition name="input" type="string" short="i">
         <documentation>
-            Placeholder
+            An input file
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="title" type="string" short="tt">
+        <documentation>
+            The title of the diagram
         </documentation>
     </arg-definition>
 
@@ -469,7 +475,7 @@
 
         <command name="bundle-plan">
             <documentation>
-                Placeholder
+                Bundle the main and imports into a single deployment plan.
             </documentation>
             <arg name="output" />
             <arg name="main" />
@@ -492,6 +498,15 @@
             <arg name="file" />
             <arg name="imports" default="imports" />
             <arg name="dump-to" default="null" />
+        </command>
+
+        <command name="diagram">
+            <documentation>
+                Convert a reflection JSON into a mermaid diagram source
+            </documentation>
+            <arg name="input" default="reflected.json" />
+            <arg name="output" default="mermaid.mmd" />
+            <arg name="title" default="Schema" />
         </command>
 
     </group>

@@ -41,8 +41,8 @@ public class Discord extends SimpleService {
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
-    sb.append("service stripe {\n");
-    sb.append("  class=\"stripe\";\n");
+    sb.append("service discord {\n");
+    sb.append("  class=\"discord\";\n");
     sb.append("  ").append(params).append("\n");
     sb.append("  method<dynamic, dynamic> GetMessage;\n");
     sb.append("}\n");

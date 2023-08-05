@@ -1,0 +1,139 @@
+/*
+ * This file is subject to the terms and conditions outlined in the
+ * file 'LICENSE' (it's dual licensed) located in the root directory
+ * near the README.md which you should also read. For more information
+ * about the project which owns this file, see https://www.adama-platform.com/ .
+ *
+ * (c) 2021 - 2023 by Adama Platform Initiative, LLC
+ */
+package org.adamalang.cli.implementations.code;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.util.*;
+
+public class Diagram {
+  private final StringBuilder mmd;
+
+  public Diagram(String title) {
+    this.mmd = new StringBuilder();
+    mmd.append("---\n");
+    mmd.append("title: ").append(title).append("\n");
+    mmd.append("---\n");
+    mmd.append("classDiagram\n");
+  }
+
+  public String finish() {
+    return mmd.toString();
+  }
+
+  private String getVisibility(ObjectNode type) {
+    try {
+      switch (type.get("privacy").textValue()) {
+        case "public":
+          return "+";
+        case "private":
+          return "-";
+        case "bubble":
+          return "#";
+        default:
+          return "~";
+      }
+    } catch (Exception ex) {
+      System.err.println(type.toPrettyString());
+      return "?";
+    }
+  }
+
+  private String summarizeType(ObjectNode type, Set<String> depends) {
+    switch (type.get("nature").textValue()) {
+      case "native_value":
+      case "reactive_value":
+        return type.get("type").textValue();
+      case "native_ref":
+      case "reactive_ref":
+        String ref = type.get("ref").textValue();
+        depends.add(ref);
+        return ref;
+      case "native_list":
+      case "reactive_list":
+        return "list~" + summarizeType((ObjectNode) type.get("type"), depends) + "~";
+      case "native_maybe":
+      case "reactive_maybe":
+        return "maybe~" + summarizeType((ObjectNode) type.get("type"), depends) + "~";
+      case "native_array":
+        return "array~" + summarizeType((ObjectNode) type.get("type"), depends) + "~";
+      case "reactive_table":
+        String tableRecord = type.get("record_name").textValue();
+        depends.add(tableRecord);
+        return "table~" + tableRecord + "~";
+      default:
+        System.err.println("unknown:" + type.toString());
+        return "?";
+    }
+  }
+
+  private void fieldsOf(ObjectNode struct, boolean isRecord, Set<String> depends) {
+    ObjectNode fields = (ObjectNode) struct.get("fields");
+    TreeMap<String, String> sorted = new TreeMap<>();
+    Iterator<Map.Entry<String, JsonNode>> it = fields.fields();
+
+    while (it.hasNext()) {
+      Map.Entry<String, JsonNode> rec = it.next();
+      String name = rec.getKey();
+      ObjectNode field = (ObjectNode) rec.getValue();
+      if (isRecord) {
+        sorted.put(name, getVisibility(field) + summarizeType((ObjectNode) field.get("type"), depends) + " " + name);
+      } else {
+        sorted.put(name, "+" + summarizeType((ObjectNode) field.get("type"), depends) + " " + name);
+      }
+    }
+    for (Map.Entry<String, String> write : sorted.entrySet()) {
+      mmd.append("        ").append(write.getValue()).append("\n");
+    }
+  }
+
+  private void structsOf(ObjectNode types) {
+    Iterator<Map.Entry<String, JsonNode>> it = types.fields();
+    while (it.hasNext()) {
+      Map.Entry<String, JsonNode> rec = it.next();
+      String name = rec.getKey();
+      ObjectNode type = (ObjectNode) rec.getValue();
+      if ("__Root".equals(name)) continue;;
+      if (name.startsWith("_")) continue;
+      TreeSet<String> depends = new TreeSet<>();
+      if ("reactive_record".equals(type.get("nature").textValue())) {
+        mmd.append("    class ").append(name).append("{\n");
+        fieldsOf(type, true, depends);
+        mmd.append("    }\n");
+      } else if ("native_message".equals(type.get("nature").textValue())) {
+        mmd.append("    class ").append(name).append("{\n");
+        fieldsOf(type, false, depends);
+        mmd.append("    }\n");
+      }
+      for (String depend : depends) {
+        mmd.append("    ").append(name).append("..>").append(depend).append("\n");
+      }
+    }
+  }
+
+  public void process(ObjectNode reflection) {
+    ObjectNode types = (ObjectNode) reflection.get("types");
+    ObjectNode doc = (ObjectNode) types.get("__Root");
+    mmd.append("    class Document{\n");
+    TreeSet<String> depends = new TreeSet<>();
+    fieldsOf(doc, true, depends);
+    mmd.append("    }\n");
+    for (String depend : depends) {
+      mmd.append("    Document..>").append(depend).append("\n");
+    }
+    ObjectNode viewer = (ObjectNode) types.get("__ViewerType");
+    mmd.append("    class Viewer{\n");
+    fieldsOf(viewer, false, new TreeSet<>());
+    mmd.append("    }\n");
+    structsOf(types);
+    mmd.append("    Viewer..>Document\n");
+  }
+
+}

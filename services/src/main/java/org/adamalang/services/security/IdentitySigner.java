@@ -45,8 +45,8 @@ public class IdentitySigner extends SimpleService {
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
-    sb.append("message IdentitySigner_Req_").append(uniqueId).append(" { string agent; }\n");
-    sb.append("message IdentitySigner_Res_").append(uniqueId).append(" { string identity; }\n");
+    sb.append("message _IdentitySigner_Req").append(" { string agent; }\n");
+    sb.append("message _IdentitySigner_Res").append(" { string identity; }\n");
     sb.append("service identitysigner {\n");
     sb.append("  class=\"identitysigner\";\n");
     sb.append("  ").append(params).append("\n");
@@ -56,7 +56,7 @@ public class IdentitySigner extends SimpleService {
     if (!names.contains("private_key")) {
       error.accept("identitysigner requires a 'private_key' field (and it should be encrypted)");
     }
-    sb.append("  method<IdentitySigner_Req_").append(uniqueId).append(", IdentitySigner_Res_").append(uniqueId).append("> sign;\n");
+    sb.append("  method<_IdentitySigner_Req").append(", _IdentitySigner_Res").append("> sign;\n");
     sb.append("}\n");
     return sb.toString();
   }

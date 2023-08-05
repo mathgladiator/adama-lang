@@ -30,11 +30,11 @@ public class SafeRandom extends SimpleService {
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
-    sb.append("message SafeRandom_AskStr_").append(uniqueId).append(" { string pool; int count; }\n");
-    sb.append("message SafeRandom_Result_").append(uniqueId).append(" { string result; }\n");
+    sb.append("message _SafeRandom_AskStr").append(" { string pool; int count; }\n");
+    sb.append("message _SafeRandom_Result").append(" { string result; }\n");
     sb.append("service saferandom {\n");
     sb.append("  class=\"saferandom\";\n");
-    sb.append("  method<SafeRandom_AskStr_").append(uniqueId).append(", SafeRandom_Result_").append(uniqueId).append("> ask;\n");
+    sb.append("  method<_SafeRandom_AskStr").append(", _SafeRandom_Result").append("> ask;\n");
     sb.append("}\n");
     return sb.toString();
   }
