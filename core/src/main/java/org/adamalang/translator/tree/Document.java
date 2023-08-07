@@ -49,7 +49,6 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRoot
 import java.io.File;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class Document implements TopLevelDocumentHandler {
   public final HashSet<String> channelsThatAreFutures;
@@ -82,6 +81,7 @@ public class Document implements TopLevelDocumentHandler {
   private final HashMap<String, String> includes;
   public final LinkedHashMap<String, DefineService> services;
   private final HashSet<String> defined;
+  private final HashSet<String> viewDefined;
 
   public Document() {
     autoClassId = 0;
@@ -113,6 +113,7 @@ public class Document implements TopLevelDocumentHandler {
     includes = new HashMap<>();
     services = new LinkedHashMap<>();
     defined = new HashSet<>();
+    viewDefined = new HashSet<>();
     auths = new ArrayList<>();
     passwords = new ArrayList<>();
   }
@@ -378,10 +379,10 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(AugmentViewerState avs) {
-    if (defined.contains(avs.name.text)) {
+    if (viewDefined.contains(avs.name.text)) {
       typeChecker.issueError(avs, String.format("View field '%s' was already defined.", avs.name.text));
     }
-    defined.add(avs.name.text);
+    viewDefined.add(avs.name.text);
     viewerType.storage.add(new FieldDefinition(null, null, avs.type, avs.name, null, null, null, avs.semicolon));
     avs.typing(typeChecker);
   }
@@ -525,6 +526,7 @@ public class Document implements TopLevelDocumentHandler {
       functionTypes.put(entry.getKey(), functional);
       typeChecker.register(Collections.emptySet(), env -> functional.typing(env));
     }
+    viewerType.typing(typeChecker);
     typeChecker.check(environment);
     {
       TreeMap<String, Set<String>> graph = new TreeMap<>();

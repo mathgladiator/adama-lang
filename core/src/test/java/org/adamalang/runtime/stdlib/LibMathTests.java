@@ -16,6 +16,26 @@ import org.junit.Test;
 public class LibMathTests {
 
   @Test
+  public void intOf() {
+    Assert.assertEquals(3, (int) LibMath.intOf(3.14).get());
+    Assert.assertEquals(3, (int) LibMath.intOf(new NtMaybe<>(3.14)).get());
+    Assert.assertFalse(LibMath.intOf(new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.intOf(new NtMaybe<>(Double.MAX_VALUE)).has());
+    Assert.assertFalse(LibMath.intOf(new NtMaybe<>(Double.NaN)).has());
+    Assert.assertFalse(LibMath.intOf(new NtMaybe<>(-Double.MAX_VALUE)).has());
+  }
+
+  @Test
+  public void longOf() {
+    Assert.assertEquals(3, (long) LibMath.longOf(3.14).get());
+    Assert.assertEquals(3, (long) LibMath.longOf(new NtMaybe<>(3.14)).get());
+    Assert.assertFalse(LibMath.longOf(new NtMaybe<>()).has());
+    Assert.assertFalse(LibMath.longOf(new NtMaybe<>(Double.MAX_VALUE)).has());;
+    Assert.assertFalse(LibMath.longOf(new NtMaybe<>(Double.NaN)).has());;
+    Assert.assertFalse(LibMath.longOf(new NtMaybe<>(-Double.MAX_VALUE)).has());;
+  }
+
+  @Test
   public void intersects() {
     Assert.assertTrue(LibMath.intersects(1, 4, 2, 3));
     Assert.assertFalse(LibMath.intersects(1, 4, 5, 10));

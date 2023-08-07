@@ -30,7 +30,7 @@ public class TemplateCoe01Tests extends BaseRxHtmlTest {
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
     gold.append("\n      var e = (function() {");
-    gold.append("\n        $.ACLASS(this.__dom,\" blad \" + (((this['c']==\" ' \" + this['id'] + \" ' \")) ? (\" block \") : (\" hidden \")));");
+    gold.append("\n        $.ACLASS(this.__dom,\" blad \" + (((this['c']==\"'\" + this['id'] + \"'\")) ? (\" block \") : (\" hidden \")));");
     gold.append("\n      }).bind(d);");
     gold.append("\n      $.Y($.pV(a),d,'c',e);");
     gold.append("\n      $.Y(a,d,'id',e);");
@@ -52,7 +52,7 @@ public class TemplateCoe01Tests extends BaseRxHtmlTest {
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
     gold.append("\n      var e = (function() {");
-    gold.append("\n        $.ACLASS(this.__dom,\" blad \" + (((this['c']==\" ' \" + this['id'] + \" ' \")) ? (\" block \") : (\" hidden \")));");
+    gold.append("\n        $.ACLASS(this.__dom,\" blad \" + (((this['c']==\"'\" + this['id'] + \"'\")) ? (\" block \") : (\" hidden \")));");
     gold.append("\n      }).bind(d);");
     gold.append("\n      $.Y($.pV(a),d,'c',e);");
     gold.append("\n      $.Y(a,d,'id',e);");
