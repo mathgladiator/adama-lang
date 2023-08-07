@@ -40,6 +40,6 @@ public class Equals implements Tree {
 
   @Override
   public String js(Context context, String env) {
-    return "(" + tree.js(context, env) + "==" + value.js(context, env) + ")";
+    return "(" + tree.js(Context.DEFAULT, env) + "==" + value.js(Context.DEFAULT, env) + ")";
   }
 }
