@@ -865,7 +865,6 @@ var RxHTML = (function () {
   // RUNTIME: <tag .. rx:event="... fire:channel ..." ...>
   self.onFR = function (state, dom, type, channel) {
     reg_event(state, dom, type, function () {
-      console.log(state.data);
       state.data.connection.ptr.send(channel, {}, {
         success: function () {
           console.log("SENT '" + channel + "'");
@@ -894,7 +893,7 @@ var RxHTML = (function () {
       } else {
         obj[name] = value;
       }
-      var delta = path_to(state[state.current], obj);
+      var delta = path_to(state.view, obj);
       state[state.current].tree.update(delta);
     });
   };
@@ -904,7 +903,7 @@ var RxHTML = (function () {
     reg_event(state, dom, type, function (event) {
       var obj = {};
       obj[name] = event.message;
-      var delta = path_to(state[state.current], obj);
+      var delta = path_to(state.view, obj);
       state[state.current].tree.update(delta);
     });
   };
@@ -930,7 +929,7 @@ var RxHTML = (function () {
     reg_event(state, dom, type, function () {
       var obj = {};
       obj[name] = !captured.value;
-      var delta = path_to(state[state.current], obj);
+      var delta = path_to(state.view, obj);
       state[state.current].tree.update(delta);
     });
     subscribe(state, name, function (value) {
@@ -944,7 +943,7 @@ var RxHTML = (function () {
     reg_event(state, dom, type, function () {
       var obj = {};
       obj[name] = captured.value + diff;
-      var delta = path_to(state[state.current], obj);
+      var delta = path_to(state.view, obj);
       state[state.current].tree.update(delta);
     });
     subscribe(state, name, function (value) {
