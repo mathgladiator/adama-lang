@@ -25,7 +25,7 @@ public class TemplateScopeViewTests extends BaseRxHtmlTest {
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c = $.E('div');");
-    gold.append("\n    var d = $.pI(a,'obj');");
+    gold.append("\n    var d = $.pIE(a,'obj', true);");
     gold.append("\n    c.append($.L(d,'key'));");
     gold.append("\n    c.append($.T(' - '));");
     gold.append("\n    c.append($.L(d,'value'));");
@@ -40,7 +40,7 @@ public class TemplateScopeViewTests extends BaseRxHtmlTest {
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c = $.E('div');");
-    gold.append("\n    var d = $.pI(a,'obj');");
+    gold.append("\n    var d = $.pIE(a,'obj', true);");
     gold.append("\n    c.append($.L(d,'key'));");
     gold.append("\n    c.append($.T(' - '));");
     gold.append("\n    c.append($.L(d,'value'));");
