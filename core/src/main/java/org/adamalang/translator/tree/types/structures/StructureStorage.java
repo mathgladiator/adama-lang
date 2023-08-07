@@ -100,8 +100,10 @@ public class StructureStorage extends DocumentPosition {
     for (Map.Entry<String, BubbleDefinition> bd : bubbles.entrySet()) {
       writer.writeObjectFieldIntro(bd.getKey());
       writer.beginObject();
-      writer.writeObjectFieldIntro("type");
-      bd.getValue().expressionType.writeTypeReflectionJson(writer, ReflectionSource.Structure);
+      if (bd.getValue().expressionType != null) {
+        writer.writeObjectFieldIntro("type");
+        bd.getValue().expressionType.writeTypeReflectionJson(writer, ReflectionSource.Structure);
+      }
       writer.writeObjectFieldIntro("privacy");
       writer.writeString("bubble");
       writer.endObject();

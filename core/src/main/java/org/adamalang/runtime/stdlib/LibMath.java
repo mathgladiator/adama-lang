@@ -676,6 +676,42 @@ public class LibMath {
     return mx;
   }
 
+  @UseName(name="intOf")
+  @Extension
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> intOf(double x) {
+    if (Integer.MIN_VALUE < x && x < Integer.MAX_VALUE) {
+      return new NtMaybe<>((int) x);
+    }
+    return new NtMaybe<>();
+  }
+
+  @UseName(name="intOf")
+  @Extension
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> intOf(@HiddenType(clazz = Double.class) NtMaybe<Double> x) {
+    if (x.has()) {
+      return intOf(x.get());
+    }
+    return new NtMaybe<>();
+  }
+
+  @UseName(name="longOf")
+  @Extension
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> longOf(double x) {
+    if (Long.MIN_VALUE < x && x < Long.MAX_VALUE) {
+      return new NtMaybe<>((long) x);
+    }
+    return new NtMaybe<>();
+  }
+
+  @UseName(name="longOf")
+  @Extension
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> longOf(@HiddenType(clazz = Double.class) NtMaybe<Double> x) {
+    if (x.has()) {
+      return longOf(x.get());
+    }
+    return new NtMaybe<>();
+  }
+
   @UseName(name = "floorMod")
   @Extension
   public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> floorMod_i(@HiddenType(clazz = Integer.class) NtMaybe<Integer> mx, int y) {

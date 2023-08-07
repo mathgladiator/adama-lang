@@ -1,0 +1,7 @@
+message Coord {
+  int x;
+  int y;
+}
+view Coord location;
+
+bubble cake = @viewer.location.x + @viewer.location.y;
