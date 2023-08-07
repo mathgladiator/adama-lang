@@ -118,7 +118,7 @@ public class Base {
     if (env.element.hasAttr("rx:scope")) {
       StatePath path = StatePath.resolve(env.element.attr("rx:scope"), env.stateVar);
       String newStateVar = env.pool.ask();
-      if (env.element.hasAttr("rx:scope-view-state")) {
+      if (env.element.hasAttr("rx:expand-view-state")) {
         env.writer.tab().append("var ").append(newStateVar).append(" = $.pIE(").append(path.command).append(",'").append(path.name).append("', true);").newline();
       } else {
         env.writer.tab().append("var ").append(newStateVar).append(" = $.pI(").append(path.command).append(",'").append(path.name).append("');").newline();
