@@ -18,6 +18,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /** a microverse is a local cosmos of an Adama machine that outlines everything needed to run Adama locally without a DB */
 public class DevBoxAdamaMicroVerse {
@@ -112,7 +114,26 @@ public class DevBoxAdamaMicroVerse {
               defn.base.deploy(defn.spaceName, new DeploymentPlan(plan, (t, ec) -> {
                 io.error("adama|deployment-issue[Code-" + ec + "]: " + t.getMessage());
               }));
-              defn.lastDeployedPlan = plan;
+              service.deploy(new DeploymentMonitor() {
+                 int documentsChanged;
+                 @Override
+                 public void bumpDocument(boolean changed) {
+                   if (changed) {
+                     documentsChanged++;
+                   }
+                 }
+
+                 @Override
+                 public void witnessException(ErrorCodeException ex) {
+                   io.error("adama|deploy-exception:" + ex.getMessage());
+                 }
+
+                 @Override
+                 public void finished(int ms) {
+                   io.notice("adama:deployment-finished: " + documentsChanged + " changed; time=" + ms + "ms");
+                 }
+               });
+                  defn.lastDeployedPlan = plan;
               io.notice("adama|deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
             } else {
               io.error("adama|failure: " + defn.spaceName);
