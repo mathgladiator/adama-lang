@@ -61,7 +61,7 @@ public class TemplateScopeViewTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <div rx:scope=\"obj\" rx:scope-view-state>");
+    source.append("\n        <div rx:scope=\"obj\" rx:expand-view-state>");
     source.append("\n            <lookup path=\"key\" /> - <lookup path=\"value\" />");
     source.append("\n        </div>");
     source.append("\n    </page>");
