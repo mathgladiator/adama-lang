@@ -74,6 +74,7 @@ public class CodeGenMessage {
     }
     sb.writeNewline();
   }
+
   public static void generateJsonReaders(final String name, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
     final var localVar = new AtomicInteger();
     { // READ FROM STREAM
@@ -235,8 +236,7 @@ public class CodeGenMessage {
       final var domainType = ((TyNativePair) type).getDomainType(environment);
       final var rangeType = ((TyNativePair) type).getRangeType(environment);
       final var localItem = "__cpy" + localVar.getAndIncrement();
-      sb.append("NtPair<").append(domainType.getJavaBoxType(environment))
-             .append(",").append(rangeType.getJavaBoxType(environment)).append("> ").append(localItem).append(" = ").append(name).append(";").writeNewline();
+      sb.append("NtPair<").append(domainType.getJavaBoxType(environment)).append(",").append(rangeType.getJavaBoxType(environment)).append("> ").append(localItem).append(" = ").append(name).append(";").writeNewline();
       sb.append("__writer.beginObject();").writeNewline();
       sb.append("__writer.writeObjectFieldIntro(\"key\");").writeNewline();
       writeValueWriter(localItem + ".key", domainType, sb, environment, localVar, false);

@@ -8,7 +8,6 @@
  */
 package org.adamalang.translator.codegen;
 
-import org.adamalang.runtime.reactives.RxTable;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
@@ -34,6 +33,7 @@ public class CodeGenRecords {
   private static boolean isCommitRevertable(final TyType fieldType) {
     return fieldType instanceof TySimpleReactive || fieldType instanceof TyReactiveMaybe || fieldType instanceof TyReactiveTable || fieldType instanceof TyReactiveRef || fieldType instanceof TyReactiveRecord || fieldType instanceof TyReactiveMap || fieldType instanceof TyReactiveText;
   }
+
   private static boolean isCommitCache(final FieldDefinition fd, TyType fieldType) {
     if (fieldType instanceof TyReactiveLazy) {
       return fd.servicesToWatch.size() > 0;
@@ -48,10 +48,7 @@ public class CodeGenRecords {
     if ("__auto_cache_id".equals(other)) {
       return false;
     }
-    if ("__cache".equals(other)) {
-      return false;
-    }
-    return true;
+    return !"__cache".equals(other);
   }
 
   public static void writeCommitAndRevert(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot, final String... others) {

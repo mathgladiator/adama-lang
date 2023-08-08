@@ -10,8 +10,8 @@ package org.adamalang.translator.codegen;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
-import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
 import org.adamalang.translator.tree.definitions.DocumentEvent;
+import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
 
 import java.util.HashMap;
 
@@ -25,6 +25,19 @@ public class CodeGenEventHandlers {
     }
     dce.code.specialWriteJava(sb, environment, false, true);
     sb.append("}").writeNewline();
+  }
+
+  public static void writeEventHandlers(final StringBuilderWithTabs sb, final Environment environment) {
+    HashMap<DocumentEvent, EventShred> shredder = new HashMap<>();
+    for (DocumentEvent event : DocumentEvent.values()) {
+      shredder.put(event, new EventShred(event));
+    }
+    for (final DefineDocumentEvent dce : environment.document.events) {
+      shredder.get(dce.which).consider(dce, sb, environment.scopeAsPolicy());
+    }
+    for (DocumentEvent event : DocumentEvent.values()) {
+      shredder.get(event).finish(sb);
+    }
   }
 
   private static class EventShred {
@@ -130,19 +143,6 @@ public class CodeGenEventHandlers {
           sb.append("}").writeNewline();
         }
       }
-    }
-  }
-
-  public static void writeEventHandlers(final StringBuilderWithTabs sb, final Environment environment) {
-    HashMap<DocumentEvent, EventShred> shredder = new HashMap<>();
-    for (DocumentEvent event : DocumentEvent.values()) {
-      shredder.put(event, new EventShred(event));
-    }
-    for (final DefineDocumentEvent dce : environment.document.events) {
-      shredder.get(dce.which).consider(dce, sb, environment.scopeAsPolicy());
-    }
-    for (DocumentEvent event : DocumentEvent.values()) {
-      shredder.get(event).finish(sb);
     }
   }
 }
