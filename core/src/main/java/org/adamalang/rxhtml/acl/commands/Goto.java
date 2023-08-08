@@ -29,7 +29,6 @@ public class Goto implements Command {
 
   @Override
   public void write(Environment env, String type, String eVar) {
-
     Map<String, String> vars = value.variables();
     if (vars.size() == 0) {
       env.writer.tab().append("$.onGO(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(",").append(Escapes.constantOf(raw)).append(");").newline();
