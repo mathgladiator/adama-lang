@@ -55,6 +55,9 @@ public class CodeGenRecords {
   }
 
   public static void writeCommitAndRevert(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot, final String... others) {
+    if (!isRoot) {
+      writeFieldOf(storage, sb);
+    }
     writeInsert(storage, sb, environment, isRoot, others);
     writerDump(storage, sb, environment, isRoot, others);
     sb.append("@Override").writeNewline();
@@ -334,6 +337,21 @@ public class CodeGenRecords {
       }
     }
     sb.append("};").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+  }
+
+  public static void writeFieldOf(final StructureStorage storage, final StringBuilderWithTabs sb) {
+    sb.append("@Override").writeNewline();
+    sb.append("public Object __fieldOf(String __name) {").tabUp().writeNewline();
+    sb.append("switch (__name) {").tabUp().writeNewline();
+    for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
+      final var fieldName = fdInOrder.name;
+      sb.append("case \"").append(fieldName).append("\":").tabUp().writeNewline();
+      sb.append("return ").append(fieldName).append(";").tabDown().writeNewline();
+    }
+    sb.append("default:").tabUp().writeNewline();
+    sb.append("return null;").tabDown().tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
     sb.append("}").writeNewline();
   }
 

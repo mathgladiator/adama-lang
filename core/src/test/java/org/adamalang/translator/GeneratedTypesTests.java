@@ -10960,6 +10960,17 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public Object __fieldOf(String __name) {");
+    gold.append("\n      switch (__name) {");
+    gold.append("\n        case \"y\":");
+    gold.append("\n          return y;");
+    gold.append("\n        case \"id\":");
+    gold.append("\n          return id;");
+    gold.append("\n        default:");
+    gold.append("\n          return null;");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while(__reader.notEndOfObject()) {");
