@@ -101,4 +101,6 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
     }
     return false;
   }
+
+  public abstract Object __fieldOf(String name);
 }

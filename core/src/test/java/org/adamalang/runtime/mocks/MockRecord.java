@@ -44,6 +44,18 @@ public class MockRecord extends RxRecordBase<MockRecord> {
   }
 
   @Override
+  public Object __fieldOf(String name) {
+    switch (name) {
+      case "id":
+        return id;
+      case "data":
+        return data;
+      default:
+        return null;
+    }
+  }
+
+  @Override
   public MockRecord __link() {
     return this;
   }
