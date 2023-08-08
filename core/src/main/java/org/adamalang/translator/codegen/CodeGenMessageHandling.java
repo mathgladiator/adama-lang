@@ -114,7 +114,7 @@ public class CodeGenMessageHandling {
       sb.append("protected boolean __is_direct_channel(String channel) {").tabUp().writeNewline();
       sb.append("switch (channel) {").tabUp().writeNewline();
       int directCountDownUntilTab = executeDirect.size();
-      for (String channelDirect: executeDirect.keySet()) {
+      for (String channelDirect : executeDirect.keySet()) {
         directCountDownUntilTab--;
         sb.append("case \"").append(channelDirect).append("\":");
         if (directCountDownUntilTab == 0) {

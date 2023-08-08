@@ -22,7 +22,7 @@ public class CodeGenViewStateFilter {
     for (String key : new TreeSet<>(environment.document.viewerType.storage.fields.keySet())) {
       quotedKeys.add("\\\"" + key + "\\\"");
     }
-    sb.append("return \"["+String.join(", ", quotedKeys)+"]\";").tabDown().writeNewline();
+    sb.append("return \"[" + String.join(", ", quotedKeys) + "]\";").tabDown().writeNewline();
     sb.append("}").writeNewline();
   }
 }

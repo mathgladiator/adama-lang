@@ -100,7 +100,7 @@ public class CodeGenDeltaClass {
     for (final FieldDefinition fd : storage.fieldsByOrder) {
       sb.append("__d").append(fd.name).append(".clear();").writeNewline();
     }
-    sb.append("__code_cost += ").append("" + ( storage.fieldsByOrder.size())).append(";").tabDown().writeNewline();
+    sb.append("__code_cost += ").append("" + (storage.fieldsByOrder.size())).append(";").tabDown().writeNewline();
     sb.append("}").writeNewline();
     sb.append("public void hide(PrivateLazyDeltaWriter __writer) {").tabUp().writeNewline();
     sb.append("if (__emitted) {").tabUp().writeNewline();
