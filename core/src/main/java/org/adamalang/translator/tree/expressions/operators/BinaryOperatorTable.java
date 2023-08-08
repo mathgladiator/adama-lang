@@ -322,6 +322,7 @@ public class BinaryOperatorTable {
       insert(tyDouble, ">", tyInt, tyBoolean, "%s > %s", false);
       insert(tyDouble, ">", tyLong, tyBoolean, "%s > %s", false);
       insert(tyDouble, ">", tyDouble, tyBoolean, "%s > %s", false);
+      insert(tyString, "=?", tyString, tyBoolean, "LibSearch.test(%s, %s)", false);
       insert(tyString, "<", tyString, tyBoolean, "(%s).compareTo(%s) < 0", false);
       insert(tyString, "<=", tyString, tyBoolean, "(%s).compareTo(%s) <= 0", false);
       insert(tyString, "==", tyString, tyBoolean, "(%s).equals(%s)", false);
