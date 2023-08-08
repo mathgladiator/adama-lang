@@ -1,0 +1,3 @@
+public formula x = "a" =? "a dog is not a pony";
+public formula y = "x" =? "nope";
+public formula z = "quick" =? "the quick black fox!";

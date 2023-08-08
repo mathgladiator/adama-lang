@@ -1124,7 +1124,7 @@ public class Parser {
 
   public Expression equality() throws AdamaLangException {
     final var left = relate();
-    final var op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("==", "!="));
+    final var op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("==", "!=", "=?"));
     if (op != null) {
       return new BinaryExpression(left, op, relate());
     }

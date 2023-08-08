@@ -17,6 +17,7 @@ public enum BinaryOp {
   GreaterThanOrEqual(">=", false), //
   LessThan("<", false), //
   LessThanOrEqual("<=", false), //
+  Search("=?", false), //
   LogicalXor("^^", false), //
   LogicalAnd("&&", false), //
   LogicalOr("||", false), //
