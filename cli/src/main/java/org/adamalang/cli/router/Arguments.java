@@ -900,7 +900,6 @@ public class Arguments {
 		public Config config;
 		public String space;
 		public String gc = "no";
-		public String root = null;
 		public String file = null;
 		public String directory = null;
 		public static SpaceUploadArgs from(String[] args, int start) {
@@ -929,17 +928,6 @@ public class Arguments {
 					case "--gc": {
 						if (k+1 < args.length) {
 							returnArgs.gc = args[k+1];
-							k++;
-						} else {
-							System.err.println("Expected value for argument '" + args[k] + "'");
-							return null;
-						}
-						break;
-					}
-					case "-r":
-					case "--root": {
-						if (k+1 < args.length) {
-							returnArgs.root = args[k+1];
 							k++;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
@@ -1001,7 +989,6 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-g, --gc", Util.ANSI.Green) + " " + Util.prefix("<gc>", Util.ANSI.White) + " : Delete assets that were not present in this upload.");
-			System.out.println("    " + Util.prefix("-r, --root", Util.ANSI.Green) + " " + Util.prefix("<root>", Util.ANSI.White) + " : Placeholder");
 			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White) + " : A file.");
 			System.out.println("    " + Util.prefix("-d, --directory", Util.ANSI.Green) + " " + Util.prefix("<directory>", Util.ANSI.White) + " : A directory.");
 		}

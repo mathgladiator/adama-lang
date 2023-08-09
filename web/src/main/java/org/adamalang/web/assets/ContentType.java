@@ -94,17 +94,29 @@ public class ContentType {
     map.put("3gp","video/3gpp");
     map.put("3g2","video/3gpp2");
     map.put("7z","application/x-7z-compressed");
+    map.put("webmanifest", "application/manifest+json");
     return map;
   }
 
   public static String of(String filename) {
+    String contentType = null;
     if (filename != null) {
       int lastDot = filename.lastIndexOf('.');
       if (lastDot >= 0) {
         String ext = filename.substring(lastDot + 1).toLowerCase(Locale.ENGLISH);
-        return EXT_TO_CONTENT_TYPE.get(ext);
+        contentType = EXT_TO_CONTENT_TYPE.get(ext);
       }
     }
-    return null;
+    if (contentType == null) {
+      switch (filename) {
+        case ".gitignore":
+          contentType = "text/plain";
+          break;
+      }
+    }
+    if (contentType == null) {
+      contentType = "application/octet-stream";
+    }
+    return contentType;
   }
 }

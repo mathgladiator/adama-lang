@@ -149,7 +149,11 @@ public class ContentTypeTests {
   }
   @Test
   public void not_found() {
-    Assert.assertNull(ContentType.of("bad-filename"));
-    Assert.assertNull(ContentType.of("bad-filename.noext"));
+    Assert.assertEquals("application/octet-stream", ContentType.of("bad-filename"));
+    Assert.assertEquals("application/octet-stream", ContentType.of("bad-filename.noext"));
+  }
+  @Test
+  public void gitignore() {
+    Assert.assertEquals("text/plain", ContentType.of(".gitignore"));
   }
 }
