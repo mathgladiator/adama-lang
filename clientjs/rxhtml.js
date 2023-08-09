@@ -569,28 +569,6 @@ var RxHTML = (function () {
     templates[name] = foo;
   };
 
-  // RUNTIME | <... href="" ...>
-  self.HREF = function (dom, href) {
-    dom.setAttribute("href", fixHref(href));
-    dom.onclick = function (evt) {
-      var parts = (href.startsWith("/") ? href.substring(1) : href).split("/");
-      if (route(parts, 0, router, {})) {
-        evt.preventDefault();
-        self.run(document.body, href, true);
-        return false;
-      }
-      return true;
-    };
-  };
-  // RUNTIME | <... class="" ...>
-  self.ACLASS = function (dom, value) {
-    dom.setAttribute("class", value);
-  };
-  // RUNTIME | <... src="" ...>
-  self.ASRC = function (dom, value) {
-    dom.setAttribute("src", value);
-  };
-
   // RUNTIME | <tag rx:template=$name>
   self.UT = function (parent, state, name, child_maker) {
     var foo = templates[name];
@@ -2058,7 +2036,39 @@ var RxHTML = (function () {
       });
     };
   };
-
+  // <todotask>description</todotask>
+  self.TASK = function(pdom, id, section, description) {
+    var element = document.createElement("div");
+    element.innerHTML = "&#9744; " + description + " ( " + section + ") <br />";
+    pdom.appendChild(element);
+  };
+  // RUNTIME: pre-compression for setting an attribute
+  // "d.setAttribute(a,v);" -->
+  // $.SA(d,a,v);"
+  self.SA = function(dom, attr, value) {
+    dom.setAttribute(attr, value);
+  };
+  // RUNTIME | <... href="" ...>
+  self.HREF = function (dom, href) {
+    dom.setAttribute("href", fixHref(href));
+    dom.onclick = function (evt) {
+      var parts = (href.startsWith("/") ? href.substring(1) : href).split("/");
+      if (route(parts, 0, router, {})) {
+        evt.preventDefault();
+        self.run(document.body, href, true);
+        return false;
+      }
+      return true;
+    };
+  };
+  // RUNTIME | <... class="" ...>
+  self.ACLASS = function (dom, value) {
+    dom.setAttribute("class", value);
+  };
+  // RUNTIME | <... src="" ...>
+  self.ASRC = function (dom, value) {
+    dom.setAttribute("src", value);
+  };
   window.rxhtml = self;
   return self;
 })();

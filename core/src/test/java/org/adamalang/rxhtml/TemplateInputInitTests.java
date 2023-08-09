@@ -25,7 +25,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c = $.E('input');");
-    gold.append("\n    c.setAttribute('name',\"email\");");
+    gold.append("\n    $.SA(c,'name',\"email\");");
     gold.append("\n    {");
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
@@ -37,7 +37,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('textarea');");
-    gold.append("\n    c.setAttribute('name',\"email\");");
+    gold.append("\n    $.SA(c,'name',\"email\");");
     gold.append("\n    {");
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
@@ -49,7 +49,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('select');");
-    gold.append("\n    c.setAttribute('name',\"email\");");
+    gold.append("\n    $.SA(c,'name',\"email\");");
     gold.append("\n    {");
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
@@ -60,12 +60,12 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      e();");
     gold.append("\n    }");
     gold.append("\n    var d = $.E('option');");
-    gold.append("\n    d.setAttribute('value',\"foo\");");
+    gold.append("\n    $.SA(d,'value',\"foo\");");
     gold.append("\n    d.append($.T('FOOO'));");
     gold.append("\n    c.append(d);");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('input');");
-    gold.append("\n    c.setAttribute('type',\"checkbox\");");
+    gold.append("\n    $.SA(c,'type',\"checkbox\");");
     gold.append("\n    c.checked=true;");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
@@ -78,7 +78,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c = $.E('input');");
-    gold.append("\n    c.setAttribute('name',\"email\");");
+    gold.append("\n    $.SA(c,'name',\"email\");");
     gold.append("\n    {");
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
@@ -90,7 +90,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('textarea');");
-    gold.append("\n    c.setAttribute('name',\"email\");");
+    gold.append("\n    $.SA(c,'name',\"email\");");
     gold.append("\n    {");
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
@@ -102,7 +102,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('select');");
-    gold.append("\n    c.setAttribute('name',\"email\");");
+    gold.append("\n    $.SA(c,'name',\"email\");");
     gold.append("\n    {");
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
@@ -113,12 +113,12 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      e();");
     gold.append("\n    }");
     gold.append("\n    var d = $.E('option');");
-    gold.append("\n    d.setAttribute('value',\"foo\");");
+    gold.append("\n    $.SA(d,'value',\"foo\");");
     gold.append("\n    d.append($.T('FOOO'));");
     gold.append("\n    c.append(d);");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('input');");
-    gold.append("\n    c.setAttribute('type',\"checkbox\");");
+    gold.append("\n    $.SA(c,'type',\"checkbox\");");
     gold.append("\n    c.checked=true;");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");

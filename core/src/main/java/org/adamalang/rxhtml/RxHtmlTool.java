@@ -38,7 +38,7 @@ public class RxHtmlTool {
     }
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
-    return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq());
+    return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq(), env.tasks);
   }
 
   private static String buildCustomJavaScript(Document document) {

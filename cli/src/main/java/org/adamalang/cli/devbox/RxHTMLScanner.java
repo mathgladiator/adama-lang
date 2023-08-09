@@ -14,6 +14,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.web.UriMatcher;
 import org.adamalang.rxhtml.Bundler;
+import org.adamalang.rxhtml.template.Task;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
@@ -22,13 +23,18 @@ import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /** this class will scan a directory for changes to .rx.html sources */
 public class RxHTMLScanner implements AutoCloseable {
@@ -138,15 +144,21 @@ public class RxHTMLScanner implements AutoCloseable {
           try {
             do {
               again.set(false);
+              StringBuilder errors = new StringBuilder();
+              AtomicInteger errorCount = new AtomicInteger(0);
               Feedback feedback = new Feedback() {
                 @Override
                 public void warn(Element element, String warning) {
+                  errorCount.incrementAndGet();
+                  errors.append("<li>").append(warning).append("</li>\n");
                   io.notice("rxhtml|warning:" + warning);
                   io.notice("rxhtml|" + element.html());
                 }
               };
               try {
+                long started = System.currentTimeMillis();
                 RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtml(scanRoot)), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
+                long buildTime = System.currentTimeMillis() - started;
                 ObjectNode freq = Json.newJsonObject();
                 int opportunity = 0;
                 for (Map.Entry<String, Integer> e : updated.cssFreq.entrySet()) {
@@ -162,6 +174,36 @@ public class RxHTMLScanner implements AutoCloseable {
                   io.info("rxhtml|css.freq.json built; opportunity=" + opportunity + " bytes");
                 } catch (Exception ex) {
                   io.error("rxhtml|css.freq.json failed to be built");
+                }
+                StringBuilder summary = new StringBuilder();
+                summary.append("<!DOCTYPE html>\n<html>\n<head><title>Task Summary</title></head>\n<body>\n");
+                summary.append("<h1>Stats</h1>\n");
+                summary.append("<b>Build Time</b>:" + buildTime + " ms<br />");
+                summary.append("<b>Uncompressed size (javascript)</b>:" + updated.javascript.length() + " bytes<br />");
+                summary.append("<b>CSS compression potential</b>:" + opportunity + " bytes<br />");
+                {
+                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                  GZIPOutputStream out = new GZIPOutputStream(baos);
+                  out.write(updated.javascript.getBytes(StandardCharsets.UTF_8));
+                  out.flush();
+                  out.close();
+                  summary.append("<b>Compressed size (javascript)</b>:" + baos.toByteArray().length + "<br />");
+                }
+
+                summary.append("<h1>Open Tasks</h1>\n");
+                summary.append("<table border=1>\n");
+                for (Task task : updated.tasks) {
+                  summary.append("<tr><td>").append(task.section).append("</td><td>").append(task.description).append("</td></tr>\n");
+                }
+                summary.append("</table>\n");
+                summary.append("<h1>Errors (").append(errorCount.get()).append(")</h1>\n");
+                summary.append("<ul>\n").append(errors.toString()).append("\n</ul>\n");
+                summary.append("</body>\n</html>\n");
+                try {
+                  Files.writeString(new File("summary.html").toPath(), summary.toString());
+                  io.info("rxhtml|summary.html built");
+                } catch (Exception ex) {
+                  io.error("rxhtml|summary.html failed to be built");
                 }
               } catch (Exception ex) {
                 io.error("rxhtml|failed; check error log; reason=" + ex.getMessage());

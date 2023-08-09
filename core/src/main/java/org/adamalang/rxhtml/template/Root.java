@@ -34,7 +34,7 @@ public class Root {
     String name = env.element.attr("name");
     env.writer.tab().append("$.TP('").append(name).append("', function(").append(parentVar).append(",").append(stateVar).append(",").append(fragmentFunc).append(") {").newline().tabUp();
     Feedback feedback = env.feedback;
-    Base.children(env.stateVar(stateVar).parentVariable(parentVar).fragmentFunc(fragmentFunc).feedback((e, msg) -> feedback.warn(e, "template " + name + ":" + msg)));
+    Base.children(env.stateVar(stateVar).parentVariable(parentVar).fragmentFunc(fragmentFunc).feedback("template " + name, (e, msg) -> feedback.warn(e, "template " + name + ":" + msg)));
     env.pool.give(parentVar);
     env.pool.give(stateVar);
     env.pool.give(fragmentFunc);
@@ -101,7 +101,7 @@ public class Root {
 
     }
     Feedback prior = env.feedback;
-    Base.children(envToUse.feedback((e, msg) -> prior.warn(e, uri + ":" + msg)));
+    Base.children(envToUse.feedback("page:" + uri, (e, msg) -> prior.warn(e, uri + ":" + msg)));
     env.writer.tabDown().tab().append("});").newline();
     env.pool.give(rootVar);
     env.pool.give(stateVar);

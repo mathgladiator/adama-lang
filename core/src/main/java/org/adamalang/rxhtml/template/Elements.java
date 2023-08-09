@@ -8,9 +8,13 @@
  */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.common.Escaping;
+import org.adamalang.common.Hashing;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 
 public class Elements {
@@ -42,6 +46,17 @@ public class Elements {
     } else {
       env.writer.tab().append(env.parentVariable).append(".append($.LT(").append(path.command).append(",'").append(path.name).append("',$.TR('").append(transform).append("')));").newline();
     }
+  }
+
+  public static void todotask(Environment env) {
+    String section = env.section;
+    String description = env.element.html();
+    MessageDigest md5 = Hashing.md5();
+    md5.update(section.getBytes(StandardCharsets.UTF_8));
+    md5.update(description.getBytes(StandardCharsets.UTF_8));
+    String id = Hashing.finishAndEncode(md5);
+    env.tasks.add(new Task(id, section, description));
+    env.writer.tab().append("$.TASK(").append(env.parentVariable).append(",'").append(id).append("','").append(section).append("',\"").append(new Escaping(description).go()).append("\");\n");
   }
 
   public static void title(Environment env) {

@@ -25,10 +25,10 @@ public class TemplateSvgTests extends BaseRxHtmlTest {
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c = $.E('svg', 'http://www.w3.org/2000/svg');");
-    gold.append("\n    c.setAttribute('height',\"210\");");
-    gold.append("\n    c.setAttribute('width',\"400\");");
+    gold.append("\n    $.SA(c,'height',\"210\");");
+    gold.append("\n    $.SA(c,'width',\"400\");");
     gold.append("\n    var d = $.E('path', 'http://www.w3.org/2000/svg');");
-    gold.append("\n    d.setAttribute('d',\"M150 0 L75 200 L225 200 Z\");");
+    gold.append("\n    $.SA(d,'d',\"M150 0 L75 200 L225 200 Z\");");
     gold.append("\n    c.append(d);");
     gold.append("\n    c.append($.T(' Sorry, your browser does not support inline SVG. '));");
     gold.append("\n    b.append(c);");
@@ -42,10 +42,10 @@ public class TemplateSvgTests extends BaseRxHtmlTest {
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c = $.E('svg', 'http://www.w3.org/2000/svg');");
-    gold.append("\n    c.setAttribute('height',\"210\");");
-    gold.append("\n    c.setAttribute('width',\"400\");");
+    gold.append("\n    $.SA(c,'height',\"210\");");
+    gold.append("\n    $.SA(c,'width',\"400\");");
     gold.append("\n    var d = $.E('path', 'http://www.w3.org/2000/svg');");
-    gold.append("\n    d.setAttribute('d',\"M150 0 L75 200 L225 200 Z\");");
+    gold.append("\n    $.SA(d,'d',\"M150 0 L75 200 L225 200 Z\");");
     gold.append("\n    c.append(d);");
     gold.append("\n    c.append($.T(' Sorry, your browser does not support inline SVG. '));");
     gold.append("\n    b.append(c);");
