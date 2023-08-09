@@ -299,7 +299,6 @@
             </documentation>
             <arg name="space" />
             <arg name="gc" default="no" />
-            <arg name="root" default="null" />
             <arg name="file" default="null" />
             <arg name="directory" default="null" />
         </command>

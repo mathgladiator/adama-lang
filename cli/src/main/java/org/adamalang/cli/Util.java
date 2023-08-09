@@ -19,6 +19,10 @@ public class Util {
     return NO_COLOR;
   }
 
+  public static void setNoColor() {
+    NO_COLOR = true;
+  }
+
   public static String prefix(String x, ANSI c) {
     if (nocolor()) {
       return x;
