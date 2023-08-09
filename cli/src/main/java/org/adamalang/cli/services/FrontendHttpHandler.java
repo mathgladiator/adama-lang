@@ -165,16 +165,19 @@ public class FrontendHttpHandler implements HttpHandler {
   public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     String host = headers.get("host");
     if (host != null) {
-      if (host.endsWith("." + init.webConfig.regionalDomain)) {
-        get(SpaceKeyRequest.parse(uri), headers, parametersJson, callback);
-        return;
-      }
-
-      for (String suffix : init.webConfig.globalDomains) {
-        if (host.endsWith("." + suffix)) {
-          String space = host.substring(0, host.length() - suffix.length() - 1);
-          getSpace(space, uri, headers, parametersJson, callback);
+      boolean isSpecial = init.webConfig.specialDomains.contains(host);
+      if (!isSpecial) {
+        if (host.endsWith("." + init.webConfig.regionalDomain)) {
+          get(SpaceKeyRequest.parse(uri), headers, parametersJson, callback);
           return;
+        }
+
+        for (String suffix : init.webConfig.globalDomains) {
+          if (host.endsWith("." + suffix)) {
+            String space = host.substring(0, host.length() - suffix.length() - 1);
+            getSpace(space, uri, headers, parametersJson, callback);
+            return;
+          }
         }
       }
 

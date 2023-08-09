@@ -274,14 +274,16 @@ public class CommonServiceInit {
           callback.success(null);
           return;
         }
-        if (_domainToLookup.endsWith("." + webConfig.regionalDomain)) { // the regional domain -> use default
-          callback.success(null);
-          return;
-        }
-        for (String globalDomain : webConfig.globalDomains) {
-          if (_domainToLookup.endsWith("." + globalDomain)) {
-            _domainToLookup = "wildcard." + globalDomain;
-            break;
+        if (!webConfig.specialDomains.contains(_domainToLookup)) {
+          if (_domainToLookup.endsWith("." + webConfig.regionalDomain)) { // the regional domain -> use default
+            callback.success(null);
+            return;
+          }
+          for (String globalDomain : webConfig.globalDomains) {
+            if (_domainToLookup.endsWith("." + globalDomain)) {
+              _domainToLookup = "wildcard." + globalDomain;
+              break;
+            }
           }
         }
       }
