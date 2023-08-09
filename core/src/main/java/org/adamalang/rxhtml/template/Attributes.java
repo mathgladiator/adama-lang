@@ -191,7 +191,7 @@ public class Attributes {
     } else if (hasChecked && key.equalsIgnoreCase("checked")) {
       env.writer.tab().append(var).append(".checked=").append(expr).append(";").newline();
     } else {
-      env.writer.tab().append(var).append(".setAttribute('").append(key).append("',").append(expr).append(");").newline();
+      env.writer.tab().append("$.SA(").append(var).append(",'").append(key).append("',").append(expr).append(");").newline();
     }
   }
 

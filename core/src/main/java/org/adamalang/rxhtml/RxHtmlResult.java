@@ -11,6 +11,7 @@ package org.adamalang.rxhtml;
 import org.adamalang.runtime.sys.web.WebFragment;
 import org.adamalang.runtime.sys.web.WebPath;
 import org.adamalang.rxhtml.template.Shell;
+import org.adamalang.rxhtml.template.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,8 +23,9 @@ public class RxHtmlResult {
   public final Shell shell;
   public final ArrayList<WebPath> paths;
   public final HashMap<String, Integer> cssFreq;
+  public final ArrayList<Task> tasks;
 
-  public RxHtmlResult(String javascript, String style, Shell shell, ArrayList<String> patterns, HashMap<String, Integer> cssFreq) {
+  public RxHtmlResult(String javascript, String style, Shell shell, ArrayList<String> patterns, HashMap<String, Integer> cssFreq, ArrayList<Task> tasks) {
     this.javascript = javascript;
     this.style = style;
     this.shell = shell;
@@ -32,6 +34,7 @@ public class RxHtmlResult {
       paths.add(new WebPath(pattern));
     }
     this.cssFreq = cssFreq;
+    this.tasks = tasks;
   }
 
   public boolean test(String rawUri) {

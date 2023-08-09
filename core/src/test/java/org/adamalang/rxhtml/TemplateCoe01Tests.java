@@ -25,7 +25,7 @@ public class TemplateCoe01Tests extends BaseRxHtmlTest {
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed','huh'], function(b,a) {");
     gold.append("\n    var c = $.E('fieldset');");
-    gold.append("\n    c.setAttribute('name',\"color\");");
+    gold.append("\n    $.SA(c,'name',\"color\");");
     gold.append("\n    {");
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");
@@ -47,7 +47,7 @@ public class TemplateCoe01Tests extends BaseRxHtmlTest {
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed','huh'], function(b,a) {");
     gold.append("\n    var c = $.E('fieldset');");
-    gold.append("\n    c.setAttribute('name',\"color\");");
+    gold.append("\n    $.SA(c,'name',\"color\");");
     gold.append("\n    {");
     gold.append("\n      var d = {};");
     gold.append("\n      d.__dom = c;");

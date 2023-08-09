@@ -8,7 +8,7 @@
  */
 package org.adamalang.rxhtml;
 
-public class TemplateCheckboxTests extends BaseRxHtmlTest {
+public class TemplateTodotaskTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -24,18 +24,8 @@ public class TemplateCheckboxTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c = $.E('input');");
-    gold.append("\n    $.SA(c,'type',\"checkbox\");");
-    gold.append("\n    {");
-    gold.append("\n      var d = {};");
-    gold.append("\n      d.__dom = c;");
-    gold.append("\n      var e = (function() {");
-    gold.append("\n        this.__dom.checked=this['is_thing'];");
-    gold.append("\n      }).bind(d);");
-    gold.append("\n      $.Y(a,d,'is_thing',e);");
-    gold.append("\n      e();");
-    gold.append("\n    }");
-    gold.append("\n    b.append(c);");
+    gold.append("\n    $.TASK(b,'rLQmQ4ErX42B71qq/sYxSw==','page:/',\"Do thing\");");
+    gold.append("\n    $.TASK(b,'/tvvoWCSV4mNoOlpfVjOLA==','page:/',\"Do a different thing\");");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -45,18 +35,8 @@ public class TemplateCheckboxTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c = $.E('input');");
-    gold.append("\n    $.SA(c,'type',\"checkbox\");");
-    gold.append("\n    {");
-    gold.append("\n      var d = {};");
-    gold.append("\n      d.__dom = c;");
-    gold.append("\n      var e = (function() {");
-    gold.append("\n        this.__dom.checked=this['is_thing'];");
-    gold.append("\n      }).bind(d);");
-    gold.append("\n      $.Y(a,d,'is_thing',e);");
-    gold.append("\n      e();");
-    gold.append("\n    }");
-    gold.append("\n    b.append(c);");
+    gold.append("\n    $.TASK(b,'rLQmQ4ErX42B71qq/sYxSw==','page:/',\"Do thing\");");
+    gold.append("\n    $.TASK(b,'/tvvoWCSV4mNoOlpfVjOLA==','page:/',\"Do a different thing\");");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");
@@ -73,7 +53,8 @@ public class TemplateCheckboxTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <input type=\"checkbox\" checked=\"{is_thing}\" />");
+    source.append("\n        <todotask>Do thing</todotask>");
+    source.append("\n        <todotask>Do a different thing</todotask>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

@@ -17,9 +17,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Environment {
+  public final String section;
   public final Environment parent;
   public final Feedback feedback;
   public final Writer writer;
@@ -32,8 +34,10 @@ public class Environment {
   public final String xmlns;
   public final String fragmentFunc;
   private final Context classContext;
+  public final ArrayList<Task> tasks;
 
-  private Environment(Environment parent, Context classContext, Feedback feedback, Writer writer, VariablePool pool, Element element, boolean elementAlone, String parentVariable, String stateVar, String caseVar, String xmlns, String fragmentFunc) {
+  private Environment(Environment parent, String section, Context classContext, Feedback feedback, Writer writer, VariablePool pool, Element element, boolean elementAlone, String parentVariable, String stateVar, String caseVar, String xmlns, String fragmentFunc, ArrayList<Task> tasks) {
+    this.section = section;
     this.parent = parent;
     this.classContext = classContext;
     this.feedback = feedback;
@@ -46,10 +50,11 @@ public class Environment {
     this.caseVar = caseVar;
     this.xmlns = xmlns;
     this.fragmentFunc = fragmentFunc;
+    this.tasks = tasks;
   }
 
   public static Environment fresh(Feedback feedback) {
-    return new Environment(null, Context.makeClassContext(), feedback, new Writer(), new VariablePool(), null, false, null, null, null, null, null);
+    return new Environment(null, "fresh", Context.makeClassContext(), feedback, new Writer(), new VariablePool(), null, false, null, null, null, null, null, new ArrayList<>());
   }
 
   public HashMap<String, Integer> getCssFreq() {
@@ -85,31 +90,31 @@ public class Environment {
   }
 
   public Environment element(Element element, boolean elementAlone) {
-    return new Environment(this, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks);
   }
 
   public Environment parentVariable(String parentVariable) {
-    return new Environment(this, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks);
   }
 
   public Environment stateVar(String stateVar) {
-    return new Environment(this, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks);
   }
 
   public Environment caseVar(String caseVar) {
-    return new Environment(this, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks);
   }
 
   public Environment xmlns(String xmlns) {
-    return new Environment(this, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks);
   }
 
   public Environment fragmentFunc(String fragmentFunc) {
-    return new Environment(this, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks);
   }
 
-  public Environment feedback(Feedback feedback) {
-    return new Environment(this, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc);
+  public Environment feedback(String section, Feedback feedback) {
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks);
   }
 
   public Context contextOf(String attr) {

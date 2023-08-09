@@ -22,7 +22,7 @@ public class RxHtmlResultTests {
     ArrayList<String> patterns = new ArrayList<>();
     patterns.add("/hi/there");
     patterns.add("/hi/$name/ok");
-    RxHtmlResult result = new RxHtmlResult("js", "css", new Shell(ShellConfig.start().end()), patterns, new HashMap<>());
+    RxHtmlResult result = new RxHtmlResult("js", "css", new Shell(ShellConfig.start().end()), patterns, new HashMap<>(), new ArrayList<>());
     Assert.assertFalse(result.test("/"));
     Assert.assertFalse(result.test("///"));
     Assert.assertFalse(result.test("/////"));

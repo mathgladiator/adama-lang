@@ -29,11 +29,11 @@ public class TemplateBigAttrEscapeTests extends BaseRxHtmlTest {
     gold.append("\n    c.append($.T(' A big escape '));");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('div');");
-    gold.append("\n    c.setAttribute('attr',\"{}\");");
+    gold.append("\n    $.SA(c,'attr',\"{}\");");
     gold.append("\n    c.append($.T(' A single escape for { '));");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('div');");
-    gold.append("\n    c.setAttribute('attr',\"[]\");");
+    gold.append("\n    $.SA(c,'attr',\"[]\");");
     gold.append("\n    c.append($.T(' A single escape for [ '));");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
@@ -50,11 +50,11 @@ public class TemplateBigAttrEscapeTests extends BaseRxHtmlTest {
     gold.append("\n    c.append($.T(' A big escape '));");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('div');");
-    gold.append("\n    c.setAttribute('attr',\"{}\");");
+    gold.append("\n    $.SA(c,'attr',\"{}\");");
     gold.append("\n    c.append($.T(' A single escape for { '));");
     gold.append("\n    b.append(c);");
     gold.append("\n    var c = $.E('div');");
-    gold.append("\n    c.setAttribute('attr',\"[]\");");
+    gold.append("\n    $.SA(c,'attr',\"[]\");");
     gold.append("\n    c.append($.T(' A single escape for [ '));");
     gold.append("\n    b.append(c);");
     gold.append("\n  });");
