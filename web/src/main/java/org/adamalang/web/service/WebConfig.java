@@ -11,6 +11,7 @@ package org.adamalang.web.service;
 import org.adamalang.common.ConfigObject;
 
 import java.io.File;
+import java.util.TreeSet;
 
 public class WebConfig {
   public final String healthCheckPath;
@@ -28,6 +29,7 @@ public class WebConfig {
   public final int idleAllSeconds;
   public final int bossThreads;
   public final int workerThreads;
+  public final TreeSet<String> specialDomains;
   public final String regionalDomain;
   public final String[] globalDomains;
   public final int sharedConnectionPoolMaxLifetimeMilliseconds;
@@ -57,6 +59,10 @@ public class WebConfig {
     this.regionalDomain = config.strOf("regional-domain", "adama-platform.com");
     this.adamaJarDomain = config.strOf("adama-jar-domain", ".adama-platform.com");
     this.globalDomains = config.stringsOf("global-domains", new String[] { "adama.games" });
+    this.specialDomains = new TreeSet<>();
+    for (String sd : config.stringsOf("special-domains", new String[] { "www.adama-platform.com", "ide.adama-platform.com", "book.adama-platform.com" })) {
+      specialDomains.add(sd);
+    }
     this.sharedConnectionPoolMaxLifetimeMilliseconds = config.intOf("shared-connection-max-lifetime-ms", 10000);
     this.sharedConnectionPoolMaxUsageCount = config.intOf("shared-connection-max-usage-count", 50);
     this.sharedConnectionPoolMaxPoolSize = config.intOf("shared-connection-max-pool-size", 50);
