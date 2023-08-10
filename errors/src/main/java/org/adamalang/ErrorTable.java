@@ -617,6 +617,8 @@ public class ErrorTable {
     descriptions.put(967879, "no description of error (yet)");
     names.put(929990, "LIST_ASSETS_PARSE_FAILURE");
     descriptions.put(929990, "no description of error (yet)");
+    names.put(994558, "STREAM_ASSET_CORRUPTED");
+    descriptions.put(994558, "no description of error (yet)");
     names.put(920777, "SUPER_NOT_AUTHORIZED_LIST");
     descriptions.put(920777, "no description of error (yet)");
     names.put(919774, "SUPER_NOT_AUTHORIZED_CHECKIN");
