@@ -43,6 +43,10 @@ public class DevBoxStart {
         localLibAdamaJSFile = null;
       }
     }
+    if (localLibAdamaJSPath == null) {
+      terminal.error("js|currently, --local-libadama-path is required (or configured)");
+      return;
+    }
     DevBoxServices.install(offload, (line) -> terminal.info(line));
     DevBoxAdamaMicroVerse verse = null;
     if (args.microverse != null) {
