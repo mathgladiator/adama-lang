@@ -10,9 +10,7 @@ package org.adamalang.extern.aws;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.caravan.contracts.Cloud;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.*;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.runtime.data.ColdAssetSystem;
 import org.adamalang.runtime.data.Key;
@@ -27,11 +25,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.security.MessageDigest;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAssetSystem {
@@ -61,6 +59,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     String s3key = "assets/" + key.space + "/" + key.key + "/" + asset.id;
     S3SimpleHttpRequestBuilder builder = new S3SimpleHttpRequestBuilder(config, "PUT", s3key, null);
     builder.withContentType(asset.contentType);
+    builder.withContentMD5(asset.md5);
     final SimpleHttpRequest request;
     if (body.getFileIfExists() != null) {
       try {
@@ -81,14 +80,20 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key, null).buildWithEmptyBody();
     base.executeShared(request, new SimpleHttpResponder() {
       private String contentType;
+      private String contentMd5;
       private long written;
       private long size;
       private boolean failed = false;
+      private MessageDigest digest = Hashing.md5();
 
       @Override
       public void start(SimpleHttpResponseHeader header) {
         if (header.status == 200) {
           this.contentType = header.headers.get("content-type");
+          this.contentMd5 = header.headers.get("content-md5");
+          if (contentMd5 == null) {
+            this.contentMd5 = header.headers.get("x-amz-meta-md5");
+          }
           this.written = 0;
         } else {
           failed = true;
@@ -101,13 +106,22 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
       @Override
       public void bodyStart(long size) {
         this.size = size;
-        stream.headers(size, this.contentType);
+        stream.headers(size, this.contentType, this.contentMd5);
       }
 
       @Override
       public void bodyFragment(byte[] chunk, int offset, int len) {
         written += len;
-        stream.body(chunk, offset, len, written == size);
+        boolean last = written == size;
+        digest.update(chunk, offset, len);
+        if (last && this.contentMd5 != null) {
+          String check = Hashing.finishAndEncode(digest);
+          if (!check.equals(this.contentMd5)) {
+            stream.failure(ErrorCodes.STREAM_ASSET_CORRUPTED);
+            return;
+          }
+        }
+        stream.body(chunk, offset, len, last);
       }
 
       @Override

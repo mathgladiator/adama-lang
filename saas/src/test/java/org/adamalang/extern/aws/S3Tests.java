@@ -113,9 +113,10 @@ public class S3Tests {
       ByteArrayOutputStream getResults = new ByteArrayOutputStream();
       s3.request(new AssetRequest("space", key, asset.id), new AssetStream() {
         @Override
-        public void headers(long length, String contentType) {
+        public void headers(long length, String contentType, String md5) {
           Assert.assertEquals(asset.size, length);
           Assert.assertEquals(asset.contentType, contentType);
+          Assert.assertEquals(asset.md5, md5);
           latchGet.countDown();
         }
 
@@ -196,9 +197,10 @@ public class S3Tests {
         ByteArrayOutputStream getResults = new ByteArrayOutputStream();
         s3.request(new AssetRequest("space", "key", asset.id), new AssetStream() {
           @Override
-          public void headers(long length, String contentType) {
+          public void headers(long length, String contentType, String md5) {
             Assert.assertEquals(asset.size, length);
             Assert.assertEquals(asset.contentType, contentType);
+            Assert.assertEquals(asset.md5, md5);
             latchGet.countDown();
           }
 

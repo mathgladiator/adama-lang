@@ -30,7 +30,7 @@ public class CacheBattery {
     Assert.assertNull(ca.attachWhileInExecutor(second));
     first.assertHeaders(expectedSize, "type");
     second.assertHeaders(expectedSize, "type");
-    pump.headers(1000, "nope");
+    pump.headers(1000, "nope", "md5");
     pump.body(CHUNK_1, 0, CHUNK_1.length, false);
     first.assertBody("Hello:");
     second.assertBody("Hello:");
@@ -70,7 +70,7 @@ public class CacheBattery {
     Assert.assertNull(ca.attachWhileInExecutor(second));
     first.assertHeaders(expectedSize, "type");
     second.assertHeaders(expectedSize, "type");
-    pump.headers(1000, "nope");
+    pump.headers(1000, "nope", "md5");
     pump.body(CHUNK_1, 0, CHUNK_1.length, false);
     first.assertBody("Hello:");
     second.assertBody("Hello:");
@@ -111,7 +111,7 @@ public class CacheBattery {
     Assert.assertNull(ca.attachWhileInExecutor(second));
     first.assertHeaders(expectedSize, "type");
     second.assertHeaders(expectedSize, "type");
-    pump.headers(1000, "nope");
+    pump.headers(1000, "nope", "md5");
     pump.body(CHUNK_1, 0, CHUNK_1.length, false);
     first.assertBody("Hello:");
     second.assertBody("Hello:");

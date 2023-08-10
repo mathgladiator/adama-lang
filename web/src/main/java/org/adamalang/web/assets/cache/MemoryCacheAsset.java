@@ -51,7 +51,7 @@ public class MemoryCacheAsset implements CachedAsset {
       attach.failure(failed);
       return null;
     }
-    attach.headers(asset.size, asset.contentType);
+    attach.headers(asset.size, asset.contentType, asset.md5);
     if (done) { // the cache item has been fed, so simply replay what was captured
       byte[] body = memory.toByteArray();
       attach.body(body, 0, body.length, done);
@@ -63,7 +63,7 @@ public class MemoryCacheAsset implements CachedAsset {
       streams.add(attach);
       return new AssetStream() {
         @Override
-        public void headers(long length, String contentType) {
+        public void headers(long length, String contentType, String md5) {
           // the headers were already transmitted
         }
 

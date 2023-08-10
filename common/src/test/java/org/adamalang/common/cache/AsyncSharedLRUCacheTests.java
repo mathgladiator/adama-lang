@@ -83,7 +83,7 @@ public class AsyncSharedLRUCacheTests {
   public void herd_failure() throws Exception {
     MockTime time = new MockTime();
     ArrayList<String> evictions = new ArrayList<>();
-    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 1, 10, 1024, 1000, (key, ms) -> evictions.add(key));
+    SyncCacheLRU<String, MeasuredString> cache = new SyncCacheLRU<>(time, 1, 10, 1024, 1000, (key, ms) -> evictions.add(key));
     SimpleExecutor executor = SimpleExecutor.create("test");
     try {
       AtomicInteger calls = new AtomicInteger(0);

@@ -18,13 +18,15 @@ public class MockAssetStream implements AssetStream {
   private ByteArrayOutputStream memory = new ByteArrayOutputStream();
   private long length = -1;
   private String type = "";
+  private String md5 = null;
   private boolean done = false;
   private Integer failureCode = null;
 
   @Override
-  public void headers(long length, String contentType) {
+  public void headers(long length, String contentType, String md5) {
     this.length = length;
     this.type = contentType;
+    this.md5 = md5;
   }
 
   public void assertHeaders(long exLength, String exType) {

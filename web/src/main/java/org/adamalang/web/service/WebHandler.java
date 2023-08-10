@@ -22,10 +22,7 @@ import io.netty.handler.codec.http.multipart.Attribute;
 import io.netty.handler.codec.http.multipart.FileUpload;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Json;
-import org.adamalang.common.ProtectedUUID;
+import org.adamalang.common.*;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.assets.*;
@@ -40,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -104,6 +102,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     metric.run();
     final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(content));
     HttpUtil.setContentLength(res, content.length);
+    res.headers().set(HttpHeaderNames.ACCEPT_RANGES, "none");
     if (contentType != null) {
       res.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
     }
@@ -117,12 +116,14 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     return new AssetStream() {
       private boolean started = false;
       private String contentType = null;
+      private String contentMd5;
       private long contentLength;
 
       @Override
-      public void headers(long contentLength, String contentType) {
+      public void headers(long contentLength, String contentType, String md5) {
         this.contentLength = contentLength;
         this.contentType = contentType;
+        this.contentMd5 = contentMd5;
       }
 
       @Override
@@ -135,6 +136,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         } else {
           if (!started) {
             DefaultHttpResponse res = new DefaultHttpResponse(req.protocolVersion(), HttpResponseStatus.OK);
+
             setResponseHeaders(res);
             HttpUtil.setKeepAlive(res, keepalive);
             ctx.write(res);
@@ -162,7 +164,13 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             response.headers().set(HttpHeaderNames.CONTENT_LENGTH, contentLength);
           }
         }
-        response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
+        if (contentMd5 != null) {
+          response.headers().set(HttpHeaderNames.CONTENT_MD5, contentMd5);
+        }
+        if (contentType != null) {
+          response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
+        }
+        response.headers().set(HttpHeaderNames.ACCEPT_RANGES, "none");
         transferCors(response, req, cors);
       }
 
@@ -190,8 +198,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     // if the response fails, for any reason, force the stream out of the cache to try again
     AssetStream wrapResponseToEvict = new AssetStream() {
       @Override
-      public void headers(long length, String contentType) {
-        response.headers(length, contentType);
+      public void headers(long length, String contentType, String md5) {
+        response.headers(length, contentType, md5);
       }
 
       @Override
@@ -368,6 +376,24 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
   }
 
+  private static final String CACHED_ADAMA_JAR_MD5 = hashAdamaJar();
+
+  private static String hashAdamaJar() {
+    try {
+      File adamaJar = new File("adama.jar");
+      FileInputStream input = new FileInputStream(adamaJar);
+      MessageDigest md5 = Hashing.md5();
+      byte[] buffer = new byte[8192];
+      int rd;
+      while ((rd = input.read(buffer)) >= 0) {
+        md5.update(buffer, 0, rd);
+      }
+      return Hashing.finishAndEncode(md5);
+    } catch (Exception ex) {
+      return null;
+    }
+  }
+
   private void sendJar(final ChannelHandlerContext ctx, final FullHttpRequest req) {
     jarThread.execute(new Runnable() {
       @Override
@@ -378,6 +404,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
           try {
             boolean keepalive = HttpUtil.isKeepAlive(req);
             HttpResponse res = new DefaultHttpResponse(req.protocolVersion(), HttpResponseStatus.OK);
+            if (CACHED_ADAMA_JAR_MD5 != null) {
+              res.headers().set(HttpHeaderNames.CONTENT_MD5, CACHED_ADAMA_JAR_MD5);
+            }
             res.headers().set(HttpHeaderNames.CONTENT_LENGTH, adamaJar.length());
             res.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/java-archive");
             HttpUtil.setKeepAlive(res, keepalive);
