@@ -43,10 +43,6 @@ public class DevBoxStart {
         localLibAdamaJSFile = null;
       }
     }
-    if (localLibAdamaJSPath == null) {
-      terminal.error("js|currently, --local-libadama-path is required (or configured)");
-      return;
-    }
     DevBoxServices.install(offload, (line) -> terminal.info(line));
     DevBoxAdamaMicroVerse verse = null;
     if (args.microverse != null) {
@@ -60,6 +56,10 @@ public class DevBoxStart {
       } else {
         terminal.error("verse|microverse: '" + args.microverse + "' is not present, using production");
       }
+    }
+    if (localLibAdamaJSPath == null && verse != null) {
+      terminal.error("js|currently, --local-libadama-path is required (or configured) when using a verse");
+      return;
     }
     terminal.info("devbox|starting up");
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
