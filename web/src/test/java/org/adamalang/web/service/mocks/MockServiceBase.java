@@ -148,26 +148,26 @@ public class MockServiceBase implements ServiceBase {
       @Override
       public void request(AssetRequest request, AssetStream stream) {
         if (request.key.equals("1")) {
-          stream.headers(-1, "text/plain");
+          stream.headers(-1, "text/plain", "md5");
           byte[] chunk = "ChunkAndDone".getBytes(StandardCharsets.UTF_8);
           stream.body(chunk, 0, chunk.length, true);
           return;
         }
         if (request.key.equals("fail")) {
-          stream.headers(-1, "text/plain");
+          stream.headers(-1, "text/plain", "md5");
           stream.failure(1234);
           return;
         }
 
         if (request.key.equals("incomplete")) {
-          stream.headers(-1, "text/plain");
+          stream.headers(-1, "text/plain", "md5");
           byte[] chunk = "Chunk".getBytes(StandardCharsets.UTF_8);
           stream.body(chunk, 0, chunk.length, false);
           stream.failure(1234);
           return;
         }
         if (request.key.equals("3")) {
-          stream.headers(-1, "text/plain");
+          stream.headers(-1, "text/plain", "md5");
           byte[] chunk1 = "Chunk1".getBytes(StandardCharsets.UTF_8);
           byte[] chunk2 = "Chunk2".getBytes(StandardCharsets.UTF_8);
           byte[] chunk3 = "Chunk3".getBytes(StandardCharsets.UTF_8);
@@ -182,24 +182,24 @@ public class MockServiceBase implements ServiceBase {
       public void request(Key key, NtAsset asset, AssetStream stream) {
         if (key.key.equals("1")) {
           byte[] chunk = "ChunkAndDone".getBytes(StandardCharsets.UTF_8);
-          stream.headers(chunk.length, "text/plain");
+          stream.headers(chunk.length, "text/plain", "md5");
           stream.body(chunk, 0, chunk.length, true);
           return;
         }
         if (key.key.equals("fail")) {
-          stream.headers(-1, "text/plain");
+          stream.headers(-1, "text/plain", "md5");
           stream.failure(1234);
           return;
         }
         if (key.key.equals("incomplete")) {
           byte[] chunk = "Chunk".getBytes(StandardCharsets.UTF_8);
-          stream.headers(chunk.length, "text/plain");
+          stream.headers(chunk.length, "text/plain", "md5");
           stream.body(chunk, 0, chunk.length, false);
           stream.failure(1234);
           return;
         }
         if (key.key.equals("3")) {
-          stream.headers(-1, "text/plain");
+          stream.headers(-1, "text/plain", "md5");
           byte[] chunk1 = "Chunk1".getBytes(StandardCharsets.UTF_8);
           byte[] chunk2 = "Chunk2".getBytes(StandardCharsets.UTF_8);
           byte[] chunk3 = "Chunk3".getBytes(StandardCharsets.UTF_8);

@@ -10,7 +10,7 @@ package org.adamalang.web.assets;
 
 /** an asset being streamed */
 public interface AssetStream {
-  void headers(long length, String contentType);
+  void headers(long length, String contentType, String contentMd5);
 
   void body(byte[] chunk, int offset, int length, boolean last);
 

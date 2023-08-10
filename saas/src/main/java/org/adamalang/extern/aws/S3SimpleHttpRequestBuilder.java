@@ -42,6 +42,12 @@ public class S3SimpleHttpRequestBuilder {
     return this;
   }
 
+  public S3SimpleHttpRequestBuilder withContentMD5(String md5) {
+    this.headers.put("Content-MD5", md5);
+    this.headers.put("x-amz-meta-md5", md5);
+    return this;
+  }
+
   private SignatureV4 startSigning() {
     SignatureV4 v4 = new SignatureV4(config.credential, config.region, "s3", method, host, "/" + config.bucket + "/" + s3key);
     for (Map.Entry<String, String> entry : headers.entrySet()) {

@@ -8,6 +8,7 @@
  */
 package org.adamalang.common;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
 
@@ -34,6 +35,6 @@ public class Hashing {
   }
 
   public static String finishAndEncode(MessageDigest digest) {
-    return new String(Base64.getEncoder().encode(digest.digest()));
+    return new String(Base64.getEncoder().encode(digest.digest()), StandardCharsets.UTF_8);
   }
 }
