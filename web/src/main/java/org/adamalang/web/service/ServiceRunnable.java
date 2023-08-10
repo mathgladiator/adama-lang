@@ -80,7 +80,9 @@ public class ServiceRunnable implements Runnable {
           final EventLoopGroup workerGroup = new NioEventLoopGroup(webConfig.workerThreads);
           try {
             final var b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new Initializer(webConfig, metrics, base, certificateFinder, context, cache));
+            b.group(bossGroup, workerGroup)//
+             .channel(NioServerSocketChannel.class) //
+             .childHandler(new Initializer(webConfig, metrics, base, certificateFinder, context, cache));
             final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
             LOGGER.info("channel-registered");
