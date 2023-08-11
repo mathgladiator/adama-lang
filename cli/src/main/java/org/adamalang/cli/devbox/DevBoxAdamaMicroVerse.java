@@ -227,22 +227,7 @@ public class DevBoxAdamaMicroVerse {
         }
       }
     }
-    DevCoreServiceFactory factory = new DevCoreServiceFactory(alive, caravanPath, cloudPath, new NoOpMetricsFactory(), new KeyToIdService() {
-      @Override
-      public void translate(Key key, Callback<Long> callback) {
-        if (keys.containsKey(key)) {
-          callback.success(keys.get(key));
-          return;
-        }
-        callback.failure(new ErrorCodeException(1000));
-      }
-
-      @Override
-      public void forget(Key key) {
-        // N/A
-      }
-    });
-
+    DevCoreServiceFactory factory = new DevCoreServiceFactory(alive, caravanPath, cloudPath, new NoOpMetricsFactory());
     JsonNode spacesNode = defn.get("spaces");
     if (spacesNode == null || !spacesNode.isArray()) {
       io.notice("verse|lacked a spaces array in microverse config");

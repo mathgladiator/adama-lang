@@ -55,11 +55,11 @@ public class KeyMap {
     return new TreeMap<>(forward);
   }
 
-  public MapKey inventAndApply(Key key, int suggestion) {
+  public MapKey inventAndApply(Key key) {
     if (forward.containsKey(key)) {
       return null;
     }
-    int id = suggestion;
+    int id = ++idgen;
     while (true) {
       if (!reverse.containsKey(id)) {
         MapKey result = new MapKey(key, id);

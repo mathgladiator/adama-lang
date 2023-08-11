@@ -36,7 +36,7 @@ public class DevCoreServiceFactory {
   public final DeploymentFactoryBase base;
   public final CoreService service;
 
-  public DevCoreServiceFactory(AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory, KeyToIdService keyToIdService) throws Exception {
+  public DevCoreServiceFactory(AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory) throws Exception {
     this.alive = alive;
     this.caravanExecutor = SimpleExecutor.create("caravan");
     File walRoot = new File(caravanPath, "wal");
@@ -71,7 +71,7 @@ public class DevCoreServiceFactory {
 
       }
     };
-    dataService = new CaravanDataService(new CaravanMetrics(metricsFactory), cloud, keyToIdService, store, caravanExecutor);
+    dataService = new CaravanDataService(new CaravanMetrics(metricsFactory), cloud, store, caravanExecutor);
     this.flusher = new Thread(() -> {
       while (alive.get()) {
         try {

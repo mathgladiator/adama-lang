@@ -12,7 +12,6 @@ import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.CaravanMetrics;
 import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.data.DurableListStore;
-import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.cli.Config;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
@@ -45,7 +44,7 @@ public class CaravanInit {
     dataRoot.mkdir();
     File storePath = new File(dataRoot, "store");
     DurableListStore store = new DurableListStore(new DiskMetrics(init.metricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
-    this.caravanDataService = new CaravanDataService(new CaravanMetrics(init.metricsFactory), init.s3, new FinderServiceToKeyToIdService(init.finder), store, caravanExecutor);
+    this.caravanDataService = new CaravanDataService(new CaravanMetrics(init.metricsFactory), init.s3, store, caravanExecutor);
     Base managedBase = new Base(init.finder, caravanDataService, init.s3, init.region, init.machine, managedExecutor, 2 * 60 * 1000);
     this.service = new ManagedDataService(managedBase);
     this.flusher = new Thread(() -> {

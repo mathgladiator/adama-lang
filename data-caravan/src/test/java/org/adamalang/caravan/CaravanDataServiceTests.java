@@ -8,7 +8,6 @@
  */
 package org.adamalang.caravan;
 
-import org.adamalang.caravan.contracts.KeyToIdService;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.events.LocalCache;
@@ -47,7 +46,6 @@ public class CaravanDataServiceTests {
           4, 4, null, "REQUEST", "{\"x\":4}", "{\"x\":3,\"z\":42}", true, 0, 300, UpdateType.AddUserData);
 
   private static class Setup {
-    private final KeyToIdService keyToIdService;
     private final DurableListStore store;
     private final SimpleExecutor executor;
     private final File root;
@@ -61,18 +59,8 @@ public class CaravanDataServiceTests {
       root.delete();
       root.mkdirs();
       this.store = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), new File(root, "STORE"), root, 1024 * 1024, 64 * 1024, 1024 * 1024 * 32);
-      this.keyToIdService = new KeyToIdService() {
-        @Override
-        public void translate(Key key, Callback<Long> callback) {
-          callback.success(Long.parseLong(key.key));
-        }
-
-        @Override
-        public void forget(Key key) {
-        }
-      };
       this.cloud = new MockCloud();
-      this.service = new CaravanDataService(new CaravanMetrics(new NoOpMetricsFactory()), cloud, keyToIdService, store, executor);
+      this.service = new CaravanDataService(new CaravanMetrics(new NoOpMetricsFactory()), cloud, store, executor);
       this.flusher = new Thread(new Runnable() {
         @Override
         public void run() {
