@@ -25,12 +25,6 @@ public class OrganizationSnapshot implements WALEntry {
     this.keymap = keymap;
   }
 
-  @Deprecated
-  public static void populateAfterTypeId_OLD(ByteBuf buf, Heap heap, Index index) {
-    heap.load(buf);
-    index.load(buf);
-  }
-
   public static void populateAfterTypeId(ByteBuf buf, Heap heap, Index index, KeyMap keymap) {
     heap.load(buf);
     index.load(buf);

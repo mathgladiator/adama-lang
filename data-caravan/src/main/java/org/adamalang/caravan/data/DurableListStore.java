@@ -143,9 +143,6 @@ public class DurableListStore {
                 heap.free(region);
               }
               break;
-            case 0x55: // snapshot with just heap and index
-              OrganizationSnapshot.populateAfterTypeId_OLD(buf, heap, index);
-              break;
             case 0x57: // snapshot
               OrganizationSnapshot.populateAfterTypeId(buf, heap, index, keymap);
               break;
