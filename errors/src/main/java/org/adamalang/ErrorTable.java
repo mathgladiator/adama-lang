@@ -324,16 +324,10 @@ public class ErrorTable {
     descriptions.put(674832, "no description of error (yet)");
     names.put(634899, "USER_FAILED_TO_SET_PROFILE");
     descriptions.put(634899, "no description of error (yet)");
-    names.put(966671, "AUTH_FAILED_FINDING_DEVELOPER_KEY");
-    descriptions.put(966671, "no description of error (yet)");
-    names.put(950322, "AUTH_FAILED_SUPER_AUTHENTICATE");
-    descriptions.put(950322, "no description of error (yet)");
     names.put(982253, "AUTH_FAILED_DOC_AUTHENTICATE");
     descriptions.put(982253, "no description of error (yet)");
     names.put(916531, "AUTH_FAILED_VALIDATING_AGAINST_KEYSTORE");
     descriptions.put(916531, "no description of error (yet)");
-    names.put(973839, "AUTH_UNKNOWN_EXCEPTION");
-    descriptions.put(973839, "no description of error (yet)");
     names.put(403403, "AUTH_FORBIDDEN");
     descriptions.put(403403, "no description of error (yet)");
     names.put(995342, "AUTH_INVALID_TOKEN_LAYOUT");

@@ -1419,7 +1419,6 @@ var RxHTML = (function () {
     } else {
       // whatever page we are, needs to die which means we need to nuke everything!
       window.setTimeout(function () {
-        // TODO: this assumes a full app goes to the window
         self.goto(redirectToFunc());
       }, 10);
       return { abort: true };
@@ -1442,7 +1441,7 @@ var RxHTML = (function () {
       },
       failure: function (reason) {
         callback.failure(reason);
-        if (reason == 966671) {
+        if (reason == 403403) {
           lookup.cleanup();
         }
       }
@@ -1558,10 +1557,7 @@ var RxHTML = (function () {
         // register the failure
         co.set_connected(false);
         co.ptr = null;
-
-        // TODO: check for reasons to cancel based on AUTH, so we can clean up
-        var authFailure = false;
-        if (authFailure) {
+        if (reason == 403403) {
           cleanup();
           return;
         }
