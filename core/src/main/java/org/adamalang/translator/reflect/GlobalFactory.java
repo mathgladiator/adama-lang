@@ -186,6 +186,9 @@ public class GlobalFactory {
       if (at instanceof HiddenTypes2) {
         return new Class<?>[]{((HiddenTypes2) at).class1(), ((HiddenTypes2) at).class2()};
       }
+      if (at instanceof HiddenTypes3) {
+        return new Class<?>[]{((HiddenTypes3) at).class1(), ((HiddenTypes3) at).class2(), ((HiddenTypes3) at).class3()};
+      }
     }
     return null;
   }

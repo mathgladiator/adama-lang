@@ -14,6 +14,12 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class JsonConstructionTests {
+
+  @Test
+  public void listMaybeStrSetup() throws Exception {
+    new RealDocumentSetup("record S { maybe<string> item; } table<S> s; public formula j = (iterate s).item.join(\", \");");
+  }
+
   @Test
   public void sendMessageBasic() throws Exception {
     final var setup =

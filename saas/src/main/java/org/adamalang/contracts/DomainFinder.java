@@ -6,8 +6,13 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.contracts;
 
-public class Platform {
-  public static final String VERSION = "20230811125131";
+import org.adamalang.common.Callback;
+import org.adamalang.mysql.data.Domain;
+
+/** find a domain */
+public interface DomainFinder {
+
+  public void find(String domain, Callback<Domain> callback);
 }

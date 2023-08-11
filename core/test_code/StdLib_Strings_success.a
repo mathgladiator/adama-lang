@@ -19,6 +19,12 @@ public string y3;
 public string y4;
 public formula y4_cp = y4.codepoints();
 public formula r2023 = (2023).to_roman();
+public maybe<string> join_maybe;
+
+record S {
+  maybe<string> item;
+}
+table<S> _s;
 
 @construct {
   x1 = "123".reverse();
@@ -39,4 +45,11 @@ public formula r2023 = (2023).to_roman();
   y2 = "ABCDEFABCDEFABCDEF".replaceAll("DEF", "XYZ");
   y3 = ["X", "Y"].concat();
   y4 = ["X", "Y"].join(", ");
+  _s <- {item:@maybe<string>};
+  _s <- {item:@maybe<string>};
+  _s <- {item:"x"};
+  _s <- {item:@maybe<string>};
+  _s <- {item:"y"};
+  _s <- {item:"z"};
+  join_maybe = (iterate _s).item.join(", ");
 }
