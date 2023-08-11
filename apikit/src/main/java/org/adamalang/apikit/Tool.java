@@ -9,7 +9,7 @@
 package org.adamalang.apikit;
 
 import org.adamalang.apikit.codegen.*;
-import org.adamalang.apikit.docgen.AssembleAPIDocs;
+import org.adamalang.apikit.codegen.AssembleAPIDocs;
 import org.adamalang.apikit.model.*;
 import org.adamalang.common.DefaultCopyright;
 import org.w3c.dom.Document;

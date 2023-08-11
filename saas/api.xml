@@ -1207,7 +1207,7 @@
         <field name="timestamp" />
     </responder>
 
-    <method name="super/check-in" responder="simple" scope="global">
+    <method name="super/check-in" responder="simple" scope="global" internal="true">
         <parameter name="identity"/>
         <documentation>
             The super agent periodically checks in.
@@ -1216,8 +1216,7 @@
         </documentation>
     </method>
 
-
-    <method name="super/list-automatic-domains" responder="automatic-domain-listing" scope="global">
+    <method name="super/list-automatic-domains" responder="automatic-domain-listing" scope="global" internal="true">
         <parameter name="identity"/>
         <parameter name="timestamp"/>
         <documentation>
@@ -1225,7 +1224,7 @@
         </documentation>
     </method>
 
-    <method name="super/set-domain-certificate" responder="simple" scope="global">
+    <method name="super/set-domain-certificate" responder="simple" scope="global" internal="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="certificate"/>
@@ -1245,7 +1244,7 @@
         <field name="timestamp"/>
     </responder>
 
-    <method name="regional/domain-lookup" responder="domain-raw" scope="global">
+    <method name="regional/domain-lookup" responder="domain-raw" scope="global" internal="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <documentation>
@@ -1311,7 +1310,7 @@
         <field name="deleted" />
     </responder>
 
-    <method name="regional/finder/find" responder="finder-result" scope="global">
+    <method name="regional/finder/find" responder="finder-result" scope="global" internal="true">
         <documentation>
             Find the host for a given document
         </documentation>
@@ -1320,7 +1319,7 @@
         <parameter name="key" />
     </method>
 
-    <method name="regional/finder/free" responder="simple" scope="global">
+    <method name="regional/finder/free" responder="simple" scope="global" internal="true">
         <documentation>
             Free the binding from the given machine and region
         </documentation>
@@ -1331,7 +1330,7 @@
         <parameter name="machine" />
     </method>
 
-    <method name="regional/finder/findbind" responder="finder-result" scope="global">
+    <method name="regional/finder/findbind" responder="finder-result" scope="global" internal="true">
         <documentation>
             Find the host, and if not bound then take possession
         </documentation>
@@ -1342,7 +1341,7 @@
         <parameter name="machine" />
     </method>
 
-    <method name="regional/finder/delete/mark" responder="simple" scope="global">
+    <method name="regional/finder/delete/mark" responder="simple" scope="global" internal="true">
         <documentation>
             Delete the document from the finder
         </documentation>
@@ -1352,7 +1351,7 @@
         <parameter name="region" />
         <parameter name="machine" />
     </method>
-    <method name="regional/finder/delete/commit" responder="simple" scope="global">
+    <method name="regional/finder/delete/commit" responder="simple" scope="global" internal="true">
         <documentation>
             Delete the document from the finder
         </documentation>
@@ -1362,7 +1361,7 @@
         <parameter name="region" />
         <parameter name="machine" />
     </method>
-    <method name="regional/finder/back-up" responder="simple" scope="global">
+    <method name="regional/finder/back-up" responder="simple" scope="global" internal="true">
         <documentation>
             Set the archive key
         </documentation>
@@ -1379,7 +1378,7 @@
         <field name="key" />
     </responder>
 
-    <method name="regional/finder/list" responder="keys" scope="global">
+    <method name="regional/finder/list" responder="keys" scope="global" internal="true">
         <documentation>
             List the keys on the given machine
         </documentation>
@@ -1388,7 +1387,7 @@
         <parameter name="machine" />
     </method>
 
-    <method name="regional/finder/deletion-list" responder="keys" scope="global">
+    <method name="regional/finder/deletion-list" responder="keys" scope="global" internal="true">
         <documentation>
             List keys that are in the process of being deleted from this host (i.e. marked and not committed)
         </documentation>

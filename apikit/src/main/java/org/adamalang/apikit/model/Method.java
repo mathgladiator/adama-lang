@@ -34,8 +34,9 @@ public class Method {
   public final boolean callOnDisconnect;
   public final boolean devbox;
   public final String scope;
+  public final boolean internal;
 
-  public Method(String name, ParameterDefinition[] parameters, String documentation, Responder responder, String handler, String create, String findBy, int errorCantFindBy, boolean destroy, boolean callOnDisconnect, boolean devbox, String scope) {
+  public Method(String name, ParameterDefinition[] parameters, String documentation, Responder responder, String handler, String create, String findBy, int errorCantFindBy, boolean destroy, boolean callOnDisconnect, boolean devbox, String scope, boolean internal) {
     this.name = name;
     this.camelName = Common.camelize(name);
     this.camelName2 = Common.camelize(name, true);
@@ -51,6 +52,7 @@ public class Method {
     this.callOnDisconnect = callOnDisconnect;
     this.devbox = devbox;
     this.scope = scope;
+    this.internal = internal;
   }
 
   public static Method[] methodsOf(Document document, Map<String, ParameterDefinition> parameters, Map<String, Responder> responders) throws Exception {
@@ -80,6 +82,7 @@ public class Method {
         handlerValue = "Root" + Common.camelize(scope);
       }
       boolean destroy = "true".equals(element.getAttribute("destroy"));
+      boolean internal = "true".equals(element.getAttribute("internal"));
       boolean devbox = "true".equals(element.getAttribute("devbox"));
       boolean callOnDisconnect = "true".equals(element.getAttribute("call-on-disconnect"));
 
@@ -108,7 +111,7 @@ public class Method {
         throw new Exception("method has no documentation");
       }
       System.out.println("\u001b[36mAPI:\u001b[0m" + name);
-      methodsArrayList.add(new Method(name, parametersArrayList.toArray(new ParameterDefinition[parametersArrayList.size()]), documentation, responder, handlerValue, createValue, findByValue, errorCantFindBy, destroy, callOnDisconnect, devbox, scope));
+      methodsArrayList.add(new Method(name, parametersArrayList.toArray(new ParameterDefinition[parametersArrayList.size()]), documentation, responder, handlerValue, createValue, findByValue, errorCantFindBy, destroy, callOnDisconnect, devbox, scope, internal));
     }
     return methodsArrayList.toArray(new Method[methodsArrayList.size()]);
   }

@@ -28,6 +28,9 @@ public class AssembleJavaScriptClient {
   private static String makeInvokePlainJs(Method[] methods) throws Exception {
     StringBuilder js = new StringBuilder();
     for (Method method : methods) {
+      if (method.internal) {
+        continue;
+      }
       if (method.handler.startsWith("Root")) {
         js.append("  ").append(method.camelName).append("(");
         boolean append1 = false;
