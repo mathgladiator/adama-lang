@@ -42,6 +42,11 @@ public class FinderServiceToKeyToIdServiceTests {
       }
 
       @Override
+      public void findbind(Key key, String machine, Callback<Result> callback) {
+        
+      }
+
+      @Override
       public void free(Key key, String machineOn, Callback<Void> callback) {
 
       }

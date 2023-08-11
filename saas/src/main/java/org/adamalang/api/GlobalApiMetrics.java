@@ -47,6 +47,15 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_SuperCheckIn;
   public final RequestResponseMonitor monitor_SuperListAutomaticDomains;
   public final RequestResponseMonitor monitor_SuperSetDomainCertificate;
+  public final RequestResponseMonitor monitor_RegionalDomainLookup;
+  public final RequestResponseMonitor monitor_RegionalFinderFind;
+  public final RequestResponseMonitor monitor_RegionalFinderFree;
+  public final RequestResponseMonitor monitor_RegionalFinderFindbind;
+  public final RequestResponseMonitor monitor_RegionalFinderDeleteMark;
+  public final RequestResponseMonitor monitor_RegionalFinderDeleteCommit;
+  public final RequestResponseMonitor monitor_RegionalFinderBackUp;
+  public final RequestResponseMonitor monitor_RegionalFinderList;
+  public final RequestResponseMonitor monitor_RegionalFinderDeletionList;
 
   public GlobalApiMetrics(MetricsFactory factory) {
     this.monitor_InitSetupAccount = factory.makeRequestResponseMonitor("init/setup-account");
@@ -84,5 +93,14 @@ public class GlobalApiMetrics {
     this.monitor_SuperCheckIn = factory.makeRequestResponseMonitor("super/check-in");
     this.monitor_SuperListAutomaticDomains = factory.makeRequestResponseMonitor("super/list-automatic-domains");
     this.monitor_SuperSetDomainCertificate = factory.makeRequestResponseMonitor("super/set-domain-certificate");
+    this.monitor_RegionalDomainLookup = factory.makeRequestResponseMonitor("regional/domain-lookup");
+    this.monitor_RegionalFinderFind = factory.makeRequestResponseMonitor("regional/finder/find");
+    this.monitor_RegionalFinderFree = factory.makeRequestResponseMonitor("regional/finder/free");
+    this.monitor_RegionalFinderFindbind = factory.makeRequestResponseMonitor("regional/finder/findbind");
+    this.monitor_RegionalFinderDeleteMark = factory.makeRequestResponseMonitor("regional/finder/delete/mark");
+    this.monitor_RegionalFinderDeleteCommit = factory.makeRequestResponseMonitor("regional/finder/delete/commit");
+    this.monitor_RegionalFinderBackUp = factory.makeRequestResponseMonitor("regional/finder/back-up");
+    this.monitor_RegionalFinderList = factory.makeRequestResponseMonitor("regional/finder/list");
+    this.monitor_RegionalFinderDeletionList = factory.makeRequestResponseMonitor("regional/finder/deletion-list");
   }
 }

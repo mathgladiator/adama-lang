@@ -303,6 +303,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="certificate" type="string">
+        <documentation>
+            The certificate of a domain
+        </documentation>
+    </field-definition>
+
     <field-definition name="reset" type="bool">
         <documentation>
             Signal that the associated delta should reset the entire state of the replication.
@@ -489,6 +495,12 @@
     <field-definition name="rxhtml" type="string">
         <documentation>
             The RxHTML forest for a space.
+        </documentation>
+    </field-definition>
+
+    <field-definition name="owner" type="int">
+        <documentation>
+            Adama ID for the owner of an asset (encoded email)
         </documentation>
     </field-definition>
 
@@ -1221,6 +1233,168 @@
         <documentation>
             The super agent will set a domain
         </documentation>
+    </method>
+
+    <responder name="domain-raw">
+        <field name="domain"/>
+        <field name="owner"/>
+        <field name="space"/>
+        <field name="key"/>
+        <field name="route"/>
+        <field name="certificate"/>
+        <field name="timestamp"/>
+    </responder>
+
+    <method name="regional/domain-lookup" responder="domain-raw" scope="global">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <documentation>
+            For regional proxies to lookup domains.
+        </documentation>
+    </method>
+
+
+    <parameter-definition name="machine" type="string" missing-error="9005" logged="true">
+        <documentation>
+            The machine to bind too
+        </documentation>
+    </parameter-definition>
+    <parameter-definition name="region" type="string" missing-error="9006" logged="true">
+        <documentation>
+            The region to bind too
+        </documentation>
+    </parameter-definition>
+    <parameter-definition name="archive" type="string" missing-error="9007" logged="true">
+        <documentation>
+            The archive key to bind too
+        </documentation>
+    </parameter-definition>
+
+    <field-definition name="id" type="long">
+        <documentation>
+            a long id
+        </documentation>
+    </field-definition>
+    <field-definition name="location-type" type="int">
+        <documentation>
+            Information about the found results
+        </documentation>
+    </field-definition>
+    <field-definition name="archive" type="string">
+        <documentation>
+            The archive containing the backup of the document
+        </documentation>
+    </field-definition>
+    <field-definition name="region" type="string">
+        <documentation>
+            The region where the document exists
+        </documentation>
+    </field-definition>
+    <field-definition name="machine" type="string">
+        <documentation>
+            The machine the document is located on
+        </documentation>
+    </field-definition>
+
+    <field-definition name="deleted" type="boolean">
+        <documentation>
+            Is the document marked for deletion?
+        </documentation>
+    </field-definition>
+
+    <responder name="finder-result">
+        <field name="id" />
+        <field name="location-type" />
+        <field name="archive" />
+        <field name="region" />
+        <field name="machine" />
+        <field name="deleted" />
+    </responder>
+
+    <method name="regional/finder/find" responder="finder-result" scope="global">
+        <documentation>
+            Find the host for a given document
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space" />
+        <parameter name="key" />
+    </method>
+
+    <method name="regional/finder/free" responder="simple" scope="global">
+        <documentation>
+            Free the binding from the given machine and region
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="region" />
+        <parameter name="machine" />
+    </method>
+
+    <method name="regional/finder/findbind" responder="finder-result" scope="global">
+        <documentation>
+            Find the host, and if not bound then take possession
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="region" />
+        <parameter name="machine" />
+    </method>
+
+    <method name="regional/finder/delete/mark" responder="simple" scope="global">
+        <documentation>
+            Delete the document from the finder
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="region" />
+        <parameter name="machine" />
+    </method>
+    <method name="regional/finder/delete/commit" responder="simple" scope="global">
+        <documentation>
+            Delete the document from the finder
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="region" />
+        <parameter name="machine" />
+    </method>
+    <method name="regional/finder/back-up" responder="simple" scope="global">
+        <documentation>
+            Set the archive key
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="region" />
+        <parameter name="machine" />
+        <parameter name="archive" />
+    </method>
+
+    <responder name="keys" stream="true">
+        <field name="space" />
+        <field name="key" />
+    </responder>
+
+    <method name="regional/finder/list" responder="keys" scope="global">
+        <documentation>
+            List the keys on the given machine
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="region" />
+        <parameter name="machine" />
+    </method>
+
+    <method name="regional/finder/deletion-list" responder="keys" scope="global">
+        <documentation>
+            List keys that are in the process of being deleted from this host (i.e. marked and not committed)
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="region" />
+        <parameter name="machine" />
     </method>
 
     <!--
