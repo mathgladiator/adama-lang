@@ -59,6 +59,22 @@ public class Finder implements FinderService {
   }
 
   @Override
+  public void findbind(Key key, String machine, Callback<Result> callback) {
+    // dumb implementation
+    bind(key, machine, new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        find(key, callback);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        find(key, callback);
+      }
+    });
+  }
+
+  @Override
   public void bind(Key key, String machine, Callback<Void> callback) {
     dataBase.transact((connection) -> {
       String updateIndexSQL = //

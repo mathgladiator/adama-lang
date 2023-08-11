@@ -457,6 +457,106 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }
 
+  /** regional/domain-lookup */
+  public void regionalDomainLookup(ClientRegionalDomainLookupRequest request, Callback<ClientDomainRawResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/domain-lookup");
+    node.put("identity", request.identity);
+    node.put("domain", request.domain);
+    pool.requestResponse(node, (obj) -> new ClientDomainRawResponse(obj), callback);
+  }
+
+  /** regional/finder/find */
+  public void regionalFinderFind(ClientRegionalFinderFindRequest request, Callback<ClientFinderResultResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/finder/find");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    pool.requestResponse(node, (obj) -> new ClientFinderResultResponse(obj), callback);
+  }
+
+  /** regional/finder/free */
+  public void regionalFinderFree(ClientRegionalFinderFreeRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/finder/free");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
+  /** regional/finder/findbind */
+  public void regionalFinderFindbind(ClientRegionalFinderFindbindRequest request, Callback<ClientFinderResultResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/finder/findbind");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestResponse(node, (obj) -> new ClientFinderResultResponse(obj), callback);
+  }
+
+  /** regional/finder/delete/mark */
+  public void regionalFinderDeleteMark(ClientRegionalFinderDeleteMarkRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/finder/delete/mark");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
+  /** regional/finder/delete/commit */
+  public void regionalFinderDeleteCommit(ClientRegionalFinderDeleteCommitRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/finder/delete/commit");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
+  /** regional/finder/back-up */
+  public void regionalFinderBackUp(ClientRegionalFinderBackUpRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/finder/back-up");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    node.put("archive", request.archive);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
+  /** regional/finder/list */
+  public void regionalFinderList(ClientRegionalFinderListRequest request, Stream<ClientKeysResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/finder/list");
+    node.put("identity", request.identity);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestStream(node, (obj) -> new ClientKeysResponse(obj), streamback);
+  }
+
+  /** regional/finder/deletion-list */
+  public void regionalFinderDeletionList(ClientRegionalFinderDeletionListRequest request, Stream<ClientKeysResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/finder/deletion-list");
+    node.put("identity", request.identity);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestStream(node, (obj) -> new ClientKeysResponse(obj), streamback);
+  }
+
   public class AttachmentUploadHandler {
     public final WebClientConnection _direct;
     public final int _id;

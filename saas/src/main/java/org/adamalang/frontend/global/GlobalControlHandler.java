@@ -32,6 +32,7 @@ import org.adamalang.validators.ValidateEmail;
 import org.adamalang.web.client.SimpleHttpRequest;
 import org.adamalang.web.client.SimpleHttpRequestBody;
 import org.adamalang.web.client.StringCallbackHttpResponder;
+import org.adamalang.web.io.JsonResponder;
 import org.adamalang.web.io.NoOpJsonResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -699,6 +700,79 @@ public class GlobalControlHandler implements RootGlobalHandler {
       }
     } else {
       responder.error(new ErrorCodeException(ErrorCodes.SUPER_NOT_AUTHORIZED_SET_AUTOMATIC));
+    }
+  }
+
+  private boolean checkRegional(AuthenticatedUser who, JsonResponder responder) {
+
+    return false;
+  }
+
+  @Override
+  public void handle(Session session, RegionalDomainLookupRequest request, DomainRawResponder responder) {
+    if (checkRegional(request.who, responder.responder)) {
+
+    }
+    //Domain domain = request.resolvedDomain.domain;
+    //public void complete(String domain, Long owner, String space, String key, Boolean route, String certificate, Long timestamp) {
+    // responder.complete(domain.domain, domain.owner, domain.space, domain.key, domain.routeKey, domain.certificate, domain.timestamp);
+  }
+
+  @Override
+  public void handle(Session session, RegionalFinderFindRequest request, FinderResultResponder responder) {
+    if (checkRegional(request.who, responder.responder)) {
+
+    }
+  }
+
+  @Override
+  public void handle(Session session, RegionalFinderFindbindRequest request, FinderResultResponder responder) {
+    if (checkRegional(request.who, responder.responder)) {
+
+    }
+  }
+
+
+
+  @Override
+  public void handle(Session session, RegionalFinderDeleteCommitRequest request, SimpleResponder responder) {
+    if (checkRegional(request.who, responder.responder)) {
+
+    }
+  }
+
+  @Override
+  public void handle(Session session, RegionalFinderDeleteMarkRequest request, SimpleResponder responder) {
+    if (checkRegional(request.who, responder.responder)) {
+
+    }
+  }
+
+  @Override
+  public void handle(Session session, RegionalFinderDeletionListRequest request, KeysResponder responder) {
+    if (checkRegional(request.who, responder.responder)) {
+
+    }
+  }
+
+  @Override
+  public void handle(Session session, RegionalFinderBackUpRequest request, SimpleResponder responder) {
+    if (checkRegional(request.who, responder.responder)) {
+
+    }
+  }
+
+  @Override
+  public void handle(Session session, RegionalFinderListRequest request, KeysResponder responder) {
+    if (checkRegional(request.who, responder.responder)) {
+
+    }
+  }
+
+  @Override
+  public void handle(Session session, RegionalFinderFreeRequest request, SimpleResponder responder) {
+    if (checkRegional(request.who, responder.responder)) {
+
     }
   }
 

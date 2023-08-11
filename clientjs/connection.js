@@ -802,6 +802,87 @@ class WebSocketAdamaConnection {
       request: {"method":"super/set-domain-certificate", "id":parId, "identity": identity, "domain": domain, "certificate": certificate, "timestamp": timestamp}
     });
   }
+  RegionalDomainLookup(identity, domain, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"regional/domain-lookup", "id":parId, "identity": identity, "domain": domain}
+    });
+  }
+  RegionalFinderFind(identity, space, key, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"regional/finder/find", "id":parId, "identity": identity, "space": space, "key": key}
+    });
+  }
+  RegionalFinderFree(identity, space, key, region, machine, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"regional/finder/free", "id":parId, "identity": identity, "space": space, "key": key, "region": region, "machine": machine}
+    });
+  }
+  RegionalFinderFindbind(identity, space, key, region, machine, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"regional/finder/findbind", "id":parId, "identity": identity, "space": space, "key": key, "region": region, "machine": machine}
+    });
+  }
+  RegionalFinderDeleteMark(identity, space, key, region, machine, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"regional/finder/delete/mark", "id":parId, "identity": identity, "space": space, "key": key, "region": region, "machine": machine}
+    });
+  }
+  RegionalFinderDeleteCommit(identity, space, key, region, machine, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"regional/finder/delete/commit", "id":parId, "identity": identity, "space": space, "key": key, "region": region, "machine": machine}
+    });
+  }
+  RegionalFinderBackUp(identity, space, key, region, machine, archive, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"regional/finder/back-up", "id":parId, "identity": identity, "space": space, "key": key, "region": region, "machine": machine, "archive": archive}
+    });
+  }
+  RegionalFinderList(identity, region, machine, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_stream({
+      id: parId,
+      responder: responder,
+      request: {"method":"regional/finder/list", "id":parId, "identity": identity, "region": region, "machine": machine}
+    });
+  }
+  RegionalFinderDeletionList(identity, region, machine, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_stream({
+      id: parId,
+      responder: responder,
+      request: {"method":"regional/finder/deletion-list", "id":parId, "identity": identity, "region": region, "machine": machine}
+    });
+  }
 
   /**[END-INVOKE]**/
 }

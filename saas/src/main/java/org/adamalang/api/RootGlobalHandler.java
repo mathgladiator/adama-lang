@@ -81,6 +81,24 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, SuperSetDomainCertificateRequest request, SimpleResponder responder);
 
+  public void handle(Session session, RegionalDomainLookupRequest request, DomainRawResponder responder);
+
+  public void handle(Session session, RegionalFinderFindRequest request, FinderResultResponder responder);
+
+  public void handle(Session session, RegionalFinderFreeRequest request, SimpleResponder responder);
+
+  public void handle(Session session, RegionalFinderFindbindRequest request, FinderResultResponder responder);
+
+  public void handle(Session session, RegionalFinderDeleteMarkRequest request, SimpleResponder responder);
+
+  public void handle(Session session, RegionalFinderDeleteCommitRequest request, SimpleResponder responder);
+
+  public void handle(Session session, RegionalFinderBackUpRequest request, SimpleResponder responder);
+
+  public void handle(Session session, RegionalFinderListRequest request, KeysResponder responder);
+
+  public void handle(Session session, RegionalFinderDeletionListRequest request, KeysResponder responder);
+
   public void disconnect();
 
   public static boolean test(String method) {
@@ -120,6 +138,15 @@ public interface RootGlobalHandler {
       case "super/check-in":
       case "super/list-automatic-domains":
       case "super/set-domain-certificate":
+      case "regional/domain-lookup":
+      case "regional/finder/find":
+      case "regional/finder/free":
+      case "regional/finder/findbind":
+      case "regional/finder/delete/mark":
+      case "regional/finder/delete/commit":
+      case "regional/finder/back-up":
+      case "regional/finder/list":
+      case "regional/finder/deletion-list":
         return true;
       default:
         return false;

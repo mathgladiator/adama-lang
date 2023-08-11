@@ -81,37 +81,13 @@
             The region to bind too
         </documentation>
     </parameter-definition>
-    <parameter-definition name="archive-key" type="string" missing-error="9007" logged="true">
+    <parameter-definition name="archive" type="string" missing-error="9007" logged="true">
         <documentation>
             The archive key to bind too
         </documentation>
     </parameter-definition>
 
-    <field-definition name="id" type="long">
-        <documentation>
-            a long id
-        </documentation>
-    </field-definition>
-    <field-definition name="location-type" type="int">
-        <documentation>
-            Information about the found results
-        </documentation>
-    </field-definition>
-    <field-definition name="archive" type="string">
-        <documentation>
-            The archive containing the backup of the document
-        </documentation>
-    </field-definition>
-    <field-definition name="region" type="string">
-        <documentation>
-            The region where the document exists
-        </documentation>
-    </field-definition>
-    <field-definition name="machine" type="string">
-        <documentation>
-            The machine the document is located on
-        </documentation>
-    </field-definition>
+
     <responder name="void">
     </responder>
 
@@ -129,66 +105,8 @@
         <field name="key" />
     </responder>
 
-    <method name="global/finder/find" responder="found">
-        <documentation>
-            Find the host for a given document
-        </documentation>
-        <parameter name="space" />
-        <parameter name="key" />
-    </method>
-    <method name="global/finder/findbind" responder="found">
-        <documentation>
-            Find the host, and if not bound then take possession
-        </documentation>
-        <parameter name="space" />
-        <parameter name="key" />
-        <parameter name="region" />
-        <parameter name="machine" />
-    </method>
-    <method name="global/finder/free" responder="void">
-        <documentation>
-            Free the binding from the given machine and region
-        </documentation>
-        <parameter name="space" />
-        <parameter name="key" />
-        <parameter name="region" />
-        <parameter name="machine" />
-    </method>
-    <method name="global/finder/delete/mark" responder="void">
-        <documentation>
-            Delete the document from the finder
-        </documentation>
-        <parameter name="space" />
-        <parameter name="key" />
-        <parameter name="region" />
-        <parameter name="machine" />
-    </method>
-    <method name="global/finder/delete/commit" responder="void">
-        <documentation>
-            Delete the document from the finder
-        </documentation>
-        <parameter name="space" />
-        <parameter name="key" />
-        <parameter name="region" />
-        <parameter name="machine" />
-    </method>
-    <method name="global/finder/back-up" responder="void">
-        <documentation>
-            Set the archive key
-        </documentation>
-        <parameter name="space" />
-        <parameter name="key" />
-        <parameter name="region" />
-        <parameter name="machine" />
-        <parameter name="archive-key" />
-    </method>
-    <method name="global/finder/list" responder="keyid">
-        <documentation>
-            List the keys on the given machine
-        </documentation>
-        <parameter name="region" />
-        <parameter name="machine" />
-    </method>
+
+
 
     <parameter-definition name="owner" type="int" missing-error="9010" logged="true">
         <documentation>

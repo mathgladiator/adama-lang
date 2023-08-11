@@ -681,6 +681,168 @@ public class GlobalConnectionRouter {
                 }
               });
             } return;
+            case "regional/domain-lookup": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalDomainLookup.start();
+              RegionalDomainLookupRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(RegionalDomainLookupRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new DomainRawResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "regional/finder/find": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalFinderFind.start();
+              RegionalFinderFindRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(RegionalFinderFindRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new FinderResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "regional/finder/free": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalFinderFree.start();
+              RegionalFinderFreeRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(RegionalFinderFreeRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "regional/finder/findbind": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalFinderFindbind.start();
+              RegionalFinderFindbindRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(RegionalFinderFindbindRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new FinderResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "regional/finder/delete/mark": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalFinderDeleteMark.start();
+              RegionalFinderDeleteMarkRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(RegionalFinderDeleteMarkRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "regional/finder/delete/commit": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalFinderDeleteCommit.start();
+              RegionalFinderDeleteCommitRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(RegionalFinderDeleteCommitRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "regional/finder/back-up": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalFinderBackUp.start();
+              RegionalFinderBackUpRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(RegionalFinderBackUpRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "regional/finder/list": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalFinderList.start();
+              RegionalFinderListRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(RegionalFinderListRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new KeysResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "regional/finder/deletion-list": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalFinderDeletionList.start();
+              RegionalFinderDeletionListRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(RegionalFinderDeletionListRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new KeysResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
           }
           responder.error(new ErrorCodeException(ErrorCodes.API_METHOD_NOT_FOUND));
         }

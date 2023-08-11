@@ -21,6 +21,9 @@ public interface FinderService {
   /** take over for the key */
   void bind(Key key, String machine, Callback<Void> callback);
 
+  /** find the result and bind it to me */
+  void findbind(Key key, String machine, Callback<Result> callback);
+
   /** release the machine for the given key */
   void free(Key key, String machineOn, Callback<Void> callback);
 
