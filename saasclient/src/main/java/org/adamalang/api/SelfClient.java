@@ -362,7 +362,6 @@ private final MultiWebClientRetryPool pool;
     node.put("identity", request.identity);
     node.put("space", request.space);
     node.put("key", request.key);
-    node.set("viewer-state", request.viewerState);
     node.put("channel", request.channel);
     node.set("message", request.message);
     pool.requestResponse(node, (obj) -> new ClientSeqResponse(obj), callback);

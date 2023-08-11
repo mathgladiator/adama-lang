@@ -991,7 +991,6 @@
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
-        <parameter name="viewer-state"/>
         <parameter name="channel"/>
         <parameter name="message"/>
         <documentation>

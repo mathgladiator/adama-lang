@@ -972,14 +972,13 @@ Send a message to a document without a connection
 | identity | yes | String | Identity is a token to authenticate a user. |
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
-| viewer-state | no | ObjectNode | A connection to a document has a side-channel for passing information about the client's view into the evaluation of bubbles.             This allows for developers to implement real-time queries and pagination. |
 | channel | yes | String | Each document has multiple channels available to send messages too. |
 | message | yes | JsonNode | The object sent to a document which will be the parameter for a channel handler. |
 
 
 ### Template
 ```js
-connection.MessageDirectSend(identity, space, key, viewer-state, channel, message, {
+connection.MessageDirectSend(identity, space, key, channel, message, {
   success: function(response) {
     // response.seq
   },
