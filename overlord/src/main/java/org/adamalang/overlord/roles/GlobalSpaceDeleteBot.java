@@ -36,11 +36,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** a bot that wakes up, looks for deleted spaces, and then ensures the name is ready for usage */
 public class GlobalSpaceDeleteBot {
   public static AuthenticatedUser OVERLORD = new AuthenticatedUser(
-      AuthenticatedUser.Source.Super,
       -1,
       new NtPrincipal("overlord", "overlord"),
-      new ConnectionContext("overlord", "0.0.0.0", "overlord", ""),
-      true);
+      new ConnectionContext("overlord", "0.0.0.0", "overlord", ""));
   private static Logger LOG = LoggerFactory.getLogger(GlobalSpaceDeleteBot.class);
   private final OverlordMetrics metrics;
   private final DataBase dataBase;

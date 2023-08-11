@@ -769,6 +769,13 @@ public class GeneratedMissingParameterTest {
       Iterator<String> c166 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:9005", c166.next());
       node.put("machine", "xzya");
+      //RegionalAuth
+      node = Json.newJsonObject();
+      node.put("id", 166);
+      node.put("method", "regional/auth");
+      Iterator<String> c167 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:458759", c167.next());
+      node.put("identity", _identity);
     }
   }
 }

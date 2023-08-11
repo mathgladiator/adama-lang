@@ -67,7 +67,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, AccountSetPasswordRequest request, SimpleResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         String hash = SCryptUtil.scrypt(request.password, 16384, 8, 1);
         Users.setPasswordHash(nexus.database, request.who.id, hash);
         responder.complete();
@@ -82,7 +82,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, AccountGetPaymentPlanRequest request, PaymentResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         // Do the DB lookup now
         String paymentInfo = Users.getPaymentInfo(nexus.database, request.who.id);
         // TODO: if no customerId, then bind one here and put it back into storage (need to handle conflicts better, or just use a better schema)
@@ -222,7 +222,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, AuthorityCreateRequest request, ClaimResultResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         String authority = ProtectedUUID.generate();
         Authorities.createAuthority(nexus.database, request.who.id, authority);
         responder.complete(authority);
@@ -237,7 +237,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, AuthoritySetRequest request, SimpleResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         // NOTE: setKeystore validates ownership
         Authorities.setKeystore(nexus.database, request.who.id, request.authority, request.keyStore.toString());
         responder.complete();
@@ -252,7 +252,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, AuthorityGetRequest request, KeystoreResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         // NOTE: getKeystorePublic validates ownership
         responder.complete(Json.parseJsonObject(Authorities.getKeystorePublic(nexus.database, request.who.id, request.authority)));
       } else {
@@ -266,7 +266,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, AuthorityListRequest request, AuthorityListingResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         for (String authority : Authorities.list(nexus.database, request.who.id)) {
           responder.next(authority);
         }
@@ -282,7 +282,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, AuthorityDestroyRequest request, SimpleResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         // NOTE: deleteAuthority validates ownership
         Authorities.deleteAuthority(nexus.database, request.who.id, request.authority);
         responder.complete();
@@ -302,7 +302,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, DomainGetRequest request, DomainPolicyResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         Domain domain = Domains.get(nexus.database, fixDomain(request.domain));
         if (domain != null) {
           responder.complete(domain.space);
@@ -350,7 +350,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, DomainListRequest request, DomainListingResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         for (Domain domain : Domains.list(nexus.database, request.who.id)) {
           responder.next(domain.domain, domain.space, domain.key, domain.routeKey);
         }
@@ -366,7 +366,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, DomainUnmapRequest request, SimpleResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         if (Domains.unmap(nexus.database, request.who.id, fixDomain(request.domain))) {
           responder.complete();
         } else {
@@ -414,7 +414,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
         responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_SPACE_RESERVED));
         return;
       }
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         int spaceId = Spaces.createSpace(nexus.database, request.who.id, request.space);
         SpaceTemplates.SpaceTemplate template = SpaceTemplates.REGISTRY.of(request.template);
         Spaces.setRxHtml(nexus.database, spaceId, template.initialRxHTML(request.space)); // TODO: put into createSpace? Or, rely on the document
@@ -609,7 +609,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, SpaceListRequest request, SpaceListingResponder responder) {
     try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
+      if (request.who.isAdamaDeveloper) {
         for (SpaceListingItem spaceListingItem : Spaces.list(nexus.database, request.who.id, request.marker, request.limit == null ? 100 : request.limit)) {
           responder.next(spaceListingItem.name, spaceListingItem.callerRole, spaceListingItem.created, spaceListingItem.enabled, spaceListingItem.storageBytes);
         }
@@ -656,7 +656,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
 
   @Override
   public void handle(Session session, SuperCheckInRequest request, SimpleResponder responder) {
-    if (request.who.source == AuthenticatedUser.Source.Super) {
+    if ("super".equals(request.who.who.authority)) {
       try {
         Sentinel.ping(nexus.database, "super", System.currentTimeMillis());
         responder.complete();
@@ -670,7 +670,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
 
   @Override
   public void handle(Session session, SuperListAutomaticDomainsRequest request, AutomaticDomainListingResponder responder) {
-    if (request.who.source == AuthenticatedUser.Source.Super) {
+    if ("super".equals(request.who.who.authority)) {
       try {
         for (Domain domain : Domains.superListAutoDomains(nexus.database, request.timestamp)) {
           responder.next(domain.domain, domain.timestamp);
@@ -686,7 +686,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
 
   @Override
   public void handle(Session session, SuperSetDomainCertificateRequest request, SimpleResponder responder) {
-    if (request.who.source == AuthenticatedUser.Source.Super) {
+    if ("super".equals(request.who.who.authority)) {
       try {
         if (request.certificate != null) {
           Domains.superSetAutoCert(nexus.database, request.domain, MasterKey.encrypt(nexus.masterKey, request.certificate), request.timestamp);
@@ -703,31 +703,29 @@ public class GlobalControlHandler implements RootGlobalHandler {
     }
   }
 
-  private boolean checkRegional(AuthenticatedUser who, JsonResponder responder) {
+  private boolean checkRegionalHost(AuthenticatedUser who, JsonResponder responder) {
 
     return false;
   }
 
   @Override
   public void handle(Session session, RegionalDomainLookupRequest request, DomainRawResponder responder) {
-    if (checkRegional(request.who, responder.responder)) {
-
+    if (checkRegionalHost(request.who, responder.responder)) {
+      Domain domain = request.resolvedDomain.domain;
+      responder.complete(domain.domain, domain.owner, domain.space, domain.key, domain.routeKey, domain.certificate, domain.timestamp);
     }
-    //Domain domain = request.resolvedDomain.domain;
-    //public void complete(String domain, Long owner, String space, String key, Boolean route, String certificate, Long timestamp) {
-    // responder.complete(domain.domain, domain.owner, domain.space, domain.key, domain.routeKey, domain.certificate, domain.timestamp);
   }
 
   @Override
   public void handle(Session session, RegionalFinderFindRequest request, FinderResultResponder responder) {
-    if (checkRegional(request.who, responder.responder)) {
+    if (checkRegionalHost(request.who, responder.responder)) {
 
     }
   }
 
   @Override
   public void handle(Session session, RegionalFinderFindbindRequest request, FinderResultResponder responder) {
-    if (checkRegional(request.who, responder.responder)) {
+    if (checkRegionalHost(request.who, responder.responder)) {
 
     }
   }
@@ -736,44 +734,50 @@ public class GlobalControlHandler implements RootGlobalHandler {
 
   @Override
   public void handle(Session session, RegionalFinderDeleteCommitRequest request, SimpleResponder responder) {
-    if (checkRegional(request.who, responder.responder)) {
+    if (checkRegionalHost(request.who, responder.responder)) {
 
     }
   }
 
   @Override
   public void handle(Session session, RegionalFinderDeleteMarkRequest request, SimpleResponder responder) {
-    if (checkRegional(request.who, responder.responder)) {
+    if (checkRegionalHost(request.who, responder.responder)) {
 
     }
   }
 
   @Override
   public void handle(Session session, RegionalFinderDeletionListRequest request, KeysResponder responder) {
-    if (checkRegional(request.who, responder.responder)) {
+    if (checkRegionalHost(request.who, responder.responder)) {
 
     }
   }
 
   @Override
   public void handle(Session session, RegionalFinderBackUpRequest request, SimpleResponder responder) {
-    if (checkRegional(request.who, responder.responder)) {
+    if (checkRegionalHost(request.who, responder.responder)) {
 
     }
   }
 
   @Override
   public void handle(Session session, RegionalFinderListRequest request, KeysResponder responder) {
-    if (checkRegional(request.who, responder.responder)) {
+    if (checkRegionalHost(request.who, responder.responder)) {
 
     }
   }
 
   @Override
   public void handle(Session session, RegionalFinderFreeRequest request, SimpleResponder responder) {
-    if (checkRegional(request.who, responder.responder)) {
+    if (checkRegionalHost(request.who, responder.responder)) {
 
     }
+  }
+
+  @Override
+  public void handle(Session session, RegionalAuthRequest request, AuthResultResponder responder) {
+    AuthenticatedUser user = request.who;
+    responder.complete((long) user.id, user.who.agent, user.who.authority);
   }
 
   @Override

@@ -218,11 +218,7 @@ public class GlobalDataHandler implements RootRegionHandler {
 
       @Override
       public void handle(ConnectionAttachRequest request, SeqResponder responder) {
-        if (connect.who.internal) {
-          connection.attach(request.assetId, request.filename, request.contentType, request.size, request.digestMd5, request.digestSha384, WRAP(responder));
-        } else {
-          responder.error(new ErrorCodeException(ErrorCodes.API_LOCKED_INTERNAL));
-        }
+        connection.attach(request.assetId, request.filename, request.contentType, request.size, request.digestMd5, request.digestSha384, WRAP(responder));
       }
 
       @Override

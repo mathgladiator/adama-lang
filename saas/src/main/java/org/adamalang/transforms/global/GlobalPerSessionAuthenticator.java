@@ -15,6 +15,8 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.keys.SigningKeyPair;
 import org.adamalang.frontend.Session;
+import org.adamalang.impl.common.FastAuth;
+import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Authorities;
 import org.adamalang.mysql.model.Hosts;
@@ -54,9 +56,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
       return;
     }
     try {
-      if (identity.startsWith("anonymous:")) {
-        String agent = identity.substring("anonymous:".length());
-        callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Anonymous, -1, new NtPrincipal(agent, "anonymous"), defaultContext, false));
+      if (FastAuth.process(identity, callback, defaultContext)) {
         return;
       }
 
@@ -67,7 +67,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
           SigningKeyPair skp = Secrets.getOrCreateDocumentSigningKey(database, masterKey, docSpaceKey[1], docSpaceKey[2]);
           skp.validateTokenThrows(identity);
           NtPrincipal who = new NtPrincipal(parsedToken.sub, parsedToken.iss);
-          AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Document, -1, who, defaultContext, false);
+          AuthenticatedUser user = new AuthenticatedUser(-1, who, defaultContext);
           callback.success(user);
         } catch (Exception ex) {
           callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_DOC_AUTHENTICATE));
@@ -75,44 +75,44 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
         return;
       }
 
-      if ("host".equals(parsedToken.iss)) {
-        PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(database, parsedToken.key_id));
+      if ("host".equals(parsedToken.iss)) { // Proxy mode
+        PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
         Jwts.parserBuilder()
             .setSigningKey(publicKey)
             .requireIssuer("host")
             .build()
             .parseClaimsJws(identity);
         ConnectionContext context = new ConnectionContext(parsedToken.proxy_origin, parsedToken.proxy_ip, parsedToken.proxy_useragent, parsedToken.proxy_asset_key);
-        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_source, parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context, true);
+        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context);
         session.identityCache.put(identity, user);
         callback.success(user);
         return;
       }
 
-      if ("internal".equals(parsedToken.iss)) {
-        PublicKey publicKey = decodePublicKey(Hosts.getHostPublicKey(database, parsedToken.key_id));
+      if ("internal".equals(parsedToken.iss)) { // Document calling another document
+        PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
         Jwts.parserBuilder()
             .setSigningKey(publicKey)
             .requireIssuer("internal")
             .build()
             .parseClaimsJws(identity);
         ConnectionContext context = new ConnectionContext("::adama", "0.0.0.0", "", null);
-        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_source, parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context, true);
+        AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context);
         session.identityCache.put(identity, user);
         callback.success(user);
         return;
       }
 
-      if ("super".equals(parsedToken.iss)) {
+      if ("super".equals(parsedToken.iss)) { // The superman machine
         for (String publicKey64 : superKeys) {
-          PublicKey publicKey = decodePublicKey(publicKey64);
+          PublicKey publicKey = PublicKeyCodec.decode(publicKey64);
           try {
             Jwts.parserBuilder()
                 .setSigningKey(publicKey)
                 .requireIssuer("super")
                 .build()
                 .parseClaimsJws(identity);
-            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Super, 0, new NtPrincipal("super", "super"), defaultContext, false);
+            AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal("super", "super"), defaultContext);
             session.identityCache.put(identity, user);
             callback.success(user);
             return;
@@ -127,14 +127,14 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
       if ("adama".equals(parsedToken.iss)) {
         int userId = Integer.parseInt(parsedToken.sub);
         for (String publicKey64 : Users.listKeys(database, userId)) {
-          PublicKey publicKey = decodePublicKey(publicKey64);
+          PublicKey publicKey = PublicKeyCodec.decode(publicKey64);
           try {
             Jwts.parserBuilder()
                 .setSigningKey(publicKey)
                 .requireIssuer("adama")
                 .build()
                 .parseClaimsJws(identity);
-            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, userId, new NtPrincipal("" + userId, "adama"), defaultContext, false);
+            AuthenticatedUser user = new AuthenticatedUser(userId, new NtPrincipal("" + userId, "adama"), defaultContext);
             session.identityCache.put(identity, user);
             callback.success(user);
             return;
@@ -150,7 +150,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
       String keystoreJson = Authorities.getKeystoreInternal(database, parsedToken.iss);
       Keystore keystore = Keystore.parse(keystoreJson);
       NtPrincipal who = keystore.validate(parsedToken.iss, identity);
-      AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who, defaultContext, false);
+      AuthenticatedUser user = new AuthenticatedUser(-1, who, defaultContext);
       session.identityCache.put(identity, user);
       callback.success(user);
     } catch (Exception ex) {
