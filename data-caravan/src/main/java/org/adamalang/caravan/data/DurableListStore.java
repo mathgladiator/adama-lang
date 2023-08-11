@@ -81,6 +81,7 @@ public class DurableListStore {
     this.pageBuffer = new byte[flushCutOffBytes];
     File walFile = new File(walRoot, "WAL");
     if (walFile.exists()) {
+      walFile.setWritable(true);
       try {
         load(walFile);
       } catch (IOException ioe) {
@@ -184,7 +185,11 @@ public class DurableListStore {
 
   /** internal: open the log for writing */
   private void openLogForWriting() throws IOException {
-    this.output = new DataOutputStream(new FileOutputStream(new File(walRoot, "WAL"), true));
+    File file = new File(walRoot, "WAL");
+    if (file.exists()) {
+      file.setWritable(true);
+    }
+    this.output = new DataOutputStream(new FileOutputStream(file, true));
     this.bytesWrittenToLog = 0;
   }
 
