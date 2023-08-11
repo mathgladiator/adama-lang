@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.apikit.docgen;
+package org.adamalang.apikit.codegen;
 
 import org.adamalang.apikit.model.Common;
 import org.adamalang.apikit.model.FieldDefinition;
@@ -25,6 +25,10 @@ public class AssembleAPIDocs {
     {
       boolean notfirst = false;
       for (Method method : methods) {
+        if (method.internal) {
+          continue;
+        }
+
         if (notfirst) {
           markdown.append(", ");
         }
@@ -34,6 +38,10 @@ public class AssembleAPIDocs {
     }
     markdown.append("\n");
     for (Method method : methods) {
+      if (method.internal) {
+        continue;
+      }
+
       boolean specialHandler = !method.handler.startsWith("Root");
       markdown.append("\n## Method: ").append(method.camelName).append("\n");
       for (String ln : method.documentation.trim().split(Pattern.quote("\n"))) {
