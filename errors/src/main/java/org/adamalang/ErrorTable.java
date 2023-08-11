@@ -334,6 +334,8 @@ public class ErrorTable {
     descriptions.put(916531, "no description of error (yet)");
     names.put(973839, "AUTH_UNKNOWN_EXCEPTION");
     descriptions.put(973839, "no description of error (yet)");
+    names.put(403403, "AUTH_FORBIDDEN");
+    descriptions.put(403403, "no description of error (yet)");
     names.put(995342, "AUTH_INVALID_TOKEN_LAYOUT");
     descriptions.put(995342, "no description of error (yet)");
     names.put(908303, "AUTH_INVALID_TOKEN_JSON");
@@ -595,8 +597,6 @@ public class ErrorTable {
     names.put(928828, "NET_LCSM_TIMEOUT");
     descriptions.put(928828, "no description of error (yet)");
     retry.add(928828);
-    names.put(937164, "API_LOCKED_INTERNAL");
-    descriptions.put(937164, "no description of error (yet)");
     names.put(904392, "WEB_CLIENT_CONNECTION_TIMEOUT");
     descriptions.put(904392, "no description of error (yet)");
     names.put(991435, "WEB_CLIENT_CONNECTION_REJECTED");
@@ -641,8 +641,6 @@ public class ErrorTable {
     descriptions.put(979194, "no description of error (yet)");
     names.put(917740, "FRONTEND_SECRETS_SIGNING_EXCEPTION");
     descriptions.put(917740, "no description of error (yet)");
-    names.put(909563, "FRONTEND_POST_NO_DOMAIN_FOUND_FOR_POST_ASK");
-    descriptions.put(909563, "no description of error (yet)");
     names.put(999675, "FRONTEND_POST_NO_HOST");
     descriptions.put(999675, "no description of error (yet)");
     names.put(929987, "CACHE_ASSET_FILE_FAILED_WRITE");

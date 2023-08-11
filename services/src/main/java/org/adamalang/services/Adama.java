@@ -15,6 +15,7 @@ import org.adamalang.api.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
+import org.adamalang.internal.InternalSigner;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
 import org.slf4j.Logger;
@@ -29,11 +30,13 @@ public class Adama extends SimpleService {
   private static final Logger LOGGER = LoggerFactory.getLogger(Adama.class);
   private final FirstPartyMetrics metrics;
   private final SelfClient client;
+  private final InternalSigner signer;
 
-  public Adama(FirstPartyMetrics metrics, SelfClient client, ServiceConfig config) throws ErrorCodeException {
+  public Adama(FirstPartyMetrics metrics, SelfClient client, InternalSigner signer, ServiceConfig config) throws ErrorCodeException {
     super("adama", new NtPrincipal("adama", "service"), true);
     this.client = client;
     this.metrics = metrics;
+    this.signer = signer;
   }
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
@@ -66,8 +69,7 @@ public class Adama extends SimpleService {
 
   @Override
   public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
-    // TODO: create an identity from who
-    String identity = "anonymous:nope";
+    String identity = signer.toIdentity(who);
     ObjectNode node = Json.parseJsonObject(request);
     switch (method) {
       case "documentCreate": {
