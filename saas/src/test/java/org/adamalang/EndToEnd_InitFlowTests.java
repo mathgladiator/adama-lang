@@ -23,7 +23,7 @@ public class EndToEnd_InitFlowTests {
           fe.execute("{\"id\":3,\"method\":\"probe\",\"identity\":\"" + devIdentity + "\"}");
       Assert.assertEquals("FINISH:{}", c3.next());
       Iterator<String> c4 = fe.execute("{\"id\":4,\"method\":\"probe\",\"identity\":\"" + devIdentityNuked + "\"}");
-      Assert.assertEquals("ERROR:966671", c4.next());
+      Assert.assertEquals("ERROR:403403", c4.next());
       {
         String email = "f@x.com";
         Runnable latch1 = fe.latchOnEmail(email);
