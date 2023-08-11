@@ -14,5 +14,6 @@ import org.adamalang.mysql.data.Domain;
 /** find a domain */
 public interface DomainFinder {
 
+  /** just find the domain */
   public void find(String domain, Callback<Domain> callback);
 }

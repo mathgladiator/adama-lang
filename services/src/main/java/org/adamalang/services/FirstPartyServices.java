@@ -14,6 +14,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.internal.InternalSigner;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
@@ -34,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class FirstPartyServices {
   private static final Logger LOGGER = LoggerFactory.getLogger(FirstPartyServices.class);
 
-  public static void install(SimpleExecutor executor, MetricsFactory factory, DataBase dataBase, WebClientBase webClientBase, String masterKey) {
+  public static void install(SimpleExecutor executor, MetricsFactory factory, DataBase dataBase, WebClientBase webClientBase, String masterKey, InternalSigner signer) {
     FirstPartyMetrics metrics = new FirstPartyMetrics(factory);
     SelfClient adamaClientRaw = null;
     if (executor != null){
@@ -46,7 +47,7 @@ public class FirstPartyServices {
     ServiceRegistry.add("adama", Adama.class, (space, configRaw) -> { // TODO
       ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
       try {
-        return new Adama(metrics, adamaClient, config);
+        return new Adama(metrics, adamaClient, signer, config);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-adama", ex);
         return Service.FAILURE;

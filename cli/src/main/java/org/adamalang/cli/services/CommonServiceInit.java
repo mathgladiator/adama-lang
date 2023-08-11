@@ -26,6 +26,7 @@ import org.adamalang.extern.aws.AWSMetrics;
 import org.adamalang.extern.aws.S3;
 import org.adamalang.extern.aws.SQS;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
+import org.adamalang.internal.InternalSigner;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
@@ -159,7 +160,7 @@ public class CommonServiceInit {
     engine = netBase.startGossiping();
     // TODO: promote the concept of the multi-region client as "everyone needs a client"
     services = SimpleExecutor.create("executor");
-    FirstPartyServices.install(services, metricsFactory, database, webBase, masterKey);
+    FirstPartyServices.install(services, metricsFactory, database, webBase, masterKey, new InternalSigner(publicKeyId, hostKey));
 
     System.out.println("[Setup]");
     System.out.println("         role:" + role.name);
