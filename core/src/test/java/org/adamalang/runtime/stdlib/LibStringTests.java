@@ -10,12 +10,37 @@ package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMaybe;
+import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class LibStringTests {
+
+  @Test
+  public void listmaybe_data() {
+    ArrayList<NtMaybe<String>> storage = new ArrayList<>();
+    storage.add(new NtMaybe<>());
+    storage.add(new NtMaybe<>("x"));
+    storage.add(new NtMaybe<>());
+    storage.add(new NtMaybe<>("y"));
+    storage.add(new NtMaybe<>());
+    NtList<NtMaybe<String>> list = new ArrayNtList<>(storage);
+    Assert.assertEquals("x, y", LibString.joinMaybes(list, ", ").get());
+  }
+
+  @Test
+  public void listmaybe_empty() {
+    ArrayList<NtMaybe<String>> storage = new ArrayList<>();
+    storage.add(new NtMaybe<>());
+    storage.add(new NtMaybe<>());
+    storage.add(new NtMaybe<>());
+    NtList<NtMaybe<String>> list = new ArrayNtList<>(storage);
+    Assert.assertFalse(LibString.joinMaybes(list, ", ").has());
+  }
+
   @Test
   public void passwords() {
     Assert.assertTrue(LibString.passwordCheck(LibString.passwordHash("secret"), "secret"));

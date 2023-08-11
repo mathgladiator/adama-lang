@@ -12,9 +12,7 @@ import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
-import org.adamalang.translator.reflect.Extension;
-import org.adamalang.translator.reflect.HiddenType;
-import org.adamalang.translator.reflect.HiddenTypes2;
+import org.adamalang.translator.reflect.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -390,6 +388,29 @@ public class LibString {
       return new NtMaybe<>(Character.toString(x.get()));
     }
     return new NtMaybe<>();
+  }
+
+
+  @Extension
+  @UseName(name="join")
+  public static  @HiddenType(clazz = String.class) NtMaybe<String> joinMaybes(@HiddenTypes2(class1 = NtMaybe.class, class2 = String.class) NtList<NtMaybe<String>> list, String delimitor) {
+    ArrayList<String> real = new ArrayList<>();
+    for (NtMaybe<String> item : list) {
+      if (item.has()) {
+        real.add(item.get());
+      }
+    }
+    if (real.size() > 0) {
+      return new NtMaybe<>(String.join(delimitor, real));
+    } else {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  @UseName(name="concat")
+  public static  @HiddenType(clazz = String.class) NtMaybe<String> concatMaybes(@HiddenTypes2(class1 = NtMaybe.class, class2 = String.class) NtList<NtMaybe<String>> list) {
+    return joinMaybes(list, "");
   }
 
   @Extension
