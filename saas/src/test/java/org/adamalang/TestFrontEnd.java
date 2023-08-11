@@ -16,7 +16,6 @@ import org.adamalang.caravan.CaravanMetrics;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DiskMetrics;
-import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -173,7 +172,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
       public void delete(Key key, String archiveKey, Callback<Void> callback) {
       }
     };
-    CaravanDataService caravanDataService = new CaravanDataService(new CaravanMetrics(new NoOpMetricsFactory()), cloud, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
+    CaravanDataService caravanDataService = new CaravanDataService(new CaravanMetrics(new NoOpMetricsFactory()), cloud, store, caravanExecutor);
     delete = new MockPostDocumentDelete();
     Base managedBase = new Base(finder, caravanDataService, delete, "test-region", identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
     ManagedDataService dataService = new ManagedDataService(managedBase);

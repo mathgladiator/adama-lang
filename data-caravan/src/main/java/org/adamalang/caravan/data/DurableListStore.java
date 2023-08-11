@@ -234,10 +234,10 @@ public class DurableListStore {
     }
   }
 
-  private int mapKeyToLocalId(Key key, long id) {
+  private int mapKeyToLocalId(Key key) {
     Integer result = keymap.get(key);
     if (result == null) {
-      MapKey mk = keymap.inventAndApply(key, (int) id);
+      MapKey mk = keymap.inventAndApply(key);
       mk.write(buffer);
       return mk.id;
     }
@@ -245,7 +245,7 @@ public class DurableListStore {
   }
 
   /** append a byte array to the given id */
-  public Integer append(Key key, long id, ArrayList<byte[]> batch, int seq, long assetBytes, Runnable notification) {
+  public Integer append(Key key, ArrayList<byte[]> batch, int seq, long assetBytes, Runnable notification) {
     // allocate the items in the batch
     ArrayList<RegionByteArrayPairing> wheres = new ArrayList<>();
     for (byte[] bytes : batch) {
@@ -266,7 +266,7 @@ public class DurableListStore {
 
     // walk the regions allocated and the bytes
     int lastSize = -1;
-    int localId = mapKeyToLocalId(key, id);
+    int id = mapKeyToLocalId(key);
     for (RegionByteArrayPairing pairing : wheres) {
       metrics.appends.run();
       RestoreWalker walker = new RestoreWalker();
@@ -320,7 +320,7 @@ public class DurableListStore {
     openLogForWriting();
   }
 
-  public Integer append(Key key, long id, byte[] bytes, int seq, long assetBytes, Runnable notification) {
+  public Integer append(Key key, byte[] bytes, int seq, long assetBytes, Runnable notification) {
     Region where = heap.ask(bytes.length);
     if (where == null) {
       metrics.failed_append.run();
@@ -330,8 +330,8 @@ public class DurableListStore {
     metrics.appends.run();
     this.notifications.add(notification);
     storage.write(where, bytes);
+    int id = mapKeyToLocalId(key);
     int size = index.append(id, new AnnotatedRegion(where.position, where.size, seq, assetBytes));
-    int localId = mapKeyToLocalId(key, id);
     new Append(id, where.position, bytes, seq, assetBytes).write(buffer);
     if (buffer.writerIndex() > flushCutOffBytes) {
       // the buffer is full, so flush it
@@ -341,25 +341,26 @@ public class DurableListStore {
   }
 
   /** read the given object by scanning all appends */
-  public void read(Key key, long id, ByteArrayStream streamback) throws Exception {
-    Iterator<AnnotatedRegion> it = index.get(id);
-    Integer localId = keymap.get(key);
-    int at = 0;
-    while (it.hasNext()) {
-      metrics.reads.run();
-      AnnotatedRegion region = it.next();
-      byte[] mem = storage.read(region);
-      streamback.next(at, mem, region.seq, region.assetBytes);
-      at++;
+  public void read(Key key, ByteArrayStream streamback) throws Exception {
+    Integer id = keymap.get(key);
+    if (id != null) {
+      Iterator<AnnotatedRegion> it = index.get(id);
+      int at = 0;
+      while (it.hasNext()) {
+        metrics.reads.run();
+        AnnotatedRegion region = it.next();
+        byte[] mem = storage.read(region);
+        streamback.next(at, mem, region.seq, region.assetBytes);
+        at++;
+      }
     }
     streamback.finished();
   }
 
   /** remove the $count appends from the head of the object */
-  public boolean trim(Key key, long id, int maxSize, Runnable notification) {
-    if (maxSize > 0) {
-      Integer localId = keymap.get(key);
-      // TODO: use the local id
+  public boolean trim(Key key, int maxSize, Runnable notification) {
+    Integer id = keymap.get(key);
+    if (maxSize > 0 && id != null) {
       ArrayList<AnnotatedRegion> regions = index.trim(id, maxSize);
       if (regions != null && regions.size() > 0) {
         this.notifications.add(notification);
@@ -380,7 +381,11 @@ public class DurableListStore {
   }
 
   /** delete the given object by id */
-  public boolean delete(Key key, long id, Runnable notification) {
+  public boolean delete(Key key, Runnable notification) {
+    Integer id = keymap.get(key);
+    if (id == null) {
+      return false;
+    }
     ArrayList<AnnotatedRegion> regions = index.delete(id);
     if (regions != null) {
       for (Region region : regions) {
@@ -401,8 +406,8 @@ public class DurableListStore {
   }
 
   /** does the given id exist within the system */
-  public boolean exists(Key key, long id) {
-    return index.exists(id) || keymap.exists(key);
+  public boolean exists(Key key) {
+    return keymap.exists(key);
   }
 
   public void shutdown() throws IOException {
