@@ -11,9 +11,7 @@ package org.adamalang.services;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
 import org.adamalang.ErrorCodes;
-import org.adamalang.api.ClientDocumentCreateRequest;
-import org.adamalang.api.ClientSimpleResponse;
-import org.adamalang.api.SelfClient;
+import org.adamalang.api.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
@@ -41,10 +39,13 @@ public class Adama extends SimpleService {
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
     sb.append("message _AdamaCreateDocument").append(" { string space; string key; maybe<long> entropy; dynamic arg; }\n");
+    sb.append("message _AdamaMessageSendDirect").append(" { string space; string key; string channel; dynamic message; }\n");
     sb.append("message _SimpleResponse").append(" { }\n");
+    sb.append("message _SeqResponse").append(" { int seq; }\n");
     sb.append("service adama {\n");
     sb.append("  class=\"adama\";\n");
     sb.append("  method secured<_AdamaCreateDocument").append(", _SimpleResponse").append("> documentCreate;\n");
+    sb.append("  method secured<_AdamaMessageSendDirect").append(", _SeqResponse").append("> sendDirect;\n");
     sb.append("}\n");
     return sb.toString();
   }
@@ -78,7 +79,7 @@ public class Adama extends SimpleService {
           req.entropy = "" + Json.readLong(node, "entropy");
         }
         req.arg = Json.readObject(node, "arg");
-        client.documentCreate(req, new Callback<ClientSimpleResponse>() {
+        client.documentCreate(req, new Callback<>() {
           @Override
           public void success(ClientSimpleResponse response) {
             callback.success("{}");
@@ -91,7 +92,23 @@ public class Adama extends SimpleService {
         return;
       }
       case "sendDirect":
-        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
+        ClientMessageDirectSendRequest req = new ClientMessageDirectSendRequest();
+        req.identity = identity;
+        req.space = Json.readString(node, "space");
+        req.key = Json.readString(node, "key");
+        req.channel = Json.readString(node, "channel");
+        req.message = Json.readObject(node, "message");
+        client.messageDirectSend(req, new Callback<>() {
+          @Override
+          public void success(ClientSeqResponse value) {
+            callback.success("{\"seq\":" + value.seq +"}");
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
         return;
       default:
         callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));

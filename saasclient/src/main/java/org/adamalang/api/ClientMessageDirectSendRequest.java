@@ -9,14 +9,12 @@
 package org.adamalang.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** generated request type for message/direct-send */
 public class ClientMessageDirectSendRequest {
   public String identity;
   public String space;
   public String key;
-  public ObjectNode viewerState;
   public String channel;
   public JsonNode message;
 }

@@ -28,17 +28,15 @@ public class MessageDirectSendRequest {
   public final String space;
   public final SpacePolicy policy;
   public final String key;
-  public final ObjectNode viewerState;
   public final String channel;
   public final JsonNode message;
 
-  public MessageDirectSendRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key, final ObjectNode viewerState, final String channel, final JsonNode message) {
+  public MessageDirectSendRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key, final String channel, final JsonNode message) {
     this.identity = identity;
     this.who = who;
     this.space = space;
     this.policy = policy;
     this.key = key;
-    this.viewerState = viewerState;
     this.channel = channel;
     this.message = message;
   }
@@ -53,11 +51,10 @@ public class MessageDirectSendRequest {
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String key = request.getString("key", true, 466947);
       ValidateKey.validate(key);
-      final ObjectNode viewerState = request.getObject("viewer-state", false, 0);
       final String channel = request.getString("channel", true, 454659);
       ValidateChannel.validate(channel);
       final JsonNode message = request.getJsonNode("message", true, 425987);
-      _latch.with(() -> new MessageDirectSendRequest(identity, who.get(), space, policy.get(), key, viewerState, channel, message));
+      _latch.with(() -> new MessageDirectSendRequest(identity, who.get(), space, policy.get(), key, channel, message));
       nexus.identityService.execute(session, identity, who);
       nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
