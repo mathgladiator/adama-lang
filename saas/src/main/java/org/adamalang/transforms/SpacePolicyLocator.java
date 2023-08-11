@@ -9,16 +9,9 @@
 package org.adamalang.transforms;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.frontend.Session;
-import org.adamalang.frontend.global.GlobalExternNexus;
-import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.model.Spaces;
-import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.transforms.results.SpacePolicy;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 public interface SpacePolicyLocator {
 

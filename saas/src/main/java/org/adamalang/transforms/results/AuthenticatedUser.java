@@ -17,8 +17,6 @@ import java.util.TreeMap;
 
 /** a user that has been authenticated */
 public class AuthenticatedUser {
-  /** where did the user come from */
-  public final Source source;
 
   /** if the user is an adama developer, then this is their id */
   public final int id;
@@ -29,32 +27,19 @@ public class AuthenticatedUser {
   /** details about the connection */
   public final ConnectionContext context;
 
-  /** Was this user internally validated */
-  public final boolean internal;
+  public boolean isAdamaDeveloper;
 
-  public AuthenticatedUser(Source source, int id, NtPrincipal who, ConnectionContext context, boolean internal) {
-    this.source = source;
+  public AuthenticatedUser(int id, NtPrincipal who, ConnectionContext context) {
     this.id = id;
     this.who = who;
     this.context = context;
-    this.internal = internal;
-  }
-
-  public enum Source {
-    Social, //
-    Adama, //
-    Internal, //
-    Anonymous, //
-    Authority, //
-    Document, //
-    Super //
+    this.isAdamaDeveloper = "adama".equalsIgnoreCase(who.authority);
   }
 
   /** convert the user to a token for cross-host transmission over the public interwebs */
   public String asIdentity(int keyId, PrivateKey key) {
     TreeMap<String, Object> claims = new TreeMap<>();
     claims.put("kid", keyId);
-    claims.put("ps", source.toString());
     claims.put("puid", id);
     claims.put("pa", who.authority);
     claims.put("po", context.origin);

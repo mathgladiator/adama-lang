@@ -25,14 +25,14 @@ public class SpacePolicy {
   }
 
   public boolean canUserDeleteSpace(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       return user.id == owner;
     }
     return false;
   }
 
   public boolean canUserGeneratePrivateKey(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       if (user.id == owner) {
         return true;
       }
@@ -42,14 +42,14 @@ public class SpacePolicy {
   }
 
   public boolean canUserSetRole(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       return user.id == owner;
     }
     return false;
   }
 
   public boolean canUserSetPlan(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       if (user.id == owner) {
         return true;
       }
@@ -59,14 +59,14 @@ public class SpacePolicy {
   }
 
   public boolean canUserManageDomain(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       return user.id == owner;
     }
     return false;
   }
 
   public boolean canUserListDeveloper(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       if (user.id == owner) {
         return true;
       }
@@ -76,7 +76,7 @@ public class SpacePolicy {
   }
 
   public boolean canUserSetRxHTML(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       if (user.id == owner) {
         return true;
       }
@@ -86,7 +86,7 @@ public class SpacePolicy {
   }
 
   public boolean canUserGetRxHTML(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       if (user.id == owner) {
         return true;
       }
@@ -96,7 +96,7 @@ public class SpacePolicy {
   }
 
   public boolean canUserSeeReflection(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       if (user.id == owner) {
         return true;
       }
@@ -106,7 +106,7 @@ public class SpacePolicy {
   }
 
   public boolean canUserSeeKeyListing(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       if (user.id == owner) {
         return true;
       }
@@ -116,7 +116,7 @@ public class SpacePolicy {
   }
 
   public boolean canUserGetPlan(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       if (user.id == owner) {
         return true;
       }
@@ -126,7 +126,7 @@ public class SpacePolicy {
   }
 
   public boolean canUserGetBillingUsage(AuthenticatedUser user) {
-    if (user.source == AuthenticatedUser.Source.Adama) {
+    if (user.isAdamaDeveloper) {
       return user.id == owner;
     }
     return false;

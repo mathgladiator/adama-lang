@@ -14,6 +14,7 @@ import io.jsonwebtoken.security.Keys;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.frontend.Session;
+import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
@@ -45,7 +46,7 @@ public class GlobalPerSessionAuthenticatorTests {
   @Test
   public void keys() throws Exception {
     KeyPair hostKeyPair = PerSessionAuthenticator.inventHostKey();
-    PerSessionAuthenticator.decodePublicKey(PerSessionAuthenticator.encodePublicKey(hostKeyPair));
+    PublicKeyCodec.decode(PerSessionAuthenticator.encodePublicKey(hostKeyPair));
   }
 
   @Test
@@ -82,7 +83,7 @@ public class GlobalPerSessionAuthenticatorTests {
     authenticator.execute(new Session(authenticator), token, new Callback<AuthenticatedUser>() {
       @Override
       public void success(AuthenticatedUser value) {
-        Assert.assertEquals(AuthenticatedUser.Source.Super, value.source);
+        Assert.assertEquals("super", value.who.authority);
         latch.countDown();
       }
 

@@ -69,8 +69,7 @@ public abstract class PerSessionAuthenticator {
   /** log the user details into */
   public static void logInto(AuthenticatedUser user, ObjectNode node) {
     if (user != null) {
-      node.put("user-source", user.source.toString());
-      if (user.source == AuthenticatedUser.Source.Adama) {
+      if ("adama".equals(user.who.agent)) {
         node.put("user-id", user.id);
       }
       if (user.who != null) {
@@ -93,13 +92,7 @@ public abstract class PerSessionAuthenticator {
     return new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
   }
 
-  /** Decode a public key stored from within a database */
-  public static PublicKey decodePublicKey(String publicKey64) throws Exception {
-    byte[] publicKey = Base64.getDecoder().decode(publicKey64);
-    X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
-    KeyFactory kf = KeyFactory.getInstance("EC");
-    return kf.generatePublic(spec);
-  }
+
 
   public abstract void execute(Session session, String identity, Callback<AuthenticatedUser> callback);
 
@@ -108,7 +101,6 @@ public abstract class PerSessionAuthenticator {
     public final String iss;
     public final String sub;
     public final int key_id;
-    public final AuthenticatedUser.Source proxy_source;
     public final int proxy_user_id;
     public final String proxy_authority;
     public final String proxy_origin;
@@ -130,7 +122,6 @@ public abstract class PerSessionAuthenticator {
             JsonNode _key_id = tree.get("kid");
             if (_key_id != null && _key_id.isIntegralNumber()) {
               this.key_id = _key_id.asInt();
-              this.proxy_source = AuthenticatedUser.Source.valueOf(tree.get("ps").asText());
               this.proxy_user_id = tree.get("puid").asInt();
               this.proxy_authority = Json.readString(tree, "pa");
               this.proxy_origin = Json.readString(tree, "po");
@@ -139,7 +130,6 @@ public abstract class PerSessionAuthenticator {
               this.proxy_useragent = Json.readString(tree, "pua");
             } else {
               this.key_id = -1;
-              this.proxy_source = null;
               this.proxy_user_id = 0;
               this.proxy_authority = null;
               this.proxy_origin = null;

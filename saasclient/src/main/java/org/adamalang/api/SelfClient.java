@@ -556,6 +556,14 @@ private final MultiWebClientRetryPool pool;
     pool.requestStream(node, (obj) -> new ClientKeysResponse(obj), streamback);
   }
 
+  /** regional/auth */
+  public void regionalAuth(ClientRegionalAuthRequest request, Callback<ClientAuthResultResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/auth");
+    node.put("identity", request.identity);
+    pool.requestResponse(node, (obj) -> new ClientAuthResultResponse(obj), callback);
+  }
+
   public class AttachmentUploadHandler {
     public final WebClientConnection _direct;
     public final int _id;

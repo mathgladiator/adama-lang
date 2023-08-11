@@ -99,6 +99,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, RegionalFinderDeletionListRequest request, KeysResponder responder);
 
+  public void handle(Session session, RegionalAuthRequest request, AuthResultResponder responder);
+
   public void disconnect();
 
   public static boolean test(String method) {
@@ -147,6 +149,7 @@ public interface RootGlobalHandler {
       case "regional/finder/back-up":
       case "regional/finder/list":
       case "regional/finder/deletion-list":
+      case "regional/auth":
         return true;
       default:
         return false;

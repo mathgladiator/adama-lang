@@ -20,12 +20,10 @@ public class AuthenticatedUserTests {
 
   @Test
   public void flow() throws Exception {
-    AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, 123, new NtPrincipal("jeff", "adama"), new ConnectionContext("origin", "ip", "agent", "asset-key"), false);
-    Assert.assertFalse(user.internal);
+    AuthenticatedUser user = new AuthenticatedUser(123, new NtPrincipal("jeff", "adama"), new ConnectionContext("origin", "ip", "agent", "asset-key"));
     KeyPair pair = PerSessionAuthenticator.inventHostKey();
     String identity = user.asIdentity(42, pair.getPrivate());
     PerSessionAuthenticator.ParsedToken parsedToken = new PerSessionAuthenticator.ParsedToken(identity);
-    Assert.assertEquals(AuthenticatedUser.Source.Adama, parsedToken.proxy_source);
     Assert.assertEquals(42, parsedToken.key_id);
     Assert.assertEquals(123, parsedToken.proxy_user_id);
     Assert.assertEquals("jeff", parsedToken.sub);

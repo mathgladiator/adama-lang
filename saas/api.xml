@@ -1395,6 +1395,25 @@
         <parameter name="machine" />
     </method>
 
+    <field-definition name="agent" type="string">
+        <documentation>The agent of a principal</documentation>
+    </field-definition>
+
+    <responder name="auth-result">
+        <field name="id" />
+        <field name="agent" />
+        <field name="authority" />
+    </responder>
+
+    <method name="regional/auth" responder="auth-result" scope="global" internal="true">
+        <documentation>
+            Authenticate an identity
+        </documentation>
+        <parameter name="identity"/>
+    </method>
+
+
+
     <!--
 
 405532
