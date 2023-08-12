@@ -126,7 +126,7 @@ public class TestBed implements AutoCloseable {
       public void integrate(String target, Collection<String> spaces) {
 
       }
-    },"127.0.0.1:" + port, clientExecutor, new StdErrLogger());
+    },"127.0.0.1:" + port, clientExecutor);
   }
 
   public static String prefixForLocalhost() {
