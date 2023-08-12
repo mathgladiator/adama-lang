@@ -43,7 +43,7 @@ public class GlobalDataHandler implements RootRegionHandler {
   }
 
   private void commonAuthorize(Session session, Key key, String username, String password, InitiationResponder responder) {
-    nexus.adama.authorize(session.authenticator.ip(), session.authenticator.origin(), key.space, key.key, username, password, new Callback<String>() {
+    nexus.adama.authorize(session.authenticator.getDefaultContext().remoteIp, session.authenticator.getDefaultContext().origin, key.space, key.key, username, password, new Callback<String>() {
       @Override
       public void success(String agent) {
         try {
@@ -234,7 +234,7 @@ public class GlobalDataHandler implements RootRegionHandler {
       @Override
       public void handle(ConnectionPasswordRequest request, SeqResponder responder) {
         // public void authorize(String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
-        nexus.adama.authorize(session.authenticator.ip(), session.authenticator.origin(), connect.space, connect.key, request.username, request.password, new Callback<String>() {
+        nexus.adama.authorize(session.authenticator.getDefaultContext().remoteIp, session.authenticator.getDefaultContext().origin, connect.space, connect.key, request.username, request.password, new Callback<String>() {
           @Override
           public void success(String identity) {
             connection.password(request.password, WRAP(responder));

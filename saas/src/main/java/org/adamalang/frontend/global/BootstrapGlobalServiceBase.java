@@ -15,7 +15,8 @@ import org.adamalang.common.SimpleExecutorFactory;
 import org.adamalang.frontend.Session;
 import org.adamalang.contracts.DomainWithPolicyResolver;
 import org.adamalang.contracts.SpacePolicyLocator;
-import org.adamalang.transforms.UserIdResolver;
+import org.adamalang.impl.global.GlobalUserIdResolver;
+import org.adamalang.contracts.UserIdResolver;
 import org.adamalang.impl.global.GlobalDomainWithPolicyResolver;
 import org.adamalang.impl.global.GlobalPerSessionAuthenticator;
 import org.adamalang.impl.global.GlobalSpacePolicyLocator;
@@ -31,7 +32,7 @@ public class BootstrapGlobalServiceBase {
   public static ServiceBase make(GlobalExternNexus extern, HttpHandler httpHandler) throws Exception {
     SimpleExecutor[] executors = SimpleExecutorFactory.DEFAULT.makeMany("saas", extern.config.threads);
     SpacePolicyLocator spacePolicyLocator = new GlobalSpacePolicyLocator(SimpleExecutor.create("space-policy-locator"), extern);
-    UserIdResolver userIdResolver = new UserIdResolver(SimpleExecutor.create("user-id-resolver"), extern);
+    UserIdResolver userIdResolver = new GlobalUserIdResolver(SimpleExecutor.create("user-id-resolver"), extern);
     GlobalControlHandler globalControlHandler = new GlobalControlHandler(extern, spacePolicyLocator);
     GlobalDataHandler globalDataHandler = new GlobalDataHandler(extern);
     DomainWithPolicyResolver domainWithPolicyResolver = new GlobalDomainWithPolicyResolver(SimpleExecutor.create("domain-resolver"), spacePolicyLocator, extern);

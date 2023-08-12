@@ -128,7 +128,7 @@
         <documentation>
             The email of an Adama developer.
         </documentation>
-        <transform service="org.adamalang.transforms.UserIdResolver"
+        <transform service="org.adamalang.contracts.UserIdResolver"
                    output-name="userId"
                    output-java-type="Integer"
                    error-code="460815"/>

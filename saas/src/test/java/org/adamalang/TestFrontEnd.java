@@ -24,6 +24,7 @@ import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.extern.MockPostDocumentDelete;
 import org.adamalang.extern.SignalControl;
+import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.model.*;
 import org.adamalang.net.client.routing.finder.MachinePicker;
@@ -280,7 +281,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
     this.webBase = new WebClientBase(new WebConfig(new ConfigObject(Json.parseJsonObject("{}"))));
     this.hostKeyPair = Keys.keyPairFor(SignatureAlgorithm.ES256);
-    int keyId = Hosts.initializeHost(dataBase, "test-region", "127.0.0.1:" + port, "web", PerSessionAuthenticator.encodePublicKey(hostKeyPair));
+    int keyId = Hosts.initializeHost(dataBase, "test-region", "127.0.0.1:" + port, "web", PublicKeyCodec.encodePublicKey(hostKeyPair));
     MultiRegionClient adama = new MultiRegionClient(dataBase, client, "test-region", hostKeyPair.getPrivate(), keyId, finder);
     AssetSystem assets = new AssetSystem() {
       @Override

@@ -26,6 +26,7 @@ import org.adamalang.extern.aws.AWSMetrics;
 import org.adamalang.extern.aws.S3;
 import org.adamalang.extern.aws.SQS;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
+import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.internal.InternalSigner;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
@@ -100,7 +101,7 @@ public class CommonServiceInit {
     this.webConfig = new WebConfig(configObjectForWeb);
     WebConfig webConfig = new WebConfig(configObjectForWeb);
     String identityFileName = config.get_string("identity-filename", "me.identity");
-    KeyPair keyPair = PerSessionAuthenticator.inventHostKey();
+    KeyPair keyPair = PublicKeyCodec.inventHostKey();
     this.alive = new AtomicBoolean(true);
     this.region = config.get_string("region", null);
     this.role = role.name;
@@ -121,7 +122,7 @@ public class CommonServiceInit {
     this.system = SimpleExecutor.create("system");
     this.picker = SimpleExecutor.create("picker");
     this.machine = this.identity.ip + ":" + servicePort;
-    this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, PerSessionAuthenticator.encodePublicKey(keyPair));
+    this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, PublicKeyCodec.encodePublicKey(keyPair));
     this.webBase = new WebClientBase(this.webConfig);
 
     system.schedule(new NamedRunnable("database-ping") {
