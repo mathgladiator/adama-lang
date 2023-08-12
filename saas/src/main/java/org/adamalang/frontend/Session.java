@@ -9,7 +9,7 @@
 package org.adamalang.frontend;
 
 import org.adamalang.transforms.PerSessionAuthenticator;
-import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.contracts.data.AuthenticatedUser;
 
 import java.util.HashMap;
 

@@ -10,7 +10,7 @@ package org.adamalang.impl.common;
 
 import org.adamalang.common.Callback;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
 
 /** the ultra fast and internal auth aspects (shared between global and region) */

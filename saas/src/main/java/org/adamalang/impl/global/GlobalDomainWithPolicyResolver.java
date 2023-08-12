@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.transforms.global;
+package org.adamalang.impl.global;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
@@ -15,18 +15,18 @@ import org.adamalang.frontend.global.GlobalExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.Domain;
 import org.adamalang.mysql.model.Domains;
-import org.adamalang.transforms.DomainResolver;
-import org.adamalang.transforms.SpacePolicyLocator;
-import org.adamalang.transforms.results.DomainWithPolicy;
-import org.adamalang.transforms.results.SpacePolicy;
+import org.adamalang.contracts.DomainWithPolicyResolver;
+import org.adamalang.contracts.SpacePolicyLocator;
+import org.adamalang.contracts.data.DomainWithPolicy;
+import org.adamalang.contracts.data.SpacePolicy;
 
-public class GlobalDomainResolver implements DomainResolver {
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(DomainResolver.class);
+public class GlobalDomainWithPolicyResolver implements DomainWithPolicyResolver {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(DomainWithPolicyResolver.class);
   private final SimpleExecutor executor;
   private final SpacePolicyLocator spacePolicyLocator;
   private final DataBase dataBase;
 
-  public GlobalDomainResolver(SimpleExecutor executor, SpacePolicyLocator spacePolicyLocator, GlobalExternNexus nexus) {
+  public GlobalDomainWithPolicyResolver(SimpleExecutor executor, SpacePolicyLocator spacePolicyLocator, GlobalExternNexus nexus) {
     this.executor = executor;
     this.spacePolicyLocator = spacePolicyLocator;
     this.dataBase = nexus.database;

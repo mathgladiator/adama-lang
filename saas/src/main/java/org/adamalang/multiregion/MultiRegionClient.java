@@ -19,7 +19,7 @@ import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.DelayAdamaStream;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.contracts.data.AuthenticatedUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

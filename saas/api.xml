@@ -6,7 +6,7 @@
         </documentation>
         <transform service="org.adamalang.transforms.PerSessionAuthenticator"
                    output-name="who"
-                   output-java-type="org.adamalang.transforms.results.AuthenticatedUser"
+                   output-java-type="org.adamalang.contracts.data.AuthenticatedUser"
                    error-code="444420"/>
     </parameter-definition>
 
@@ -17,9 +17,9 @@
 
             Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--'
         </documentation>
-        <transform service="org.adamalang.transforms.SpacePolicyLocator"
+        <transform service="org.adamalang.contracts.SpacePolicyLocator"
                    output-name="policy"
-                   output-java-type="org.adamalang.transforms.results.SpacePolicy"
+                   output-java-type="org.adamalang.contracts.data.SpacePolicy"
                    error-code="454658"/>
         <skip-transform on="space/create"/>
         <validate service="org.adamalang.validators.ValidateSpace"/>
@@ -266,9 +266,9 @@
             A domain name.
         </documentation>
 
-        <transform service="org.adamalang.transforms.DomainResolver"
+        <transform service="org.adamalang.contracts.DomainWithPolicyResolver"
                    output-name="resolvedDomain"
-                   output-java-type="org.adamalang.transforms.results.DomainWithPolicy"
+                   output-java-type="org.adamalang.contracts.data.DomainWithPolicy"
                    error-code="406514"/>
     </parameter-definition>
 

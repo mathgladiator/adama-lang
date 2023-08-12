@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.transforms.global;
+package org.adamalang.impl.global;
 
 import io.jsonwebtoken.Jwts;
 import org.adamalang.ErrorCodes;
@@ -24,7 +24,7 @@ import org.adamalang.mysql.model.Users;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.security.Keystore;
 import org.adamalang.transforms.PerSessionAuthenticator;
-import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

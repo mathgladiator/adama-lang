@@ -13,13 +13,12 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.SimpleExecutorFactory;
 import org.adamalang.frontend.Session;
-import org.adamalang.transforms.DomainResolver;
-import org.adamalang.transforms.PerSessionAuthenticator;
-import org.adamalang.transforms.SpacePolicyLocator;
+import org.adamalang.contracts.DomainWithPolicyResolver;
+import org.adamalang.contracts.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
-import org.adamalang.transforms.global.GlobalDomainResolver;
-import org.adamalang.transforms.global.GlobalPerSessionAuthenticator;
-import org.adamalang.transforms.global.GlobalSpacePolicyLocator;
+import org.adamalang.impl.global.GlobalDomainWithPolicyResolver;
+import org.adamalang.impl.global.GlobalPerSessionAuthenticator;
+import org.adamalang.impl.global.GlobalSpacePolicyLocator;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.contracts.*;
 import org.adamalang.web.io.ConnectionContext;
@@ -35,7 +34,7 @@ public class BootstrapGlobalServiceBase {
     UserIdResolver userIdResolver = new UserIdResolver(SimpleExecutor.create("user-id-resolver"), extern);
     GlobalControlHandler globalControlHandler = new GlobalControlHandler(extern, spacePolicyLocator);
     GlobalDataHandler globalDataHandler = new GlobalDataHandler(extern);
-    DomainResolver domainResolver = new GlobalDomainResolver(SimpleExecutor.create("domain-resolver"), spacePolicyLocator, extern);
+    DomainWithPolicyResolver domainWithPolicyResolver = new GlobalDomainWithPolicyResolver(SimpleExecutor.create("domain-resolver"), spacePolicyLocator, extern);
 
     Random randomExecutorIndex = new Random();
     return new ServiceBase() {
@@ -47,7 +46,7 @@ public class BootstrapGlobalServiceBase {
               new GlobalConnectionNexus(extern.accessLogger, //
                   extern.globalApiMetrics, //
                   executors[randomExecutorIndex.nextInt(executors.length)], //
-                  domainResolver, //
+                  domainWithPolicyResolver, //
                   userIdResolver, //
                   session.authenticator, //
                   spacePolicyLocator); //
@@ -56,7 +55,7 @@ public class BootstrapGlobalServiceBase {
               new RegionConnectionNexus(extern.accessLogger, //
                   extern.regionApiMetrics, //
                   executors[randomExecutorIndex.nextInt(executors.length)], //
-                  domainResolver, //
+                  domainWithPolicyResolver, //
                   session.authenticator, //
                   spacePolicyLocator); //
           final GlobalConnectionRouter globalRouter = new GlobalConnectionRouter(session, globalNexus, globalControlHandler);

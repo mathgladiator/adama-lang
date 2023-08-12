@@ -23,7 +23,7 @@ import org.adamalang.mysql.model.Sentinel;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
