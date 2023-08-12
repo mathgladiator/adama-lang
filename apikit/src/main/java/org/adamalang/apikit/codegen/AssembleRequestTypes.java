@@ -110,7 +110,11 @@ public class AssembleRequestTypes {
               }
               java.append(parameter.name).append("\", ").append(parameter.optional ? "false" : "true").append(", ").append(parameter.errorCodeIfMissing).append(");\n");
               if (parameter.validator != null) {
-                java.append("      ").append(parameter.validator.shortServiceName).append(".validate(").append(parameter.camelName).append(");\n");
+                java.append("      ").append(parameter.validator.shortServiceName).append(".validate(");
+                if (parameter.validator.args != null) {
+                  java.append(String.join(", ", parameter.validator.args)).append(", ");
+                }
+                java.append(parameter.camelName).append(");\n");
               }
               Transform transform = parameter.getTransform(method.name);
               if (transform != null) {

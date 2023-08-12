@@ -15,41 +15,36 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.contracts.data.SpacePolicy;
 import org.adamalang.frontend.Session;
-import org.adamalang.validators.ValidatePlan;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/** Set the deployment plan for a space. */
-public class SpaceSetRequest {
+/** Download a plan (internally) */
+public class RegionalGetPlanRequest {
   public final String identity;
   public final AuthenticatedUser who;
   public final String space;
   public final SpacePolicy policy;
-  public final ObjectNode plan;
 
-  public SpaceSetRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final ObjectNode plan) {
+  public RegionalGetPlanRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy) {
     this.identity = identity;
     this.who = who;
     this.space = space;
     this.policy = policy;
-    this.plan = plan;
   }
 
-  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<SpaceSetRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<RegionalGetPlanRequest> callback) {
     try {
-      final BulkLatch<SpaceSetRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
+      final BulkLatch<RegionalGetPlanRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getStringNormalize("space", true, 461828);
       ValidateSpace.validate(space);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
-      final ObjectNode plan = request.getObject("plan", true, 425999);
-      ValidatePlan.validate(space, plan);
-      _latch.with(() -> new SpaceSetRequest(identity, who.get(), space, policy.get(), plan));
+      _latch.with(() -> new RegionalGetPlanRequest(identity, who.get(), space, policy.get()));
       nexus.identityService.execute(session, identity, who);
       nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(new NamedRunnable("spaceset-error") {
+      nexus.executor.execute(new NamedRunnable("regionalgetplan-error") {
         @Override
         public void execute() throws Exception {
           callback.failure(ece);

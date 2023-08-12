@@ -861,6 +861,24 @@ public class GlobalConnectionRouter {
                 }
               });
             } return;
+            case "regional/get-plan": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalGetPlan.start();
+              RegionalGetPlanRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(RegionalGetPlanRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new PlanResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
           }
           responder.error(new ErrorCodeException(ErrorCodes.API_METHOD_NOT_FOUND));
         }

@@ -113,7 +113,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     return false;
   }
 
-  private void authAdama(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
+  private boolean authAdama(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
     int userId = Integer.parseInt(parsedToken.sub);
     for (String publicKey64 : Users.listKeys(database, userId)) {
       PublicKey publicKey = PublicKeyCodec.decode(publicKey64);
@@ -126,11 +126,12 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
         AuthenticatedUser user = new AuthenticatedUser(userId, new NtPrincipal("" + userId, "adama"), defaultContext);
         session.identityCache.put(identity, user);
         callback.success(user);
-        return;
+        return true;
       } catch (Exception ex) {
         // move on
       }
     }
+    return false;
   }
 
   private void authKeystore(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
@@ -184,7 +185,9 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
         }
       }
       else if ("adama".equals(parsedToken.iss)) {
-        authAdama(session, identity, parsedToken, callback);
+        if (authAdama(session, identity, parsedToken, callback)) {
+          return;
+        }
       } else {
         authKeystore(session, identity, parsedToken, callback);
       }

@@ -564,6 +564,15 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientAuthResultResponse(obj), callback);
   }
 
+  /** regional/get-plan */
+  public void regionalGetPlan(ClientRegionalGetPlanRequest request, Callback<ClientPlanResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/get-plan");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    pool.requestResponse(node, (obj) -> new ClientPlanResponse(obj), callback);
+  }
+
   public class AttachmentUploadHandler {
     public final WebClientConnection _direct;
     public final int _id;

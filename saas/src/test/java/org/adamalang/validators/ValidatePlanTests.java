@@ -18,11 +18,11 @@ public class ValidatePlanTests {
   @Test
   public void coverage() throws Exception {
     try {
-      ValidatePlan.validate(Json.newJsonObject());
+      ValidatePlan.validate("space", Json.newJsonObject());
       Assert.fail();
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(115788, ece.code);
     }
-    ValidatePlan.validate(Json.parseJsonObject(EndToEnd_SpaceInfoTests.planFor("@static {}")));
+    ValidatePlan.validate("space", Json.parseJsonObject(EndToEnd_SpaceInfoTests.planFor("@static {}")));
   }
 }

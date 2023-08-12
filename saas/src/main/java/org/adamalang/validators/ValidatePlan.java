@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ValidatePlan {
   private static final AtomicInteger validationClassId = new AtomicInteger(0);
 
-  public static void validate(ObjectNode node) throws ErrorCodeException {
+  public static void validate(String space, ObjectNode node) throws ErrorCodeException {
     DeploymentPlan localPlan = new DeploymentPlan(node.toString(), (t, c) -> t.printStackTrace());
-    new DeploymentFactory("name", "prefix", validationClassId, null, localPlan, Deliverer.FAILURE);
+    new DeploymentFactory(space, space + "prefix", validationClassId, null, localPlan, Deliverer.FAILURE);
   }
 }

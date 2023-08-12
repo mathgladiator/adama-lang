@@ -9,13 +9,22 @@
 package org.adamalang.cli.devbox;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.api.ClientConnectionCreateRequest;
+import org.adamalang.api.ClientDataResponse;
+import org.adamalang.api.SelfClient;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.common.*;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
+import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.socket.ConnectionReady;
+import org.adamalang.web.client.socket.MultiWebClientRetryPool;
+import org.adamalang.web.client.socket.MultiWebClientRetryPoolConfig;
+import org.adamalang.web.client.socket.MultiWebClientRetryPoolMetrics;
 import org.adamalang.web.service.WebConfig;
 
 import java.io.File;
@@ -25,8 +34,75 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DevBoxStart {
+
+  private static void spinupSpacialConnection(SimpleExecutor executor, SelfClient client, String identity, String space, TerminalIO io, AtomicBoolean alive) {
+    ClientConnectionCreateRequest request = new ClientConnectionCreateRequest();
+    request.identity = identity;
+    request.space = "ide";
+    request.key = space;
+    request.viewerState = Json.newJsonObject();
+
+    Callback<SelfClient.DocumentStreamHandler> callbackWrite = new Callback<SelfClient.DocumentStreamHandler>() {
+      @Override
+      public void success(SelfClient.DocumentStreamHandler value) {
+        io.notice("hivemind|connected");
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    };
+
+    Stream<ClientDataResponse> callbackRead = new Stream<ClientDataResponse>() {
+      int backoff = 500;
+      int deploymentAt = -1;
+      @Override
+      public void next(ClientDataResponse value) {
+        if (value.delta.has("data")) {
+          ObjectNode data = (ObjectNode) value.delta.get("data");
+          if (data.has("deployments")) {
+            int deploymentsValue = data.get("deployments").intValue();
+            if (deploymentAt != -1 && deploymentsValue > deploymentAt) {
+              io.important("hivemind:" + space + " was deployed");
+            }
+            deploymentAt = deploymentsValue;
+          }
+        }
+      }
+
+      @Override
+      public void complete() {
+
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        io.notice("hivemind|disconnected");
+        backoff = (int) Math.min(5000, backoff * (1 + Math.random()));
+        Stream<ClientDataResponse> callbackRead = this;
+        if (alive.get()) {
+          executor.schedule(new NamedRunnable("retry-connection") {
+            @Override
+            public void execute() throws Exception {
+              client.connectionCreate(request, callbackWrite, callbackRead);
+            }
+          }, backoff);
+
+        }
+      }
+    };
+
+    client.connectionCreate(request, callbackWrite, callbackRead);
+  }
   public static void start(Arguments.FrontendDevServerArgs args) throws Exception {
+    String developerIdentity = args.config.get_string("identity", null);
     SimpleExecutor offload = SimpleExecutor.create("executor");
+    WebClientBase webClientBase = new WebClientBase(new WebConfig(new ConfigObject(Json.newJsonObject())));
+    MultiWebClientRetryPoolConfig config = new MultiWebClientRetryPoolConfig(new ConfigObject(Json.parseJsonObject("{\"multi-connection-count\":1}")));
+    MultiWebClientRetryPool productionPool = new MultiWebClientRetryPool(offload, webClientBase, new MultiWebClientRetryPoolMetrics(new NoOpMetricsFactory()), config, ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
+    SelfClient production = new SelfClient(productionPool);
+
     DynamicControl control = new DynamicControl();
     AtomicBoolean alive = new AtomicBoolean(true);
     String localLibAdamaJSPath = "".equals(args.localLibadamaPath) ? null : args.localLibadamaPath;
@@ -52,6 +128,11 @@ public class DevBoxStart {
         verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn);
         if (verse == null) {
           terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
+        } else {
+          for (DevBoxAdamaMicroVerse.LocalSpaceDefn space : verse.spaces) {
+            terminal.notice("devbox|connecting to hivemind for " + space.spaceName);
+            spinupSpacialConnection(offload, production, developerIdentity,  space.spaceName, terminal, alive);
+          }
         }
       } else {
         terminal.error("verse|microverse: '" + args.microverse + "' is not present, using production");
@@ -61,6 +142,8 @@ public class DevBoxStart {
       terminal.error("js|currently, --local-libadama-path is required (or configured) when using a verse");
       return;
     }
+
+
     terminal.info("devbox|starting up");
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
     try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), localLibAdamaJSPath != null, (b) -> bundle.set(b))) {
