@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
-import org.adamalang.contracts.UserIdResolver;
 import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.contracts.data.SpacePolicy;
 import org.adamalang.frontend.Session;
@@ -73,7 +72,7 @@ public class SpaceSetRoleRequest {
     _node.put("space", space);
     org.adamalang.contracts.SpacePolicyLocator.logInto(policy, _node);
     _node.put("email", email);
-    UserIdResolver.logInto(userId, _node);
+    org.adamalang.contracts.UserIdResolver.logInto(userId, _node);
     _node.put("role", role);
   }
 }
