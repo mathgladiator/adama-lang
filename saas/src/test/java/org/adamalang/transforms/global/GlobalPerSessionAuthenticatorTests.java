@@ -16,7 +16,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.frontend.Session;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.impl.global.GlobalPerSessionAuthenticator;
-import org.adamalang.transforms.PerSessionAuthenticator;
+import org.adamalang.contracts.data.ParsedToken;
 import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
 import org.junit.Assert;
@@ -31,13 +31,13 @@ public class GlobalPerSessionAuthenticatorTests {
   @Test
   public void tokenParsing() {
     try {
-      new GlobalPerSessionAuthenticator.ParsedToken("{}");
+      new ParsedToken("{}");
       Assert.fail();
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(995342, ece.code);
     }
     try {
-      new GlobalPerSessionAuthenticator.ParsedToken("x.x.x");
+      new ParsedToken("x.x.x");
       Assert.fail();
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(908303, ece.code);
