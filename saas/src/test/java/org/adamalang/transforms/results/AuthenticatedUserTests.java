@@ -11,7 +11,7 @@ package org.adamalang.transforms.results;
 import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.transforms.PerSessionAuthenticator;
+import org.adamalang.contracts.data.ParsedToken;
 import org.adamalang.web.io.ConnectionContext;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class AuthenticatedUserTests {
     AuthenticatedUser user = new AuthenticatedUser(123, new NtPrincipal("jeff", "adama"), new ConnectionContext("origin", "ip", "agent", "asset-key"));
     KeyPair pair = PublicKeyCodec.inventHostKey();
     String identity = user.asIdentity(42, pair.getPrivate());
-    PerSessionAuthenticator.ParsedToken parsedToken = new PerSessionAuthenticator.ParsedToken(identity);
+    ParsedToken parsedToken = new ParsedToken(identity);
     Assert.assertEquals(42, parsedToken.key_id);
     Assert.assertEquals(123, parsedToken.proxy_user_id);
     Assert.assertEquals("jeff", parsedToken.sub);

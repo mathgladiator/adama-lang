@@ -23,6 +23,7 @@ import org.adamalang.mysql.model.Secrets;
 import org.adamalang.mysql.model.Users;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.security.Keystore;
+import org.adamalang.contracts.data.ParsedToken;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
@@ -51,7 +52,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     return defaultContext;
   }
 
-  private void authDocument(String identity, PerSessionAuthenticator.ParsedToken parsedToken, Callback<AuthenticatedUser> callback) {
+  private void authDocument(String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) {
     final SigningKeyPair skp;
     try {
       String[] docSpaceKey = parsedToken.iss.split(Pattern.quote("/"));
@@ -66,7 +67,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     callback.success(user);
   }
 
-  private void authHost(Session session, String identity, PerSessionAuthenticator.ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
+  private void authHost(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
     PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
     Jwts.parserBuilder()
         .setSigningKey(publicKey)
@@ -79,7 +80,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     callback.success(user);
   }
 
-  private void authInternal(Session session, String identity, PerSessionAuthenticator.ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
+  private void authInternal(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
     PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
     Jwts.parserBuilder()
         .setSigningKey(publicKey)
@@ -92,7 +93,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     callback.success(user);
   }
 
-  private boolean authSuper(Session session, String identity, PerSessionAuthenticator.ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
+  private boolean authSuper(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
     for (String publicKey64 : superKeys) {
       PublicKey publicKey = PublicKeyCodec.decode(publicKey64);
       try {
@@ -112,7 +113,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     return false;
   }
 
-  private void authAdama(Session session, String identity, PerSessionAuthenticator.ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
+  private void authAdama(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
     int userId = Integer.parseInt(parsedToken.sub);
     for (String publicKey64 : Users.listKeys(database, userId)) {
       PublicKey publicKey = PublicKeyCodec.decode(publicKey64);
@@ -132,7 +133,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     }
   }
 
-  private void authKeystore(Session session, String identity, PerSessionAuthenticator.ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
+  private void authKeystore(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
     // otherwise, try a keystore by the authority presented
     final Keystore keystore;
     try {
@@ -164,7 +165,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
         return;
       }
 
-      PerSessionAuthenticator.ParsedToken parsedToken = new PerSessionAuthenticator.ParsedToken(identity);
+      ParsedToken parsedToken = new ParsedToken(identity);
       if (parsedToken.iss.startsWith("doc/")) {
         authDocument(identity, parsedToken, callback);
         return;
