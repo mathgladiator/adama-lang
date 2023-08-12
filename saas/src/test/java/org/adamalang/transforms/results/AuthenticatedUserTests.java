@@ -9,6 +9,7 @@
 package org.adamalang.transforms.results;
 
 import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.web.io.ConnectionContext;
@@ -22,7 +23,7 @@ public class AuthenticatedUserTests {
   @Test
   public void flow() throws Exception {
     AuthenticatedUser user = new AuthenticatedUser(123, new NtPrincipal("jeff", "adama"), new ConnectionContext("origin", "ip", "agent", "asset-key"));
-    KeyPair pair = PerSessionAuthenticator.inventHostKey();
+    KeyPair pair = PublicKeyCodec.inventHostKey();
     String identity = user.asIdentity(42, pair.getPrivate());
     PerSessionAuthenticator.ParsedToken parsedToken = new PerSessionAuthenticator.ParsedToken(identity);
     Assert.assertEquals(42, parsedToken.key_id);

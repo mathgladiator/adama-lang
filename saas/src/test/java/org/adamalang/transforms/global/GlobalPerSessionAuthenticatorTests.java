@@ -46,8 +46,8 @@ public class GlobalPerSessionAuthenticatorTests {
 
   @Test
   public void keys() throws Exception {
-    KeyPair hostKeyPair = PerSessionAuthenticator.inventHostKey();
-    PublicKeyCodec.decode(PerSessionAuthenticator.encodePublicKey(hostKeyPair));
+    KeyPair hostKeyPair = PublicKeyCodec.inventHostKey();
+    PublicKeyCodec.decode(PublicKeyCodec.encodePublicKey(hostKeyPair));
   }
 
   @Test

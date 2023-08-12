@@ -8,7 +8,11 @@
  */
 package org.adamalang.impl.common;
 
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
 import java.security.KeyFactory;
+import java.security.KeyPair;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -23,4 +27,14 @@ public class PublicKeyCodec {
     KeyFactory kf = KeyFactory.getInstance("EC");
     return kf.generatePublic(spec);
   }
+  /** Encode a public key to store within a database */
+  public static String encodePublicKey(KeyPair pair) {
+    return new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+  }
+
+  /** Invent a key pair for the host to bind to */
+  public static KeyPair inventHostKey() {
+    return Keys.keyPairFor(SignatureAlgorithm.ES256);
+  }
+
 }

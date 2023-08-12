@@ -33,22 +33,16 @@ public abstract class PerSessionAuthenticator {
     this.defaultContext = defaultContext;
   }
 
-  /** get the origin */
-  public String origin() {
-    return defaultContext.origin;
-  }
-
-  /** get the remote ip */
-  public String ip() {
-    return defaultContext.remoteIp;
-  }
+  public abstract ConnectionContext getDefaultContext();
 
   /** update the default asset key within the default context */
+  @Deprecated
   public void updateAssetKey(String assetKey) {
     this.defaultContext = new ConnectionContext(defaultContext.origin, defaultContext.remoteIp, defaultContext.userAgent, assetKey);
   }
 
   /** get the asset key for the default context. If the session's connection is a user, then this is the user's asset key. */
+  @Deprecated
   public String assetKey() {
     return defaultContext.assetKey;
   }
@@ -68,18 +62,6 @@ public abstract class PerSessionAuthenticator {
       node.put("user-agent", user.context.userAgent);
     }
   }
-
-  /** Invent a key pair for the host to bind to */
-  public static KeyPair inventHostKey() {
-    return Keys.keyPairFor(SignatureAlgorithm.ES256);
-  }
-
-  /** Encode a public key to store within a database */
-  public static String encodePublicKey(KeyPair pair) {
-    return new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-  }
-
-
 
   public abstract void execute(Session session, String identity, Callback<AuthenticatedUser> callback);
 

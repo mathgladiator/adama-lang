@@ -46,6 +46,11 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     this.database = database;
   }
 
+  @Override
+  public ConnectionContext getDefaultContext() {
+    return defaultContext;
+  }
+
   private void authDocument(String identity, PerSessionAuthenticator.ParsedToken parsedToken, Callback<AuthenticatedUser> callback) {
     final SigningKeyPair skp;
     try {
