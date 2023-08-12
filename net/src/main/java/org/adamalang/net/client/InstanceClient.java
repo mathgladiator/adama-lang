@@ -38,7 +38,6 @@ import org.adamalang.runtime.sys.web.WebResponse;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -51,14 +50,12 @@ public class InstanceClient implements AutoCloseable {
   private final ClientMetrics metrics;
   private final RoutingTarget routing;
   private final HeatMonitor monitor;
-  private final Random rng;
-  private final ExceptionLogger logger;
   private final AtomicBoolean alive;
   private final ItemQueue<ChannelClient> client;
   private final ClientConfig config;
   private int backoff;
 
-  public InstanceClient(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor, ExceptionLogger logger) throws Exception {
+  public InstanceClient(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor) throws Exception {
     this.base = base;
     this.config = config;
     this.target = target;
@@ -66,9 +63,7 @@ public class InstanceClient implements AutoCloseable {
     this.metrics = metrics;
     this.monitor = monitor;
     this.routing = routing;
-    this.rng = new Random();
     this.client = new ItemQueue<>(executor, config.getClientQueueSize(), config.getClientQueueTimeoutMS());
-    this.logger = logger;
     this.alive = new AtomicBoolean(true);
     this.backoff = 1;
     retryConnection();
@@ -99,7 +94,6 @@ public class InstanceClient implements AutoCloseable {
 
             @Override
             public void error(int errorCode) {
-              logger.convertedToErrorCode(new NullPointerException("base.connect error:" + errorCode), errorCode);
               metrics.client_info_failed_downstream.run();
             }
           }, new CallbackByteStreamInfo(monitor, metrics));

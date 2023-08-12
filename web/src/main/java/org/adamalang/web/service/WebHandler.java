@@ -594,7 +594,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
       @Override
       public void failure(ErrorCodeException ex) {
-        LOG.error("failed-handler:", ex);
+        LOG.error("failed-web-handler:" + ex.getMessage());
         handleHttpResult(null, ctx, req);
       }
     };

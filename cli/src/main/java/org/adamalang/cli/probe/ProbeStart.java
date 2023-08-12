@@ -59,7 +59,7 @@ public class ProbeStart {
       }
     };
     executor = SimpleExecutor.create("probe");
-    client = new InstanceClient(base, clientConfig, clientMetrics, heatMonitor, routingTarget, args.target, executor, LOGGER);
+    client = new InstanceClient(base, clientConfig, clientMetrics, heatMonitor, routingTarget, args.target, executor);
   }
 
   public void run() {

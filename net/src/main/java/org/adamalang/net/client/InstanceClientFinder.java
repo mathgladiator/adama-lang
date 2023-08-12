@@ -87,7 +87,7 @@ public class InstanceClientFinder {
       public void execute() throws Exception {
         for (String target : targets) {
           if (!clients.containsKey(target)) {
-            clients.put(target, new InstanceClient(base, config, metrics, monitor, routingTarget, target, clientExecutors[rng.nextInt(clientExecutors.length)], logger));
+            clients.put(target, new InstanceClient(base, config, metrics, monitor, routingTarget, target, clientExecutors[rng.nextInt(clientExecutors.length)]));
           }
         }
         Iterator<Map.Entry<String, InstanceClient>> it = clients.entrySet().iterator();
