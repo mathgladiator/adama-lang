@@ -12,9 +12,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.contracts.data.SpacePolicy;
 import org.adamalang.frontend.Session;
-import org.adamalang.transforms.results.AuthenticatedUser;
-import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateKey;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
@@ -64,7 +64,7 @@ public class ConnectionCreateRequest {
   public void logInto(ObjectNode _node) {
     org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
     _node.put("space", space);
-    org.adamalang.transforms.SpacePolicyLocator.logInto(policy, _node);
+    org.adamalang.contracts.SpacePolicyLocator.logInto(policy, _node);
     _node.put("key", key);
   }
 }

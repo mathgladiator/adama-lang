@@ -12,8 +12,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.frontend.Session;
-import org.adamalang.transforms.results.DomainWithPolicy;
 import org.adamalang.web.io.*;
 
 /** Authorize a username and password against a document. */
@@ -50,6 +50,6 @@ public class DocumentAuthorizeDomainRequest {
   }
 
   public void logInto(ObjectNode _node) {
-    org.adamalang.transforms.DomainResolver.logInto(resolvedDomain, _node);
+    org.adamalang.contracts.DomainWithPolicyResolver.logInto(resolvedDomain, _node);
   }
 }

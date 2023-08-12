@@ -12,9 +12,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.frontend.Session;
-import org.adamalang.transforms.results.AuthenticatedUser;
-import org.adamalang.transforms.results.DomainWithPolicy;
 import org.adamalang.web.io.*;
 
 /** Create a connection to a document via a domain name. */
@@ -56,6 +56,6 @@ public class ConnectionCreateViaDomainRequest {
 
   public void logInto(ObjectNode _node) {
     org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
-    org.adamalang.transforms.DomainResolver.logInto(resolvedDomain, _node);
+    org.adamalang.contracts.DomainWithPolicyResolver.logInto(resolvedDomain, _node);
   }
 }

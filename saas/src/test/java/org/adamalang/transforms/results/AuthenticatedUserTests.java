@@ -8,6 +8,7 @@
  */
 package org.adamalang.transforms.results;
 
+import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.web.io.ConnectionContext;

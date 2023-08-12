@@ -6,12 +6,12 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.transforms;
+package org.adamalang.contracts;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.*;
 import org.adamalang.frontend.Session;
-import org.adamalang.transforms.results.SpacePolicy;
+import org.adamalang.contracts.data.SpacePolicy;
 
 public interface SpacePolicyLocator {
 

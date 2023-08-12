@@ -12,8 +12,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.frontend.Session;
-import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.*;
 
 /** List keys that are in the process of being deleted from this host (i.e. marked and not committed) */

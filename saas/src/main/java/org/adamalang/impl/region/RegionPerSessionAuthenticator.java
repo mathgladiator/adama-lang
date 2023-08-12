@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.transforms.region;
+package org.adamalang.impl.region;
 
-public class RegionSpacePolicyLocator {
+public class RegionPerSessionAuthenticator {
 }

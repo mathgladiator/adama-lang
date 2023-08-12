@@ -6,17 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.transforms.results;
+package org.adamalang.impl.region;
 
-import org.adamalang.mysql.data.Domain;
-
-/** a domain with an associated space policy */
-public class DomainWithPolicy {
-  public final Domain domain;
-  public final SpacePolicy policy;
-
-  public DomainWithPolicy(Domain domain, SpacePolicy policy) {
-    this.domain = domain;
-    this.policy = policy;
-  }
+public class RegionSpacePolicyLocator {
 }

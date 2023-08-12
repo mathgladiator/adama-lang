@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.transforms.results;
+package org.adamalang.contracts.data;
 
 import org.adamalang.mysql.data.SpaceInfo;
 

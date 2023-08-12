@@ -9,9 +9,9 @@
 package org.adamalang.api;
 
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.transforms.DomainResolver;
+import org.adamalang.contracts.DomainWithPolicyResolver;
+import org.adamalang.contracts.SpacePolicyLocator;
 import org.adamalang.transforms.PerSessionAuthenticator;
-import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
 import org.adamalang.web.io.JsonLogger;;
 
@@ -19,12 +19,12 @@ public class GlobalConnectionNexus {
   public final JsonLogger logger;
   public final GlobalApiMetrics metrics;
   public final SimpleExecutor executor;
-  public final DomainResolver domainService;
+  public final DomainWithPolicyResolver domainService;
   public final UserIdResolver emailService;
   public final PerSessionAuthenticator identityService;
   public final SpacePolicyLocator spaceService;
 
-  public GlobalConnectionNexus(JsonLogger logger, GlobalApiMetrics metrics, SimpleExecutor executor, DomainResolver domainService, UserIdResolver emailService, PerSessionAuthenticator identityService, SpacePolicyLocator spaceService) {
+  public GlobalConnectionNexus(JsonLogger logger, GlobalApiMetrics metrics, SimpleExecutor executor, DomainWithPolicyResolver domainService, UserIdResolver emailService, PerSessionAuthenticator identityService, SpacePolicyLocator spaceService) {
     this.logger = logger;
     this.metrics = metrics;
     this.executor = executor;
