@@ -101,6 +101,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, RegionalAuthRequest request, AuthResultResponder responder);
 
+  public void handle(Session session, RegionalGetPlanRequest request, PlanResponder responder);
+
   public void disconnect();
 
   public static boolean test(String method) {
@@ -150,6 +152,7 @@ public interface RootGlobalHandler {
       case "regional/finder/list":
       case "regional/finder/deletion-list":
       case "regional/auth":
+      case "regional/get-plan":
         return true;
       default:
         return false;

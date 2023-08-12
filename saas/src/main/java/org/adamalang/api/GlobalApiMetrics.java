@@ -57,6 +57,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_RegionalFinderList;
   public final RequestResponseMonitor monitor_RegionalFinderDeletionList;
   public final RequestResponseMonitor monitor_RegionalAuth;
+  public final RequestResponseMonitor monitor_RegionalGetPlan;
 
   public GlobalApiMetrics(MetricsFactory factory) {
     this.monitor_InitSetupAccount = factory.makeRequestResponseMonitor("init/setup-account");
@@ -104,5 +105,6 @@ public class GlobalApiMetrics {
     this.monitor_RegionalFinderList = factory.makeRequestResponseMonitor("regional/finder/list");
     this.monitor_RegionalFinderDeletionList = factory.makeRequestResponseMonitor("regional/finder/deletion-list");
     this.monitor_RegionalAuth = factory.makeRequestResponseMonitor("regional/auth");
+    this.monitor_RegionalGetPlan = factory.makeRequestResponseMonitor("regional/get-plan");
   }
 }

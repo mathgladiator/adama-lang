@@ -16,6 +16,7 @@ import org.w3c.dom.NodeList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 public class ParameterDefinition {
   public final String name;
@@ -132,7 +133,11 @@ public class ParameterDefinition {
             if (service == null) {
               throw new Exception("validate needs a service");
             }
-            validator = new Validator(service);
+            String[] args = null;
+            if (childElement.hasAttribute("args")) {
+              args = childElement.getAttribute("args").split(Pattern.quote(","));
+            }
+            validator = new Validator(service, args);
           }
           break;
           case "skip-transform": {

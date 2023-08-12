@@ -6,8 +6,10 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20230812123603";
+/** generated request type for regional/get-plan */
+public class ClientRegionalGetPlanRequest {
+  public String identity;
+  public String space;
 }

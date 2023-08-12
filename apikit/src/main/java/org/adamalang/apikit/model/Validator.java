@@ -11,9 +11,11 @@ package org.adamalang.apikit.model;
 public class Validator {
   public final String service;
   public final String shortServiceName;
+  public final String[] args;
 
-  public Validator(String service) {
+  public Validator(String service, String[] args) {
     this.service = service;
+    this.args = args;
     int lastDotService = service.lastIndexOf('.');
     shortServiceName = service.substring(lastDotService + 1);
   }

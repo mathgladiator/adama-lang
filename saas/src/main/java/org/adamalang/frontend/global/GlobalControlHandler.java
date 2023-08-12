@@ -407,10 +407,14 @@ public class GlobalControlHandler implements RootGlobalHandler {
     }
   }
 
+  private boolean isReservedSpace(String space) {
+    return "ide".equals(space) || "wildcard".equals(space) || "billing".equals(space);
+  }
+
   @Override
   public void handle(Session session, SpaceCreateRequest request, SimpleResponder responder) {
     try {
-      if ("ide".equals(request.space) || "wildcard".equals(request.space) || "billing".equals(request.space)) {
+      if (isReservedSpace(request.space)) {
         responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_SPACE_RESERVED));
         return;
       }
@@ -486,15 +490,30 @@ public class GlobalControlHandler implements RootGlobalHandler {
         // Change the master plan
         Spaces.setPlan(nexus.database, request.policy.id, planJson, hash);
         // iterate the targets with this space loaded
-        nexus.adama.deployLocal(request.space);
-        nexus.adama.deployCrossRegion(request.who, request.space);
-        nexus.adama.waitForCapacity(request.space, 30000, (found) -> {
-          if (found) {
-            responder.complete();
-          } else {
-            responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_DEPLOYMENT_FAILED_FINDING_CAPACITY));
+        Callback<Integer> postDirectSend = new Callback<>() {
+          @Override
+          public void success(Integer value) {
+            nexus.adama.deployLocal(request.space);
+            nexus.adama.deployCrossRegion(request.who, request.space);
+            nexus.adama.waitForCapacity(request.space, 30000, (found) -> {
+              if (found) {
+                responder.complete();
+              } else {
+                responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_DEPLOYMENT_FAILED_FINDING_CAPACITY));
+              }
+            });
           }
-        });
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            responder.error(ex);
+          }
+        };
+        if (isReservedSpace(request.space)) {
+          postDirectSend.success(0);
+        } else {
+          nexus.adama.directSend(request.who, "ide", request.space, null, "signal_deployment", "{}", postDirectSend);
+        }
       } else {
         throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE);
       }
@@ -778,6 +797,13 @@ public class GlobalControlHandler implements RootGlobalHandler {
   public void handle(Session session, RegionalAuthRequest request, AuthResultResponder responder) {
     AuthenticatedUser user = request.who;
     responder.complete((long) user.id, user.who.agent, user.who.authority);
+  }
+
+  @Override
+  public void handle(Session session, RegionalGetPlanRequest request, PlanResponder responder) {
+    if (checkRegionalHost(request.who, responder.responder)) {
+
+    }
   }
 
   @Override

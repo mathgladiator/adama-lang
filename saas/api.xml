@@ -151,7 +151,7 @@
             Note: this value will validated such that the scripts are valid, compile, and will not have any major regressions
             during role out.
         </documentation>
-        <validate service="org.adamalang.validators.ValidatePlan"/>
+        <validate service="org.adamalang.validators.ValidatePlan" args="space"/>
     </parameter-definition>
 
     <parameter-definition name="limit" type="int" optional="true" logged="true">
@@ -1410,6 +1410,14 @@
             Authenticate an identity
         </documentation>
         <parameter name="identity"/>
+    </method>
+
+    <method name="regional/get-plan" responder="plan" scope="global" internal="true">
+        <documentation>
+            Download a plan (internally)
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space"/>
     </method>
 
 

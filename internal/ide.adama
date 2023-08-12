@@ -26,6 +26,15 @@ channel set_developers_from_frontend(SyncDevelopers sd) open {
   }
 }
 
+public int deployments;
+
+message Deployment {
+}
+
+channel signal_deployment(Deployment d) open {
+  deployments ++;
+}
+
 procedure security_check(principal other) -> bool readonly {
   if (other == owner) {
     return true;
