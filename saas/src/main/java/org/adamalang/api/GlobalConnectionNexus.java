@@ -11,8 +11,8 @@ package org.adamalang.api;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.contracts.DomainWithPolicyResolver;
 import org.adamalang.contracts.SpacePolicyLocator;
-import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.contracts.UserIdResolver;
+import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.web.io.JsonLogger;;
 
 public class GlobalConnectionNexus {
