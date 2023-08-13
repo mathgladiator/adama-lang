@@ -1,0 +1,18 @@
+record A {
+  int x;
+}
+
+record B {
+ table<A> _a;
+ formula a = (iterate _a).x;
+
+}
+
+table<B> _b;
+
+@construct {
+ _b <- {_a: [{x:1}, {x:2}, {x:3}]};
+ _b <- {_a: [{x:4}, {x:5}, {x:6}]};
+}
+
+public formula x = (iterate _b).a.flatten();

@@ -16,6 +16,7 @@ import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetLists;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
@@ -144,6 +145,15 @@ public class TyNativeList extends TyType implements //
         foi.hiddenSuffixArgs.add("(Integer __n) -> (Object) (new " + elementType.getJavaConcreteType(environment) + "[__n])");
       }
       return new TyNativeFunctional("toArray", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.ExpressionThenArgs);
+    }
+    if ("flatten".equals(name)) {
+      TyType listElementType = getEmbeddedType(environment);
+      if (RuleSetLists.IsNativeList(environment, listElementType, true) && listElementType instanceof DetailContainsAnEmbeddedType) {
+        TyType itemType = ((DetailContainsAnEmbeddedType) listElementType).getEmbeddedType(environment);
+        TyType resultType = new TyNativeList(TypeBehavior.ReadOnlyNativeValue,  null, null, new TokenizedItem<>(itemType)).withPosition(this);
+        final var foi = new FunctionOverloadInstance("LibLists.flatten", resultType, new ArrayList<>(), FunctionPaint.READONLY_NORMAL);
+        return new TyNativeFunctional("LibLists.flatten", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+      }
     }
     TyNativeFunctional extensionBeforeAggregate = environment.state.globals.findExtension(this, name);
     if (extensionBeforeAggregate != null) {
