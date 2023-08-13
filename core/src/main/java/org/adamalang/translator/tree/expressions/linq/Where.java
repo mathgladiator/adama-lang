@@ -122,7 +122,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     var first = true;
     var index = 0;
     for (final Map.Entry<String, FieldDefinition> entry : structureStorage.fields.entrySet()) {
-      if ("id".equals(entry.getKey())) {
+      if (!structureStorage.indexSet.contains(entry.getKey())) {
         continue;
       }
       final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
@@ -213,7 +213,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     // to misbehave
     final var typeFrom = sql.typing(environment, null);
     if (typeFrom != null && environment.rules.IsNativeListOfStructure(typeFrom, false)) {
-      final var storageType = (IsStructure) ((TyNativeList) typeFrom).elementType;
+      final var storageType = (IsStructure) environment.rules.Resolve(((TyNativeList) environment.rules.Resolve(typeFrom, false)).elementType, false);
       structureStorage = storageType.storage();
       final var watch = environment.watch((name, tyUn) -> {
         TyType ty = environment.rules.Resolve(tyUn, false);

@@ -1145,7 +1145,7 @@ public class Parser {
       base = assignment();
     }
     Token op;
-    while ((op = tokens.popIf(t -> t.isIdentifier("where", "where_as", "order", "shuffle", "map", "reduce", "limit", "offset"))) != null) {
+    while ((op = tokens.popIf(t -> t.isIdentifier("materialize", "where", "where_as", "order", "shuffle", "map", "reduce", "limit", "offset"))) != null) {
       base = wrap_linq(base, op);
     }
     return base;
@@ -1856,6 +1856,8 @@ public class Parser {
 
   Expression wrap_linq(final Expression base, final Token op) throws AdamaLangException {
     switch (op.text) {
+      case "materialize":
+        return new Materialize(base, op);
       case "where":
         return new Where(base, op, null, null, assignment());
       case "where_as": {

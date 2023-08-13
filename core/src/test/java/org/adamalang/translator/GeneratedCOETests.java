@@ -1190,7 +1190,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    private NtPrincipal w;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {0, w.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -1260,7 +1260,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    private NtPrincipal __who;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {0, __who.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");

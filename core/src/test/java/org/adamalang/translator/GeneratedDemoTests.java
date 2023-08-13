@@ -3707,7 +3707,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private NtPrincipal __who;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, __who.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -6459,7 +6459,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxCard> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, NtPrincipal.NO_ONE.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -6477,7 +6477,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxCard> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, NtPrincipal.NO_ONE.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -6495,7 +6495,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxCard> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, NtPrincipal.NO_ONE.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -6514,7 +6514,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private NtPrincipal __who;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {0, __who.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -6536,7 +6536,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private NtPrincipal __who;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, __who.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -9384,7 +9384,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxCard> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {2, 2};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -9403,7 +9403,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private NtPrincipal __who;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, __who.hashCode(), 2, 4};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -9426,7 +9426,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private NtPrincipal __who;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, __who.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -9448,7 +9448,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private NtPrincipal __who;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, __who.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -9658,7 +9658,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause14 implements WhereClause<RTxCard> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, NtPrincipal.NO_ONE.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -9695,7 +9695,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private RxPrincipal player1;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, player1.get().hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -9717,7 +9717,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private RxPrincipal player2;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, player2.get().hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -9739,7 +9739,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private RxPrincipal player3;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, player3.get().hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -9761,7 +9761,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private RxPrincipal player4;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, player4.get().hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -10046,7 +10046,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause32 implements WhereClause<RTxCard> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {3, 2, 4, 1};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -10065,7 +10065,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause33 implements WhereClause<RTxCard> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {2, 3};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -10087,7 +10087,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private RxEnumInt32 suit_in_play;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, current.get().hashCode(), 2, 2};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -10115,7 +10115,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private RxPrincipal current;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, current.get().hashCode(), 2, 2};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -10182,7 +10182,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private RxEnumInt32 suit_in_play;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {2, 3, 4, suit_in_play.get()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -10204,7 +10204,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause39 implements WhereClause<RTxCard> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {2, 3};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -10222,7 +10222,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause40 implements WhereClause<RTxCard> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {2, 3};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -10241,7 +10241,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private RxPrincipal current;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, current.get().hashCode(), 2, 2};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -10282,7 +10282,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private RTxPlayer p;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, p.link.get().hashCode(), 2, 4};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -13195,7 +13195,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxCard> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, NtPrincipal.NO_ONE.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -13214,7 +13214,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private NtPrincipal who;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {1, who.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -17135,7 +17135,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxSquare> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {0, 0};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -17177,7 +17177,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private int placed;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {0, placed, 1, k};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -17202,7 +17202,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private int placed;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {0, placed, 2, k};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -17226,7 +17226,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private int placed;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {0, placed};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
@@ -17250,7 +17250,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    private int placed;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {0, placed};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
