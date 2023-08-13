@@ -1,0 +1,30 @@
+record R {
+  int z;
+}
+
+table<R> tblR;
+
+message M {
+  int m;
+}
+
+public int foo_ran;
+procedure foo(table<R> which) {
+  (iterate which).z = 123;
+  foo_ran = 1;
+}
+
+procedure goo(table<M> which) -> int {
+  return (iterate which).m.sum().getOrDefaultTo(10000);
+}
+
+public int sum;
+
+@construct {
+  foo(tblR);
+  table<M> t;
+  t <- {m:1};
+  t <- {m:2};
+  t <- {m:3};
+  sum = goo(t);
+}
