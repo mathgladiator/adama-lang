@@ -13,6 +13,7 @@ import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.adamalang.translator.reflect.Skip;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class LibLists {
 
@@ -23,6 +24,46 @@ public class LibLists {
       for (T item : sub) {
         result.add(item);
       }
+    }
+    return new ArrayNtList<>(result);
+  }
+
+  @Skip
+  public static <T> NtList<T> reverse(NtList<T> list) {
+    Stack<T> stack = new Stack<>();
+    ArrayList<T> result = new ArrayList<>();
+    for (T item : list) {
+      stack.push(item);
+    }
+    while (!stack.empty()) {
+      result.add(stack.pop());
+    }
+    return new ArrayNtList<>(result);
+  }
+
+  @Skip
+  public static <T> NtList<T> skip(NtList<T> list, int count) {
+    ArrayList<T> result = new ArrayList<>();
+    int skip = count;
+    for (T item : list) {
+      if (skip == 0) {
+        result.add(item);
+      } else {
+        skip--;
+      }
+    }
+    return new ArrayNtList<>(result);
+  }
+
+  @Skip
+  public static <T> NtList<T> drop(NtList<T> list, int count) {
+    ArrayList<T> result = new ArrayList<>();
+    int keep = list.size() - count;
+    for (T item : list) {
+      if (keep > 0) {
+        result.add(item);
+      }
+      keep--;
     }
     return new ArrayNtList<>(result);
   }
