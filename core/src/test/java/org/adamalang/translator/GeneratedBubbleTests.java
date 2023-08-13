@@ -3558,7 +3558,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    private RTx__ViewerType __viewer;");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {0, __viewer.name.hashCode()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");

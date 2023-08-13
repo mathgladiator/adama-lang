@@ -63,13 +63,11 @@ public class CodeGenIndexing {
     sb.append("}").writeNewline();
     sb.append("@Override").writeNewline();
     sb.append("public int[] __getIndexValues() {").tabUp().writeNewline();
+    int indexId = 0;
     sb.append("return new int[] {");
     first = true;
     for (final Map.Entry<String, FieldDefinition> entry : storage.fields.entrySet()) {
       if (!storage.indexSet.contains(entry.getKey())) {
-        continue;
-      }
-      if ("id".equals(entry.getKey())) {
         continue;
       }
       final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
@@ -91,9 +89,6 @@ public class CodeGenIndexing {
     boolean first = true;
     for (final Map.Entry<String, FieldDefinition> entry : storage.fields.entrySet()) {
       if (!storage.indexSet.contains(entry.getKey())) {
-        continue;
-      }
-      if ("id".equals(entry.getKey())) {
         continue;
       }
       final var fieldType = environment.rules.Resolve(entry.getValue().type, false);

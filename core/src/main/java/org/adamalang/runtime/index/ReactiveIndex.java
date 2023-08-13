@@ -48,74 +48,7 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
 
   /** get the index */
   public TreeSet<Ty> of(final int at, IndexQuerySet.LookupMode mode) {
-    switch (mode) {
-      case LessThan: {
-        TreeSet<Ty> values = new TreeSet<>();
-        Iterator<Map.Entry<Integer, TreeSet<Ty>>> it = index.entrySet().iterator();
-        while (it.hasNext()) {
-          Map.Entry<Integer, TreeSet<Ty>> entry = it.next();
-          if (entry.getKey() < at) {
-            values.addAll(entry.getValue());
-          } else {
-            break;
-          }
-        }
-        if (values.size() == 0) {
-          return null;
-        }
-        return values;
-      }
-      case LessThanOrEqual: {
-        TreeSet<Ty> values = new TreeSet<>();
-        Iterator<Map.Entry<Integer, TreeSet<Ty>>> it = index.entrySet().iterator();
-        while (it.hasNext()) {
-          Map.Entry<Integer, TreeSet<Ty>> entry = it.next();
-          if (entry.getKey() <= at) {
-            values.addAll(entry.getValue());
-          } else {
-            break;
-          }
-        }
-        if (values.size() == 0) {
-          return null;
-        }
-        return values;
-      }
-      case GreaterThan: {
-        TreeSet<Ty> values = new TreeSet<>();
-        Iterator<Map.Entry<Integer, TreeSet<Ty>>> it = index.descendingMap().entrySet().iterator();
-        while (it.hasNext()) {
-          Map.Entry<Integer, TreeSet<Ty>> entry = it.next();
-          if (entry.getKey() > at) {
-            values.addAll(entry.getValue());
-          } else {
-            break;
-          }
-        }
-        if (values.size() == 0) {
-          return null;
-        }
-        return values;
-      }
-      case GreaterThanOrEqual: {
-        TreeSet<Ty> values = new TreeSet<>();
-        Iterator<Map.Entry<Integer, TreeSet<Ty>>> it = index.descendingMap().entrySet().iterator();
-        while (it.hasNext()) {
-          Map.Entry<Integer, TreeSet<Ty>> entry = it.next();
-          if (entry.getKey() >= at) {
-            values.addAll(entry.getValue());
-          } else {
-            break;
-          }
-        }
-        if (values.size() == 0) {
-          return null;
-        }
-        return values;
-      }
-      default:
-        return index.get(at);
-    }
+    return EvaluateLookupMode.of(index, at, mode);
   }
 
   /** remove the item from the index */

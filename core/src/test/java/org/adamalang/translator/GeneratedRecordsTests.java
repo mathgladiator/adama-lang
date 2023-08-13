@@ -8445,7 +8445,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxX> {");
     gold.append("\n    @Override");
     gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {0, 1};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");

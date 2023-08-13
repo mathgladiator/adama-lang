@@ -18,6 +18,7 @@ public abstract class LinqExpression extends Expression {
   public LinqExpression(final Expression sql) {
     intermediateExpression = false;
     this.sql = sql;
+    ingest(sql);
     indicateIntermediateExpression(sql);
   }
 

@@ -1,0 +1,22 @@
+message M {
+  int x;
+}
+
+int countEq;
+int countLEq;
+int countL;
+int countGEq;
+int countG;
+
+@construct {
+  table<M> msg;
+  msg <- {x:1};
+  msg <- {x:2};
+  msg <- {x:3};
+  list<M> mat = iterate msg materialize;
+  countEq = (mat where x == 2).size();
+  countLEq = (mat where x <= 2).size();
+  countL = (mat where x < 2).size();
+  countGEq = (mat where x >= 2).size();
+  countG = (mat where x > 2).size();
+}
