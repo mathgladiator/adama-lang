@@ -91,11 +91,10 @@ The language is going to big with many features!
 | dynamic-query          |     | introduce a special language for queries to be dynamic                                                                                                              |
 | math-matrix            |     | The type system and math library should come with vectors and matrices out of the box                                                                               |
 | xml support            |     | Convert messages to XML                                                                                                                                             |
-| rxhtml-static          |     | Embed rxhtml into compile process                                                                                                                                   |
 | rxhtml-dynamic         |     | Embed rxhtml as a first class language feature                                                                                                                      |
 | metrics emit id;       |     | The language should have first class support for metrics (counters, inflight, distributions)                                                                        |
 | auto-convert-msg       |     | the binding of messages can be imprecise, need to simplify and automate @convert primarily for services                                                             |
-| bubble + privacy       |     | Add a way to annotate a bubble with a privacy policy to simplify a privacy                                                                                          |
+| bubble + privacy       |     | Add a way to annotate a bubble with a privacy policy to simplify privacy logic                                                                                      |
 | privacy-policy caching |     | instead of making privacy policies executable every single time, cache them by person and invalidate on data changes                                                |
 | table-protocol         |     | introduce a way to expose a table protocol for reading and writing tables via a data-grid component                                                                 |
 | sum types              |     | a sum type is going to be a special type of message                                                                                                                 |
@@ -116,30 +115,23 @@ For integration across different ecosystems, there are more protocols to bridge 
 | raft           |     | Implement raft leader election and log append using Adama's network stack                                                                                                                                                                       |
 | control plane  |     | (1) Manual definition of raft shards definitions, (2) automatic machine management                                                                                                                                                              |
 
-## Infrastructure - Globalize control plane
-| project                                                          | IP  | milestones                                                     |
-|------------------------------------------------------------------|-----|----------------------------------------------------------------|
-| design document for replacing Database with a service            |     | A key part of going multi-region is factoring out the database |
-| security document for exposing the control plane to the internet |     |                                                                |
-
 ## Infrastructure - Multi-region &amp; massive scale
 At some point, Adama is going to be at the edge with hundreds of nodes across the world.
 
 | project         | IP  | milestones                                                                                                                               |
 |-----------------|-----|------------------------------------------------------------------------------------------------------------------------------------------|
 | diagram         |     | diagram the usage of the database in the adama service                                                                                   |
-| billing         |     | have billing route partial metering records to billing document ( and globalize )                                                        |
-| proxy-mode      |     | proxy the WS API from region A to region B (or global important services )                                                               |
-| spacial-homing  |     | globalizing biases to regions, some spaces may be regional so make their index local to that region                                      |
-| remote-finder   |     | extend WS API to implement a Finder for region A to do core tasks (or globalize)                                                         |
-| finder in adama |     | Turn core service into a finder cache for web tier                                                                                       |
+| billing         | X   | have billing route partial metering records to billing document ( and globalize )                                                        |
+| proxy-mode      | X   | proxy the WS API from region A to region B (or global important services )                                                               |
+| remote-finder   | X   | extend WS API to implement a Finder for region A to do core tasks (or globalize)                                                         |
+| finder in adama | X   | Turn core service into a finder cache for web tier                                                                                       |
 | region-isolate  |     | Allow regions to have storage for local documents                                                                                        |
 | capacity-global |     | globalize capacity management                                                                                                            |
 | test-heat-cap   |     | validate when an adama host heats up that traffic sheds                                                                                  | 
 | test-cold-cap   |     | validate when an adama host cools off that traffic returns for density                                                                   |
 | cap-config      |     | make high/low vectors dynamic configurable                                                                                               |
 | ro-replica      |     | (1) introduce new observe command which is a read-only version of connect, (2) have web routes go to an in-region replica                |
-| reconcile       |     | every adama host should be lazy with unknown spaces and also reconcile capacity if it should redeploy (due to missed deployment message) | 
+| reconcile       | X   | every adama host should be lazy with unknown spaces and also reconcile capacity if it should redeploy (due to missed deployment message) | 
 
 ## Infrastructure - Core Service
 Adama is a service.
@@ -147,19 +139,19 @@ Adama is a service.
 | project                 | IP  | milestones/description                                                                                                                                                                                                                                                                                             |
 |-------------------------|-----|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | env-bootstrap           |     | automatic the memory and other JVM args                                                                                                                                                                                                                                                                            |
-| third-party replication |     | the language should allow specification of a endpoint to replace a piece of data to on data changes. This requires maintaining a local copy in the document along with a state machine about status. The tricky bit requires a delete notification. There is also the need to load every document on a deployment. |
+| third-party replication | X   | the language should allow specification of a endpoint to replace a piece of data to on data changes. This requires maintaining a local copy in the document along with a state machine about status. The tricky bit requires a delete notification. There is also the need to load every document on a deployment. |
 | replication-search      |     | provide a "between document" search using replication tech                                                                                                                                                                                                                                                         |
 | replication-graph       |     | similar to search, replicate part of the document into a graph database                                                                                                                                                                                                                                            |
 | metrics                 |     | documents should able to emit metrics                                                                                                                                                                                                                                                                              |
 | fix-keys                |     | document keys are stored with both private and public keys, and this is really bad; we should only store the public key and version the keys along with an expiry                                                                                                                                                  |
 | op-query-engine         |     | a tool to debug the status of a document live                                                                                                                                                                                                                                                                      |
 | portlets                |     | maybe part of replication, but a subdocument that can emit messages that are independent subscriptions (for SSE/MQTT) and for Adama to consume                                                                                                                                                                     |
-| adama-actor             |     | implement Adama as a special first class service                                                                                                                                                                                                                                                                   |
+| adama-actor             | X   | implement Adama as a special first class service                                                                                                                                                                                                                                                                   |
 | twilio-service          |     | implement twilio as a first party service                                                                                                                                                                                                                                                                          |
 | stripe-service          | X   | implement stripe as a first party service                                                                                                                                                                                                                                                                          |
 | discord-service         |     | implement discord as a first party service                                                                                                                                                                                                                                                                         |
-| BUG: doc-ids            | X   | need to make the relationship between document id and key/space ironclad on adama service; it's possible to resurrect old data due to id resurrection                                                                                                                                                              |
 | results-stream          |     | figure out how to ensure deliveries can overwrite prior entries                                                                                                                                                                                                                                                    |
+| portlets - passive net  |     | if we express the desigre for a result to hold the stream results for a foreign document's portlet then this creates a graph such that documents need to be reloaded. that is, we need a persistent subscription                                                                                                   |
 
 ## Infrastructure - Web
 Adama is a web host provider of sorts!
@@ -169,6 +161,7 @@ Adama is a web host provider of sorts!
 | web-async delete        | X   | allow DELETEs to contain async calls                                                       |
 | web-async get           | X   | allow GETs to contain async calls                                                          |
 | request caching         |     | respect the cache_ttl_ms                                                                   |
+| doc auth - expiry       |     | infer cache_ttl_ms as an expiry for doc auth                                               | 
 | asset transforms        |     | implement some basic asset transforms                                                      |
 | web-abort put/delete    | X   | web calls that write should support abort                                                  |
 | @context                |     | ensure web operations can access context                                                   |
