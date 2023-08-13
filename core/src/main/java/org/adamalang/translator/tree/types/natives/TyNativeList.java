@@ -155,6 +155,28 @@ public class TyNativeList extends TyType implements //
         return new TyNativeFunctional("LibLists.flatten", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.InjectNameThenExpressionAndArgs);
       }
     }
+    if ("reverse".equals(name)) {
+      TyType listElementType = getEmbeddedType(environment);
+      TyType resultType = new TyNativeList(TypeBehavior.ReadOnlyNativeValue,  null, null, new TokenizedItem<>(listElementType)).withPosition(this);
+      final var foi = new FunctionOverloadInstance("LibLists.reverse", resultType, new ArrayList<>(), FunctionPaint.READONLY_NORMAL);
+      return new TyNativeFunctional("LibLists.reverse", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+    }
+    if ("skip".equals(name)) {
+      TyType listElementType = getEmbeddedType(environment);
+      TyType resultType = new TyNativeList(TypeBehavior.ReadOnlyNativeValue,  null, null, new TokenizedItem<>(listElementType)).withPosition(this);
+      ArrayList<TyType> args = new ArrayList<>();
+      args.add(new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null));
+      final var foi = new FunctionOverloadInstance("LibLists.skip", resultType, args, FunctionPaint.READONLY_NORMAL);
+      return new TyNativeFunctional("LibLists.skip", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+    }
+    if ("drop".equals(name)) {
+      TyType listElementType = getEmbeddedType(environment);
+      TyType resultType = new TyNativeList(TypeBehavior.ReadOnlyNativeValue,  null, null, new TokenizedItem<>(listElementType)).withPosition(this);
+      ArrayList<TyType> args = new ArrayList<>();
+      args.add(new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null));
+      final var foi = new FunctionOverloadInstance("LibLists.drop", resultType, args, FunctionPaint.READONLY_NORMAL);
+      return new TyNativeFunctional("LibLists.drop", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+    }
     TyNativeFunctional extensionBeforeAggregate = environment.state.globals.findExtension(this, name);
     if (extensionBeforeAggregate != null) {
       return extensionBeforeAggregate;

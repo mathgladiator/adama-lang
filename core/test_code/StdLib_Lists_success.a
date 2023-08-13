@@ -16,3 +16,8 @@ table<B> _b;
 }
 
 public formula x = (iterate _b).a.flatten();
+public formula r_x = x.reverse();
+public formula x_skip_3 = x.skip(3);
+public formula x_skip_1_r = x.skip(1).reverse().skip(1).reverse();
+public formula x_d = x.drop(2);
+public formula x_mirror = x.skip(1).drop(1);
