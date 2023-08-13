@@ -16,8 +16,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 /** shared library for evaluating the look up mode against an index */
-
 public class EvaluateLookupMode {
+
   /** get the index */
   public static <Ty> TreeSet<Ty> of(TreeMap<Integer, TreeSet<Ty>> index, final int at, IndexQuerySet.LookupMode mode) {
     switch (mode) {

@@ -10,7 +10,7 @@ hljs.registerLanguage("adama", (() => {
         "require", "index", "method",
         "while", "do", "for", "foreach", "if", "break", "continue", "block", "abort", "return",
         "transition", "invoke", "preempt", "assert",
-        "iterate", "where", "where_as", "order", "shuffle", "limit", "reduce", "offset", "asc", "desc", "via",
+        "iterate", "where", "where_as", "order", "shuffle", "limit", "reduce", "offset", "asc", "desc", "via", "materialize",
         "create", "send", "invent", "maximum_history", // TODO: scope within @static
         "auto", "var", "let", "formula", "readonly",
         "public", "private", "viewer_is", "use_policy"];
@@ -27,6 +27,10 @@ hljs.registerLanguage("adama", (() => {
     const LITERAL_NOTHING = {
         className: 'literal',
         begin: '@nothing'
+    };
+    const LITERATE_WHO = {
+        className: 'literal',
+        begin: '@who'
     };
     const LITERAL_NULL = {
         className: 'literal',
@@ -65,6 +69,10 @@ hljs.registerLanguage("adama", (() => {
         "complex",
         "long",
         "string",
+        "date",
+        "datetime",
+        "time",
+        "timespan",
         "label",
         "map",  // <,>
         "table", // <
@@ -91,6 +99,7 @@ hljs.registerLanguage("adama", (() => {
             LITERAL_NO_ONE,
             LITERAL_I,
             LITERAL_NOTHING,
+            LITERATE_WHO,
             LITERAL_NULL,
             LITERAL_STABLE,
             LITERAL_BLOCKED,
