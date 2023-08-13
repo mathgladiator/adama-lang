@@ -634,6 +634,15 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
+    gold.append("\n    private static String[] __INDEX_COLUMNS___ViewerType = new String[] {};");
+    gold.append("\n    @Override");
+    gold.append("\n    public String[] __getIndexColumns() {");
+    gold.append("\n      return __INDEX_COLUMNS___ViewerType;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public int[] __getIndexValues() {");
+    gold.append("\n      return new int[] {};");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
@@ -857,7 +866,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static String[] __INDEX_COLUMNS_Person = new String[] {\"account\", \"family_id\"};");
+    gold.append("\n  private static String[] __INDEX_COLUMNS_Person = new String[] {};");
     gold.append("\n  private class RTxPerson extends RxRecordBase<RTxPerson> {");
     gold.append("\n    private final RTxPerson __this;");
     gold.append("\n    private final RxInt32 id;");
@@ -889,7 +898,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public int[] __getIndexValues() {");
-    gold.append("\n      return new int[] {account.getIndexValue(), family_id.getIndexValue()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Object __fieldOf(String __name) {");

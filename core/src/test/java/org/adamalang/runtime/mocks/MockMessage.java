@@ -50,6 +50,16 @@ public class MockMessage extends NtMessageBase {
   }
 
   @Override
+  public int[] __getIndexValues() {
+    return new int[0];
+  }
+
+  @Override
+  public String[] __getIndexColumns() {
+    return new String[0];
+  }
+
+  @Override
   public void __writeOut(final JsonStreamWriter writer) {
     writer.beginObject();
     writer.writeObjectFieldIntro("x");

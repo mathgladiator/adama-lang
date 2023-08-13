@@ -10,7 +10,9 @@ package org.adamalang.translator.tree.types.natives;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.codegen.CodeGenDeltaClass;
+import org.adamalang.translator.codegen.CodeGenIndexing;
 import org.adamalang.translator.codegen.CodeGenMessage;
+import org.adamalang.translator.codegen.CodeGenRecords;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -92,6 +94,8 @@ public class TyNativeMessage extends TyType implements //
       sb.append(";").writeNewline();
     }
     CodeGenMessage.generateHashers(name, storage, sb, environment);
+    CodeGenIndexing.writeIndexConstant(name, storage, sb, environment);
+    CodeGenIndexing.writeIndices(name, storage, sb, environment);
     CodeGenMessage.generateJsonReaders(name, storage, sb, environment);
     for (final DefineMethod dm : storage.methods) {
       dm.writeFunctionJava(sb, environment.scopeStatic());

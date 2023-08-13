@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.tree.expressions.linq;
 
+import org.adamalang.translator.codegen.CodeGenIndexing;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
@@ -125,16 +126,14 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         continue;
       }
       final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
-      boolean requiresToInt = fieldType instanceof TyReactiveDate || fieldType instanceof TyReactiveTime || fieldType instanceof TyNativeDate || fieldType instanceof TyNativeTime;
-      boolean isIntegral = fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum || fieldType instanceof TyNativeInteger || fieldType instanceof TyNativeEnum || requiresToInt;
-      boolean isPrincipal = fieldType instanceof TyReactivePrincipal || fieldType instanceof TyNativePrincipal;
-      if (isIntegral || isPrincipal) {
+      CodeGenIndexing.IndexClassification classification = new CodeGenIndexing.IndexClassification(fieldType);
+      if (classification.good) {
         // Here is where we wrap this to search for <, <=, ==, >=, >
         // This will let us complete #20 for integers and enums
         var indexValue = findIndex(expression, aliasToken != null ? aliasToken.text : null, entry.getKey(), BinaryOp.Equal);
         String indexLookupMode = "IndexQuerySet.LookupMode.Equals";
 
-        if (indexValue == null && isIntegral) {
+        if (indexValue == null && classification.isIntegral) {
           for (BinaryOp mode : new BinaryOp[] {BinaryOp.LessThan, BinaryOp.LessThanOrEqual, BinaryOp.GreaterThan, BinaryOp.GreaterThanOrEqual}) {
             indexValue = findIndex(expression, aliasToken != null ? aliasToken.text : null, entry.getKey(), mode);
             if (indexValue != null) {
@@ -148,11 +147,14 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
           intersectModeByName.put(entry.getKey(), indexLookupMode);
           var indexValueString = compileIndexExpr(indexValue, environment);
           if (indexValueString != null) {
-            if (isPrincipal) {
+            if (classification.useHashCode) {
               indexValueString += ".hashCode()";
             }
-            if (requiresToInt) {
+            if (classification.requiresToInt) {
               indexValueString += ".toInt()";
+            }
+            if (classification.isBoolean) {
+              indexValueString = "((" + indexValueString + ") ? 1 : 0)";
             }
             intersectCodeByName.put(entry.getKey(), indexValueString);
             if (first) {

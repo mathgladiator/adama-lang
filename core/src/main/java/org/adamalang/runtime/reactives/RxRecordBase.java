@@ -8,12 +8,13 @@
  */
 package org.adamalang.runtime.reactives;
 
+import org.adamalang.runtime.contracts.MultiIndexable;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
 
 /** the base object for generated record types */
-public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase implements Comparable<Ty>, RxParent, RxChild, RxKillable {
+public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase implements Comparable<Ty>, MultiIndexable, RxParent, RxChild, RxKillable {
   protected boolean __isDying;
   private boolean __alive;
 
@@ -41,10 +42,6 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
   public long __memory() {
     return super.__memory() + 2;
   }
-
-  public abstract String[] __getIndexColumns();
-
-  public abstract int[] __getIndexValues();
 
   public boolean __isDying() {
     return __isDying;

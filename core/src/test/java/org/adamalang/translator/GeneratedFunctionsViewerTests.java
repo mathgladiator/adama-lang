@@ -450,6 +450,15 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
     gold.append("\n      __hash.hashInteger(this.x);");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
+    gold.append("\n    private static String[] __INDEX_COLUMNS___ViewerType = new String[] {};");
+    gold.append("\n    @Override");
+    gold.append("\n    public String[] __getIndexColumns() {");
+    gold.append("\n      return __INDEX_COLUMNS___ViewerType;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public int[] __getIndexValues() {");
+    gold.append("\n      return new int[] {};");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
@@ -517,7 +526,7 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static String[] __INDEX_COLUMNS_R = new String[] {\"z\"};");
+    gold.append("\n  private static String[] __INDEX_COLUMNS_R = new String[] {};");
     gold.append("\n  private class RTxR extends RxRecordBase<RTxR> {");
     gold.append("\n    private final RTxR __this;");
     gold.append("\n    private final RxInt32 z;");
@@ -556,7 +565,7 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public int[] __getIndexValues() {");
-    gold.append("\n      return new int[] {z.getIndexValue()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Object __fieldOf(String __name) {");

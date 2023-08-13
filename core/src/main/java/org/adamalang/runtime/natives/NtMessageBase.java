@@ -8,12 +8,13 @@
  */
 package org.adamalang.runtime.natives;
 
+import org.adamalang.runtime.contracts.MultiIndexable;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.algo.HashBuilder;
 
 /** the base contract which messages must obey */
-public abstract class NtMessageBase implements NtToDynamic {
+public abstract class NtMessageBase implements NtToDynamic, MultiIndexable {
   public final static NtMessageBase NULL = new NtMessageBase() {
     @Override
     public void __hash(HashBuilder __hash) {
@@ -28,6 +29,16 @@ public abstract class NtMessageBase implements NtToDynamic {
     @Override
     public void __ingest(JsonStreamReader reader) {
       reader.skipValue();
+    }
+
+    @Override
+    public int[] __getIndexValues() {
+      return new int[] {};
+    }
+
+    @Override
+    public String[] __getIndexColumns() {
+      return new String[] {};
     }
   };
 

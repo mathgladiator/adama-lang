@@ -9,6 +9,7 @@
 package org.adamalang.translator.tree.types.structures;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.translator.codegen.CodeGenIndexing;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.env.topo.TopologicalSort;
@@ -232,10 +233,7 @@ public class StructureStorage extends DocumentPosition {
         if (fd == null) {
           env.document.createError(indexDefn, String.format("Index could not find field '%s'", indexDefn.nameToken.text));
         } else {
-          final var canBeIndexReactive = fd.type instanceof TyReactiveInteger || fd.type instanceof TyReactiveEnum || fd.type instanceof TyReactivePrincipal || fd.type instanceof TyReactiveDate || fd.type instanceof TyReactiveTime;
-          final var canBeIndexNative = fd.type instanceof TyNativeInteger || fd.type instanceof TyNativeEnum || fd.type instanceof TyNativePrincipal || fd.type instanceof TyNativeDate || fd.type instanceof TyNativeTime;
-          final var canBeIndex = canBeIndexReactive || canBeIndexNative;
-          if (!canBeIndex ) {
+          if (!(new CodeGenIndexing.IndexClassification(fd.type).good)) {
             env.document.createError(indexDefn, String.format("Index for field '%s' is not possible due to type", indexDefn.nameToken.text, fd.type.getAdamaType()));
           }
         }

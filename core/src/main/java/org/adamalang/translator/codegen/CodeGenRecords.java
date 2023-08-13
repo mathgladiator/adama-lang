@@ -289,54 +289,6 @@ public class CodeGenRecords {
     }
   }
 
-  public static void writeIndexConstant(final String name, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
-    sb.append("private static String[] __INDEX_COLUMNS_").append(name).append(" = new String[] {");
-    boolean first = true;
-    for (final Map.Entry<String, FieldDefinition> entry : storage.fields.entrySet()) {
-      if ("id".equals(entry.getKey())) {
-        continue;
-      }
-      final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
-      if (fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum || fieldType instanceof TyReactivePrincipal) {
-        if (first) {
-          first = false;
-        } else {
-          sb.append(", ");
-        }
-        sb.append("\"").append(entry.getKey()).append("\"");
-      }
-    }
-    sb.append("};").writeNewline();
-  }
-
-  public static void writeIndices(final String name, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
-    boolean first;
-    sb.append("@Override").writeNewline();
-    sb.append("public String[] __getIndexColumns() {").tabUp().writeNewline();
-    sb.append("return __INDEX_COLUMNS_").append(name).append(";").tabDown().writeNewline();
-    sb.append("}").writeNewline();
-    sb.append("@Override").writeNewline();
-    sb.append("public int[] __getIndexValues() {").tabUp().writeNewline();
-    sb.append("return new int[] {");
-    first = true;
-    for (final Map.Entry<String, FieldDefinition> entry : storage.fields.entrySet()) {
-      if ("id".equals(entry.getKey())) {
-        continue;
-      }
-      final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
-      if (fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum || fieldType instanceof TyReactivePrincipal) {
-        if (first) {
-          first = false;
-        } else {
-          sb.append(", ");
-        }
-        sb.append("").append(entry.getKey()).append(".getIndexValue()");
-      }
-    }
-    sb.append("};").tabDown().writeNewline();
-    sb.append("}").writeNewline();
-  }
-
   public static void writeFieldOf(final StructureStorage storage, final StringBuilderWithTabs sb) {
     sb.append("@Override").writeNewline();
     sb.append("public Object __fieldOf(String __name) {").tabUp().writeNewline();

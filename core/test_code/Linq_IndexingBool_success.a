@@ -1,0 +1,10 @@
+record S {
+  bool s;
+  index s;
+}
+
+table<S> tbl;
+
+#code {
+  (iterate tbl) where s;
+}
