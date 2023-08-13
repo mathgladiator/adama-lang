@@ -71,12 +71,22 @@ public class RuleSetIngestion {
     final var leftStorage = ((IsStructure) leftStructureType).storage();
     final var rightStorage = ((IsStructure) rightStructureType).storage();
     var possible = true;
+    for (final Map.Entry<String, FieldDefinition> leftFieldEntry : leftStorage.fields.entrySet()) {
+      if (leftFieldEntry.getValue().isRequired()) {
+        if (!rightStorage.fields.containsKey(leftFieldEntry.getKey())) {
+          environment.document.createError(originalTypeB, String.format("Type check failure: The field '%s' was required for ingestion and is not present", leftFieldEntry.getKey()));
+          possible = false;
+        }
+      }
+    }
     for (final Map.Entry<String, FieldDefinition> rightFieldEntry : rightStorage.fields.entrySet()) {
       final var leftField = leftStorage.fields.get(rightFieldEntry.getKey());
       final var rightField = rightFieldEntry.getValue();
       if (leftField == null) {
-        environment.document.createError(originalTypeB, String.format("Type check failure: The field '%s' was lost during ingestion", rightFieldEntry.getKey()));
-        possible = false;
+        if (!rightField.isLossy()) {
+          environment.document.createError(originalTypeB, String.format("Type check failure: The field '%s' was lost during ingestion", rightFieldEntry.getKey()));
+          possible = false;
+        }
       } else {
         if (RuleSetIngestion.IngestionLeftSidePossible(environment, leftField.type)) {
           if (!CanAIngestB(environment, leftField.type, rightField.type, silent)) {
