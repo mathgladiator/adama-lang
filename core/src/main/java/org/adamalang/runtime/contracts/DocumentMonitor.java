@@ -21,10 +21,4 @@ public interface DocumentMonitor {
 
   /** push a function on the call stack to measure timing */
   void push(String label);
-
-  /** register a table's effectiveness for a particular query */
-  void registerTableColumnIndexEffectiveness(String tableName, String colummName, int total, int effectiveness);
-
-  /** should the runtime measure table indexing effectiveness. Warning: this is very slow */
-  boolean shouldMeasureTableColumnIndexEffectiveness();
 }
