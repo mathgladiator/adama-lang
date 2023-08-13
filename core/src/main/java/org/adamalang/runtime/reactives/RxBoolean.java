@@ -9,12 +9,13 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
+import org.adamalang.runtime.contracts.Indexable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a reactive boolean */
-public class RxBoolean extends RxBase implements Comparable<RxBoolean>, CanGetAndSet<Boolean> {
+public class RxBoolean extends RxBase implements Comparable<RxBoolean>, CanGetAndSet<Boolean>, Indexable {
   private boolean backup;
   private boolean value;
 
@@ -81,5 +82,10 @@ public class RxBoolean extends RxBase implements Comparable<RxBoolean>, CanGetAn
       this.value = value;
       __raiseDirty();
     }
+  }
+
+  @Override
+  public int getIndexValue() {
+    return value ? 1 : 0;
   }
 }

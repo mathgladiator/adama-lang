@@ -38,6 +38,16 @@ public class NtChannelTests {
     public void __hash(HashBuilder __hash) {
       __hash.hashString("demo");
     }
+
+    @Override
+    public int[] __getIndexValues() {
+      return new int[0];
+    }
+
+    @Override
+    public String[] __getIndexColumns() {
+      return new String[0];
+    }
   };
 
   public OutstandingFutureTracker makeFutures() {

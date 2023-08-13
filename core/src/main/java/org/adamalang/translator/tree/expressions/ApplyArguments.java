@@ -126,7 +126,6 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       if (environmentToUse.state.isReadonlyEnvironment() && !functionInstance.pure) {
         boolean serviceCallInGet = functionStyle == FunctionStyleJava.RemoteCall && exceptIfWebGet;
         if (!serviceCallInGet) {
-          System.err.println(functionInstance.javaFunction);
           environmentToUse.document.createError(expression, String.format("Read only methods can only call other read-only methods or pure functions"));
         }
       }

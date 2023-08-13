@@ -435,6 +435,15 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
+    gold.append("\n    private static String[] __INDEX_COLUMNS___ViewerType = new String[] {};");
+    gold.append("\n    @Override");
+    gold.append("\n    public String[] __getIndexColumns() {");
+    gold.append("\n      return __INDEX_COLUMNS___ViewerType;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public int[] __getIndexValues() {");
+    gold.append("\n      return new int[] {};");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");

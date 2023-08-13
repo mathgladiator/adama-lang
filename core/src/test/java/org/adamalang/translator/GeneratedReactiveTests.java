@@ -464,6 +464,15 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
+    gold.append("\n    private static String[] __INDEX_COLUMNS___ViewerType = new String[] {};");
+    gold.append("\n    @Override");
+    gold.append("\n    public String[] __getIndexColumns() {");
+    gold.append("\n      return __INDEX_COLUMNS___ViewerType;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public int[] __getIndexValues() {");
+    gold.append("\n      return new int[] {};");
+    gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
@@ -508,7 +517,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static String[] __INDEX_COLUMNS_X = new String[] {\"val\"};");
+    gold.append("\n  private static String[] __INDEX_COLUMNS_X = new String[] {};");
     gold.append("\n  private class RTxX extends RxRecordBase<RTxX> {");
     gold.append("\n    private final RTxX __this;");
     gold.append("\n    private final RxInt32 val;");
@@ -541,7 +550,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public int[] __getIndexValues() {");
-    gold.append("\n      return new int[] {val.getIndexValue()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Object __fieldOf(String __name) {");
@@ -699,7 +708,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static String[] __INDEX_COLUMNS_Y = new String[] {\"val\"};");
+    gold.append("\n  private static String[] __INDEX_COLUMNS_Y = new String[] {};");
     gold.append("\n  private class RTxY extends RxRecordBase<RTxY> {");
     gold.append("\n    private final RTxY __this;");
     gold.append("\n    private final RxInt32 val;");
@@ -732,7 +741,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public int[] __getIndexValues() {");
-    gold.append("\n      return new int[] {val.getIndexValue()};");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Object __fieldOf(String __name) {");
@@ -1480,6 +1489,15 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    private final RTx__ViewerType __this;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
+    gold.append("\n    }");
+    gold.append("\n    private static String[] __INDEX_COLUMNS___ViewerType = new String[] {};");
+    gold.append("\n    @Override");
+    gold.append("\n    public String[] __getIndexColumns() {");
+    gold.append("\n      return __INDEX_COLUMNS___ViewerType;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public int[] __getIndexValues() {");
+    gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
     gold.append("\n      __this = this;");

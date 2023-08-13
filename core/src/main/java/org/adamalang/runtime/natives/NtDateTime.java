@@ -45,4 +45,10 @@ public class NtDateTime implements Comparable<NtDateTime> {
   public int compareTo(NtDateTime o) {
     return dateTime.compareTo(o.dateTime);
   }
+
+  public int toInt() {
+    long val = dateTime.toInstant().toEpochMilli();
+    // convert to minutes since epoch as this fits within int
+    return (int) (val / 60000L);
+  }
 }

@@ -6,8 +6,12 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.runtime.contracts;
 
-public class Platform {
-  public static final String VERSION = "20230813095942";
+/** allow both messages and records to be indexable */
+public interface MultiIndexable {
+
+  public String[] __getIndexColumns();
+
+  public int[] __getIndexValues();
 }

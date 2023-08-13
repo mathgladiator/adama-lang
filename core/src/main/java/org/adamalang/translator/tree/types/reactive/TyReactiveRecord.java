@@ -10,6 +10,7 @@ package org.adamalang.translator.tree.types.reactive;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.codegen.CodeGenDeltaClass;
+import org.adamalang.translator.codegen.CodeGenIndexing;
 import org.adamalang.translator.codegen.CodeGenRecords;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -69,15 +70,11 @@ public class TyReactiveRecord extends TyType implements //
       classConstructor.append("__INDEX_").append(idefn.nameToken.text).append(" = new ReactiveIndexInvalidator(((RxTable<RTx").append(name).append(">)(__owner)).getIndex((short)").append("" + colNum).append("), this) {").tabUp().tabUp().writeNewline();
       classConstructor.append("@Override").writeNewline();
       classConstructor.append("public int pullValue() {").tabUp().writeNewline();
-      classConstructor.append("  return ").append(idefn.nameToken.text).append(".get()");
       final var fd = storage.fields.get(idefn.nameToken.text);
       if (fd != null) {
-        if (fd.type instanceof TyReactivePrincipal) {
-          classConstructor.append(".hashCode()");
-        }
-        if (fd.type instanceof TyReactiveDate || fd.type instanceof TyReactiveTime) {
-          classConstructor.append(".toInt()");
-        }
+        classConstructor.append("  return ");
+        CodeGenIndexing.IndexClassification classification = new CodeGenIndexing.IndexClassification(fd.type);
+        classConstructor.append(String.format(classification.indexValueMethod, idefn.nameToken.text));
       }
       classConstructor.append(";").tabDown().writeNewline();
       classConstructor.append("}").tabDown().writeNewline();
@@ -92,7 +89,7 @@ public class TyReactiveRecord extends TyType implements //
     }
     classConstructor.append("/* ok */").tabDown().writeNewline();
     classConstructor.append("}").writeNewline();
-    CodeGenRecords.writeIndexConstant(name, storage, sb, environment);
+    CodeGenIndexing.writeIndexConstant(name, storage, sb, environment);
     sb.append("private class RTx" + name + " extends RxRecordBase<RTx").append(name).append("> {").tabUp().writeNewline();
     sb.append("private final RTx" + name + " __this;").writeNewline();
     sb.append(classFields.toString());
@@ -105,7 +102,7 @@ public class TyReactiveRecord extends TyType implements //
       dm.writeFunctionJava(sb, environment);
     }
     CodeGenRecords.writePrivacyCommonBetweenRecordAndRoot(storage, sb, environment);
-    CodeGenRecords.writeIndices(name, storage, sb, environment);
+    CodeGenIndexing.writeIndices(name, storage, sb, environment);
     CodeGenRecords.writeCommitAndRevert(storage, sb, environment, false);
     String linkerCompact = classLinker.toString().stripTrailing();
     sb.append("@Override").writeNewline();
