@@ -1,0 +1,14 @@
+message M {
+  int x;
+  int y;
+
+  index x;
+}
+
+@construct {
+  table<M> t;
+  for (int k = 0; k < 10; k++) {
+    t <- {x:1 + k, y: 10};
+  }
+  let l = iterate t where x == 4;
+}

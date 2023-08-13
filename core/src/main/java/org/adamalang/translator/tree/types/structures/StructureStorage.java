@@ -20,10 +20,9 @@ import org.adamalang.translator.tree.privacy.PrivatePolicy;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.Watcher;
-import org.adamalang.translator.tree.types.natives.TyNativeRef;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.topo.TypeChecker;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
-import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.topo.TypeCheckerStructure;
@@ -233,8 +232,10 @@ public class StructureStorage extends DocumentPosition {
         if (fd == null) {
           env.document.createError(indexDefn, String.format("Index could not find field '%s'", indexDefn.nameToken.text));
         } else {
-          final var canBeIndex = fd.type instanceof TyReactiveInteger || fd.type instanceof TyReactiveEnum || fd.type instanceof TyReactivePrincipal || fd.type instanceof TyReactiveDate || fd.type instanceof TyReactiveTime;
-          if (!canBeIndex) {
+          final var canBeIndexReactive = fd.type instanceof TyReactiveInteger || fd.type instanceof TyReactiveEnum || fd.type instanceof TyReactivePrincipal || fd.type instanceof TyReactiveDate || fd.type instanceof TyReactiveTime;
+          final var canBeIndexNative = fd.type instanceof TyNativeInteger || fd.type instanceof TyNativeEnum || fd.type instanceof TyNativePrincipal || fd.type instanceof TyNativeDate || fd.type instanceof TyNativeTime;
+          final var canBeIndex = canBeIndexReactive || canBeIndexNative;
+          if (!canBeIndex ) {
             env.document.createError(indexDefn, String.format("Index for field '%s' is not possible due to type", indexDefn.nameToken.text, fd.type.getAdamaType()));
           }
         }
