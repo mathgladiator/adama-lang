@@ -961,21 +961,26 @@ public class Parser {
     storage.setSelf(new TyNativeRef(TypeBehavior.ReadOnlyNativeValue, null, name));
     var endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
     while (endBrace == null) {
-      Token methodToken = tokens.popIf((t) -> t.isIdentifier("method"));
-      if (methodToken != null) {
-        storage.add(define_method_trailer(methodToken));
+      Token indexToken = tokens.popIf((t) -> t.isIdentifier("index"));
+      if (indexToken != null) {
+        storage.add(define_indexing(indexToken));
       } else {
-        final var type = native_type();
-        final var field = id();
-        final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
-        Expression defaultValueOverride = null;
-        if (equalsToken != null) {
-          defaultValueOverride = expression();
+        Token methodToken = tokens.popIf((t) -> t.isIdentifier("method"));
+        if (methodToken != null) {
+          storage.add(define_method_trailer(methodToken));
+        } else {
+          final var type = native_type();
+          final var field = id();
+          final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
+          Expression defaultValueOverride = null;
+          if (equalsToken != null) {
+            defaultValueOverride = expression();
+          }
+          // Token lossy = tokens.popIf(t -> t.isIdentifier("lossy"));
+          // TODO: Think hard about a field properties for both messages and records; see #147
+          FieldDefinition fd = new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, consumeExpectedSymbol(";"));
+          storage.add(fd);
         }
-        // Token lossy = tokens.popIf(t -> t.isIdentifier("lossy"));
-        // TODO: Think hard about a field properties for both messages and records; see #147
-        FieldDefinition fd = new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, consumeExpectedSymbol(";"));
-        storage.add(fd);
       }
       endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
     }
@@ -1772,6 +1777,7 @@ public class Parser {
     return left;
   }
 
+  /** predict if we are declaring a variable natively */
   public boolean test_native_declare() throws AdamaLangException {
     final var token = tokens.peek();
     if (token == null) {
@@ -1804,6 +1810,10 @@ public class Parser {
       default:
         final var futureToken = tokens.peek(1);
         if (token.isIdentifier() && futureToken != null) {
+          switch (token.text) {
+            case "iterate":
+              return false;
+          }
           if (futureToken.isIdentifier()) {
             return true;
           }

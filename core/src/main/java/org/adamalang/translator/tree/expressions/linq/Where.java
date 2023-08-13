@@ -24,10 +24,7 @@ import org.adamalang.translator.tree.expressions.operators.Parentheses;
 import org.adamalang.translator.tree.operands.BinaryOp;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
-import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
-import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
-import org.adamalang.translator.tree.types.natives.TyNativeList;
-import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
@@ -128,9 +125,10 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         continue;
       }
       final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
-      boolean requiresToInt = fieldType instanceof TyReactiveDate || fieldType instanceof TyReactiveTime;
-      boolean isIntegral = fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum || requiresToInt;
-      if (isIntegral || fieldType instanceof TyReactivePrincipal) {
+      boolean requiresToInt = fieldType instanceof TyReactiveDate || fieldType instanceof TyReactiveTime || fieldType instanceof TyNativeDate || fieldType instanceof TyNativeTime;
+      boolean isIntegral = fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum || fieldType instanceof TyNativeInteger || fieldType instanceof TyNativeEnum || requiresToInt;
+      boolean isPrincipal = fieldType instanceof TyReactivePrincipal || fieldType instanceof TyNativePrincipal;
+      if (isIntegral || isPrincipal) {
         // Here is where we wrap this to search for <, <=, ==, >=, >
         // This will let us complete #20 for integers and enums
         var indexValue = findIndex(expression, aliasToken != null ? aliasToken.text : null, entry.getKey(), BinaryOp.Equal);
@@ -150,7 +148,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
           intersectModeByName.put(entry.getKey(), indexLookupMode);
           var indexValueString = compileIndexExpr(indexValue, environment);
           if (indexValueString != null) {
-            if (fieldType instanceof TyReactivePrincipal) {
+            if (isPrincipal) {
               indexValueString += ".hashCode()";
             }
             if (requiresToInt) {
