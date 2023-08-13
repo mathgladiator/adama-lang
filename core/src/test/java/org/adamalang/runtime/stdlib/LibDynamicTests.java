@@ -25,6 +25,11 @@ public class LibDynamicTests {
   }
 
   @Test
+  public void to_str() {
+    Assert.assertEquals("{}", LibDynamic.to_str(new NtDynamic("{}")));
+  }
+
+  @Test
   public void coverage_raw_str() {
     Assert.assertFalse(LibDynamic.str(new NtMaybe<>()).has());
     Assert.assertFalse(LibDynamic.str(new NtDynamic("{}")).has());

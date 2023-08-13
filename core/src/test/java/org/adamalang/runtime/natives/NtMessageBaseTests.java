@@ -20,5 +20,7 @@ public class NtMessageBaseTests {
     NtMessageBase.NULL.ingest_dynamic(new NtDynamic("{}"));
     NtMessageBase.NULL.__hash(null);
     NtMessageBase.NULL.__ingest(new JsonStreamReader("{}"));
+    NtMessageBase.NULL.__getIndexValues();
+    NtMessageBase.NULL.__getIndexColumns();
   }
 }

@@ -8,10 +8,15 @@
  */
 package org.adamalang.runtime.remote;
 
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.natives.NtResult;
+import org.adamalang.runtime.natives.NtToDynamic;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.function.Function;
 
 public class ServiceRegistryTests {
   @Test
@@ -31,5 +36,18 @@ public class ServiceRegistryTests {
   public void static_reg() {
     ServiceRegistry.add("xyx", ServiceRegistryTests.class, null);
     Assert.assertNull(ServiceRegistry.getLinkDefinition("xyz", 12, null, null, null));
+  }
+
+  class DumbXYZ implements Service {
+    @Override
+    public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtPrincipal agent, NtToDynamic request, Function<String, T> result) {
+      return null;
+    }
+  }
+
+  @Test
+  public void nulldef() {
+    ServiceRegistry.add("xyz", DumbXYZ.class, (x, y) -> new DumbXYZ());
+    Assert.assertNull(ServiceRegistry.getLinkDefinition("xyz", 1, "{}", new HashSet<>(), (err) -> {}));
   }
 }

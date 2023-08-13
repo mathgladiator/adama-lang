@@ -29,45 +29,78 @@ public class JsonStreamReaderTests {
     }
   }
 
+  @Test
   public void obj_to_empty_str() {
     JsonStreamReader reader = new JsonStreamReader("{\"x\":123},\"xyz\"");
     Assert.assertEquals("", reader.readString());
     Assert.assertEquals("xyz", reader.readString());
   }
 
+  @Test
+  public void skip_bad_principal() {
+    JsonStreamReader reader = new JsonStreamReader("[]");
+    Assert.assertEquals(NtPrincipal.NO_ONE, reader.readNtPrincipal());
+  }
+
+  @Test
+  public void bad_long_skip() {
+    JsonStreamReader reader = new JsonStreamReader("[]123");
+    Assert.assertEquals(0, reader.readLong());
+    Assert.assertEquals(123L, reader.readLong());
+  }
+
+  @Test
+  public void bad_long() {
+    JsonStreamReader reader = new JsonStreamReader("\"x\"");
+    Assert.assertEquals(0, reader.readLong());
+  }
+
+  @Test
+  public void bad_double() {
+    JsonStreamReader reader = new JsonStreamReader("\"x\"");
+    Assert.assertEquals(0, reader.readDouble(), 0.01);
+  }
+
+  @Test
   public void arr_to_empty_str() {
     JsonStreamReader reader = new JsonStreamReader("[123,\"\"],\"xyz\"");
     Assert.assertEquals("", reader.readString());
     Assert.assertEquals("xyz", reader.readString());
   }
 
+  @Test
   public void obj_to_zero_int() {
     JsonStreamReader reader = new JsonStreamReader("{\"x\":123},42");
     Assert.assertEquals(0, reader.readInteger());
     Assert.assertEquals(42, reader.readInteger());
   }
 
+  @Test
   public void obj_to_zero_int_2() {
     JsonStreamReader reader = new JsonStreamReader("\"X\"");
     Assert.assertEquals(0, reader.readInteger());
   }
 
+  @Test
   public void arr_to_zero_int() {
     JsonStreamReader reader = new JsonStreamReader("[123,\"\"],42");
     Assert.assertEquals(0, reader.readInteger());
     Assert.assertEquals(42, reader.readInteger());
   }
 
+  @Test
   public void complex_downpromote() {
     JsonStreamReader reader = new JsonStreamReader("\"x\"");
     Assert.assertEquals(0, (int) reader.readNtComplex().real);
   }
 
+  @Test
   public void principal_downpromote() {
     JsonStreamReader reader = new JsonStreamReader("\"x\"");
     Assert.assertEquals("?", reader.readNtPrincipal().authority);
   }
 
+  @Test
   public void assert_downpromote() {
     JsonStreamReader reader = new JsonStreamReader("\"x\"");
     Assert.assertEquals("", reader.readNtAsset().id);

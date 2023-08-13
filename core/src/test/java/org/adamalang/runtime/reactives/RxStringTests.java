@@ -25,6 +25,12 @@ public class RxStringTests {
   }
 
   @Test
+  public void idx_value() {
+    final var a = new RxString(null, "a");
+    Assert.assertEquals("a".hashCode(), a.getIndexValue());
+  }
+
+  @Test
   public void compare() {
     final var a = new RxString(null, "a");
     final var b = new RxString(null, "b");

@@ -11,6 +11,8 @@ package org.adamalang.runtime.natives;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.ZonedDateTime;
+
 public class NtTimeTests {
   @Test
   public void coverage() {
@@ -22,6 +24,12 @@ public class NtTimeTests {
     Assert.assertNotEquals(t, "");
     t.hashCode();
     Assert.assertEquals("12:17", t.toString());
+  }
+
+  @Test
+  public void toint() {
+    NtTime t = new NtTime(12, 17);
+    Assert.assertEquals(737, t.toInt());
   }
 
   @Test

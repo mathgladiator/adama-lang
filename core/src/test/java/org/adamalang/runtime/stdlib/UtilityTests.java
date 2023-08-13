@@ -79,4 +79,15 @@ public class UtilityTests {
     Assert.assertFalse(Utility.lookup(X, -1).has());
     Assert.assertFalse(Utility.lookup(X, 4).has());
   }
+
+  @Test
+  public void lookup_maybe() {
+    final var X = new Integer[] {1, 3, 5};
+    Assert.assertEquals(1, (int) Utility.lookup(X, new NtMaybe<>(0)).get());
+    Assert.assertEquals(3, (int) Utility.lookup(X, new NtMaybe<>(1)).get());
+    Assert.assertEquals(5, (int) Utility.lookup(X, new NtMaybe<>(2)).get());
+    Assert.assertFalse(Utility.lookup(X, new NtMaybe<>(-1)).has());
+    Assert.assertFalse(Utility.lookup(X, new NtMaybe<>(4)).has());
+    Assert.assertFalse(Utility.lookup(X, new NtMaybe<>()).has());
+  }
 }
