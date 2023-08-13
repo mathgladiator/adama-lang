@@ -44,9 +44,6 @@ public class CompressedTrieIndex {
       }
       root = next(val);
     }
-    if (root.keys == null) {
-      root.keys = new TreeSet<>();
-    }
     return root;
   }
 
@@ -64,7 +61,7 @@ public class CompressedTrieIndex {
       index.keys.remove(key);
       if (index.keys.size() == 0) {
         index.keys = null;
-        // TODO: need to clean up the children
+        // TODO: need to clean up the parents
       }
     }
   }

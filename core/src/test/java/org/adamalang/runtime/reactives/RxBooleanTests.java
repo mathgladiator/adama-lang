@@ -30,6 +30,16 @@ public class RxBooleanTests {
     Assert.assertEquals(-1, rf.compareTo(rt));
   }
 
+
+  @Test
+  public void idx_value() {
+    final var rt = new RxBoolean(null, true);
+    final var rf = new RxBoolean(null, false);
+    Assert.assertEquals(1, rt.getIndexValue());
+    Assert.assertEquals(0, rf.getIndexValue());
+  }
+
+
   @Test
   public void dirty_and_commit() {
     final var parent = new MockRxParent();

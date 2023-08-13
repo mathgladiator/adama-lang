@@ -26,4 +26,10 @@ public class NtDateTimeTests {
     Assert.assertEquals("2023-04-24T17:57:19.802528800-05:00[America/Chicago]", dt.toString());
     Assert.assertEquals(64, dt.memory());
   }
+
+  @Test
+  public void toint() {
+    NtDateTime dt = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
+    Assert.assertEquals(28039617, dt.toInt());
+  }
 }

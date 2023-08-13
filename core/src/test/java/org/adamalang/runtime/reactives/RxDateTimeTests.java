@@ -36,6 +36,12 @@ public class RxDateTimeTests {
   }
 
   @Test
+  public void idx_value() {
+    RxDateTime a = new RxDateTime(null, A);
+    Assert.assertEquals(26988417, a.getIndexValue());
+  }
+
+  @Test
   public void compare() {
     RxDateTime a = new RxDateTime(null, A);
     RxDateTime b = new RxDateTime(null, B);

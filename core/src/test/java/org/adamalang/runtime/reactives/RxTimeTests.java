@@ -31,6 +31,12 @@ public class RxTimeTests {
   }
 
   @Test
+  public void idx_value() {
+    RxTime a = new RxTime(null, A);
+    Assert.assertEquals(260, a.getIndexValue());
+  }
+
+  @Test
   public void compare() {
     RxTime a = new RxTime(null, A);
     RxTime b = new RxTime(null, B);

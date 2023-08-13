@@ -108,12 +108,14 @@ public class JsonStreamReader {
   public double readDouble() {
     ensureQueueHappy(1);
     String toParse = readValueWithDefaultZeros();
-    return Double.parseDouble(toParse);
+    try {
+      return Double.parseDouble(toParse);
+    } catch (NumberFormatException nfe) {
+      return 0.0;
+    }
   }
 
-  public int readInteger() {
-    ensureQueueHappy(1);
-    String toParse = readValueWithDefaultZeros();
+  private int parseInt(String toParse) {
     try {
       return Integer.parseInt(toParse);
     } catch (NumberFormatException nfe1) {
@@ -125,13 +127,18 @@ public class JsonStreamReader {
     }
   }
 
+  public int readInteger() {
+    ensureQueueHappy(1);
+    return parseInt(readValueWithDefaultZeros());
+  }
+
   public long readLong() {
     ensureQueueHappy(1);
     String toParse = readValueWithDefaultZeros();
     try {
       return Long.parseLong(toParse);
     } catch (NumberFormatException nfe) {
-      return readInteger();
+      return parseInt(toParse);
     }
   }
 

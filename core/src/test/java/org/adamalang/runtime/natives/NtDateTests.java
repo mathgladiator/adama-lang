@@ -28,6 +28,12 @@ public class NtDateTests {
   }
 
   @Test
+  public void toint() {
+    NtDate d = new NtDate(2010, 11, 22);
+    Assert.assertEquals(23541494, d.toInt());
+  }
+
+  @Test
   public void compare_year() {
     Assert.assertEquals(0, new NtDate(2010, 11, 22).compareTo(new NtDate(2010, 11, 22)));
     Assert.assertEquals(-1, new NtDate(2010, 11, 22).compareTo(new NtDate(2011, 11, 22)));

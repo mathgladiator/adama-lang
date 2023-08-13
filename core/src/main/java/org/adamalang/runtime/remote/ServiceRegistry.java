@@ -48,12 +48,10 @@ public class ServiceRegistry {
     }
     try {
       Method method = clazz.getMethod("definition", int.class, String.class, HashSet.class, Consumer.class);
-      if (method != null) {
-        return (String) method.invoke(null, autoId, params, names, error);
-      }
+      return (String) method.invoke(null, autoId, params, names, error);
     } catch (Exception ex) {
+      return null;
     }
-    return null;
   }
 
   /** find a service */

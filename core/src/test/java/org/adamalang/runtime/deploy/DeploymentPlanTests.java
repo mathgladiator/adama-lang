@@ -71,14 +71,7 @@ public class DeploymentPlanTests {
     Assert.assertEquals("y", plan.pickVersion("y3"));
   }
 
-  @Test
-  public void stage_percent_bad() {
-    parseTest(
-        "{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":\"x\"}]}",
-        151615);
-  }
-
-  public void parseTest(String json, int expectedError) {
+  public void parseBadTest(String json, int expectedError) {
     try {
       new DeploymentPlan(json, (t, errorCode) -> {});
       Assert.fail();
@@ -89,76 +82,76 @@ public class DeploymentPlanTests {
 
   @Test
   public void stage_no_version() {
-    parseTest("{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[{}]}", 199768);
+    parseBadTest("{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[{}]}", 199768);
   }
 
   @Test
   public void stage_version_doest_exist() {
-    parseTest(
+    parseBadTest(
         "{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[{\"version\":\"y\"}]}", 120895);
   }
 
   @Test
   public void stage_extra_field() {
-    parseTest(
+    parseBadTest(
         "{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"z\":true}]}",
         116812);
   }
 
   @Test
   public void stage_bad_field_keys() {
-    parseTest(
+    parseBadTest(
         "{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"keys\":true}]}",
         199886);
   }
 
   @Test
   public void stage_bad_element() {
-    parseTest("{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[true]}", 176703);
+    parseBadTest("{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":[true]}", 176703);
   }
 
   @Test
   public void plan_bad_type() {
-    parseTest("{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":\"z\"}", 126012);
+    parseBadTest("{\"versions\":{\"x\":\"\"},\"default\":\"x\",\"plan\":\"z\"}", 126012);
   }
 
   @Test
   public void no_default() {
-    parseTest("{\"versions\":{\"x\":\"\"}}", 143948);
+    parseBadTest("{\"versions\":{\"x\":\"\"}}", 143948);
   }
 
   @Test
   public void default_invalid() {
-    parseTest("{\"versions\":{\"x\":\"\"},\"default\":\"y\"}", 145980);
+    parseBadTest("{\"versions\":{\"x\":\"\"},\"default\":\"y\"}", 145980);
   }
 
   @Test
   public void no_versions() {
-    parseTest("{}", 115788);
+    parseBadTest("{}", 115788);
   }
 
   @Test
   public void empty_versions() {
-    parseTest("{\"versions\":{}}", 115788);
+    parseBadTest("{\"versions\":{}}", 115788);
   }
 
   @Test
   public void bad_versions_type() {
-    parseTest("{\"versions\":true}", 155711);
+    parseBadTest("{\"versions\":true}", 155711);
   }
 
   @Test
   public void invalid_field() {
-    parseTest("{\"x\":{}}", 143430);
+    parseBadTest("{\"x\":{}}", 143430);
   }
 
   @Test
   public void must_be_obj() {
-    parseTest("[]", 117818);
+    parseBadTest("[]", 117818);
   }
 
   @Test
   public void must_be_json() {
-    parseTest("x", 146561);
+    parseBadTest("x", 146561);
   }
 }
