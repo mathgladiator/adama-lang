@@ -16,6 +16,7 @@ import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.TyReactiveMaybe;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
+import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.IsStructure;
@@ -195,6 +196,13 @@ public class RuleSetAssignment {
     if (aTable && bTable) {
       return ((TyNativeTable) typeA).messageName.equals(((TyNativeTable) typeB).messageName);
     }
+
+    final var aRxTable = RuleSetTable.IsReactiveTable(environment, typeA);
+    final var bRxTable = RuleSetTable.IsReactiveTable(environment, typeB);
+    if (aRxTable && bRxTable) {
+      return ((TyReactiveTable) typeA).recordName.equals(((TyReactiveTable) typeB).recordName);
+    }
+
     if (tweak == StorageTweak.None) {
       final var aMaybe = aEmbedAssign == AssignableEmbedType.Maybe && RuleSetMaybe.IsMaybe(environment, typeA, true);
       if (aMaybe && bEmbedAssign == AssignableEmbedType.None) {
