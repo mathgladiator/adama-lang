@@ -35,9 +35,10 @@ public class FieldDefinition extends StructureComponent {
   public final LinkedHashSet<String> variablesToWatch;
   public final LinkedHashSet<String> servicesToWatch;
 
+  public Token lossyOrRequiredToken;
   public TyType type;
 
-  public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token semicolonToken) {
+  public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token lossyOrRequiredToken, final Token semicolonToken) {
     this.policy = policy;
     this.introToken = introToken;
     this.type = type;
@@ -46,6 +47,7 @@ public class FieldDefinition extends StructureComponent {
     this.computeExpression = computeExpression;
     this.equalsToken = equalsToken;
     this.defaultValueOverride = defaultValueOverride;
+    this.lossyOrRequiredToken = lossyOrRequiredToken;
     this.semicolonToken = semicolonToken;
     if (policy != null) {
       ingest(policy);
@@ -69,8 +71,22 @@ public class FieldDefinition extends StructureComponent {
     variablesToWatch = new LinkedHashSet<>();
   }
 
+  public boolean isLossy() {
+    if (lossyOrRequiredToken != null) {
+      return "lossy".equals(lossyOrRequiredToken.text);
+    }
+    return false;
+  }
+
+  public boolean isRequired() {
+    if (lossyOrRequiredToken != null) {
+      return "required".equals(lossyOrRequiredToken.text);
+    }
+    return false;
+  }
+
   public static FieldDefinition invent(final TyType type, final String name) {
-    return new FieldDefinition(null, null, type, Token.WRAP(name), null, null, null, null);
+    return new FieldDefinition(null, null, type, Token.WRAP(name), null, null, null, null, null);
   }
 
   @Override
@@ -93,6 +109,9 @@ public class FieldDefinition extends StructureComponent {
       if (defaultValueOverride != null) {
         defaultValueOverride.emit(yielder);
       }
+    }
+    if (lossyOrRequiredToken != null) {
+      yielder.accept(lossyOrRequiredToken);
     }
     yielder.accept(semicolonToken);
   }

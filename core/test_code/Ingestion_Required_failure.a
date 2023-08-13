@@ -1,0 +1,20 @@
+
+record X {
+  int x;
+  int y required;
+}
+
+message M {
+  int x;
+}
+
+table<X> tbl;
+X x;
+
+channel foo(M m) {
+  tbl <- m;
+}
+
+channel goo(M m) {
+  x <- m;
+}

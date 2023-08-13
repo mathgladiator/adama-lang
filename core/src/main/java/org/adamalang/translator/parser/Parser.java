@@ -874,7 +874,7 @@ public class Parser {
       final var id = id();
       final var equalsToken = consumeExpectedSymbol("=");
       final var compute = expression();
-      return new FieldDefinition(policy, isAuto, null, id, equalsToken, compute, null, consumeExpectedSymbol(";"));
+      return new FieldDefinition(policy, isAuto, null, id, equalsToken, compute, null, null, consumeExpectedSymbol(";"));
     } else {
       final var type = reactive_type();
       final var id = id();
@@ -883,7 +883,8 @@ public class Parser {
       if (equalsToken != null) {
         defaultValue = expression();
       }
-      return new FieldDefinition(policy, null, type, id, equalsToken, null, defaultValue, consumeExpectedSymbol(";"));
+      Token required = tokens.popIf(t -> t.isIdentifier("required"));
+      return new FieldDefinition(policy, null, type, id, equalsToken, null, defaultValue, required, consumeExpectedSymbol(";"));
     }
   }
 
@@ -977,9 +978,9 @@ public class Parser {
           if (equalsToken != null) {
             defaultValueOverride = expression();
           }
-          // Token lossy = tokens.popIf(t -> t.isIdentifier("lossy"));
-          // TODO: Think hard about a field properties for both messages and records; see #147
-          FieldDefinition fd = new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, consumeExpectedSymbol(";"));
+          Token lossy = tokens.popIf((t) -> t.isIdentifier("lossy"));
+          Token end = consumeExpectedSymbol(";");
+          FieldDefinition fd = new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, lossy, end);
           storage.add(fd);
         }
       }
