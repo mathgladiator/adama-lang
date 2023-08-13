@@ -27,13 +27,4 @@ public class SilentDocumentMonitor implements DocumentMonitor {
   @Override
   public void push(final String label) {
   }
-
-  @Override
-  public void registerTableColumnIndexEffectiveness(final String tableName, final String colummName, final int total, final int effectiveness) {
-  }
-
-  @Override
-  public boolean shouldMeasureTableColumnIndexEffectiveness() {
-    return false;
-  }
 }

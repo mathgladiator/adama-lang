@@ -18,7 +18,5 @@ public class SilentDocumentMonitorTests {
     monitor.goodwillFailureAt(0, 0, 0, 0);
     monitor.push("hi");
     monitor.pop(0, false);
-    monitor.shouldMeasureTableColumnIndexEffectiveness();
-    monitor.registerTableColumnIndexEffectiveness("nope", "nope", 100, 5);
   }
 }

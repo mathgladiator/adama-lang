@@ -39,24 +39,6 @@ public class StdOutDocumentMonitor implements DocumentMonitor {
     System.out.println("PUSH:" + label);
   }
 
-  @Override
-  public void registerTableColumnIndexEffectiveness(final String tableName, final String colummName, final int total, final int effectiveness) {
-    final var key = tableName + ":" + colummName;
-    var r = stats.get(key);
-    if (r == null) {
-      r = new TableRegister(tableName, colummName);
-      stats.put(key, r);
-    }
-    r.calls++;
-    r.total += total;
-    r.effectiveness += effectiveness;
-  }
-
-  @Override
-  public boolean shouldMeasureTableColumnIndexEffectiveness() {
-    return true;
-  }
-
   public void dump() {
     final var items = new ArrayList<>(stats.values());
     items.sort((a, b) -> {

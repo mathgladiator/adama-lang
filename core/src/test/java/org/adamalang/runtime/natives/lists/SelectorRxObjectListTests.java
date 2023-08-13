@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-public class SelectoRxTObjectListTests {
+public class SelectorRxObjectListTests {
   @Test
   public void flow() {
     final var document = new MockLivingDocument();
@@ -303,10 +303,6 @@ public class SelectoRxTObjectListTests {
     final var document =
         new MockLivingDocument(
             new SilentDocumentMonitor() {
-              @Override
-              public boolean shouldMeasureTableColumnIndexEffectiveness() {
-                return true;
-              }
             });
     while (document.__genNextAutoKey() < 7) {}
     final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);

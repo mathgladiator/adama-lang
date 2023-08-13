@@ -46,39 +46,12 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
     if (this.finalized == null) {
       finalized = new ArrayList<>();
       if (filter != null) {
-        if (table.document.__monitor != null && table.document.__monitor.shouldMeasureTableColumnIndexEffectiveness()) {
-          final var clause = filter.getIndices();
-          final var effectiveness = makeEffectiveness(clause);
-          var TOTAL = 0;
-          String[] columns = null;
-          for (final Ty item : table.scan(filter)) {
-            if (item.__isDying()) {
-              continue;
-            }
-            final var TEST = crazyCandidate(clause, item.__getIndexValues(), effectiveness);
-            if (columns == null) {
-              columns = item.__getIndexColumns();
-            }
-            TOTAL++;
-            if (TEST) {
-              if (filter.test(item)) {
-                finalized.add(item);
-              }
-            }
+        for (final Ty item : table.scan(filter)) {
+          if (item.__isDying()) {
+            continue;
           }
-          if (columns != null) {
-            for (var candidate = 0; candidate < effectiveness.length; candidate++) {
-              table.document.__monitor.registerTableColumnIndexEffectiveness(table.className, columns[clause[2 * candidate]], TOTAL, effectiveness[candidate]);
-            }
-          }
-        } else {
-          for (final Ty item : table.scan(filter)) {
-            if (item.__isDying()) {
-              continue;
-            }
-            if (filter.test(item)) {
-              finalized.add(item);
-            }
+          if (filter.test(item)) {
+            finalized.add(item);
           }
         }
       } else {
