@@ -175,8 +175,6 @@ public class DurableLivingDocument implements Queryable {
           JsonStreamReader reader = new JsonStreamReader(documentValue.patch);
           reader.ingestDedupe(doc.__get_intern_strings());
           doc.__insert(reader);
-          JsonStreamWriter writer = new JsonStreamWriter();
-          doc.__dump(writer);
           DurableLivingDocument document = new DurableLivingDocument(key, doc, factory, base);
           document.size.set(documentValue.reads);
           document.load(new Callback<>() {

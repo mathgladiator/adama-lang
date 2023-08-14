@@ -10,6 +10,7 @@ package org.adamalang.runtime;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.template.tree.T;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.delta.secure.TestKey;
@@ -46,6 +47,7 @@ import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
 public class LivingDocumentTests {
@@ -445,7 +447,17 @@ public class LivingDocumentTests {
 
   @Test
   public void webget_async_service() throws Exception {
-    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
+    AtomicReference<Runnable> gotIt = new AtomicReference<>(null);
+    CountDownLatch latch = new CountDownLatch(1);
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService() {
+      @Override
+      public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+        gotIt.set(() -> {
+          super.request(who, method, request, callback);
+        });
+        latch.countDown();
+      }
+    });
     RealDocumentSetup setup = new RealDocumentSetup(
         "@link sample{}" +
             "public string msg = \"Hi\";" +
@@ -472,7 +484,9 @@ public class LivingDocumentTests {
         ex.printStackTrace();
       }
     });
-    gotResponse.await(1000, TimeUnit.MILLISECONDS);
+    Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+    gotIt.get().run();
+    Assert.assertTrue(gotResponse.await(2000, TimeUnit.MILLISECONDS));
     setup.document.invalidate(new RealDocumentSetup.AssertInt(3));
     setup.assertCompare();
   }
