@@ -35,7 +35,7 @@ public class NtTime implements Comparable<NtTime> {
 
   @Override
   public String toString() {
-    return hour + (minute < 10 ? ":0" : ":") + minute;
+    return (hour < 10 ? ("0" + hour) : hour) + (minute < 10 ? ":0" : ":") + minute;
   }
 
   public long memory() {
