@@ -9,6 +9,7 @@
 package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
+import org.adamalang.runtime.contracts.DeleteTask;
 
 public class PrefixSplitDataService implements DataService {
   private final DataService dataServiceA;
@@ -49,8 +50,8 @@ public class PrefixSplitDataService implements DataService {
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
-    ds(key).delete(key, callback);
+  public void delete(Key key, DeleteTask task, Callback<Void> callback) {
+    ds(key).delete(key, task, callback);
   }
 
   @Override

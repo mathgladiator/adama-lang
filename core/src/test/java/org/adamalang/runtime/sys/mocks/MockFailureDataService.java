@@ -10,6 +10,7 @@ package org.adamalang.runtime.sys.mocks;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.*;
 
 public class MockFailureDataService implements DataService {
@@ -37,7 +38,7 @@ public class MockFailureDataService implements DataService {
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
+  public void delete(Key key, DeleteTask task, Callback<Void> callback) {
     callback.failure(new ErrorCodeException(999));
   }
 

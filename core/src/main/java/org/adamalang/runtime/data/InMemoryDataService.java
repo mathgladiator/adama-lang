@@ -13,6 +13,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.natives.NtPrincipal;
 
@@ -149,13 +150,13 @@ public class InMemoryDataService implements DataService {
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
+  public void delete(Key key, DeleteTask task, Callback<Void> callback) {
     executor.execute(() -> {
       InMemoryDocument document = datum.remove(key);
       if (document == null) {
         callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_DELETE_CANT_FIND_DOCUMENT));
       } else {
-        callback.success(null);
+        task.executeAfterMark(callback);
       }
     });
   }

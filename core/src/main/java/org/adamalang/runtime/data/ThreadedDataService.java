@@ -10,6 +10,7 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.NamedThreadFactory;
+import org.adamalang.runtime.contracts.DeleteTask;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -73,8 +74,8 @@ public class ThreadedDataService implements DataService {
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
-    at(key, (service) -> service.delete(key, callback));
+  public void delete(Key key, DeleteTask task, Callback<Void> callback) {
+    at(key, (service) -> service.delete(key, task, callback));
   }
 
   @Override

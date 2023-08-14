@@ -16,6 +16,7 @@ import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.events.*;
 import org.adamalang.common.*;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.slf4j.Logger;
@@ -432,12 +433,12 @@ public class CaravanDataService implements ArchivingDataService {
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
+  public void delete(Key key, DeleteTask task, Callback<Void> callback) {
     execute("delete", key, false, callback, (cached) -> {
       store.delete(key, () -> {
       });
       cache.remove(key);
-      callback.success(null);
+      task.executeAfterMark(callback);
     });
   }
 

@@ -12,6 +12,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
@@ -72,7 +73,7 @@ public class Machine {
           @Override
           public void execute() throws Exception {
             base.documents.remove(key);
-            base.data.delete(key, Callback.DONT_CARE_VOID);
+            base.data.delete(key, DeleteTask.TRIVIAL, Callback.DONT_CARE_VOID);
           }
         });
       }

@@ -10,6 +10,7 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.junit.Assert;
@@ -104,6 +105,7 @@ public class PrefixSplitDataServiceTests {
         });
     ds.delete(
         key,
+        DeleteTask.TRIVIAL,
         new Callback<Void>() {
           @Override
           public void success(Void value) {

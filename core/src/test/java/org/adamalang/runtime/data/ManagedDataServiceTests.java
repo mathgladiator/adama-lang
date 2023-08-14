@@ -9,6 +9,7 @@
 package org.adamalang.runtime.data;
 
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.managed.Base;
 import org.adamalang.runtime.data.mocks.*;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -82,7 +83,7 @@ public class ManagedDataServiceTests {
         firstArchive.run();
         {
           SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
-          setup.managed.delete(KEY_DELETE_WHILE_ARCHIVE, cb_Delete);
+          setup.managed.delete(KEY_DELETE_WHILE_ARCHIVE, DeleteTask.TRIVIAL, cb_Delete);
           cb_Delete.assertSuccess();
         }
         setup.archive.driveBackup();
@@ -100,7 +101,7 @@ public class ManagedDataServiceTests {
       SimpleDataCallback cb_Get = new SimpleDataCallback();
       setup.managed.get(KEY_SLOW_FIND_WHILE_FINDING, cb_Get);
       SimpleVoidCallback cb_Close = new SimpleVoidCallback();
-      setup.managed.delete(KEY_SLOW_FIND_WHILE_FINDING, cb_Close);
+      setup.managed.delete(KEY_SLOW_FIND_WHILE_FINDING, DeleteTask.TRIVIAL, cb_Close);
       cb_Close.assertSuccess();
       gotSlow.run();
       cb_Get.assertFailure(786620);
@@ -353,7 +354,7 @@ public class ManagedDataServiceTests {
 
       {
         SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
-        setup.managed.delete(KEY_CANT_DELETE, cb_Delete);
+        setup.managed.delete(KEY_CANT_DELETE, DeleteTask.TRIVIAL, cb_Delete);
         cb_Delete.assertFailure(-123456);
       }
 
@@ -370,7 +371,7 @@ public class ManagedDataServiceTests {
 
       {
         SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
-        setup.managed.delete(KEY1, cb_Delete);
+        setup.managed.delete(KEY1, DeleteTask.TRIVIAL, cb_Delete);
         cb_Delete.assertSuccess();
       }
 
@@ -378,13 +379,13 @@ public class ManagedDataServiceTests {
 
       {
         SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
-        setup.managed.delete(KEY1, cb_Delete);
+        setup.managed.delete(KEY1, DeleteTask.TRIVIAL, cb_Delete);
         cb_Delete.assertSuccess();
       }
 
       {
         SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
-        setup.managed.delete(KEY_CANT_DELETE_LOCAL, cb_Delete);
+        setup.managed.delete(KEY_CANT_DELETE_LOCAL, DeleteTask.TRIVIAL, cb_Delete);
         cb_Delete.assertFailure(-42);
       }
 

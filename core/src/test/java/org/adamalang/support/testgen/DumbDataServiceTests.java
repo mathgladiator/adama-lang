@@ -10,6 +10,7 @@ package org.adamalang.support.testgen;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.ComputeMethod;
 import org.adamalang.runtime.data.DocumentSnapshot;
 import org.adamalang.runtime.data.Key;
@@ -36,6 +37,7 @@ public class DumbDataServiceTests {
     Key key = new Key("?", "1");
     dds.delete(
         key,
+        DeleteTask.TRIVIAL,
         new Callback<Void>() {
           @Override
           public void success(Void value) {}

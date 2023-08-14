@@ -9,6 +9,7 @@
 package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
+import org.adamalang.runtime.contracts.DeleteTask;
 
 /** the contract for the data service */
 public interface DataService {
@@ -26,7 +27,7 @@ public interface DataService {
   void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback);
 
   /** Delete the document given by the ID */
-  void delete(Key key, Callback<Void> callback);
+  void delete(Key key, DeleteTask task, Callback<Void> callback);
 
   /** Snapshot the state of the document */
   void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback);

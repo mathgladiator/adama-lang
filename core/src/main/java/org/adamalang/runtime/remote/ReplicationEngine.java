@@ -8,14 +8,19 @@
  */
 package org.adamalang.runtime.remote;
 
+import org.adamalang.common.Callback;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
-public class ReplicationEngine {
+public class ReplicationEngine implements DeleteTask  {
 
-  public void init() {
+  private boolean dirty;
 
+  public ReplicationEngine() {
+    this.dirty = false;
   }
+
   public void load(JsonStreamReader reader) {
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
@@ -31,6 +36,19 @@ public class ReplicationEngine {
   }
 
   public void commit(JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
+    if (dirty) {
+      forwardDelta.writeObjectFieldIntro("__replication");
+      forwardDelta.beginObject();
+      reverseDelta.writeObjectFieldIntro("__replication");
+      reverseDelta.beginObject();
+      // TODO
+      forwardDelta.endObject();
+      reverseDelta.endObject();
+    }
+  }
 
+  @Override
+  public void executeAfterMark(Callback<Void> callback) {
+    callback.success(null);
   }
 }

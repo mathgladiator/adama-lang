@@ -9,6 +9,7 @@
 package org.adamalang.runtime.sys.mocks;
 
 import org.adamalang.common.Callback;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.*;
 import org.junit.Assert;
 
@@ -105,8 +106,8 @@ public class MockDelayDataService implements DataService {
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
-    enqueue(() -> parent.delete(key, callback));
+  public void delete(Key key, DeleteTask task, Callback<Void> callback) {
+    enqueue(() -> parent.delete(key, task, callback));
   }
 
   @Override
