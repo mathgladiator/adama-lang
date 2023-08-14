@@ -251,8 +251,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     this.__key = key;
     this.__deliverer = deliverer;
     __link(registry);
-
-    // TODO: check replication
+    __bindReplication();
   }
 
   protected abstract void __link(ServiceRegistry registry);
@@ -672,11 +671,10 @@ public abstract class LivingDocument implements RxParent, Caller {
     __replication.load(reader);
   }
 
-  protected abstract void __bindReplication(String __space, String __key);
+  protected abstract void __bindReplication();
 
-  protected RxInvalidate __setupReplication(String space, String key, String name, Service service, String method, Supplier<NtToDynamic> value) {
-    RxInvalidate invalidate = new RxInvalidate();
-    return invalidate;
+  protected RxInvalidate __setupReplication(String name, Service service, String method, Supplier<NtToDynamic> value) {
+    return __replication.init(this, name, service, method, value);
   }
 
   protected void __hydrateClients(final JsonStreamReader reader) {

@@ -18,6 +18,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
@@ -118,7 +119,7 @@ public class CaravanDataServiceTests {
       cb_ComputeFailsFNF_HeadPatch.assertFailure(625676);
 
       SimpleMockCallback cb_DeleteSuccessFNF = new SimpleMockCallback();
-      setup.service.delete(KEY1, cb_DeleteSuccessFNF);
+      setup.service.delete(KEY1, DeleteTask.TRIVIAL, cb_DeleteSuccessFNF);
       cb_DeleteSuccessFNF.assertSuccess();
 
       SimpleMockCallback cb_InitSuccess = new SimpleMockCallback();
@@ -273,12 +274,12 @@ public class CaravanDataServiceTests {
 
       {
         SimpleMockCallback cb_DeleteWorks = new SimpleMockCallback();
-        setup.service.delete(KEY1, cb_DeleteWorks);
+        setup.service.delete(KEY1, DeleteTask.TRIVIAL, cb_DeleteWorks);
         cb_DeleteWorks.assertSuccess();
       }
       {
         SimpleMockCallback cb_DeleteWorks = new SimpleMockCallback();
-        setup.service.delete(KEY1, cb_DeleteWorks);
+        setup.service.delete(KEY1, DeleteTask.TRIVIAL, cb_DeleteWorks);
         cb_DeleteWorks.assertSuccess();
       }
 
@@ -349,7 +350,7 @@ public class CaravanDataServiceTests {
 
       {
         SimpleMockCallback cb_Delete = new SimpleMockCallback();
-        setup.service.delete(KEY2, cb_Delete);
+        setup.service.delete(KEY2, DeleteTask.TRIVIAL, cb_Delete);
         cb_Delete.assertSuccess();
       }
 
