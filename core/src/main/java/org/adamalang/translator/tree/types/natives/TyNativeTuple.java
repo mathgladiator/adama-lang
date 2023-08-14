@@ -40,7 +40,7 @@ public class TyNativeTuple extends TyType implements //
     this.tupleToken = tupleToken;
     this.types = new ArrayList<>();
     this.endToken = null;
-    this.storage = new StructureStorage(StorageSpecialization.Message, true, tupleToken);
+    this.storage = new StructureStorage(Token.WRAP("__Tuple"), StorageSpecialization.Message, true, tupleToken);
     ingest(readonlyToken);
     ingest(tupleToken);
   }

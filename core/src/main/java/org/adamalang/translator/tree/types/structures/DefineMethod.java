@@ -38,6 +38,7 @@ public class DefineMethod extends StructureComponent {
   private FunctionOverloadInstance cachedInstance;
   private int functionId;
   private LinkedHashSet<String> depends;
+  private LinkedHashSet<String> methodDependencies;
   private LinkedHashSet<String> services;
   private final FunctionPaint paint;
 
@@ -61,6 +62,7 @@ public class DefineMethod extends StructureComponent {
     ingest(code);
     this.depends = new LinkedHashSet<>();
     this.services = new LinkedHashSet<>();
+    this.methodDependencies = new LinkedHashSet<>();
   }
 
   @Override
@@ -84,7 +86,7 @@ public class DefineMethod extends StructureComponent {
     code.emit(yielder);
   }
 
-  public FunctionOverloadInstance typing(final Environment environment, HashSet<String> local) {
+  public FunctionOverloadInstance typing(StructureStorage storage, final Environment environment, HashSet<String> local) {
     if (cachedInstance == null) {
       functionId = environment.autoVariable();
       returnType = environment.rules.Resolve(returnType, false);
@@ -101,8 +103,11 @@ public class DefineMethod extends StructureComponent {
       for (String depend : depends) {
         if (!local.contains(depend)) {
           cachedInstance.dependencies.add(depend);
+        } else {
+          cachedInstance.recordDependencies.add(depend);
         }
       }
+      cachedInstance.withinRecord.set(storage.name.text);
       cachedInstance.ingest(this);
     }
     return cachedInstance;
@@ -121,6 +126,7 @@ public class DefineMethod extends StructureComponent {
     for (final FunctionArg arg : args) {
       toUse.define(arg.argName, arg.type, true, arg.type);
     }
+    toUse = toUse.watch(Watcher.make(toUse, methodDependencies, new LinkedHashSet<>())).scopeDefine();
     toUse.setReturnType(returnType);
     return toUse;
   }

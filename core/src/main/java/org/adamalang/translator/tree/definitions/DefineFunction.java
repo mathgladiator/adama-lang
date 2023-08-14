@@ -105,7 +105,7 @@ public class DefineFunction extends Definition {
       }
       final var flow = code.typing(prepareEnvironment(environment));
       if (producedInstance != null) {
-        producedInstance.dependOn(depends);
+        producedInstance.dependencies.addAll(depends);
       }
       if (returnType != null && flow == ControlFlow.Open) {
         environment.document.createError(this, String.format("The %s '%s' does not return in all cases", specialization == FunctionSpecialization.Pure ? "function" : "procedure", nameToken.text));

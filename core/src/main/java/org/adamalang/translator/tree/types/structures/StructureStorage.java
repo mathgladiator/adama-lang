@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class StructureStorage extends DocumentPosition {
+  public final Token name;
   public final boolean anonymous;
   public final TreeMap<String, BubbleDefinition> bubbles;
   public final ArrayList<Consumer<Consumer<Token>>> emissions;
@@ -51,7 +52,8 @@ public class StructureStorage extends DocumentPosition {
   public final HashSet<String> fieldsWithDefaults;
   public Token closeBraceToken;
 
-  public StructureStorage(final StorageSpecialization specialization, final boolean anonymous, final Token openBraceToken) {
+  public StructureStorage(final Token name, final StorageSpecialization specialization, final boolean anonymous, final Token openBraceToken) {
+    this.name = name;
     this.specialization = specialization;
     this.anonymous = anonymous;
     this.openBraceToken = openBraceToken;
@@ -176,7 +178,7 @@ public class StructureStorage extends DocumentPosition {
       for (DefineMethod method : methods) {
         local.add(method.name);
       }
-      final var foi = dm.typing(env, local);
+      final var foi = dm.typing(StructureStorage.this, env, local);
       var functional = methodTypes.get(dm.name);
       if (functional == null) {
         functional = new TyNativeFunctional(dm.name, new ArrayList<>(), FunctionStyleJava.ExpressionThenNameWithArgs);
@@ -278,7 +280,7 @@ public class StructureStorage extends DocumentPosition {
   }
 
   public StructureStorage makeAnonymousCopy() {
-    final var storage = new StructureStorage(StorageSpecialization.Message, true, openBraceToken);
+    final var storage = new StructureStorage(name.cloneWithNewText("Anony_" + name.text), StorageSpecialization.Message, true, openBraceToken);
     storage.fieldsByOrder.addAll(fieldsByOrder);
     storage.fields.putAll(fields);
     return storage;

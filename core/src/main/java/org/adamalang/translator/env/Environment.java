@@ -313,6 +313,10 @@ public class Environment {
     return new Environment(document, state.scopeStatic(), this);
   }
 
+  public Environment scopeRecord(String name) {
+    return new Environment(document, state.scopeInRecord(name), this);
+  }
+
   /** create a new environment which is for static methods (i.e. policy methods) */
   public Environment scopeMessage() {
     return new Environment(document, state.scopeStatic().scopePure(), null);

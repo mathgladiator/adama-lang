@@ -148,7 +148,7 @@ public class SillyTypeIssues {
             new Document(),
             new EnvironmentState(
                 GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
-    final var ss = new StructureStorage(StorageSpecialization.Record, false, Token.WRAP("{"));
+    final var ss = new StructureStorage(Token.WRAP("s"), StorageSpecialization.Record, false, Token.WRAP("{"));
     ss.end(Token.WRAP("}"));
     final var record = new TyReactiveRecord(Token.WRAP("R"), Token.WRAP("X"), ss);
     final var ptr = new TyNativeReactiveRecordPtr(TypeBehavior.ReadOnlyNativeValue, record);
