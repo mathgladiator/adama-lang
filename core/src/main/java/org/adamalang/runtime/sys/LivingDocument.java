@@ -292,6 +292,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __auto_gen.__commit("__auto_gen", forward, reverse);
     __timeouts.commit(forward, reverse);
     __webQueue.commit(forward, reverse);
+    __replication.commit(forward, reverse);
   }
 
   private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again) {
@@ -671,9 +672,9 @@ public abstract class LivingDocument implements RxParent, Caller {
     __replication.load(reader);
   }
 
-  protected abstract void __bindReplication();
+  protected abstract void __bindReplication(String __space, String __key);
 
-  protected RxInvalidate __setupReplication(String name, String service, String method, Supplier<NtMessageBase> value) {
+  protected RxInvalidate __setupReplication(String space, String key, String name, Service service, String method, Supplier<NtToDynamic> value) {
     RxInvalidate invalidate = new RxInvalidate();
     return invalidate;
   }
@@ -1478,6 +1479,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         reverse.beginObject();
         __commit(null, forward, reverse);
         __timeouts.commit(forward, reverse);
+        __replication.commit(forward, reverse);
         forward.writeObjectFieldIntro("__clients");
         forward.beginObject();
         forward.writeObjectFieldIntro(cId);
@@ -1550,6 +1552,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       forward.beginObject();
       reverse.beginObject();
       __commit(null, forward, reverse);
+      __replication.commit(forward, reverse);
       forward.endObject();
       reverse.endObject();
       final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), context.who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
@@ -1584,6 +1587,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       forward.beginObject();
       reverse.beginObject();
       __commit(null, forward, reverse);
+      __replication.commit(forward, reverse);
       forward.writeObjectFieldIntro("__clients");
       forward.beginObject();
       forward.writeObjectFieldIntro(id);
@@ -1833,6 +1837,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __randomizeOutOfBand();
     __seq.bumpUpPre();
     __timeouts.commit(forward, reverse);
+    __replication.commit(forward, reverse);
     __commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
@@ -1880,6 +1885,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     // commit changes (i.e. the message id)
     __seq.bumpUpPre();
     __timeouts.commit(forward, reverse);
+    __replication.commit(forward, reverse);
     __commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
