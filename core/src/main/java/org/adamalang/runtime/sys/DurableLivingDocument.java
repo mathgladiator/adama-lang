@@ -166,15 +166,14 @@ public class DurableLivingDocument implements Queryable {
         callback.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_NEW_DOCUMENT));
         return;
       }
-
-      LivingDocument doc = factory.create(monitor);
-      doc.__lateBind(key.space, key.key, factory.deliverer, factory.registry);
       base.service.get(key, new Callback<>() {
         @Override
         public void success(LocalDocumentChange documentValue) {
           base.executor.execute(new NamedRunnable("doc-load") {
             @Override
             public void execute() throws Exception {
+              LivingDocument doc = factory.create(monitor);
+              doc.__lateBind(key.space, key.key, factory.deliverer, factory.registry);
               JsonStreamReader reader = new JsonStreamReader(documentValue.patch);
               reader.ingestDedupe(doc.__get_intern_strings());
               doc.__insert(reader);
