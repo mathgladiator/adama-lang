@@ -8,5 +8,20 @@
  */
 package org.adamalang.runtime.remote;
 
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
+
 public class ReplicationEngine {
+  public void load(JsonStreamReader reader) {
+    if (reader.startObject()) {
+      while (reader.notEndOfObject()) {
+        String name = reader.fieldName();
+        reader.skipValue();
+      }
+    }
+  }
+  public void dump(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.endObject();
+  }
 }

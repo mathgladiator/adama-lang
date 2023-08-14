@@ -6,8 +6,13 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.runtime.remote;
 
-public class Platform {
-  public static final String VERSION = "20230814061243";
+import org.adamalang.runtime.contracts.RxChild;
+
+public class RxInvalidate implements RxChild {
+  @Override
+  public boolean __raiseInvalid() {
+    return false;
+  }
 }

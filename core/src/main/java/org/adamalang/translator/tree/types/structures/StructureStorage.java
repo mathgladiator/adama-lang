@@ -116,6 +116,7 @@ public class StructureStorage extends DocumentPosition {
     emissions.add(e -> rd.emit(e));
     ingest(rd);
     rd.expression.free(fe);
+    fe.free.add("service:" + rd.service.text);
     checker.register(fe.free, env -> rd.typing(env.watch(Watcher.make(env, rd.variablesToWatch, rd.servicesToWatch))));
     if (has(rd.name.text)) {
       checker.issueError(rd, String.format("Replication '%s' was already defined", rd.name.text));

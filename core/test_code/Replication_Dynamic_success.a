@@ -1,0 +1,8 @@
+service sms {
+  internal = "twilio.com";
+
+  replication<dynamic> m;
+}
+
+
+replication<sms:m> foo = {x:123}.to_dynamic();

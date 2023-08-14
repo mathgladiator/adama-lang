@@ -488,6 +488,8 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __bindReplication() {}");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -1098,6 +1100,8 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
@@ -1722,6 +1726,8 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
