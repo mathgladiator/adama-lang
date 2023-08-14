@@ -10,6 +10,7 @@ package org.adamalang.runtime.data.mocks;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
@@ -187,8 +188,8 @@ public class MockArchiveDataSource implements ArchivingDataService {
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
-    data.delete(key, callback);
+  public void delete(Key key, DeleteTask task, Callback<Void> callback) {
+    data.delete(key, task, callback);
   }
 
   @Override

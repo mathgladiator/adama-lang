@@ -11,6 +11,7 @@ package org.adamalang.runtime.data;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
@@ -106,7 +107,7 @@ public class InMemoryDataServiceTests {
           }
         });
     ds.patch(key, new RemoteDocumentUpdate[] { updateActive(4, "{\"x\":4}", "{\"x\":3}", 42) }, bumpSuccess(success));
-    ds.delete(key, bumpSuccess(success));
+    ds.delete(key, DeleteTask.TRIVIAL, bumpSuccess(success));
     Assert.assertEquals(9, success.get());
   }
 
@@ -156,7 +157,7 @@ public class InMemoryDataServiceTests {
     ds.get(key, bumpFailureDoc(failure, 625676));
     ds.patch(key, new RemoteDocumentUpdate[] { update(1, null, null) }, bumpFailure(failure, 144944));
     ds.compute(key, null, 1, bumpFailureDoc(failure, 106546));
-    ds.delete(key, bumpFailure(failure, 117816));
+    ds.delete(key, DeleteTask.TRIVIAL, bumpFailure(failure, 117816));
   }
 
   private static Callback<LocalDocumentChange> bumpFailureDoc(

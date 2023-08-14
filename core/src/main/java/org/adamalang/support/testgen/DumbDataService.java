@@ -11,6 +11,7 @@ package org.adamalang.support.testgen;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -112,10 +113,10 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
+  public void delete(Key key, DeleteTask task, Callback<Void> callback) {
     if (deletesWork) {
       deleted.add(key);
-      callback.success(null);
+      task.executeAfterMark(callback);
     } else {
       callback.failure(new ErrorCodeException(1234567));
     }

@@ -91,7 +91,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
   protected final ArrayList<EphemeralWebGet> __gets;
-  private final ReplicationEngine __replication;
+  public final ReplicationEngine __replication;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;

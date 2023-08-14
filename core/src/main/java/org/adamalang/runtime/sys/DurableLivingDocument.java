@@ -413,7 +413,7 @@ public class DurableLivingDocument implements Queryable {
      * OK, so, here, we should introduce a deletion service where the FIRST thing is to simply mark for deletion.
      * Then we have a function to do all the post delete work.
      */
-    base.service.delete(key, callback);
+    base.service.delete(key, document.__replication, callback);
   }
 
   public LivingDocumentFactory getCurrentFactory() {

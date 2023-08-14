@@ -11,6 +11,7 @@ package org.adamalang.runtime.sys.mocks;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -151,14 +152,14 @@ public class MockInstantDataService implements DataService {
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
+  public void delete(Key key, DeleteTask task, Callback<Void> callback) {
     if ("cant-delete-delete".equals(key.key)) {
       callback.failure(new ErrorCodeException(-42));
       return;
     }
     println("DELETE:" + key.space + "/" + key.key);
     logByKey.remove(key);
-    callback.success(null);
+    task.executeAfterMark(callback);
   }
 
   @Override

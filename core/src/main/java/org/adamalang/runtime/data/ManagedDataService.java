@@ -11,6 +11,7 @@ package org.adamalang.runtime.data;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.managed.Action;
 import org.adamalang.runtime.data.managed.Base;
 import org.slf4j.Logger;
@@ -72,14 +73,24 @@ public class ManagedDataService implements DataService {
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
+  public void delete(Key key, DeleteTask task, Callback<Void> callback) {
     base.finder.markDelete(key, base.target, new Callback<Void>() {
       @Override
       public void success(Void value) {
-        deleteLocal(key, new Callback<>() {
+        task.executeAfterMark(new Callback<Void>() {
           @Override
           public void success(Void value) {
-            base.finder.commitDelete(key, base.target, callback);
+            deleteLocal(key, new Callback<>() {
+              @Override
+              public void success(Void value) {
+                base.finder.commitDelete(key, base.target, callback);
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                callback.failure(ex);
+              }
+            });
           }
 
           @Override
@@ -110,7 +121,7 @@ public class ManagedDataService implements DataService {
   private void deleteLocal(Key key, Callback<Void> callback) {
     base.on(key, (machine) -> {
       machine.delete();
-      base.data.delete(key, new Callback<Void>() {
+      base.data.delete(key, DeleteTask.TRIVIAL, new Callback<Void>() {
         @Override
         public void success(Void value) {
           base.executor.execute(new NamedRunnable("managed-delete") {
