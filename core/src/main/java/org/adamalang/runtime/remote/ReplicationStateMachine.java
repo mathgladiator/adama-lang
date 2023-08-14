@@ -8,14 +8,26 @@
  */
 package org.adamalang.runtime.remote;
 
-import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtToDynamic;
+
+import java.util.function.Supplier;
 
 public class ReplicationStateMachine {
+  public final RxInvalidate invalidated;
+  public final Caller caller;
   public final String name;
+  public final Service service;
+  public final String method;
+  public final Supplier<NtToDynamic> supplier;
+  public final ReplicationStatus status;
 
-  public ReplicationStateMachine(String name) {
+  public ReplicationStateMachine(Caller caller, String name, Service service, String method, Supplier<NtToDynamic> supplier, ReplicationStatus status) {
+    this.invalidated = new RxInvalidate();
+    this.caller = caller;
     this.name = name;
+    this.service = service;
+    this.method = method;
+    this.supplier = supplier;
+    this.status = status;
   }
-
-
 }

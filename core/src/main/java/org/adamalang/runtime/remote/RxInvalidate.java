@@ -11,8 +11,21 @@ package org.adamalang.runtime.remote;
 import org.adamalang.runtime.contracts.RxChild;
 
 public class RxInvalidate implements RxChild {
+  private boolean invalidated;
+
+  public RxInvalidate() {
+    this.invalidated = false;
+  }
+
+  public boolean getAndClearInvalidated() {
+    boolean prior = invalidated;
+    invalidated = false;
+    return prior;
+  }
+
   @Override
   public boolean __raiseInvalid() {
+    this.invalidated = true;
     return false;
   }
 }

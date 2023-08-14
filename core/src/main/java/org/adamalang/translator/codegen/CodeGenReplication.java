@@ -20,13 +20,13 @@ public class CodeGenReplication {
     ArrayList<ReplicationDefinition> replications = new ArrayList<>(environment.document.root.storage.replications.values());
     if (replications.size() == 0) {
       sb.append("@Override").writeNewline();
-      sb.append("public void __bindReplication(String __space, String __key) {}").writeNewline();
+      sb.append("public void __bindReplication() {}").writeNewline();
     } else {
       sb.append("@Override").writeNewline();
-      sb.append("public void __bindReplication(String __space, String __key) {").tabUp().writeNewline();
+      sb.append("public void __bindReplication() {").tabUp().writeNewline();
       int countDown = replications.size();
       for (ReplicationDefinition defn : replications) {
-        sb.append("RxInvalidate __L_").append(defn.name.text).append(" = __setupReplication(__space, __key, \"").append(defn.name.text).append("\",");
+        sb.append("RxInvalidate __L_").append(defn.name.text).append(" = __setupReplication(\"").append(defn.name.text).append("\",");
         sb.append(defn.service.text).append(",");
         sb.append("\"").append(defn.method.text).append("\",() -> ");
         defn.expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
