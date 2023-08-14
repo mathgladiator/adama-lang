@@ -66,7 +66,7 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  protected void __bindReplication() {
+  protected void __bindReplication(String space, String key) {
   }
 
   @Override

@@ -683,7 +683,7 @@ public class GeneratedScopeTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
+    gold.append("\n  public void __bindReplication(String __space, String __key) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");

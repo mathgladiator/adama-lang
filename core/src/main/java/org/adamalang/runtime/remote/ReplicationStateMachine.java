@@ -8,10 +8,14 @@
  */
 package org.adamalang.runtime.remote;
 
+import org.adamalang.runtime.json.JsonStreamWriter;
+
 public class ReplicationStateMachine {
   public final String name;
 
   public ReplicationStateMachine(String name) {
     this.name = name;
   }
+
+
 }

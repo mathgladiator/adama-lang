@@ -12,6 +12,10 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
 public class ReplicationEngine {
+
+  public void init() {
+
+  }
   public void load(JsonStreamReader reader) {
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
@@ -20,8 +24,13 @@ public class ReplicationEngine {
       }
     }
   }
+
   public void dump(JsonStreamWriter writer) {
     writer.beginObject();
     writer.endObject();
+  }
+
+  public void commit(JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
+
   }
 }
