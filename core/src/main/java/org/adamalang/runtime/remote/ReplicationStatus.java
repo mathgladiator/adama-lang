@@ -24,18 +24,18 @@ public class ReplicationStatus {
   public ReplicationStatus(LivingDocument parent) {
     this.dirty = true;
     cache = new RxCache(parent, null);
-    result = new NtResult<>("", false, 0, "");
+    result = new NtResult<>(null, false, 0, "");
     this.hasData = false;
     this.hash = "";
   }
 
   public boolean needSend() {
-    return !hasData || result.failed();
+    return !hasData || result.failed() || !result.has();
   }
 
   public boolean desire(String newHash) {
     if (!hash.equals(newHash)) {
-      result = new NtResult<>("", false, 0, "");
+      result = new NtResult<>(null, false, 0, "");
       dirty = true;
       hash = newHash;
       return true;
@@ -55,6 +55,10 @@ public class ReplicationStatus {
 
   public void read(JsonStreamReader reader) {
     if (reader.startObject()) {
+      boolean failed = false;
+      String value = null;
+      int failureCode = 0;
+      String failureMessage = "";
       while (reader.notEndOfObject()) {
         String field = reader.fieldName();
         switch (field) {
@@ -65,12 +69,22 @@ public class ReplicationStatus {
             hash = reader.readString();
             break;
           case "failed":
-            result = new NtResult<>("", reader.readBoolean(), 0, "");
+            failed = reader.readBoolean();
+            break;
+          case "reason":
+            failureCode = reader.readInteger();
+            break;
+          case "reason_message":
+            failureMessage = reader.readString();
+            break;
+          case "value":
+            value = reader.readString();
             break;
           default:
             reader.skipValue();
         }
       }
+      result = new NtResult<>(value, failed, failureCode, failureMessage);
     } else {
       reader.skipValue();
     }
@@ -84,6 +98,15 @@ public class ReplicationStatus {
     writer.writeString(hash);
     writer.writeObjectFieldIntro("failed");
     writer.writeBoolean(result.failed());
+    if (result.has()) {
+      writer.writeObjectFieldIntro("value");
+      writer.writeString(result.get());
+    } else {
+      writer.writeObjectFieldIntro("reason");
+      writer.writeInteger(result.code());
+      writer.writeObjectFieldIntro("reason_message");
+      writer.writeString(result.message());
+    }
     writer.endObject();
   }
 }
