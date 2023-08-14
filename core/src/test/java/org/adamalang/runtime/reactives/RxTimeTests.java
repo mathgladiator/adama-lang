@@ -64,10 +64,10 @@ public class RxTimeTests {
     a.set(B);
     a.__commit("x", redo, undo);
     Assert.assertEquals(
-        "\"x\":\"6:09\"",
+        "\"x\":\"06:09\"",
         redo.toString());
     Assert.assertEquals(
-        "\"x\":\"4:20\"",
+        "\"x\":\"04:20\"",
         undo.toString());
   }
 
@@ -89,7 +89,7 @@ public class RxTimeTests {
     RxTime a = new RxTime(null, A);
     a.__dump(c);
     Assert.assertEquals(
-        "\"4:20\"",
+        "\"04:20\"",
         c.toString());
   }
 
@@ -103,7 +103,7 @@ public class RxTimeTests {
             "2:32"));
     a.__dump(c);
     Assert.assertEquals(
-        "\"6:09\"\"2:00\"",
+        "\"06:09\"\"02:00\"",
         c.toString());
   }
 
@@ -113,10 +113,10 @@ public class RxTimeTests {
     RxTime a = new RxTime(null, B);
     a.__patch(
         new JsonStreamReader(
-            "\"2:30\""));
+            "\"02:30\""));
     a.__dump(c);
     Assert.assertEquals(
-        "\"2:30\"",
+        "\"02:30\"",
         c.toString());
   }
 }

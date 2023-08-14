@@ -263,6 +263,10 @@ public class CodeGenRecords {
           }
           classConstructorX.append("new " + elementType.getJavaConcreteType(environment) + "(__parent, ");
           defaultValue.writeJava(classConstructorX, environment.scopeWithComputeContext(ComputeContext.Computation));
+          if (elementType instanceof TyReactiveEnum) {
+            String name = ((TyReactiveEnum) elementType).name;
+            classConstructorX.append(", (__v) -> __EnumFix_").append(name).append("(__v)");
+          }
           classConstructorX.append(")");
           if (elementType instanceof TyReactiveRecord) {
             classLinker.append(fieldName + ".__link()");

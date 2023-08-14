@@ -17,6 +17,7 @@ import org.adamalang.cli.implementations.code.Diagram;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.CodeHandler;
 import org.adamalang.cli.runtime.Output;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.lsp.LanguageServer;
@@ -147,7 +148,10 @@ public class CodeHandlerImpl implements CodeHandler {
           try {
             sharedCompileCode(entry.getKey(), entry.getValue().textValue(), new HashMap<>());
           } catch (Exception e) {
-            System.err.println("version '" + entry.getValue() + "' failed to validate");
+            System.err.println("version '" + entry.getValue() + "' failed to validate: " + e.getMessage());
+            if (!(e instanceof KnownException)) {
+              e.printStackTrace();
+            }
             success = false;
           }
         } else if (entry.getValue().isObject()) {
@@ -179,7 +183,10 @@ public class CodeHandlerImpl implements CodeHandler {
             try {
               sharedCompileCode(entry.getKey(), main.textValue(), includes);
             } catch (Exception e) {
-              System.err.println("version '" + entry.getKey() + "' failed to validate");
+              System.err.println("version '" + entry.getKey() + "' failed to validate: " + e.getMessage());
+              if (!(e instanceof KnownException)) {
+                e.printStackTrace();
+              }
               success = false;
             }
           }
@@ -218,6 +225,10 @@ public class CodeHandlerImpl implements CodeHandler {
     return success;
   }
 
+  private static class KnownException extends Exception {
+
+  }
+
   public static CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) throws Exception {
     final var options = CompilerOptions.start().make();
     final var globals = GlobalObjectPool.createPoolWithStdLib();
@@ -245,7 +256,7 @@ public class CodeHandlerImpl implements CodeHandler {
       String file = errorItem.get("file").textValue();
       System.err.println(Util.prefix("[" + file + ";start=" + startLine + ":" + startCharacter + ", end=" + endLine + ":" + endCharacter + "]", Util.ANSI.Red) + " :" + errorItem.get("message").textValue());
     }
-    throw new Exception("failed to compile: " + filename);
+    throw new KnownException();
   }
 
   public static class CompileResult {
