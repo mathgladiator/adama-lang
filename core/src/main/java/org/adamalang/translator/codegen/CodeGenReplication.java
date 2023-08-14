@@ -21,7 +21,6 @@ public class CodeGenReplication {
     if (replications.size() == 0) {
       sb.append("@Override").writeNewline();
       sb.append("public void __bindReplication() {}").writeNewline();
-      return;
     } else {
       sb.append("@Override").writeNewline();
       sb.append("public void __bindReplication() {").tabUp().writeNewline();
