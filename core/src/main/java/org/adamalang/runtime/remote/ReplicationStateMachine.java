@@ -28,7 +28,7 @@ public class ReplicationStateMachine {
   public final Supplier<NtToDynamic> supplier;
   public final ReplicationStatus status;
 
-  public ReplicationStateMachine(Caller caller, String name, SimpleService service, String method, Supplier<NtToDynamic> supplier, ReplicationStatus status) {
+  public ReplicationStateMachine(Caller caller, String name, Service service, String method, Supplier<NtToDynamic> supplier, ReplicationStatus status) {
     this.invalidated = new RxInvalidate();
     this.caller = caller;
     this.name = name;
