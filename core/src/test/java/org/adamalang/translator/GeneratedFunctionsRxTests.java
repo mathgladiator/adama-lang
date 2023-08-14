@@ -99,7 +99,7 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    vx = new RxInt32(this, 0);");
     gold.append("\n    x = new RTxR(this);");
     gold.append("\n    y = new RTxR(this);");
-    gold.append("\n    xy_HERE = new RxLazy<Integer>(this, () -> (__FUNC_1_foo()));");
+    gold.append("\n    xy_HERE = new RxLazy<Integer>(this, () -> (Integer)(__FUNC_1_foo()));");
     gold.append("\n    x.__link();");
     gold.append("\n    y.__link();");
     gold.append("\n    vx.__subscribe(xy_HERE);");
@@ -935,7 +935,7 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RTxR(this);");
     gold.append("\n    y = new RTxR(this);");
-    gold.append("\n    xy_HERE = new RxLazy<Integer>(this, () -> (__FUNC_1_foo()));");
+    gold.append("\n    xy_HERE = new RxLazy<Integer>(this, () -> (Integer)(__FUNC_1_foo()));");
     gold.append("\n    x.__link();");
     gold.append("\n    y.__link();");
     gold.append("\n    x.__subscribe(xy_HERE);");
@@ -1752,7 +1752,7 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n  public Decouple_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RTxR(this);");
-    gold.append("\n    xy = new RxLazy<Integer>(this, () -> (__FUNC_0_foo()));");
+    gold.append("\n    xy = new RxLazy<Integer>(this, () -> (Integer)(__FUNC_0_foo()));");
     gold.append("\n    x.__link();");
     gold.append("\n    x.__subscribe(xy);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -2553,9 +2553,9 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public Time_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    now = new RxLazy<Long>(this, () -> (__timeNow()));");
-    gold.append("\n    datetime = new RxLazy<NtDateTime>(this, () -> (__datetimeNow()));");
-    gold.append("\n    today = new RxLazy<NtDate>(this, () -> (__dateOfToday()));");
+    gold.append("\n    now = new RxLazy<Long>(this, () -> (Long)(__timeNow()));");
+    gold.append("\n    datetime = new RxLazy<NtDateTime>(this, () -> (NtDateTime)(__datetimeNow()));");
+    gold.append("\n    today = new RxLazy<NtDate>(this, () -> (NtDate)(__dateOfToday()));");
     gold.append("\n    __time.__subscribe(now);");
     gold.append("\n    __time.__subscribe(datetime);");
     gold.append("\n    __today.__subscribe(today);");

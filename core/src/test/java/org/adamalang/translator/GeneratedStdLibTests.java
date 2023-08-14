@@ -103,12 +103,12 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n  public Lists_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    _b = new RxTable<>(__self, this, \"_b\", (RxParent __parent) -> new RTxB(__parent).__link(), 0);");
-    gold.append("\n    x = new RxLazy<NtList<Integer>>(this, () -> (LibLists.flatten((_b.iterate(true)).transform((item) -> item.a.get()))));");
-    gold.append("\n    r_x = new RxLazy<NtList<Integer>>(this, () -> (LibLists.reverse(x.get())));");
-    gold.append("\n    x_skip_3 = new RxLazy<NtList<Integer>>(this, () -> (LibLists.skip(x.get(), 3)));");
-    gold.append("\n    x_skip_1_r = new RxLazy<NtList<Integer>>(this, () -> (LibLists.reverse(LibLists.skip(LibLists.reverse(LibLists.skip(x.get(), 1)), 1))));");
-    gold.append("\n    x_d = new RxLazy<NtList<Integer>>(this, () -> (LibLists.drop(x.get(), 2)));");
-    gold.append("\n    x_mirror = new RxLazy<NtList<Integer>>(this, () -> (LibLists.drop(LibLists.skip(x.get(), 1), 1)));");
+    gold.append("\n    x = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.flatten((_b.iterate(true)).transform((item) -> item.a.get()))));");
+    gold.append("\n    r_x = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.reverse(x.get())));");
+    gold.append("\n    x_skip_3 = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.skip(x.get(), 3)));");
+    gold.append("\n    x_skip_1_r = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.reverse(LibLists.skip(LibLists.reverse(LibLists.skip(x.get(), 1)), 1))));");
+    gold.append("\n    x_d = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.drop(x.get(), 2)));");
+    gold.append("\n    x_mirror = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.drop(LibLists.skip(x.get(), 1), 1)));");
     gold.append("\n    _b.__subscribe(x);");
     gold.append("\n    x.__subscribe(r_x);");
     gold.append("\n    x.__subscribe(x_skip_3);");
@@ -798,7 +798,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      this.__this = this;");
     gold.append("\n      _a = new RxTable<>(__self, this, \"_a\", (RxParent __parent) -> new RTxA(__parent).__link(), 0);");
     gold.append("\n      id = new RxInt32(this, 0);");
-    gold.append("\n      a = new RxLazy<NtList<Integer>>(this, () -> ((_a.iterate(true)).transform((item) -> item.x.get())));");
+    gold.append("\n      a = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)((_a.iterate(true)).transform((item) -> item.x.get())));");
     gold.append("\n      a.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -3699,8 +3699,8 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    y4 = new RxString(this, \"\");");
     gold.append("\n    join_maybe = new RxMaybe<>(this, (RxParent __parent) -> new RxString(__parent, \"\"));");
     gold.append("\n    _s = new RxTable<>(__self, this, \"_s\", (RxParent __parent) -> new RTxS(__parent).__link(), 0);");
-    gold.append("\n    y4_cp = new RxLazy<NtList<Integer>>(this, () -> (LibString.codepoints(y4.get())));");
-    gold.append("\n    r2023 = new RxLazy<String>(this, () -> (LibString.to_roman((2023))));");
+    gold.append("\n    y4_cp = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibString.codepoints(y4.get())));");
+    gold.append("\n    r2023 = new RxLazy<String>(this, () -> (String)(LibString.to_roman((2023))));");
     gold.append("\n    y4.__subscribe(y4_cp);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -5075,7 +5075,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n  public TablesJoin_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    wp = new RTxWeekPattern(this);");
-    gold.append("\n    nice = new RxLazy<String>(this, () -> (wp.__METH_0_summary()));");
+    gold.append("\n    nice = new RxLazy<String>(this, () -> (String)(wp.__METH_0_summary()));");
     gold.append("\n    wp.__link();");
     gold.append("\n    wp.__subscribe(nice);");
     gold.append("\n    __goodwillBudget = 100000;");

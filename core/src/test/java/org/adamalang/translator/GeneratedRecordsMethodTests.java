@@ -2096,7 +2096,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      super(__owner);");
     gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
-    gold.append("\n      boom = new RxLazy<Integer>(this, () -> (__METH_0_one()));");
+    gold.append("\n      boom = new RxLazy<Integer>(this, () -> (Integer)(__METH_0_one()));");
     gold.append("\n      boom.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");

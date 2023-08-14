@@ -173,7 +173,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  public BringLazyIntoPicture_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    raw = new RxInt32(this, 0);");
-    gold.append("\n    x = new RxLazy<Integer>(this, () -> (raw.get() + raw.get() + 1));");
+    gold.append("\n    x = new RxLazy<Integer>(this, () -> (Integer)(raw.get() + raw.get() + 1));");
     gold.append("\n    raw.__subscribe(x);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");

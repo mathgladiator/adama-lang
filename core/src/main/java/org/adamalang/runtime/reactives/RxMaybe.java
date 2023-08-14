@@ -172,12 +172,12 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
   }
 
   @SuppressWarnings("unchecked")
-  public NtMaybe get() {
+  public <X> NtMaybe<X> get() {
     if (value == null) {
       return new NtMaybe();
     } else {
       if (value instanceof CanGetAndSet) {
-        return new NtMaybe(((CanGetAndSet) value).get()).withDeleteChain(() -> delete());
+        return new NtMaybe<>((X)((CanGetAndSet) value).get()).withDeleteChain(() -> delete());
       } else {
         return new NtMaybe(value).withDeleteChain(() -> delete());
       }

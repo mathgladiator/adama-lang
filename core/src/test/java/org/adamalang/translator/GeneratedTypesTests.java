@@ -173,7 +173,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public BooleanBulk_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    b = new RxBoolean(this, true);");
-    gold.append("\n    ib = new RxLazy<Boolean>(this, () -> (!b.get()));");
+    gold.append("\n    ib = new RxLazy<Boolean>(this, () -> (Boolean)(!b.get()));");
     gold.append("\n    b.__subscribe(ib);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -3103,7 +3103,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x = new RxDouble(this, 0.0);");
     gold.append("\n    y = new RxDouble(this, 3.14);");
     gold.append("\n    z = new RxDouble(this, 2000.0);");
-    gold.append("\n    sum = new RxLazy<Double>(this, () -> (x.get() + y.get() + z.get()));");
+    gold.append("\n    sum = new RxLazy<Double>(this, () -> (Double)(x.get() + y.get() + z.get()));");
     gold.append("\n    tiny = new RxDouble(this, 2.0E-32);");
     gold.append("\n    x.__subscribe(sum);");
     gold.append("\n    y.__subscribe(sum);");
@@ -3813,7 +3813,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x = new RxInt32(this, 1);");
     gold.append("\n    y = new RxInt32(this, 2);");
     gold.append("\n    z = new RxInt32(this, 0);");
-    gold.append("\n    sum = new RxLazy<Integer>(this, () -> (x.get() + y.get() + z.get()));");
+    gold.append("\n    sum = new RxLazy<Integer>(this, () -> (Integer)(x.get() + y.get() + z.get()));");
     gold.append("\n    x.__subscribe(sum);");
     gold.append("\n    y.__subscribe(sum);");
     gold.append("\n    z.__subscribe(sum);");
@@ -13071,7 +13071,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x = new RxInt32(this, 1);");
     gold.append("\n    y = new RxInt32(this, 2);");
     gold.append("\n    z = new RxDouble(this, 0.0);");
-    gold.append("\n    sum = new RxLazy<Double>(this, () -> (x.get() + y.get() + z.get()));");
+    gold.append("\n    sum = new RxLazy<Double>(this, () -> (Double)(x.get() + y.get() + z.get()));");
     gold.append("\n    x.__subscribe(sum);");
     gold.append("\n    y.__subscribe(sum);");
     gold.append("\n    z.__subscribe(sum);");
@@ -14366,7 +14366,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x = new RxInt32(this, 1);");
     gold.append("\n    y = new RxString(this, \"2\");");
     gold.append("\n    z = new RxDouble(this, 0.0);");
-    gold.append("\n    sum = new RxLazy<String>(this, () -> (x.get() + y.get() + z.get()));");
+    gold.append("\n    sum = new RxLazy<String>(this, () -> (String)(x.get() + y.get() + z.get()));");
     gold.append("\n    x.__subscribe(sum);");
     gold.append("\n    y.__subscribe(sum);");
     gold.append("\n    z.__subscribe(sum);");

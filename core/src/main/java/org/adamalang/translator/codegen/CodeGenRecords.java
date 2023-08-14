@@ -199,7 +199,8 @@ public class CodeGenRecords {
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
       if (fieldType instanceof TyReactiveLazy && fdInOrder.computeExpression != null) {
         final var lazyType = ((TyReactiveLazy) fieldType).getEmbeddedType(environment);
-        classFields.append("private final RxLazy<" + lazyType.getJavaBoxType(environment) + "> " + fieldName + ";").writeNewline();
+        String boxType = lazyType.getJavaBoxType(environment);
+        classFields.append("private final RxLazy<" + boxType + "> " + fieldName + ";").writeNewline();
         boolean hasCache = !fdInOrder.servicesToWatch.isEmpty();
         if (hasCache) {
           classFields.append("private final RxCache __c").append(fieldName).append(";");
@@ -207,11 +208,11 @@ public class CodeGenRecords {
         }
         classConstructorX.append(fieldName).append(" = new RxLazy<").append(lazyType.getJavaBoxType(environment));
         if (hasCache) {
-          classConstructorX.append(">(this,__c").append(fieldName).append(".wrap(() -> (");
+          classConstructorX.append(">(this,__c").append(fieldName).append(".wrap(() -> (").append(boxType).append(")(");
           fdInOrder.computeExpression.writeJava(classConstructorX, environment.scopeWithCache("__c" + fieldName).scopeWithComputeContext(ComputeContext.Computation));
           classConstructorX.append(")));").writeNewline();
         } else {
-          classConstructorX.append(">(this, () -> (");
+          classConstructorX.append(">(this, () -> (").append(boxType).append(")(");
           fdInOrder.computeExpression.writeJava(classConstructorX, environment.scopeWithCache("__c" + fieldName).scopeWithComputeContext(ComputeContext.Computation));
           classConstructorX.append("));").writeNewline();
         }
