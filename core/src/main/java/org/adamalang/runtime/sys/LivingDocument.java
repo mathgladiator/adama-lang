@@ -673,7 +673,7 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   protected abstract void __bindReplication();
 
-  protected RxInvalidate __setupReplication(String name, SimpleService service, String method, Supplier<NtToDynamic> value) {
+  protected RxInvalidate __setupReplication(String name, Service service, String method, Supplier<NtToDynamic> value) {
     return __replication.init(this, name, service, method, value);
   }
 

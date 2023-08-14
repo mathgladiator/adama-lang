@@ -39,7 +39,7 @@ public class ReplicationEngine implements DeleteTask  {
     return value;
   }
 
-  public RxInvalidate init(Caller caller, String name, SimpleService service, String method, Supplier<NtToDynamic> supplier) {
+  public RxInvalidate init(Caller caller, String name, Service service, String method, Supplier<NtToDynamic> supplier) {
     ReplicationStateMachine sm = new ReplicationStateMachine(caller, name, service, method, supplier, getOrCreateStatus(name));
     machines.put(name, sm);
     return sm.invalidated;
