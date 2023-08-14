@@ -61,6 +61,7 @@ public class DurableLivingDocument implements Queryable {
   public final Key key;
   private final ArrayDeque<IngestRequest> pending;
   private final AtomicInteger size;
+  private final ArrayList<DataObserver> observers;
   private LivingDocumentFactory currentFactory;
   private LivingDocument document;
   private Integer requiresInvalidateMilliseconds;
@@ -72,7 +73,6 @@ public class DurableLivingDocument implements Queryable {
   private boolean inflightCompact;
   private int trackingSeq;
   private long lastActivityMS;
-  private final ArrayList<DataObserver> observers;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
@@ -172,25 +172,30 @@ public class DurableLivingDocument implements Queryable {
       base.service.get(key, new Callback<>() {
         @Override
         public void success(LocalDocumentChange documentValue) {
-          JsonStreamReader reader = new JsonStreamReader(documentValue.patch);
-          reader.ingestDedupe(doc.__get_intern_strings());
-          doc.__insert(reader);
-          DurableLivingDocument document = new DurableLivingDocument(key, doc, factory, base);
-          document.size.set(documentValue.reads);
-          document.load(new Callback<>() {
+          base.executor.execute(new NamedRunnable("doc-load") {
             @Override
-            public void success(LivingDocumentChange change) {
-              callback.success(document);
-              document.queueCompact();
-            }
+            public void execute() throws Exception {
+              JsonStreamReader reader = new JsonStreamReader(documentValue.patch);
+              reader.ingestDedupe(doc.__get_intern_strings());
+              doc.__insert(reader);
+              DurableLivingDocument newDocument = new DurableLivingDocument(key, doc, factory, base);
+              newDocument.size.set(documentValue.reads);
+              newDocument.load(new Callback<>() {
+                @Override
+                public void success(LivingDocumentChange change) {
+                  callback.success(newDocument);
+                  newDocument.queueCompact();
+                }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-              if (ex.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CHANGE) {
-                callback.success(document);
-              } else {
-                callback.failure(ex);
-              }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  if (ex.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CHANGE) {
+                    callback.success(newDocument);
+                  } else {
+                    callback.failure(ex);
+                  }
+                }
+              });
             }
           });
         }
@@ -405,6 +410,10 @@ public class DurableLivingDocument implements Queryable {
     }
   }
 
+  public LivingDocumentFactory getCurrentFactory() {
+    return currentFactory;
+  }
+
   private void executeDelete(Callback<Void> callback) {
     /**
      * the tricky thing here is for external resources like assets and replicated state.
@@ -412,10 +421,6 @@ public class DurableLivingDocument implements Queryable {
      * Then we have a function to do all the post delete work.
      */
     base.service.delete(key, document.__replication, callback);
-  }
-
-  public LivingDocumentFactory getCurrentFactory() {
-    return currentFactory;
   }
 
   /** watch the underlying data stream */

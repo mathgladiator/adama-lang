@@ -8,7 +8,6 @@
  */
 package org.adamalang.runtime.sys.web;
 
-import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a web item persisted */

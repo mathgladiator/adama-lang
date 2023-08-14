@@ -8,7 +8,6 @@
  */
 package org.adamalang.runtime.sys.web;
 
-import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtMap;
@@ -33,6 +32,13 @@ public class WebDelete implements WebItem {
     this.parameters = parameters;
   }
 
+  @Override
+  public void writeAsObject(JsonStreamWriter writer) {
+    writer.beginObject();
+    injectWrite(writer);
+    writer.endObject();
+  }
+
   public void injectWrite(JsonStreamWriter writer) {
     writer.writeObjectFieldIntro("delete");
     writer.beginObject();
@@ -47,13 +53,6 @@ public class WebDelete implements WebItem {
     writer.endObject();
     writer.writeObjectFieldIntro("parameters");
     writer.writeNtDynamic(parameters);
-    writer.endObject();
-  }
-
-  @Override
-  public void writeAsObject(JsonStreamWriter writer) {
-    writer.beginObject();
-    injectWrite(writer);
     writer.endObject();
   }
 }

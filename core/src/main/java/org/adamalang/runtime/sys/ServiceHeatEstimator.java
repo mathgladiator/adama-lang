@@ -22,6 +22,7 @@ public class ServiceHeatEstimator implements Function<ArrayList<MeterReading>, B
   private final ConcurrentHashMap<String, Heat> heat;
   private final HeatVector low;
   private final HeatVector hot;
+
   public ServiceHeatEstimator(HeatVector low, HeatVector hot) {
     this.heat = new ConcurrentHashMap<>();
     this.low = low;

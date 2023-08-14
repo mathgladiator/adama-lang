@@ -13,8 +13,6 @@ import org.adamalang.runtime.sys.web.WebContext;
 import org.adamalang.runtime.sys.web.WebItem;
 
 public interface WebPartial {
-  public WebItem convert(WebContext context);
-
   /** load the web item from an object (most likely in a queue) */
   static WebPartial read(JsonStreamReader reader) {
     WebPartial result = null;
@@ -34,4 +32,6 @@ public interface WebPartial {
     }
     return result;
   }
+
+  WebItem convert(WebContext context);
 }
