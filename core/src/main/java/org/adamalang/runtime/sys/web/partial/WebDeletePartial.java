@@ -27,14 +27,6 @@ public class WebDeletePartial implements WebPartial {
     this.parameters = parameters;
   }
 
-  @Override
-  public WebItem convert(WebContext context) {
-    if (uri != null && headers != null && parameters != null) {
-      return new WebDelete(context, uri, headers, parameters);
-    }
-    return null;
-  }
-
   public static WebDeletePartial read(JsonStreamReader reader) {
     String uri = null;
     NtDynamic parameters = null;
@@ -68,6 +60,14 @@ public class WebDeletePartial implements WebPartial {
     }
 
     return new WebDeletePartial(uri, headers, parameters);
+  }
+
+  @Override
+  public WebItem convert(WebContext context) {
+    if (uri != null && headers != null && parameters != null) {
+      return new WebDelete(context, uri, headers, parameters);
+    }
+    return null;
   }
 
 }

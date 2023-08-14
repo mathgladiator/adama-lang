@@ -47,6 +47,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LivingDocument.class);
   public final DocumentMonitor __monitor;
   public final LivingDocument __self;
+  public final ReplicationEngine __replication;
   protected final RxInt32 __auto_future_id;
   protected final RxInt32 __auto_table_row_id;
   protected final RxInt32 __auto_gen;
@@ -69,6 +70,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final RxString __timezone;
   protected final RxInt32 __webTaskId;
   protected final WebQueue __webQueue;
+  protected final ArrayList<EphemeralWebGet> __gets;
   private final TreeMap<NtPrincipal, Integer> __clients;
   private final HashMap<NtPrincipal, ArrayList<PrivateView>> __trackedViews;
   private final HashMap<Integer, PrivateView> __viewsById;
@@ -90,8 +92,6 @@ public abstract class LivingDocument implements RxParent, Caller {
   private Deliverer __deliverer;
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
-  protected final ArrayList<EphemeralWebGet> __gets;
-  public final ReplicationEngine __replication;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -255,6 +255,8 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   protected abstract void __link(ServiceRegistry registry);
+
+  protected abstract void __bindReplication();
 
   protected abstract void __executeServiceCalls(boolean cancel);
 
@@ -459,8 +461,6 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
     return false;
   }
-
-
 
   public boolean __gotoViewState(String uri) {
     if (__currentViewId >= 0) {
@@ -671,8 +671,6 @@ public abstract class LivingDocument implements RxParent, Caller {
     __replication.load(reader);
   }
 
-  protected abstract void __bindReplication();
-
   protected RxInvalidate __setupReplication(String name, Service service, String method, Supplier<NtToDynamic> value) {
     return __replication.init(this, name, service, method, value);
   }
@@ -828,6 +826,15 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
+  public void __web_get(WebGet get, Callback<WebResponse> callback) {
+    DelayParent delay = new DelayParent();
+    RxCache cache = new RxCache(this, delay);
+    EphemeralWebGet eget = new EphemeralWebGet(cache, get, callback, delay);
+    if (!__execute_web_get(eget)) {
+      __gets.add(eget);
+    }
+  }
+
   private boolean __execute_web_get(EphemeralWebGet get) {
     try {
       __currentWebCache = get.cache;
@@ -839,15 +846,6 @@ public abstract class LivingDocument implements RxParent, Caller {
       return true;
     } catch (ComputeBlockedException cbe) {
       return false;
-    }
-  }
-
-  public void __web_get(WebGet get, Callback<WebResponse> callback) {
-    DelayParent delay = new DelayParent();
-    RxCache cache = new RxCache(this, delay);
-    EphemeralWebGet eget = new EphemeralWebGet(cache, get, callback, delay);
-    if (!__execute_web_get(eget)) {
-      __gets.add(eget);
     }
   }
 
