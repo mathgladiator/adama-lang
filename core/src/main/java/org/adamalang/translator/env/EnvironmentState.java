@@ -36,6 +36,7 @@ public class EnvironmentState {
   private boolean abortion;
   private boolean authorize;
   private boolean viewer;
+  private String inRecord;
 
   private EnvironmentState(final EnvironmentState prior) {
     autoId = prior.autoId;
@@ -62,6 +63,7 @@ public class EnvironmentState {
     abortion = prior.abortion;
     authorize = prior.authorize;
     viewer = prior.viewer;
+    inRecord = prior.inRecord;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -88,6 +90,7 @@ public class EnvironmentState {
     abortion = false;
     authorize = false;
     viewer = false;
+    inRecord = null;
   }
 
   public boolean hasNoCost() {
@@ -197,6 +200,13 @@ public class EnvironmentState {
     final var next = new EnvironmentState(this);
     next.isStatic = true;
     next.define = true;
+    return next;
+  }
+
+
+  public EnvironmentState scopeInRecord(String name) {
+    final var next = new EnvironmentState(this);
+    next.inRecord = name;
     return next;
   }
 

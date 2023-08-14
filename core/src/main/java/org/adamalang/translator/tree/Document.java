@@ -87,7 +87,7 @@ public class Document implements TopLevelDocumentHandler {
     autoClassId = 0;
     errorLists = new ArrayList<>();
     typeChecker = new TypeCheckerRoot();
-    root = new TyReactiveRecord(null, Token.WRAP("Root"), new StructureStorage(StorageSpecialization.Record, false, null));
+    root = new TyReactiveRecord(null, Token.WRAP("Root"), new StructureStorage(Token.WRAP("Root"), StorageSpecialization.Record, false, null));
     types = new LinkedHashMap<>();
     handlers = new ArrayList<>();
     transitions = new LinkedHashMap<>();
@@ -104,7 +104,7 @@ public class Document implements TopLevelDocumentHandler {
     functionTypes = new HashMap<>();
     functionsDefines = new HashSet<>();
     configs = new HashMap<>();
-    viewerType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__ViewerType"), new StructureStorage(StorageSpecialization.Message, true, null));
+    viewerType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__ViewerType"), new StructureStorage(Token.WRAP("Viewer"), StorageSpecialization.Message, true, null));
     types.put("__ViewerType", viewerType);
     webGet = new UriTable();
     webPut = new UriTable();

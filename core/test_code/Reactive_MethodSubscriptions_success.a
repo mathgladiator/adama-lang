@@ -1,0 +1,27 @@
+message JustStr {
+  string str;
+}
+
+record WeekPattern {
+  public bool monday;
+  public bool tuesday;
+  public bool wednesday;
+  public bool thursday;
+  public bool friday;
+  public bool saturday;
+  public bool sunday;
+
+  method summary() -> string readonly {
+    table<JustStr> tbl;
+    if (monday) { tbl <- {str:"Mo"};  }
+    if (tuesday) { tbl <- {str:"Tu"}; }
+    if (wednesday) {tbl <- {str:"Wed"}; }
+    if (thursday) { tbl <- {str:"Th"}; }
+    if (friday) { tbl <- {str:"Fr"}; }
+    if (saturday) { tbl <- {str:"Sa"}; }
+    if (sunday) { tbl <- {str:"Su"}; }
+    return (iterate tbl).str.join(", ");
+  }
+
+  public formula nice = summary();
+}

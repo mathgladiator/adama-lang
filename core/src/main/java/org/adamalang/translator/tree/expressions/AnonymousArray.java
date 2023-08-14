@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 
 /** an anonymous array of items [item1, item2, ..., itemN] */
 public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping {
-  private static final TyNativeMessage EMPTY_MESSAGE = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__EmptyMessageNoArgs_"), new StructureStorage(StorageSpecialization.Message, true, null));
+  private static final TyNativeMessage EMPTY_MESSAGE = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__EmptyMessageNoArgs_"), new StructureStorage(Token.WRAP("empty"), StorageSpecialization.Message, true, null));
   public final ArrayList<TokenizedItem<Expression>> elements;
   public Token closeBracketToken;
   public Token openBracketToken;

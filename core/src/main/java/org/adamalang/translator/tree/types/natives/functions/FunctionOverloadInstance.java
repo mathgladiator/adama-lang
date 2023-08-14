@@ -15,7 +15,9 @@ import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * a function overload instance is set of arguments bound to the same name such that the types of
@@ -24,6 +26,8 @@ import java.util.LinkedHashSet;
 public class FunctionOverloadInstance extends DocumentPosition {
   public final ArrayList<String> hiddenSuffixArgs;
   public final LinkedHashSet<String> dependencies;
+  public final AtomicReference<String> withinRecord;
+  public final LinkedHashSet<String> recordDependencies;
   public final String javaFunction;
   public final boolean pure;
   public final TyType returnType;
@@ -45,12 +49,8 @@ public class FunctionOverloadInstance extends DocumentPosition {
     if (this.viewer) {
       hiddenSuffixArgs.add("__viewer");
     }
-  }
-
-  public void dependOn(Collection<String> depends) {
-    for (String depend : depends) {
-      this.dependencies.add(depend);
-    }
+    this.recordDependencies = new LinkedHashSet<>();
+    this.withinRecord = new AtomicReference<>("n/a");
   }
 
   public static ArrayList<FunctionOverloadInstance> WRAP(final FunctionOverloadInstance foi) {
