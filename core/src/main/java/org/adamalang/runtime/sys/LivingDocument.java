@@ -90,6 +90,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
   protected final ArrayList<EphemeralWebGet> __gets;
+  private final ReplicationEngine __replication;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -140,6 +141,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __webQueue = new WebQueue(__webTaskId);
     __currentWebCache = null;
     __gets = new ArrayList<>();
+    __replication = new ReplicationEngine();
   }
 
   /** exposed: get the document's timestamp as a date */
@@ -248,6 +250,8 @@ public abstract class LivingDocument implements RxParent, Caller {
     this.__key = key;
     this.__deliverer = deliverer;
     __link(registry);
+
+    // TODO: check replication
   }
 
   protected abstract void __link(ServiceRegistry registry);
@@ -653,6 +657,21 @@ public abstract class LivingDocument implements RxParent, Caller {
         } else {
           __dedupe.remove(key);
         }
+      }
+    }
+  }
+
+  protected void __dumpReplicationEngine(final JsonStreamWriter writer) {
+    writer.writeObjectFieldIntro("__replication");
+    writer.beginObject();
+    writer.endObject();
+  }
+
+  protected void __hydrateReplicationEngine(final JsonStreamReader reader) {
+    if (reader.startObject()) {
+      while (reader.notEndOfObject()) {
+        String name = reader.fieldName();
+        reader.skipValue();
       }
     }
   }
