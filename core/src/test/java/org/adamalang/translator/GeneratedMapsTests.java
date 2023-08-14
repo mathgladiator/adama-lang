@@ -102,7 +102,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    count = new RxInt32(this, 0);");
     gold.append("\n    count_after_delete = new RxInt32(this, 0);");
     gold.append("\n    rv = new RxInt32(this, 0);");
-    gold.append("\n    zoop = new RxLazy<NtMap<Integer,Integer>>(this, () -> (__FUNC_0_x()));");
+    gold.append("\n    zoop = new RxLazy<NtMap<Integer,Integer>>(this, () -> (NtMap<Integer,Integer>)(__FUNC_0_x()));");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -1783,7 +1783,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  public PairUsage_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    z_s = new RxInt32(this, 0);");
-    gold.append("\n    x = new RxLazy<RTxM>(this, () -> (__FUNC_0_foo()));");
+    gold.append("\n    x = new RxLazy<RTxM>(this, () -> (RTxM)(__FUNC_0_foo()));");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

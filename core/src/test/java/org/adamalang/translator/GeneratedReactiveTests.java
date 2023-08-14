@@ -98,8 +98,8 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RTxX(this);");
     gold.append("\n    y = new RTxY(this);");
-    gold.append("\n    val_sum = new RxLazy<Integer>(this, () -> (x.val.get() + y.val.get()));");
-    gold.append("\n    val_sum2 = new RxLazy<Integer>(this, () -> (x.z1.get() + y.z2.get()));");
+    gold.append("\n    val_sum = new RxLazy<Integer>(this, () -> (Integer)(x.val.get() + y.val.get()));");
+    gold.append("\n    val_sum2 = new RxLazy<Integer>(this, () -> (Integer)(x.z1.get() + y.z2.get()));");
     gold.append("\n    x.__link();");
     gold.append("\n    y.__link();");
     gold.append("\n    x.__subscribe(val_sum);");
@@ -535,7 +535,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n      this.__this = this;");
     gold.append("\n      val = new RxInt32(this, 0);");
     gold.append("\n      id = new RxInt32(this, 0);");
-    gold.append("\n      z1 = new RxLazy<Integer>(this, () -> (y.val.get()));");
+    gold.append("\n      z1 = new RxLazy<Integer>(this, () -> (Integer)(y.val.get()));");
     gold.append("\n      z1.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -726,7 +726,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n      this.__this = this;");
     gold.append("\n      val = new RxInt32(this, 0);");
     gold.append("\n      id = new RxInt32(this, 0);");
-    gold.append("\n      z2 = new RxLazy<Integer>(this, () -> (x.val.get()));");
+    gold.append("\n      z2 = new RxLazy<Integer>(this, () -> (Integer)(x.val.get()));");
     gold.append("\n      z2.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -1139,9 +1139,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n  public ReorderTyping_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 0);");
-    gold.append("\n    y = new RxLazy<Integer>(this, () -> (x.get() + 1));");
-    gold.append("\n    z = new RxLazy<Integer>(this, () -> (y.get() + 2));");
-    gold.append("\n    w = new RxLazy<Integer>(this, () -> (z.get() + y.get()));");
+    gold.append("\n    y = new RxLazy<Integer>(this, () -> (Integer)(x.get() + 1));");
+    gold.append("\n    z = new RxLazy<Integer>(this, () -> (Integer)(y.get() + 2));");
+    gold.append("\n    w = new RxLazy<Integer>(this, () -> (Integer)(z.get() + y.get()));");
     gold.append("\n    x.__subscribe(y);");
     gold.append("\n    y.__subscribe(z);");
     gold.append("\n    z.__subscribe(w);");

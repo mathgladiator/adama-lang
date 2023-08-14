@@ -1700,7 +1700,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  public DeleteOnList_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
-    gold.append("\n    even = new RxLazy<NtList<RTxR>>(this, () -> (t.iterate(false).where(true, new __CLOSURE_WhereClause0())));");
+    gold.append("\n    even = new RxLazy<NtList<RTxR>>(this, () -> (NtList<RTxR>)(t.iterate(false).where(true, new __CLOSURE_WhereClause0())));");
     gold.append("\n    t.__subscribe(even);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -3299,7 +3299,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      super(__owner);");
     gold.append("\n      this.__this = this;");
     gold.append("\n      u = new RxInt32(this, 0);");
-    gold.append("\n      v = new RxLazy<Integer>(this, () -> (u.get() * u.get()));");
+    gold.append("\n      v = new RxLazy<Integer>(this, () -> (Integer)(u.get() * u.get()));");
     gold.append("\n      v.__subscribe(this);");
     gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      if (__owner instanceof RxTable) {");
@@ -3493,7 +3493,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      this.__this = this;");
     gold.append("\n      x = new RxInt32(this, 0);");
     gold.append("\n      y = new RxInt32(this, 0);");
-    gold.append("\n      z = new RxLazy<Integer>(this, () -> (x.get() + y.get()));");
+    gold.append("\n      z = new RxLazy<Integer>(this, () -> (Integer)(x.get() + y.get()));");
     gold.append("\n      z.__subscribe(this);");
     gold.append("\n      w = new RTxY(this);");
     gold.append("\n      id = new RxInt32(this, 0);");
@@ -6938,8 +6938,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    x = new RTxX(this);");
     gold.append("\n    owners_money = new RxDouble(this, 0.0);");
     gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
-    gold.append("\n    listz = new RxLazy<NtList<RTxX>>(this, () -> (tbl.iterate(false).where(true, new __CLOSURE_WhereClause0())));");
-    gold.append("\n    listz2 = new RxLazy<NtList<RTxX>>(this, () -> (tbl.iterate(true)));");
+    gold.append("\n    listz = new RxLazy<NtList<RTxX>>(this, () -> (NtList<RTxX>)(tbl.iterate(false).where(true, new __CLOSURE_WhereClause0())));");
+    gold.append("\n    listz2 = new RxLazy<NtList<RTxX>>(this, () -> (NtList<RTxX>)(tbl.iterate(true)));");
     gold.append("\n    y = new RTxY(this);");
     gold.append("\n    z = new RTxZ(this);");
     gold.append("\n    x.__link();");
@@ -7699,7 +7699,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      this.__this = this;");
     gold.append("\n      x = new RxInt32(this, 0);");
     gold.append("\n      y = new RxInt32(this, 0);");
-    gold.append("\n      sum = new RxLazy<Integer>(this, () -> (x.get() + 1));");
+    gold.append("\n      sum = new RxLazy<Integer>(this, () -> (Integer)(x.get() + 1));");
     gold.append("\n      sum.__subscribe(this);");
     gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      if (__owner instanceof RxTable) {");

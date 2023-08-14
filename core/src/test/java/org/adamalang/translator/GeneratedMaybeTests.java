@@ -1358,9 +1358,9 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n  public IntEqualityRegression_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
-    gold.append("\n    all = new RxLazy<NtList<RTxR>>(this, () -> (tbl.iterate(true)));");
-    gold.append("\n    v1 = new RxLazy<NtList<RTxR>>(this, () -> (tbl.iterate(false).where(true, new __CLOSURE_WhereClause0())));");
-    gold.append("\n    v2 = new RxLazy<NtList<RTxR>>(this, () -> (tbl.iterate(false).where(true, new __CLOSURE_WhereClause1())));");
+    gold.append("\n    all = new RxLazy<NtList<RTxR>>(this, () -> (NtList<RTxR>)(tbl.iterate(true)));");
+    gold.append("\n    v1 = new RxLazy<NtList<RTxR>>(this, () -> (NtList<RTxR>)(tbl.iterate(false).where(true, new __CLOSURE_WhereClause0())));");
+    gold.append("\n    v2 = new RxLazy<NtList<RTxR>>(this, () -> (NtList<RTxR>)(tbl.iterate(false).where(true, new __CLOSURE_WhereClause1())));");
     gold.append("\n    tbl.__subscribe(all);");
     gold.append("\n    tbl.__subscribe(v1);");
     gold.append("\n    tbl.__subscribe(v2);");
@@ -2366,7 +2366,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    r = new RxMaybe<>(this, (RxParent __parent) -> new RTxR(__parent).__link());");
     gold.append("\n    hey = new RxInt32(this, 0);");
-    gold.append("\n    rx = new RxLazy<NtMaybe<Integer>>(this, () -> (r.get().unpack((item) -> ((RTxR) item).x.get())));");
+    gold.append("\n    rx = new RxLazy<NtMaybe<Integer>>(this, () -> (NtMaybe<Integer>)(r.get().unpack((item) -> ((RTxR) item).x.get())));");
     gold.append("\n    r.__subscribe(rx);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
