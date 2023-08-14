@@ -611,6 +611,7 @@ public class Parser {
     Token open = consumeExpectedSymbol("{");
     ArrayList<DefineService.ServiceAspect> aspects = new ArrayList<>();
     ArrayList<DefineService.ServiceMethod> methods = new ArrayList<>();
+    ArrayList<DefineService.ServiceReplication> replications = new ArrayList<>();
     ArrayList<Consumer<Consumer<Token>>> emissions = new ArrayList<>();
     var nextOrClose = tokens.pop();
     while (!nextOrClose.isSymbolWithTextEq("}")) {
@@ -618,7 +619,17 @@ public class Parser {
         throw new ParseException("Service was expecting an identifier", tokens.getLastTokenIfAvailable());
       }
 
-      if (nextOrClose.isIdentifier("method")) {
+      if (nextOrClose.isIdentifier("replication")) {
+        Token pairOpen = consumeExpectedSymbol("<");
+        Token inputTypeName = id();
+        Token pairClose = consumeExpectedSymbol(">");
+        Token methodName = id();
+        Token semicolon = consumeExpectedSymbol(";");
+        DefineService.ServiceReplication replication = new DefineService.ServiceReplication(nextOrClose, pairOpen, inputTypeName, pairClose, methodName, semicolon);
+        replications.add(replication);
+        emissions.add((y) -> replication.emit(y));
+
+      } else if (nextOrClose.isIdentifier("method")) {
         Token secured = tokens.popIf((t) -> t.isIdentifier("secured"));
         Token pairOpen = consumeExpectedSymbol("<");
         Token inputTypeName = id();
@@ -641,7 +652,7 @@ public class Parser {
       }
       nextOrClose = tokens.pop();
     }
-    DefineService ds = new DefineService(serviceToken, name, open, aspects, methods, nextOrClose, emissions);
+    DefineService ds = new DefineService(serviceToken, name, open, aspects, methods, replications, nextOrClose, emissions);
     return (doc) -> doc.add(ds);
   }
 
@@ -1077,11 +1088,8 @@ public class Parser {
           case "method":
             storage.add(define_method_trailer(op));
             break;
-          case "replication":
-            storage.add(define_replication(op));
-            break;
         }
-        op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "replication"));
+        op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index"));
       }
       op = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
       if (op != null) {

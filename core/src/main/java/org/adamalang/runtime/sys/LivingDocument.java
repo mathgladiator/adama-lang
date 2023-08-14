@@ -40,6 +40,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.function.Supplier;
 
 /** The central class for a living document (i.e. a tiny VM) */
 public abstract class LivingDocument implements RxParent, Caller {
@@ -663,17 +664,18 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   protected void __dumpReplicationEngine(final JsonStreamWriter writer) {
     writer.writeObjectFieldIntro("__replication");
-    writer.beginObject();
-    writer.endObject();
+    __replication.dump(writer);
   }
 
   protected void __hydrateReplicationEngine(final JsonStreamReader reader) {
-    if (reader.startObject()) {
-      while (reader.notEndOfObject()) {
-        String name = reader.fieldName();
-        reader.skipValue();
-      }
-    }
+    __replication.load(reader);
+  }
+
+  protected abstract void __bindReplication();
+
+  protected RxInvalidate __setupReplication(String name, String service, String method, Supplier<NtMessageBase> value) {
+    RxInvalidate invalidate = new RxInvalidate();
+    return invalidate;
   }
 
   protected void __hydrateClients(final JsonStreamReader reader) {

@@ -8,12 +8,17 @@
  */
 package org.adamalang.translator.tree.types.structures;
 
+import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
-import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.definitions.DefineService;
 import org.adamalang.translator.tree.expressions.Expression;
-import org.adamalang.translator.tree.types.topo.TypeChecker;
-import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
+import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetIngestion;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMessages;
+import org.adamalang.translator.tree.types.natives.TyNativeDynamic;
 
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
@@ -21,9 +26,9 @@ import java.util.function.Consumer;
 public class ReplicationDefinition extends StructureComponent  {
   private final Token replication;
   private final Token open;
-  private final Token service;
+  public final Token service;
   private final Token split;
-  private final Token method;
+  public final Token method;
   private final Token close;
   public final Token name;
   private final Token equals;
@@ -63,7 +68,29 @@ public class ReplicationDefinition extends StructureComponent  {
     yielder.accept(end);
   }
 
-  public void typing(final Environment environment) {
-    // TODO
+  public void typing(Environment prior) {
+    Environment env = prior.scopeWithComputeContext(ComputeContext.Computation);
+    DefineService definition = env.document.services.get(service.text);
+    if (definition == null) {
+      env.document.createError(ReplicationDefinition.this, "The service '" + service.text + "' was not found for replication at '" + name.text + "'");
+      return;
+    }
+    DefineService.ServiceReplication replication = definition.replicationsMap.get(method.text);
+    if (replication == null) {
+      env.document.createError(ReplicationDefinition.this, "The service '" + service.text + "' was had no replication for '" + method.text + "'");
+      return;
+    }
+    if ("dynamic".equals(replication.inputTypeName.text)) {
+      TyType type = expression.typing(env, new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, null));
+      RuleSetCommon.IsDynamic(env, type, false);
+    } else {
+      TyType expectedType = env.document.types.get(replication.inputTypeName.text);
+      if (RuleSetMessages.IsNativeMessage(env, expectedType, false)) {
+        TyType type = env.rules.Resolve(expression.typing(env, expectedType), false);
+        if (RuleSetMessages.IsNativeMessage(env, type, false)) {
+          RuleSetIngestion.CanAIngestB(env, expectedType, type, false);
+        }
+      }
+    }
   }
 }

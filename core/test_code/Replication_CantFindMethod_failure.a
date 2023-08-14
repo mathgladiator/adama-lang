@@ -1,0 +1,12 @@
+message SyncRequest {
+  int x;
+}
+
+service sms {
+  internal = "twilio.com";
+
+  replication<SyncRequest> wwaaaa;
+}
+
+
+replication<sms:m> foo = {x:123};
