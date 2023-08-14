@@ -838,6 +838,13 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
     gold.append("\n    public RTxWeekPattern __link() {");
+    gold.append("\n      monday.__subscribe(nice);");
+    gold.append("\n      tuesday.__subscribe(nice);");
+    gold.append("\n      wednesday.__subscribe(nice);");
+    gold.append("\n      thursday.__subscribe(nice);");
+    gold.append("\n      friday.__subscribe(nice);");
+    gold.append("\n      saturday.__subscribe(nice);");
+    gold.append("\n      sunday.__subscribe(nice);");
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");

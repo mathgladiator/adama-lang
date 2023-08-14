@@ -210,6 +210,13 @@ public class EnvironmentState {
     return next;
   }
 
+  public boolean shouldDumpRecordMethodSubscriptions(String recordName) {
+    if (recordName != null) {
+      return recordName.equals(inRecord);
+    }
+    return false;
+  }
+
   public EnvironmentState scopePolicy() {
     final var next = new EnvironmentState(this);
     next.isPolicy = true;
