@@ -13,16 +13,19 @@ import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtToDynamic;
+import org.adamalang.runtime.sys.LivingDocument;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public class ReplicationEngine implements DeleteTask  {
+  private final LivingDocument parent;
   private final HashMap<String, ReplicationStateMachine> machines;
   private final HashMap<String, ReplicationStatus> status;
 
-  public ReplicationEngine() {
+  public ReplicationEngine(LivingDocument parent) {
+    this.parent = parent;
     this.machines = new HashMap<>();
     this.status = new HashMap<>();
   }
@@ -30,13 +33,13 @@ public class ReplicationEngine implements DeleteTask  {
   protected ReplicationStatus getOrCreateStatus(String name) {
     ReplicationStatus value = status.get(name);
     if (value == null) {
-      value = new ReplicationStatus();
+      value = new ReplicationStatus(parent);
       status.put(name, value);
     }
     return value;
   }
 
-  public RxInvalidate init(Caller caller, String name, Service service, String method, Supplier<NtToDynamic> supplier) {
+  public RxInvalidate init(Caller caller, String name, SimpleService service, String method, Supplier<NtToDynamic> supplier) {
     ReplicationStateMachine sm = new ReplicationStateMachine(caller, name, service, method, supplier, getOrCreateStatus(name));
     machines.put(name, sm);
     return sm.invalidated;
