@@ -1,0 +1,7 @@
+enum X { A, B, C };
+
+maybe<X> x;
+
+record R {
+  maybe<X> y;
+}
