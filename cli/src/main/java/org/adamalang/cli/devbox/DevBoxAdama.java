@@ -241,7 +241,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
             stream.ref.update(viewerState.toString());
             responder.complete();
           }
-        }, 5000);
+        }, 1000);
       } else {
         stream.ref.update(viewerState.toString());
         responder.complete();

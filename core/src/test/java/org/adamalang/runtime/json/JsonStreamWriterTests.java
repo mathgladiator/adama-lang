@@ -484,10 +484,24 @@ public class JsonStreamWriterTests {
   }
 
   @Test
-  public void writeTime() {
+  public void writeTime1() {
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.writeNtTime(new NtTime(14, 37));
     Assert.assertEquals("\"14:37\"", writer.toString());
+  }
+
+  @Test
+  public void writeTime2() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.writeNtTime(new NtTime(2, 37));
+    Assert.assertEquals("\"02:37\"", writer.toString());
+  }
+
+  @Test
+  public void writeTime3() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.writeNtTime(new NtTime(2, 1));
+    Assert.assertEquals("\"02:01\"", writer.toString());
   }
 
   @Test
