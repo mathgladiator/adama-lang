@@ -193,6 +193,9 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n          case \"__timeouts\":");
     gold.append("\n            __hydrateTimeouts(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__replication\":");
+    gold.append("\n            __hydrateReplicationEngine(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -286,6 +289,9 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n          case \"__timeouts\":");
     gold.append("\n            __hydrateTimeouts(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__replication\":");
+    gold.append("\n            __hydrateReplicationEngine(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -344,6 +350,7 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n    __dumpMessages(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
+    gold.append("\n    __dumpReplicationEngine(__writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -762,10 +769,10 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:1966");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"r0\":2,\"r1\":\"7\",\"r2\":17.0,\"r3\":{\"r\":7.5,\"i\":2.0},\"rS\":\"123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{}}");
+    gold.append("\n{\"r0\":2,\"r1\":\"7\",\"r2\":17.0,\"r3\":{\"r\":7.5,\"i\":2.0},\"rS\":\"123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"r0\":2,\"r1\":\"7\",\"r2\":17.0,\"r3\":{\"r\":7.5,\"i\":2.0},\"rS\":\"123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{}}");
-    gold.append("\n{\"r0\":2,\"r1\":\"7\",\"r2\":17.0,\"r3\":{\"r\":7.5,\"i\":2.0},\"rS\":\"123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{}}");
+    gold.append("\n{\"r0\":2,\"r1\":\"7\",\"r2\":17.0,\"r3\":{\"r\":7.5,\"i\":2.0},\"rS\":\"123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
+    gold.append("\n{\"r0\":2,\"r1\":\"7\",\"r2\":17.0,\"r3\":{\"r\":7.5,\"i\":2.0},\"rS\":\"123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i123.51.0 2.0imaybe?true7.0 2.0i\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -1691,6 +1698,9 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n          case \"__timeouts\":");
     gold.append("\n            __hydrateTimeouts(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__replication\":");
+    gold.append("\n            __hydrateReplicationEngine(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -1769,6 +1779,9 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n          case \"__timeouts\":");
     gold.append("\n            __hydrateTimeouts(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__replication\":");
+    gold.append("\n            __hydrateReplicationEngine(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -1817,6 +1830,7 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n    __dumpMessages(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
+    gold.append("\n    __dumpReplicationEngine(__writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -5303,10 +5317,10 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:36086");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{}}");
+    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{}}");
-    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{}}");
+    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
+    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -5470,6 +5484,9 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n          case \"__timeouts\":");
     gold.append("\n            __hydrateTimeouts(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__replication\":");
+    gold.append("\n            __hydrateReplicationEngine(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -5551,6 +5568,9 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n          case \"__timeouts\":");
     gold.append("\n            __hydrateTimeouts(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__replication\":");
+    gold.append("\n            __hydrateReplicationEngine(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          default:");
     gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
@@ -5601,6 +5621,7 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n    __dumpMessages(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
+    gold.append("\n    __dumpReplicationEngine(__writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -6351,10 +6372,10 @@ public class GeneratedOperationsAdditionTests extends GeneratedBase {
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
     gold.append("\nMEMORY:1588");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"tbl\":{\"1\":{\"r0\":2,\"r1\":\"4\",\"r2\":6.3,\"r3\":{\"r\":4.0,\"i\":3.0},\"rS\":\"111.01.0 2.0itruex\",\"id\":1},\"2\":{\"r0\":3,\"r1\":\"5\",\"r2\":7.4,\"r3\":{\"r\":4.0,\"i\":4.0},\"rS\":\"S111.01.0 2.0itruex\",\"id\":2}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":2,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"r0\":2,\"r1\":\"4\",\"r2\":6.3,\"r3\":{\"r\":4.0,\"i\":3.0},\"rS\":\"111.01.0 2.0itruex\",\"id\":1},\"2\":{\"r0\":3,\"r1\":\"5\",\"r2\":7.4,\"r3\":{\"r\":4.0,\"i\":4.0},\"rS\":\"S111.01.0 2.0itruex\",\"id\":2}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":2,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"tbl\":{\"1\":{\"r0\":2,\"r1\":\"4\",\"r2\":6.3,\"r3\":{\"r\":4.0,\"i\":3.0},\"rS\":\"111.01.0 2.0itruex\",\"id\":1},\"2\":{\"r0\":3,\"r1\":\"5\",\"r2\":7.4,\"r3\":{\"r\":4.0,\"i\":4.0},\"rS\":\"S111.01.0 2.0itruex\",\"id\":2}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":2,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{}}");
-    gold.append("\n{\"tbl\":{\"1\":{\"r0\":2,\"r1\":\"4\",\"r2\":6.3,\"r3\":{\"r\":4.0,\"i\":3.0},\"rS\":\"111.01.0 2.0itruex\",\"id\":1},\"2\":{\"r0\":3,\"r1\":\"5\",\"r2\":7.4,\"r3\":{\"r\":4.0,\"i\":4.0},\"rS\":\"S111.01.0 2.0itruex\",\"id\":2}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":2,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"r0\":2,\"r1\":\"4\",\"r2\":6.3,\"r3\":{\"r\":4.0,\"i\":3.0},\"rS\":\"111.01.0 2.0itruex\",\"id\":1},\"2\":{\"r0\":3,\"r1\":\"5\",\"r2\":7.4,\"r3\":{\"r\":4.0,\"i\":4.0},\"rS\":\"S111.01.0 2.0itruex\",\"id\":2}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":2,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
+    gold.append("\n{\"tbl\":{\"1\":{\"r0\":2,\"r1\":\"4\",\"r2\":6.3,\"r3\":{\"r\":4.0,\"i\":3.0},\"rS\":\"111.01.0 2.0itruex\",\"id\":1},\"2\":{\"r0\":3,\"r1\":\"5\",\"r2\":7.4,\"r3\":{\"r\":4.0,\"i\":4.0},\"rS\":\"S111.01.0 2.0itruex\",\"id\":2}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":2,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
