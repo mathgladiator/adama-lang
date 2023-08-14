@@ -1616,6 +1616,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
     gold.append("\n    public RTxR2 __link() {");
+    gold.append("\n      score.__subscribe(ds);");
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");

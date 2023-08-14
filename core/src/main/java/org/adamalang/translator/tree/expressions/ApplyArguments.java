@@ -110,6 +110,11 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       for (String depend : functionInstance.dependencies) {
         environmentToUse.lookup(depend, true, this, true);
       }
+      if (environmentToUse.state.shouldDumpRecordMethodSubscriptions(functionInstance.withinRecord.get())) {
+        for (String dependR : functionInstance.recordDependencies) {
+          environmentToUse.lookup(dependR, true, this, true);
+        }
+      }
       if (environmentToUse.state.isPure() && !functionInstance.pure) {
         environmentToUse.document.createError(expression, String.format("Pure functions can only call other pure functions"));
       }

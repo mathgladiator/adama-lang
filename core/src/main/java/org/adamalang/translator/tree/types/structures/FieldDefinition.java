@@ -129,8 +129,16 @@ public class FieldDefinition extends StructureComponent {
     return false;
   }
 
+  private Environment envOf(Environment priorEnv, final StructureStorage owningStructureStorage) {
+    Environment env = priorEnv.scopeWithComputeContext(ComputeContext.Computation);
+    if (owningStructureStorage.specialization == StorageSpecialization.Record) {
+      env = env.scopeRecord(owningStructureStorage.name.text);
+    }
+    return env;
+  }
+
   public void typing(final Environment priorEnv, final StructureStorage owningStructureStorage) {
-    final var environment = priorEnv.scopeWithComputeContext(ComputeContext.Computation);
+    final var environment = envOf(priorEnv, owningStructureStorage);
     if (policy != null) {
       policy.typing(environment, owningStructureStorage);
     }
