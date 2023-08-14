@@ -845,8 +845,9 @@ public abstract class LivingDocument implements RxParent, Caller {
   public void __web_get(WebGet get, Callback<WebResponse> callback) {
     DelayParent delay = new DelayParent();
     RxCache cache = new RxCache(this, delay);
-    if (!__execute_web_get(new EphemeralWebGet(cache, get, callback, delay))) {
-
+    EphemeralWebGet eget = new EphemeralWebGet(cache, get, callback, delay);
+    if (!__execute_web_get(eget)) {
+      __gets.add(eget);
     }
   }
 
