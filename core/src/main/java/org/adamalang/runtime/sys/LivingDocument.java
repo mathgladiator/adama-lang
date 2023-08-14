@@ -478,9 +478,24 @@ public abstract class LivingDocument implements RxParent, Caller {
     return false;
   }
 
+  private class BroadcastTask {
+    public NtPrincipal who;
+    private PrivateView pv;
+
+    public BroadcastTask(NtPrincipal who, PrivateView pv) {
+      this.who = who;
+      this.pv = pv;
+    }
+
+    public LivingDocumentChange.Broadcast convert() {
+      return __buildBroadcast(who, pv);
+    }
+  }
+
   /** internal: we compute per client */
   private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastList() {
-    ArrayList<LivingDocumentChange.Broadcast> broadcasts = new ArrayList<>(__trackedViews.size());
+    // build a broadcast task list
+    ArrayList<BroadcastTask> tasks = new ArrayList<>(__trackedViews.size());
     final var itTrackedViews = __trackedViews.entrySet().iterator();
     while (itTrackedViews.hasNext()) {
       final var entryTrackedView = itTrackedViews.next();
@@ -488,9 +503,14 @@ public abstract class LivingDocument implements RxParent, Caller {
       while (itView.hasNext()) {
         final var pv = itView.next();
         if (pv.isAlive()) {
-          broadcasts.add(__buildBroadcast(entryTrackedView.getKey(), pv));
+          tasks.add(new BroadcastTask(entryTrackedView.getKey(), pv));
         }
       }
+    }
+    // convert the tasks to broadcasts
+    ArrayList<LivingDocumentChange.Broadcast> broadcasts = new ArrayList<>(tasks.size());
+    for (BroadcastTask task : tasks) {
+      broadcasts.add(task.convert());
     }
     return broadcasts;
   }
