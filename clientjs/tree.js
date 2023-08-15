@@ -15,7 +15,7 @@ function AdamaTree() {
     } else if (typeof (obj) == "object") {
       var next = {};
       for (key in obj) {
-        if (key[0] == "#" || key == "__key" || key == "@o") continue;
+        if (key[0] == "#" || key == "__key" || key == "@o" || key == "@s") continue;
         next[key] = clone_object(obj[key]);
       }
       return next;
@@ -276,7 +276,7 @@ function AdamaTree() {
               var after = [];
               var msg = [];
               for (var k = 0; k < resize; k++) { // we rebuild the array
-                after[k] = before[k];
+                after[k] = eBase["" + k];
                 msg.push("" + k);
               }
               delayOrder.push(function () {
