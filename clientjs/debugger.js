@@ -267,7 +267,6 @@ Adama.Debugger = (function() {
     return {dom: unknown, update: function() {}};
   };
 
-
   var render = function(name) {
     var co = connections[name];
     if (co.rendered == co.bound) {
@@ -334,7 +333,7 @@ Adama.Debugger = (function() {
 
       debuggerPosition = localStorage.getItem("AdamaDebuggerPosition");
       if (!debuggerPosition || debuggerPosition == "") {
-        debuggerPosition = "top:0px; left:0px;width:640px;height:480px";
+        debuggerPosition = "top:0px; left:0px;width:800px;height:600px";
       }
       self.root.style = "position:absolute;" + debuggerPosition + ";background: #000;border:1px solid red;z-index:1000; overflow:scroll";
       var titleBar = document.createElement("div");
@@ -343,18 +342,18 @@ Adama.Debugger = (function() {
       titleBar.onmousedown = function(ev) {
         ev.preventDefault();
         var rect = self.root.getBoundingClientRect();
-        var start = {x: ev.clientX, y: ev.clientY};TR
+        var start = {x: ev.clientX, y: ev.clientY};
         var update = function(nx) {
           self.root.style.left = (rect.left + nx.clientX - start.x) + "px";
           self.root.style.top = (rect.top + nx.clientY - start.y) + "px";
         };
         window.onmousemove = function(nx) {
           update(nx);
-          localStorage.setItem("AdamaDebuggerPosition", "top:"+self.root.style.top+"; left:"+self.root.style.left+";width:640px;height:480px");
+          localStorage.setItem("AdamaDebuggerPosition", "top:"+self.root.style.top+"; left:"+self.root.style.left+";width:800px;height:600px");
         };
         window.onmouseup = function(nx) {
           update(nx);
-          localStorage.setItem("AdamaDebuggerPosition", "top:"+self.root.style.top+"; left:"+self.root.style.left+";width:640px;height:480px");
+          localStorage.setItem("AdamaDebuggerPosition", "top:"+self.root.style.top+"; left:"+self.root.style.left+";width:800px;height:600px");
           window.onmousemove = function() {};
           window.onmouseup = function() {};
         };
