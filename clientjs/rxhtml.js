@@ -1154,7 +1154,7 @@ var RxHTML = (function () {
       }
       apply(nextObject);
     } else if (isInputBox) {
-      var type = ("type" in el) ? el.type.toUpperCase() : "text";
+      var type = ("type" in el) ? el.type.toUpperCase() : "TEXT";
       if (type == "SUBMIT" || type == "RESET") return;
       if (type == "PASSWORD" && !allow_passwords) {
         return;
@@ -2017,6 +2017,63 @@ var RxHTML = (function () {
           fire_failure(form, "Failed InitCompleteAccount:" + reason);
         }
       });
+    };
+  };
+
+
+  var hydrate_form = function(el, input) {
+    var tag = el.tagName.toUpperCase();
+    var isSettable = tag == "SELECT" || tag == "INPUT" || tag == "HIDDEN";
+    if ('name' in el && isSettable) {
+      var name = el.name;
+      var payload = input;
+      var kDot = name.indexOf('.');
+      while (kDot > 0) {
+        var item = name.substring(0, kDot);
+        name = name.substring(kDot + 1);
+        if (item in payload) {
+          payload = payload[item];
+        } else {
+          return;
+        }
+        kDot = name.indexOf('.');
+      }
+      if (name in payload) {
+        var type = el.type.toUpperCase();
+        if (type == "CHECKBOX") {
+          el.checked = payload[name] == "true" || payload[name] === true ? true : false;
+        } else if (type == "RADIO") {
+          if (payload[name] == el.value) {
+            el.checked = true;
+          }
+        } else {
+          el.value = payload[name];
+        }
+      }
+    }
+    if ("children" in el) {
+      var arr = el.children;
+      var n = arr.length;
+      for (var k = 0; k < n; k++) {
+        var ch = el.children[k];
+        hydrate_form(ch, input);
+      }
+    }
+  }
+
+
+  // RUNTIME | rx:action:copy-form:$target-id
+  self.aCF = function(form, targetFormId) {
+    form.onsubmit = function(evt) {
+      evt.preventDefault();
+      var input = get_form(form, false);
+      var target = document.getElementById(targetFormId);
+      if (target) {
+        hydrate_form(target, input);
+        fire_success(form)
+      } else {
+        fire_failure(form, "failed to find form by id '" + targetFormId + "'");
+      }
     };
   };
 
