@@ -48,7 +48,7 @@ public class CoreStream implements AdamaStream {
       @Override
       public void execute() throws Exception {
         inventory.message();
-        view.ingest(patch);
+        view.ingestViewUpdate(patch);
         document.invalidate(Callback.DONT_CARE_INTEGER);
         // TODO: for efficiency sake, we can recompute just the view. However, it does require no patch being inflight to not leak data.
       }
@@ -67,7 +67,7 @@ public class CoreStream implements AdamaStream {
       @Override
       public void execute() throws Exception {
         inventory.message();
-        document.send(context, view.viewId, marker, channel, message, callback);
+        document.send(context, view.getViewId(), marker, channel, message, callback);
       }
     });
   }

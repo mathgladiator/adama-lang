@@ -356,6 +356,9 @@ public abstract class LivingDocument implements RxParent, Caller {
         // create a new view within the usurping document
         PrivateView usurper = usurpingDocument.__createView(existing.getKey(), pv.perspective, pv.assetIdEncoder);
         // the usuper takes over the current view
+        JsonStreamWriter priorView = new JsonStreamWriter();
+        pv.dumpViewer(priorView);
+        usurper.ingestViewUpdate(new JsonStreamReader(priorView.toString()));
         pv.usurp(usurper);
       }
     }
@@ -371,7 +374,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       viewsForWho = new ArrayList<>();
       __trackedViews.put(__who, viewsForWho);
     }
-    __viewsById.put(view.viewId, view);
+    __viewsById.put(view.getViewId(), view);
     viewsForWho.add(view);
     return view;
   }
@@ -575,7 +578,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         if (pv.isAlive()) {
           count++;
         } else {
-          __viewsById.remove(pv.viewId);
+          __viewsById.remove(pv.getViewId());
           it.remove();
         }
       }

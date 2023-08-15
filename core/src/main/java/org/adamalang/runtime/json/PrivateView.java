@@ -18,7 +18,7 @@ public abstract class PrivateView {
   public final Perspective perspective;
   public final NtPrincipal who;
   public final AssetIdEncoder assetIdEncoder;
-  public final int viewId;
+  private final int viewId;
   private boolean alive;
   private PrivateView usurper;
   private String lastWrittenFutures;
@@ -40,6 +40,22 @@ public abstract class PrivateView {
    */
   public void usurp(PrivateView usurper) {
     this.usurper = usurper;
+  }
+
+  public int getViewId() {
+    if (usurper != null) {
+      return usurper.getViewId();
+    } else {
+      return viewId;
+    }
+  }
+
+  public void ingestViewUpdate(JsonStreamReader reader) {
+    if (usurper != null) {
+      usurper.ingestViewUpdate(reader);
+    } else {
+      ingest(reader);
+    }
   }
 
   /** codegen: seed the state held by the view */
