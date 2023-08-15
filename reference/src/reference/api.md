@@ -1,6 +1,6 @@
 # API Reference 
  Methods: 
-[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceUsage](#method-spaceusage), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [DomainMap](#method-domainmap), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentAuthorize](#method-documentauthorize), [DocumentAuthorizeDomain](#method-documentauthorizedomain), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionCreateViaDomain](#method-connectioncreateviadomain), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
+[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceUsage](#method-spaceusage), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [DomainMap](#method-domainmap), [DomainReflect](#method-domainreflect), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentAuthorize](#method-documentauthorize), [DocumentAuthorizeDomain](#method-documentauthorizedomain), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionCreateViaDomain](#method-connectioncreateviadomain), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
 
 ## Method: InitSetupAccount
 This initiates developer machine via email verification.
@@ -709,6 +709,33 @@ connection.DomainMap(identity, domain, space, certificate, {
 ```
 
 This method simply returns void.
+
+## Method: DomainReflect
+Get a schema for the domain
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| identity | yes | String | Identity is a token to authenticate a user. |
+| domain | yes | String | A domain name. |
+
+
+### Template
+```js
+connection.DomainReflect(identity, domain, {
+  success: function(response) {
+    // response.reflection
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+
+### Request response fields
+| name | type | documentation |
+| --- | --- | --- |
+| reflection | ObjectNode | Schema of a document. |
 
 ## Method: DomainMapDocument
 Map a domain to a space.

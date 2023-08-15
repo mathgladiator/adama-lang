@@ -27,7 +27,7 @@ With the name of the authority in hand, we will use the tool to create a keystor
 java -jar adama.jar authority create-local \
  --authority Z2YISR3YMJN29XZ2 \
  --keystore my.keystore.json \
- --private first.private.key.json
+ --priv first.private.key.json
 ```
 
 This will create two files within your working directory:

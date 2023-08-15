@@ -1671,6 +1671,8 @@ var RxHTML = (function () {
       co.handlers = {};
       co.viewstate_sent = true;
       co.label = "Domain:" + domain + " [ " + rxobj.name + "]";
+      co.via_domain = true;
+      co.domain = domain;
       var retry_sm = {};
       retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
       retry_sm.go = function() {
@@ -1716,7 +1718,7 @@ var RxHTML = (function () {
       co.handlers = {};
       co.viewstate_sent = true;
       co.label = co.space + "/" + co.key + " [ " + rxobj.name + "]";
-
+      co.via_domain = false;
       var retry_sm = {};
       retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
       retry_sm.go = function() {

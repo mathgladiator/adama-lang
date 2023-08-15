@@ -38,6 +38,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_SpaceReflect;
   public final RequestResponseMonitor monitor_SpaceList;
   public final RequestResponseMonitor monitor_DomainMap;
+  public final RequestResponseMonitor monitor_DomainReflect;
   public final RequestResponseMonitor monitor_DomainMapDocument;
   public final RequestResponseMonitor monitor_DomainList;
   public final RequestResponseMonitor monitor_DomainUnmap;
@@ -86,6 +87,7 @@ public class GlobalApiMetrics {
     this.monitor_SpaceReflect = factory.makeRequestResponseMonitor("space/reflect");
     this.monitor_SpaceList = factory.makeRequestResponseMonitor("space/list");
     this.monitor_DomainMap = factory.makeRequestResponseMonitor("domain/map");
+    this.monitor_DomainReflect = factory.makeRequestResponseMonitor("domain/reflect");
     this.monitor_DomainMapDocument = factory.makeRequestResponseMonitor("domain/map-document");
     this.monitor_DomainList = factory.makeRequestResponseMonitor("domain/list");
     this.monitor_DomainUnmap = factory.makeRequestResponseMonitor("domain/unmap");
