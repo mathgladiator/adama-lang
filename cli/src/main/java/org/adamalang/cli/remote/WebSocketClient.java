@@ -64,7 +64,7 @@ public class WebSocketClient implements AutoCloseable {
 
       }
     });
-    if (gotConnectionRef.await(2500, TimeUnit.MILLISECONDS)) {
+    if (gotConnectionRef.await(30000, TimeUnit.MILLISECONDS)) {
       return new Connection(connectionRef.get());
     } else {
       throw new Exception("Failed to connect");

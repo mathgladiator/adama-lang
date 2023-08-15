@@ -8,10 +8,7 @@
  */
 package org.adamalang.runtime.stdlib;
 
-import org.adamalang.runtime.natives.NtDate;
-import org.adamalang.runtime.natives.NtDateTime;
-import org.adamalang.runtime.natives.NtList;
-import org.adamalang.runtime.natives.NtTimeSpan;
+import org.adamalang.runtime.natives.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -244,5 +241,19 @@ public class LibDateTests {
     NtDate x = new NtDate(2023, 8, 1);
     Assert.assertEquals("2022-06-27", LibDate.offsetDay(x, -400).toString());
     Assert.assertEquals("2024-09-04", LibDate.offsetDay(x, 400).toString());
+  }
+
+  @Test
+  public void conv_to_date() {
+    NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
+    NtDate d = LibDate.date(present);
+    Assert.assertEquals("2023-04-24", d.toString());
+  }
+
+  @Test
+  public void conv_to_time() {
+    NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
+    NtTime t = LibDate.time(present);
+    Assert.assertEquals("17:57", t.toString());
   }
 }

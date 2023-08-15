@@ -8,15 +8,13 @@
  */
 package org.adamalang.runtime.stdlib;
 
-import org.adamalang.runtime.natives.NtDate;
-import org.adamalang.runtime.natives.NtDateTime;
-import org.adamalang.runtime.natives.NtList;
-import org.adamalang.runtime.natives.NtTimeSpan;
+import org.adamalang.runtime.natives.*;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.adamalang.translator.reflect.Extension;
 import org.adamalang.translator.reflect.HiddenType;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
@@ -176,5 +174,17 @@ public class LibDate {
   public static NtDate offsetDay(NtDate day, int offset) {
     LocalDate d = day.toLocalDate().plusDays(offset);
     return new NtDate(d.getYear(), d.getMonthValue(), d.getDayOfMonth());
+  }
+
+  @Extension
+  public static NtDate date(NtDateTime dt) {
+    LocalDate d = dt.dateTime.toLocalDate();
+    return new NtDate(d.getYear(), d.getMonthValue(), d.getDayOfMonth());
+  }
+
+  @Extension
+  public static NtTime time(NtDateTime dt) {
+    LocalTime lt = dt.dateTime.toLocalTime();
+    return new NtTime(lt.getHour(), lt.getMinute());
   }
 }
