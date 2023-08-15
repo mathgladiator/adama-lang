@@ -223,7 +223,11 @@ public class StructureStorage extends DocumentPosition {
       env.define(fd.name, fd.type, false, fd);
     });
     fields.put(fd.name, fd);
-    fieldsByOrder.add(fd);
+    if ("id".equals(fd.name)) {
+      fieldsByOrder.add(0, fd);
+    } else {
+      fieldsByOrder.add(fd);
+    }
   }
 
   public void add(final IndexDefinition indexDefn) {
@@ -275,7 +279,7 @@ public class StructureStorage extends DocumentPosition {
       final var fakeId = FieldDefinition.invent(new TyReactiveInteger(null).withPosition(this), "id");
       fakeId.ingest(this);
       fields.put("id", fakeId);
-      fieldsByOrder.add(fakeId);
+      fieldsByOrder.add(0, fakeId);
     }
   }
 
