@@ -33,6 +33,23 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   private final LinkedHashMap<Integer, Ty> itemsByKey;
   private final TreeSet<Ty> unknowns;
 
+  public void debug(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("created");
+    writer.writeInteger(createdObjects.size());
+    writer.writeObjectFieldIntro("items");
+    writer.writeInteger(itemsByKey.size());
+    if (indices != null) {
+      writer.writeObjectFieldIntro("idx");
+      writer.writeInteger(indices.length);
+    }
+    if (unknowns != null) {
+      writer.writeObjectFieldIntro("unknowns");
+      writer.writeInteger(unknowns.size());
+    }
+    writer.endObject();
+  }
+
   @SuppressWarnings("unchecked")
   public RxTable(final LivingDocument document, final RxParent owner, final String className, final Function<RxParent, Ty> maker, final int indicies) {
     super(owner);
@@ -307,4 +324,5 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   public NtList<Ty> iterate(final boolean done) {
     return new SelectorRxObjectList<>(this);
   }
+
 }

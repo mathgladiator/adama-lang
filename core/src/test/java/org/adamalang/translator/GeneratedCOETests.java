@@ -1120,6 +1120,16 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"tables\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"_families\");");
+    gold.append("\n    _families.debug(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"_people\");");
+    gold.append("\n    _people.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
     gold.append("\n  }");

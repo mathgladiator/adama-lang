@@ -220,6 +220,8 @@ public abstract class LivingDocument implements RxParent, Caller {
     return false;
   }
 
+  protected abstract void __debug(JsonStreamWriter __writer);
+
   /** is the given route id in-flight */
   public boolean __isRouteInflight(int routeId) {
     return __routing.containsKey(routeId);

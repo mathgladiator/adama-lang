@@ -66,6 +66,11 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  protected void __debug(JsonStreamWriter __writer) {
+
+  }
+
+  @Override
   protected void __bindReplication() {
   }
 

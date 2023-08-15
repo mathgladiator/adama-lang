@@ -590,6 +590,7 @@ public class Document implements TopLevelDocumentHandler {
     CodeGenViewStateFilter.writeViewStateFilter(sb, environment);
     CodeGenMessageHandling.writeMessageHandlers(sb, environment);
     CodeGenReplication.writeReplicationBind(sb, environment);
+    CodeGenDebug.writeDebugInfo(sb, environment);
     CodeGenAuth.writeAuth(sb, environment);
     CodeGenWeb.writeWebHandlers(sb, environment);
     CodeGenStateMachine.writeStateMachine(sb, environment);
