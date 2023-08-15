@@ -276,7 +276,7 @@ public class StructureStorage extends DocumentPosition {
 
   public void finalizeRecord() {
     if (!fields.containsKey("id")) {
-      final var fakeId = FieldDefinition.invent(new TyReactiveInteger(null).withPosition(this), "id");
+      final var fakeId = FieldDefinition.inventId(this);
       fakeId.ingest(this);
       fields.put("id", fakeId);
       fieldsByOrder.add(0, fakeId);

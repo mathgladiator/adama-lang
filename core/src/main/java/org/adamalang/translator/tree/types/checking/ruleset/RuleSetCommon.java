@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.types.checking.ruleset;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
+import org.adamalang.translator.tree.privacy.PublicPolicy;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.CanTestEqualityResult;
@@ -390,7 +391,7 @@ public class RuleSetCommon {
         for (final Map.Entry<String, FieldDefinition> aEntry : aActualMessage.storage.fields.entrySet()) {
           final var bFd = bActualMessage.storage.fields.get(aEntry.getKey());
           if (bFd != null) {
-            newStorage.fields.put(aEntry.getKey(), new FieldDefinition(null, null, GetMaxType(environment, aEntry.getValue().type, bFd.type, false), bFd.nameToken, null, null, null, null, null));
+            newStorage.fields.put(aEntry.getKey(), new FieldDefinition(new PublicPolicy(null), null, GetMaxType(environment, aEntry.getValue().type, bFd.type, false), bFd.nameToken, null, null, null, null, null));
           } else {
             newStorage.fields.put(aEntry.getKey(), aEntry.getValue());
           }
