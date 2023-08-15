@@ -22,7 +22,7 @@ public class RxGuard extends RxBase implements RxChild {
   private int generation;
 
   public RxGuard(RxParent parent) {
-    super(null);
+    super(parent);
     generation = 0;
     invalid = true;
   }
