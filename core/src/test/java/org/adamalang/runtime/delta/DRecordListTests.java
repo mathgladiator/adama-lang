@@ -121,4 +121,25 @@ public class DRecordListTests {
     // { [0, 4], [6
     Assert.assertEquals("{\"@o\":[[0,4],[6,9]],\"5\":null}", process.apply(new Integer[]{0, 1, 2, 3, 4, 6, 7, 8, 9}));
   }
+
+  @Test
+  public void to_nothing() {
+    final var list = new DRecordList<DBoolean>();
+    final Function<Integer[], String> process = inserts -> {
+      final var stream = new JsonStreamWriter();
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var delta = writer.planObject();
+      final var walk = list.begin();
+      for (final Integer insert : inserts) {
+        walk.next(insert);
+        final var a = list.getPrior(insert, DBoolean::new);
+        a.show(true, delta.planField(insert));
+      }
+      walk.end(delta);
+      delta.end();
+      return stream.toString();
+    };
+    Assert.assertEquals("{\"0\":true,\"1\":true,\"2\":true,\"3\":true,\"4\":true,\"6\":true,\"7\":true,\"8\":true,\"9\":true,\"@o\":[0,1,2,3,4,6,7,8,9]}", process.apply(new Integer[]{0, 1, 2, 3, 4, 6, 7, 8, 9}));
+    Assert.assertEquals("{\"@o\":[],\"0\":null,\"1\":null,\"2\":null,\"3\":null,\"4\":null,\"6\":null,\"7\":null,\"8\":null,\"9\":null}", process.apply(new Integer[]{}));
+  }
 }

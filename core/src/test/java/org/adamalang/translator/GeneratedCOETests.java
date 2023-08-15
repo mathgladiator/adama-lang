@@ -262,10 +262,10 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    _families = new RxTable<>(__self, this, \"_families\", (RxParent __parent) -> new RTxFamily(__parent).__link(), 0);");
     gold.append("\n    _people = new RxTable<>(__self, this, \"_people\", (RxParent __parent) -> new RTxPerson(__parent).__link(), 0);");
-    gold.append("\n    ___your_family_1 =  new RxGuard();");
+    gold.append("\n    ___your_family_1 =  new RxGuard(this);");
     gold.append("\n    _families.__subscribe(___your_family_1);");
     gold.append("\n    _people.__subscribe(___your_family_1);");
-    gold.append("\n    ___your_family_2 =  new RxGuard();");
+    gold.append("\n    ___your_family_2 =  new RxGuard(this);");
     gold.append("\n    _families.__subscribe(___your_family_2);");
     gold.append("\n    _people.__subscribe(___your_family_2);");
     gold.append("\n    __goodwillBudget = 100000;");

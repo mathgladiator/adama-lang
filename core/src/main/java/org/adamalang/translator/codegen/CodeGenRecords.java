@@ -287,7 +287,7 @@ public class CodeGenRecords {
 
     for (final BubbleDefinition bubble : storage.bubbles.values()) {
       classFields.append("private final RxGuard ___" + bubble.nameToken.text + ";").writeNewline();
-      classConstructorX.append("___").append(bubble.nameToken.text).append(" =  new RxGuard();").writeNewline();
+      classConstructorX.append("___").append(bubble.nameToken.text).append(" =  new RxGuard(this);").writeNewline();
       for (final String watched : bubble.variablesToWatch) {
         classConstructorX.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
       }
