@@ -327,10 +327,16 @@ Adama.Debugger = (function() {
 
   self.toggle = function() {
     if (self.shown) {
-      document.body.removeChild(self.root);
-    } else {
+      try {
+        document.body.removeChild(self.root);
+      } catch (notpresent) {
+        self.shown = !self.shown;
+        document.body.append(self.root);
+      }
+    }
+    else
+    {
       self.root = document.createElement("div");
-
       debuggerPosition = localStorage.getItem("AdamaDebuggerPosition");
       if (!debuggerPosition || debuggerPosition == "") {
         debuggerPosition = "top:0px; left:0px;width:800px;height:600px";
