@@ -449,6 +449,11 @@ public class Attributes {
           .append(",").append(env.stateVar) //
           .append(",'").append(channel) //
           .append("');").newline();
+    } else if (action.startsWith("copy-form:")) {
+      String targetFormId = action.substring(10);
+      env.writer.tab().append("$.aCF(").append(eVar) //
+          .append(",'").append(targetFormId) //
+          .append("');").newline();
     } else if (action.startsWith("copy:")) { // Copy the form object into the view
       String path = action.substring(5);
       boolean tuned = path.startsWith("view:") | path.startsWith("data:");
