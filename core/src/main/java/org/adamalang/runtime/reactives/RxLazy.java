@@ -27,10 +27,7 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
     this.formula = formula;
     this.cached = null;
     this.invalid = true;
-    this.generation = 1;
-    if (parent instanceof RxRecordBase) {
-      this.generation = ((RxRecordBase) parent).__id();
-    }
+    this.generation = 0;
   }
 
   @Override
@@ -70,11 +67,19 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
     return cached;
   }
 
+  private void inc() {
+    if (__parent instanceof RxRecordBase && generation == 0) {
+      generation = ((RxRecordBase) __parent).__id();
+    } else {
+      generation *= 65521;
+      generation++;
+    }
+  }
+
   private void ensureCacheValid() {
     if (checkInvalidAndLower() || cached == null) {
       cached = formula.get();
-      generation *= 65521;
-      generation ++;
+      inc();
     }
   }
 
@@ -87,6 +92,9 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   }
 
   public int getGeneration() {
+    if (generation == 0) {
+      inc();
+    }
     ensureCacheValid();
     return generation;
   }
