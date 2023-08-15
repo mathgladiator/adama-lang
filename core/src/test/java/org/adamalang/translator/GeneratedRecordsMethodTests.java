@@ -2514,7 +2514,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n  public SimpleAccess_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    _things = new RxTable<>(__self, this, \"_things\", (RxParent __parent) -> new RTxThing(__parent).__link(), 0);");
-    gold.append("\n    ___things =  new RxGuard();");
+    gold.append("\n    ___things =  new RxGuard(this);");
     gold.append("\n    _things.__subscribe(___things);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -4219,7 +4219,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n  public ViewerAccess_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    _things = new RxTable<>(__self, this, \"_things\", (RxParent __parent) -> new RTxThing(__parent).__link(), 0);");
-    gold.append("\n    ___things =  new RxGuard();");
+    gold.append("\n    ___things =  new RxGuard(this);");
     gold.append("\n    _things.__subscribe(___things);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");

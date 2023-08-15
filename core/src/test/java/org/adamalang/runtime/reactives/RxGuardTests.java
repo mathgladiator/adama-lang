@@ -16,7 +16,7 @@ import org.junit.Test;
 public class RxGuardTests {
   @Test
   public void dump() {
-    final var d = new RxGuard();
+    final var d = new RxGuard(null);
     final var writer = new JsonStreamWriter();
     d.__dump(writer);
     Assert.assertEquals("", writer.toString());
@@ -24,21 +24,21 @@ public class RxGuardTests {
 
   @Test
   public void flow() {
-    final var guard = new RxGuard();
+    final var guard = new RxGuard(null);
     Assert.assertEquals(1, guard.getGeneration());
     Assert.assertEquals(true, guard.invalid);
     guard.__commit(null, null, null);
-    Assert.assertEquals(2, guard.getGeneration());
+    Assert.assertEquals(65522, guard.getGeneration());
     Assert.assertEquals(false, guard.invalid);
     final var child = new MockRxChild();
     guard.__subscribe(child);
     guard.__raiseInvalid();
     child.assertInvalidateCount(0);
-    Assert.assertEquals(3, guard.getGeneration());
+    Assert.assertEquals(-1900333, guard.getGeneration());
     Assert.assertEquals(true, guard.invalid);
     guard.__revert();
     Assert.assertEquals(false, guard.invalid);
-    Assert.assertEquals(4, guard.getGeneration());
+    Assert.assertEquals(42333092, guard.getGeneration());
     guard.__insert(null);
     guard.__patch(null);
   }

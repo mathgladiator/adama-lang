@@ -2665,7 +2665,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  public ChatOrder_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    _chat = new RxTable<>(__self, this, \"_chat\", (RxParent __parent) -> new RTxLine(__parent).__link(), 0);");
-    gold.append("\n    ___chat =  new RxGuard();");
+    gold.append("\n    ___chat =  new RxGuard(this);");
     gold.append("\n    _chat.__subscribe(___chat);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -3983,9 +3983,9 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    _resources = new RxTable<>(__self, this, \"_resources\", (RxParent __parent) -> new RTxResource(__parent).__link(), 0);");
     gold.append("\n    cards_left = new RxLazy<Integer>(this, () -> (Integer)((deck.iterate(false).where(true, new __CLOSURE_WhereClause2())).size()));");
     gold.append("\n    cards_available = new RxLazy<Boolean>(this, () -> (Boolean)(cards_left.get() > 0));");
-    gold.append("\n    ___hand =  new RxGuard();");
+    gold.append("\n    ___hand =  new RxGuard(this);");
     gold.append("\n    deck.__subscribe(___hand);");
-    gold.append("\n    ___yours =  new RxGuard();");
+    gold.append("\n    ___yours =  new RxGuard(this);");
     gold.append("\n    recs.__subscribe(___yours);");
     gold.append("\n    pvalue1.__link();");
     gold.append("\n    pvalue2.__link();");
@@ -6847,7 +6847,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    players_ordered = new RxLazy<NtList<RTxPlayer>>(this, () -> (NtList<RTxPlayer>)(players.iterate(false).where(false, new __CLOSURE_WhereClause6()).orderBy(true, __ORDER_Player_play_order_a)));");
     gold.append("\n    ready = new RxLazy<Boolean>(this, () -> (Boolean)(((int) players_connected.get()) == ((int) 4)));");
     gold.append("\n    in_play = new RxLazy<NtList<RTxCard>>(this, () -> (NtList<RTxCard>)(deck.iterate(false).where(false, new __CLOSURE_WhereClause33()).orderBy(true, __ORDER_Card_rank_d)));");
-    gold.append("\n    ___my_take =  new RxGuard();");
+    gold.append("\n    ___my_take =  new RxGuard(this);");
     gold.append("\n    deck.__subscribe(___my_take);");
     gold.append("\n    players.__subscribe(people);");
     gold.append("\n    deck.__subscribe(hand);");
@@ -16022,12 +16022,12 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    stalemates = new RxInt32(this, 0);");
     gold.append("\n    _squares = new RxTable<>(__self, this, \"_squares\", (RxParent __parent) -> new RTxSquare(__parent).__link(), 0);");
     gold.append("\n    board = new RxLazy<NtList<RTxSquare>>(this, () -> (NtList<RTxSquare>)(_squares.iterate(true)));");
-    gold.append("\n    ___your_role =  new RxGuard();");
+    gold.append("\n    ___your_role =  new RxGuard(this);");
     gold.append("\n    playerX.__subscribe(___your_role);");
     gold.append("\n    playerO.__subscribe(___your_role);");
-    gold.append("\n    ___your_turn =  new RxGuard();");
+    gold.append("\n    ___your_turn =  new RxGuard(this);");
     gold.append("\n    current.__subscribe(___your_turn);");
-    gold.append("\n    ___your_wins =  new RxGuard();");
+    gold.append("\n    ___your_wins =  new RxGuard(this);");
     gold.append("\n    playerX.__subscribe(___your_wins);");
     gold.append("\n    wins_X.__subscribe(___your_wins);");
     gold.append("\n    playerO.__subscribe(___your_wins);");
