@@ -701,6 +701,8 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("\n    RxInvalidate __L_foo = __setupReplication(\"foo\",sms,\"m\",() -> new RTx_AnonObjConvert_0(123).to_dynamic());");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -1403,6 +1405,8 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("\n    RxInvalidate __L_foo_z = __setupReplication(\"foo_z\",sms,\"m\",() -> new RTxSyncRequest(z.get()));");
     gold.append("\n    z.__subscribe(__L_foo_z);");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");

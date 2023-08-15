@@ -248,20 +248,26 @@ public class DurableLivingDocument implements Queryable {
 
   @Override
   public void query(TreeMap<String, String> query, Callback<String> callback) {
-    JsonStreamWriter writer = new JsonStreamWriter();
-    writer.beginObject();
-    writer.writeObjectFieldIntro("space");
-    writer.writeString(key.space);
-    writer.writeObjectFieldIntro("key");
-    writer.writeString(key.key);
-    writer.writeObjectFieldIntro("size");
-    writer.writeInteger(size.get());
-    writer.writeObjectFieldIntro("seq");
-    writer.writeInteger(document.__getSeq());
-    writer.writeObjectFieldIntro("cost");
-    writer.writeInteger(document.__getCodeCost());
-    writer.endObject();
-    callback.success(writer.toString());
+    base.executor.execute(new NamedRunnable("make-query") {
+      @Override
+      public void execute() throws Exception {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.beginObject();
+        writer.writeObjectFieldIntro("space");
+        writer.writeString(key.space);
+        writer.writeObjectFieldIntro("key");
+        writer.writeString(key.key);
+        writer.writeObjectFieldIntro("size");
+        writer.writeInteger(size.get());
+        writer.writeObjectFieldIntro("seq");
+        writer.writeInteger(document.__getSeq());
+        writer.writeObjectFieldIntro("cost");
+        writer.writeInteger(document.__getCodeCost());
+        document.__debug(writer);
+        writer.endObject();
+        callback.success(writer.toString());
+      }
+    });
   }
 
   private void testQueueSizeAndThenMaybeCompact() {

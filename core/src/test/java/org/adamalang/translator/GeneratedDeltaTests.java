@@ -621,6 +621,8 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -1569,6 +1571,8 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __bindReplication() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
@@ -2674,6 +2678,14 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"tables\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
+    gold.append("\n    t.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -3384,6 +3396,8 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __bindReplication() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
@@ -4113,6 +4127,8 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __bindReplication() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
@@ -4999,6 +5015,14 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __bindReplication() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"tables\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
+    gold.append("\n    t.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
@@ -5982,6 +6006,14 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"tables\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
+    gold.append("\n    t.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -6838,6 +6870,8 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -7579,6 +7613,8 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __bindReplication() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
@@ -8512,6 +8548,8 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __bindReplication() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
