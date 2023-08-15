@@ -390,16 +390,18 @@ public class RuleSetCommon {
         final var newStorage = new StructureStorage(Token.WRAP("Created"), StorageSpecialization.Message, true, null);
         for (final Map.Entry<String, FieldDefinition> aEntry : aActualMessage.storage.fields.entrySet()) {
           final var bFd = bActualMessage.storage.fields.get(aEntry.getKey());
+          final FieldDefinition toAdd;
           if (bFd != null) {
-            newStorage.fields.put(aEntry.getKey(), new FieldDefinition(new PublicPolicy(null), null, GetMaxType(environment, aEntry.getValue().type, bFd.type, false), bFd.nameToken, null, null, null, null, null));
+            toAdd = new FieldDefinition(new PublicPolicy(null), null, GetMaxType(environment, aEntry.getValue().type, bFd.type, false), bFd.nameToken, null, null, null, null, null);
           } else {
-            newStorage.fields.put(aEntry.getKey(), aEntry.getValue());
+            toAdd = aEntry.getValue();
           }
+          newStorage.add(toAdd);
         }
         for (final Map.Entry<String, FieldDefinition> bEntry : bActualMessage.storage.fields.entrySet()) {
           final var aFd = aActualMessage.storage.fields.get(bEntry.getKey());
           if (aFd == null) {
-            newStorage.fields.put(bEntry.getKey(), bEntry.getValue());
+            newStorage.add(bEntry.getValue());
           }
         }
         return new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("AutoMaxRecord" + environment.autoVariable()), newStorage);
