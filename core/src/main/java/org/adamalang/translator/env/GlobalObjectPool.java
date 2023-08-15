@@ -84,6 +84,7 @@ public class GlobalObjectPool {
     time.functions.put("now", subscribe("__time", generateInternalDocumentFunction("__timeNow", tyLng)));
     time.functions.put("today", subscribe("__today", generateInternalDocumentFunction("__dateOfToday", new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null))));
     time.functions.put("datetime", subscribe("__time", generateInternalDocumentFunction("__datetimeNow", new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, null))));
+    time.functions.put("time", subscribe("__time", generateInternalDocumentFunction("__timeOfToday", new TyNativeTime(TypeBehavior.ReadOnlyNativeValue, null, null))));
     time.functions.put("zone", generateInternalDocumentFunction("__timeZone", tyStr));
     time.functions.put("setZone", generateInternalDocumentFunction("__setTimeZone", tyStr, tyBool, null, null));
     time.setParentOverride((GlobalFactory.makeGlobal("LibTime", LibTime.class, pool.extensions)));

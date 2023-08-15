@@ -2,9 +2,13 @@ public long now;
 public date today;
 public datetime deepnow;
 public string zone;
+public time nt;
+public formula deepnow_date = deepnow.date();
+public formula deepnow_time = deepnow.time();
 
 #sm {
   now = Time.now();
+  nt = Time.time();
   today = Time.today();
   deepnow = Time.datetime();
   zone = Time.zone();

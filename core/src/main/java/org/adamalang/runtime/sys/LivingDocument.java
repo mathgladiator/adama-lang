@@ -151,6 +151,12 @@ public abstract class LivingDocument implements RxParent, Caller {
     return new NtDate(dt.getYear(), dt.getMonthValue(), dt.getDayOfMonth());
   }
 
+  /** exposed: get the document's timestamp as a time */
+  protected NtTime __timeOfToday() {
+    ZonedDateTime dt = __datetimeNow().dateTime;
+    return new NtTime(dt.getHour(), dt.getMinute());
+  }
+
   /** exposed: get the document's timestamp as a datetime */
   protected NtDateTime __datetimeNow() {
     if (__timezoneCachedZoneId == null) {
