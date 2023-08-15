@@ -519,6 +519,24 @@ public class GlobalConnectionRouter {
                 }
               });
             } return;
+            case "domain/reflect": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DomainReflect.start();
+              DomainReflectRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(DomainReflectRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new ReflectionResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "domain/map-document": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DomainMapDocument.start();
               DomainMapDocumentRequest.resolve(session, nexus, request, new Callback<>() {

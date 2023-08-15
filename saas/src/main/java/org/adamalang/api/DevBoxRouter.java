@@ -18,6 +18,8 @@ public abstract class DevBoxRouter {
 
   public abstract void handle_SpaceReflect(long requestId, String identity, String space, String key, ReflectionResponder responder);
 
+  public abstract void handle_DomainReflect(long requestId, String identity, String domain, ReflectionResponder responder);
+
   public abstract void handle_DocumentAuthorize(long requestId, String space, String key, String username, String password, InitiationResponder responder);
 
   public abstract void handle_DocumentAuthorizeDomain(long requestId, String domain, String username, String password, InitiationResponder responder);
@@ -52,6 +54,12 @@ public abstract class DevBoxRouter {
           request.getString("identity", true, 458759), //
           request.getStringNormalize("space", true, 461828), //
           request.getString("key", true, 466947), //
+          new ReflectionResponder(responder));
+          return;
+        case "domain/reflect":
+          handle_DomainReflect(requestId, //
+          request.getString("identity", true, 458759), //
+          request.getString("domain", true, 488444), //
           new ReflectionResponder(responder));
           return;
         case "document/authorize":

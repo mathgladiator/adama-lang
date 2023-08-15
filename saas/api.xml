@@ -894,6 +894,14 @@
         </documentation>
     </method>
 
+    <method name="domain/reflect" responder="reflection" devbox="true" scope="global">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <documentation>
+            Get a schema for the domain
+        </documentation>
+    </method>
+
     <method name="domain/map-document" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="domain"/>

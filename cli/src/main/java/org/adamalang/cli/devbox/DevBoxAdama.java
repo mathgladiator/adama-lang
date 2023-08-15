@@ -77,6 +77,21 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     });
   }
 
+  @Override
+  public void handle_DomainReflect(long requestId, String identity, String domain, ReflectionResponder responder) {
+    verse.service.reflect(verse.domainKeyToUse, new Callback<>() {
+      @Override
+      public void success(String value) {
+        responder.complete(Json.parseJsonObject(value));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
   // public void authorize(String origin, String ip, Key key, String username, String password, Callback<String> callback) {
   private void commonAuthorize(Key key, String username, String password, InitiationResponder responder) {
     verse.service.authorize(context.origin, context.remoteIp, key, username, password, new Callback<String>() {

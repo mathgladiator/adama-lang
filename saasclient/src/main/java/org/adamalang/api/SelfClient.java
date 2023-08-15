@@ -262,6 +262,15 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }
 
+  /** domain/reflect */
+  public void domainReflect(ClientDomainReflectRequest request, Callback<ClientReflectionResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "domain/reflect");
+    node.put("identity", request.identity);
+    node.put("domain", request.domain);
+    pool.requestResponse(node, (obj) -> new ClientReflectionResponse(obj), callback);
+  }
+
   /** domain/map-document */
   public void domainMapDocument(ClientDomainMapDocumentRequest request, Callback<ClientSimpleResponse> callback) {
     ObjectNode node = Json.newJsonObject();

@@ -626,6 +626,26 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
+  public void handle(Session session, DomainReflectRequest request, ReflectionResponder responder) {
+    if (request.resolvedDomain.policy != null && request.resolvedDomain.policy.canUserSeeReflection(request.who)) {
+      String key = request.resolvedDomain.domain.key != null ? request.resolvedDomain.domain.key : "";
+      nexus.adama.reflect(request.resolvedDomain.domain.space, key, new Callback<String>() {
+        @Override
+        public void success(String value) {
+          responder.complete(Json.parseJsonObject(value));
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      });
+    } else {
+      responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_NO_PERMISSION_TO_EXECUTE));
+    }
+  }
+
+  @Override
   public void handle(Session session, SpaceListRequest request, SpaceListingResponder responder) {
     try {
       if (request.who.isAdamaDeveloper) {
