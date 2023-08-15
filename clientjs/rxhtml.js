@@ -1040,6 +1040,8 @@ var RxHTML = (function () {
           next = self.pEV(next, name);
         }
       }
+      // we default back to data in the IF case
+      next.current = 'data';
       if (show) {
         makerTrue(parent, next);
       } else {
