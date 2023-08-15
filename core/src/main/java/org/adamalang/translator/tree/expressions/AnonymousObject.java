@@ -95,8 +95,6 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
     final var storage = new StructureStorage(name, StorageSpecialization.Message, true, null);
     for (final Map.Entry<String, Expression> entry : fields.entrySet()) {
       final var type = entry.getValue() instanceof SupportsTwoPhaseTyping ? ((SupportsTwoPhaseTyping) entry.getValue()).estimateType(environment) : entry.getValue().typing(environment, null);
-      final var p = new PrivatePolicy(null);
-      p.ingest(entry.getValue());
       final var fd = FieldDefinition.invent(type, entry.getKey());
       storage.add(fd);
     }

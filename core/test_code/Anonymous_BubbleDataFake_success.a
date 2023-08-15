@@ -1,0 +1,10 @@
+bubble this_day_calendar = [
+    {
+      room_name: "Purple Palace",
+      room_color: "#f0f",
+      has_events: true,
+      events: [
+        {id: 1000, name: "Some Name", start: "9:00am", end: "10:00am", class_type: "Some Thing",  instructor_name: "Person", class_type: "Boom", row_start: 540, duration_span: 60,  overlap_count: 1 }
+      ]
+    }
+  ];

@@ -11,8 +11,10 @@ package org.adamalang.translator.tree.types.structures;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.Policy;
+import org.adamalang.translator.tree.privacy.PublicPolicy;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
@@ -86,7 +88,12 @@ public class FieldDefinition extends StructureComponent {
   }
 
   public static FieldDefinition invent(final TyType type, final String name) {
-    return new FieldDefinition(null, null, type, Token.WRAP(name), null, null, null, null, null);
+    return new FieldDefinition(new PublicPolicy(null), null, type, Token.WRAP(name), null, null, null, null, null);
+  }
+
+
+  public static FieldDefinition inventId(DocumentPosition dp) {
+    return new FieldDefinition(null, null, new TyReactiveInteger(null).withPosition(dp), Token.WRAP("id"), null, null, null, null, null);
   }
 
   @Override
