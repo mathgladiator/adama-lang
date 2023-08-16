@@ -35,6 +35,16 @@ public class Parser {
     }
   }
 
+  private static Tree getBaseOf(TokenStream.Token conditionStart) throws ParseException {
+    for (String operator : Operate.OPERATORS) {
+      if (conditionStart.base.contains(operator)) {
+        String[] parts = conditionStart.base.split(Pattern.quote(operator));
+        return new Operate(new Lookup(parts[0].trim()), parts[1].trim(), Operate.convertOp(operator));
+      }
+    }
+    return new Lookup(conditionStart.base);
+  }
+
   private static Tree condition(Iterator<TokenStream.Token> it, TokenStream.Token conditionStart) throws ParseException {
     ArrayList<Tree> childrenTrue = new ArrayList<>();
     ArrayList<Tree> childrenFalse = new ArrayList<>();
@@ -58,14 +68,8 @@ public class Parser {
       }
     }
 
-    Tree lookup;
-    if (conditionStart.base.contains("=")) {
-      String[] parts = conditionStart.base.split(Pattern.quote("="));
-      lookup = new Equals(new Lookup(parts[0].trim()), parts[1].trim());
-    } else {
-      lookup = new Lookup(conditionStart.base);
-    }
 
+    Tree lookup = getBaseOf(conditionStart);
     Tree guard = wrapTransforms(lookup, conditionStart);
     if (conditionStart.mod == TokenStream.Modifier.Not) {
       guard = new Negate(guard);
