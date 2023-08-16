@@ -26,6 +26,8 @@ import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.support.GenerateLanguageTests;
 import org.adamalang.support.GenerateTemplateTests;
 import org.adamalang.web.service.BundleJavaScript;
+import org.commonmark.Extension;
+import org.commonmark.ext.gfm.tables.TablesExtension;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -175,9 +177,11 @@ public class ContribHandlerImpl implements ContribHandler {
   }
 
   private String md2html(String markdown) {
-    Parser parser = Parser.builder().build();
+    HashSet<Extension> ext = new HashSet<>();
+    ext.add(TablesExtension.create());
+    Parser parser = Parser.builder().extensions(ext).build();
     Node document = parser.parse(markdown);
-    HtmlRenderer renderer = HtmlRenderer.builder().build();
+    HtmlRenderer renderer = HtmlRenderer.builder().extensions(ext).build();
     Document doc = Jsoup.parse(renderer.render(document));
     for (Element a : doc.getElementsByTag("a")) {
       if (a.hasAttr("href")) {
@@ -205,13 +209,13 @@ public class ContribHandlerImpl implements ContribHandler {
     body.getElementsByTag("h1").remove();
     for (Element element : body.children()) {
       if (element.tagName().endsWith("ul")) {
-        element.attr("class", "text-sm");
+        element.attr("class", "text-sm list-disc list-inside");
         for (Element firstLevelItem : element.children()) {
           if (firstLevelItem.tagName().equals("li")) {
-            firstLevelItem.attr("class", "mb-1");
+            firstLevelItem.attr("class", "mb-2");
             for (Element secondLevel : firstLevelItem.children()) {
               if (secondLevel.tagName().endsWith("ul")) {
-                secondLevel.attr("class", "mb-3 ml-4 pl-6 border-l border-slate-200 dark:border-slate-800");
+                secondLevel.attr("class", "mb-3 ml-4 pl-6 border-l border-slate-200 dark:border-slate-800 list-decimal");
                 for (Element secondLevelItem : secondLevel.children()) {
                   if (secondLevelItem.tagName().equals("li")) {
                     secondLevelItem.attr("class", "mt-3");

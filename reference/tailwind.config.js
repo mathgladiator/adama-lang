@@ -5,6 +5,13 @@ module.exports = {
    require('@tailwindcss/line-clamp')],
   theme: {
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: '120ch',
+          }
+        }
+      },
       colors: {
         white: '#FFFFFF',
         black: '#000000',
