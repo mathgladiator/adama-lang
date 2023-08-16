@@ -2153,6 +2153,105 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama contrib make-api", Util.ANSI.Green));
 		}
 	}
+	public static class ContribMakeBookArgs {
+		public Config config;
+		public String input;
+		public String output;
+		public String bookTemplate;
+		public String bookMerge;
+		public static ContribMakeBookArgs from(String[] args, int start) {
+			ContribMakeBookArgs returnArgs = new ContribMakeBookArgs();
+			try {
+				returnArgs.config = new Config(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			String[] missing = new String[]{"--input", "--output", "--book-template", "--book-merge", };
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-i":
+					case "--input": {
+						if (k+1 < args.length) {
+							returnArgs.input = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-o":
+					case "--output": {
+						if (k+1 < args.length) {
+							returnArgs.output = args[k+1];
+							k++;
+							missing[1] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-bt":
+					case "--book-template": {
+						if (k+1 < args.length) {
+							returnArgs.bookTemplate = args[k+1];
+							k++;
+							missing[2] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-bm":
+					case "--book-merge": {
+						if (k+1 < args.length) {
+							returnArgs.bookMerge = args[k+1];
+							k++;
+							missing[3] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Compile Adama's Book", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama contrib make-book", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : An input file");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-bt, --book-template", Util.ANSI.Green) + " " + Util.prefix("<book-template>", Util.ANSI.White) + " : Template for generating the book");
+			System.out.println("    " + Util.prefix("-bm, --book-merge", Util.ANSI.Green) + " " + Util.prefix("<book-merge>", Util.ANSI.White) + " : Files to merge into the book");
+		}
+	}
 	public static class ContribMakeCliArgs {
 		public Config config;
 		public static ContribMakeCliArgs from(String[] args, int start) {
