@@ -194,7 +194,7 @@ public class DurableLivingDocument implements Queryable {
                     callback.failure(ex);
                   }
                 }
-              });
+              }, "create");
             }
           });
         }
@@ -332,8 +332,13 @@ public class DurableLivingDocument implements Queryable {
     newDocument.__lateBind(key.space, key.key, factory.deliverer, factory.registry);
     JsonStreamWriter writer = new JsonStreamWriter();
     document.__dump(writer);
-    newDocument.__insert(new JsonStreamReader(writer.toString()));
+    String prior = writer.toString();
+    newDocument.__insert(new JsonStreamReader(prior));
+    int fromSize = prior.length();
     document.__usurp(newDocument);
+    JsonStreamWriter dumpNew = new JsonStreamWriter();
+    document.__dump(dumpNew);
+    int newSize = dumpNew.toString().length();
     document = newDocument;
     currentFactory = factory;
     load(new Callback<LivingDocumentChange>() {
@@ -350,7 +355,7 @@ public class DurableLivingDocument implements Queryable {
           callback.failure(ex);
         }
       }
-    });
+    }, "deploy|" + fromSize + "-" + newSize);
   }
 
   public void triggerExpire() {
@@ -752,8 +757,10 @@ public class DurableLivingDocument implements Queryable {
     ingest(NtPrincipal.NO_ONE, request.toString(), DONT_CARE_CHANGE, true, false);
   }
 
-  public void load(Callback<LivingDocumentChange> callback) {
+  public void load(Callback<LivingDocumentChange> callback, String reason) {
     final var request = forge("load", null, false);
+    request.writeObjectFieldIntro("reason");
+    request.writeString(reason);
     request.endObject();
     ingest(NtPrincipal.NO_ONE, request.toString(), callback, true, false);
   }

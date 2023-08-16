@@ -153,6 +153,7 @@ public class DumbDataService implements DataService {
 
     @Override
     public void failure(ErrorCodeException ex) {
+      ex.printStackTrace();
       throw new RuntimeException(ex);
     }
   }

@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -315,6 +316,45 @@ public class CaravanDataService implements ArchivingDataService {
     }) == null) {
       callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_MERGE_RESTORE_OUT_OF_SPACE));
     }
+  }
+
+  public void dumpLog(Key key, Stream<String> stream) {
+    executor.execute(new NamedRunnable("dump-log") {
+      @Override
+      public void execute() throws Exception {
+        store.read(key, new ByteArrayStream() {
+          @Override
+          public void next(int appendIndex, byte[] value, int seq, long assetBytes) throws Exception {
+            EventCodec.route(Unpooled.wrappedBuffer(value), new EventCodec.HandlerEvent() {
+              @Override
+              public void handle(Events.Snapshot payload) {
+                stream.next("[" + (seq == payload.seq ? seq : (seq + "/" + payload.seq)  + "] SNAPSHOT:" + payload.document + " (history=" + payload.history + ", assets=" + payload.assetBytes + ")"));
+              }
+
+              @Override
+              public void handle(Events.Batch payload) {
+                if (payload.changes.length > 1) {
+                  stream.next("BATCH:" + payload.changes.length);
+                }
+                for (Events.Change change : payload.changes) {
+                  handle(change);
+                }
+              }
+
+              @Override
+              public void handle(Events.Change payload) {
+                stream.next("[" + (seq + ":" + payload.seq_begin + "-->" + payload.seq_end)  + "] REQUEST:"+ payload.request + " ; REDO:" + payload.redo + " ; UNDO=" + payload.undo + " (active=" + payload.active + ")");
+              }
+            });
+          }
+
+          @Override
+          public void finished() throws Exception {
+            stream.complete();
+          }
+        });
+      }
+    });
   }
 
   @Override
