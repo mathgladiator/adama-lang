@@ -56,10 +56,19 @@ public class Config {
     this.cache = config;
   }
 
+  public static class BadException extends RuntimeException {
+    public BadException(String msg) {
+      super(msg);
+    }
+  }
+
   public String get_string(String field, String defaultValue) {
     JsonNode node = read().get(field);
     if (node == null || node.isNull()) {
       if (defaultValue == null) {
+        if ("identity".equals(field)) {
+          throw new BadException("The config has no identity; this means you are unable to talk to adama until run: adama init (or java -jar adama.jar init)");
+        }
         throw new NullPointerException("expected an '" + field + "' within the config");
       } else {
         return defaultValue;
