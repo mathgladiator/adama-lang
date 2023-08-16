@@ -1,1 +1,9 @@
+node_modules
 book
+make2
+template
+package-lock.json
+logs
+css.freq.json
+summary.html
+output

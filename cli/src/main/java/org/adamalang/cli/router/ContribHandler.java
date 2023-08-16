@@ -15,6 +15,7 @@ public interface ContribHandler {
   void bundleJs(ContribBundleJsArgs args, YesOrError output) throws Exception;
   void copyright(ContribCopyrightArgs args, YesOrError output) throws Exception;
   void makeApi(ContribMakeApiArgs args, YesOrError output) throws Exception;
+  void makeBook(ContribMakeBookArgs args, YesOrError output) throws Exception;
   void makeCli(ContribMakeCliArgs args, YesOrError output) throws Exception;
   void makeCodec(ContribMakeCodecArgs args, YesOrError output) throws Exception;
   void makeEt(ContribMakeEtArgs args, YesOrError output) throws Exception;

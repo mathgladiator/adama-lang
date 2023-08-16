@@ -8,6 +8,7 @@
  */
 package org.adamalang.cli.implementations;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.GenerateTables;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.router.Arguments;
@@ -15,20 +16,28 @@ import org.adamalang.cli.router.ContribHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.DefaultCopyright;
 import org.adamalang.common.Escaping;
+import org.adamalang.common.Json;
 import org.adamalang.common.codec.CodecCodeGen;
 import org.adamalang.common.gossip.codec.GossipProtocol;
+import org.adamalang.common.template.Settings;
+import org.adamalang.common.template.tree.T;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.support.GenerateLanguageTests;
 import org.adamalang.support.GenerateTemplateTests;
 import org.adamalang.web.service.BundleJavaScript;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -151,5 +160,119 @@ public class ContribHandlerImpl implements ContribHandler {
       Files.writeString(new File("core/src/main/java/org/adamalang/runtime/stdlib/intern/Template" + name + ".java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + java.toString());
     }
     output.out();
+  }
+
+  public void assembleBook(File root, String prefix, TreeMap<String, String> files) throws Exception {
+    for (File child : root.listFiles()) {
+      if (child.isDirectory()) {
+        assembleBook(child, prefix + child.getName() + "/", files);
+      } else {
+        if (child.getName().endsWith(".md")) {
+          files.put(prefix + child.getName(), Files.readString(child.toPath()));
+        }
+      }
+    }
+  }
+
+  private String md2html(String markdown) {
+    Parser parser = Parser.builder().build();
+    Node document = parser.parse(markdown);
+    HtmlRenderer renderer = HtmlRenderer.builder().build();
+    Document doc = Jsoup.parse(renderer.render(document));
+    for (Element a : doc.getElementsByTag("a")) {
+      if (a.hasAttr("href")) {
+        String href = a.attr("href");
+        if (href.endsWith(".md")) {
+          a.attr("href", href.substring(0, href.length() - 3) + ".html");
+        }
+      }
+    }
+    return doc.body().html();
+  }
+
+  private String render(String markdown, String navHtml, T template) {
+    ObjectNode input = Json.newJsonObject();
+    input.put("body", md2html(markdown));
+    input.put("nav", navHtml);
+    StringBuilder output = new StringBuilder();
+    template.render(new Settings(), input, output);
+    return output.toString();
+  }
+
+  private String renderNav(String markdown) {
+    Document doc = Jsoup.parse(md2html(markdown));
+    Element body = doc.body();
+    body.getElementsByTag("h1").remove();
+    for (Element element : body.children()) {
+      if (element.tagName().endsWith("ul")) {
+        element.attr("class", "text-sm");
+        for (Element firstLevelItem : element.children()) {
+          if (firstLevelItem.tagName().equals("li")) {
+            firstLevelItem.attr("class", "mb-1");
+            for (Element secondLevel : firstLevelItem.children()) {
+              if (secondLevel.tagName().endsWith("ul")) {
+                secondLevel.attr("class", "mb-3 ml-4 pl-6 border-l border-slate-200 dark:border-slate-800");
+                for (Element secondLevelItem : secondLevel.children()) {
+                  if (secondLevelItem.tagName().equals("li")) {
+                    secondLevelItem.attr("class", "mt-3");
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    for (Element a : body.getElementsByTag("a")) {
+      if (a.hasAttr("href")) {
+        String href = a.attr("href");
+        if (href.startsWith(".")) {
+          a.attr("href", href.substring(1));
+        }
+      }
+    }
+
+    return body.html();
+  }
+
+  @Override
+  public void makeBook(Arguments.ContribMakeBookArgs args, Output.YesOrError output) throws Exception {
+    File input = new File(args.input);
+    TreeMap<String, String> book = new TreeMap<>();
+    assembleBook(input, "", book);
+    File out = new File(args.output);
+    out.mkdirs();
+
+    T template = org.adamalang.common.template.Parser.parse(Files.readString(new File(args.bookTemplate).toPath()));
+
+    String navHtml = renderNav(book.remove("SUMMARY.md"));
+
+    for (Map.Entry<String, String> entry : book.entrySet()) {
+      String path = entry.getKey();
+      int lastSlash = path.lastIndexOf('/');
+      File toPut = out;
+      String name = path;
+      if (lastSlash > 0) {
+        toPut = new File(toPut, path.substring(0, lastSlash));
+        toPut.mkdirs();
+        name = path.substring(lastSlash + 1);
+      }
+      name = name.substring(0, name.lastIndexOf('.')) + ".html";
+      Files.writeString(new File(toPut, name).toPath(), render(entry.getValue(), navHtml, template));
+    }
+
+    for (File child : new File(args.bookMerge).listFiles()) {
+      Files.copy(child.toPath(), new File(out, child.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+    }
+  }
+
+  public static void main(String[] x) throws Exception {
+    Arguments.ContribMakeBookArgs args = new Arguments.ContribMakeBookArgs();
+    Output.YesOrError out = new Output(x).makeYesOrError();
+    args.input = "reference/src";
+    args.output = "reference/output";
+    args.bookTemplate = "reference/template.html";
+    args.bookMerge = "reference/merge";
+    new ContribHandlerImpl().makeBook(args, out);
   }
 }

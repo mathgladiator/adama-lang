@@ -182,6 +182,18 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="book-template" type="string" short="bt">
+        <documentation>
+            Template for generating the book
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="book-merge" type="string" short="bm">
+        <documentation>
+            Files to merge into the book
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="title" type="string" short="tt">
         <documentation>
             The title of the diagram
@@ -515,6 +527,16 @@
             Open source contributor tools
         </documentation>
 
+        <command name="make-book">
+            <documentation>
+                Compile Adama's Book
+            </documentation>
+            <arg name="input" />
+            <arg name="output" />
+            <arg name="book-template" />
+            <arg name="book-merge" />
+        </command>
+
         <command name="tests-adama">
             <documentation>
                 Generate tests for Adama Language.
@@ -577,7 +599,7 @@
 
     <group name="database">
         <documentation>
-            Prepare database for usage
+            Work with production databases for the global service.
         </documentation>
         <command name="configure">
             <documentation>
@@ -598,7 +620,7 @@
 
     <group name="document" alt-name="documents">
         <documentation>
-            Interact with documents
+            Interact with documents within a space.
         </documentation>
 
         <command name="connect">
@@ -651,7 +673,7 @@
 
     <group name="domain" alt-name="domains">
         <documentation>
-            Manage Domains
+            Manage custom domains
         </documentation>
         <command name="map">
             <documentation>

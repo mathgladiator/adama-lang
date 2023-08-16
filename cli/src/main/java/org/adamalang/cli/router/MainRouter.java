@@ -437,6 +437,16 @@ public class MainRouter {
                contribHandler.makeApi(contribArgs, out);
                return 0;
             }
+            case "make-book": {
+              ContribMakeBookArgs contribArgs = ContribMakeBookArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribMakeBookArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.makeBook(contribArgs, out);
+               return 0;
+            }
             case "make-cli": {
               ContribMakeCliArgs contribArgs = ContribMakeCliArgs.from(args, 2);
               if (contribArgs == null) {

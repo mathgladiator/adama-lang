@@ -22,9 +22,9 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("account", 15), Util.ANSI.Cyan) + "Manage your account");
     System.out.println("    " + Util.prefix(Util.justifyLeft("code", 15), Util.ANSI.Cyan) + "Local developer tools");
     System.out.println("    " + Util.prefix(Util.justifyLeft("contrib", 15), Util.ANSI.Cyan) + "Open source contributor tools");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("database", 15), Util.ANSI.Cyan) + "Prepare database for usage");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("document", 15), Util.ANSI.Cyan) + "Interact with documents");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("domain", 15), Util.ANSI.Cyan) + "Manage Domains");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("database", 15), Util.ANSI.Cyan) + "Work with production databases for the global service.");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("document", 15), Util.ANSI.Cyan) + "Interact with documents within a space.");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("domain", 15), Util.ANSI.Cyan) + "Manage custom domains");
     System.out.println("    " + Util.prefix(Util.justifyLeft("frontend", 15), Util.ANSI.Cyan) + "Frontend tools (rxhtml)");
     System.out.println("    " + Util.prefix(Util.justifyLeft("services", 15), Util.ANSI.Cyan) + "Launch a service");
     System.out.println("    " + Util.prefix(Util.justifyLeft("dumpenv", 15), Util.ANSI.Green) + "Dump your environment variables");
@@ -113,6 +113,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("bundle-js", 15), Util.ANSI.Green) + "Bundles the libadama.js into the webserver");
     System.out.println("    " + Util.prefix(Util.justifyLeft("copyright", 15), Util.ANSI.Green) + "Sprinkle the copyright everywhere.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-api", 15), Util.ANSI.Green) + "Produces api files for SaaS and documentation for the WebSocket low level API.");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("make-book", 15), Util.ANSI.Green) + "Compile Adama's Book");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-cli", 15), Util.ANSI.Green) + "Generate the command line router");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-codec", 15), Util.ANSI.Green) + "Generates the networking codec");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-et", 15), Util.ANSI.Green) + "Generates the error table which provides useful insight to issues");
@@ -122,7 +123,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("version", 15), Util.ANSI.Green) + "Create the version number for the platform");
   }
   public static void displayDatabaseHelp() {
-    System.out.println(Util.prefix("Prepare database for usage", Util.ANSI.Green));
+    System.out.println(Util.prefix("Work with production databases for the global service.", Util.ANSI.Green));
     System.out.println();
     System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("adama database", Util.ANSI.Green) + " " + Util.prefix("[DATABASESUBCOMMAND]", Util.ANSI.Magenta));
@@ -135,7 +136,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("migrate", 15), Util.ANSI.Green) + "Migrate data from 'db' to 'nextdb'");
   }
   public static void displayDocumentHelp() {
-    System.out.println(Util.prefix("Interact with documents", Util.ANSI.Green));
+    System.out.println(Util.prefix("Interact with documents within a space.", Util.ANSI.Green));
     System.out.println();
     System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("adama document", Util.ANSI.Green) + " " + Util.prefix("[DOCUMENTSUBCOMMAND]", Util.ANSI.Magenta));
@@ -150,7 +151,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("list", 15), Util.ANSI.Green) + "List documents");
   }
   public static void displayDomainHelp() {
-    System.out.println(Util.prefix("Manage Domains", Util.ANSI.Green));
+    System.out.println(Util.prefix("Manage custom domains", Util.ANSI.Green));
     System.out.println();
     System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("adama domain", Util.ANSI.Green) + " " + Util.prefix("[DOMAINSUBCOMMAND]", Util.ANSI.Magenta));
