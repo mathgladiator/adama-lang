@@ -17,7 +17,6 @@ import org.adamalang.cli.implementations.code.Diagram;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.CodeHandler;
 import org.adamalang.cli.runtime.Output;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.lsp.LanguageServer;
@@ -35,7 +34,6 @@ import org.adamalang.translator.tree.Document;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -52,15 +50,6 @@ public class CodeHandlerImpl implements CodeHandler {
     plan.put("default", "file");
     plan.putArray("plan");
     Files.writeString(new File(args.output).toPath(), plan.toPrettyString());
-    output.out();
-  }
-
-  @Override
-  public void diagram(Arguments.CodeDiagramArgs args, Output.YesOrError output) throws Exception {
-    ObjectNode reflection = Json.parseJsonObject(Files.readString(new File(args.input).toPath()));
-    Diagram diagram = new Diagram("Diagram");
-    diagram.process(reflection);
-    Files.writeString(new File(args.output).toPath(), diagram.finish());
     output.out();
   }
 
@@ -83,6 +72,15 @@ public class CodeHandlerImpl implements CodeHandler {
     if (args.dumpTo != null) {
       Files.writeString(new File(args.dumpTo).toPath(), result.code);
     }
+    output.out();
+  }
+
+  @Override
+  public void diagram(Arguments.CodeDiagramArgs args, Output.YesOrError output) throws Exception {
+    ObjectNode reflection = Json.parseJsonObject(Files.readString(new File(args.input).toPath()));
+    Diagram diagram = new Diagram("Diagram");
+    diagram.process(reflection);
+    Files.writeString(new File(args.output).toPath(), diagram.finish());
     output.out();
   }
 
@@ -225,10 +223,6 @@ public class CodeHandlerImpl implements CodeHandler {
     return success;
   }
 
-  private static class KnownException extends Exception {
-
-  }
-
   public static CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) throws Exception {
     final var options = CompilerOptions.start().make();
     final var globals = GlobalObjectPool.createPoolWithStdLib();
@@ -257,6 +251,10 @@ public class CodeHandlerImpl implements CodeHandler {
       System.err.println(Util.prefix("[" + file + ";start=" + startLine + ":" + startCharacter + ", end=" + endLine + ":" + endCharacter + "]", Util.ANSI.Red) + " :" + errorItem.get("message").textValue());
     }
     throw new KnownException();
+  }
+
+  private static class KnownException extends Exception {
+
   }
 
   public static class CompileResult {

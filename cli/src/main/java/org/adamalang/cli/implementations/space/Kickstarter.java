@@ -21,8 +21,8 @@ public class Kickstarter {
   public final Config config;
   public final Connection connection;
   public final String identity;
-  private String space;
   private final String template;
+  private String space;
 
   public Kickstarter(Config config, Connection connection) {
     this.config = config;

@@ -88,14 +88,6 @@ public class AuthorityHandlerImpl implements AuthorityHandler {
     }
   }
 
-  private static File ensureFileDoesNotExist(String filename) throws Exception {
-    File file = new File(filename);
-    if (file.exists()) {
-      throw new Exception(filename + " already exists, refusing to create");
-    }
-    return file;
-  }
-
   @Override
   public void list(Arguments.AuthorityListArgs args, Output.JsonOrError output) throws Exception {
     String identity = args.config.get_string("identity", null);
@@ -145,6 +137,14 @@ public class AuthorityHandlerImpl implements AuthorityHandler {
       tokenBundle.put("validated", true);
     }
     output.out();
+  }
+
+  private static File ensureFileDoesNotExist(String filename) throws Exception {
+    File file = new File(filename);
+    if (file.exists()) {
+      throw new Exception(filename + " already exists, refusing to create");
+    }
+    return file;
   }
 
   private void append(String authority, File keystoreFile, File keyFile) throws Exception {
