@@ -9,6 +9,7 @@
 package org.adamalang.cli.router;
 
 import org.adamalang.ErrorTable;
+import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.cli.runtime.Output.*;
@@ -907,7 +908,10 @@ public class MainRouter {
             return 1;
       }
     } catch (Exception ex) {
-      if (ex instanceof ErrorCodeException) {
+      if (ex instanceof Config.BadException) {
+        System.err.println(Util.prefix("[CONFIG ERROR]", Util.ANSI.Red));
+        System.err.println(ex.getMessage());
+      } else if (ex instanceof ErrorCodeException) {
         System.err.println(Util.prefix("[ERROR]", Util.ANSI.Red));
         System.err.println("#:" + ((ErrorCodeException) ex).code);
         System.err.println("Name:" + ErrorTable.INSTANCE.names.get(((ErrorCodeException) ex).code));
