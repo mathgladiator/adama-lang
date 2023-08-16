@@ -40,11 +40,6 @@ import java.io.File;
 public class ServicesHandlerImpl implements ServicesHandler {
 
   @Override
-  public void probe(Arguments.ServicesProbeArgs args, Output.YesOrError output) throws Exception {
-    new ProbeStart(args).run();
-  }
-
-  @Override
   public void auto(Arguments.ServicesAutoArgs args, Output.YesOrError output) throws Exception {
     Config config = args.config;
     String role = config.get_string("role", "none");
@@ -120,6 +115,11 @@ public class ServicesHandlerImpl implements ServicesHandler {
   public void overlord(Arguments.ServicesOverlordArgs args, Output.YesOrError output) throws Exception {
     Overlord.run(args.config);
     output.out();
+  }
+
+  @Override
+  public void probe(Arguments.ServicesProbeArgs args, Output.YesOrError output) throws Exception {
+    new ProbeStart(args).run();
   }
 
   @Override

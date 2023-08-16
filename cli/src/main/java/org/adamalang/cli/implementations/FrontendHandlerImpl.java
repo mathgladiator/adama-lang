@@ -10,8 +10,6 @@ package org.adamalang.cli.implementations;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.helger.css.ECSSVersion;
-import com.helger.css.decl.CSSDeclaration;
-import com.helger.css.decl.CSSStyleRule;
 import com.helger.css.decl.CascadingStyleSheet;
 import com.helger.css.reader.CSSReader;
 import org.adamalang.cli.css.StudyEngine;
@@ -42,6 +40,15 @@ public class FrontendHandlerImpl implements FrontendHandler {
   }
 
   @Override
+  public void bundle(Arguments.FrontendBundleArgs args, Output.YesOrError output) throws Exception {
+    ArrayList<File> files = new ArrayList<>();
+    aggregateFiles(new File(args.rxhtmlPath), files);
+    String result = Bundler.bundle(files);
+    Files.writeString(new File(args.output).toPath(), result);
+    output.out();
+  }
+
+  @Override
   public void devServer(Arguments.FrontendDevServerArgs args, Output.YesOrError output) throws Exception {
     DevBoxStart.start(args);
   }
@@ -50,17 +57,8 @@ public class FrontendHandlerImpl implements FrontendHandler {
   public void make200(Arguments.FrontendMake200Args args, Output.YesOrError output) throws Exception {
     ArrayList<File> files = new ArrayList<>();
     aggregateFiles(new File(args.rxhtmlPath), files);
-    RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files),  ShellConfig.start().withFeedback((element, warning) -> System.err.println(warning)).end());
+    RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files), ShellConfig.start().withFeedback((element, warning) -> System.err.println(warning)).end());
     Files.writeString(new File(args.output).toPath(), updated.shell.makeShell(updated));
-    output.out();
-  }
-
-  @Override
-  public void bundle(Arguments.FrontendBundleArgs args, Output.YesOrError output) throws Exception {
-    ArrayList<File> files = new ArrayList<>();
-    aggregateFiles(new File(args.rxhtmlPath), files);
-    String result = Bundler.bundle(files);
-    Files.writeString(new File(args.output).toPath(), result);
     output.out();
   }
 
@@ -81,13 +79,6 @@ public class FrontendHandlerImpl implements FrontendHandler {
   }
 
   @Override
-  public void wrapCss(Arguments.FrontendWrapCssArgs args, Output.YesOrError output) throws Exception {
-    String css = Files.readString(new File(args.input).toPath());
-    Files.writeString(new File(args.output).toPath(), "<forest><style>\n" + css + "\n</style></forest>");
-    output.out();
-  }
-
-  @Override
   public void studyCss(Arguments.FrontendStudyCssArgs args, Output.YesOrError output) throws Exception {
     final CascadingStyleSheet css = CSSReader.readFromFile(new File(args.input), StandardCharsets.UTF_8, ECSSVersion.CSS30);
     StringBuilder constant = new StringBuilder();
@@ -96,6 +87,13 @@ public class FrontendHandlerImpl implements FrontendHandler {
     Files.writeString(new File("css.style.txt").toPath(), study);
     Files.writeString(new File("css.style.constants.txt").toPath(), constant.toString());
     Files.writeString(new File("css.style.db.json").toPath(), db.toPrettyString());
+    output.out();
+  }
+
+  @Override
+  public void wrapCss(Arguments.FrontendWrapCssArgs args, Output.YesOrError output) throws Exception {
+    String css = Files.readString(new File(args.input).toPath());
+    Files.writeString(new File(args.output).toPath(), "<forest><style>\n" + css + "\n</style></forest>");
     output.out();
   }
 }

@@ -91,6 +91,25 @@ public class SpaceHandlerImpl implements SpaceHandler {
     output.out();
   }
 
+  @Override
+  public void encryptPriv(Arguments.SpaceEncryptPrivArgs args, Output.YesOrError output) throws Exception {
+    encrypt(args.config, args.space, () -> {
+      try {
+        return Files.readString(new File(args.priv).toPath());
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    }, output);
+  }
+
+  @Override
+  public void encryptSecret(Arguments.SpaceEncryptSecretArgs args, Output.YesOrError output) throws Exception {
+    encrypt(args.config, args.space, () -> {
+      System.out.print(Util.prefix("Secret/Token:", Util.ANSI.Red));
+      return new String(System.console().readPassword());
+    }, output);
+  }
+
   private static void encrypt(Config config, String space, Supplier<String> secretSupplier, Output.YesOrError output) throws Exception {
     ObjectNode keys = config.get_or_create_child("space-keys");
     if (!keys.has(space)) {
@@ -114,25 +133,6 @@ public class SpaceHandlerImpl implements SpaceHandler {
     System.out.println(encrypted);
     System.out.println("------------------");
     output.out();
-  }
-
-  @Override
-  public void encryptSecret(Arguments.SpaceEncryptSecretArgs args, Output.YesOrError output) throws Exception {
-    encrypt(args.config, args.space, () -> {
-      System.out.print(Util.prefix("Secret/Token:", Util.ANSI.Red));
-      return new String(System.console().readPassword());
-    }, output);
-  }
-
-  @Override
-  public void encryptPriv(Arguments.SpaceEncryptPrivArgs args, Output.YesOrError output) throws Exception {
-    encrypt(args.config, args.space, () -> {
-      try {
-        return Files.readString(new File(args.priv).toPath());
-      } catch (Exception ex) {
-        throw new RuntimeException(ex);
-      }
-    }, output);
   }
 
   @Override

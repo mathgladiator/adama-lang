@@ -8,38 +8,27 @@
  */
 package org.adamalang.cli.implementations;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.GenerateTables;
 import org.adamalang.cli.Util;
+import org.adamalang.cli.implementations.docgen.BookGenerator;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.ContribHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.DefaultCopyright;
 import org.adamalang.common.Escaping;
-import org.adamalang.common.Json;
 import org.adamalang.common.codec.CodecCodeGen;
 import org.adamalang.common.gossip.codec.GossipProtocol;
-import org.adamalang.common.template.Settings;
-import org.adamalang.common.template.tree.T;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.support.GenerateLanguageTests;
 import org.adamalang.support.GenerateTemplateTests;
 import org.adamalang.web.service.BundleJavaScript;
-import org.commonmark.Extension;
-import org.commonmark.ext.gfm.tables.TablesExtension;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,6 +56,16 @@ public class ContribHandlerImpl implements ContribHandler {
     }
   }
 
+  public static void main(String[] x) throws Exception {
+    Arguments.ContribMakeBookArgs args = new Arguments.ContribMakeBookArgs();
+    Output.YesOrError out = new Output(x).makeYesOrError();
+    args.input = "reference/src";
+    args.output = "reference/output";
+    args.bookTemplate = "reference/template.html";
+    args.bookMerge = "reference/merge";
+    new ContribHandlerImpl().makeBook(args, out);
+  }
+
   @Override
   public void bundleJs(Arguments.ContribBundleJsArgs args, Output.YesOrError output) throws Exception {
     System.out.println(Util.prefix("Bundling JavaScript", Util.ANSI.Cyan));
@@ -87,6 +86,11 @@ public class ContribHandlerImpl implements ContribHandler {
     org.adamalang.apikit.Tool.build("saas/api.xml", new File("."));
     System.out.println(Util.prefix("Assembling Global Control Plane API", Util.ANSI.Cyan));
     output.out();
+  }
+
+  @Override
+  public void makeBook(Arguments.ContribMakeBookArgs args, Output.YesOrError output) throws Exception {
+    new BookGenerator().go(args, output);
   }
 
   @Override
@@ -117,6 +121,22 @@ public class ContribHandlerImpl implements ContribHandler {
   }
 
   @Override
+  public void strTemp(Arguments.ContribStrTempArgs args, Output.YesOrError output) throws Exception {
+    System.out.println(Util.prefix("Converting string templates to code!", Util.ANSI.Cyan));
+    for (File template : new File("core/string_templates").listFiles()) {
+      String str = Files.readString(template.toPath());
+      String[] parts = template.getName().replaceAll("[\\.-]", "_").split(Pattern.quote("_"));
+      for (int k = 0; k < parts.length; k++) {
+        parts[k] = parts[k].substring(0, 1).toUpperCase(Locale.ENGLISH) + parts[k].substring(1).toLowerCase(Locale.ENGLISH);
+      }
+      String name = String.join("", parts);
+      String java = "package org.adamalang.runtime.stdlib.intern;\n" + "\n" + "import org.adamalang.common.template.Parser;\n" + "import org.adamalang.common.template.tree.T;\n" + "\n" + "public class Template" + name + " {\n" + "  public static final String VALUE = \"" + new Escaping(str).go() + "\";\n" + "  public static final T TEMPLATE = Parser.parse(VALUE);\n" + "}\n";
+      Files.writeString(new File("core/src/main/java/org/adamalang/runtime/stdlib/intern/Template" + name + ".java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + java);
+    }
+    output.out();
+  }
+
+  @Override
   public void testsAdama(Arguments.ContribTestsAdamaArgs args, Output.YesOrError output) throws Exception {
     System.out.println(Util.prefix("Generate Adama Tests", Util.ANSI.Cyan));
     GenerateLanguageTests.generate(args.input, args.output, args.errors);
@@ -137,146 +157,5 @@ public class ContribHandlerImpl implements ContribHandler {
     String versionFile = "package org.adamalang.common;\n" + "\n" + "public class Platform {\n" + "  public static final String VERSION = \"" + versionCode + "\";\n" + "}\n";
     Files.writeString(new File("common/src/main/java/org/adamalang/common/Platform.java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + versionFile);
     output.out();
-  }
-
-  @Override
-  public void strTemp(Arguments.ContribStrTempArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Converting string templates to code!", Util.ANSI.Cyan));
-    for (File template : new File("core/string_templates").listFiles()) {
-      String str = Files.readString(template.toPath());
-      String[] parts = template.getName().replaceAll("[\\.-]", "_").split(Pattern.quote("_"));
-      for (int k = 0; k < parts.length; k++) {
-        parts[k] = parts[k].substring(0, 1).toUpperCase(Locale.ENGLISH) + parts[k].substring(1).toLowerCase(Locale.ENGLISH);
-      }
-      String name = String.join("", parts);
-      StringBuilder java = new StringBuilder();
-      java.append("package org.adamalang.runtime.stdlib.intern;\n");
-      java.append("\n");
-      java.append("import org.adamalang.common.template.Parser;\n");
-      java.append("import org.adamalang.common.template.tree.T;\n");
-      java.append("\n");
-      java.append("public class Template").append(name).append(" {\n");
-      java.append("  public static final String VALUE = \"").append(new Escaping(str).go()).append("\";\n");
-      java.append("  public static final T TEMPLATE = Parser.parse(VALUE);\n");
-      java.append("}\n");
-      Files.writeString(new File("core/src/main/java/org/adamalang/runtime/stdlib/intern/Template" + name + ".java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + java.toString());
-    }
-    output.out();
-  }
-
-  public void assembleBook(File root, String prefix, TreeMap<String, String> files) throws Exception {
-    for (File child : root.listFiles()) {
-      if (child.isDirectory()) {
-        assembleBook(child, prefix + child.getName() + "/", files);
-      } else {
-        if (child.getName().endsWith(".md")) {
-          files.put(prefix + child.getName(), Files.readString(child.toPath()));
-        }
-      }
-    }
-  }
-
-  private String md2html(String markdown) {
-    HashSet<Extension> ext = new HashSet<>();
-    ext.add(TablesExtension.create());
-    Parser parser = Parser.builder().extensions(ext).build();
-    Node document = parser.parse(markdown);
-    HtmlRenderer renderer = HtmlRenderer.builder().extensions(ext).build();
-    Document doc = Jsoup.parse(renderer.render(document));
-    for (Element a : doc.getElementsByTag("a")) {
-      if (a.hasAttr("href")) {
-        String href = a.attr("href");
-        if (href.endsWith(".md")) {
-          a.attr("href", href.substring(0, href.length() - 3) + ".html");
-        }
-      }
-    }
-    return doc.body().html();
-  }
-
-  private String render(String markdown, String navHtml, T template) {
-    ObjectNode input = Json.newJsonObject();
-    input.put("body", md2html(markdown));
-    input.put("nav", navHtml);
-    StringBuilder output = new StringBuilder();
-    template.render(new Settings(), input, output);
-    return output.toString();
-  }
-
-  private String renderNav(String markdown) {
-    Document doc = Jsoup.parse(md2html(markdown));
-    Element body = doc.body();
-    body.getElementsByTag("h1").remove();
-    for (Element element : body.children()) {
-      if (element.tagName().endsWith("ul")) {
-        element.attr("class", "text-sm list-disc list-inside");
-        for (Element firstLevelItem : element.children()) {
-          if (firstLevelItem.tagName().equals("li")) {
-            firstLevelItem.attr("class", "mb-2");
-            for (Element secondLevel : firstLevelItem.children()) {
-              if (secondLevel.tagName().endsWith("ul")) {
-                secondLevel.attr("class", "mb-3 ml-4 pl-6 border-l border-slate-200 dark:border-slate-800 list-decimal");
-                for (Element secondLevelItem : secondLevel.children()) {
-                  if (secondLevelItem.tagName().equals("li")) {
-                    secondLevelItem.attr("class", "mt-3");
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    for (Element a : body.getElementsByTag("a")) {
-      if (a.hasAttr("href")) {
-        String href = a.attr("href");
-        if (href.startsWith(".")) {
-          a.attr("href", href.substring(1));
-        }
-      }
-    }
-
-    return body.html();
-  }
-
-  @Override
-  public void makeBook(Arguments.ContribMakeBookArgs args, Output.YesOrError output) throws Exception {
-    File input = new File(args.input);
-    TreeMap<String, String> book = new TreeMap<>();
-    assembleBook(input, "", book);
-    File out = new File(args.output);
-    out.mkdirs();
-
-    T template = org.adamalang.common.template.Parser.parse(Files.readString(new File(args.bookTemplate).toPath()));
-
-    String navHtml = renderNav(book.remove("SUMMARY.md"));
-
-    for (Map.Entry<String, String> entry : book.entrySet()) {
-      String path = entry.getKey();
-      int lastSlash = path.lastIndexOf('/');
-      File toPut = out;
-      String name = path;
-      if (lastSlash > 0) {
-        toPut = new File(toPut, path.substring(0, lastSlash));
-        toPut.mkdirs();
-        name = path.substring(lastSlash + 1);
-      }
-      name = name.substring(0, name.lastIndexOf('.')) + ".html";
-      Files.writeString(new File(toPut, name).toPath(), render(entry.getValue(), navHtml, template));
-    }
-
-    for (File child : new File(args.bookMerge).listFiles()) {
-      Files.copy(child.toPath(), new File(out, child.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-    }
-  }
-
-  public static void main(String[] x) throws Exception {
-    Arguments.ContribMakeBookArgs args = new Arguments.ContribMakeBookArgs();
-    Output.YesOrError out = new Output(x).makeYesOrError();
-    args.input = "reference/src";
-    args.output = "reference/output";
-    args.bookTemplate = "reference/template.html";
-    args.bookMerge = "reference/merge";
-    new ContribHandlerImpl().makeBook(args, out);
   }
 }

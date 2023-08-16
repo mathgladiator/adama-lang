@@ -69,7 +69,7 @@ public class Diagram {
         depends.add(tableRecord);
         return "table~" + tableRecord + "~";
       default:
-        System.err.println("unknown:" + type.toString());
+        System.err.println("unknown:" + type);
         return "?";
     }
   }
@@ -100,7 +100,7 @@ public class Diagram {
       Map.Entry<String, JsonNode> rec = it.next();
       String name = rec.getKey();
       ObjectNode type = (ObjectNode) rec.getValue();
-      if ("__Root".equals(name)) continue;;
+      if ("__Root".equals(name)) continue;
       if (name.startsWith("_")) continue;
       TreeSet<String> depends = new TreeSet<>();
       if ("reactive_record".equals(type.get("nature").textValue())) {
@@ -128,7 +128,7 @@ public class Diagram {
       mmd.append("        +").append(message).append(" msg\n");
       mmd.append("    }\n");
       mmd.append("    ").append(name).append("-->Document\n");
-      mmd.append("    ").append(message).append("..>").append("").append(name).append("\n");
+      mmd.append("    ").append(message).append("..>").append(name).append("\n");
     }
   }
 
