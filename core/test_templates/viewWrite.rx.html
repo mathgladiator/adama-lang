@@ -1,0 +1,9 @@
+<forest>
+    <page uri="/">
+        <connection name="myname" use-domain>
+            <input type="text" rx:sync="value_a" />
+            <input type="text" rx:sync="value_b" />
+            <view-write name="sum" value="{value_a}_{value_b}" />
+        </connection>
+    </page>
+</forest>

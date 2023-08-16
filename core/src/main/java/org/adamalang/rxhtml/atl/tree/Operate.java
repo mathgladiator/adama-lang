@@ -16,13 +16,24 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /** a simple way of doing string equality */
-public class Equals implements Tree {
+public class Operate implements Tree {
+  public static final String[] OPERATORS = new String[] { "<=", ">=", "!=", "<", ">", "=" };
+
+  public static String convertOp(String op) {
+    if ("=".equals(op)) {
+      return "==";
+    }
+    return op;
+  }
+
   public final Tree tree;
   public final Tree value;
+  public final String operator;
 
-  public Equals(Tree tree, String value) throws ParseException  {
+  public Operate(Tree tree, String value, String operator) throws ParseException  {
     this.tree = tree;
     this.value = Parser.parse(value);
+    this.operator = operator;
   }
 
   @Override
@@ -35,11 +46,11 @@ public class Equals implements Tree {
 
   @Override
   public String debug() {
-    return "EQUALS[" + tree.debug() + ",'" + value.debug() + "']";
+    return "OP(" + operator + ")[" + tree.debug() + ",'" + value.debug() + "']";
   }
 
   @Override
   public String js(Context context, String env) {
-    return "(" + tree.js(Context.DEFAULT, env) + "==" + value.js(Context.DEFAULT, env) + ")";
+    return "(" + tree.js(Context.DEFAULT, env) + operator + value.js(Context.DEFAULT, env) + ")";
   }
 }

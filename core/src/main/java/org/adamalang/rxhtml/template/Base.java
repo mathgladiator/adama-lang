@@ -17,6 +17,7 @@ import org.jsoup.nodes.TextNode;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 public class Base {
   private static final String[] EVENTS = new String[]{"click", "mouseenter", "mouseleave", "load", "success", "failure", "blur", "focus"};
@@ -177,7 +178,8 @@ public class Base {
         org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) node;
         Environment childEnv = env.element(child, nodes.size() == 1);
         try {
-          Method method = Elements.class.getMethod(child.tagName(), Environment.class);
+          String tagNameNormal = child.tagName().replaceAll(Pattern.quote("-"), "_");
+          Method method = Elements.class.getMethod(tagNameNormal, Environment.class);
           method.invoke(null, childEnv);
         } catch (Exception ex) {
           Base.write(childEnv, false);

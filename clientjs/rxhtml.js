@@ -498,6 +498,21 @@ var RxHTML = (function () {
     return document.createTextNode(tx);
   };
 
+  // RUNTIME | <view-write name="" value="">
+  self.VW = function(state, name, rxObj) {
+    rxObj.__ = debounce(50, function() {
+      var obj = {};
+      var value = rxObj.value;
+      if (typeof (value) == "function") {
+        obj[name] = value();
+      } else {
+        obj[name] = value;
+      }
+      var delta = path_to(state.view, obj);
+      state[state.current].tree.update(delta);
+    });
+  };
+
   // RUNTIME | <lookup path=...>
   self.L = function (state, name) {
     var dom = document.createTextNode("");

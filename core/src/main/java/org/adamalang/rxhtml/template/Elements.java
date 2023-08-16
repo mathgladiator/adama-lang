@@ -38,6 +38,13 @@ public class Elements {
     env.writer.tab().append(env.fragmentFunc).append("(").append(env.parentVariable).append(",").append(env.stateVar).append(",'").append(caseToUse).append("');").newline();
   }
 
+  public static void view_write(Environment env) {
+    StatePath path = StatePath.resolve("view:" + env.element.attr("path"), env.stateVar);
+    RxObject obj = new RxObject(env, "value");
+    env.writer.tab().append("$.VW(").append(path.command).append(",'").append(path.name).append("',").append(obj.rxObj).append(");").newline();
+    obj.finish();
+  }
+
   public static void lookup(Environment env) {
     StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
     String transform = env.element.attr("transform");
@@ -62,6 +69,7 @@ public class Elements {
   public static void title(Environment env) {
     RxObject obj = new RxObject(env, "value");
     env.writer.tab().append("$.ST(").append(obj.rxObj).append(");").newline();
+    obj.finish();
   }
 
   public static void viewsync(Environment env) {

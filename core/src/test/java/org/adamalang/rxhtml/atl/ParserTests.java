@@ -106,7 +106,7 @@ public class ParserTests {
   @Test
   public void condition_eq() throws Exception {
     Tree tree = Parser.parse("hi [b=xyz]A[#b=xyz]B[/b=xyz] there");
-    Assert.assertEquals("[TEXT(hi ),(EQUALS[LOOKUP[b],'TEXT(xyz)']) ? (TEXT(A)) : (TEXT(B)),TEXT( there)]", tree.debug());
+    Assert.assertEquals("[TEXT(hi ),(OP(==)[LOOKUP[b],'TEXT(xyz)']) ? (TEXT(A)) : (TEXT(B)),TEXT( there)]", tree.debug());
     Assert.assertEquals("\"hi \" + ((($X['b']==\"xyz\")) ? (\"A\") : (\"B\")) + \" there\"", tree.js(Context.DEFAULT, "$X"));
     Map<String, String> vars = tree.variables();
     Assert.assertEquals(1, vars.size());
