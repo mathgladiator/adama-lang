@@ -8,6 +8,8 @@
  */
 package org.adamalang.rxhtml.template;
 
+import java.util.Locale;
+
 public class StatePath {
   public final String command;
   public final String name;
@@ -23,27 +25,31 @@ public class StatePath {
   public static StatePath resolve(String path, String stateVar) {
     // NOTE: this is a very quick and dirty implementation
     String command = stateVar;
-    String toParse = path;
-    if (toParse.startsWith("view:")) {
-      toParse = toParse.substring(5);
-      command = "$.pV(" + command + ")";
-    }
-    if (toParse.startsWith("data:")) {
-      toParse = toParse.substring(5);
-      command = "$.pD(" + command + ")";
+    String toParse = path.trim();
+
+    int kColon = toParse.indexOf(':');
+    if (kColon >= 0) {
+      String switchTo = toParse.substring(0, kColon).trim().toLowerCase(Locale.ENGLISH);
+      if ("view".equals(switchTo)) {
+        toParse = toParse.substring(kColon + 1).stripLeading();
+        command = "$.pV(" + command + ")";
+      } else if ("data".equals(switchTo)) {
+        toParse = toParse.substring(kColon + 1).stripLeading();
+        command = "$.pD(" + command + ")";
+      }
     }
     while (true) {
       if (toParse.startsWith("/")) {
-        toParse = toParse.substring(1);
+        toParse = toParse.substring(1).stripLeading();
         command = "$.pR(" + command + ")";
       } else if (toParse.startsWith("../")) {
-        toParse = toParse.substring(3);
+        toParse = toParse.substring(3).stripLeading();
         command = "$.pU(" + command + ")";
       } else {
         int kSlash = toParse.indexOf('/');
         if (kSlash > 0) {
-          String scopeInto = toParse.substring(0, kSlash);
-          toParse = toParse.substring(kSlash + 1);
+          String scopeInto = toParse.substring(0, kSlash).stripTrailing();
+          toParse = toParse.substring(kSlash + 1).stripLeading();
           command = "$.pI(" + command + ",'" + scopeInto + "')";
         } else {
           return new StatePath(command, toParse, command.equals(stateVar));
