@@ -27,6 +27,8 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a microverse is a local cosmos of an Adama machine that outlines everything needed to run Adama locally without a DB */
@@ -111,6 +113,7 @@ public class DevBoxAdamaMicroVerse {
               defn.base.deploy(defn.spaceName, new DeploymentPlan(plan, (t, ec) -> {
                 io.error("adama|deployment-issue[Code-" + ec + "]: " + t.getMessage());
               }));
+              CountDownLatch awaitDeployment = new CountDownLatch(1);
               service.deploy(new DeploymentMonitor() {
                  int documentsChanged;
                  @Override
@@ -128,9 +131,11 @@ public class DevBoxAdamaMicroVerse {
                  @Override
                  public void finished(int ms) {
                    io.notice("adama:deployment-finished: " + documentsChanged + " changed; time=" + ms + "ms");
+                   awaitDeployment.countDown();
                  }
                });
-                  defn.lastDeployedPlan = plan;
+              defn.lastDeployedPlan = plan;
+              awaitDeployment.await(30000, TimeUnit.MILLISECONDS);
               io.notice("adama|deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
             } else {
               io.error("adama|failure: " + defn.spaceName);

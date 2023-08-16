@@ -9,6 +9,7 @@
 package org.adamalang.cli.implementations;
 
 import org.adamalang.GenerateTables;
+import org.adamalang.caravan.events.Events;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.implementations.docgen.BookGenerator;
 import org.adamalang.cli.router.Arguments;
@@ -108,8 +109,11 @@ public class ContribHandlerImpl implements ContribHandler {
     Files.writeString(new File("./net/src/main/java/org/adamalang/net/codec/ClientCodec.java").toPath(), client);
     Files.writeString(new File("./net/src/main/java/org/adamalang/net/codec/ServerCodec.java").toPath(), server);
     System.out.println(Util.prefix("Creating Gossip Codec", Util.ANSI.Cyan));
-    String codec = CodecCodeGen.assembleCodec("org.adamalang.common.gossip.codec", "GossipProtocolCodec", GossipProtocol.class.getDeclaredClasses());
-    Files.writeString(new File("./common/src/main/java/org/adamalang/common/gossip/codec/GossipProtocolCodec.java").toPath(), codec);
+    String gossipCodec = CodecCodeGen.assembleCodec("org.adamalang.common.gossip.codec", "GossipProtocolCodec", GossipProtocol.class.getDeclaredClasses());
+    Files.writeString(new File("./common/src/main/java/org/adamalang/common/gossip/codec/GossipProtocolCodec.java").toPath(), gossipCodec);
+    System.out.println(Util.prefix("Creating Disk Codec", Util.ANSI.Cyan));
+    String diskCodec = CodecCodeGen.assembleCodec("org.adamalang.caravan.events", "EventCodec", Events.class.getDeclaredClasses());
+    Files.writeString(new File("./data-caravan/src/main/java/org/adamalang/caravan/events/EventCodec.java").toPath(), diskCodec);
     output.out();
   }
 

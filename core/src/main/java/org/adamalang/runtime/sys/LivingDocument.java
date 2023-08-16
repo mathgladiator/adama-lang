@@ -1159,6 +1159,10 @@ public abstract class LivingDocument implements RxParent, Caller {
             case "arg": // for constructor
               arg = __parse_construct_arg(reader);
               break;
+            case "reason":
+              // don't use
+              reader.readString();
+              break;
             default:
               throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT);
           }
