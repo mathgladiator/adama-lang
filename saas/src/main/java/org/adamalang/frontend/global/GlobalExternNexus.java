@@ -17,6 +17,7 @@ import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.ops.GlobalCapacityOverseer;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.client.WebClientBase;
@@ -44,6 +45,7 @@ public class GlobalExternNexus {
   public final String[] superPublicKeys;
   public final SignalControl signalControl;
   public final FinderService finder;
+  public final GlobalCapacityOverseer overseer;
 
   public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys, SignalControl signalControl, FinderService finder) {
     this.config = config;
@@ -64,6 +66,7 @@ public class GlobalExternNexus {
     this.superPublicKeys = superPublicKeys;
     this.signalControl = signalControl;
     this.finder = finder;
+    this.overseer = new GlobalCapacityOverseer(database);
     attachmentRoot.mkdir();
   }
   public void close() throws Exception {

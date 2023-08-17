@@ -21,6 +21,7 @@ import org.adamalang.net.server.ServerNexus;
 import org.adamalang.ops.*;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
+import org.adamalang.runtime.ops.CapacityMetrics;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
@@ -62,7 +63,7 @@ public class Backend {
     ServiceHeatEstimator estimator = new ServiceHeatEstimator(low, hot);
     meteringPubSub.subscribe(estimator);
 
-    CapacityAgent capacityAgent = new CapacityAgent(new CapacityMetrics(init.metricsFactory), init.database, service, deploymentFactoryBase, estimator, init.system, init.alive, service.shield, init.region, init.machine);
+    CapacityAgent capacityAgent = new CapacityAgent(new CapacityMetrics(init.metricsFactory), new GlobalCapacityOverseer(init.database), service, deploymentFactoryBase, estimator, init.system, init.alive, service.shield, init.region, init.machine);
     deploymentFactoryBase.attachDeliverer(service);
     // tell the proxy how to pull code on demand
     factoryProxy.setAgent(deployAgent);

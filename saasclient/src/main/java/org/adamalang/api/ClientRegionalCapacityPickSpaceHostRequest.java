@@ -6,8 +6,11 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20230817122923";
+/** generated request type for regional/capacity/pick-space-host */
+public class ClientRegionalCapacityPickSpaceHostRequest {
+  public String identity;
+  public String space;
+  public String region;
 }

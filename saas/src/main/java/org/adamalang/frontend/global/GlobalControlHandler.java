@@ -770,8 +770,6 @@ public class GlobalControlHandler implements RootGlobalHandler {
     }
   }
 
-
-
   @Override
   public void handle(Session session, RegionalFinderDeleteCommitRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
@@ -831,76 +829,67 @@ public class GlobalControlHandler implements RootGlobalHandler {
     }
   }
 
+
+  /*********
+   * Capacity Management for Regions
+   *********/
+
   @Override
   public void handle(Session session, RegionalCapacityAddRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-      try {
-        Capacity.add(nexus.database, request.space, request.region, request.machine);
-      } catch (Exception ex) {
-        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
-      }
+      nexus.overseer.add(request.space, request.region, request.machine, WRAP(responder));
     }
   }
 
   @Override
   public void handle(Session session, RegionalCapacityNukeRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-      try {
-        Capacity.removeAll(nexus.database, request.space);
-      } catch (Exception ex) {
-        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
-      }
+      nexus.overseer.nuke(request.space, WRAP(responder));
     }
   }
 
   @Override
   public void handle(Session session, RegionalCapacityRemoveRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-      try {
-        Capacity.remove(nexus.database, request.space, request.region, request.machine);
-      } catch (Exception ex) {
-        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
-      }
+      nexus.overseer.add(request.space, request.region, request.machine, WRAP(responder));
     }
   }
-  
-  private void pump(CapacityListResponder responder, List<CapacityInstance> instances) {
-    for (CapacityInstance instance : instances) {
-      responder.next(instance.space, instance.region, instance.machine, instance.override);
+
+  @Override
+  public void handle(Session session, RegionalCapacityPickSpaceHostRequest request, CapacityHostResponder responder) {
+    if (checkRegionalHost(request.who, responder.responder)) {
+      nexus.overseer.pickHostForSpace(request.space, request.region, new Callback<String>() {
+        @Override
+        public void success(String machine) {
+          responder.complete(machine);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      });
     }
-    responder.finish();
   }
 
   @Override
   public void handle(Session session, RegionalCapacityListSpaceRequest request, CapacityListResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-      try {
-        pump(responder, Capacity.listAll(nexus.database, request.space));
-      } catch (Exception ex) {
-        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
-      }
+      nexus.overseer.listAllSpace(request.space, WRAP(responder));
     }
   }
 
   @Override
   public void handle(Session session, RegionalCapacityListRegionRequest request, CapacityListResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-      try {
-        pump(responder, Capacity.listRegion(nexus.database, request.space, request.region));
-      } catch (Exception ex) {
-        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
-      }
+      nexus.overseer.listWithinRegion(request.space, request.region, WRAP(responder));
     }
   }
 
   @Override
   public void handle(Session session, RegionalCapacityListMachineRequest request, CapacityListResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-      try {
-        pump(responder, Capacity.listAllOnMachine(nexus.database, request.region, request.machine));
-      } catch (Exception ex) {
-        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
-      }
+      nexus.overseer.listAllOnMachine(request.region, request.machine, WRAP(responder));
     }
   }
 
@@ -921,4 +910,34 @@ public class GlobalControlHandler implements RootGlobalHandler {
       }
     };
   }
-}
+
+  private static Callback<Void> WRAP(SimpleResponder responder) {
+    return new Callback<Void>() {
+      @Override
+      public void success(Void v) {
+        responder.complete();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    };
+  }
+
+  private Callback<List<CapacityInstance>> WRAP(CapacityListResponder responder) {
+    return new Callback<>() {
+      @Override
+      public void success(List<CapacityInstance> instances) {
+        for (CapacityInstance instance : instances) {
+          responder.next(instance.space, instance.region, instance.machine, instance.override);
+        }
+        responder.finish();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    };
+  }}
