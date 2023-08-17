@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.runtime.ops.capacity;
+package org.adamalang.runtime.sys.capacity;
 
 /** a region bound machine */
 public class CapacityInstance {

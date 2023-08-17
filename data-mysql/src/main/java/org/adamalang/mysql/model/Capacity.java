@@ -9,7 +9,7 @@
 package org.adamalang.mysql.model;
 
 import org.adamalang.mysql.DataBase;
-import org.adamalang.runtime.ops.capacity.CapacityInstance;
+import org.adamalang.runtime.sys.capacity.CapacityInstance;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
