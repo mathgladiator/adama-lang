@@ -165,7 +165,7 @@ public class InstanceClientTests {
 
   @Test
   public void cantAttachPolicy() throws Exception {
-    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    LocalRegionClientMetrics metrics = new LocalRegionClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10005,

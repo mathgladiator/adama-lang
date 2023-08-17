@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-public class LocalClientTests {
+public class LocalRegionClientTests {
   private static final WebContext CONTEXT = new WebContext(NtPrincipal.NO_ONE, "ORIGIN", "1.2.3.4");
 
   @Test

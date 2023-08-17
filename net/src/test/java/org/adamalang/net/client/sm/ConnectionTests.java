@@ -12,7 +12,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
 import org.adamalang.net.client.ClientConfig;
-import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.InstanceClientFinder;
 import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
@@ -26,7 +26,7 @@ public class ConnectionTests {
 
   @Test
   public void happy() throws Exception {
-    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    LocalRegionClientMetrics metrics = new LocalRegionClientMetrics(new NoOpMetricsFactory());
     TestBed[] servers = new TestBed[2];
     SimpleExecutor executor = SimpleExecutor.create("executor");
     ExceptionLogger logger = (t, c) -> {};
@@ -89,7 +89,7 @@ public class ConnectionTests {
   
   @Test
   public void sad() throws Exception {
-    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    LocalRegionClientMetrics metrics = new LocalRegionClientMetrics(new NoOpMetricsFactory());
     TestBed[] servers = new TestBed[2];
     SimpleExecutor executor = SimpleExecutor.create("executor");
     ExceptionLogger logger = (t, c) -> {};

@@ -12,16 +12,16 @@ import io.netty.buffer.ByteBuf;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.net.ByteStream;
-import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
 
 public class CallbackByteStreamInfo implements Callback<ByteStream> {
   private final HeatMonitor monitor;
-  private final ClientMetrics metrics;
+  private final LocalRegionClientMetrics metrics;
 
-  public CallbackByteStreamInfo(HeatMonitor monitor, ClientMetrics metrics) {
+  public CallbackByteStreamInfo(HeatMonitor monitor, LocalRegionClientMetrics metrics) {
     this.monitor = monitor;
     this.metrics = metrics;
   }

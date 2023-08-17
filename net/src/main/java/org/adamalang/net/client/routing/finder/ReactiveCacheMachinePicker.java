@@ -11,17 +11,17 @@ package org.adamalang.net.client.routing.finder;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.runtime.data.Key;
 
 public class ReactiveCacheMachinePicker implements MachinePicker {
-  private final ClientMetrics metrics;
+  private final LocalRegionClientMetrics metrics;
   private final AggregatedCacheRouter engine;
   private final MachinePicker fallback;
 
-  public ReactiveCacheMachinePicker(ClientMetrics metrics, AggregatedCacheRouter engine, MachinePicker fallback) {
+  public ReactiveCacheMachinePicker(LocalRegionClientMetrics metrics, AggregatedCacheRouter engine, MachinePicker fallback) {
     this.metrics = metrics;
     this.engine = engine;
     this.fallback = fallback;

@@ -26,7 +26,7 @@ import org.adamalang.extern.aws.AWSMetrics;
 import org.adamalang.extern.prometheus.PrometheusDashboard;
 import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.mysql.DataBaseMetrics;
-import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.ops.CapacityMetrics;
 import org.adamalang.ops.DeploymentMetrics;
@@ -78,7 +78,7 @@ public class ServicesHandlerImpl implements ServicesHandler {
     new GlobalApiMetrics(metricsFactory);
     new RegionApiMetrics(metricsFactory);
     metricsFactory.page("client", "Web to Adama");
-    new ClientMetrics(metricsFactory);
+    new LocalRegionClientMetrics(metricsFactory);
     metricsFactory.page("server", "Adama Service");
     new ServerMetrics(metricsFactory);
     metricsFactory.page("adama", "Adama Core");
