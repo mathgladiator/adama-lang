@@ -16,11 +16,12 @@ import org.adamalang.frontend.global.BootstrapGlobalServiceBase;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Capacity;
 import org.adamalang.mysql.model.Hosts;
-import org.adamalang.runtime.ops.CapacityInstance;
-import org.adamalang.runtime.ops.CapacityOverseer;
+import org.adamalang.runtime.ops.capacity.CapacityInstance;
+import org.adamalang.runtime.ops.capacity.CapacityOverseer;
 
 import java.util.List;
 
+/** the global capacity overseer */
 public class GlobalCapacityOverseer implements CapacityOverseer  {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(BootstrapGlobalServiceBase.class);
   private final DataBase database;

@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.runtime.ops;
+package org.adamalang.runtime.ops.capacity;
 
 import org.adamalang.common.Callback;
 
