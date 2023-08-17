@@ -37,6 +37,15 @@ public class Json {
     throw new Exception("given json is not an ObjectNode at root");
   }
 
+
+  public static JsonNode parse(final String json) {
+    try {
+      return MAPPER.readTree(json);
+    } catch (Exception jpe) {
+      throw new RuntimeException(jpe);
+    }
+  }
+
   public static ArrayNode parseJsonArray(final String json) {
     try {
       return parseJsonArrayThrows(json);

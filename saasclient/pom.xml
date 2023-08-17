@@ -18,6 +18,16 @@
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
+            <artifactId>net</artifactId>
+            <version>MAIN</version>
+        </dependency>
+        <dependency>
+            <groupId>org.adamalang</groupId>
+            <artifactId>core</artifactId>
+            <version>MAIN</version>
+        </dependency>
+        <dependency>
+            <groupId>org.adamalang</groupId>
             <artifactId>web</artifactId>
             <version>MAIN</version>
         </dependency>

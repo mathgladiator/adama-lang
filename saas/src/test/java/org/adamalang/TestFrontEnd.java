@@ -76,6 +76,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -281,7 +282,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.webBase = new WebClientBase(new WebConfig(new ConfigObject(Json.parseJsonObject("{}"))));
     this.hostKeyPair = Keys.keyPairFor(SignatureAlgorithm.ES256);
     int keyId = Hosts.initializeHost(dataBase, "test-region", "127.0.0.1:" + port, "web", PublicKeyCodec.encodePublicKey(hostKeyPair));
-    MultiRegionClient adama = new MultiRegionClient(dataBase, client, "test-region", hostKeyPair.getPrivate(), keyId, finder);
+
+    MultiRegionClient adama = new MultiRegionClient(client, "test-region", hostKeyPair.getPrivate(), keyId, finder, new TreeMap<>());
     AssetSystem assets = new AssetSystem() {
       @Override
       public void request(AssetRequest request, AssetStream stream) {
