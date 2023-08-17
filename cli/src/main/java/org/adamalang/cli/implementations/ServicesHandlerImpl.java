@@ -28,7 +28,7 @@ import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.server.ServerMetrics;
-import org.adamalang.runtime.ops.capacity.CapacityMetrics;
+import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.ops.DeploymentMetrics;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.sys.CoreMetrics;

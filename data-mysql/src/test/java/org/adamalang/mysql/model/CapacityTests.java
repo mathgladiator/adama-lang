@@ -10,7 +10,7 @@ package org.adamalang.mysql.model;
 
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
-import org.adamalang.runtime.ops.capacity.CapacityInstance;
+import org.adamalang.runtime.sys.capacity.CapacityInstance;
 import org.junit.Assert;
 import org.junit.Test;
 

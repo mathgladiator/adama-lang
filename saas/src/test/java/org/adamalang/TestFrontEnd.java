@@ -29,7 +29,7 @@ import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.model.*;
 import org.adamalang.net.client.routing.finder.MachinePicker;
 import org.adamalang.ops.*;
-import org.adamalang.runtime.ops.capacity.CapacityMetrics;
+import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;

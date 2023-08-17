@@ -16,8 +16,8 @@ import org.adamalang.frontend.global.BootstrapGlobalServiceBase;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Capacity;
 import org.adamalang.mysql.model.Hosts;
-import org.adamalang.runtime.ops.capacity.CapacityInstance;
-import org.adamalang.runtime.ops.capacity.CapacityOverseer;
+import org.adamalang.runtime.sys.capacity.CapacityInstance;
+import org.adamalang.runtime.sys.capacity.CapacityOverseer;
 
 import java.util.List;
 

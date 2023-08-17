@@ -10,7 +10,7 @@ package org.adamalang.ops;
 
 import org.adamalang.common.*;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.runtime.ops.capacity.CapacityInstance;
+import org.adamalang.runtime.sys.capacity.CapacityInstance;
 import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.mysql.model.Capacity;
 import org.adamalang.mysql.model.Spaces;
