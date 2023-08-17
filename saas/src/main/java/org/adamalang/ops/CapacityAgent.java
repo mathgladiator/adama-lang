@@ -18,7 +18,6 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.CapacityInstance;
 import org.adamalang.mysql.model.Capacity;
 import org.adamalang.mysql.model.Hosts;
-import org.adamalang.net.client.Client;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreService;

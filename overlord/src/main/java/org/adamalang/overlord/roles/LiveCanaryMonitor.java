@@ -12,7 +12,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.net.client.Client;
+import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.overlord.OverlordMetrics;
@@ -26,7 +26,7 @@ public class LiveCanaryMonitor {
 
   private static class LiveCanaryStateMachine {
     private final OverlordMetrics metrics;
-    private final Client client;
+    private final LocalRegionClient client;
     private final String canarySpace;
     private final String agent;
     private final String suffix;
@@ -61,7 +61,7 @@ public class LiveCanaryMonitor {
       }
     }
 
-    public LiveCanaryStateMachine(OverlordMetrics metrics, Client client, String canarySpace, String agent, String suffix) {
+    public LiveCanaryStateMachine(OverlordMetrics metrics, LocalRegionClient client, String canarySpace, String agent, String suffix) {
       this.metrics = metrics;
       this.client = client;
       this.canarySpace = canarySpace;
@@ -97,7 +97,7 @@ public class LiveCanaryMonitor {
     }
   }
 
-  public static void kickOff(OverlordMetrics metrics, Client client, String canarySpace, String agent, int canaries) {
+  public static void kickOff(OverlordMetrics metrics, LocalRegionClient client, String canarySpace, String agent, int canaries) {
     SimpleExecutor executor = SimpleExecutor.create("metering-aggregator");
     for (int k = 0; k < canaries; k++) {
       final LiveCanaryStateMachine capture = new LiveCanaryStateMachine(metrics, client, canarySpace, agent, "-" + k);

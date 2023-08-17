@@ -42,7 +42,7 @@ import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.Installer;
-import org.adamalang.net.client.Client;
+import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.contracts.RoutingCallback;
@@ -60,7 +60,6 @@ import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.ServiceShield;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
-import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonLogger;
@@ -225,7 +224,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
         callback.success(identity.ip + ":" + port);
       }
     }, "test-region");
-    Client client = new Client(netBase, clientConfig, clientMetrics, router, null);
+    LocalRegionClient client = new LocalRegionClient(netBase, clientConfig, clientMetrics, router, null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
 
 

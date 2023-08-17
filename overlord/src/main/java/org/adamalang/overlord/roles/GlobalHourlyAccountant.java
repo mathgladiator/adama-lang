@@ -16,7 +16,6 @@ import org.adamalang.mysql.data.UnbilledResources;
 import org.adamalang.mysql.model.*;
 import org.adamalang.mysql.data.MeteringSpaceSummary;
 import org.adamalang.mysql.data.ResourcesPerPenny;
-import org.adamalang.net.client.Client;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;

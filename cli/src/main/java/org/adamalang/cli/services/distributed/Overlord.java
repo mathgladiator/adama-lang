@@ -13,7 +13,7 @@ import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.multiregion.MultiRegionClient;
-import org.adamalang.net.client.Client;
+import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.web.contracts.HttpHandler;
@@ -40,7 +40,7 @@ public class Overlord {
     });
     ConcurrentCachedHttpHandler overlordHandler = new ConcurrentCachedHttpHandler();
     HeatTable heatTable = new HeatTable(overlordHandler);
-    Client client = init.makeClient(heatTable::onSample);
+    LocalRegionClient client = init.makeClient(heatTable::onSample);
     boolean isGlobalOverlord = config.get_string("overlord-region-global", null).equals(init.region);
     if (isGlobalOverlord) {
       System.err.println("[Global Overlord Established]");

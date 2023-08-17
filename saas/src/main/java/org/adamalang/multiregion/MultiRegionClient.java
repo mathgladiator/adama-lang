@@ -13,7 +13,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Finder;
-import org.adamalang.net.client.Client;
+import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.*;
@@ -29,13 +29,13 @@ public class MultiRegionClient {
   private static final Logger LOG = LoggerFactory.getLogger(MultiRegionClient.class);
   private final SimpleExecutor executor;
   private final DataBase dataBase;
-  private final Client local;
+  private final LocalRegionClient local;
   private final String region;
   private final PrivateKey privateKey;
   private final int keyId;
   private final Finder finder;
 
-  public MultiRegionClient(DataBase dataBase, Client local, String region, PrivateKey privateKey, int keyId, Finder finder) {
+  public MultiRegionClient(DataBase dataBase, LocalRegionClient local, String region, PrivateKey privateKey, int keyId, Finder finder) {
     this.executor = SimpleExecutor.create("multi-region-client");
     this.dataBase = dataBase;
     this.local = local;

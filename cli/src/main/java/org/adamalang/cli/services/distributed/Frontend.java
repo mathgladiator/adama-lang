@@ -20,7 +20,7 @@ import org.adamalang.extern.aws.SES;
 import org.adamalang.frontend.global.BootstrapGlobalServiceBase;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.multiregion.MultiRegionClient;
-import org.adamalang.net.client.Client;
+import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.RedirectAndWellknownServiceRunnable;
 import org.adamalang.web.service.ServiceRunnable;
@@ -38,7 +38,7 @@ public class Frontend {
 
   public final MultiRegionClient adama;
 
-  public Frontend(Config config, CommonServiceInit init, Client client) throws Exception {
+  public Frontend(Config config, CommonServiceInit init, LocalRegionClient client) throws Exception {
     FrontendHttpHandler http = new FrontendHttpHandler(init, client);
     Email email = new SES(init.webBase, init.awsConfig, init.awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
@@ -92,7 +92,7 @@ public class Frontend {
 
   public static void run(Config config) throws Exception {
     CommonServiceInit init = new CommonServiceInit(config, Role.Web);
-    Client client = init.makeClient(null);
+    LocalRegionClient client = init.makeClient(null);
     new Frontend(config, init, client);
   }
 }
