@@ -92,4 +92,9 @@ public class GlobalCapacityOverseer implements CapacityOverseer  {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GLOBAL_CAPACITY_EXCEPTION_PICKHOST, ex, LOGGER));
     }
   }
+
+  @Override
+  public void pickNewHostForSpace(String space, String region, Callback<String> callback) {
+
+  }
 }

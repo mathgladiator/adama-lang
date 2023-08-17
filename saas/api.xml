@@ -206,6 +206,21 @@
         </documentation>
     </parameter-definition>
 
+    <parameter-definition name="asset-bytes" type="long" missing-error="460787" logged="true">
+        <documentation>
+            The number of bytes associated to a backup's assets
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="delta-bytes" type="long" missing-error="492531" logged="true">
+        <documentation>
+            The number of bytes associated to a backup's change log
+        </documentation>
+    </parameter-definition>
+
+
+
+
     <parameter-definition name="asset-id" type="string" missing-error="476156" logged="true">
         <documentation>
             The id of an asset.
@@ -1384,6 +1399,9 @@
         <parameter name="region" />
         <parameter name="machine" />
         <parameter name="archive" />
+        <parameter name="seq" />
+        <parameter name="delta-bytes" />
+        <parameter name="asset-bytes" />
     </method>
 
     <responder name="keys" stream="true">
@@ -1954,8 +1972,7 @@
 454644
 493556
 453621
-460787
-492531
+
 
 -->
 

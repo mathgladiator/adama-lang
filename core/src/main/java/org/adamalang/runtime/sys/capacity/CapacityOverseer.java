@@ -35,4 +35,7 @@ public interface CapacityOverseer {
 
   /** pick a new host for a space within a region (that is stable) */
   public void pickStableHostForSpace(String space, String region, Callback<String> callback);
+
+  /** pick a new host for a space that hasn't been allocated */
+  public void pickNewHostForSpace(String space, String region, Callback<String> callback);
 }

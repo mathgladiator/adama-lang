@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /** this is the base for all spaces to resolve against */
-public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deliverer {
+public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deliverer, Undeploy {
   private final AtomicInteger newClassId;
   private final ConcurrentHashMap<String, DeploymentFactory> spaces;
   private Deliverer deliverer;
@@ -72,6 +72,7 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deli
     return spacePrefix.toString();
   }
 
+  @Override
   public void undeploy(String space) {
     spaces.remove(space);
   }

@@ -753,23 +753,19 @@ public class GeneratedMissingParameterTest {
       Iterator<String> c162 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:9007", c162.next());
       node.put("archive", "xzya");
+      Iterator<String> c163 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:461836", c163.next());
+      node.put("seq", 42);
+      Iterator<String> c164 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:492531", c164.next());
+      node.put("delta-bytes", 100L);
+      Iterator<String> c165 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:460787", c165.next());
+      node.put("asset-bytes", 100L);
       //RegionalFinderList
       node = Json.newJsonObject();
-      node.put("id", 162);
-      node.put("method", "regional/finder/list");
-      Iterator<String> c163 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:458759", c163.next());
-      node.put("identity", _identity);
-      Iterator<String> c164 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:9006", c164.next());
-      node.put("region", "xzya");
-      Iterator<String> c165 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:9005", c165.next());
-      node.put("machine", "xzya");
-      //RegionalFinderDeletionList
-      node = Json.newJsonObject();
       node.put("id", 165);
-      node.put("method", "regional/finder/deletion-list");
+      node.put("method", "regional/finder/list");
       Iterator<String> c166 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:458759", c166.next());
       node.put("identity", _identity);
@@ -779,105 +775,105 @@ public class GeneratedMissingParameterTest {
       Iterator<String> c168 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:9005", c168.next());
       node.put("machine", "xzya");
-      //RegionalAuth
+      //RegionalFinderDeletionList
       node = Json.newJsonObject();
       node.put("id", 168);
-      node.put("method", "regional/auth");
+      node.put("method", "regional/finder/deletion-list");
       Iterator<String> c169 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:458759", c169.next());
       node.put("identity", _identity);
-      //RegionalGetPlan
-      node = Json.newJsonObject();
-      node.put("id", 169);
-      node.put("method", "regional/get-plan");
       Iterator<String> c170 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:458759", c170.next());
-      node.put("identity", _identity);
+      Assert.assertEquals("ERROR:9006", c170.next());
+      node.put("region", "xzya");
       Iterator<String> c171 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:461828", c171.next());
-      node.put("space", "xzya");
-      //RegionalCapacityAdd
+      Assert.assertEquals("ERROR:9005", c171.next());
+      node.put("machine", "xzya");
+      //RegionalAuth
       node = Json.newJsonObject();
       node.put("id", 171);
-      node.put("method", "regional/capacity/add");
+      node.put("method", "regional/auth");
       Iterator<String> c172 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:458759", c172.next());
       node.put("identity", _identity);
+      //RegionalGetPlan
+      node = Json.newJsonObject();
+      node.put("id", 172);
+      node.put("method", "regional/get-plan");
       Iterator<String> c173 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:461828", c173.next());
-      node.put("space", "xzya");
+      Assert.assertEquals("ERROR:458759", c173.next());
+      node.put("identity", _identity);
       Iterator<String> c174 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:9006", c174.next());
-      node.put("region", "xzya");
+      Assert.assertEquals("ERROR:461828", c174.next());
+      node.put("space", "xzya");
+      //RegionalCapacityAdd
+      node = Json.newJsonObject();
+      node.put("id", 174);
+      node.put("method", "regional/capacity/add");
       Iterator<String> c175 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:9005", c175.next());
+      Assert.assertEquals("ERROR:458759", c175.next());
+      node.put("identity", _identity);
+      Iterator<String> c176 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:461828", c176.next());
+      node.put("space", "xzya");
+      Iterator<String> c177 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:9006", c177.next());
+      node.put("region", "xzya");
+      Iterator<String> c178 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:9005", c178.next());
       node.put("machine", "xzya");
       //RegionalCapacityRemove
       node = Json.newJsonObject();
-      node.put("id", 175);
+      node.put("id", 178);
       node.put("method", "regional/capacity/remove");
-      Iterator<String> c176 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:458759", c176.next());
-      node.put("identity", _identity);
-      Iterator<String> c177 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:461828", c177.next());
-      node.put("space", "xzya");
-      Iterator<String> c178 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:9006", c178.next());
-      node.put("region", "xzya");
       Iterator<String> c179 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:9005", c179.next());
+      Assert.assertEquals("ERROR:458759", c179.next());
+      node.put("identity", _identity);
+      Iterator<String> c180 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:461828", c180.next());
+      node.put("space", "xzya");
+      Iterator<String> c181 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:9006", c181.next());
+      node.put("region", "xzya");
+      Iterator<String> c182 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:9005", c182.next());
       node.put("machine", "xzya");
       //RegionalCapacityNuke
       node = Json.newJsonObject();
-      node.put("id", 179);
+      node.put("id", 182);
       node.put("method", "regional/capacity/nuke");
-      Iterator<String> c180 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:458759", c180.next());
+      Iterator<String> c183 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:458759", c183.next());
       node.put("identity", _identity);
-      Iterator<String> c181 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:461828", c181.next());
+      Iterator<String> c184 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:461828", c184.next());
       node.put("space", "xzya");
       //RegionalCapacityListSpace
       node = Json.newJsonObject();
-      node.put("id", 181);
+      node.put("id", 184);
       node.put("method", "regional/capacity/list-space");
-      Iterator<String> c182 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:458759", c182.next());
+      Iterator<String> c185 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:458759", c185.next());
       node.put("identity", _identity);
-      Iterator<String> c183 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:461828", c183.next());
+      Iterator<String> c186 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:461828", c186.next());
       node.put("space", "xzya");
       //RegionalCapacityListMachine
       node = Json.newJsonObject();
-      node.put("id", 183);
-      node.put("method", "regional/capacity/list-machine");
-      Iterator<String> c184 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:458759", c184.next());
-      node.put("identity", _identity);
-      Iterator<String> c185 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:9006", c185.next());
-      node.put("region", "xzya");
-      Iterator<String> c186 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:9005", c186.next());
-      node.put("machine", "xzya");
-      //RegionalCapacityListRegion
-      node = Json.newJsonObject();
       node.put("id", 186);
-      node.put("method", "regional/capacity/list-region");
+      node.put("method", "regional/capacity/list-machine");
       Iterator<String> c187 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:458759", c187.next());
       node.put("identity", _identity);
       Iterator<String> c188 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:461828", c188.next());
-      node.put("space", "xzya");
-      Iterator<String> c189 = fe.execute(node.toString());
-      Assert.assertEquals("ERROR:9006", c189.next());
+      Assert.assertEquals("ERROR:9006", c188.next());
       node.put("region", "xzya");
-      //RegionalCapacityPickSpaceHost
+      Iterator<String> c189 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:9005", c189.next());
+      node.put("machine", "xzya");
+      //RegionalCapacityListRegion
       node = Json.newJsonObject();
       node.put("id", 189);
-      node.put("method", "regional/capacity/pick-space-host");
+      node.put("method", "regional/capacity/list-region");
       Iterator<String> c190 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:458759", c190.next());
       node.put("identity", _identity);
@@ -886,6 +882,19 @@ public class GeneratedMissingParameterTest {
       node.put("space", "xzya");
       Iterator<String> c192 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:9006", c192.next());
+      node.put("region", "xzya");
+      //RegionalCapacityPickSpaceHost
+      node = Json.newJsonObject();
+      node.put("id", 192);
+      node.put("method", "regional/capacity/pick-space-host");
+      Iterator<String> c193 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:458759", c193.next());
+      node.put("identity", _identity);
+      Iterator<String> c194 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:461828", c194.next());
+      node.put("space", "xzya");
+      Iterator<String> c195 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:9006", c195.next());
       node.put("region", "xzya");
     }
   }

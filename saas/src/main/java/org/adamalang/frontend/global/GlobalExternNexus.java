@@ -17,8 +17,9 @@ import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.impl.GlobalRegionFinder;
+import org.adamalang.mysql.impl.MySQLFinderCore;
 import org.adamalang.ops.GlobalCapacityOverseer;
-import org.adamalang.runtime.data.FinderService;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.io.JsonLogger;
@@ -44,10 +45,11 @@ public class GlobalExternNexus {
   public final FrontendMetrics frontendMetrics;
   public final String[] superPublicKeys;
   public final SignalControl signalControl;
-  public final FinderService finder;
+  public final GlobalRegionFinder finder;
+  public final MySQLFinderCore finderCore;
   public final GlobalCapacityOverseer overseer;
 
-  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys, SignalControl signalControl, FinderService finder) {
+  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys, SignalControl signalControl, GlobalRegionFinder finder) {
     this.config = config;
     this.email = email;
     this.database = database;
@@ -66,6 +68,7 @@ public class GlobalExternNexus {
     this.superPublicKeys = superPublicKeys;
     this.signalControl = signalControl;
     this.finder = finder;
+    this.finderCore = finder.core;
     this.overseer = new GlobalCapacityOverseer(database);
     attachmentRoot.mkdir();
   }

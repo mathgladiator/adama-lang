@@ -22,6 +22,9 @@ import org.adamalang.frontend.Session;
 import org.adamalang.frontend.SpaceTemplates;
 import org.adamalang.mysql.data.*;
 import org.adamalang.mysql.model.*;
+import org.adamalang.runtime.data.BackupResult;
+import org.adamalang.runtime.data.DocumentLocation;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -748,6 +751,9 @@ public class GlobalControlHandler implements RootGlobalHandler {
     return false;
   }
 
+  /*********
+   * Looking up domains from data regions
+   *********/
   @Override
   public void handle(Session session, RegionalDomainLookupRequest request, DomainRawResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
@@ -756,68 +762,81 @@ public class GlobalControlHandler implements RootGlobalHandler {
     }
   }
 
+  /*********
+   * Finding and binding keys to machines for the data regions
+   *********/
   @Override
   public void handle(Session session, RegionalFinderFindRequest request, FinderResultResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-
+      nexus.finder.find(new Key(request.space, request.key), WRAP(responder));
     }
   }
-
   @Override
   public void handle(Session session, RegionalFinderFindbindRequest request, FinderResultResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
+      Key key = new Key(request.space, request.key);
+      nexus.finderCore.bind(key, request.region, request.machine, new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          nexus.finder.find(key, WRAP(responder));
+        }
 
+        @Override
+        public void failure(ErrorCodeException ex) {
+          success(null);
+        }
+      });
     }
   }
-
   @Override
   public void handle(Session session, RegionalFinderDeleteCommitRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-
+      nexus.finderCore.commitDelete(new Key(request.space, request.key), request.region, request.machine, WRAP(responder));
     }
   }
-
   @Override
   public void handle(Session session, RegionalFinderDeleteMarkRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-
+      nexus.finderCore.markDelete(new Key(request.space, request.key), request.region, request.machine, WRAP(responder));
     }
   }
-
   @Override
   public void handle(Session session, RegionalFinderDeletionListRequest request, KeysResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-
+      nexus.finderCore.listDeleted(request.region, request.machine, WRAP(responder));
     }
   }
-
   @Override
   public void handle(Session session, RegionalFinderBackUpRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-
+      nexus.finderCore.backup(new Key(request.space, request.key), new BackupResult(request.archive, request.seq, request.deltaBytes, request.assetBytes), request.region, request.machine, WRAP(responder));
     }
   }
-
   @Override
   public void handle(Session session, RegionalFinderListRequest request, KeysResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-
+      nexus.finderCore.list(request.region, request.machine, WRAP(responder));
     }
   }
-
   @Override
   public void handle(Session session, RegionalFinderFreeRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-
+      nexus.finderCore.free(new Key(request.space, request.key), request.region, request.machine, WRAP(responder));
     }
   }
 
+  /*********
+   * Auth for regions
+   *********/
   @Override
   public void handle(Session session, RegionalAuthRequest request, AuthResultResponder responder) {
     AuthenticatedUser user = request.who;
     responder.complete((long) user.id, user.who.agent, user.who.authority);
   }
 
+  /*********
+   * Regional deployment support
+   *********/
   @Override
   public void handle(Session session, RegionalGetPlanRequest request, PlanResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
@@ -829,32 +848,27 @@ public class GlobalControlHandler implements RootGlobalHandler {
     }
   }
 
-
   /*********
-   * Capacity Management for Regions
+   * Capacity Management for regions
    *********/
-
   @Override
   public void handle(Session session, RegionalCapacityAddRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
       nexus.overseer.add(request.space, request.region, request.machine, WRAP(responder));
     }
   }
-
   @Override
   public void handle(Session session, RegionalCapacityNukeRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
       nexus.overseer.nuke(request.space, WRAP(responder));
     }
   }
-
   @Override
   public void handle(Session session, RegionalCapacityRemoveRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
       nexus.overseer.add(request.space, request.region, request.machine, WRAP(responder));
     }
   }
-
   @Override
   public void handle(Session session, RegionalCapacityPickSpaceHostRequest request, CapacityHostResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
@@ -871,21 +885,18 @@ public class GlobalControlHandler implements RootGlobalHandler {
       });
     }
   }
-
   @Override
   public void handle(Session session, RegionalCapacityListSpaceRequest request, CapacityListResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
       nexus.overseer.listAllSpace(request.space, WRAP(responder));
     }
   }
-
   @Override
   public void handle(Session session, RegionalCapacityListRegionRequest request, CapacityListResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
       nexus.overseer.listWithinRegion(request.space, request.region, WRAP(responder));
     }
   }
-
   @Override
   public void handle(Session session, RegionalCapacityListMachineRequest request, CapacityListResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
@@ -940,4 +951,36 @@ public class GlobalControlHandler implements RootGlobalHandler {
         responder.error(ex);
       }
     };
-  }}
+  }
+
+  public static Callback<DocumentLocation> WRAP(FinderResultResponder responder) {
+    return new Callback<>() {
+      @Override
+      public void success(DocumentLocation value) {
+        responder.complete(value.id, value.location.type, value.archiveKey, value.region, value.machine, value.deleted);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    };
+  }
+
+  public static Callback<List<Key>> WRAP(KeysResponder responder) {
+    return new Callback<List<Key>>() {
+      @Override
+      public void success(List<Key> list) {
+        for (Key key : list) {
+          responder.next(key.space, key.key);
+        }
+        responder.finish();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    };
+  }
+}
