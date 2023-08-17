@@ -84,8 +84,6 @@ public class FrontendHttpHandler implements HttpHandler {
         if (response != null) {
           if ("text/agent".equals(response.contentType)) {
             try {
-              SigningKeyPair keyPair = Secrets.getOrCreateDocumentSigningKey(init.database, init.masterKey, skr.space, skr.key);
-
               String identity = signingKey.signDocumentIdentity(response.body, skr.space, skr.key, response.cache_ttl_seconds);
               ObjectNode json = Json.newJsonObject();
               json.put("identity", identity);
