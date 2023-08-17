@@ -1428,6 +1428,66 @@
         <parameter name="space"/>
     </method>
 
+    <method name="regional/capacity/add" responder="simple" scope="global" internal="true">
+        <documentation>
+            Associate capacity for a space to a machine
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="region"/>
+        <parameter name="machine"/>
+    </method>
+
+    <method name="regional/capacity/remove" responder="simple" scope="global" internal="true">
+        <documentation>
+            Disassociate capacity for a space from a machine
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="region"/>
+        <parameter name="machine"/>
+    </method>
+
+    <method name="regional/capacity/nuke" responder="simple" scope="global" internal="true">
+        <documentation>
+            Remove all capacity for a space
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space"/>
+    </method>
+
+    <responder name="capacity-list" stream="true">
+        <field name="space" />
+        <field name="region" />
+        <field name="machine" />
+    </responder>
+
+    <method name="regional/capacity/list-space" responder="capacity-list" scope="global" internal="true">
+        <documentation>
+            List capacity for a space
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space"/>
+    </method>
+
+    <method name="regional/capacity/list-machine" responder="capacity-list" scope="global" internal="true">
+        <documentation>
+            List capacity on a machine
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="region"/>
+        <parameter name="machine"/>
+    </method>
+
+    <method name="regional/capacity/list-region" responder="capacity-list" scope="global" internal="true">
+        <documentation>
+            List capacity within a region for a space
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="region"/>
+    </method>
+
 
 
     <!--

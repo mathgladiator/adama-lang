@@ -22,6 +22,7 @@ import org.adamalang.frontend.Session;
 import org.adamalang.frontend.SpaceTemplates;
 import org.adamalang.mysql.data.*;
 import org.adamalang.mysql.model.*;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -822,7 +823,84 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, RegionalGetPlanRequest request, PlanResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
+      try {
+        responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.database, request.policy.id)));
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
+      }
+    }
+  }
 
+  @Override
+  public void handle(Session session, RegionalCapacityAddRequest request, SimpleResponder responder) {
+    if (checkRegionalHost(request.who, responder.responder)) {
+      try {
+        Capacity.add(nexus.database, request.space, request.region, request.machine);
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
+      }
+    }
+  }
+
+  @Override
+  public void handle(Session session, RegionalCapacityNukeRequest request, SimpleResponder responder) {
+    if (checkRegionalHost(request.who, responder.responder)) {
+      try {
+        Capacity.removeAll(nexus.database, request.space);
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
+      }
+    }
+  }
+
+  @Override
+  public void handle(Session session, RegionalCapacityRemoveRequest request, SimpleResponder responder) {
+    if (checkRegionalHost(request.who, responder.responder)) {
+      try {
+        Capacity.remove(nexus.database, request.space, request.region, request.machine);
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
+      }
+    }
+  }
+  
+  private void pump(CapacityListResponder responder, List<CapacityInstance> instances) {
+    for (CapacityInstance instance : instances) {
+      responder.next(instance.space, instance.region, instance.machine);
+    }
+    responder.finish();
+  }
+
+  @Override
+  public void handle(Session session, RegionalCapacityListSpaceRequest request, CapacityListResponder responder) {
+    if (checkRegionalHost(request.who, responder.responder)) {
+      try {
+        pump(responder, Capacity.listAll(nexus.database, request.space));
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
+      }
+    }
+  }
+
+  @Override
+  public void handle(Session session, RegionalCapacityListRegionRequest request, CapacityListResponder responder) {
+    if (checkRegionalHost(request.who, responder.responder)) {
+      try {
+        pump(responder, Capacity.listRegion(nexus.database, request.space, request.region));
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
+      }
+    }
+  }
+
+  @Override
+  public void handle(Session session, RegionalCapacityListMachineRequest request, CapacityListResponder responder) {
+    if (checkRegionalHost(request.who, responder.responder)) {
+      try {
+        pump(responder, Capacity.listAllOnMachine(nexus.database, request.region, request.machine));
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
+      }
     }
   }
 
