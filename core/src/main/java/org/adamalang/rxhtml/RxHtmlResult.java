@@ -10,6 +10,7 @@ package org.adamalang.rxhtml;
 
 import org.adamalang.runtime.sys.web.WebFragment;
 import org.adamalang.runtime.sys.web.WebPath;
+import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
 import org.adamalang.rxhtml.template.Shell;
 import org.adamalang.rxhtml.template.Task;
 
@@ -38,6 +39,10 @@ public class RxHtmlResult {
   }
 
   public boolean test(String rawUri) {
+    return testUri(paths, rawUri);
+  }
+
+  public static boolean testUri(ArrayList<WebPath> paths, String rawUri) {
     String uri = rawUri;
     // truncate a trailing "/"
     while (uri.length() > 1 && uri.endsWith("/")) {

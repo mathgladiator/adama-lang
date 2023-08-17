@@ -10,25 +10,23 @@ package org.adamalang.cli.services;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.Json;
+import org.adamalang.common.*;
+import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.common.keys.SigningKeyPair;
 import org.adamalang.mysql.impl.GlobalDomainFinder;
+import org.adamalang.mysql.impl.GlobalRxHtmlFetcher;
+import org.adamalang.runtime.sys.domains.CachedDomainFinder;
 import org.adamalang.runtime.sys.domains.Domain;
-import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.mysql.model.Health;
 import org.adamalang.mysql.model.Secrets;
-import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.runtime.sys.web.*;
-import org.adamalang.rxhtml.RxHtmlResult;
-import org.adamalang.rxhtml.RxHtmlTool;
-import org.adamalang.rxhtml.template.config.ShellConfig;
+import org.adamalang.runtime.sys.web.rxhtml.CachedRxHtmlFetcher;
+import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
+import org.adamalang.runtime.sys.web.rxhtml.RxHtmlFetcher;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.service.KeyPrefixUri;
 import org.adamalang.web.service.SpaceKeyRequest;
@@ -37,7 +35,6 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 /** the http handler for the service */
 public class FrontendHttpHandler implements HttpHandler {
@@ -45,14 +42,18 @@ public class FrontendHttpHandler implements HttpHandler {
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private final CommonServiceInit init;
   private final LocalRegionClient client;
-  private final ConcurrentHashMap<String, Integer> spaceIds;
   private final DomainFinder domainFinder;
+  private final RxHtmlFetcher rxHtmlFetcher;
+  private final SimpleExecutor caches;
+  private PrivateKeyWithId signingKey;
 
-  public FrontendHttpHandler(CommonServiceInit init, LocalRegionClient client) {
+  public FrontendHttpHandler(CommonServiceInit init, LocalRegionClient client, PrivateKeyWithId signingKey) {
+    this.caches = SimpleExecutor.create("cache-thread");
     this.init = init;
-    this.domainFinder = new GlobalDomainFinder(init.database);
+    this.domainFinder = new CachedDomainFinder(TimeSource.REAL_TIME, 1000, 5 * 60 * 1000, caches, new GlobalDomainFinder(init.database));
     this.client = client;
-    this.spaceIds = new ConcurrentHashMap<>();
+    this.rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, caches, new GlobalRxHtmlFetcher(init.database));
+    this.signingKey = signingKey;
   }
 
   @Override
@@ -84,7 +85,8 @@ public class FrontendHttpHandler implements HttpHandler {
           if ("text/agent".equals(response.contentType)) {
             try {
               SigningKeyPair keyPair = Secrets.getOrCreateDocumentSigningKey(init.database, init.masterKey, skr.space, skr.key);
-              String identity = keyPair.signDocument(skr.space, skr.key, response.body);
+
+              String identity = signingKey.signDocumentIdentity(response.body, skr.space, skr.key, response.cache_ttl_seconds);
               ObjectNode json = Json.newJsonObject();
               json.put("identity", identity);
               callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
@@ -138,30 +140,23 @@ public class FrontendHttpHandler implements HttpHandler {
   }
 
   private void getSpace(String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-    try {
-      Integer spaceId = spaceIds.get(space);
-      if (spaceId == null) {
-        SpaceInfo spaceInfo = Spaces.getSpaceInfo(init.database, space);
-        spaceId = spaceInfo.id;
-        spaceIds.put(space, spaceInfo.id);
-        // TODO: expire this after X minutes
-      }
-      String rxhtml = Spaces.getRxHtml(init.database, spaceId);
-      if (rxhtml != null) {
-        RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().end());
-        // TODO: cache this along with a timestamp (OR, tie it to the document)
-        if (rxhtmlResult.test(uri)) {
-          String html = rxhtmlResult.shell.makeShell(rxhtmlResult);
-          HttpResult result = new HttpResult("text/html", html.getBytes(StandardCharsets.UTF_8), false);
-          callback.success(result);
-          return;
+    rxHtmlFetcher.fetch(space, new Callback<>() {
+      @Override
+      public void success(LiveSiteRxHtmlResult result) {
+        if (result != null) {
+          if (result.test(uri)) {
+            callback.success(new HttpResult("text/html", result.html, false));
+            return;
+          }
         }
+        get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
       }
-    } catch (Exception ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_FAILED_RXHTML_LOOKUP, ex, EXLOGGER));
-      return;
-    }
-    get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   @Override
@@ -252,15 +247,9 @@ public class FrontendHttpHandler implements HttpHandler {
       health.append("<!DOCTYPE html>\n<html><head><title>Adama Deep Health</title></head><body>\n");
       health.append("<h1>Adama Deep Health Check (for Humans!)</h1>\n");
       health.append("<table border=1>\n");
-      health.append("<tr><td>Database Ping</td><td>" + Health.pingDataBase(init.database) + "</td>");
-      init.engine.summarizeHtml((html) -> {
-        health.append("<tr><td>Gossip</td><td>" + html + "</td>");
-        // TODO: simplify for privacy of the service
-        // TODO: check overlord is present
-        // TODO: check if web and adama hosts is greated then a threshold; maybe, record a max and ensure we are at 80%+
-        health.append("</table></body></html>\n");
-        callback.success(health.toString());
-      });
+      // TODO: if global, then ping database
+      // TODO: if region, then ping global region
+      // TODO: abstract the health checks to be a set
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(0, ex, EXLOGGER));
     }

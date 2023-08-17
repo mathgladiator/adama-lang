@@ -53,15 +53,21 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
   }
 
   private void authDocument(String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) {
-    final SigningKeyPair skp;
+    final Runnable auth;
     try {
-      String[] docSpaceKey = parsedToken.iss.split(Pattern.quote("/"));
-      skp = Secrets.getOrCreateDocumentSigningKey(database, masterKey, docSpaceKey[1], docSpaceKey[2]);
+      if (parsedToken.key_id > 0) {
+        PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
+        auth = () -> Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(identity);
+      } else {
+        String[] docSpaceKey = parsedToken.iss.split(Pattern.quote("/"));
+        SigningKeyPair skp = Secrets.getOrCreateDocumentSigningKey(database, masterKey, docSpaceKey[1], docSpaceKey[2]);
+        auth = () -> skp.validateTokenThrows(identity);
+      }
     } catch (Exception ex) {
       callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_DOC_AUTHENTICATE));
       return;
     }
-    skp.validateTokenThrows(identity);
+    auth.run();
     NtPrincipal who = new NtPrincipal(parsedToken.sub, parsedToken.iss);
     AuthenticatedUser user = new AuthenticatedUser(-1, who, defaultContext);
     callback.success(user);

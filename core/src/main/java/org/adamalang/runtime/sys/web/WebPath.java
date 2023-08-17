@@ -8,10 +8,12 @@
  */
 package org.adamalang.runtime.sys.web;
 
+import org.adamalang.common.cache.Measurable;
+
 import java.util.ArrayList;
 
 /** Tear down a URI into fragments */
-public class WebPath {
+public class WebPath implements Measurable {
   public String uri;
   public WebFragment[] fragments;
 
@@ -41,5 +43,10 @@ public class WebPath {
 
   public int size() {
     return fragments.length;
+  }
+
+  @Override
+  public long measure() {
+    return uri.length() * 3 + 32 * fragments.length + 64;
   }
 }

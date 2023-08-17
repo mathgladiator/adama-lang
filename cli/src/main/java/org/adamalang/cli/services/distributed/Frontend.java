@@ -13,6 +13,7 @@ import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.FrontendHttpHandler;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.ConfigObject;
+import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.frontend.global.GlobalAssetSystem;
 import org.adamalang.extern.Email;
 import org.adamalang.frontend.global.GlobalExternNexus;
@@ -39,7 +40,7 @@ public class Frontend {
   public final MultiRegionClient adama;
 
   public Frontend(Config config, CommonServiceInit init, LocalRegionClient client) throws Exception {
-    FrontendHttpHandler http = new FrontendHttpHandler(init, client);
+    FrontendHttpHandler http = new FrontendHttpHandler(init, client, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
     Email email = new SES(init.webBase, init.awsConfig, init.awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
@@ -49,7 +50,7 @@ public class Frontend {
 
     GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, email, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
-    }, init.masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalFinder);
+    }, init.masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalFinder, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
     System.err.println("ExternNexus constructed");
     ServiceBase serviceBase = BootstrapGlobalServiceBase.make(nexus, http);
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();

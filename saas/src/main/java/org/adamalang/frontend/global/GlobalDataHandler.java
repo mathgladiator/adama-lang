@@ -46,12 +46,7 @@ public class GlobalDataHandler implements RootRegionHandler {
     nexus.adama.authorize(session.authenticator.getDefaultContext().remoteIp, session.authenticator.getDefaultContext().origin, key.space, key.key, username, password, new Callback<String>() {
       @Override
       public void success(String agent) {
-        try {
-          String identity = Secrets.getOrCreateDocumentSigningKey(nexus.database, nexus.masterKey, key.space, key.key).signDocument(key.space, key.key, agent);
-          responder.complete(identity);
-        } catch (Exception ex) {
-          responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_AUTH_DOCUMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
-        }
+        responder.complete(nexus.signingKey.signDocumentIdentity(agent, key.space, key.key, 0));
       }
 
       @Override
