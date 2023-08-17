@@ -10,7 +10,7 @@ package org.adamalang.mysql.model;
 
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
-import org.adamalang.mysql.data.CapacityInstance;
+import org.adamalang.runtime.ops.CapacityInstance;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,7 +45,6 @@ public class CapacityTests {
         Assert.assertEquals("machine2", capacities.get(1).machine);
         Assert.assertEquals("machine3", capacities.get(2).machine);
 
-        Assert.assertEquals(x, capacities.get(0).id);
         Assert.assertFalse(capacities.get(0).override);
         Capacity.setOverride(dataBase, x, true);
 
@@ -62,7 +61,6 @@ public class CapacityTests {
         Assert.assertEquals("region1", capacities.get(0).region);
         Assert.assertEquals("machine1", capacities.get(0).machine);
 
-        Assert.assertEquals(x, capacities.get(0).id);
         Assert.assertTrue(capacities.get(0).override);
 
         Capacity.remove(dataBase, "space", "region1", "machine2");

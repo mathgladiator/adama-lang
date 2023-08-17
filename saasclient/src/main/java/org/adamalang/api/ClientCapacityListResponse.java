@@ -17,11 +17,13 @@ public class ClientCapacityListResponse {
   public final String space;
   public final String region;
   public final String machine;
+  public final Boolean override;
 
   public ClientCapacityListResponse(ObjectNode response) {
     this._original = response;
     this.space = Json.readString(response, "space");
     this.region = Json.readString(response, "region");
     this.machine = Json.readString(response, "machine");
+    this.override = Json.readBool(response, "override");
   }
 }

@@ -22,13 +22,13 @@ import org.adamalang.frontend.Session;
 import org.adamalang.frontend.SpaceTemplates;
 import org.adamalang.mysql.data.*;
 import org.adamalang.mysql.model.*;
-import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.contracts.SpacePolicyLocator;
 import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.contracts.data.SpacePolicy;
+import org.adamalang.runtime.ops.CapacityInstance;
 import org.adamalang.validators.ValidateEmail;
 import org.adamalang.web.client.SimpleHttpRequest;
 import org.adamalang.web.client.SimpleHttpRequestBody;
@@ -866,7 +866,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   
   private void pump(CapacityListResponder responder, List<CapacityInstance> instances) {
     for (CapacityInstance instance : instances) {
-      responder.next(instance.space, instance.region, instance.machine);
+      responder.next(instance.space, instance.region, instance.machine, instance.override);
     }
     responder.finish();
   }

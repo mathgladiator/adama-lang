@@ -9,7 +9,7 @@
 package org.adamalang.mysql.model;
 
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.data.CapacityInstance;
+import org.adamalang.runtime.ops.CapacityInstance;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -66,7 +66,7 @@ public class Capacity {
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<CapacityInstance> listing = new ArrayList<>();
           while (rs.next()) {
-            listing.add(new CapacityInstance(rs.getInt(1), space, rs.getString(2), rs.getString(3), rs.getBoolean(4)));
+            listing.add(new CapacityInstance(space, rs.getString(2), rs.getString(3), rs.getBoolean(4)));
           }
           return listing;
         }
@@ -84,7 +84,7 @@ public class Capacity {
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<CapacityInstance> listing = new ArrayList<>();
           while (rs.next()) {
-            listing.add(new CapacityInstance(rs.getInt(1), rs.getString(2), region, machine, rs.getBoolean(3)));
+            listing.add(new CapacityInstance(rs.getString(2), region, machine, rs.getBoolean(3)));
           }
           return listing;
         }
@@ -102,7 +102,7 @@ public class Capacity {
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<CapacityInstance> listing = new ArrayList<>();
           while (rs.next()) {
-            listing.add(new CapacityInstance(rs.getInt(1), space, region, rs.getString(2), rs.getBoolean(3)));
+            listing.add(new CapacityInstance(space, region, rs.getString(2), rs.getBoolean(3)));
           }
           return listing;
         }

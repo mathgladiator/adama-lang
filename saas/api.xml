@@ -315,6 +315,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="override" type="bool">
+        <documentation>
+            Signal that capacity should remain stuck; this is special capacity.
+        </documentation>
+    </field-definition>
+
     <field-definition name="change" type="json-object">
         <documentation>
             A json change behind a replica.
@@ -1460,6 +1466,7 @@
         <field name="space" />
         <field name="region" />
         <field name="machine" />
+        <field name="override" />
     </responder>
 
     <method name="regional/capacity/list-space" responder="capacity-list" scope="global" internal="true">
