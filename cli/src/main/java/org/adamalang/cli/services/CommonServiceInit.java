@@ -53,6 +53,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.PrivateKey;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Common service initialization */
@@ -199,7 +200,7 @@ public class CommonServiceInit {
   }
 
   public MultiRegionClient makeGlobalClient(LocalRegionClient client) {
-    return new MultiRegionClient(database, client, region, hostKey, publicKeyId, finder);
+    return new MultiRegionClient(client, region, hostKey, publicKeyId, finder, new TreeMap<>());
   }
 
   public LocalRegionClient makeClient(HeatMonitor heat) {

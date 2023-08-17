@@ -36,7 +36,7 @@ public class AuthenticatedUser {
     this.isAdamaDeveloper = "adama".equalsIgnoreCase(who.authority);
   }
 
-  /** convert the user to a token for cross-host transmission over the public interwebs */
+  /** convert the user to a token for cross-host transmission over the public interwebs; we do this so the remote region can capture and validate the IP and Origin */
   public String asIdentity(int keyId, PrivateKey key) {
     TreeMap<String, Object> claims = new TreeMap<>();
     claims.put("kid", keyId);
