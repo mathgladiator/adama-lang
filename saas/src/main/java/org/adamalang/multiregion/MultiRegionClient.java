@@ -15,6 +15,10 @@ import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.*;
 import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.runtime.sys.web.WebDelete;
+import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebPut;
+import org.adamalang.runtime.sys.web.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -290,5 +294,21 @@ public class MultiRegionClient {
 
   public void authorize(String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
     local.authorize(ip, origin, space, key, username, password, callback);
+  }
+
+  public void webGet(String space, String key, WebGet request, Callback<WebResponse> callback) {
+    local.webGet(space, key, request, callback);
+  }
+
+  public void webOptions(String space, String key, WebGet request, Callback<WebResponse> callback) {
+    local.webOptions(space, key, request, callback);
+  }
+
+  public void webDelete(String space, String key, WebDelete request, Callback<WebResponse> callback) {
+    local.webDelete(space, key, request, callback);
+  }
+
+  public void webPut(String space, String key, WebPut request, Callback<WebResponse> callback) {
+    local.webPut(space, key, request, callback);
   }
 }
