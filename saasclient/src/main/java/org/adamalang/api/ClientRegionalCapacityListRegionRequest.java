@@ -6,8 +6,11 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20230817114631";
+/** generated request type for regional/capacity/list-region */
+public class ClientRegionalCapacityListRegionRequest {
+  public String identity;
+  public String space;
+  public String region;
 }

@@ -582,6 +582,66 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientPlanResponse(obj), callback);
   }
 
+  /** regional/capacity/add */
+  public void regionalCapacityAdd(ClientRegionalCapacityAddRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/capacity/add");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
+  /** regional/capacity/remove */
+  public void regionalCapacityRemove(ClientRegionalCapacityRemoveRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/capacity/remove");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
+  /** regional/capacity/nuke */
+  public void regionalCapacityNuke(ClientRegionalCapacityNukeRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/capacity/nuke");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
+  /** regional/capacity/list-space */
+  public void regionalCapacityListSpace(ClientRegionalCapacityListSpaceRequest request, Stream<ClientCapacityListResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/capacity/list-space");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    pool.requestStream(node, (obj) -> new ClientCapacityListResponse(obj), streamback);
+  }
+
+  /** regional/capacity/list-machine */
+  public void regionalCapacityListMachine(ClientRegionalCapacityListMachineRequest request, Stream<ClientCapacityListResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/capacity/list-machine");
+    node.put("identity", request.identity);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    pool.requestStream(node, (obj) -> new ClientCapacityListResponse(obj), streamback);
+  }
+
+  /** regional/capacity/list-region */
+  public void regionalCapacityListRegion(ClientRegionalCapacityListRegionRequest request, Stream<ClientCapacityListResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/capacity/list-region");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("region", request.region);
+    pool.requestStream(node, (obj) -> new ClientCapacityListResponse(obj), streamback);
+  }
+
   public class AttachmentUploadHandler {
     public final WebClientConnection _direct;
     public final int _id;

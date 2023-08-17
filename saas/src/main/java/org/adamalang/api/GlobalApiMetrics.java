@@ -59,6 +59,12 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_RegionalFinderDeletionList;
   public final RequestResponseMonitor monitor_RegionalAuth;
   public final RequestResponseMonitor monitor_RegionalGetPlan;
+  public final RequestResponseMonitor monitor_RegionalCapacityAdd;
+  public final RequestResponseMonitor monitor_RegionalCapacityRemove;
+  public final RequestResponseMonitor monitor_RegionalCapacityNuke;
+  public final RequestResponseMonitor monitor_RegionalCapacityListSpace;
+  public final RequestResponseMonitor monitor_RegionalCapacityListMachine;
+  public final RequestResponseMonitor monitor_RegionalCapacityListRegion;
 
   public GlobalApiMetrics(MetricsFactory factory) {
     this.monitor_InitSetupAccount = factory.makeRequestResponseMonitor("init/setup-account");
@@ -108,5 +114,11 @@ public class GlobalApiMetrics {
     this.monitor_RegionalFinderDeletionList = factory.makeRequestResponseMonitor("regional/finder/deletion-list");
     this.monitor_RegionalAuth = factory.makeRequestResponseMonitor("regional/auth");
     this.monitor_RegionalGetPlan = factory.makeRequestResponseMonitor("regional/get-plan");
+    this.monitor_RegionalCapacityAdd = factory.makeRequestResponseMonitor("regional/capacity/add");
+    this.monitor_RegionalCapacityRemove = factory.makeRequestResponseMonitor("regional/capacity/remove");
+    this.monitor_RegionalCapacityNuke = factory.makeRequestResponseMonitor("regional/capacity/nuke");
+    this.monitor_RegionalCapacityListSpace = factory.makeRequestResponseMonitor("regional/capacity/list-space");
+    this.monitor_RegionalCapacityListMachine = factory.makeRequestResponseMonitor("regional/capacity/list-machine");
+    this.monitor_RegionalCapacityListRegion = factory.makeRequestResponseMonitor("regional/capacity/list-region");
   }
 }

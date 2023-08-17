@@ -105,6 +105,18 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, RegionalGetPlanRequest request, PlanResponder responder);
 
+  public void handle(Session session, RegionalCapacityAddRequest request, SimpleResponder responder);
+
+  public void handle(Session session, RegionalCapacityRemoveRequest request, SimpleResponder responder);
+
+  public void handle(Session session, RegionalCapacityNukeRequest request, SimpleResponder responder);
+
+  public void handle(Session session, RegionalCapacityListSpaceRequest request, CapacityListResponder responder);
+
+  public void handle(Session session, RegionalCapacityListMachineRequest request, CapacityListResponder responder);
+
+  public void handle(Session session, RegionalCapacityListRegionRequest request, CapacityListResponder responder);
+
   public void disconnect();
 
   public static boolean test(String method) {
@@ -156,6 +168,12 @@ public interface RootGlobalHandler {
       case "regional/finder/deletion-list":
       case "regional/auth":
       case "regional/get-plan":
+      case "regional/capacity/add":
+      case "regional/capacity/remove":
+      case "regional/capacity/nuke":
+      case "regional/capacity/list-space":
+      case "regional/capacity/list-machine":
+      case "regional/capacity/list-region":
         return true;
       default:
         return false;
