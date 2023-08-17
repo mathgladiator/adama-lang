@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.mysql.model;
+package org.adamalang.mysql.impl;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
@@ -14,8 +14,10 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
 import org.adamalang.mysql.data.DocumentIndex;
 import org.adamalang.mysql.data.GCTask;
+import org.adamalang.mysql.impl.GlobalRegionFinder;
 import org.adamalang.mysql.mocks.SimpleFinderCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
+import org.adamalang.mysql.model.FinderOperations;
 import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.LocationType;
@@ -28,7 +30,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class FinderTests {
+public class GlobalRegionFinderTests {
   private final Key KEY1 = new Key("space-1", "key-1");
   private final Key KEY2 = new Key("space-2", "key-2");
 
@@ -40,7 +42,7 @@ public class FinderTests {
       try {
         installer.install();
         Assert.assertFalse(FinderOperations.exists(dataBase, 1));
-        Finder machine = new Finder(dataBase, "region");
+        GlobalRegionFinder machine = new GlobalRegionFinder(dataBase, "region");
         ArrayList<DocumentIndex> listing;
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();

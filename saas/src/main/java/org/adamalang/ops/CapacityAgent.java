@@ -135,7 +135,7 @@ public class CapacityAgent implements HeatMonitor  {
           }
           if (heat.low) {
             // Don't remove capacity from the prime host
-            overseer.pickHostForSpace(instance.space, region, new Callback<String>() {
+            overseer.pickStableHostForSpace(instance.space, region, new Callback<String>() {
               @Override
               public void success(String stableHost) {
                 if (!machine.equals(stableHost)) {

@@ -26,6 +26,7 @@ import org.adamalang.extern.MockPostDocumentDelete;
 import org.adamalang.extern.SignalControl;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.multiregion.MultiRegionClient;
+import org.adamalang.mysql.impl.GlobalRegionFinder;
 import org.adamalang.mysql.model.*;
 import org.adamalang.net.client.routing.finder.MachinePicker;
 import org.adamalang.ops.*;
@@ -148,7 +149,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     File cloudPath = new File(caravanPath, "archive");
     File storePath = new File(dataRoot, "store");
     this.store = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), storePath, walRoot, 64 * 1024 * 1024, 64 * 1024, 1024 * 1024);
-    Finder finder = new Finder(dataBase, "test-region");
+    GlobalRegionFinder globalRegionFinder = new GlobalRegionFinder(dataBase, "test-region");
     Cloud cloud = new Cloud() {
       @Override
       public File path() {
@@ -176,7 +177,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     };
     CaravanDataService caravanDataService = new CaravanDataService(new CaravanMetrics(new NoOpMetricsFactory()), cloud, store, caravanExecutor);
     delete = new MockPostDocumentDelete();
-    Base managedBase = new Base(finder, caravanDataService, delete, "test-region", identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
+    Base managedBase = new Base(globalRegionFinder, caravanDataService, delete, "test-region", identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
     ManagedDataService dataService = new ManagedDataService(managedBase);
     threadDeath = new CountDownLatch(1);
     Thread flusher = new Thread(new Runnable() {
@@ -214,7 +215,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
     ClientConfig clientConfig = new ClientConfig();
     LocalRegionClientMetrics localRegionClientMetrics =  new LocalRegionClientMetrics(new NoOpMetricsFactory());
-    ClientRouter router = ClientRouter.FINDER(localRegionClientMetrics, finder, new MachinePicker() {
+    ClientRouter router = ClientRouter.FINDER(localRegionClientMetrics, globalRegionFinder, new MachinePicker() {
       @Override
       public void pickHost(Key key, Callback<String> callback) {
         System.err.println("picking a host via fallback");
@@ -284,7 +285,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.hostKeyPair = Keys.keyPairFor(SignatureAlgorithm.ES256);
     int keyId = Hosts.initializeHost(dataBase, "test-region", "127.0.0.1:" + port, "web", PublicKeyCodec.encodePublicKey(hostKeyPair));
 
-    MultiRegionClient adama = new MultiRegionClient(client, "test-region", hostKeyPair.getPrivate(), keyId, finder, new TreeMap<>());
+    MultiRegionClient adama = new MultiRegionClient(client, "test-region", hostKeyPair.getPrivate(), keyId, globalRegionFinder, new TreeMap<>());
     AssetSystem assets = new AssetSystem() {
       @Override
       public void request(AssetRequest request, AssetStream stream) {
@@ -322,7 +323,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
         System.err.println("domain needs certificate:" + domain);
       }
     };
-    this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, new String[] {}, signalControl, finder);
+    this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, new String[] {}, signalControl, globalRegionFinder);
 
     this.frontend = BootstrapGlobalServiceBase.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);

@@ -6,33 +6,33 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.mysql.model;
+package org.adamalang.mysql.impl;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.runtime.data.*;
+import org.adamalang.runtime.data.BackupResult;
+import org.adamalang.runtime.data.DocumentLocation;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.LocationType;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Finder implements FinderService {
-  private final DataBase dataBase;
-  private final String region;
+public class GlobalFinderCore {
+  private final DataBase database;
 
-  public Finder(DataBase dataBase, String region) {
-    this.dataBase = dataBase;
-    this.region = region;
+  public GlobalFinderCore(DataBase database) {
+    this.database = database;
   }
 
-  @Override
   public void find(Key key, Callback<DocumentLocation> callback) {
-    dataBase.transact((connection) -> {
+    database.transact((connection) -> {
       String selectSQL = //
-          "SELECT `id`, `type`, `region`, `machine`, `archive`, `deleted` FROM `" + dataBase.databaseName + //
+          "SELECT `id`, `type`, `region`, `machine`, `archive`, `deleted` FROM `" + database.databaseName + //
               "`.`directory` WHERE `space`=? AND `key`=?" //
           ;
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(selectSQL)) {
@@ -53,63 +53,44 @@ public class Finder implements FinderService {
         }
       }
       throw new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED);
-    }, dataBase.metrics.finder_find.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_FIND_EXCEPTION);
+    }, database.metrics.finder_find.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_FIND_EXCEPTION);
   }
-
-  @Override
-  public void findbind(Key key, String machine, Callback<DocumentLocation> callback) {
-    // dumb implementation
-    bind(key, machine, new Callback<Void>() {
-      @Override
-      public void success(Void value) {
-        find(key, callback);
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        find(key, callback);
-      }
-    });
-  }
-
-  @Override
-  public void bind(Key key, String machine, Callback<Void> callback) {
-    dataBase.transact((connection) -> {
+  public void bind(Key key, String regionToUse, String machine, Callback<Void> callback) {
+    database.transact((connection) -> {
       String updateIndexSQL = //
-          "UPDATE `" + dataBase.databaseName + "`.`directory` " + //
+          "UPDATE `" + database.databaseName + "`.`directory` " + //
               "SET `type`=" + LocationType.Machine.type + //
               ", `region`=?" + ", `machine`=?" + " WHERE NOT `deleted` AND `space`=? AND `key`=? AND ((`machine`=? AND `region`=?) OR `type`!=" + LocationType.Machine.type + ")";
       try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
-        statementUpdate.setString(1, region);
+        statementUpdate.setString(1, regionToUse);
         statementUpdate.setString(2, machine);
         statementUpdate.setString(3, key.space);
         statementUpdate.setString(4, key.key);
         statementUpdate.setString(5, machine);
-        statementUpdate.setString(6, region);
+        statementUpdate.setString(6, regionToUse);
         if (statementUpdate.executeUpdate() == 1) {
           return null;
         }
       }
       String insertSQL = //
-          "INSERT INTO `" + dataBase.databaseName + "`.`directory` (" + //
+          "INSERT INTO `" + database.databaseName + "`.`directory` (" + //
               "`space`, `key`, `type`, `head_seq`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`, `need_gc`) VALUES (?, ?, " + LocationType.Machine.type + ", 0, ?, ?, '', 0, 0, FALSE)" //
           ;
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(insertSQL)) {
         statementInsertIndex.setString(1, key.space);
         statementInsertIndex.setString(2, key.key);
-        statementInsertIndex.setString(3, region);
+        statementInsertIndex.setString(3, regionToUse);
         statementInsertIndex.setString(4, machine);
         statementInsertIndex.execute();
         return null;
       }
-    }, dataBase.metrics.finder_bind.wrap(callback), ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE);
+    }, database.metrics.finder_bind.wrap(callback), ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE);
   }
 
-  @Override
-  public void free(Key key, String machineOn, Callback<Void> callback) {
-    dataBase.transact((connection) -> {
+  public void free(Key key, String region, String machineOn, Callback<Void> callback) {
+    database.transact((connection) -> {
       String freeSQL = //
-          "UPDATE `" + dataBase.databaseName + "`.`directory` " + //
+          "UPDATE `" + database.databaseName + "`.`directory` " + //
               "SET `type`=" + LocationType.Archive.type + //
               ", `region`=''" + ", `machine`=''" + " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + LocationType.Machine.type;
       try (PreparedStatement statementUpdate = connection.prepareStatement(freeSQL)) {
@@ -120,14 +101,13 @@ public class Finder implements FinderService {
         statementUpdate.executeUpdate();
       }
       return null;
-    }, dataBase.metrics.finder_free.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_FREE_EXCEPTION);
+    }, database.metrics.finder_free.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_FREE_EXCEPTION);
   }
 
-  @Override
-  public void backup(Key key, BackupResult result, String machineOn, Callback<Void> callback) {
-    dataBase.transact((connection) -> {
+  public void backup(Key key, BackupResult result, String region, String machineOn, Callback<Void> callback) {
+    database.transact((connection) -> {
       String backupSQL = //
-          "UPDATE `" + dataBase.databaseName + "`.`directory` " + //
+          "UPDATE `" + database.databaseName + "`.`directory` " + //
               "SET `archive`=?" + ", `head_seq`=" + result.seq + //
               ", `need_gc` = (`need_gc` OR `asset_bytes` != " + result.assetBytes + ")" + //
               ", `delta_bytes`=" + result.deltaBytes + //
@@ -143,14 +123,13 @@ public class Finder implements FinderService {
         }
       }
       throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_BACKUP);
-    }, dataBase.metrics.finder_backup.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_BACKUP_EXCEPTION);
+    }, database.metrics.finder_backup.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_BACKUP_EXCEPTION);
   }
 
-  @Override
-  public void markDelete(Key key, String machineOn, Callback<Void> callback) {
-    dataBase.transact((connection) -> {
+  public void markDelete(Key key, String region, String machineOn, Callback<Void> callback) {
+    database.transact((connection) -> {
       String backupSQL = //
-          "UPDATE `" + dataBase.databaseName + "`.`directory` " + //
+          "UPDATE `" + database.databaseName + "`.`directory` " + //
               "SET `deleted`=TRUE WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + LocationType.Machine.type;
       try (PreparedStatement statementUpdate = connection.prepareStatement(backupSQL)) {
         statementUpdate.setString(1, key.space);
@@ -162,14 +141,13 @@ public class Finder implements FinderService {
         }
       }
       throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_MARK_DELETE);
-    }, dataBase.metrics.finder_backup.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_MARK_DELETE_EXCEPTION);
+    }, database.metrics.finder_backup.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_MARK_DELETE_EXCEPTION);
   }
 
-  @Override
-  public void commitDelete(Key key, String machineOn, Callback<Void> callback) {
-    dataBase.transact((connection) -> {
+  public void commitDelete(Key key, String region, String machineOn, Callback<Void> callback) {
+    database.transact((connection) -> {
       String deleteSQL = //
-          "DELETE FROM `" + dataBase.databaseName + "`.`directory` " + //
+          "DELETE FROM `" + database.databaseName + "`.`directory` " + //
               " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + LocationType.Machine.type;
       try (PreparedStatement statementDelete = connection.prepareStatement(deleteSQL)) {
         statementDelete.setString(1, key.space);
@@ -181,14 +159,13 @@ public class Finder implements FinderService {
         }
       }
       throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_COMMIT_DELETE);
-    }, dataBase.metrics.finder_delete.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_COMMIT_DELETE_EXCEPTION);
+    }, database.metrics.finder_delete.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_COMMIT_DELETE_EXCEPTION);
   }
 
-  @Override
-  public void list(String machine, Callback<List<Key>> callback) {
-    dataBase.transact((connection) -> {
+  public void list(String region, String machine, Callback<List<Key>> callback) {
+    database.transact((connection) -> {
       String selectSQL = //
-          "SELECT `space`, `key` FROM `" + dataBase.databaseName + //
+          "SELECT `space`, `key` FROM `" + database.databaseName + //
               "`.`directory` WHERE `region`=? AND `machine`=? AND NOT `deleted` AND `type`=" + //
               LocationType.Machine.type //
           ;
@@ -205,14 +182,13 @@ public class Finder implements FinderService {
           return results;
         }
       }
-    }, dataBase.metrics.finder_list.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_LIST_EXCEPTION);
+    }, database.metrics.finder_list.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_LIST_EXCEPTION);
   }
 
-  @Override
-  public void listDeleted(String machine, Callback<List<Key>> callback) {
-    dataBase.transact((connection) -> {
+  public void listDeleted(String region, String machine, Callback<List<Key>> callback) {
+    database.transact((connection) -> {
       String selectSQL = //
-          "SELECT `space`, `key` FROM `" + dataBase.databaseName + //
+          "SELECT `space`, `key` FROM `" + database.databaseName + //
               "`.`directory` WHERE `region`=? AND `machine`=? AND `deleted` AND `type`=" + //
               LocationType.Machine.type //
           ;
@@ -229,6 +205,6 @@ public class Finder implements FinderService {
           return results;
         }
       }
-    }, dataBase.metrics.finder_list.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_LIST_EXCEPTION);
+    }, database.metrics.finder_list.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_LIST_EXCEPTION);
   }
 }

@@ -45,7 +45,7 @@ public class CaravanInit {
     File storePath = new File(dataRoot, "store");
     DurableListStore store = new DurableListStore(new DiskMetrics(init.metricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
     this.caravanDataService = new CaravanDataService(new CaravanMetrics(init.metricsFactory), init.s3, store, caravanExecutor);
-    Base managedBase = new Base(init.finder, caravanDataService, init.s3, init.region, init.machine, managedExecutor, 2 * 60 * 1000);
+    Base managedBase = new Base(init.globalRegionFinder, caravanDataService, init.s3, init.region, init.machine, managedExecutor, 2 * 60 * 1000);
     this.service = new ManagedDataService(managedBase);
     this.flusher = new Thread(() -> {
       int diagnostics = 0;
