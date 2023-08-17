@@ -16,9 +16,7 @@ import org.adamalang.mysql.model.Finder;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
-import org.adamalang.runtime.data.DelayAdamaStream;
-import org.adamalang.runtime.data.FinderService;
-import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.*;
 import org.adamalang.contracts.data.AuthenticatedUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,8 +81,8 @@ public class MultiRegionClient {
   public void directSend(AuthenticatedUser user, String space, String key, String marker, String channel, String message, Callback<Integer> callback) {
     finder.find(new Key(space, key), new Callback<>() {
       @Override
-      public void success(FinderService.Result value) {
-        if (value.location == FinderService.Location.Machine) {
+      public void success(DocumentLocation value) {
+        if (value.location == LocationType.Machine) {
           if (region.equals(value.region)) {
             local.directSend(user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, marker, channel, message, callback);
           } else {
@@ -107,8 +105,8 @@ public class MultiRegionClient {
   public void delete(AuthenticatedUser user, String space, String key, Callback<Void> callback) {
     finder.find(new Key(space, key), new Callback<>() {
       @Override
-      public void success(FinderService.Result value) {
-        if (value.location == FinderService.Location.Machine) {
+      public void success(DocumentLocation value) {
+        if (value.location == LocationType.Machine) {
           if (region.equals(value.region)) {
             local.delete(user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, callback);
           } else {
@@ -133,8 +131,8 @@ public class MultiRegionClient {
     DelayAdamaStream stream = new DelayAdamaStream(executor, local.metrics.multi_region_find);
     finder.find(new Key(space, key), new Callback<>() {
       @Override
-      public void success(FinderService.Result value) {
-        if (value.location == FinderService.Location.Machine) {
+      public void success(DocumentLocation value) {
+        if (value.location == LocationType.Machine) {
           if (region.equals(value.region)) {
             stream.ready(local.connect(value.machine, user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, viewerState, user.context.assetKey, events));
           } else {

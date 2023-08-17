@@ -13,16 +13,13 @@ import org.adamalang.common.Callback;
 import java.util.List;
 
 /** an interface to describe how to find a specific document by key */
-public interface FinderService {
-
-  /** find the location of a key */
-  void find(Key key, Callback<Result> callback);
+public interface FinderService extends SimpleFinderService {
 
   /** take over for the key */
   void bind(Key key, String machine, Callback<Void> callback);
 
   /** find the result and bind it to me */
-  void findbind(Key key, String machine, Callback<Result> callback);
+  void findbind(Key key, String machine, Callback<DocumentLocation> callback);
 
   /** release the machine for the given key */
   void free(Key key, String machineOn, Callback<Void> callback);
@@ -42,45 +39,4 @@ public interface FinderService {
   /** list all items on a host */
   void listDeleted(String machine, Callback<List<Key>> callback);
 
-  /** where a document may be */
-  enum Location {
-    // a single machine
-    Machine(2),
-
-    // an archive
-    Archive(4);
-
-    public final int type;
-
-    Location(int type) {
-      this.type = type;
-    }
-
-    public static Location fromType(int type) {
-      for (Location location : Location.values()) {
-        if (location.type == type) {
-          return location;
-        }
-      }
-      return null;
-    }
-  }
-
-  class Result {
-    public final long id;
-    public final Location location;
-    public final String region;
-    public final String machine;
-    public final String archiveKey;
-    public final boolean deleted;
-
-    public Result(long id, Location location, String region, String machine, String archiveKey, boolean deleted) {
-      this.id = id;
-      this.location = location;
-      this.region = region;
-      this.machine = machine;
-      this.archiveKey = archiveKey;
-      this.deleted = deleted;
-    }
-  }
 }

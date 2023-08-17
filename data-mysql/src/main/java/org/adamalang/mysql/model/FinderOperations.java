@@ -11,7 +11,7 @@ package org.adamalang.mysql.model;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.DocumentIndex;
 import org.adamalang.mysql.data.GCTask;
-import org.adamalang.runtime.data.FinderService;
+import org.adamalang.runtime.data.LocationType;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -84,7 +84,7 @@ public class FinderOperations {
   public static ArrayList<GCTask> produceGCTasks(DataBase dataBase) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `id`, `space`, `key`, `head_seq`, `archive` FROM `" + dataBase.databaseName + //
-          "`.`directory` WHERE `need_gc`=TRUE AND `type`=" + FinderService.Location.Archive.type + " LIMIT 100";
+          "`.`directory` WHERE `need_gc`=TRUE AND `type`=" + LocationType.Archive.type + " LIMIT 100";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<GCTask> tasks = new ArrayList<>();
@@ -100,7 +100,7 @@ public class FinderOperations {
   public static boolean validateTask(DataBase dataBase, GCTask task) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `id`, `space`, `key`, `head_seq` FROM `" + dataBase.databaseName + //
-          "`.`directory` WHERE `id`=" + task.id + " AND `head_seq`=" + task.seq + " AND `need_gc`=TRUE AND `type`=" + FinderService.Location.Archive.type;
+          "`.`directory` WHERE `id`=" + task.id + " AND `head_seq`=" + task.seq + " AND `need_gc`=TRUE AND `type`=" + LocationType.Archive.type;
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         try (ResultSet rs = statement.executeQuery()) {
           while (rs.next()) {
@@ -115,7 +115,7 @@ public class FinderOperations {
   public static boolean lowerTask(DataBase dataBase, GCTask task) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "UPDATE `" + dataBase.databaseName + //
-          "`.`directory` SET `need_gc`=FALSE WHERE `id`=" + task.id + " AND `head_seq`=" + task.seq + " AND `need_gc`=TRUE AND `type`=" + FinderService.Location.Archive.type;
+          "`.`directory` SET `need_gc`=FALSE WHERE `id`=" + task.id + " AND `head_seq`=" + task.seq + " AND `need_gc`=TRUE AND `type`=" + LocationType.Archive.type;
       return DataBase.executeUpdate(connection, sql) == 1;
     });
   }

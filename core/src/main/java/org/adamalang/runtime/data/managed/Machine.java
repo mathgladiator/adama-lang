@@ -13,9 +13,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.runtime.contracts.DeleteTask;
-import org.adamalang.runtime.data.BackupResult;
-import org.adamalang.runtime.data.FinderService;
-import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.*;
 
 import java.util.ArrayList;
 
@@ -248,7 +246,7 @@ public class Machine {
     state = State.Finding;
     base.finder.find(key, new Callback<>() {
       @Override
-      public void success(FinderService.Result found) {
+      public void success(DocumentLocation found) {
         base.executor.execute(new NamedRunnable("got-find-result") {
           @Override
           public void execute() throws Exception {
@@ -256,7 +254,7 @@ public class Machine {
             if ("".equals(lastArchiveKey)) {
               lastArchiveKey = null;
             }
-            if (found.location == FinderService.Location.Machine) {
+            if (found.location == LocationType.Machine) {
               find_FoundMachine(found.machine, false);
             } else {
               find_Restore(found.archiveKey);

@@ -10,11 +10,12 @@ package org.adamalang.mysql.mocks;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.data.FinderService;
+import org.adamalang.runtime.data.LocationType;
+import org.adamalang.runtime.data.DocumentLocation;
 import org.junit.Assert;
 
-public class SimpleFinderCallback implements Callback<FinderService.Result> {
-  public FinderService.Result value;
+public class SimpleFinderCallback implements Callback<DocumentLocation> {
+  public DocumentLocation value;
   public int reads;
   private boolean success;
   private int count;
@@ -28,7 +29,7 @@ public class SimpleFinderCallback implements Callback<FinderService.Result> {
   }
 
   @Override
-  public void success(FinderService.Result value) {
+  public void success(DocumentLocation value) {
     this.value = value;
     count++;
     success = true;
@@ -41,7 +42,7 @@ public class SimpleFinderCallback implements Callback<FinderService.Result> {
     reason = ex.code;
   }
 
-  public void assertSuccess(FinderService.Location location, String machine, String archiveKey) {
+  public void assertSuccess(LocationType location, String machine, String archiveKey) {
     Assert.assertEquals(1, count);
     Assert.assertTrue(success);
     Assert.assertEquals(location, value.location);
