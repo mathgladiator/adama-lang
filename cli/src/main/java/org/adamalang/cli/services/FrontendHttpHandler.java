@@ -12,24 +12,18 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.PrivateKeyWithId;
-import org.adamalang.common.keys.SigningKeyPair;
-import org.adamalang.mysql.impl.GlobalDomainFinder;
-import org.adamalang.mysql.impl.GlobalRxHtmlFetcher;
-import org.adamalang.runtime.sys.domains.CachedDomainFinder;
+import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.runtime.sys.domains.Domain;
-import org.adamalang.mysql.model.Health;
-import org.adamalang.mysql.model.Secrets;
-import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.runtime.sys.web.*;
-import org.adamalang.runtime.sys.web.rxhtml.CachedRxHtmlFetcher;
 import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
 import org.adamalang.runtime.sys.web.rxhtml.RxHtmlFetcher;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.service.KeyPrefixUri;
 import org.adamalang.web.service.SpaceKeyRequest;
+import org.adamalang.web.service.WebConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,19 +34,17 @@ import java.util.TreeMap;
 public class FrontendHttpHandler implements HttpHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(FrontendHttpHandler.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
-  private final CommonServiceInit init;
-  private final LocalRegionClient client;
+  private final MultiRegionClient client;
   private final DomainFinder domainFinder;
   private final RxHtmlFetcher rxHtmlFetcher;
-  private final SimpleExecutor caches;
   private PrivateKeyWithId signingKey;
+  private final WebConfig webConfig;
 
-  public FrontendHttpHandler(CommonServiceInit init, LocalRegionClient client, PrivateKeyWithId signingKey) {
-    this.caches = SimpleExecutor.create("cache-thread");
-    this.init = init;
-    this.domainFinder = new CachedDomainFinder(TimeSource.REAL_TIME, 1000, 5 * 60 * 1000, caches, new GlobalDomainFinder(init.database));
+  public FrontendHttpHandler(WebConfig webConfig, DomainFinder domainFinder, RxHtmlFetcher rxHtmlFetcher, MultiRegionClient client, PrivateKeyWithId signingKey) {
+    this.webConfig = webConfig;
+    this.domainFinder = domainFinder;
     this.client = client;
-    this.rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, caches, new GlobalRxHtmlFetcher(init.database));
+    this.rxHtmlFetcher = rxHtmlFetcher;
     this.signingKey = signingKey;
   }
 
@@ -161,14 +153,14 @@ public class FrontendHttpHandler implements HttpHandler {
   public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     String host = headers.get("host");
     if (host != null) {
-      boolean isSpecial = init.webConfig.specialDomains.contains(host);
+      boolean isSpecial = webConfig.specialDomains.contains(host);
       if (!isSpecial) {
-        if (host.endsWith("." + init.webConfig.regionalDomain)) {
+        if (host.endsWith("." + webConfig.regionalDomain)) {
           get(SpaceKeyRequest.parse(uri), headers, parametersJson, callback);
           return;
         }
 
-        for (String suffix : init.webConfig.globalDomains) {
+        for (String suffix : webConfig.globalDomains) {
           if (host.endsWith("." + suffix)) {
             String space = host.substring(0, host.length() - suffix.length() - 1);
             getSpace(space, uri, headers, parametersJson, callback);

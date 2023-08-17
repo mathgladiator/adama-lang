@@ -13,6 +13,7 @@ import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.FrontendHttpHandler;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.ConfigObject;
+import org.adamalang.common.TimeSource;
 import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.frontend.global.GlobalAssetSystem;
 import org.adamalang.extern.Email;
@@ -21,7 +22,13 @@ import org.adamalang.extern.aws.SES;
 import org.adamalang.frontend.global.BootstrapGlobalServiceBase;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.multiregion.MultiRegionClient;
+import org.adamalang.mysql.impl.GlobalDomainFinder;
+import org.adamalang.mysql.impl.GlobalRxHtmlFetcher;
 import org.adamalang.net.client.LocalRegionClient;
+import org.adamalang.runtime.sys.domains.CachedDomainFinder;
+import org.adamalang.runtime.sys.domains.DomainFinder;
+import org.adamalang.runtime.sys.web.rxhtml.CachedRxHtmlFetcher;
+import org.adamalang.runtime.sys.web.rxhtml.RxHtmlFetcher;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.RedirectAndWellknownServiceRunnable;
 import org.adamalang.web.service.ServiceRunnable;
@@ -40,11 +47,13 @@ public class Frontend {
   public final MultiRegionClient adama;
 
   public Frontend(Config config, CommonServiceInit init, LocalRegionClient client) throws Exception {
-    FrontendHttpHandler http = new FrontendHttpHandler(init, client, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
+    this.adama = init.makeGlobalClient(client);
+    DomainFinder domainFinder = new CachedDomainFinder(TimeSource.REAL_TIME, 1000, 5 * 60 * 1000, init.system, new GlobalDomainFinder(init.database));
+    RxHtmlFetcher rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, init.system, new GlobalRxHtmlFetcher(init.database));
+    FrontendHttpHandler http = new FrontendHttpHandler(init.webConfig, domainFinder, rxHtmlFetcher, adama, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
     Email email = new SES(init.webBase, init.awsConfig, init.awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
-    this.adama = init.makeGlobalClient(client);
     GlobalAssetSystem assets = new GlobalAssetSystem(init.database, init.masterKey, adama, init.s3);
     ArrayList<String> superKeys = config.get_str_list("super-public-keys");
 

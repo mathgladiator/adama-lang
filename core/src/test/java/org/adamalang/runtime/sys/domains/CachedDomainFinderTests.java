@@ -21,23 +21,28 @@ import java.util.concurrent.TimeUnit;
 public class CachedDomainFinderTests {
   @Test
   public void passthrough() throws Exception {
-    MockDomainFinder mock = new MockDomainFinder() //
-        .with("host", new Domain("domain", 1, "space", "key", false, "", null, 123L));
-    CachedDomainFinder finder = new CachedDomainFinder(TimeSource.REAL_TIME, 100, 100000, SimpleExecutor.NOW, mock);
-    CountDownLatch latch = new CountDownLatch(1);
-    finder.find("host", new Callback<Domain>() {
-      @Override
-      public void success(Domain value) {
-        Assert.assertEquals("domain", value.domain);
-        Assert.assertEquals("space", value.space);
-        latch.countDown();
-      }
+    SimpleExecutor executor = SimpleExecutor.create("x");
+    try {
+      MockDomainFinder mock = new MockDomainFinder() //
+          .with("host", new Domain("domain", 1, "space", "key", false, "", null, 123L));
+      CachedDomainFinder finder = new CachedDomainFinder(TimeSource.REAL_TIME, 100, 100000, executor, mock);
+      CountDownLatch latch = new CountDownLatch(1);
+      finder.find("host", new Callback<Domain>() {
+        @Override
+        public void success(Domain value) {
+          Assert.assertEquals("domain", value.domain);
+          Assert.assertEquals("space", value.space);
+          latch.countDown();
+        }
 
-      @Override
-      public void failure(ErrorCodeException ex) {
+        @Override
+        public void failure(ErrorCodeException ex) {
 
-      }
-    });
-    Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+        }
+      });
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    } finally {
+      executor.shutdown();
+    }
   }
 }

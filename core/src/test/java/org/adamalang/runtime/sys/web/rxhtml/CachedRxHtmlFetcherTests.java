@@ -21,21 +21,26 @@ import java.util.concurrent.TimeUnit;
 public class CachedRxHtmlFetcherTests {
   @Test
   public void trivial() throws Exception {
-    MockRxHtmlFetcher mock = new MockRxHtmlFetcher();
-    CachedRxHtmlFetcher fetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 5 * 1000, SimpleExecutor.NOW, mock);
-    CountDownLatch latch = new CountDownLatch(1);
-    fetcher.fetch("trivial", new Callback<LiveSiteRxHtmlResult>() {
-      @Override
-      public void success(LiveSiteRxHtmlResult value) {
-        System.err.println("Got one");
-        latch.countDown();
-      }
+    SimpleExecutor executor = SimpleExecutor.create("exe");
+    try {
+      MockRxHtmlFetcher mock = new MockRxHtmlFetcher();
+      CachedRxHtmlFetcher fetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 5 * 1000, executor, mock);
+      CountDownLatch latch = new CountDownLatch(1);
+      fetcher.fetch("trivial", new Callback<LiveSiteRxHtmlResult>() {
+        @Override
+        public void success(LiveSiteRxHtmlResult value) {
+          System.err.println("Got one");
+          latch.countDown();
+        }
 
-      @Override
-      public void failure(ErrorCodeException ex) {
+        @Override
+        public void failure(ErrorCodeException ex) {
 
-      }
-    });
-    Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+        }
+      });
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    } finally {
+      executor.shutdown();
+    }
   }
 }
