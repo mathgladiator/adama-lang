@@ -6,18 +6,16 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.mysql.data;
+package org.adamalang.runtime.ops;
 
 /** a region bound machine */
 public class CapacityInstance {
-  public final int id;
   public final String space;
   public final String region;
   public final String machine;
   public final boolean override;
 
-  public CapacityInstance(int id, String space, String region, String machine, boolean override) {
-    this.id = id;
+  public CapacityInstance(String space, String region, String machine, boolean override) {
     this.space = space;
     this.region = region;
     this.machine = machine;

@@ -21,11 +21,12 @@ public class CapacityListResponder {
     this.responder = responder;
   }
 
-  public void next(String space, String region, String machine) {
+  public void next(String space, String region, String machine, Boolean override) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
     _obj.put("space", space);
     _obj.put("region", region);
     _obj.put("machine", machine);
+    _obj.put("override", override);
     responder.stream(_obj.toString());
   }
 
