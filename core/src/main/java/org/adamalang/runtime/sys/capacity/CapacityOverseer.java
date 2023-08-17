@@ -34,5 +34,5 @@ public interface CapacityOverseer {
   public void nuke(String space, Callback<Void> callback);
 
   /** pick a new host for a space within a region (that is stable) */
-  public void pickHostForSpace(String space, String region, Callback<String> callback);
+  public void pickStableHostForSpace(String space, String region, Callback<String> callback);
 }

@@ -85,7 +85,7 @@ public class GlobalCapacityOverseer implements CapacityOverseer  {
   }
 
   @Override
-  public void pickHostForSpace(String space, String region, Callback<String> callback) {
+  public void pickStableHostForSpace(String space, String region, Callback<String> callback) {
     try {
       callback.success(Hosts.pickStableHostFromRegion(database, region, "adama", space));
     } catch (Exception ex) {

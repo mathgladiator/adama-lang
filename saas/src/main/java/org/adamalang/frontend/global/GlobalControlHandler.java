@@ -858,7 +858,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, RegionalCapacityPickSpaceHostRequest request, CapacityHostResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-      nexus.overseer.pickHostForSpace(request.space, request.region, new Callback<String>() {
+      nexus.overseer.pickStableHostForSpace(request.space, request.region, new Callback<String>() {
         @Override
         public void success(String machine) {
           responder.complete(machine);
