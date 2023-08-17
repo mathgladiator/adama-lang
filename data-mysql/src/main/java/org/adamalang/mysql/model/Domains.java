@@ -9,7 +9,7 @@
 package org.adamalang.mysql.model;
 
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.data.Domain;
+import org.adamalang.runtime.sys.domains.Domain;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

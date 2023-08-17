@@ -51,7 +51,9 @@ public class AsyncSharedLRUCache<D, R extends Measurable> {
               executor.execute(new NamedRunnable("ascache-success") {
                 @Override
                 public void execute() throws Exception {
-                  cache.add(key, value);
+                  if (value != null) {
+                    cache.add(key, value);
+                  }
                   for (Callback<R> cb : inflight.remove(key)) {
                     cb.success(value);
                   }

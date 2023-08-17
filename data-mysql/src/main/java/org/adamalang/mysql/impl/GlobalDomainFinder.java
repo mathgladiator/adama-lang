@@ -6,17 +6,20 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.impl.global;
+package org.adamalang.mysql.impl;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.contracts.DomainFinder;
+import org.adamalang.common.ExceptionLogger;
+import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.data.Domain;
+import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.mysql.model.Domains;
 
 /** find domains from the database */
 public class GlobalDomainFinder implements DomainFinder {
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(GlobalDomainFinder.class);
   private final DataBase dataBase;
 
   public GlobalDomainFinder(DataBase dataBase) {
@@ -28,7 +31,7 @@ public class GlobalDomainFinder implements DomainFinder {
     try {
       callback.success(Domains.get(dataBase, domain));
     } catch (Exception ex) {
-      callback.failure(new ErrorCodeException(-1));
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DOMAIN_LOOKUP_FAILURE, ex, EXLOGGER));
     }
   }
 }

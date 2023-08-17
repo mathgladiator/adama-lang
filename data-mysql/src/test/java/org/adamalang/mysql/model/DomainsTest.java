@@ -10,7 +10,7 @@ package org.adamalang.mysql.model;
 
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
-import org.adamalang.mysql.data.Domain;
+import org.adamalang.runtime.sys.domains.Domain;
 
 import org.junit.Assert;
 import org.junit.Test;
