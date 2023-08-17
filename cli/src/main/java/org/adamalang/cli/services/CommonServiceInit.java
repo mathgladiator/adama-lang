@@ -34,7 +34,7 @@ import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.data.Domain;
 import org.adamalang.mysql.model.*;
-import org.adamalang.net.client.Client;
+import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.TargetsQuorum;
@@ -42,7 +42,6 @@ import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.routing.finder.MachinePicker;
 import org.adamalang.services.FirstPartyServices;
-import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.service.WebConfig;
@@ -199,11 +198,11 @@ public class CommonServiceInit {
     })));
   }
 
-  public MultiRegionClient makeGlobalClient(Client client) {
+  public MultiRegionClient makeGlobalClient(LocalRegionClient client) {
     return new MultiRegionClient(database, client, region, hostKey, publicKeyId, finder);
   }
 
-  public Client makeClient(HeatMonitor heat) {
+  public LocalRegionClient makeClient(HeatMonitor heat) {
     ClientConfig clientConfig = new ClientConfig();
     ClientMetrics metrics = new ClientMetrics(metricsFactory);
     MachinePicker fallback = (key, callback) -> {
@@ -218,7 +217,7 @@ public class CommonServiceInit {
       }
     };
     ClientRouter router = ClientRouter.FINDER(metrics, finder, fallback, region);
-    Client client = new Client(netBase, clientConfig, metrics, router, heat);
+    LocalRegionClient client = new LocalRegionClient(netBase, clientConfig, metrics, router, heat);
 
     TargetsQuorum targetsQuorum = new TargetsQuorum(metrics, client.getTargetPublisher());
     system.schedule(new NamedRunnable("list-hosts-database") {

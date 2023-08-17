@@ -10,11 +10,10 @@ package org.adamalang.overlord.roles;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Metering;
 import org.adamalang.mysql.model.Sentinel;
-import org.adamalang.net.client.Client;
+import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
@@ -23,7 +22,7 @@ import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
 // Collect metering records from all hosts via gossip and sync them to the metering table.
 public class MeteringAggregator {
   // TODO: turn Client into the multi-region client
-  public static void kickOff(OverlordMetrics metrics, Client client, DataBase dataBase, ConcurrentCachedHttpHandler handler) {
+  public static void kickOff(OverlordMetrics metrics, LocalRegionClient client, DataBase dataBase, ConcurrentCachedHttpHandler handler) {
     SimpleExecutor executor = SimpleExecutor.create("metering-aggregator");
     FixedHtmlStringLoggerTable table = new FixedHtmlStringLoggerTable(32, "target", "batch", "time");
     executor.schedule(new NamedRunnable("metering-fetch") {

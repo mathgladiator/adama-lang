@@ -14,7 +14,7 @@ import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.net.ServerHandle;
-import org.adamalang.net.client.Client;
+import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
@@ -34,9 +34,9 @@ import java.util.List;
 public class Backend {
   public final CommonServiceInit init;
   public final Thread serverThread;
-  public final Client client;
+  public final LocalRegionClient client;
 
-  public Backend(CommonServiceInit init, Thread serverThread, Client client) {
+  public Backend(CommonServiceInit init, Thread serverThread, LocalRegionClient client) {
     this.init = init;
     this.serverThread = serverThread;
     this.client = client;
@@ -66,7 +66,7 @@ public class Backend {
     deploymentFactoryBase.attachDeliverer(service);
     // tell the proxy how to pull code on demand
     factoryProxy.setAgent(deployAgent);
-    Client client = init.makeClient(capacityAgent);
+    LocalRegionClient client = init.makeClient(capacityAgent);
     init.engine.subscribe("adama", (hosts) -> {
       capacityAgent.deliverAdamaHosts(hosts);
     });

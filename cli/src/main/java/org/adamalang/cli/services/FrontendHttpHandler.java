@@ -21,7 +21,7 @@ import org.adamalang.mysql.model.Domains;
 import org.adamalang.mysql.model.Health;
 import org.adamalang.mysql.model.Secrets;
 import org.adamalang.mysql.model.Spaces;
-import org.adamalang.net.client.Client;
+import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.web.*;
@@ -43,10 +43,10 @@ public class FrontendHttpHandler implements HttpHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(FrontendHttpHandler.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private final CommonServiceInit init;
-  private final Client client;
+  private final LocalRegionClient client;
   private final ConcurrentHashMap<String, Integer> spaceIds;
 
-  public FrontendHttpHandler(CommonServiceInit init, Client client) {
+  public FrontendHttpHandler(CommonServiceInit init, LocalRegionClient client) {
     this.init = init;
     this.client = client;
     this.spaceIds = new ConcurrentHashMap<>();

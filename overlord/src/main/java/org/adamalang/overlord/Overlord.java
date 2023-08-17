@@ -13,7 +13,7 @@ import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.net.client.Client;
+import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.roles.*;
 import org.adamalang.runtime.data.ColdAssetSystem;
@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Overlord {
-  public static HttpHandler execute(ConcurrentCachedHttpHandler handler, boolean isGlobalOverlord, Client localClient, MultiRegionClient client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, ColdAssetSystem lister, Cloud cloud, AtomicBoolean alive) throws Exception {
+  public static HttpHandler execute(ConcurrentCachedHttpHandler handler, boolean isGlobalOverlord, LocalRegionClient localClient, MultiRegionClient client, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase dataBase, ColdAssetSystem lister, Cloud cloud, AtomicBoolean alive) throws Exception {
     // the overlord has metrics
     OverlordMetrics metrics = new OverlordMetrics(metricsFactory);
 
