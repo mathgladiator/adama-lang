@@ -12,7 +12,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
-import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.Remote;
 import org.adamalang.net.client.mocks.SimpleIntCallback;
 import org.adamalang.net.mocks.*;

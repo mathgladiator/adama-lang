@@ -17,7 +17,7 @@ import org.adamalang.common.capacity.LoadEvent;
 import org.adamalang.common.capacity.LoadMonitor;
 import org.adamalang.common.capacity.RepeatingSignal;
 import org.adamalang.runtime.sys.capacity.CapacityInstance;
-import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.sys.capacity.CapacityOverseer;

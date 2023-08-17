@@ -11,7 +11,7 @@ package org.adamalang.net.client;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.net.NetBase;
-import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
 
 import java.util.Iterator;

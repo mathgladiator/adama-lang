@@ -6,10 +6,10 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.net.client.contracts;
+package org.adamalang.runtime.sys.capacity;
 
 @FunctionalInterface
 public interface HeatMonitor {
 
-  void heat(String target, double cpu, double memory);
+  void heat(String machine, double cpu, double memory);
 }

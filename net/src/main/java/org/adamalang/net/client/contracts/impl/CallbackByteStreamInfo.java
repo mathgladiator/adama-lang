@@ -13,7 +13,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.client.LocalRegionClientMetrics;
-import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
 

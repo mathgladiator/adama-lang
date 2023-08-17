@@ -22,10 +22,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GlobalFinderCore {
+/** this is a fundamental proxy to the database for finder related operations */
+public class MySQLFinderCore {
   private final DataBase database;
 
-  public GlobalFinderCore(DataBase database) {
+  public MySQLFinderCore(DataBase database) {
     this.database = database;
   }
 
@@ -55,6 +56,7 @@ public class GlobalFinderCore {
       throw new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED);
     }, database.metrics.finder_find.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_FIND_EXCEPTION);
   }
+
   public void bind(Key key, String region, String machine, Callback<Void> callback) {
     database.transact((connection) -> {
       String updateIndexSQL = //

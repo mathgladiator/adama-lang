@@ -19,7 +19,7 @@ import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.bidi.DocumentExchange;
 import org.adamalang.net.client.bidi.MeteringExchange;
 import org.adamalang.net.client.contracts.Events;
-import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.client.contracts.impl.CallbackByteStreamInfo;
