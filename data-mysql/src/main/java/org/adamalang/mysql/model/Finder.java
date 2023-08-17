@@ -12,9 +12,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.runtime.data.BackupResult;
-import org.adamalang.runtime.data.FinderService;
-import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +29,7 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void find(Key key, Callback<Result> callback) {
+  public void find(Key key, Callback<DocumentLocation> callback) {
     dataBase.transact((connection) -> {
       String selectSQL = //
           "SELECT `id`, `type`, `region`, `machine`, `archive`, `deleted` FROM `" + dataBase.databaseName + //
@@ -47,9 +45,9 @@ public class Finder implements FinderService {
             String region = rs.getString(3);
             String machineValue = rs.getString(4);
             String archiveValue = rs.getString(5);
-            Location location = Location.fromType(type);
+            LocationType location = LocationType.fromType(type);
             if (location != null) {
-              return new Result(id, location, region, machineValue, archiveValue, rs.getBoolean(6));
+              return new DocumentLocation(id, location, region, machineValue, archiveValue, rs.getBoolean(6));
             }
           }
         }
@@ -59,7 +57,7 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void findbind(Key key, String machine, Callback<Result> callback) {
+  public void findbind(Key key, String machine, Callback<DocumentLocation> callback) {
     // dumb implementation
     bind(key, machine, new Callback<Void>() {
       @Override
@@ -79,8 +77,8 @@ public class Finder implements FinderService {
     dataBase.transact((connection) -> {
       String updateIndexSQL = //
           "UPDATE `" + dataBase.databaseName + "`.`directory` " + //
-              "SET `type`=" + Location.Machine.type + //
-              ", `region`=?" + ", `machine`=?" + " WHERE NOT `deleted` AND `space`=? AND `key`=? AND ((`machine`=? AND `region`=?) OR `type`!=" + Location.Machine.type + ")";
+              "SET `type`=" + LocationType.Machine.type + //
+              ", `region`=?" + ", `machine`=?" + " WHERE NOT `deleted` AND `space`=? AND `key`=? AND ((`machine`=? AND `region`=?) OR `type`!=" + LocationType.Machine.type + ")";
       try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
         statementUpdate.setString(1, region);
         statementUpdate.setString(2, machine);
@@ -94,7 +92,7 @@ public class Finder implements FinderService {
       }
       String insertSQL = //
           "INSERT INTO `" + dataBase.databaseName + "`.`directory` (" + //
-              "`space`, `key`, `type`, `head_seq`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`, `need_gc`) VALUES (?, ?, " + Location.Machine.type + ", 0, ?, ?, '', 0, 0, FALSE)" //
+              "`space`, `key`, `type`, `head_seq`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`, `need_gc`) VALUES (?, ?, " + LocationType.Machine.type + ", 0, ?, ?, '', 0, 0, FALSE)" //
           ;
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(insertSQL)) {
         statementInsertIndex.setString(1, key.space);
@@ -112,8 +110,8 @@ public class Finder implements FinderService {
     dataBase.transact((connection) -> {
       String freeSQL = //
           "UPDATE `" + dataBase.databaseName + "`.`directory` " + //
-              "SET `type`=" + Location.Archive.type + //
-              ", `region`=''" + ", `machine`=''" + " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + Location.Machine.type;
+              "SET `type`=" + LocationType.Archive.type + //
+              ", `region`=''" + ", `machine`=''" + " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + LocationType.Machine.type;
       try (PreparedStatement statementUpdate = connection.prepareStatement(freeSQL)) {
         statementUpdate.setString(1, key.space);
         statementUpdate.setString(2, key.key);
@@ -133,7 +131,7 @@ public class Finder implements FinderService {
               "SET `archive`=?" + ", `head_seq`=" + result.seq + //
               ", `need_gc` = (`need_gc` OR `asset_bytes` != " + result.assetBytes + ")" + //
               ", `delta_bytes`=" + result.deltaBytes + //
-              ", `asset_bytes`=" + result.assetBytes + " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + Location.Machine.type;
+              ", `asset_bytes`=" + result.assetBytes + " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + LocationType.Machine.type;
       try (PreparedStatement statementUpdate = connection.prepareStatement(backupSQL)) {
         statementUpdate.setString(1, result.archiveKey);
         statementUpdate.setString(2, key.space);
@@ -153,7 +151,7 @@ public class Finder implements FinderService {
     dataBase.transact((connection) -> {
       String backupSQL = //
           "UPDATE `" + dataBase.databaseName + "`.`directory` " + //
-              "SET `deleted`=TRUE WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + Location.Machine.type;
+              "SET `deleted`=TRUE WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + LocationType.Machine.type;
       try (PreparedStatement statementUpdate = connection.prepareStatement(backupSQL)) {
         statementUpdate.setString(1, key.space);
         statementUpdate.setString(2, key.key);
@@ -172,7 +170,7 @@ public class Finder implements FinderService {
     dataBase.transact((connection) -> {
       String deleteSQL = //
           "DELETE FROM `" + dataBase.databaseName + "`.`directory` " + //
-              " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + Location.Machine.type;
+              " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + LocationType.Machine.type;
       try (PreparedStatement statementDelete = connection.prepareStatement(deleteSQL)) {
         statementDelete.setString(1, key.space);
         statementDelete.setString(2, key.key);
@@ -192,7 +190,7 @@ public class Finder implements FinderService {
       String selectSQL = //
           "SELECT `space`, `key` FROM `" + dataBase.databaseName + //
               "`.`directory` WHERE `region`=? AND `machine`=? AND NOT `deleted` AND `type`=" + //
-              Location.Machine.type //
+              LocationType.Machine.type //
           ;
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(selectSQL)) {
         statementInsertIndex.setString(1, region);
@@ -216,7 +214,7 @@ public class Finder implements FinderService {
       String selectSQL = //
           "SELECT `space`, `key` FROM `" + dataBase.databaseName + //
               "`.`directory` WHERE `region`=? AND `machine`=? AND `deleted` AND `type`=" + //
-              Location.Machine.type //
+              LocationType.Machine.type //
           ;
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(selectSQL)) {
         statementInsertIndex.setString(1, region);

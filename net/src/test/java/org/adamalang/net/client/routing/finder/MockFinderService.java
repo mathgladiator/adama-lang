@@ -11,9 +11,7 @@ package org.adamalang.net.client.routing.finder;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.data.BackupResult;
-import org.adamalang.runtime.data.FinderService;
-import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.*;
 import org.junit.Assert;
 
 import java.util.HashMap;
@@ -22,7 +20,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class MockFinderService implements FinderService {
-  private final HashMap<Key, Result> map;
+  private final HashMap<Key, DocumentLocation> map;
 
   public MockFinderService() {
     this.map = new HashMap<>();
@@ -47,7 +45,7 @@ public class MockFinderService implements FinderService {
   private boolean willFailCantFindKeyRetry = true;
 
   @Override
-  public void find(Key key, Callback<Result> callback) {
+  public void find(Key key, Callback<DocumentLocation> callback) {
     if (key.key.contains("cant-find")) {
       callback.failure(new ErrorCodeException(-999));
       return;
@@ -58,10 +56,10 @@ public class MockFinderService implements FinderService {
       callback.failure(new ErrorCodeException(-1999));
       return;
     }
-    Result result = map.get(key);
+    DocumentLocation documentLocation = map.get(key);
     Runnable action = () -> {
-      if (result != null) {
-        callback.success(result);
+      if (documentLocation != null) {
+        callback.success(documentLocation);
       } else {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
       }
@@ -76,7 +74,7 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void findbind(Key key, String machine, Callback<Result> callback) {
+  public void findbind(Key key, String machine, Callback<DocumentLocation> callback) {
     bind(key, machine, new Callback<Void>() {
       @Override
       public void success(Void value) {
@@ -96,19 +94,19 @@ public class MockFinderService implements FinderService {
       callback.failure(new ErrorCodeException(-1234));
       return;
     }
-    Result result = map.get(key);
-    if (result != null) {
-      if (result.location == Location.Archive) {
-        map.put(key, new Result(1, Location.Machine, "test-region", machine, result.archiveKey, false));
+    DocumentLocation documentLocation = map.get(key);
+    if (documentLocation != null) {
+      if (documentLocation.location == LocationType.Archive) {
+        map.put(key, new DocumentLocation(1, LocationType.Machine, "test-region", machine, documentLocation.archiveKey, false));
         callback.success(null);
-      } else if (machine.equals(result.machine) && result.location == Location.Machine) {
+      } else if (machine.equals(documentLocation.machine) && documentLocation.location == LocationType.Machine) {
         callback.success(null);
       } else {
         callback.failure(new ErrorCodeException(-1));
         return;
       }
     } else {
-      map.put(key, new Result(1, Location.Machine, "test-region", machine, "", false));
+      map.put(key, new DocumentLocation(1, LocationType.Machine, "test-region", machine, "", false));
       callback.success(null);
     }
   }
@@ -118,15 +116,15 @@ public class MockFinderService implements FinderService {
   }
 
   public void bindArchive(Key key, String archiveKey) {
-    map.put(key, new Result(1, Location.Archive, "", "", archiveKey, false));
+    map.put(key, new DocumentLocation(1, LocationType.Archive, "", "", archiveKey, false));
   }
 
   public void bindOtherMachine(Key key) {
-    map.put(key, new Result(1, Location.Machine, "test-region", "other-machine", "", false));
+    map.put(key, new DocumentLocation(1, LocationType.Machine, "test-region", "other-machine", "", false));
   }
 
   public void bindOtherRegion(Key key) {
-    map.put(key, new Result(1, Location.Machine, "other-region", "other-machine", "", false));
+    map.put(key, new DocumentLocation(1, LocationType.Machine, "other-region", "other-machine", "", false));
   }
 
   @Override
@@ -139,10 +137,10 @@ public class MockFinderService implements FinderService {
       }
     }
 
-    Result result = map.get(key);
-    if (result != null) {
-      if (machineOn.equals(result.machine) && result.location == Location.Machine) {
-        map.put(key, new Result(1, Location.Archive, "", "", result.archiveKey, false));
+    DocumentLocation documentLocation = map.get(key);
+    if (documentLocation != null) {
+      if (machineOn.equals(documentLocation.machine) && documentLocation.location == LocationType.Machine) {
+        map.put(key, new DocumentLocation(1, LocationType.Archive, "", "", documentLocation.archiveKey, false));
         callback.success(null);
       } else {
         callback.failure(new ErrorCodeException(-2));
@@ -164,10 +162,10 @@ public class MockFinderService implements FinderService {
         return;
       }
     }
-    Result result = map.get(key);
-    if (result != null) {
-      if (machineOn.equals(result.machine) && result.location == Location.Machine) {
-        map.put(key, new Result(1, result.location, result.region, result.machine, backupResult.archiveKey, false));
+    DocumentLocation documentLocation = map.get(key);
+    if (documentLocation != null) {
+      if (machineOn.equals(documentLocation.machine) && documentLocation.location == LocationType.Machine) {
+        map.put(key, new DocumentLocation(1, documentLocation.location, documentLocation.region, documentLocation.machine, backupResult.archiveKey, false));
         callback.success(null);
       } else {
         callback.failure(new ErrorCodeException(-4));

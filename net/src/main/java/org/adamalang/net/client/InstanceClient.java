@@ -28,8 +28,9 @@ import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
-import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.LocationType;
+import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
@@ -250,7 +251,7 @@ public class InstanceClient implements AutoCloseable {
     });
   }
 
-  public void find(Key key, Callback<FinderService.Result> callback) {
+  public void find(Key key, Callback<DocumentLocation> callback) {
     executor.execute(new NamedRunnable("client-find") {
       @Override
       public void execute() throws Exception {
@@ -260,7 +261,7 @@ public class InstanceClient implements AutoCloseable {
             client.open(new ServerCodec.StreamFinder() {
               @Override
               public void handle(ServerMessage.FindResponse payload) {
-                callback.success(new FinderService.Result(payload.id, FinderService.Location.fromType(payload.location), payload.region, payload.machine, payload.archive, false));
+                callback.success(new DocumentLocation(payload.id, LocationType.fromType(payload.location), payload.region, payload.machine, payload.archive, false));
               }
 
               @Override

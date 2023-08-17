@@ -12,9 +12,7 @@ import org.adamalang.api.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Stream;
-import org.adamalang.runtime.data.BackupResult;
-import org.adamalang.runtime.data.FinderService;
-import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +29,7 @@ public class RegionalFinder implements FinderService {
   }
 
   @Override
-  public void find(Key key, Callback<Result> callback) {
+  public void find(Key key, Callback<DocumentLocation> callback) {
     ClientRegionalFinderFindRequest request = new ClientRegionalFinderFindRequest();
     request.identity = identity;
     request.space = key.space;
@@ -40,7 +38,7 @@ public class RegionalFinder implements FinderService {
   }
 
   @Override
-  public void findbind(Key key, String machine, Callback<Result> callback) {
+  public void findbind(Key key, String machine, Callback<DocumentLocation> callback) {
     ClientRegionalFinderFindbindRequest request = new ClientRegionalFinderFindbindRequest();
     request.identity = identity;
     request.space = key.space;
@@ -139,11 +137,11 @@ public class RegionalFinder implements FinderService {
     client.regionalFinderDeletionList(request, wrapListKey(callback));
   }
 
-  private Callback<ClientFinderResultResponse> wrapResult(Callback<Result> callback) {
+  private Callback<ClientFinderResultResponse> wrapResult(Callback<DocumentLocation> callback) {
     return new Callback<ClientFinderResultResponse>() {
       @Override
       public void success(ClientFinderResultResponse value) {
-        callback.success(new Result(value.id, Location.fromType(value.locationType), value.region, value.machine, value.archive, value.deleted));
+        callback.success(new DocumentLocation(value.id, LocationType.fromType(value.locationType), value.region, value.machine, value.archive, value.deleted));
       }
 
       @Override

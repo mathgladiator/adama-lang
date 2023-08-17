@@ -17,8 +17,8 @@ import org.adamalang.mysql.data.GCTask;
 import org.adamalang.mysql.mocks.SimpleFinderCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
 import org.adamalang.runtime.data.BackupResult;
-import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.LocationType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -83,7 +83,7 @@ public class FinderTests {
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "");
+          cb.assertSuccess(LocationType.Machine, "machineB:523", "");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
@@ -93,12 +93,12 @@ public class FinderTests {
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "");
+          cb.assertSuccess(LocationType.Machine, "machineB:523", "");
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "");
+          cb.assertSuccess(LocationType.Machine, "machineB:523", "");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
@@ -125,12 +125,12 @@ public class FinderTests {
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key");
+          cb.assertSuccess(LocationType.Machine, "machineB:523", "new-achive-key");
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key");
+          cb.assertSuccess(LocationType.Machine, "machineB:523", "new-achive-key");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
@@ -140,7 +140,7 @@ public class FinderTests {
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key-old");
+          cb.assertSuccess(LocationType.Machine, "machineB:523", "new-achive-key-old");
         }
         CountDownLatch listFinished = new CountDownLatch(1);
         machine.list("machineB:523", new Callback<List<Key>>() {
@@ -167,7 +167,7 @@ public class FinderTests {
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key-old");
+          cb.assertSuccess(LocationType.Machine, "machineB:523", "new-achive-key-old");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
@@ -190,7 +190,7 @@ public class FinderTests {
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Archive, "", "new-achive-key-old");
+          cb.assertSuccess(LocationType.Archive, "", "new-achive-key-old");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();

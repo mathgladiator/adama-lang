@@ -15,8 +15,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.routing.Router;
-import org.adamalang.runtime.data.FinderService;
-import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.*;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -92,13 +91,13 @@ public class FinderServiceRouter implements Router {
     // find the key once, or assign capacity to it
     finder.find(key, new Callback<>() {
       @Override
-      public void success(FinderService.Result finderResult) {
+      public void success(DocumentLocation documentLocation) {
         reportFindSuccess();
-        if (finderResult.location == FinderService.Location.Machine) {
-          if (finderResult.region.equals(region)) {
-            callback.onMachine(finderResult.machine);
+        if (documentLocation.location == LocationType.Machine) {
+          if (documentLocation.region.equals(region)) {
+            callback.onMachine(documentLocation.machine);
           } else {
-            callback.onRegion(finderResult.region);
+            callback.onRegion(documentLocation.region);
           }
         } else {
           pickHost(key, callback, true);
