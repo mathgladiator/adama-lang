@@ -20,7 +20,7 @@ public class TargetsQuorumTests {
   @Test
   public void quorom() {
     AtomicReference<Collection<String>> last = new AtomicReference<>();
-    TargetsQuorum quorum = new TargetsQuorum(new ClientMetrics(new NoOpMetricsFactory()), last::set);
+    TargetsQuorum quorum = new TargetsQuorum(new LocalRegionClientMetrics(new NoOpMetricsFactory()), last::set);
     quorum.deliverDatabase(Collections.singleton("X"));
     quorum.deliverGossip(Collections.singleton("X"));
     Assert.assertEquals(1, last.get().size());

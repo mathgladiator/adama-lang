@@ -9,7 +9,7 @@
 package org.adamalang.net.client.routing;
 
 import org.adamalang.common.*;
-import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.routing.finder.FinderServiceRouter;
 import org.adamalang.net.client.routing.finder.MachinePicker;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
@@ -31,13 +31,13 @@ public class ClientRouter {
     AwaitHelper.block(executor.shutdown(), 1000);
   }
 
-  public static ClientRouter REACTIVE(ClientMetrics metrics) {
+  public static ClientRouter REACTIVE(LocalRegionClientMetrics metrics) {
     SimpleExecutor executor = SimpleExecutor.create("routing-executor");
     AggregatedCacheRouter engine = new AggregatedCacheRouter(executor);
     return new ClientRouter(executor, engine, engine);
   }
 
-  public static ClientRouter FINDER(ClientMetrics metrics, FinderService finder, MachinePicker pickerFallback, String region) {
+  public static ClientRouter FINDER(LocalRegionClientMetrics metrics, FinderService finder, MachinePicker pickerFallback, String region) {
     SimpleExecutor executor = SimpleExecutor.create("routing-executor");
     AggregatedCacheRouter engine = new AggregatedCacheRouter(executor);
     MachinePicker picker = new ReactiveCacheMachinePicker(metrics, engine, pickerFallback);

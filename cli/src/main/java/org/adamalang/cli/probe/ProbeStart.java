@@ -17,13 +17,11 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.net.client.ClientConfig;
-import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
-import org.adamalang.net.codec.ClientMessage;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -45,7 +43,7 @@ public class ProbeStart {
     this.identity = MachineIdentity.fromFile(identityFileName);
     this.base = new NetBase(new NetMetrics(metricsFactory), identity, 1, 1);
     ClientConfig clientConfig = new ClientConfig();
-    ClientMetrics clientMetrics = new ClientMetrics(metricsFactory);
+    LocalRegionClientMetrics localRegionClientMetrics = new LocalRegionClientMetrics(metricsFactory);
     HeatMonitor heatMonitor = new HeatMonitor() {
       @Override
       public void heat(String target, double cpu, double memory) {
@@ -59,7 +57,7 @@ public class ProbeStart {
       }
     };
     executor = SimpleExecutor.create("probe");
-    client = new InstanceClient(base, clientConfig, clientMetrics, heatMonitor, routingTarget, args.target, executor);
+    client = new InstanceClient(base, clientConfig, localRegionClientMetrics, heatMonitor, routingTarget, args.target, executor);
   }
 
   public void run() {

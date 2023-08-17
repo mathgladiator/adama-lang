@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 /** You ask it for clients, and you get clients */
 public class InstanceClientFinder {
   private final NetBase base;
-  private final ClientMetrics metrics;
+  private final LocalRegionClientMetrics metrics;
   private final HeatMonitor monitor;
   private final RoutingTarget routingTarget;
   private final ConcurrentHashMap<String, InstanceClient> clients;
@@ -35,7 +35,7 @@ public class InstanceClientFinder {
   private final Random rng;
   private final ClientConfig config;
 
-  public InstanceClientFinder(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor, SimpleExecutorFactory threadFactory, int nThreads, RoutingTarget routingTarget, ExceptionLogger logger) {
+  public InstanceClientFinder(NetBase base, ClientConfig config, LocalRegionClientMetrics metrics, HeatMonitor monitor, SimpleExecutorFactory threadFactory, int nThreads, RoutingTarget routingTarget, ExceptionLogger logger) {
     this.base = base;
     this.config = config;
     this.metrics = metrics;

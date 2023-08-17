@@ -44,7 +44,7 @@ import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.Installer;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.ClientConfig;
-import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.server.Handler;
@@ -211,8 +211,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
     ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, deploymentAgent, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(),  1800000L), port, 2);
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
     ClientConfig clientConfig = new ClientConfig();
-    ClientMetrics clientMetrics =  new ClientMetrics(new NoOpMetricsFactory());
-    ClientRouter router = ClientRouter.FINDER(clientMetrics, finder, new MachinePicker() {
+    LocalRegionClientMetrics localRegionClientMetrics =  new LocalRegionClientMetrics(new NoOpMetricsFactory());
+    ClientRouter router = ClientRouter.FINDER(localRegionClientMetrics, finder, new MachinePicker() {
       @Override
       public void pickHost(Key key, Callback<String> callback) {
         System.err.println("picking a host via fallback");
@@ -224,7 +224,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
         callback.success(identity.ip + ":" + port);
       }
     }, "test-region");
-    LocalRegionClient client = new LocalRegionClient(netBase, clientConfig, clientMetrics, router, null);
+    LocalRegionClient client = new LocalRegionClient(netBase, clientConfig, localRegionClientMetrics, router, null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
 
 

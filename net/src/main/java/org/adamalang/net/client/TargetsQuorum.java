@@ -14,13 +14,13 @@ import java.util.function.Consumer;
 
 /** Ensures that clients are available from gossip and the hosts databases */
 public class TargetsQuorum {
-  private final ClientMetrics metrics;
+  private final LocalRegionClientMetrics metrics;
   private final Consumer<Collection<String>> destination;
   private final TreeSet<String> fromDatabase;
   private final TreeSet<String> fromGossip;
   private long created;
 
-  public TargetsQuorum(ClientMetrics metrics, Consumer<Collection<String>> destination) {
+  public TargetsQuorum(LocalRegionClientMetrics metrics, Consumer<Collection<String>> destination) {
     this.metrics = metrics;
     this.destination = destination;
     this.fromGossip = new TreeSet<>();
