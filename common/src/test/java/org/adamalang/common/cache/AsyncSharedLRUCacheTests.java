@@ -73,6 +73,7 @@ public class AsyncSharedLRUCacheTests {
           }
         });
         Assert.assertTrue(happy.await(10000, TimeUnit.MILLISECONDS));
+        Assert.assertEquals(1, cache.size());
       }
     } finally {
       executor.shutdown();
@@ -118,6 +119,41 @@ public class AsyncSharedLRUCacheTests {
       cbRef.get().failure(new ErrorCodeException(123));
       Assert.assertTrue(allIn.await(50000, TimeUnit.MILLISECONDS));
       Assert.assertEquals(1, calls.get());
+      Assert.assertEquals(0, cache.size());
+    } finally {
+      executor.shutdown();
+    }
+  }
+
+  @Test
+  public void dontcachenull() throws Exception {
+    MockTime time = new MockTime();
+    ArrayList<String> evictions = new ArrayList<>();
+    SyncCacheLRU<String, MeasuredString> cache = new SyncCacheLRU<>(time, 1, 10, 1024, 1000, (key, ms) -> evictions.add(key));
+    SimpleExecutor executor = SimpleExecutor.create("test");
+    try {
+      AtomicReference<Callback<MeasuredString>> cbRef = new AtomicReference<>();
+      AsyncSharedLRUCache<String, MeasuredString> async = new AsyncSharedLRUCache<String, MeasuredString>(executor, cache, (key, cb) -> {
+        cb.success(null);
+      });
+      CountDownLatch allIn = new CountDownLatch(10);
+      for (int k = 0; k < 10; k++) {
+        Callback<MeasuredString> cb = new Callback<MeasuredString>() {
+          @Override
+          public void success(MeasuredString value) {
+            Assert.assertNull(value);
+            allIn.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        };
+        async.get("X", cb);
+      }
+      Assert.assertTrue(allIn.await(50000, TimeUnit.MILLISECONDS));
+      Assert.assertEquals(0, cache.size());
     } finally {
       executor.shutdown();
     }

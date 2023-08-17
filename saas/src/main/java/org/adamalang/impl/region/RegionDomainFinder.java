@@ -13,8 +13,8 @@ import org.adamalang.api.ClientRegionalDomainLookupRequest;
 import org.adamalang.api.SelfClient;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.contracts.DomainFinder;
-import org.adamalang.mysql.data.Domain;
+import org.adamalang.runtime.sys.domains.DomainFinder;
+import org.adamalang.runtime.sys.domains.Domain;
 
 import java.sql.Date;
 

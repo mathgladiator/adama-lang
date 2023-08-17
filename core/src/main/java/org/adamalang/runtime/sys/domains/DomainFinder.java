@@ -6,10 +6,10 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.contracts;
+package org.adamalang.runtime.sys.domains;
 
 import org.adamalang.common.Callback;
-import org.adamalang.mysql.data.Domain;
+import org.adamalang.runtime.sys.domains.Domain;
 
 /** find a domain */
 public interface DomainFinder {

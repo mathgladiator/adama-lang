@@ -13,7 +13,7 @@ import org.adamalang.common.*;
 import org.adamalang.frontend.Session;
 import org.adamalang.frontend.global.GlobalExternNexus;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.data.Domain;
+import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.mysql.model.Domains;
 import org.adamalang.contracts.DomainWithPolicyResolver;
 import org.adamalang.contracts.SpacePolicyLocator;

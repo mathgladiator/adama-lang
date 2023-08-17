@@ -32,6 +32,7 @@ import org.adamalang.contracts.SpacePolicyLocator;
 import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.contracts.data.SpacePolicy;
 import org.adamalang.runtime.sys.capacity.CapacityInstance;
+import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.validators.ValidateEmail;
 import org.adamalang.web.client.SimpleHttpRequest;
 import org.adamalang.web.client.SimpleHttpRequestBody;

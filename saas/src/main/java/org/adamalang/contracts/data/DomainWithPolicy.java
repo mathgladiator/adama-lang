@@ -8,7 +8,7 @@
  */
 package org.adamalang.contracts.data;
 
-import org.adamalang.mysql.data.Domain;
+import org.adamalang.runtime.sys.domains.Domain;
 
 /** a domain with an associated space policy */
 public class DomainWithPolicy {

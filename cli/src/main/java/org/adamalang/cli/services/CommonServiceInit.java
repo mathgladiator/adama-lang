@@ -32,7 +32,7 @@ import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
-import org.adamalang.mysql.data.Domain;
+import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.mysql.impl.GlobalFinder;
 import org.adamalang.mysql.model.*;
 import org.adamalang.net.client.LocalRegionClient;

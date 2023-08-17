@@ -15,15 +15,16 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
 import org.adamalang.common.keys.SigningKeyPair;
-import org.adamalang.mysql.data.Domain;
+import org.adamalang.mysql.impl.GlobalDomainFinder;
+import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.mysql.data.SpaceInfo;
-import org.adamalang.mysql.model.Domains;
 import org.adamalang.mysql.model.Health;
 import org.adamalang.mysql.model.Secrets;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.runtime.sys.web.*;
 import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
@@ -45,9 +46,11 @@ public class FrontendHttpHandler implements HttpHandler {
   private final CommonServiceInit init;
   private final LocalRegionClient client;
   private final ConcurrentHashMap<String, Integer> spaceIds;
+  private final DomainFinder domainFinder;
 
   public FrontendHttpHandler(CommonServiceInit init, LocalRegionClient client) {
     this.init = init;
+    this.domainFinder = new GlobalDomainFinder(init.database);
     this.client = client;
     this.spaceIds = new ConcurrentHashMap<>();
   }
@@ -180,27 +183,28 @@ public class FrontendHttpHandler implements HttpHandler {
           }
         }
       }
-
-      try {
-        Domain domain = Domains.get(init.database, host); // TODO: cache this?
-        if (domain != null) {
-          if (domain.key != null && domain.routeKey) {
-            SpaceKeyRequest skr = new SpaceKeyRequest(domain.space, domain.key, uri);
-            get(skr, headers, parametersJson, callback);
+      domainFinder.find(host, new Callback<>() {
+        @Override
+        public void success(Domain domain) {
+          if (domain != null) {
+            if (domain.key != null && domain.routeKey) {
+              SpaceKeyRequest skr = new SpaceKeyRequest(domain.space, domain.key, uri);
+              get(skr, headers, parametersJson, callback);
+            } else {
+              getSpace(domain.space, uri, headers, parametersJson, callback);
+            }
           } else {
-            getSpace(domain.space, uri, headers, parametersJson, callback);
+            callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_NO_DOMAIN_MAPPING));
           }
-        } else {
-          LOGGER.error("no-domain-mapped: " + host);
-          callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_NO_DOMAIN_MAPPING));
         }
-        return;
-      } catch (Exception ex) {
-        LOGGER.error("failed-find-domain: " + host, ex);
-        callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_UNKNOWN_EXCEPTION_DOMAIN_LOOKUP_GET, ex, EXLOGGER));
-      }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          LOGGER.error("failed-find-domain: " + host, ex);
+          callback.failure(ex);
+        }
+      });
     }
-    callback.success(null);
   }
 
   private void post(SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
@@ -219,22 +223,26 @@ public class FrontendHttpHandler implements HttpHandler {
       callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_POST_NO_HOST));
       return;
     }
-    try {
-      Domain domain = Domains.get(init.database, host); // TODO: cache this?
-      if (domain != null) {
-        if (domain.key != null) {
-          post(new SpaceKeyRequest(domain.space, domain.key, uri), headers, parametersJson, body, callback);
+    domainFinder.find(host, new Callback<Domain>() {
+      @Override
+      public void success(Domain domain) {
+        if (domain != null) {
+          if (domain.key != null) {
+            post(new SpaceKeyRequest(domain.space, domain.key, uri), headers, parametersJson, body, callback);
+          } else {
+            KeyPrefixUri kpu = KeyPrefixUri.fromCompleteUri(uri);
+            post(new SpaceKeyRequest(domain.space, kpu.key, kpu.uri), headers, parametersJson, body, callback);
+          }
         } else {
-          KeyPrefixUri kpu = KeyPrefixUri.fromCompleteUri(uri);
-          post(new SpaceKeyRequest(domain.space, kpu.key, kpu.uri), headers, parametersJson, body, callback);
+          post(SpaceKeyRequest.parse(uri), headers, parametersJson, body, callback);
         }
-      } else {
-        post(SpaceKeyRequest.parse(uri), headers, parametersJson, body, callback);
       }
-    } catch (Exception ex) {
-      LOGGER.error("failed-find-domain: " + host, ex);
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_UNKNOWN_EXCEPTION_DOMAIN_LOOKUP_POST, ex, EXLOGGER));
-    }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   @Override
