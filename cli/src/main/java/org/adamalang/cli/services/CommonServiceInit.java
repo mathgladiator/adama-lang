@@ -39,7 +39,7 @@ import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.TargetsQuorum;
-import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.routing.finder.MachinePicker;
 import org.adamalang.services.FirstPartyServices;

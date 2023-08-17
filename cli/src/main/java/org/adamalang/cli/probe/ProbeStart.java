@@ -19,7 +19,7 @@ import org.adamalang.common.net.NetMetrics;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.InstanceClient;
-import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
 
 import java.util.Collection;
