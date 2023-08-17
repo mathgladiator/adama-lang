@@ -61,6 +61,13 @@ public class LinterTests {
   }
 
   @Test
+  public void rootLostData() {
+    ArrayList<String> diagnostics = Linter.compare(reflect("public long x;"), reflect(""));
+    Assert.assertEquals(1, diagnostics.size());
+    Assert.assertEquals("field 'x' was removed", diagnostics.get(0));
+  }
+
+  @Test
   public void rootLongToDoubleWarns() {
     ArrayList<String> diagnostics = Linter.compare(reflect("public long x;"), reflect("public double x;"));
     Assert.assertEquals(1, diagnostics.size());
