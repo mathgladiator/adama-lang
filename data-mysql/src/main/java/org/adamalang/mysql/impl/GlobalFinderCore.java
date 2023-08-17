@@ -55,19 +55,19 @@ public class GlobalFinderCore {
       throw new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED);
     }, database.metrics.finder_find.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_FIND_EXCEPTION);
   }
-  public void bind(Key key, String regionToUse, String machine, Callback<Void> callback) {
+  public void bind(Key key, String region, String machine, Callback<Void> callback) {
     database.transact((connection) -> {
       String updateIndexSQL = //
           "UPDATE `" + database.databaseName + "`.`directory` " + //
               "SET `type`=" + LocationType.Machine.type + //
               ", `region`=?" + ", `machine`=?" + " WHERE NOT `deleted` AND `space`=? AND `key`=? AND ((`machine`=? AND `region`=?) OR `type`!=" + LocationType.Machine.type + ")";
       try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
-        statementUpdate.setString(1, regionToUse);
+        statementUpdate.setString(1, region);
         statementUpdate.setString(2, machine);
         statementUpdate.setString(3, key.space);
         statementUpdate.setString(4, key.key);
         statementUpdate.setString(5, machine);
-        statementUpdate.setString(6, regionToUse);
+        statementUpdate.setString(6, region);
         if (statementUpdate.executeUpdate() == 1) {
           return null;
         }
@@ -79,7 +79,7 @@ public class GlobalFinderCore {
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(insertSQL)) {
         statementInsertIndex.setString(1, key.space);
         statementInsertIndex.setString(2, key.key);
-        statementInsertIndex.setString(3, regionToUse);
+        statementInsertIndex.setString(3, region);
         statementInsertIndex.setString(4, machine);
         statementInsertIndex.execute();
         return null;
@@ -87,7 +87,7 @@ public class GlobalFinderCore {
     }, database.metrics.finder_bind.wrap(callback), ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE);
   }
 
-  public void free(Key key, String region, String machineOn, Callback<Void> callback) {
+  public void free(Key key, String region, String machine, Callback<Void> callback) {
     database.transact((connection) -> {
       String freeSQL = //
           "UPDATE `" + database.databaseName + "`.`directory` " + //
@@ -96,7 +96,7 @@ public class GlobalFinderCore {
       try (PreparedStatement statementUpdate = connection.prepareStatement(freeSQL)) {
         statementUpdate.setString(1, key.space);
         statementUpdate.setString(2, key.key);
-        statementUpdate.setString(3, machineOn);
+        statementUpdate.setString(3, machine);
         statementUpdate.setString(4, region);
         statementUpdate.executeUpdate();
       }
@@ -104,7 +104,7 @@ public class GlobalFinderCore {
     }, database.metrics.finder_free.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_FREE_EXCEPTION);
   }
 
-  public void backup(Key key, BackupResult result, String region, String machineOn, Callback<Void> callback) {
+  public void backup(Key key, BackupResult result, String region, String machine, Callback<Void> callback) {
     database.transact((connection) -> {
       String backupSQL = //
           "UPDATE `" + database.databaseName + "`.`directory` " + //
@@ -116,7 +116,7 @@ public class GlobalFinderCore {
         statementUpdate.setString(1, result.archiveKey);
         statementUpdate.setString(2, key.space);
         statementUpdate.setString(3, key.key);
-        statementUpdate.setString(4, machineOn);
+        statementUpdate.setString(4, machine);
         statementUpdate.setString(5, region);
         if (statementUpdate.executeUpdate() == 1) {
           return null;
@@ -126,7 +126,7 @@ public class GlobalFinderCore {
     }, database.metrics.finder_backup.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_BACKUP_EXCEPTION);
   }
 
-  public void markDelete(Key key, String region, String machineOn, Callback<Void> callback) {
+  public void markDelete(Key key, String region, String machine, Callback<Void> callback) {
     database.transact((connection) -> {
       String backupSQL = //
           "UPDATE `" + database.databaseName + "`.`directory` " + //
@@ -134,7 +134,7 @@ public class GlobalFinderCore {
       try (PreparedStatement statementUpdate = connection.prepareStatement(backupSQL)) {
         statementUpdate.setString(1, key.space);
         statementUpdate.setString(2, key.key);
-        statementUpdate.setString(3, machineOn);
+        statementUpdate.setString(3, machine);
         statementUpdate.setString(4, region);
         if (statementUpdate.executeUpdate() == 1) {
           return null;
@@ -144,7 +144,7 @@ public class GlobalFinderCore {
     }, database.metrics.finder_backup.wrap(callback), ErrorCodes.FINDER_SERVICE_MYSQL_MARK_DELETE_EXCEPTION);
   }
 
-  public void commitDelete(Key key, String region, String machineOn, Callback<Void> callback) {
+  public void commitDelete(Key key, String region, String machine, Callback<Void> callback) {
     database.transact((connection) -> {
       String deleteSQL = //
           "DELETE FROM `" + database.databaseName + "`.`directory` " + //
@@ -152,7 +152,7 @@ public class GlobalFinderCore {
       try (PreparedStatement statementDelete = connection.prepareStatement(deleteSQL)) {
         statementDelete.setString(1, key.space);
         statementDelete.setString(2, key.key);
-        statementDelete.setString(3, machineOn);
+        statementDelete.setString(3, machine);
         statementDelete.setString(4, region);
         if (statementDelete.executeUpdate() == 1) {
           return null;
