@@ -117,6 +117,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, RegionalCapacityListRegionRequest request, CapacityListResponder responder);
 
+  public void handle(Session session, RegionalCapacityPickSpaceHostRequest request, CapacityHostResponder responder);
+
   public void disconnect();
 
   public static boolean test(String method) {
@@ -174,6 +176,7 @@ public interface RootGlobalHandler {
       case "regional/capacity/list-space":
       case "regional/capacity/list-machine":
       case "regional/capacity/list-region":
+      case "regional/capacity/pick-space-host":
         return true;
       default:
         return false;

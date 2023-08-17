@@ -642,6 +642,16 @@ private final MultiWebClientRetryPool pool;
     pool.requestStream(node, (obj) -> new ClientCapacityListResponse(obj), streamback);
   }
 
+  /** regional/capacity/pick-space-host */
+  public void regionalCapacityPickSpaceHost(ClientRegionalCapacityPickSpaceHostRequest request, Callback<ClientCapacityHostResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/capacity/pick-space-host");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("region", request.region);
+    pool.requestResponse(node, (obj) -> new ClientCapacityHostResponse(obj), callback);
+  }
+
   public class AttachmentUploadHandler {
     public final WebClientConnection _direct;
     public final int _id;

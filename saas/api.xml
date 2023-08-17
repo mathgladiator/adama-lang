@@ -1495,6 +1495,19 @@
         <parameter name="region"/>
     </method>
 
+    <responder name="capacity-host">
+        <field name="machine" />
+    </responder>
+
+    <method name="regional/capacity/pick-space-host" responder="capacity-host" scope="global" internal="true">
+        <documentation>
+            Pick a machine within the region for the given space.
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="region"/>
+    </method>
+
 
 
     <!--
