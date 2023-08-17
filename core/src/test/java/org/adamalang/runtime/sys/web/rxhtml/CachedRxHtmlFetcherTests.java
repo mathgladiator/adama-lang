@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.runtime.sys.domains;
+package org.adamalang.runtime.sys.web.rxhtml;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
@@ -18,18 +18,16 @@ import org.junit.Test;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class CachedDomainFinderTests {
+public class CachedRxHtmlFetcherTests {
   @Test
-  public void passthrough() throws Exception {
-    MockDomainFinder mock = new MockDomainFinder() //
-        .with("host", new Domain("domain", 1, "space", "key", false, "", null, 123L));
-    CachedDomainFinder finder = new CachedDomainFinder(TimeSource.REAL_TIME, 100, 100000, SimpleExecutor.NOW, mock);
+  public void trivial() throws Exception {
+    MockRxHtmlFetcher mock = new MockRxHtmlFetcher();
+    CachedRxHtmlFetcher fetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 5 * 1000, SimpleExecutor.NOW, mock);
     CountDownLatch latch = new CountDownLatch(1);
-    finder.find("host", new Callback<Domain>() {
+    fetcher.fetch("trivial", new Callback<LiveSiteRxHtmlResult>() {
       @Override
-      public void success(Domain value) {
-        Assert.assertEquals("domain", value.domain);
-        Assert.assertEquals("space", value.space);
+      public void success(LiveSiteRxHtmlResult value) {
+        System.err.println("Got one");
         latch.countDown();
       }
 

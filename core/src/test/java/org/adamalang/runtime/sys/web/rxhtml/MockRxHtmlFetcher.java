@@ -6,8 +6,15 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.runtime.sys.web.rxhtml;
 
-public class Platform {
-  public static final String VERSION = "20230817170746";
+import org.adamalang.common.Callback;
+
+import java.util.ArrayList;
+
+public class MockRxHtmlFetcher implements RxHtmlFetcher {
+  @Override
+  public void fetch(String space, Callback<LiveSiteRxHtmlResult> callback) {
+    callback.success(new LiveSiteRxHtmlResult("html", new ArrayList<>()));
+  }
 }

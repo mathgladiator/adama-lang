@@ -10,6 +10,7 @@ package org.adamalang.frontend.global;
 
 import org.adamalang.api.GlobalApiMetrics;
 import org.adamalang.api.RegionApiMetrics;
+import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.SignalControl;
@@ -48,8 +49,9 @@ public class GlobalExternNexus {
   public final GlobalFinder finder;
   public final MySQLFinderCore finderCore;
   public final GlobalCapacityOverseer overseer;
+  public final PrivateKeyWithId signingKey;
 
-  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys, SignalControl signalControl, GlobalFinder finder) {
+  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey) {
     this.config = config;
     this.email = email;
     this.database = database;
@@ -70,6 +72,7 @@ public class GlobalExternNexus {
     this.finder = finder;
     this.finderCore = finder.core;
     this.overseer = new GlobalCapacityOverseer(database);
+    this.signingKey = signingKey;
     attachmentRoot.mkdir();
   }
   public void close() throws Exception {

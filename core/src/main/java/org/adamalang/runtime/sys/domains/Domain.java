@@ -34,7 +34,20 @@ public class Domain implements Measurable {
     this.certificate = certificate;
     this.updated = updated;
     this.timestamp = timestamp;
-    _measure = domain.length() + space.length() + key.length() + certificate.length() + 64;;
+    long m = 0;
+    if (domain != null) {
+      m += domain.length();
+    }
+    if (space != null) {
+      m += space.length();
+    }
+    if (key != null) {
+      m += key.length();
+    }
+    if (certificate != null) {
+      m += certificate.length();
+    }
+    _measure = m;
   }
 
   @Override

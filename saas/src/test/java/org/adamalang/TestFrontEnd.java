@@ -18,6 +18,7 @@ import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
+import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
@@ -87,7 +88,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestFrontEnd implements AutoCloseable, Email {
-
   public final ConcurrentHashMap<String, CountDownLatch> emailLatch;
   public final ConcurrentHashMap<String, String> codesSentToEmail;
   public final GlobalExternNexus nexus;
@@ -325,8 +325,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
         System.err.println("domain needs certificate:" + domain);
       }
     };
-    this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, new String[] {}, signalControl, globalFinder);
-
+    this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, new String[] {}, signalControl, globalFinder, new PrivateKeyWithId(0, hostKeyPair.getPrivate()));
     this.frontend = BootstrapGlobalServiceBase.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);
     connection = this.frontend.establish(context);

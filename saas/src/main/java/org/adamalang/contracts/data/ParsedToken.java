@@ -44,6 +44,10 @@ public class ParsedToken {
           JsonNode _key_id = tree.get("kid");
           if (_key_id != null && _key_id.isIntegralNumber()) {
             this.key_id = _key_id.asInt();
+          } else {
+            this.key_id = -1;
+          }
+          if (tree.has("puid")) {
             this.proxy_user_id = tree.get("puid").asInt();
             this.proxy_authority = Json.readString(tree, "pa");
             this.proxy_origin = Json.readString(tree, "po");
@@ -51,13 +55,12 @@ public class ParsedToken {
             this.proxy_asset_key = Json.readString(tree, "pak");
             this.proxy_useragent = Json.readString(tree, "pua");
           } else {
-            this.key_id = -1;
             this.proxy_user_id = 0;
             this.proxy_authority = null;
             this.proxy_origin = null;
             this.proxy_ip = null;
-            this.proxy_asset_key = null;
             this.proxy_useragent = null;
+            this.proxy_asset_key = null;
           }
           if (_iss != null && _iss.isTextual() && _sub != null && _sub.isTextual()) {
             this.iss = _iss.textValue();
