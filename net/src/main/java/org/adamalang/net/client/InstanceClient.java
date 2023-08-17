@@ -48,7 +48,7 @@ public class InstanceClient implements AutoCloseable {
   public final String target;
   public final SimpleExecutor executor;
   private final NetBase base;
-  private final ClientMetrics metrics;
+  private final LocalRegionClientMetrics metrics;
   private final RoutingTarget routing;
   private final HeatMonitor monitor;
   private final AtomicBoolean alive;
@@ -56,7 +56,7 @@ public class InstanceClient implements AutoCloseable {
   private final ClientConfig config;
   private int backoff;
 
-  public InstanceClient(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor) throws Exception {
+  public InstanceClient(NetBase base, ClientConfig config, LocalRegionClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor) throws Exception {
     this.base = base;
     this.config = config;
     this.target = target;

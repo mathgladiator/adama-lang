@@ -31,14 +31,14 @@ import java.util.function.Consumer;
 
 /** the front-door to talking to the gRPC client. */
 public class LocalRegionClient {
-  public final ClientMetrics metrics;
+  public final LocalRegionClientMetrics metrics;
   private final ClientRouter router;
   private final InstanceClientFinder clientFinder;
   private final SimpleExecutor[] executors;
   private final Random rng;
   private final ClientConfig config;
 
-  public LocalRegionClient(NetBase base, ClientConfig config, ClientMetrics metrics, ClientRouter router, HeatMonitor monitor) {
+  public LocalRegionClient(NetBase base, ClientConfig config, LocalRegionClientMetrics metrics, ClientRouter router, HeatMonitor monitor) {
     this.config = config;
     this.metrics = metrics;
     this.router = router;

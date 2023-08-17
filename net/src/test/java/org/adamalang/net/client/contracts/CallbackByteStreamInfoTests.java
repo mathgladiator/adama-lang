@@ -10,13 +10,13 @@ package org.adamalang.net.client.contracts;
 
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.contracts.impl.CallbackByteStreamInfo;
 import org.junit.Test;
 
 public class CallbackByteStreamInfoTests {
   @Test
   public void hacky() {
-    new CallbackByteStreamInfo(null, new ClientMetrics(new NoOpMetricsFactory())).failure(new ErrorCodeException(-1));
+    new CallbackByteStreamInfo(null, new LocalRegionClientMetrics(new NoOpMetricsFactory())).failure(new ErrorCodeException(-1));
   }
 }

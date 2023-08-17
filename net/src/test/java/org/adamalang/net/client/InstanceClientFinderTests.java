@@ -23,7 +23,7 @@ public class InstanceClientFinderTests {
 
   @Test
   public void bigMesh() throws Exception {
-    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    LocalRegionClientMetrics metrics = new LocalRegionClientMetrics(new NoOpMetricsFactory());
     TestBed[] servers = new TestBed[10];
     SimpleExecutor routingExecutor = SimpleExecutor.create("routing");
     ExceptionLogger logger = (t, c) -> {};
