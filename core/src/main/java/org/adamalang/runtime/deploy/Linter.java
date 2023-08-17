@@ -113,6 +113,8 @@ public class Linter {
       HashMap<String, Object> fieldTo = (HashMap<String, Object>) fieldsTo.get(fieldFromEntry.getKey());
       if (fieldTo != null) {
         pumpFieldCompare("field '" + fieldFromEntry.getKey() + "' in " + what, (HashMap<String, Object>) fieldFrom.get("type"), (HashMap<String, Object>) fieldTo.get("type"));
+      } else {
+        diagnostics.add("field '" + fieldFromEntry.getKey() + "' was removed");
       }
     }
   }

@@ -20,12 +20,14 @@ import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
+import org.adamalang.runtime.deploy.Linter;
 import org.adamalang.runtime.sys.CoreService;
 
 import java.io.File;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +53,7 @@ public class DevBoxAdamaMicroVerse {
     private HashMap<String, WatchKey> watchKeyCache;
     private final DeploymentFactoryBase base;
     public String lastDeployedPlan;
+    public String lastReflection;
 
     public LocalSpaceDefn(WatchService watchService, String spaceName, String mainFile, String includePath, DeploymentFactoryBase base) {
       this.watchService = watchService;
@@ -108,7 +111,19 @@ public class DevBoxAdamaMicroVerse {
           if (!defn.lastDeployedPlan.equals(plan)) {
             long start = System.currentTimeMillis();
             io.notice("adama|validating: " + defn.spaceName);
-            if (CodeHandlerImpl.sharedValidatePlan(plan)) {
+            String newReflection = CodeHandlerImpl.sharedValidatePlanGetLastReflection(plan);
+            if (newReflection != null) {
+              if (defn.lastReflection != null) {
+                List<String> issues = Linter.compare(defn.lastReflection, newReflection);
+                if (issues.size() == 0) {
+                  io.notice("adama|no lint issues: " + defn.spaceName);
+                } else {
+                  io.notice("adama|" + issues.size() + " lint issues: " + defn.spaceName);
+                }
+                for (String issue : issues) {
+                  io.notice("adama|lint-issue[" + defn.spaceName +"] := " + issue);
+                }
+              }
               io.notice("adama|deploying: " + defn.spaceName);
               defn.base.deploy(defn.spaceName, new DeploymentPlan(plan, (t, ec) -> {
                 io.error("adama|deployment-issue[Code-" + ec + "]: " + t.getMessage());
@@ -134,6 +149,7 @@ public class DevBoxAdamaMicroVerse {
                    awaitDeployment.countDown();
                  }
                });
+              defn.lastReflection = newReflection;
               defn.lastDeployedPlan = plan;
               awaitDeployment.await(30000, TimeUnit.MILLISECONDS);
               io.notice("adama|deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");

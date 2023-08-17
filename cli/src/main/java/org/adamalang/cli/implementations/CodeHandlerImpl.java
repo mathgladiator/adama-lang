@@ -126,11 +126,16 @@ public class CodeHandlerImpl implements CodeHandler {
   }
 
   public static boolean sharedValidatePlan(String plan) {
+    return sharedValidatePlanGetLastReflection(plan) != null;
+  }
+
+  public static String sharedValidatePlanGetLastReflection(String plan) {
     ObjectNode node = Json.parseJsonObject(plan);
     JsonNode versionsNode = node.get("versions");
     JsonNode defaultNode = node.get("default");
     JsonNode planNode = node.get("plan");
 
+    String lastReflection = null;
     boolean success = true;
     if (versionsNode == null || !versionsNode.isObject()) {
       System.err.println("'versions' node in root plan json is not an object or doesn't exist");
@@ -179,7 +184,7 @@ public class CodeHandlerImpl implements CodeHandler {
               }
             }
             try {
-              sharedCompileCode(entry.getKey(), main.textValue(), includes);
+              lastReflection = sharedCompileCode(entry.getKey(), main.textValue(), includes).reflection;
             } catch (Exception e) {
               System.err.println("version '" + entry.getKey() + "' failed to validate: " + e.getMessage());
               if (!(e instanceof KnownException)) {
@@ -220,7 +225,10 @@ public class CodeHandlerImpl implements CodeHandler {
         }
       }
     }
-    return success;
+    if (success) {
+      return lastReflection;
+    }
+    return null;
   }
 
   public static CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) throws Exception {
