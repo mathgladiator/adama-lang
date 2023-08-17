@@ -872,17 +872,13 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, RegionalCapacityPickSpaceHostRequest request, CapacityHostResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-      nexus.overseer.pickStableHostForSpace(request.space, request.region, new Callback<String>() {
-        @Override
-        public void success(String machine) {
-          responder.complete(machine);
-        }
-
-        @Override
-        public void failure(ErrorCodeException ex) {
-          responder.error(ex);
-        }
-      });
+      nexus.overseer.pickStableHostForSpace(request.space, request.region, WRAP(responder));
+    }
+  }
+  @Override
+  public void handle(Session session, RegionalCapacityPickSpaceHostNewRequest request, CapacityHostResponder responder) {
+    if (checkRegionalHost(request.who, responder.responder)) {
+      nexus.overseer.pickNewHostForSpace(request.space, request.region, WRAP(responder));
     }
   }
   @Override
@@ -921,7 +917,6 @@ public class GlobalControlHandler implements RootGlobalHandler {
       }
     };
   }
-
   private static Callback<Void> WRAP(SimpleResponder responder) {
     return new Callback<Void>() {
       @Override
@@ -935,7 +930,6 @@ public class GlobalControlHandler implements RootGlobalHandler {
       }
     };
   }
-
   private Callback<List<CapacityInstance>> WRAP(CapacityListResponder responder) {
     return new Callback<>() {
       @Override
@@ -952,7 +946,6 @@ public class GlobalControlHandler implements RootGlobalHandler {
       }
     };
   }
-
   public static Callback<DocumentLocation> WRAP(FinderResultResponder responder) {
     return new Callback<>() {
       @Override
@@ -966,7 +959,6 @@ public class GlobalControlHandler implements RootGlobalHandler {
       }
     };
   }
-
   public static Callback<List<Key>> WRAP(KeysResponder responder) {
     return new Callback<List<Key>>() {
       @Override
@@ -975,6 +967,19 @@ public class GlobalControlHandler implements RootGlobalHandler {
           responder.next(key.space, key.key);
         }
         responder.finish();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    };
+  }
+  public static Callback<String> WRAP(CapacityHostResponder responder) {
+    return new Callback<String>() {
+      @Override
+      public void success(String machine) {
+        responder.complete(machine);
       }
 
       @Override

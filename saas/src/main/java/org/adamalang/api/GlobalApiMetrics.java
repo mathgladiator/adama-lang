@@ -66,6 +66,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_RegionalCapacityListMachine;
   public final RequestResponseMonitor monitor_RegionalCapacityListRegion;
   public final RequestResponseMonitor monitor_RegionalCapacityPickSpaceHost;
+  public final RequestResponseMonitor monitor_RegionalCapacityPickSpaceHostNew;
 
   public GlobalApiMetrics(MetricsFactory factory) {
     this.monitor_InitSetupAccount = factory.makeRequestResponseMonitor("init/setup-account");
@@ -122,5 +123,6 @@ public class GlobalApiMetrics {
     this.monitor_RegionalCapacityListMachine = factory.makeRequestResponseMonitor("regional/capacity/list-machine");
     this.monitor_RegionalCapacityListRegion = factory.makeRequestResponseMonitor("regional/capacity/list-region");
     this.monitor_RegionalCapacityPickSpaceHost = factory.makeRequestResponseMonitor("regional/capacity/pick-space-host");
+    this.monitor_RegionalCapacityPickSpaceHostNew = factory.makeRequestResponseMonitor("regional/capacity/pick-space-host-new");
   }
 }

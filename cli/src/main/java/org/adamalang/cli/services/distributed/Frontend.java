@@ -49,7 +49,7 @@ public class Frontend {
 
     GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, email, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
-    }, init.masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalRegionFinder);
+    }, init.masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalFinder);
     System.err.println("ExternNexus constructed");
     ServiceBase serviceBase = BootstrapGlobalServiceBase.make(nexus, http);
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();

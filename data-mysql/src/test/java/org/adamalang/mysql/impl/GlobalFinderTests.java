@@ -14,7 +14,6 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
 import org.adamalang.mysql.data.DocumentIndex;
 import org.adamalang.mysql.data.GCTask;
-import org.adamalang.mysql.impl.GlobalRegionFinder;
 import org.adamalang.mysql.mocks.SimpleFinderCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
 import org.adamalang.mysql.model.FinderOperations;
@@ -30,7 +29,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class GlobalRegionFinderTests {
+public class GlobalFinderTests {
   private final Key KEY1 = new Key("space-1", "key-1");
   private final Key KEY2 = new Key("space-2", "key-2");
 
@@ -42,7 +41,7 @@ public class GlobalRegionFinderTests {
       try {
         installer.install();
         Assert.assertFalse(FinderOperations.exists(dataBase, 1));
-        GlobalRegionFinder machine = new GlobalRegionFinder(dataBase, "region");
+        GlobalFinder machine = new GlobalFinder(dataBase, "region");
         ArrayList<DocumentIndex> listing;
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
