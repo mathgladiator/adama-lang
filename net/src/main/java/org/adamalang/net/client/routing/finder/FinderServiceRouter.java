@@ -16,6 +16,7 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.routing.Router;
 import org.adamalang.runtime.data.*;
+import org.adamalang.runtime.sys.capacity.MachinePicker;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

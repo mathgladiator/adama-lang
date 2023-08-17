@@ -11,7 +11,7 @@ package org.adamalang.net.client.routing;
 import org.adamalang.common.*;
 import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.routing.finder.FinderServiceRouter;
-import org.adamalang.net.client.routing.finder.MachinePicker;
+import org.adamalang.runtime.sys.capacity.MachinePicker;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.net.client.routing.finder.ReactiveCacheMachinePicker;
 import org.adamalang.runtime.data.FinderService;

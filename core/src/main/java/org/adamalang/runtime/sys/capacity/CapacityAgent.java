@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.ops;
+package org.adamalang.runtime.sys.capacity;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
@@ -16,11 +16,7 @@ import org.adamalang.common.capacity.BinaryEventOrGate;
 import org.adamalang.common.capacity.LoadEvent;
 import org.adamalang.common.capacity.LoadMonitor;
 import org.adamalang.common.capacity.RepeatingSignal;
-import org.adamalang.runtime.sys.capacity.CapacityInstance;
-import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
-import org.adamalang.runtime.sys.capacity.CapacityMetrics;
-import org.adamalang.runtime.sys.capacity.CapacityOverseer;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.runtime.sys.ServiceShield;
@@ -75,7 +71,7 @@ public class CapacityAgent implements HeatMonitor  {
       executor.execute(new NamedRunnable("capacity-add-capacity") {
         @Override
         public void execute() throws Exception {
-          addCapacityWhileInExecutor();
+          addCapacity();
         }
       });
     }));
@@ -83,7 +79,7 @@ public class CapacityAgent implements HeatMonitor  {
       executor.execute(new NamedRunnable("capacity-add-rebalance") {
         @Override
         public void execute() throws Exception {
-          rebalanceWhileInExecutor();
+          rebalance();
         }
       });
     }));
@@ -119,7 +115,7 @@ public class CapacityAgent implements HeatMonitor  {
     }
   }
 
-  private void offloadLowSpacesWhileInExecutor() {
+  public void offloadLowSpacesWhileInExecutor() {
     overseer.listAllOnMachine(region, machine, new Callback<List<CapacityInstance>>() {
       @Override
       public void success(List<CapacityInstance> instances) {
@@ -160,7 +156,7 @@ public class CapacityAgent implements HeatMonitor  {
     });
   }
 
-  private void addCapacityWhileInExecutor() {
+  public void addCapacity() {
     overseer.listAllOnMachine(region, machine, new Callback<List<CapacityInstance>>() {
       @Override
       public void success(List<CapacityInstance> instances) {
@@ -182,7 +178,7 @@ public class CapacityAgent implements HeatMonitor  {
     });
   }
 
-  private void rebalanceWhileInExecutor() {
+  public void rebalance() {
     overseer.listAllOnMachine(region, machine, new Callback<List<CapacityInstance>>() {
       @Override
       public void success(List<CapacityInstance> instances) {
