@@ -29,8 +29,11 @@ public class RegionalFinderBackUpRequest {
   public final String region;
   public final String machine;
   public final String archive;
+  public final Integer seq;
+  public final Long deltaBytes;
+  public final Long assetBytes;
 
-  public RegionalFinderBackUpRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key, final String region, final String machine, final String archive) {
+  public RegionalFinderBackUpRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key, final String region, final String machine, final String archive, final Integer seq, final Long deltaBytes, final Long assetBytes) {
     this.identity = identity;
     this.who = who;
     this.space = space;
@@ -39,6 +42,9 @@ public class RegionalFinderBackUpRequest {
     this.region = region;
     this.machine = machine;
     this.archive = archive;
+    this.seq = seq;
+    this.deltaBytes = deltaBytes;
+    this.assetBytes = assetBytes;
   }
 
   public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<RegionalFinderBackUpRequest> callback) {
@@ -54,7 +60,10 @@ public class RegionalFinderBackUpRequest {
       final String region = request.getString("region", true, 9006);
       final String machine = request.getString("machine", true, 9005);
       final String archive = request.getString("archive", true, 9007);
-      _latch.with(() -> new RegionalFinderBackUpRequest(identity, who.get(), space, policy.get(), key, region, machine, archive));
+      final Integer seq = request.getInteger("seq", true, 461836);
+      final Long deltaBytes = request.getLong("delta-bytes", true, 492531);
+      final Long assetBytes = request.getLong("asset-bytes", true, 460787);
+      _latch.with(() -> new RegionalFinderBackUpRequest(identity, who.get(), space, policy.get(), key, region, machine, archive, seq, deltaBytes, assetBytes));
       nexus.identityService.execute(session, identity, who);
       nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
@@ -75,5 +84,8 @@ public class RegionalFinderBackUpRequest {
     _node.put("region", region);
     _node.put("machine", machine);
     _node.put("archive", archive);
+    _node.put("seq", seq);
+    _node.put("delta-bytes", deltaBytes);
+    _node.put("asset-bytes", assetBytes);
   }
 }

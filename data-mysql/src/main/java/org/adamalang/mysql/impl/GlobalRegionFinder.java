@@ -17,7 +17,7 @@ import java.util.List;
 
 /** The finder for the global control plane region */
 public class GlobalRegionFinder implements FinderService {
-  private final MySQLFinderCore core;
+  public final MySQLFinderCore core;
   private final String region;
 
   public GlobalRegionFinder(DataBase dataBase, String region) {

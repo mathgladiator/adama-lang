@@ -94,6 +94,9 @@ public class RegionalFinder implements FinderService {
     request.region = region;
     request.machine = machine;
     request.archive = result.archiveKey;
+    request.seq = result.seq;
+    request.assetBytes = result.assetBytes;
+    request.deltaBytes = result.deltaBytes;
     client.regionalFinderBackUp(request, wrapVoid(callback));
   }
 

@@ -542,6 +542,9 @@ private final MultiWebClientRetryPool pool;
     node.put("region", request.region);
     node.put("machine", request.machine);
     node.put("archive", request.archive);
+    node.put("seq", request.seq);
+    node.put("delta-bytes", request.deltaBytes);
+    node.put("asset-bytes", request.assetBytes);
     pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }
 

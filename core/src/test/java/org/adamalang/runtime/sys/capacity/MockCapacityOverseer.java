@@ -107,11 +107,9 @@ public class MockCapacityOverseer implements CapacityOverseer {
     hosts.add(host);
   }
 
-  @Override
-  public void pickStableHostForSpace(String space, String region, Callback<String> callback) {
+  private static String pick(List<String> hosts, String space, String region) {
     if (hosts.size() == 0) {
-      callback.failure(new ErrorCodeException(1234));
-      return;
+      return null;
     }
     String winner = null;
     String winningHash = null;
@@ -124,6 +122,43 @@ public class MockCapacityOverseer implements CapacityOverseer {
         winningHash = currentHash;
       }
     }
-    callback.success(winner);
+    return winner;
+  }
+
+  @Override
+  public void pickStableHostForSpace(String space, String region, Callback<String> callback) {
+    String result = pick(hosts, space, region);
+    if (result == null) {
+      callback.failure(new ErrorCodeException(1234));
+    } else {
+      callback.success(result);
+    }
+  }
+
+  private boolean _found(String space, String region, String machine) {
+    Iterator<CapacityInstance> it = capacity.iterator();
+    while (it.hasNext()) {
+      CapacityInstance instance = it.next();
+      if (instance.machine.equals(machine) && instance.region.equals(region) && instance.space.equals(space)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public void pickNewHostForSpace(String space, String region, Callback<String> callback) {
+    ArrayList<String> avail = new ArrayList<>();
+    for (String host : hosts) {
+      if (!_found(space, region, host)) {
+        avail.add(host);
+      }
+    }
+    String result = pick(avail, space, region);
+    if (result == null) {
+      callback.failure(new ErrorCodeException(23));
+    } else {
+      callback.success(result);
+    }
   }
 }

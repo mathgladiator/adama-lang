@@ -16,4 +16,7 @@ public class ClientRegionalFinderBackUpRequest {
   public String region;
   public String machine;
   public String archive;
+  public Integer seq;
+  public Long deltaBytes;
+  public Long assetBytes;
 }

@@ -8,24 +8,21 @@
  */
 package org.adamalang.runtime.sys.capacity;
 
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.NamedRunnable;
-import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.*;
 import org.adamalang.common.capacity.BinaryEventOrGate;
 import org.adamalang.common.capacity.LoadEvent;
 import org.adamalang.common.capacity.LoadMonitor;
 import org.adamalang.common.capacity.RepeatingSignal;
-import org.adamalang.runtime.deploy.DeploymentFactoryBase;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.deploy.Undeploy;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.runtime.sys.ServiceShield;
-import org.adamalang.runtime.sys.metering.MeterReading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -35,26 +32,24 @@ public class CapacityAgent implements HeatMonitor  {
   private final CapacityMetrics metrics;
   private final CapacityOverseer overseer;
   private final CoreService service;
-  private final DeploymentFactoryBase deploymentFactoryBase;
+  private final Undeploy undeploy;
   private final ServiceHeatEstimator estimator;
-  private final SimpleExecutor executor;
   private final LoadMonitor resources;
   private final String region;
   private final String machine;
 
-  public final BinaryEventOrGate add_capacity;
-  public final BinaryEventOrGate rebalance;
-  public final BinaryEventOrGate rejectNew;
-  public final BinaryEventOrGate rejectExisting;
-  public final BinaryEventOrGate rejectMessages;
+  private final BinaryEventOrGate add_capacity;
+  private final BinaryEventOrGate rebalance;
+  private final BinaryEventOrGate rejectNew;
+  private final BinaryEventOrGate rejectExisting;
+  private final BinaryEventOrGate rejectMessages;
 
-  public CapacityAgent(CapacityMetrics metrics, CapacityOverseer overseer, CoreService service, DeploymentFactoryBase deploymentFactoryBase, ServiceHeatEstimator estimator, SimpleExecutor executor, AtomicBoolean alive, ServiceShield shield, String region, String machine) {
+  public CapacityAgent(CapacityMetrics metrics, CapacityOverseer overseer, CoreService service, Undeploy undeploy, ServiceHeatEstimator estimator, SimpleExecutor executor, AtomicBoolean alive, ServiceShield shield, String region, String machine) {
     this.metrics = metrics;
     this.overseer = overseer;
     this.service = service;
-    this.deploymentFactoryBase = deploymentFactoryBase;
+    this.undeploy = undeploy;
     this.estimator = estimator;
-    this.executor = executor;
     this.resources = new LoadMonitor(executor, alive);
     this.region = region;
     this.machine = machine;
@@ -125,7 +120,7 @@ public class CapacityAgent implements HeatMonitor  {
           }
           ServiceHeatEstimator.Heat heat = estimator.of(instance.space);
           if (heat.empty) {
-            deploymentFactoryBase.undeploy(instance.space);
+            undeploy.undeploy(instance.space);
             overseer.remove(instance.space, region, machine, Callback.DONT_CARE_VOID);
             return;
           }
@@ -163,10 +158,18 @@ public class CapacityAgent implements HeatMonitor  {
         for (CapacityInstance instance : instances) {
           ServiceHeatEstimator.Heat heat = estimator.of(instance.space);
           if (heat.hot) {
-            String newHost = null; // TODO: find a new candidate host
-            if (newHost != null) {
-              overseer.add(instance.space, region, newHost, Callback.DONT_CARE_VOID);
-            }
+            overseer.pickNewHostForSpace(instance.space, region, new Callback<String>() {
+              String space = instance.space;
+              @Override
+              public void success(String newHost) {
+                overseer.add(instance.space, region, newHost, Callback.DONT_CARE_VOID);
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                LOG.error("failed-to-find-new-capacity:" + space, ex);
+              }
+            });
           }
         }
       }
@@ -178,6 +181,13 @@ public class CapacityAgent implements HeatMonitor  {
     });
   }
 
+  private String hash(Key key, String machine) { // This is a fairly dumb approach, we should sync this up with how to pick a new host
+    MessageDigest digest = Hashing.md5();
+    digest.update(key.key.getBytes(StandardCharsets.UTF_8));
+    digest.update(machine.getBytes(StandardCharsets.UTF_8));
+    return Hashing.finishAndEncode(digest);
+  }
+
   public void rebalance() {
     overseer.listAllOnMachine(region, machine, new Callback<List<CapacityInstance>>() {
       @Override
@@ -186,15 +196,25 @@ public class CapacityAgent implements HeatMonitor  {
           ServiceHeatEstimator.Heat heat = estimator.of(instance.space);
           if (heat.hot) {
             overseer.listWithinRegion(instance.space, instance.region, new Callback<List<CapacityInstance>>() {
+              String space = instance.space;
               @Override
-              public void success(List<CapacityInstance> other) {
-                          /*
-          service.shed((key) -> {
-            // TODO: rendevous hash the key to the other, and shed ones that don't fit
-            // if the key doesn't win a rendevouz hash, then return true
-            return false;
-          });
-          */
+              public void success(List<CapacityInstance> instances) {
+                service.shed((key) -> {
+                  // TODO: unify with the client on how it picks clients
+                  /*
+                  if (space.equals(key.space)) {
+                    String toBeat = hash(key, machine);
+                    for (CapacityInstance instance : instances) {
+                      if (!machine.equals(instance.machine)) {
+                        if (hash(key, instance.machine).compareTo(toBeat) > 0) {
+                          return true;
+                        }
+                      }
+                    }
+                  }
+                  */
+                  return false;
+                });
               }
 
               @Override
@@ -209,26 +229,6 @@ public class CapacityAgent implements HeatMonitor  {
       @Override
       public void failure(ErrorCodeException ex) {
         LOG.error("failed-rebalance-capacity", ex);
-      }
-    });
-  }
-
-  public void deliverMeteringRecords(ArrayList<MeterReading> bills) {
-    metrics.shield_count_metering.set(bills.size());
-    executor.execute(new NamedRunnable("capacity-agent-on-bills") {
-      @Override
-      public void execute() throws Exception {
-
-      }
-    });
-  }
-
-  public void deliverAdamaHosts(Collection<String> instances) {
-    metrics.shield_count_hosts.set(instances.size());
-    executor.execute(new NamedRunnable("capacity-agent-on-instances") {
-      @Override
-      public void execute() throws Exception {
-
       }
     });
   }

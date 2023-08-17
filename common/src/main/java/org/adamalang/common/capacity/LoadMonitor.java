@@ -33,33 +33,35 @@ public class LoadMonitor {
     }
     this.monitorCPU = new ArrayList<>();
     this.monitorMemory = new ArrayList<>();
-    this.executor.schedule(new NamedRunnable("load-signal") {
-      int at = 0;
+    if (alive.get()) {
+      this.executor.schedule(new NamedRunnable("load-signal") {
+        int at = 0;
 
-      @Override
-      public void execute() throws Exception {
-        samples[at] = new Sample();
-        at++;
-        at %= samples.length;
-        double sum_cpu = 0;
-        double sum_memory = 0;
-        for (Sample sample : samples) {
-          sum_cpu += sample.cpu;
-          sum_memory += sample.memory;
+        @Override
+        public void execute() throws Exception {
+          samples[at] = new Sample();
+          at++;
+          at %= samples.length;
+          double sum_cpu = 0;
+          double sum_memory = 0;
+          for (Sample sample : samples) {
+            sum_cpu += sample.cpu;
+            sum_memory += sample.memory;
+          }
+          sum_cpu /= samples.length;
+          sum_memory /= samples.length;
+          for (LoadEvent e : monitorCPU) {
+            e.at(sum_cpu);
+          }
+          for (LoadEvent e : monitorMemory) {
+            e.at(sum_memory);
+          }
+          if (alive.get()) {
+            executor.schedule(this, 1000);
+          }
         }
-        sum_cpu /= samples.length;
-        sum_memory /= samples.length;
-        for (LoadEvent e : monitorCPU) {
-          e.at(sum_cpu);
-        }
-        for (LoadEvent e : monitorMemory) {
-          e.at(sum_memory);
-        }
-        if (alive.get()) {
-          executor.schedule(this, 1000);
-        }
-      }
-    }, 10);
+      }, 10);
+    }
   }
 
   public void cpu(LoadEvent e) {
