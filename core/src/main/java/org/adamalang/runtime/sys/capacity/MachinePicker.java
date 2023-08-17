@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.net.client.routing.finder;
+package org.adamalang.runtime.sys.capacity;
 
 import org.adamalang.common.Callback;
 import org.adamalang.runtime.data.Key;

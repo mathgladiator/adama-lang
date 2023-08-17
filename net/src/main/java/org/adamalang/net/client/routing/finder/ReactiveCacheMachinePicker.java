@@ -15,6 +15,7 @@ import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.sys.capacity.MachinePicker;
 
 public class ReactiveCacheMachinePicker implements MachinePicker {
   private final LocalRegionClientMetrics metrics;
