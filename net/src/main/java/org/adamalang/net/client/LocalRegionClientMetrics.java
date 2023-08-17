@@ -10,7 +10,7 @@ package org.adamalang.net.client;
 
 import org.adamalang.common.metrics.*;
 
-public class ClientMetrics {
+public class LocalRegionClientMetrics {
   public final Inflight client_connection_alive;
   public final Inflight client_state_machines_alive;
 
@@ -72,7 +72,7 @@ public class ClientMetrics {
 
   public final ItemActionMonitor multi_region_find;
 
-  public ClientMetrics(MetricsFactory factory) {
+  public LocalRegionClientMetrics(MetricsFactory factory) {
     client_connection_alive = factory.inflight("client_connection_alive");
     client_state_machines_alive = factory.inflight("client_state_machines_alive");
     client_notify_deploy_success = factory.counter("client_notify_deploy_success");

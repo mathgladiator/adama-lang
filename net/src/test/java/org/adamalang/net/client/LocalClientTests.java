@@ -45,7 +45,7 @@ public class LocalClientTests {
                  "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
-      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       try {
         waitForRouting(bed, client);
         CountDownLatch latchGetDeployTargets = new CountDownLatch(1);
@@ -192,7 +192,7 @@ public class LocalClientTests {
                      "message M { int x; } public int z = 1000; @web put / (M m) { z = m.x; return {html:\"c:\" + z}; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
-      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       try {
         waitForRouting(bed, client);
         CountDownLatch latchGetDeployTargets = new CountDownLatch(1);
@@ -345,7 +345,7 @@ public class LocalClientTests {
                  "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
-      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       try {
         waitForRouting(bed, client);
         {
@@ -383,7 +383,7 @@ public class LocalClientTests {
                  12502,
                  "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       ClientConfig clientConfig = new TestClientConfig();
-      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       try {
         CountDownLatch latch1Failed = new CountDownLatch(1);
         client.notifyDeployment("127.0.0.1:" + bed.port, "space");
@@ -476,7 +476,7 @@ public class LocalClientTests {
                  "@static { create { return false; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
-      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       try {
         waitForRouting(bed, client);
         CountDownLatch latchFailed = new CountDownLatch(1);
@@ -508,7 +508,7 @@ public class LocalClientTests {
                  "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
-      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       try {
         waitForRouting(bed, client);
         CountDownLatch created = new CountDownLatch(1);
@@ -576,7 +576,7 @@ public class LocalClientTests {
                  "@static { create { return false; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.naughty().inventory("space").failEverything().start();
       ClientConfig clientConfig = new TestClientConfig();
-      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       waitForRouting(bed, client);
       CountDownLatch failures = new CountDownLatch(5);
       client.notifyDeployment("127.0.0.1:" + bed.port, "*");
@@ -685,7 +685,7 @@ public class LocalClientTests {
                  "@static { create { return false; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.naughty().inventory("space").start();
       ClientConfig clientConfig = new TestClientConfig();
-      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       waitForRouting(bed, client);
       client.notifyDeployment("127.0.0.1:12505", "*");
       CountDownLatch meteringLatch = new CountDownLatch(2);
@@ -720,7 +720,7 @@ public class LocalClientTests {
                  "@static { create { return false; } invent { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.naughty().inventory("space").closeStream().start();
       ClientConfig clientConfig = new TestClientConfig();
-      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       waitForRouting(bed, client);
       CountDownLatch closures = new CountDownLatch(1);
       client.connect("127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", null, new SimpleEvents() {

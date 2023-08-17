@@ -36,7 +36,7 @@ import org.adamalang.mysql.data.Domain;
 import org.adamalang.mysql.model.*;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.ClientConfig;
-import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.TargetsQuorum;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.routing.ClientRouter;
@@ -204,7 +204,7 @@ public class CommonServiceInit {
 
   public LocalRegionClient makeClient(HeatMonitor heat) {
     ClientConfig clientConfig = new ClientConfig();
-    ClientMetrics metrics = new ClientMetrics(metricsFactory);
+    LocalRegionClientMetrics metrics = new LocalRegionClientMetrics(metricsFactory);
     MachinePicker fallback = (key, callback) -> {
       try {
         String machine = Hosts.pickStableHostFromRegion(database, region, "adama", key.space);

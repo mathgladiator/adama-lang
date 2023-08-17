@@ -10,7 +10,7 @@ package org.adamalang.net.client.sm;
 
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.net.client.ClientConfig;
-import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.InstanceClientFinder;
 import org.adamalang.net.client.routing.Router;
 
@@ -19,7 +19,7 @@ public class ConnectionBase {
   public final ClientConfig config;
 
   // metrics for the client
-  public final ClientMetrics metrics;
+  public final LocalRegionClientMetrics metrics;
 
   // how to map keys to targets;
   public final Router router;
@@ -30,7 +30,7 @@ public class ConnectionBase {
   // how we handle thread safety and time
   public final SimpleExecutor executor;
 
-  public ConnectionBase(ClientConfig config, ClientMetrics metrics, Router router, InstanceClientFinder mesh, SimpleExecutor executor) {
+  public ConnectionBase(ClientConfig config, LocalRegionClientMetrics metrics, Router router, InstanceClientFinder mesh, SimpleExecutor executor) {
     this.config = config;
     this.metrics = metrics;
     this.router = router;
