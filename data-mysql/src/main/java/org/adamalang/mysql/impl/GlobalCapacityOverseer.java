@@ -6,13 +6,12 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.ops;
+package org.adamalang.mysql.impl;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
-import org.adamalang.frontend.global.BootstrapGlobalServiceBase;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Capacity;
 import org.adamalang.mysql.model.Hosts;
@@ -23,7 +22,7 @@ import java.util.List;
 
 /** the global capacity overseer */
 public class GlobalCapacityOverseer implements CapacityOverseer  {
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(BootstrapGlobalServiceBase.class);
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(GlobalCapacityOverseer.class);
   private final DataBase database;
 
   public GlobalCapacityOverseer(DataBase database) {
@@ -95,6 +94,7 @@ public class GlobalCapacityOverseer implements CapacityOverseer  {
 
   @Override
   public void pickNewHostForSpace(String space, String region, Callback<String> callback) {
-
+    // TODO
+    callback.failure(new ErrorCodeException(-1));
   }
 }

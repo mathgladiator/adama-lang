@@ -14,6 +14,7 @@ import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.net.ServerHandle;
+import org.adamalang.mysql.impl.GlobalCapacityOverseer;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
@@ -92,7 +93,7 @@ public class Backend {
     deployAgent.optimisticScanAll();
 
     // list all the documents on this machine, and spin them up
-    init.globalRegionFinder.list(init.machine, new Callback<List<Key>>() {
+    init.globalFinder.list(init.machine, new Callback<List<Key>>() {
       @Override
       public void success(List<Key> keys) {
         for (Key key : keys) {

@@ -16,11 +16,11 @@ import org.adamalang.runtime.data.*;
 import java.util.List;
 
 /** The finder for the global control plane region */
-public class GlobalRegionFinder implements FinderService {
+public class GlobalFinder implements FinderService {
   public final MySQLFinderCore core;
   private final String region;
 
-  public GlobalRegionFinder(DataBase dataBase, String region) {
+  public GlobalFinder(DataBase dataBase, String region) {
     this.core = new MySQLFinderCore(dataBase);
     this.region = region;
   }

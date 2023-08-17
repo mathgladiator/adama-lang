@@ -1526,6 +1526,15 @@
         <parameter name="region"/>
     </method>
 
+    <method name="regional/capacity/pick-space-host-new" responder="capacity-host" scope="global" internal="true">
+        <documentation>
+            Pick a new machine within the region for the given space.
+        </documentation>
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="region"/>
+    </method>
+
 
 
     <!--

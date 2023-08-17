@@ -33,7 +33,7 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.data.Domain;
-import org.adamalang.mysql.impl.GlobalRegionFinder;
+import org.adamalang.mysql.impl.GlobalFinder;
 import org.adamalang.mysql.model.*;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.ClientConfig;
@@ -71,7 +71,7 @@ public class CommonServiceInit {
   public final PrometheusMetricsFactory metricsFactory;
   public final DataBase database;
   public final NetBase netBase;
-  public final GlobalRegionFinder globalRegionFinder;
+  public final GlobalFinder globalFinder;
   public final SimpleExecutor system;
   public final SimpleExecutor picker;
   public final S3 s3;
@@ -119,7 +119,7 @@ public class CommonServiceInit {
     this.metricsFactory = new PrometheusMetricsFactory(monitoringPort);
     this.database = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(metricsFactory));
     this.netBase = new NetBase(new NetMetrics(metricsFactory), identity, 1, 2);
-    this.globalRegionFinder = new GlobalRegionFinder(database, region);
+    this.globalFinder = new GlobalFinder(database, region);
     this.system = SimpleExecutor.create("system");
     this.picker = SimpleExecutor.create("picker");
     this.machine = this.identity.ip + ":" + servicePort;
@@ -201,7 +201,7 @@ public class CommonServiceInit {
   }
 
   public MultiRegionClient makeGlobalClient(LocalRegionClient client) {
-    return new MultiRegionClient(client, region, hostKey, publicKeyId, globalRegionFinder, new TreeMap<>());
+    return new MultiRegionClient(client, region, hostKey, publicKeyId, globalFinder, new TreeMap<>());
   }
 
   public LocalRegionClient makeClient(HeatMonitor heat) {
@@ -218,7 +218,7 @@ public class CommonServiceInit {
         callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.NET_FINDER_ROUTER_NULL_MACHINE, ex, EXLOGGER));
       }
     };
-    ClientRouter router = ClientRouter.FINDER(metrics, globalRegionFinder, fallback, region);
+    ClientRouter router = ClientRouter.FINDER(metrics, globalFinder, fallback, region);
     LocalRegionClient client = new LocalRegionClient(netBase, clientConfig, metrics, router, heat);
 
     TargetsQuorum targetsQuorum = new TargetsQuorum(metrics, client.getTargetPublisher());

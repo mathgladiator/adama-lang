@@ -896,6 +896,19 @@ public class GeneratedMissingParameterTest {
       Iterator<String> c195 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:9006", c195.next());
       node.put("region", "xzya");
+      //RegionalCapacityPickSpaceHostNew
+      node = Json.newJsonObject();
+      node.put("id", 195);
+      node.put("method", "regional/capacity/pick-space-host-new");
+      Iterator<String> c196 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:458759", c196.next());
+      node.put("identity", _identity);
+      Iterator<String> c197 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:461828", c197.next());
+      node.put("space", "xzya");
+      Iterator<String> c198 = fe.execute(node.toString());
+      Assert.assertEquals("ERROR:9006", c198.next());
+      node.put("region", "xzya");
     }
   }
 }

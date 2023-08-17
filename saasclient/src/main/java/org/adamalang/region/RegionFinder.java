@@ -8,6 +8,7 @@
  */
 package org.adamalang.region;
 
+import org.adamalang.Wraps;
 import org.adamalang.api.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
@@ -17,12 +18,12 @@ import org.adamalang.runtime.data.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegionalFinder implements FinderService {
+public class RegionFinder implements FinderService {
   private final SelfClient client;
   private final String identity;
   private final String region;
 
-  public RegionalFinder(SelfClient client, String identity, String region) {
+  public RegionFinder(SelfClient client, String identity, String region) {
     this.client = client;
     this.identity = identity;
     this.region = region;
@@ -34,7 +35,7 @@ public class RegionalFinder implements FinderService {
     request.identity = identity;
     request.space = key.space;
     request.key = key.key;
-    client.regionalFinderFind(request, wrapResult(callback));
+    client.regionalFinderFind(request, Wraps.wrapResult(callback));
   }
 
   @Override
@@ -45,7 +46,7 @@ public class RegionalFinder implements FinderService {
     request.key = key.key;
     request.region = region;
     request.machine = machine;
-    client.regionalFinderFindbind(request, wrapResult(callback));
+    client.regionalFinderFindbind(request, Wraps.wrapResult(callback));
   }
 
   @Override
@@ -82,7 +83,7 @@ public class RegionalFinder implements FinderService {
     request.key = key.key;
     request.region = region;
     request.machine = machine;
-    client.regionalFinderFree(request, wrapVoid(callback));
+    client.regionalFinderFree(request, Wraps.wrapVoid(callback));
   }
 
   @Override
@@ -97,7 +98,7 @@ public class RegionalFinder implements FinderService {
     request.seq = result.seq;
     request.assetBytes = result.assetBytes;
     request.deltaBytes = result.deltaBytes;
-    client.regionalFinderBackUp(request, wrapVoid(callback));
+    client.regionalFinderBackUp(request, Wraps.wrapVoid(callback));
   }
 
   @Override
@@ -108,7 +109,7 @@ public class RegionalFinder implements FinderService {
     request.key = key.key;
     request.region = region;
     request.machine = machine;
-    client.regionalFinderDeleteMark(request, wrapVoid(callback));
+    client.regionalFinderDeleteMark(request, Wraps.wrapVoid(callback));
   }
 
   @Override
@@ -119,7 +120,7 @@ public class RegionalFinder implements FinderService {
     request.key = key.key;
     request.region = region;
     request.machine = machine;
-    client.regionalFinderDeleteCommit(request, wrapVoid(callback));
+    client.regionalFinderDeleteCommit(request, Wraps.wrapVoid(callback));
   }
 
   @Override
@@ -128,7 +129,7 @@ public class RegionalFinder implements FinderService {
     request.identity = identity;
     request.region = region;
     request.machine = machine;
-    client.regionalFinderList(request, wrapListKey(callback));
+    client.regionalFinderList(request, Wraps.wrapListKey(callback));
   }
 
   @Override
@@ -137,54 +138,8 @@ public class RegionalFinder implements FinderService {
     request.identity = identity;
     request.region = region;
     request.machine = machine;
-    client.regionalFinderDeletionList(request, wrapListKey(callback));
+    client.regionalFinderDeletionList(request, Wraps.wrapListKey(callback));
   }
 
-  private Callback<ClientFinderResultResponse> wrapResult(Callback<DocumentLocation> callback) {
-    return new Callback<ClientFinderResultResponse>() {
-      @Override
-      public void success(ClientFinderResultResponse value) {
-        callback.success(new DocumentLocation(value.id, LocationType.fromType(value.locationType), value.region, value.machine, value.archive, value.deleted));
-      }
 
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    };
-  }
-
-  private Callback<ClientSimpleResponse> wrapVoid(Callback<Void> callback) {
-    return new Callback<ClientSimpleResponse>() {
-      @Override
-      public void success(ClientSimpleResponse value) {
-        callback.success(null);
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    };
-  }
-
-  private Stream<ClientKeysResponse> wrapListKey(Callback<List<Key>> callback) {
-    return new Stream<ClientKeysResponse>() {
-      private ArrayList<Key> result = new ArrayList<>();
-      @Override
-      public void next(ClientKeysResponse value) {
-        result.add(new Key(value.space, value.key));
-      }
-
-      @Override
-      public void complete() {
-        callback.success(result);
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    };
-  }
 }
