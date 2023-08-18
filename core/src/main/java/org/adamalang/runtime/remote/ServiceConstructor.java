@@ -6,13 +6,15 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.runtime.contracts;
+package org.adamalang.runtime.remote;
 
-import org.adamalang.common.Callback;
-import org.adamalang.runtime.deploy.DeploymentBundle;
-import org.adamalang.runtime.deploy.DeploymentPlan;
+import org.adamalang.common.keys.PrivateKeyBundle;
 
-/** fetch a plan */
-public interface PlanFetcher {
-  public void find(String space, Callback<DeploymentBundle> callback);
+import java.util.HashMap;
+import java.util.TreeMap;
+
+/** constructor for a service */
+public interface ServiceConstructor {
+
+  public Service cons(String space, HashMap<String, Object> params, TreeMap<Integer, PrivateKeyBundle> keys);
 }

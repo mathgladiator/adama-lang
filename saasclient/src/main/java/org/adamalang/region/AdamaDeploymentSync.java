@@ -11,20 +11,21 @@ package org.adamalang.region;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
+import org.adamalang.runtime.deploy.DeploySync;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.function.BiConsumer;
 
 /** connect to ide/$space to learn when deployments happen */
-public class DeploymentSync {
+public class AdamaDeploymentSync implements DeploySync {
   private final SelfClient client;
   private final String identity;
   private final SimpleExecutor executor;
   private final HashMap<String, SM> stateMachines;
   private final BiConsumer<Boolean, String> event;
 
-  public DeploymentSync(SelfClient client, SimpleExecutor executor, String identity, BiConsumer<Boolean, String> event) {
+  public AdamaDeploymentSync(SelfClient client, SimpleExecutor executor, String identity, BiConsumer<Boolean, String> event) {
     this.client = client;
     this.executor = executor;
     this.identity = identity;

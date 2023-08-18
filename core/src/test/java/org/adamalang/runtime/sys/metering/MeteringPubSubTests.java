@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,7 +32,7 @@ public class MeteringPubSubTests {
               t.printStackTrace();
             });
     DeploymentFactoryBase base = new DeploymentFactoryBase();
-    base.deploy("space", plan);
+    base.deploy("space", plan, new TreeMap<>());
     MeteringPubSub pubsub = new MeteringPubSub(new MockTime(), base);
     {
       AtomicInteger pubs = new AtomicInteger(0);

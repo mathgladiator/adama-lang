@@ -76,7 +76,7 @@ public class LivingDocumentTests {
     final var java = document.compileJava(state);
     var cached = compilerCache.get(java);
     if (cached == null) {
-      cached = new LivingDocumentFactory("me", "MeCode", java, reflection.toString(), deliverer);
+      cached = new LivingDocumentFactory("me", "MeCode", java, reflection.toString(), deliverer, new TreeMap<>());
       compilerCache.put(java, cached);
     }
     return cached;
@@ -348,7 +348,7 @@ public class LivingDocumentTests {
 
   @Test
   public void sample_service() throws Exception {
-    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap, keys) -> new SampleService());
     RealDocumentSetup setup = new RealDocumentSetup(
         "@link sample{}" +
             "public string msg = \"Hi\";" +
@@ -379,7 +379,7 @@ public class LivingDocumentTests {
 
   @Test
   public void webput_async_service() throws Exception {
-    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap, keys) -> new SampleService());
     RealDocumentSetup setup = new RealDocumentSetup(
         "@link sample{}" +
             "public string msg = \"Hi\";" +
@@ -413,7 +413,7 @@ public class LivingDocumentTests {
 
   @Test
   public void webdel_async_service() throws Exception {
-    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap, keys) -> new SampleService());
     RealDocumentSetup setup = new RealDocumentSetup(
         "@link sample{}" +
             "public string msg = \"Hi\";" +
@@ -449,7 +449,7 @@ public class LivingDocumentTests {
   public void webget_async_service() throws Exception {
     AtomicReference<Runnable> gotIt = new AtomicReference<>(null);
     CountDownLatch latch = new CountDownLatch(1);
-    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService() {
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap, keys) -> new SampleService() {
       @Override
       public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
         gotIt.set(() -> {
@@ -493,7 +493,7 @@ public class LivingDocumentTests {
 
   @Test
   public void sample_service_with_error() throws Exception {
-    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap, keys) -> new SampleService());
     try {
       LivingDocumentTests.compile("@link sample{ error = \"Nope\"; }" + "public string msg = \"Hi\";" + "public formula result = sample.echo(@no_one, {message:msg});" + "@connected { msg =\"Hello\"; return true; }", null);
       Assert.fail();

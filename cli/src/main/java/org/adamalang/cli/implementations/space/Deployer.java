@@ -22,6 +22,7 @@ import org.adamalang.runtime.remote.Deliverer;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Deployer {
@@ -48,7 +49,7 @@ public class Deployer {
     }
     DeploymentPlan localPlan = new DeploymentPlan(planJson, (t, c) -> t.printStackTrace());
     String spacePrefix = DeploymentFactoryBase.getSpaceClassNamePrefix(args.space);
-    new DeploymentFactory(args.space, spacePrefix, new AtomicInteger(0), null, localPlan, Deliverer.FAILURE);
+    new DeploymentFactory(args.space, spacePrefix, new AtomicInteger(0), null, localPlan, Deliverer.FAILURE, new TreeMap<>());
     try (WebSocketClient client = new WebSocketClient(args.config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();

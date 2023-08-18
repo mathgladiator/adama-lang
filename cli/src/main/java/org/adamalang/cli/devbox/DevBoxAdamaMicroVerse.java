@@ -25,10 +25,7 @@ import org.adamalang.runtime.sys.CoreService;
 
 import java.io.File;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -127,7 +124,7 @@ public class DevBoxAdamaMicroVerse {
               io.notice("adama|deploying: " + defn.spaceName);
               defn.base.deploy(defn.spaceName, new DeploymentPlan(plan, (t, ec) -> {
                 io.error("adama|deployment-issue[Code-" + ec + "]: " + t.getMessage());
-              }));
+              }), new TreeMap<>());
               CountDownLatch awaitDeployment = new CountDownLatch(1);
               service.deploy(new DeploymentMonitor() {
                  int documentsChanged;

@@ -39,6 +39,7 @@ import org.junit.Assert;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -61,7 +62,7 @@ public class TestBed implements AutoCloseable {
   public final ClientConfig clientConfig;
 
   public TestBed(int port, String code) throws Exception {
-    DeploymentFactory.compile("<direct>", "X", code, new HashMap<>(), Deliverer.FAILURE);
+    DeploymentFactory.compile("<direct>", "X", code, new HashMap<>(), Deliverer.FAILURE, new TreeMap<>());
     this.base = new NetBase(new NetMetrics(new NoOpMetricsFactory()), MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
     this.port = port;
     clientExecutor = SimpleExecutor.create("client-executor");
@@ -79,7 +80,7 @@ public class TestBed implements AutoCloseable {
     DeploymentPlan plan = new DeploymentPlan(planWriter.toString(), (t, errorCode) -> {});
 
     DeploymentFactoryBase base = new DeploymentFactoryBase();
-    base.deploy("space", plan);
+    base.deploy("space", plan, new TreeMap<>());
 
     ExecutorService inMemoryThread = Executors.newSingleThreadScheduledExecutor();
     this.meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, base);

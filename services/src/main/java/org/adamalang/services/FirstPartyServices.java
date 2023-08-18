@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class FirstPartyServices {
   private static final Logger LOGGER = LoggerFactory.getLogger(FirstPartyServices.class);
 
-  public static void install(SimpleExecutor executor, MetricsFactory factory, DataBase dataBase, WebClientBase webClientBase, String masterKey, InternalSigner signer) {
+  public static void install(SimpleExecutor executor, MetricsFactory factory, WebClientBase webClientBase, InternalSigner signer) {
     FirstPartyMetrics metrics = new FirstPartyMetrics(factory);
     SelfClient adamaClientRaw = null;
     if (executor != null){
@@ -44,8 +44,8 @@ public class FirstPartyServices {
       adamaClientRaw = new SelfClient(pool);
     }
     final SelfClient adamaClient = adamaClientRaw;
-    ServiceRegistry.add("adama", Adama.class, (space, configRaw) -> { // TODO
-      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
+    ServiceRegistry.add("adama", Adama.class, (space, configRaw, keys) -> { // TODO
+      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
         return new Adama(metrics, adamaClient, signer, config);
       } catch (ErrorCodeException ex) {
@@ -53,8 +53,8 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
-    ServiceRegistry.add("twilio", Twilio.class, (space, configRaw) -> {
-      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
+    ServiceRegistry.add("twilio", Twilio.class, (space, configRaw, keys) -> {
+      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
         return Twilio.build(metrics, config, webClientBase);
       } catch (ErrorCodeException ex) {
@@ -62,8 +62,8 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
-    ServiceRegistry.add("stripe", Stripe.class, (space, configRaw) -> {
-      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
+    ServiceRegistry.add("stripe", Stripe.class, (space, configRaw, keys) -> {
+      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
         return Stripe.build(metrics, config, webClientBase);
       } catch (ErrorCodeException ex) {
@@ -71,8 +71,8 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
-    ServiceRegistry.add("amazonses", AmazonSES.class, (space, configRaw) -> {
-      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
+    ServiceRegistry.add("amazonses", AmazonSES.class, (space, configRaw, keys) -> {
+      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
         return AmazonSES.build(metrics, config, webClientBase);
       } catch (ErrorCodeException ex) {
@@ -80,8 +80,8 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
-    ServiceRegistry.add("discord", Discord.class, (space, configRaw) -> {
-      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
+    ServiceRegistry.add("discord", Discord.class, (space, configRaw, keys) -> {
+      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
         return Discord.build(metrics, config, webClientBase);
       } catch (ErrorCodeException ex) {
@@ -89,8 +89,8 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
-    ServiceRegistry.add("identitysigner", IdentitySigner.class, (space, configRaw) -> {
-      ServiceConfig config = new ServiceConfig(dataBase, space, configRaw, masterKey);
+    ServiceRegistry.add("identitysigner", IdentitySigner.class, (space, configRaw, keys) -> {
+      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
         return IdentitySigner.build(metrics, config, executor);
       } catch (ErrorCodeException ex) {
@@ -98,6 +98,6 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
-    ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw) -> new SafeRandom(executor));
+    ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
   }
 }

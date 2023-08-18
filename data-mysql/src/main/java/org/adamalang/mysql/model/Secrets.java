@@ -10,12 +10,15 @@ package org.adamalang.mysql.model;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.keys.SigningKeyPair;
 import org.adamalang.mysql.DataBase;
 
+import java.security.PublicKey;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.TreeMap;
 
 public class Secrets {
   /** This is fundamentally unsafe as it puts both the public and private key (granted, encrypted) in the datbase. Instead, we should only put the public key in, store private keys in memory, and then index the keys so public keys can be looked up by id */
@@ -65,6 +68,7 @@ public class Secrets {
   }
 
   /** get the private key by an id */
+  @Deprecated
   public static String getPrivateKey(DataBase dataBase, String space, int keyId) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `encrypted_private_key` FROM `" + dataBase.databaseName + "`.`secrets` WHERE `id`=? AND `space`=?";
@@ -78,6 +82,22 @@ public class Secrets {
         }
       }
       throw new ErrorCodeException(ErrorCodes.MYSQL_FAILED_FINDING_SECRET_KEY);
+    });
+  }
+
+  public static TreeMap<Integer, PrivateKeyBundle> getKeys(DataBase dataBase, String masterKey, String space) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      TreeMap<Integer, PrivateKeyBundle> keys = new TreeMap<>();
+      String sql = "SELECT `id`, `encrypted_private_key` FROM `" + dataBase.databaseName + "`.`secrets` WHERE `space`=?";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, space);
+        try (ResultSet rs = statement.executeQuery()) {
+          while (rs.next()) {
+            keys.put(rs.getInt(1), PrivateKeyBundle.fromDisk(rs.getString(2), masterKey));
+          }
+        }
+      }
+      return keys;
     });
   }
 }

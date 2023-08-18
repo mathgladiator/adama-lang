@@ -31,7 +31,7 @@ import java.util.function.Consumer;
 
 public class PhaseRun {
   public static void go(final LivingDocumentFactory factory, final DocumentMonitor monitor, final AtomicBoolean passedTests, final StringBuilder outputFile) throws Exception {
-    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap) -> new SampleService());
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap, keys) -> new SampleService());
     final var testTime = new AtomicLong(0);
     final var time = (TimeSource) () -> testTime.get();
     outputFile.append("--JAVA RUNNING-------------------------------------").append("\n");

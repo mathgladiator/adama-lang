@@ -6,13 +6,13 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.runtime.contracts;
+package org.adamalang.runtime.deploy;
 
-import org.adamalang.common.Callback;
-import org.adamalang.runtime.deploy.DeploymentBundle;
-import org.adamalang.runtime.deploy.DeploymentPlan;
+/** contract for deployment synchronization */
+public interface DeploySync {
+  /** watch the given space for deployments */
+  public void watch(String space);
 
-/** fetch a plan */
-public interface PlanFetcher {
-  public void find(String space, Callback<DeploymentBundle> callback);
+  /** stop watching the space for deployments */
+  public void unwatch(String space);
 }

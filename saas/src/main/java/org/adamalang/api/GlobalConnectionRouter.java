@@ -885,7 +885,7 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalGetPlanRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new PlanResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new PlanWithKeysResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {

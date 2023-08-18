@@ -9,7 +9,9 @@
 package org.adamalang.ops;
 
 import org.adamalang.common.*;
+import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.model.Secrets;
 import org.adamalang.runtime.sys.capacity.CapacityInstance;
 import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.mysql.model.Capacity;
@@ -22,6 +24,8 @@ import org.adamalang.runtime.sys.CoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.TreeMap;
+
 /** agent of deployments */
 public class DeploymentAgent implements LocalCapacityRequestor, DeploymentMonitor, ExceptionLogger {
   private static final Logger LOGGER = LoggerFactory.getLogger(DeploymentAgent.class);
@@ -32,8 +36,9 @@ public class DeploymentAgent implements LocalCapacityRequestor, DeploymentMonito
   public final String machine;
   public final DeploymentFactoryBase deploymentFactoryBase;
   public final CoreService service;
+  public final String masterKey;
 
-  public DeploymentAgent(SimpleExecutor executor, DataBase database, DeploymentMetrics metrics, String region, String machine, DeploymentFactoryBase deploymentFactoryBase, CoreService service) {
+  public DeploymentAgent(SimpleExecutor executor, DataBase database, DeploymentMetrics metrics, String region, String machine, DeploymentFactoryBase deploymentFactoryBase, CoreService service, String masterKey) {
     this.executor = executor;
     this.database = database;
     this.metrics = metrics;
@@ -41,6 +46,7 @@ public class DeploymentAgent implements LocalCapacityRequestor, DeploymentMonito
     this.machine = machine;
     this.deploymentFactoryBase = deploymentFactoryBase;
     this.service = service;
+    this.masterKey = masterKey;
   }
 
   public void optimisticScanAll() throws Exception {
@@ -75,7 +81,8 @@ public class DeploymentAgent implements LocalCapacityRequestor, DeploymentMonito
         return;
       }
       metrics.deploy_started.run();
-      deploymentFactoryBase.deploy(space, new DeploymentPlan(plan, this));
+      TreeMap<Integer, PrivateKeyBundle> keys = Secrets.getKeys(database, masterKey, space);
+      deploymentFactoryBase.deploy(space, new DeploymentPlan(plan, this), keys);
       service.deploy(this);
       callback.success(null);
     } catch (Exception ex) {

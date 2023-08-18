@@ -14,6 +14,7 @@ import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.remote.Deliverer;
 
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ValidatePlan {
@@ -21,6 +22,6 @@ public class ValidatePlan {
 
   public static void validate(String space, ObjectNode node) throws ErrorCodeException {
     DeploymentPlan localPlan = new DeploymentPlan(node.toString(), (t, c) -> t.printStackTrace());
-    new DeploymentFactory(space, space + "prefix", validationClassId, null, localPlan, Deliverer.FAILURE);
+    new DeploymentFactory(space, space + "prefix", validationClassId, null, localPlan, Deliverer.FAILURE, new TreeMap<>());
   }
 }

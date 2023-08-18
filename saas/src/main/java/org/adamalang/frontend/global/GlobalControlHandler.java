@@ -17,6 +17,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
+import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.frontend.Session;
 import org.adamalang.frontend.SpaceTemplates;
@@ -839,15 +840,20 @@ public class GlobalControlHandler implements RootGlobalHandler {
    * Regional deployment support
    *********/
   @Override
-  public void handle(Session session, RegionalGetPlanRequest request, PlanResponder responder) {
+  public void handle(Session session, RegionalGetPlanRequest request, PlanWithKeysResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
       try {
-        responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.database, request.policy.id)));
+        ObjectNode keys = Json.newJsonObject();
+        for (Map.Entry<Integer, PrivateKeyBundle> entry : Secrets.getKeys(nexus.database, nexus.masterKey, request.space).entrySet()) {
+          keys.put("" + entry.getKey(), entry.getValue().getPrivateKey());
+        }
+        responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.database, request.policy.id)), keys);
       } catch (Exception ex) {
         responder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
       }
     }
   }
+
 
   /*********
    * Capacity Management for regions

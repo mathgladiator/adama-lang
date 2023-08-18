@@ -103,7 +103,7 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, RegionalAuthRequest request, AuthResultResponder responder);
 
-  public void handle(Session session, RegionalGetPlanRequest request, PlanResponder responder);
+  public void handle(Session session, RegionalGetPlanRequest request, PlanWithKeysResponder responder);
 
   public void handle(Session session, RegionalCapacityAddRequest request, SimpleResponder responder);
 

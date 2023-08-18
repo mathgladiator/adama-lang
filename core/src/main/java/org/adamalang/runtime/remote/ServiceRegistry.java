@@ -8,6 +8,8 @@
  */
 package org.adamalang.runtime.remote;
 
+import org.adamalang.common.keys.PrivateKeyBundle;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,7 +20,7 @@ import java.util.function.Consumer;
 
 /** a service registry maps service names to services */
 public class ServiceRegistry {
-  public static TreeMap<String, BiFunction<String, HashMap<String, Object>, Service>> REGISTRY = new TreeMap<>();
+  public static TreeMap<String, ServiceConstructor> REGISTRY = new TreeMap<>();
   public static ServiceRegistry NOT_READY = new ServiceRegistry() {
     @Override
     public Service find(String name) {
@@ -26,7 +28,7 @@ public class ServiceRegistry {
     }
 
     @Override
-    public void resolve(String space, HashMap<String, HashMap<String, Object>> servicesConfig) {
+    public void resolve(String space, HashMap<String, HashMap<String, Object>> servicesConfig, TreeMap<Integer, PrivateKeyBundle> keys) {
     }
   };
   private static final TreeMap<String, Class<?>> INCLUDED_SERVICES = new TreeMap<>();
@@ -36,7 +38,7 @@ public class ServiceRegistry {
     this.services = new TreeMap<>();
   }
 
-  public static void add(String name, Class<?> clazz, BiFunction<String, HashMap<String, Object>, Service> cons) {
+  public static void add(String name, Class<?> clazz, ServiceConstructor cons) {
     INCLUDED_SERVICES.put(name, clazz);
     REGISTRY.put(name, cons);
   }
@@ -67,9 +69,9 @@ public class ServiceRegistry {
     return services.containsKey(name);
   }
 
-  public void resolve(String spaceName, HashMap<String, HashMap<String, Object>> servicesConfig) {
+  public void resolve(String spaceName, HashMap<String, HashMap<String, Object>> servicesConfig, TreeMap<Integer, PrivateKeyBundle> keys) {
     for (Map.Entry<String, HashMap<String, Object>> entry : servicesConfig.entrySet()) {
-      Service resolved = resolveService(spaceName, entry.getValue());
+      Service resolved = resolveService(spaceName, entry.getValue(), keys);
       if (resolved == null) {
         resolved = Service.FAILURE;
       }
@@ -77,13 +79,13 @@ public class ServiceRegistry {
     }
   }
 
-  private Service resolveService(String spaceName, HashMap<String, Object> config) {
+  private Service resolveService(String spaceName, HashMap<String, Object> config, TreeMap<Integer, PrivateKeyBundle> keys) {
     Object clazz = config.get("class");
     try {
       if (clazz != null && clazz instanceof String) {
-        BiFunction<String, HashMap<String, Object>, Service> cons = REGISTRY.get((String) clazz);
+        ServiceConstructor cons = REGISTRY.get((String) clazz);
         if (cons != null) {
-          return cons.apply(spaceName, config);
+          return cons.cons(spaceName, config, keys);
         }
       }
     } catch (Exception ex) { // ignore it
