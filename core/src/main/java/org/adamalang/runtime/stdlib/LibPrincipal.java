@@ -32,4 +32,14 @@ public class LibPrincipal {
   public static boolean fromAuthority(final NtPrincipal principal, String authority) {
     return authority.equals(principal.authority);
   }
+
+  @Extension
+  public static String agent(final NtPrincipal principal) {
+    return principal.agent;
+  }
+
+  @Extension
+  public static String authority(final NtPrincipal principal) {
+    return principal.authority;
+  }
 }

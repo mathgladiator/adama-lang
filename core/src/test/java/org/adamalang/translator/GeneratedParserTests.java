@@ -662,7 +662,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadArrayEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadArrayEOS1_failure.a' failed to parse: Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadArrayEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadArrayEOS1_failure.a' failed to parse: Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadArrayEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -702,7 +702,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadArrayEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadArrayEOS2_failure.a' failed to parse: Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadArrayEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadArrayEOS2_failure.a' failed to parse: Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadArrayEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -742,7 +742,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadArrayInvalidEnd_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadArrayInvalidEnd_failure.a' failed to parse: Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadArrayInvalidEnd_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadArrayInvalidEnd_failure.a' failed to parse: Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadArrayInvalidEnd_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -782,7 +782,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadDouble_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":17,\"byte\":31}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadDouble_failure.a' failed to parse: Parser was unable to parse `1.2.3e1` as a double. {Token: `1.2.3e1` @ (2,10) -> (2,17): NumberLiteral:NumberIsDouble}\",\"file\":\"./test_code/Parser_AtomicsBadDouble_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was unable to parse `1.2.3e1` as a double. {Token: `1.2.3e1` @ (2,10) -> (2,17): NumberLiteral:NumberIsDouble}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":17,\"byte\":31}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadDouble_failure.a' failed to parse: Parser was unable to parse `1.2.3e1` as a double. {Token: `1.2.3e1` @ (2,10) -> (2,17): NumberLiteral:NumberIsDouble}\",\"file\":\"./test_code/Parser_AtomicsBadDouble_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was unable to parse `1.2.3e1` as a double. {Token: `1.2.3e1` @ (2,10) -> (2,17): NumberLiteral:NumberIsDouble}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -822,7 +822,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadEnumSymbol_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":11,\"byte\":38},\"end\":{\"line\":3,\"character\":13,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadEnumSymbol_failure.a' failed to parse: Parser was expecting either an identifier or an `*` after `::`, but got `+` instead. {Token: `::` @ (3,11) -> (3,13): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadEnumSymbol_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting either an identifier or an `*` after `::`, but got `+` instead. {Token: `::` @ (3,11) -> (3,13): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":11,\"byte\":38},\"end\":{\"line\":3,\"character\":13,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadEnumSymbol_failure.a' failed to parse: Parser was expecting either an identifier or an `*` after `::`, but got `+` instead. {Token: `::` @ (3,11) -> (3,13): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadEnumSymbol_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting either an identifier or an `*` after `::`, but got `+` instead. {Token: `::` @ (3,11) -> (3,13): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -862,7 +862,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadEnumValueEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":11,\"byte\":38},\"end\":{\"line\":3,\"character\":13,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadEnumValueEOS_failure.a' failed to parse: Parser was expecting either an identifier or an `*` after `::`, but got end of stream instead. {Token: `::` @ (3,11) -> (3,13): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadEnumValueEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting either an identifier or an `*` after `::`, but got end of stream instead. {Token: `::` @ (3,11) -> (3,13): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":11,\"byte\":38},\"end\":{\"line\":3,\"character\":13,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadEnumValueEOS_failure.a' failed to parse: Parser was expecting either an identifier or an `*` after `::`, but got end of stream instead. {Token: `::` @ (3,11) -> (3,13): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadEnumValueEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting either an identifier or an `*` after `::`, but got end of stream instead. {Token: `::` @ (3,11) -> (3,13): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -902,7 +902,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadHex_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":18,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadHex_failure.a' failed to parse: Parser was expecting a valid numeric sequence, but got a '0x123x12' instead. {Token: `0x123x12` @ (2,10) -> (2,18): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_AtomicsBadHex_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a valid numeric sequence, but got a '0x123x12' instead. {Token: `0x123x12` @ (2,10) -> (2,18): NumberLiteral:NumberIsInteger}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":18,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadHex_failure.a' failed to parse: Parser was expecting a valid numeric sequence, but got a '0x123x12' instead. {Token: `0x123x12` @ (2,10) -> (2,18): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_AtomicsBadHex_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a valid numeric sequence, but got a '0x123x12' instead. {Token: `0x123x12` @ (2,10) -> (2,18): NumberLiteral:NumberIsInteger}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -942,7 +942,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadObjectEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadObjectEOS1_failure.a' failed to parse: Parser expected a `}`, but instead got end of stream. {Token: `{` @ (2,10) -> (2,11): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadObjectEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `}`, but instead got end of stream. {Token: `{` @ (2,10) -> (2,11): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadObjectEOS1_failure.a' failed to parse: Parser expected a `}`, but instead got end of stream. {Token: `{` @ (2,10) -> (2,11): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadObjectEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `}`, but instead got end of stream. {Token: `{` @ (2,10) -> (2,11): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -982,7 +982,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadObjectEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":13,\"byte\":27},\"end\":{\"line\":2,\"character\":16,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadObjectEOS2_failure.a' failed to parse: Parser expected a `}` or `,`, but instead got end of stream. {Token: `123` @ (2,13) -> (2,16): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_AtomicsBadObjectEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `}` or `,`, but instead got end of stream. {Token: `123` @ (2,13) -> (2,16): NumberLiteral:NumberIsInteger}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":13,\"byte\":27},\"end\":{\"line\":2,\"character\":16,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadObjectEOS2_failure.a' failed to parse: Parser expected a `}` or `,`, but instead got end of stream. {Token: `123` @ (2,13) -> (2,16): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_AtomicsBadObjectEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `}` or `,`, but instead got end of stream. {Token: `123` @ (2,13) -> (2,16): NumberLiteral:NumberIsInteger}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -1022,7 +1022,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadObjectInvalidEnd_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":14,\"byte\":28},\"end\":{\"line\":2,\"character\":15,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadObjectInvalidEnd_failure.a' failed to parse: Parser expected a `}` or `,`, but instead got `!` {Token: `!` @ (2,14) -> (2,15): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadObjectInvalidEnd_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `}` or `,`, but instead got `!` {Token: `!` @ (2,14) -> (2,15): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":14,\"byte\":28},\"end\":{\"line\":2,\"character\":15,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadObjectInvalidEnd_failure.a' failed to parse: Parser expected a `}` or `,`, but instead got `!` {Token: `!` @ (2,14) -> (2,15): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadObjectInvalidEnd_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a `}` or `,`, but instead got `!` {Token: `!` @ (2,14) -> (2,15): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -1062,7 +1062,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadParenthesisEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadParenthesisEOS_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `(` @ (2,10) -> (2,11): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadParenthesisEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an atomic expression, but got end of stream instead. {Token: `(` @ (2,10) -> (2,11): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":10,\"byte\":24},\"end\":{\"line\":2,\"character\":11,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadParenthesisEOS_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `(` @ (2,10) -> (2,11): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadParenthesisEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an atomic expression, but got end of stream instead. {Token: `(` @ (2,10) -> (2,11): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -1102,7 +1102,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadParenthesisUnmatched_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":14,\"byte\":28},\"end\":{\"line\":2,\"character\":15,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadParenthesisUnmatched_failure.a' failed to parse: Parser expected a ), but instead got an `]` {Token: `]` @ (2,14) -> (2,15): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadParenthesisUnmatched_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ), but instead got an `]` {Token: `]` @ (2,14) -> (2,15): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":14,\"byte\":28},\"end\":{\"line\":2,\"character\":15,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadParenthesisUnmatched_failure.a' failed to parse: Parser expected a ), but instead got an `]` {Token: `]` @ (2,14) -> (2,15): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadParenthesisUnmatched_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ), but instead got an `]` {Token: `]` @ (2,14) -> (2,15): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -1142,7 +1142,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_AtomicsBadThing_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":16,\"byte\":30},\"end\":{\"line\":2,\"character\":17,\"byte\":31}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadThing_failure.a' failed to parse: Parser expected an atomic, but instead got `)` {Token: `)` @ (2,16) -> (2,17): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadThing_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected an atomic, but instead got `)` {Token: `)` @ (2,16) -> (2,17): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":16,\"byte\":30},\"end\":{\"line\":2,\"character\":17,\"byte\":31}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_AtomicsBadThing_failure.a' failed to parse: Parser expected an atomic, but instead got `)` {Token: `)` @ (2,16) -> (2,17): Symbol}\",\"file\":\"./test_code/Parser_AtomicsBadThing_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected an atomic, but instead got `)` {Token: `)` @ (2,16) -> (2,17): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2380,8 +2380,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord6 extends NtMessageBase {");
-    gold.append("\n    private final RTxAutoMaxRecord6 __this;");
+    gold.append("\n  private static class RTx_AutoMaxRecord_6 extends NtMessageBase {");
+    gold.append("\n    private final RTx_AutoMaxRecord_6 __this;");
     gold.append("\n    private int x = 0;");
     gold.append("\n    private int y = 0;");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
@@ -2391,16 +2391,16 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      __hash.hashInteger(this.y);");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
-    gold.append("\n    private static String[] __INDEX_COLUMNS_AutoMaxRecord6 = new String[] {};");
+    gold.append("\n    private static String[] __INDEX_COLUMNS__AutoMaxRecord_6 = new String[] {};");
     gold.append("\n    @Override");
     gold.append("\n    public String[] __getIndexColumns() {");
-    gold.append("\n      return __INDEX_COLUMNS_AutoMaxRecord6;");
+    gold.append("\n      return __INDEX_COLUMNS__AutoMaxRecord_6;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public int[] __getIndexValues() {");
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord6(JsonStreamReader __reader) {");
+    gold.append("\n    private RTx_AutoMaxRecord_6(JsonStreamReader __reader) {");
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -2430,18 +2430,18 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord6() { __this = this; }");
-    gold.append("\n    private RTxAutoMaxRecord6(int x, int y) {");
+    gold.append("\n    private RTx_AutoMaxRecord_6() { __this = this; }");
+    gold.append("\n    private RTx_AutoMaxRecord_6(int x, int y) {");
     gold.append("\n      this.__this = this;");
     gold.append("\n      this.x = x;");
     gold.append("\n      this.y = y;");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaRTxAutoMaxRecord6 implements DeltaNode {");
+    gold.append("\n  private class DeltaRTx_AutoMaxRecord_6 implements DeltaNode {");
     gold.append("\n    private DInt32 __dx;");
     gold.append("\n    private DInt32 __dy;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaRTxAutoMaxRecord6() {");
+    gold.append("\n    private DeltaRTx_AutoMaxRecord_6() {");
     gold.append("\n      __dx = new DInt32();");
     gold.append("\n      __dy = new DInt32();");
     gold.append("\n      __emitted = false;");
@@ -2453,7 +2453,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      __sum += __dy.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxAutoMaxRecord6 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(RTx_AutoMaxRecord_6 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __dx.show(__item.x, __obj.planField(\"x\"));");
@@ -2476,8 +2476,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static class RTxAutoMaxRecord9 extends NtMessageBase {");
-    gold.append("\n    private final RTxAutoMaxRecord9 __this;");
+    gold.append("\n  private static class RTx_AutoMaxRecord_9 extends NtMessageBase {");
+    gold.append("\n    private final RTx_AutoMaxRecord_9 __this;");
     gold.append("\n    private boolean a0 = false;");
     gold.append("\n    private String a1 = \"\";");
     gold.append("\n    private boolean a2 = false;");
@@ -2493,16 +2493,16 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      __hash.hashInteger(this.x);");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
-    gold.append("\n    private static String[] __INDEX_COLUMNS_AutoMaxRecord9 = new String[] {};");
+    gold.append("\n    private static String[] __INDEX_COLUMNS__AutoMaxRecord_9 = new String[] {};");
     gold.append("\n    @Override");
     gold.append("\n    public String[] __getIndexColumns() {");
-    gold.append("\n      return __INDEX_COLUMNS_AutoMaxRecord9;");
+    gold.append("\n      return __INDEX_COLUMNS__AutoMaxRecord_9;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public int[] __getIndexValues() {");
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord9(JsonStreamReader __reader) {");
+    gold.append("\n    private RTx_AutoMaxRecord_9(JsonStreamReader __reader) {");
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
@@ -2542,8 +2542,8 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(x);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    private RTxAutoMaxRecord9() { __this = this; }");
-    gold.append("\n    private RTxAutoMaxRecord9(boolean a0, String a1, boolean a2, int x) {");
+    gold.append("\n    private RTx_AutoMaxRecord_9() { __this = this; }");
+    gold.append("\n    private RTx_AutoMaxRecord_9(boolean a0, String a1, boolean a2, int x) {");
     gold.append("\n      this.__this = this;");
     gold.append("\n      this.a0 = a0;");
     gold.append("\n      this.a1 = a1;");
@@ -2551,13 +2551,13 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      this.x = x;");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaRTxAutoMaxRecord9 implements DeltaNode {");
+    gold.append("\n  private class DeltaRTx_AutoMaxRecord_9 implements DeltaNode {");
     gold.append("\n    private DBoolean __da0;");
     gold.append("\n    private DFastString __da1;");
     gold.append("\n    private DBoolean __da2;");
     gold.append("\n    private DInt32 __dx;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaRTxAutoMaxRecord9() {");
+    gold.append("\n    private DeltaRTx_AutoMaxRecord_9() {");
     gold.append("\n      __da0 = new DBoolean();");
     gold.append("\n      __da1 = new DFastString();");
     gold.append("\n      __da2 = new DBoolean();");
@@ -2573,7 +2573,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      __sum += __dx.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxAutoMaxRecord9 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(RTx_AutoMaxRecord_9 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 4;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __da0.show(__item.a0, __obj.planField(\"a0\"));");
@@ -2762,11 +2762,11 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    __track(16);");
     gold.append("\n    final RTx_AnonObjConvert_0[] a15 = new RTx_AnonObjConvert_0[] {new RTx_AnonObjConvert_0(1)};");
     gold.append("\n    __track(17);");
-    gold.append("\n    final RTxAutoMaxRecord6[] a16 = new RTxAutoMaxRecord6[] {new RTxAutoMaxRecord6(1, 2)};");
+    gold.append("\n    final RTx_AutoMaxRecord_6[] a16 = new RTx_AutoMaxRecord_6[] {new RTx_AutoMaxRecord_6(1, 2)};");
     gold.append("\n    __track(18);");
     gold.append("\n    final int a17 = (123);");
     gold.append("\n    __track(19);");
-    gold.append("\n    final RTxAutoMaxRecord9[] a18 = new RTxAutoMaxRecord9[] {new RTxAutoMaxRecord9(a0, a1, a2, 1)};");
+    gold.append("\n    final RTx_AutoMaxRecord_9[] a18 = new RTx_AutoMaxRecord_9[] {new RTx_AutoMaxRecord_9(a0, a1, a2, 1)};");
     gold.append("\n    __track(20);");
     gold.append("\n    final RTx_AnonObjConvert_0[] a19 = new RTx_AnonObjConvert_0[] {new RTx_AnonObjConvert_0(1), new RTx_AnonObjConvert_0(2)};");
     gold.append("\n  }");
@@ -2786,7 +2786,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nBegin");
     gold.append("\nEnd");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"E\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":42},\"names\":{\"42\":\"A\"},\"default\":\"A\"}},\"_AnonObjConvert_0\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_0\",\"anonymous\":true,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"AutoMaxRecord6\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord6\",\"anonymous\":true,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"y\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"AutoMaxRecord9\":{\"nature\":\"native_message\",\"name\":\"AutoMaxRecord9\",\"anonymous\":true,\"fields\":{\"a0\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"},\"a1\":{\"type\":{\"nature\":\"native_value\",\"type\":\"label\"},\"privacy\":\"public\"},\"a2\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"},\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[\"foo\"]}");
+    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"E\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":42},\"names\":{\"42\":\"A\"},\"default\":\"A\"}},\"_AnonObjConvert_0\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_0\",\"anonymous\":true,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"_AutoMaxRecord_6\":{\"nature\":\"native_message\",\"name\":\"_AutoMaxRecord_6\",\"anonymous\":true,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"y\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"_AutoMaxRecord_9\":{\"nature\":\"native_message\",\"name\":\"_AutoMaxRecord_9\",\"anonymous\":true,\"fields\":{\"a0\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"},\"a1\":{\"type\":{\"nature\":\"native_value\",\"type\":\"label\"},\"privacy\":\"public\"},\"a2\":{\"type\":{\"nature\":\"native_value\",\"type\":\"bool\"},\"privacy\":\"public\"},\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[\"foo\"]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
@@ -2852,7 +2852,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_BadChannelHandlerEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":8,\"byte\":23},\"end\":{\"line\":3,\"character\":11,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerEOS1_failure.a' failed to parse: Parser was expecting a Symbol=`(`; instead, the parser got an end of stream. {Token: `foo` @ (3,8) -> (3,11): Identifier}\",\"file\":\"./test_code/Parser_BadChannelHandlerEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`(`; instead, the parser got an end of stream. {Token: `foo` @ (3,8) -> (3,11): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":8,\"byte\":23},\"end\":{\"line\":3,\"character\":11,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerEOS1_failure.a' failed to parse: Parser was expecting a Symbol=`(`; instead, the parser got an end of stream. {Token: `foo` @ (3,8) -> (3,11): Identifier}\",\"file\":\"./test_code/Parser_BadChannelHandlerEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`(`; instead, the parser got an end of stream. {Token: `foo` @ (3,8) -> (3,11): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2892,7 +2892,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_BadChannelHandlerEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":14,\"byte\":29},\"end\":{\"line\":3,\"character\":15,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerEOS2_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `c` @ (3,14) -> (3,15): Identifier}\",\"file\":\"./test_code/Parser_BadChannelHandlerEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `c` @ (3,14) -> (3,15): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":14,\"byte\":29},\"end\":{\"line\":3,\"character\":15,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerEOS2_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `c` @ (3,14) -> (3,15): Identifier}\",\"file\":\"./test_code/Parser_BadChannelHandlerEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `c` @ (3,14) -> (3,15): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2932,7 +2932,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_BadChannelHandlerEOS3_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":14,\"byte\":29},\"end\":{\"line\":3,\"character\":15,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerEOS3_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,14) -> (3,15): Identifier}\",\"file\":\"./test_code/Parser_BadChannelHandlerEOS3_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,14) -> (3,15): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":14,\"byte\":29},\"end\":{\"line\":3,\"character\":15,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerEOS3_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,14) -> (3,15): Identifier}\",\"file\":\"./test_code/Parser_BadChannelHandlerEOS3_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,14) -> (3,15): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -2972,7 +2972,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_BadChannelHandlerEOS4_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":14,\"byte\":29},\"end\":{\"line\":3,\"character\":15,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerEOS4_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,14) -> (3,15): Identifier}\",\"file\":\"./test_code/Parser_BadChannelHandlerEOS4_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,14) -> (3,15): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":14,\"byte\":29},\"end\":{\"line\":3,\"character\":15,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerEOS4_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,14) -> (3,15): Identifier}\",\"file\":\"./test_code/Parser_BadChannelHandlerEOS4_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,14) -> (3,15): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -3012,7 +3012,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_BadChannelHandlerUnexpected1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":13,\"byte\":28},\"end\":{\"line\":3,\"character\":14,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerUnexpected1_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,13) -> (3,14): Symbol}\",\"file\":\"./test_code/Parser_BadChannelHandlerUnexpected1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,13) -> (3,14): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":13,\"byte\":28},\"end\":{\"line\":3,\"character\":14,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerUnexpected1_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,13) -> (3,14): Symbol}\",\"file\":\"./test_code/Parser_BadChannelHandlerUnexpected1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,13) -> (3,14): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -3052,7 +3052,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_BadChannelHandlerUnexpected2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":15,\"byte\":30},\"end\":{\"line\":3,\"character\":16,\"byte\":31}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerUnexpected2_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parse got Symbol:+. {Token: `+` @ (3,15) -> (3,16): Symbol}\",\"file\":\"./test_code/Parser_BadChannelHandlerUnexpected2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`)`; instead, the parse got Symbol:+. {Token: `+` @ (3,15) -> (3,16): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":15,\"byte\":30},\"end\":{\"line\":3,\"character\":16,\"byte\":31}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerUnexpected2_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parse got Symbol:+. {Token: `+` @ (3,15) -> (3,16): Symbol}\",\"file\":\"./test_code/Parser_BadChannelHandlerUnexpected2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`)`; instead, the parse got Symbol:+. {Token: `+` @ (3,15) -> (3,16): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -3092,7 +3092,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_BadChannelHandlerUnexpected3_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":13,\"byte\":28},\"end\":{\"line\":3,\"character\":14,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerUnexpected3_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,13) -> (3,14): Symbol}\",\"file\":\"./test_code/Parser_BadChannelHandlerUnexpected3_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,13) -> (3,14): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":13,\"byte\":28},\"end\":{\"line\":3,\"character\":14,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerUnexpected3_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,13) -> (3,14): Symbol}\",\"file\":\"./test_code/Parser_BadChannelHandlerUnexpected3_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,13) -> (3,14): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -3132,7 +3132,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_BadChannelHandlerUnexpected4_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":8,\"byte\":23},\"end\":{\"line\":3,\"character\":9,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerUnexpected4_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,8) -> (3,9): Symbol}\",\"file\":\"./test_code/Parser_BadChannelHandlerUnexpected4_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,8) -> (3,9): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":8,\"byte\":23},\"end\":{\"line\":3,\"character\":9,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerUnexpected4_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,8) -> (3,9): Symbol}\",\"file\":\"./test_code/Parser_BadChannelHandlerUnexpected4_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,8) -> (3,9): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -3172,7 +3172,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_BadChannelHandlerUnexpected5_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":11,\"byte\":26},\"end\":{\"line\":3,\"character\":12,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerUnexpected5_failure.a' failed to parse: Parser was expecting a Symbol=`(`; instead, the parse got Symbol:!. {Token: `!` @ (3,11) -> (3,12): Symbol}\",\"file\":\"./test_code/Parser_BadChannelHandlerUnexpected5_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`(`; instead, the parse got Symbol:!. {Token: `!` @ (3,11) -> (3,12): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":11,\"byte\":26},\"end\":{\"line\":3,\"character\":12,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_BadChannelHandlerUnexpected5_failure.a' failed to parse: Parser was expecting a Symbol=`(`; instead, the parse got Symbol:!. {Token: `!` @ (3,11) -> (3,12): Symbol}\",\"file\":\"./test_code/Parser_BadChannelHandlerUnexpected5_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`(`; instead, the parse got Symbol:!. {Token: `!` @ (3,11) -> (3,12): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -8553,7 +8553,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_DefineConstructorNoBlockEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":10,\"byte\":10}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DefineConstructorNoBlockEOS_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `@construct` @ (0,0) -> (0,10): Keyword}\",\"file\":\"./test_code/Parser_DefineConstructorNoBlockEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an atomic expression, but got end of stream instead. {Token: `@construct` @ (0,0) -> (0,10): Keyword}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":10,\"byte\":10}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DefineConstructorNoBlockEOS_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `@construct` @ (0,0) -> (0,10): Keyword}\",\"file\":\"./test_code/Parser_DefineConstructorNoBlockEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an atomic expression, but got end of stream instead. {Token: `@construct` @ (0,0) -> (0,10): Keyword}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -11261,7 +11261,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_DefineRecordNoNameEndOfStream_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":6,\"byte\":6}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DefineRecordNoNameEndOfStream_failure.a' failed to parse: Parser was expecting an identifier, but got end of stream instead. {Token: `record` @ (0,0) -> (0,6): Identifier}\",\"file\":\"./test_code/Parser_DefineRecordNoNameEndOfStream_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got end of stream instead. {Token: `record` @ (0,0) -> (0,6): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":6,\"byte\":6}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DefineRecordNoNameEndOfStream_failure.a' failed to parse: Parser was expecting an identifier, but got end of stream instead. {Token: `record` @ (0,0) -> (0,6): Identifier}\",\"file\":\"./test_code/Parser_DefineRecordNoNameEndOfStream_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got end of stream instead. {Token: `record` @ (0,0) -> (0,6): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -11301,7 +11301,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_DefineRecordNoNameSymbolInstead_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":7,\"byte\":7},\"end\":{\"line\":0,\"character\":8,\"byte\":8}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DefineRecordNoNameSymbolInstead_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,7) -> (0,8): Symbol}\",\"file\":\"./test_code/Parser_DefineRecordNoNameSymbolInstead_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,7) -> (0,8): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":7,\"byte\":7},\"end\":{\"line\":0,\"character\":8,\"byte\":8}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DefineRecordNoNameSymbolInstead_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,7) -> (0,8): Symbol}\",\"file\":\"./test_code/Parser_DefineRecordNoNameSymbolInstead_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,7) -> (0,8): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -11341,7 +11341,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_DispatchEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":9,\"byte\":27},\"end\":{\"line\":4,\"character\":10,\"byte\":28}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DispatchEOS1_failure.a' failed to parse: Expected `::`, but got end of stream instead. {Token: `X` @ (4,9) -> (4,10): Identifier}\",\"file\":\"./test_code/Parser_DispatchEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Expected `::`, but got end of stream instead. {Token: `X` @ (4,9) -> (4,10): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":9,\"byte\":27},\"end\":{\"line\":4,\"character\":10,\"byte\":28}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DispatchEOS1_failure.a' failed to parse: Expected `::`, but got end of stream instead. {Token: `X` @ (4,9) -> (4,10): Identifier}\",\"file\":\"./test_code/Parser_DispatchEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Expected `::`, but got end of stream instead. {Token: `X` @ (4,9) -> (4,10): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -11381,7 +11381,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_DispatchEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":10,\"byte\":28},\"end\":{\"line\":4,\"character\":12,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DispatchEOS2_failure.a' failed to parse: Expected an id or `*`, but got end of stream instead {Token: `::` @ (4,10) -> (4,12): Symbol}\",\"file\":\"./test_code/Parser_DispatchEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Expected an id or `*`, but got end of stream instead {Token: `::` @ (4,10) -> (4,12): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":10,\"byte\":28},\"end\":{\"line\":4,\"character\":12,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DispatchEOS2_failure.a' failed to parse: Expected an id or `*`, but got end of stream instead {Token: `::` @ (4,10) -> (4,12): Symbol}\",\"file\":\"./test_code/Parser_DispatchEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Expected an id or `*`, but got end of stream instead {Token: `::` @ (4,10) -> (4,12): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -12100,7 +12100,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_DoWhileEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":23},\"end\":{\"line\":3,\"character\":3,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DoWhileEOS_failure.a' failed to parse: Parser was expecting `while`, but got an end of the stream instead. {Token: `}` @ (3,2) -> (3,3): Symbol}\",\"file\":\"./test_code/Parser_DoWhileEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting `while`, but got an end of the stream instead. {Token: `}` @ (3,2) -> (3,3): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":23},\"end\":{\"line\":3,\"character\":3,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DoWhileEOS_failure.a' failed to parse: Parser was expecting `while`, but got an end of the stream instead. {Token: `}` @ (3,2) -> (3,3): Symbol}\",\"file\":\"./test_code/Parser_DoWhileEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting `while`, but got an end of the stream instead. {Token: `}` @ (3,2) -> (3,3): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -12140,7 +12140,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_DoWhileNoWhile_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":4,\"byte\":25},\"end\":{\"line\":3,\"character\":5,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DoWhileNoWhile_failure.a' failed to parse: Parser was expecting keyword:`while`, but got `(` instead. {Token: `(` @ (3,4) -> (3,5): Symbol}\",\"file\":\"./test_code/Parser_DoWhileNoWhile_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting keyword:`while`, but got `(` instead. {Token: `(` @ (3,4) -> (3,5): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":4,\"byte\":25},\"end\":{\"line\":3,\"character\":5,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DoWhileNoWhile_failure.a' failed to parse: Parser was expecting keyword:`while`, but got `(` instead. {Token: `(` @ (3,4) -> (3,5): Symbol}\",\"file\":\"./test_code/Parser_DoWhileNoWhile_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting keyword:`while`, but got `(` instead. {Token: `(` @ (3,4) -> (3,5): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -12180,7 +12180,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_DotNotAtomic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":9,\"byte\":9},\"end\":{\"line\":0,\"character\":12,\"byte\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DotNotAtomic_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `xyz` @ (0,9) -> (0,12): Identifier}\",\"file\":\"./test_code/Parser_DotNotAtomic_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an atomic expression, but got end of stream instead. {Token: `xyz` @ (0,9) -> (0,12): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":9,\"byte\":9},\"end\":{\"line\":0,\"character\":12,\"byte\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_DotNotAtomic_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `xyz` @ (0,9) -> (0,12): Identifier}\",\"file\":\"./test_code/Parser_DotNotAtomic_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an atomic expression, but got end of stream instead. {Token: `xyz` @ (0,9) -> (0,12): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -12260,7 +12260,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_EnumEndOfStreamAfterColon_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":15,\"byte\":15},\"end\":{\"line\":0,\"character\":16,\"byte\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumEndOfStreamAfterColon_failure.a' failed to parse: Parser was expecting an integer after ':', but got end of stream instead. {Token: `:` @ (0,15) -> (0,16): Symbol}\",\"file\":\"./test_code/Parser_EnumEndOfStreamAfterColon_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an integer after ':', but got end of stream instead. {Token: `:` @ (0,15) -> (0,16): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":15,\"byte\":15},\"end\":{\"line\":0,\"character\":16,\"byte\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumEndOfStreamAfterColon_failure.a' failed to parse: Parser was expecting an integer after ':', but got end of stream instead. {Token: `:` @ (0,15) -> (0,16): Symbol}\",\"file\":\"./test_code/Parser_EnumEndOfStreamAfterColon_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an integer after ':', but got end of stream instead. {Token: `:` @ (0,15) -> (0,16): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -12300,7 +12300,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_EnumEndOfStreamAfterLabel_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":14,\"byte\":14},\"end\":{\"line\":0,\"character\":15,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumEndOfStreamAfterLabel_failure.a' failed to parse: Parser was expecting either a Symbol=} or an Identifier to define a new enum label, but got end of stream instead. {Token: `Y` @ (0,14) -> (0,15): Identifier}\",\"file\":\"./test_code/Parser_EnumEndOfStreamAfterLabel_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting either a Symbol=} or an Identifier to define a new enum label, but got end of stream instead. {Token: `Y` @ (0,14) -> (0,15): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":14,\"byte\":14},\"end\":{\"line\":0,\"character\":15,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumEndOfStreamAfterLabel_failure.a' failed to parse: Parser was expecting either a Symbol=} or an Identifier to define a new enum label, but got end of stream instead. {Token: `Y` @ (0,14) -> (0,15): Identifier}\",\"file\":\"./test_code/Parser_EnumEndOfStreamAfterLabel_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting either a Symbol=} or an Identifier to define a new enum label, but got end of stream instead. {Token: `Y` @ (0,14) -> (0,15): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -12340,7 +12340,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_EnumErrorNoIdentLabel_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":12,\"byte\":12},\"end\":{\"line\":0,\"character\":13,\"byte\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumErrorNoIdentLabel_failure.a' failed to parse: Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (0,12) -> (0,13): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_EnumErrorNoIdentLabel_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (0,12) -> (0,13): NumberLiteral:NumberIsInteger}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":12,\"byte\":12},\"end\":{\"line\":0,\"character\":13,\"byte\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumErrorNoIdentLabel_failure.a' failed to parse: Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (0,12) -> (0,13): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_EnumErrorNoIdentLabel_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (0,12) -> (0,13): NumberLiteral:NumberIsInteger}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -12380,7 +12380,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_EnumErrorNoName_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":6,\"byte\":6},\"end\":{\"line\":0,\"character\":7,\"byte\":7}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumErrorNoName_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,6) -> (0,7): Symbol}\",\"file\":\"./test_code/Parser_EnumErrorNoName_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,6) -> (0,7): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":6,\"byte\":6},\"end\":{\"line\":0,\"character\":7,\"byte\":7}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumErrorNoName_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,6) -> (0,7): Symbol}\",\"file\":\"./test_code/Parser_EnumErrorNoName_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,6) -> (0,7): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -12420,7 +12420,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_EnumErrorNoOpenBrace_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":10,\"byte\":10},\"end\":{\"line\":0,\"character\":11,\"byte\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumErrorNoOpenBrace_failure.a' failed to parse: Parser was expecting a Symbol=`{`; instead, the parse got Identifier:X. {Token: `X` @ (0,10) -> (0,11): Identifier}\",\"file\":\"./test_code/Parser_EnumErrorNoOpenBrace_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`{`; instead, the parse got Identifier:X. {Token: `X` @ (0,10) -> (0,11): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":10,\"byte\":10},\"end\":{\"line\":0,\"character\":11,\"byte\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumErrorNoOpenBrace_failure.a' failed to parse: Parser was expecting a Symbol=`{`; instead, the parse got Identifier:X. {Token: `X` @ (0,10) -> (0,11): Identifier}\",\"file\":\"./test_code/Parser_EnumErrorNoOpenBrace_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`{`; instead, the parse got Identifier:X. {Token: `X` @ (0,10) -> (0,11): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -13080,7 +13080,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_EnumNoIntegerAfterColon_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":15,\"byte\":15},\"end\":{\"line\":0,\"character\":16,\"byte\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumNoIntegerAfterColon_failure.a' failed to parse: Parser was expecting a valid numeric sequence, but got a Identifier instead. {Token: `Y` @ (0,15) -> (0,16): Identifier}\",\"file\":\"./test_code/Parser_EnumNoIntegerAfterColon_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a valid numeric sequence, but got a Identifier instead. {Token: `Y` @ (0,15) -> (0,16): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":15,\"byte\":15},\"end\":{\"line\":0,\"character\":16,\"byte\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_EnumNoIntegerAfterColon_failure.a' failed to parse: Parser was expecting a valid numeric sequence, but got a Identifier instead. {Token: `Y` @ (0,15) -> (0,16): Identifier}\",\"file\":\"./test_code/Parser_EnumNoIntegerAfterColon_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a valid numeric sequence, but got a Identifier instead. {Token: `Y` @ (0,15) -> (0,16): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -16351,7 +16351,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ForeachEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":23},\"end\":{\"line\":1,\"character\":11,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ForeachEOS_failure.a' failed to parse: Parser was expecting `in`, but got an end of the stream instead. {Token: `x` @ (1,10) -> (1,11): Identifier}\",\"file\":\"./test_code/Parser_ForeachEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting `in`, but got an end of the stream instead. {Token: `x` @ (1,10) -> (1,11): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":23},\"end\":{\"line\":1,\"character\":11,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ForeachEOS_failure.a' failed to parse: Parser was expecting `in`, but got an end of the stream instead. {Token: `x` @ (1,10) -> (1,11): Identifier}\",\"file\":\"./test_code/Parser_ForeachEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting `in`, but got an end of the stream instead. {Token: `x` @ (1,10) -> (1,11): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -16391,7 +16391,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ForeachNoInToken_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":12,\"byte\":25},\"end\":{\"line\":1,\"character\":13,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ForeachNoInToken_failure.a' failed to parse: Parser was expecting `in`, but got `:` instead. {Token: `:` @ (1,12) -> (1,13): Symbol}\",\"file\":\"./test_code/Parser_ForeachNoInToken_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting `in`, but got `:` instead. {Token: `:` @ (1,12) -> (1,13): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":12,\"byte\":25},\"end\":{\"line\":1,\"character\":13,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ForeachNoInToken_failure.a' failed to parse: Parser was expecting `in`, but got `:` instead. {Token: `:` @ (1,12) -> (1,13): Symbol}\",\"file\":\"./test_code/Parser_ForeachNoInToken_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting `in`, but got `:` instead. {Token: `:` @ (1,12) -> (1,13): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -17690,7 +17690,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_GlobalDefineVariableHangingNoDefault_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":13,\"byte\":13},\"end\":{\"line\":0,\"character\":14,\"byte\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_GlobalDefineVariableHangingNoDefault_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `=` @ (0,13) -> (0,14): Symbol}\",\"file\":\"./test_code/Parser_GlobalDefineVariableHangingNoDefault_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an atomic expression, but got end of stream instead. {Token: `=` @ (0,13) -> (0,14): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":13,\"byte\":13},\"end\":{\"line\":0,\"character\":14,\"byte\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_GlobalDefineVariableHangingNoDefault_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `=` @ (0,13) -> (0,14): Symbol}\",\"file\":\"./test_code/Parser_GlobalDefineVariableHangingNoDefault_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an atomic expression, but got end of stream instead. {Token: `=` @ (0,13) -> (0,14): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -17730,7 +17730,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_GlobalDefineVariableHangingNoSemicolon_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":11,\"byte\":11},\"end\":{\"line\":0,\"character\":12,\"byte\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_GlobalDefineVariableHangingNoSemicolon_failure.a' failed to parse: Parser was expecting a Symbol=`;`; instead, the parser got an end of stream. {Token: `x` @ (0,11) -> (0,12): Identifier}\",\"file\":\"./test_code/Parser_GlobalDefineVariableHangingNoSemicolon_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`;`; instead, the parser got an end of stream. {Token: `x` @ (0,11) -> (0,12): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":11,\"byte\":11},\"end\":{\"line\":0,\"character\":12,\"byte\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_GlobalDefineVariableHangingNoSemicolon_failure.a' failed to parse: Parser was expecting a Symbol=`;`; instead, the parser got an end of stream. {Token: `x` @ (0,11) -> (0,12): Identifier}\",\"file\":\"./test_code/Parser_GlobalDefineVariableHangingNoSemicolon_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`;`; instead, the parser got an end of stream. {Token: `x` @ (0,11) -> (0,12): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -17770,7 +17770,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_GlobalDefineVariableNoName_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":11,\"byte\":11},\"end\":{\"line\":0,\"character\":12,\"byte\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_GlobalDefineVariableNoName_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:; instead. {Token: `;` @ (0,11) -> (0,12): Symbol}\",\"file\":\"./test_code/Parser_GlobalDefineVariableNoName_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:; instead. {Token: `;` @ (0,11) -> (0,12): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":11,\"byte\":11},\"end\":{\"line\":0,\"character\":12,\"byte\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_GlobalDefineVariableNoName_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:; instead. {Token: `;` @ (0,11) -> (0,12): Symbol}\",\"file\":\"./test_code/Parser_GlobalDefineVariableNoName_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:; instead. {Token: `;` @ (0,11) -> (0,12): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -17810,7 +17810,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_GlobalDefineVariablePolicyOnly_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":6,\"byte\":6}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_GlobalDefineVariablePolicyOnly_failure.a' failed to parse: Parser was expecting a reactive type, but got an end of stream instead. {Token: `public` @ (0,0) -> (0,6): Identifier}\",\"file\":\"./test_code/Parser_GlobalDefineVariablePolicyOnly_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a reactive type, but got an end of stream instead. {Token: `public` @ (0,0) -> (0,6): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":6,\"byte\":6}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_GlobalDefineVariablePolicyOnly_failure.a' failed to parse: Parser was expecting a reactive type, but got an end of stream instead. {Token: `public` @ (0,0) -> (0,6): Identifier}\",\"file\":\"./test_code/Parser_GlobalDefineVariablePolicyOnly_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a reactive type, but got an end of stream instead. {Token: `public` @ (0,0) -> (0,6): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -18484,7 +18484,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_IncompleteArgList_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":13,\"byte\":13},\"end\":{\"line\":0,\"character\":14,\"byte\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_IncompleteArgList_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `(` @ (0,13) -> (0,14): Symbol}\",\"file\":\"./test_code/Parser_IncompleteArgList_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `(` @ (0,13) -> (0,14): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":13,\"byte\":13},\"end\":{\"line\":0,\"character\":14,\"byte\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_IncompleteArgList_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `(` @ (0,13) -> (0,14): Symbol}\",\"file\":\"./test_code/Parser_IncompleteArgList_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `(` @ (0,13) -> (0,14): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -18524,7 +18524,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_IncompleteField_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":13,\"byte\":38},\"end\":{\"line\":2,\"character\":14,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_IncompleteField_failure.a' failed to parse: Parser was expecting an identifier, but instead got end of stream. {Token: `.` @ (2,13) -> (2,14): Symbol}\",\"file\":\"./test_code/Parser_IncompleteField_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but instead got end of stream. {Token: `.` @ (2,13) -> (2,14): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":13,\"byte\":38},\"end\":{\"line\":2,\"character\":14,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_IncompleteField_failure.a' failed to parse: Parser was expecting an identifier, but instead got end of stream. {Token: `.` @ (2,13) -> (2,14): Symbol}\",\"file\":\"./test_code/Parser_IncompleteField_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but instead got end of stream. {Token: `.` @ (2,13) -> (2,14): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -18564,7 +18564,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_IncompleteHandler_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":26},\"end\":{\"line\":2,\"character\":12,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_IncompleteHandler_failure.a' failed to parse: Parser expected a type, but instead got end of stream {Token: `(` @ (2,11) -> (2,12): Symbol}\",\"file\":\"./test_code/Parser_IncompleteHandler_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a type, but instead got end of stream {Token: `(` @ (2,11) -> (2,12): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":26},\"end\":{\"line\":2,\"character\":12,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_IncompleteHandler_failure.a' failed to parse: Parser expected a type, but instead got end of stream {Token: `(` @ (2,11) -> (2,12): Symbol}\",\"file\":\"./test_code/Parser_IncompleteHandler_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a type, but instead got end of stream {Token: `(` @ (2,11) -> (2,12): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -18604,7 +18604,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_IncompleteParen_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":8,\"byte\":8},\"end\":{\"line\":0,\"character\":9,\"byte\":9}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_IncompleteParen_failure.a' failed to parse: Parser expected a ), but instead got end of stream. {Token: `(` @ (0,8) -> (0,9): Symbol}\",\"file\":\"./test_code/Parser_IncompleteParen_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ), but instead got end of stream. {Token: `(` @ (0,8) -> (0,9): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":8,\"byte\":8},\"end\":{\"line\":0,\"character\":9,\"byte\":9}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_IncompleteParen_failure.a' failed to parse: Parser expected a ), but instead got end of stream. {Token: `(` @ (0,8) -> (0,9): Symbol}\",\"file\":\"./test_code/Parser_IncompleteParen_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ), but instead got end of stream. {Token: `(` @ (0,8) -> (0,9): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -19361,7 +19361,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_IngestFailureEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":11,\"character\":20,\"byte\":122},\"end\":{\"line\":11,\"character\":22,\"byte\":124}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_IngestFailureEOS_failure.a' failed to parse: Parser tried to read a identifier, but got end of stream {Token: `as` @ (11,20) -> (11,22): Identifier}\",\"file\":\"./test_code/Parser_IngestFailureEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser tried to read a identifier, but got end of stream {Token: `as` @ (11,20) -> (11,22): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":11,\"character\":20,\"byte\":122},\"end\":{\"line\":11,\"character\":22,\"byte\":124}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_IngestFailureEOS_failure.a' failed to parse: Parser tried to read a identifier, but got end of stream {Token: `as` @ (11,20) -> (11,22): Identifier}\",\"file\":\"./test_code/Parser_IngestFailureEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser tried to read a identifier, but got end of stream {Token: `as` @ (11,20) -> (11,22): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -19401,7 +19401,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_InvalidCharacterFast_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidCharacterFast_failure.a' failed to lex: Failed to understand codepoint:96('`')\",\"file\":,null},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Lex): Failed to understand codepoint:96('`')\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidCharacterFast_failure.a' failed to lex: Failed to understand codepoint:96('`')\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Lex): Failed to understand codepoint:96('`')\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -19441,7 +19441,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_InvalidCharacterSlow_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidCharacterSlow_failure.a' failed to lex: Codepoint fell outside of valid range:29503('\\u733f') is outside of [0, 256)\",\"file\":,null},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Lex): Codepoint fell outside of valid range:29503('\\u733f') is outside of [0, 256)\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidCharacterSlow_failure.a' failed to lex: Codepoint fell outside of valid range:29503('\\u733f') is outside of [0, 256)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Lex): Codepoint fell outside of valid range:29503('\\u733f') is outside of [0, 256)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -19481,7 +19481,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_InvalidLong_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11,\"byte\":24},\"end\":{\"line\":1,\"character\":19,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidLong_failure.a' failed to parse: Parser was expecting a valid integral sequence, but got a '123x01xL' instead. {Token: `123x01xL` @ (1,11) -> (1,19): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_InvalidLong_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a valid integral sequence, but got a '123x01xL' instead. {Token: `123x01xL` @ (1,11) -> (1,19): NumberLiteral:NumberIsInteger}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11,\"byte\":24},\"end\":{\"line\":1,\"character\":19,\"byte\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidLong_failure.a' failed to parse: Parser was expecting a valid integral sequence, but got a '123x01xL' instead. {Token: `123x01xL` @ (1,11) -> (1,19): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_InvalidLong_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a valid integral sequence, but got a '123x01xL' instead. {Token: `123x01xL` @ (1,11) -> (1,19): NumberLiteral:NumberIsInteger}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -19521,7 +19521,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_InvalidMultiPolicyRecord_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":19,\"byte\":136},\"end\":{\"line\":6,\"character\":20,\"byte\":137}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidMultiPolicyRecord_failure.a' failed to parse: Parser was expecting one of the following symbols:,, >; instead, the parse got Symbol:+. {Token: `+` @ (6,19) -> (6,20): Symbol}\",\"file\":\"./test_code/Parser_InvalidMultiPolicyRecord_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting one of the following symbols:,, >; instead, the parse got Symbol:+. {Token: `+` @ (6,19) -> (6,20): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":19,\"byte\":136},\"end\":{\"line\":6,\"character\":20,\"byte\":137}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidMultiPolicyRecord_failure.a' failed to parse: Parser was expecting one of the following symbols:,, >; instead, the parse got Symbol:+. {Token: `+` @ (6,19) -> (6,20): Symbol}\",\"file\":\"./test_code/Parser_InvalidMultiPolicyRecord_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting one of the following symbols:,, >; instead, the parse got Symbol:+. {Token: `+` @ (6,19) -> (6,20): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -23327,7 +23327,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_MaybeIncompleteEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":6,\"byte\":20},\"end\":{\"line\":2,\"character\":12,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_MaybeIncompleteEOS_failure.a' failed to parse: Parser was expected either a '<' or '(' after @maybe, but got end of stream instead. {Token: `@maybe` @ (2,6) -> (2,12): Keyword}\",\"file\":\"./test_code/Parser_MaybeIncompleteEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expected either a '<' or '(' after @maybe, but got end of stream instead. {Token: `@maybe` @ (2,6) -> (2,12): Keyword}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":6,\"byte\":20},\"end\":{\"line\":2,\"character\":12,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_MaybeIncompleteEOS_failure.a' failed to parse: Parser was expected either a '<' or '(' after @maybe, but got end of stream instead. {Token: `@maybe` @ (2,6) -> (2,12): Keyword}\",\"file\":\"./test_code/Parser_MaybeIncompleteEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expected either a '<' or '(' after @maybe, but got end of stream instead. {Token: `@maybe` @ (2,6) -> (2,12): Keyword}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -23367,7 +23367,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_MaybeIncompleteSymbol_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":26},\"end\":{\"line\":2,\"character\":13,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_MaybeIncompleteSymbol_failure.a' failed to parse: Parser was expected either a '<' or '(' after @maybe, but got `+` instead. {Token: `+` @ (2,12) -> (2,13): Symbol}\",\"file\":\"./test_code/Parser_MaybeIncompleteSymbol_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expected either a '<' or '(' after @maybe, but got `+` instead. {Token: `+` @ (2,12) -> (2,13): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":26},\"end\":{\"line\":2,\"character\":13,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_MaybeIncompleteSymbol_failure.a' failed to parse: Parser was expected either a '<' or '(' after @maybe, but got `+` instead. {Token: `+` @ (2,12) -> (2,13): Symbol}\",\"file\":\"./test_code/Parser_MaybeIncompleteSymbol_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expected either a '<' or '(' after @maybe, but got `+` instead. {Token: `+` @ (2,12) -> (2,13): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -24778,7 +24778,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_PairEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":16,\"byte\":22},\"end\":{\"line\":1,\"character\":19,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_PairEOS_failure.a' failed to parse: Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_PairEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":16,\"byte\":22},\"end\":{\"line\":1,\"character\":19,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_PairEOS_failure.a' failed to parse: Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_PairEOS_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -24818,7 +24818,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_PairNoArrow_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":16,\"byte\":22},\"end\":{\"line\":1,\"character\":19,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_PairNoArrow_failure.a' failed to parse: Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_PairNoArrow_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":16,\"byte\":22},\"end\":{\"line\":1,\"character\":19,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_PairNoArrow_failure.a' failed to parse: Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_PairNoArrow_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was an expecting an '->'; @pair was expected an arrow to bond a key to a value {Token: `123` @ (1,16) -> (1,19): NumberLiteral:NumberIsInteger}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -24858,7 +24858,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ParenBadClose1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":12,\"byte\":25},\"end\":{\"line\":1,\"character\":13,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ParenBadClose1_failure.a' failed to parse: Parser expected a ), but instead got an `]` {Token: `]` @ (1,12) -> (1,13): Symbol}\",\"file\":\"./test_code/Parser_ParenBadClose1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ), but instead got an `]` {Token: `]` @ (1,12) -> (1,13): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":12,\"byte\":25},\"end\":{\"line\":1,\"character\":13,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ParenBadClose1_failure.a' failed to parse: Parser expected a ), but instead got an `]` {Token: `]` @ (1,12) -> (1,13): Symbol}\",\"file\":\"./test_code/Parser_ParenBadClose1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ), but instead got an `]` {Token: `]` @ (1,12) -> (1,13): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -24898,7 +24898,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ParenBadClose2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":14,\"byte\":27},\"end\":{\"line\":1,\"character\":15,\"byte\":28}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ParenBadClose2_failure.a' failed to parse: Parser expected a ), but instead got an `]` {Token: `]` @ (1,14) -> (1,15): Symbol}\",\"file\":\"./test_code/Parser_ParenBadClose2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ), but instead got an `]` {Token: `]` @ (1,14) -> (1,15): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":14,\"byte\":27},\"end\":{\"line\":1,\"character\":15,\"byte\":28}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ParenBadClose2_failure.a' failed to parse: Parser expected a ), but instead got an `]` {Token: `]` @ (1,14) -> (1,15): Symbol}\",\"file\":\"./test_code/Parser_ParenBadClose2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ), but instead got an `]` {Token: `]` @ (1,14) -> (1,15): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -24938,7 +24938,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ParenEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":23},\"end\":{\"line\":1,\"character\":11,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ParenEOS1_failure.a' failed to parse: Parser expected a ), but instead got end of stream. {Token: `(` @ (1,10) -> (1,11): Symbol}\",\"file\":\"./test_code/Parser_ParenEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ), but instead got end of stream. {Token: `(` @ (1,10) -> (1,11): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":23},\"end\":{\"line\":1,\"character\":11,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ParenEOS1_failure.a' failed to parse: Parser expected a ), but instead got end of stream. {Token: `(` @ (1,10) -> (1,11): Symbol}\",\"file\":\"./test_code/Parser_ParenEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ), but instead got end of stream. {Token: `(` @ (1,10) -> (1,11): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -24978,7 +24978,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ParenEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":12,\"byte\":25},\"end\":{\"line\":1,\"character\":13,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ParenEOS2_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `,` @ (1,12) -> (1,13): Symbol}\",\"file\":\"./test_code/Parser_ParenEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an atomic expression, but got end of stream instead. {Token: `,` @ (1,12) -> (1,13): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":12,\"byte\":25},\"end\":{\"line\":1,\"character\":13,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ParenEOS2_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `,` @ (1,12) -> (1,13): Symbol}\",\"file\":\"./test_code/Parser_ParenEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an atomic expression, but got end of stream instead. {Token: `,` @ (1,12) -> (1,13): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -25018,7 +25018,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_ParenEOS3_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":12,\"byte\":25},\"end\":{\"line\":1,\"character\":13,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ParenEOS3_failure.a' failed to parse: Parser expected a ',' or ')', but instead got end of stream. {Token: `,` @ (1,12) -> (1,13): Symbol}\",\"file\":\"./test_code/Parser_ParenEOS3_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ',' or ')', but instead got end of stream. {Token: `,` @ (1,12) -> (1,13): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":12,\"byte\":25},\"end\":{\"line\":1,\"character\":13,\"byte\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_ParenEOS3_failure.a' failed to parse: Parser expected a ',' or ')', but instead got end of stream. {Token: `,` @ (1,12) -> (1,13): Symbol}\",\"file\":\"./test_code/Parser_ParenEOS3_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser expected a ',' or ')', but instead got end of stream. {Token: `,` @ (1,12) -> (1,13): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -25712,7 +25712,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_PureFunctionMustReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":16,\"byte\":16},\"end\":{\"line\":0,\"character\":17,\"byte\":17}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_PureFunctionMustReturn_failure.a' failed to parse: Parser was an expecting an '->'; pure functions must have return types. {Token: `)` @ (0,16) -> (0,17): Symbol}\",\"file\":\"./test_code/Parser_PureFunctionMustReturn_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was an expecting an '->'; pure functions must have return types. {Token: `)` @ (0,16) -> (0,17): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":16,\"byte\":16},\"end\":{\"line\":0,\"character\":17,\"byte\":17}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_PureFunctionMustReturn_failure.a' failed to parse: Parser was an expecting an '->'; pure functions must have return types. {Token: `)` @ (0,16) -> (0,17): Symbol}\",\"file\":\"./test_code/Parser_PureFunctionMustReturn_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was an expecting an '->'; pure functions must have return types. {Token: `)` @ (0,16) -> (0,17): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -30203,7 +30203,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_StaticIncomplete_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":23},\"end\":{\"line\":2,\"character\":3,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_StaticIncomplete_failure.a' failed to parse: Parser was expecting either a Symbol=} or an Identifier to define a new enum label, but got end of stream instead. {Token: `}` @ (2,2) -> (2,3): Symbol}\",\"file\":\"./test_code/Parser_StaticIncomplete_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting either a Symbol=} or an Identifier to define a new enum label, but got end of stream instead. {Token: `}` @ (2,2) -> (2,3): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2,\"byte\":23},\"end\":{\"line\":2,\"character\":3,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_StaticIncomplete_failure.a' failed to parse: Parser was expecting either a Symbol=} or an Identifier to define a new enum label, but got end of stream instead. {Token: `}` @ (2,2) -> (2,3): Symbol}\",\"file\":\"./test_code/Parser_StaticIncomplete_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting either a Symbol=} or an Identifier to define a new enum label, but got end of stream instead. {Token: `}` @ (2,2) -> (2,3): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -30243,7 +30243,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_StaticUknown_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":12},\"end\":{\"line\":1,\"character\":5,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_StaticUknown_failure.a' failed to parse: Parser was expecting a static definition. Candidates are create, invent, send {Token: `foo` @ (1,2) -> (1,5): Identifier}\",\"file\":\"./test_code/Parser_StaticUknown_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a static definition. Candidates are create, invent, send {Token: `foo` @ (1,2) -> (1,5): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":12},\"end\":{\"line\":1,\"character\":5,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_StaticUknown_failure.a' failed to parse: Parser was expecting a static definition. Candidates are create, invent, send {Token: `foo` @ (1,2) -> (1,5): Identifier}\",\"file\":\"./test_code/Parser_StaticUknown_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a static definition. Candidates are create, invent, send {Token: `foo` @ (1,2) -> (1,5): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -30283,7 +30283,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_StringEscapingBadUnicodeHex_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_StringEscapingBadUnicodeHex_failure.a' failed to lex: Unrecognized hex value within the unicode escape value:33('!')\",\"file\":,null},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Lex): Unrecognized hex value within the unicode escape value:33('!')\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_StringEscapingBadUnicodeHex_failure.a' failed to lex: Unrecognized hex value within the unicode escape value:33('!')\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Lex): Unrecognized hex value within the unicode escape value:33('!')\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -30323,7 +30323,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_StringEscapingBad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_StringEscapingBad_failure.a' failed to lex: Unrecognized string escape value:122('z')\",\"file\":,null},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Lex): Unrecognized string escape value:122('z')\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_StringEscapingBad_failure.a' failed to lex: Unrecognized string escape value:122('z')\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Lex): Unrecognized string escape value:122('z')\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -32919,7 +32919,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_TupleEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":15},\"end\":{\"line\":1,\"character\":7,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS1_failure.a' failed to parse: Parser was expecting a Symbol=`<`; instead, the parser got an end of stream. {Token: `tuple` @ (1,2) -> (1,7): Identifier}\",\"file\":\"./test_code/Parser_TupleEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`<`; instead, the parser got an end of stream. {Token: `tuple` @ (1,2) -> (1,7): Identifier}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2,\"byte\":15},\"end\":{\"line\":1,\"character\":7,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS1_failure.a' failed to parse: Parser was expecting a Symbol=`<`; instead, the parser got an end of stream. {Token: `tuple` @ (1,2) -> (1,7): Identifier}\",\"file\":\"./test_code/Parser_TupleEOS1_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting a Symbol=`<`; instead, the parser got an end of stream. {Token: `tuple` @ (1,2) -> (1,7): Identifier}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -32959,7 +32959,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_TupleEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7,\"byte\":20},\"end\":{\"line\":1,\"character\":8,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS2_failure.a' failed to parse: Parser was expecting an identifier, but got end of stream instead. {Token: `<` @ (1,7) -> (1,8): Symbol}\",\"file\":\"./test_code/Parser_TupleEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got end of stream instead. {Token: `<` @ (1,7) -> (1,8): Symbol}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7,\"byte\":20},\"end\":{\"line\":1,\"character\":8,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS2_failure.a' failed to parse: Parser was expecting an identifier, but got end of stream instead. {Token: `<` @ (1,7) -> (1,8): Symbol}\",\"file\":\"./test_code/Parser_TupleEOS2_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got end of stream instead. {Token: `<` @ (1,7) -> (1,8): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -32999,7 +32999,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_TupleEOS3_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":8,\"byte\":21},\"end\":{\"line\":1,\"character\":9,\"byte\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS3_failure.a' failed to parse: Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (1,8) -> (1,9): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_TupleEOS3_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (1,8) -> (1,9): NumberLiteral:NumberIsInteger}\",\"file\":,null}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":8,\"byte\":21},\"end\":{\"line\":1,\"character\":9,\"byte\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_TupleEOS3_failure.a' failed to parse: Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (1,8) -> (1,9): NumberLiteral:NumberIsInteger}\",\"file\":\"./test_code/Parser_TupleEOS3_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (1,8) -> (1,9): NumberLiteral:NumberIsInteger}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

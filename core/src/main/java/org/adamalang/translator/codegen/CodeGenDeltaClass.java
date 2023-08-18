@@ -133,7 +133,9 @@ public class CodeGenDeltaClass {
       final var bubbleType = environment.rules.Resolve(bd.expressionType, false);
       sb.append("private long __g").append(bd.nameToken.text).append(";").writeNewline();
       sb.append("private ").append(((DetailHasDeltaType) bubbleType).getDeltaType(environment)).append(" __d").append(bd.nameToken.text).append(";").writeNewline();
-      bubbles.add(FieldDefinition.invent(bd.expressionType, bd.nameToken.text));
+      FieldDefinition fd = FieldDefinition.invent(bd.expressionType, bd.nameToken.text);
+      fd.ingest(bd);
+      bubbles.add(fd);
     }
     writeCommonConstructorAndCost(fds, bubbles, sb, environment, className);
     sb.append("public void show(").append(className).append(" __item, PrivateLazyDeltaWriter __writer) {").tabUp().writeNewline();

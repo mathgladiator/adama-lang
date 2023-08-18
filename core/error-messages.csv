@@ -1,10 +1,10 @@
 file,start_line,start_character,end_line,end_character,message
 ./test_code/Aggregates_CantBumpBoolList_failure.a,6,2,6,15,"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<r<bool>>'"
 ./test_code/Aggregates_CantBumpBoolList_failure.a,7,5,7,18,"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<r<bool>>'"
-./test_code/Aggregates_RecordAssignMaybeBad_failure.a,0,0,12,25,"'maybe<r<int>>' is unable to accept an set of 'int'."
+./test_code/Aggregates_RecordAssignMaybeBad_failure.a,12,2,12,25,"'maybe<r<int>>' is unable to accept an set of 'int'."
 ./test_code/Aggregates_RecordAssignMaybeBad_failure.a,13,2,13,27,"'maybe<r<int>>' is unable to accept an assignment of 'int'."
-./test_code/Aggregates_RecordAssignMaybeBad_failure.a,0,0,13,27,"Could not find a meaning for 'maybe<r<int>>' += 'int'"
-./test_code/Array_ParenthesisInvalidTypeDuringTPTC_failure.a,1,19,1,23,"Type check failure: The types 'AutoMaxRecord8' and 'bool' are not compatible for type unification"
+./test_code/Aggregates_RecordAssignMaybeBad_failure.a,13,2,13,27,"Could not find a meaning for 'maybe<r<int>>' += 'int'"
+./test_code/Array_ParenthesisInvalidTypeDuringTPTC_failure.a,1,19,1,23,"Type check failure: The types '_AutoMaxRecord_8' and 'bool' are not compatible for type unification"
 ./test_code/Assets_CanAttach_failure.a,0,12,1,1,"The @can_attach handler must return a boolean"
 ./test_code/Assets_Failures_failure.a,4,2,4,8,"Type 'asset' lacks field 'food'"
 ./test_code/Assets_Failures_failure.a,4,2,4,8,"Expression is not a function"

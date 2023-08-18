@@ -49,8 +49,10 @@ public class DocumentError {
     writer.writeObjectFieldIntro("message");
     writer.writeString(message);
 
-    writer.writeObjectFieldIntro("file");
-    writer.writeString(file);
+    if (file != null) {
+      writer.writeObjectFieldIntro("file");
+      writer.writeString(file);
+    }
 
     writer.endObject();
     return writer.toString();

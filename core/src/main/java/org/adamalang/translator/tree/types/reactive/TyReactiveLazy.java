@@ -30,6 +30,7 @@ public class TyReactiveLazy extends TyType implements //
   public TyReactiveLazy(final TyType computedType) {
     super(TypeBehavior.ReadOnlyGetNativeValue);
     this.computedType = computedType;
+    ingest(computedType);
   }
 
   @Override

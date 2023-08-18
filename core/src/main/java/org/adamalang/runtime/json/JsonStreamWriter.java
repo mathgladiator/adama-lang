@@ -133,7 +133,7 @@ public class JsonStreamWriter {
   public void writeString(final String s) {
     maybe_comma();
     if (s == null) {
-      writeNull();
+      sb.append("null");
       return;
     }
     sb.append("\"");

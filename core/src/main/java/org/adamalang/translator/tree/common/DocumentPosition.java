@@ -94,8 +94,10 @@ public class DocumentPosition {
           if (this.source == null) {
             this.source = token.sourceName;
           }
-          ingest(token.lineStart, token.charStart, token.byteStart);
-          ingest(token.lineEnd, token.charEnd, token.byteEnd);
+          if (token.lineStart != Integer.MAX_VALUE) {
+            ingest(token.lineStart, token.charStart, token.byteStart);
+            ingest(token.lineEnd, token.charEnd, token.byteEnd);
+          }
         }
       }
     }

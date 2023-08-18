@@ -131,8 +131,8 @@ public class CodeGenIngestion {
       TyType elementType = environment.rules.ResolvePtr(elementTypeRaw, false);
       if (environment.rules.IsStructure(assignType, true) && environment.rules.IsStructure(elementType, true)) {
         var countDownUntilTab = ((IsStructure) elementType).storage().fields.size();
-        environment.define(assignVar, assignType, false, DocumentPosition.ZERO);
-        environment.define(elementVar, elementType, false, DocumentPosition.ZERO);
+        environment.define(assignVar, assignType, false, assignType);
+        environment.define(elementVar, elementType, false, elementType);
         if (!environment.state.hasNoCost()) {
           sb.append("__code_cost += ").append(Integer.toString(((IsStructure) elementType).storage().fields.size())).append(";").writeNewline();
         }
@@ -175,8 +175,8 @@ public class CodeGenIngestion {
             new Lookup(Token.WRAP(assignVar)), Token.WRAP("="), //
             new Lookup(Token.WRAP(elementVar)), null, null, null, false);
 
-        environment.define(assignVar, assignType, false, DocumentPosition.ZERO);
-        environment.define(elementVar, elementType, false, DocumentPosition.ZERO);
+        environment.define(assignVar, assignType, false, assignType);
+        environment.define(elementVar, elementType, false, elementType);
         ass.typing(environment);
         ass.writeJava(sb, environment);
         sb.tabDown().writeNewline();
