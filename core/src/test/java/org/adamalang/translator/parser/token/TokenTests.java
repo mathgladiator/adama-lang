@@ -37,7 +37,7 @@ public class TokenTests {
   public void coverageHashcode() {
     Token a1 = Token.WRAP("a");
     Token a2 = Token.WRAP("a");
-    Assert.assertEquals(-293309790, a1.hashCode());
+    Assert.assertEquals(178794309, a1.hashCode());
     Assert.assertEquals(a1.hashCode(), a2.hashCode());
   }
 
