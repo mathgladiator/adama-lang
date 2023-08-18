@@ -671,6 +671,8 @@ public class ErrorTable {
     descriptions.put(786441, "no description of error (yet)");
     names.put(716812, "SERVICE_CONFIG_BAD_ENCRYPT_STRING_KEYID_INVALID");
     descriptions.put(716812, "no description of error (yet)");
+    names.put(785601, "SERVICE_CONFIG_BAD_PRIVATE_KEY_BUNDLE");
+    descriptions.put(785601, "no description of error (yet)");
     names.put(791567, "SERVICE_CONFIG_BAD_ENCRYPT_STRING_FAILED_SECRET_KEY_LOOKUP");
     descriptions.put(791567, "no description of error (yet)");
     names.put(782348, "SERVICE_CONFIG_BAD_ENCRYPT_STRING_FAILED_DECRYPTION");

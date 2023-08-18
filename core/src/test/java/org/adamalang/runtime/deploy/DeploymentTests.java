@@ -21,6 +21,7 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DeploymentTests {
@@ -39,7 +40,7 @@ public class DeploymentTests {
               t.printStackTrace();
             });
     DeploymentFactoryBase base = new DeploymentFactoryBase();
-    base.deploy("MySpace", plan1);
+    base.deploy("MySpace", plan1, new TreeMap<>());
     AtomicInteger count1 = new AtomicInteger(0);
     AtomicInteger count2 = new AtomicInteger(0);
 
@@ -93,7 +94,7 @@ public class DeploymentTests {
     }
     Assert.assertEquals(10, count1.get());
     Assert.assertEquals(0, count2.get());
-    base.deploy("MySpace", plan2);
+    base.deploy("MySpace", plan2, new TreeMap<>());
     for (int k = 0; k < 100; k++) {
       base.fetch(new Key("MySpace", "keyX" + k), shred);
     }

@@ -11,6 +11,7 @@ package org.adamalang.translator.jvm;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -27,7 +28,9 @@ import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.security.PublicKey;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 /** responsible for compiling java code into a LivingDocumentFactory */
 public class LivingDocumentFactory {
@@ -43,7 +46,7 @@ public class LivingDocumentFactory {
   public final Deliverer deliverer;
   public final long memoryUsage;
 
-  public LivingDocumentFactory(final String spaceName, final String className, final String javaSource, String reflection, Deliverer deliverer) throws ErrorCodeException {
+  public LivingDocumentFactory(final String spaceName, final String className, final String javaSource, String reflection, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
     final var diagnostics = new DiagnosticCollector<JavaFileObject>();
     final var fileManager = new ByteArrayJavaFileManager(compiler.getStandardFileManager(null, null, null));
@@ -75,7 +78,7 @@ public class LivingDocumentFactory {
       delete_on_close = extractDeleteOnClose(config);
       this.reflection = reflection;
       this.registry = new ServiceRegistry();
-      this.registry.resolve(spaceName, (HashMap<String, HashMap<String, Object>>) (clazz.getMethod("__services").invoke(null)));
+      this.registry.resolve(spaceName, (HashMap<String, HashMap<String, Object>>) (clazz.getMethod("__services").invoke(null)), keys);
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
     }

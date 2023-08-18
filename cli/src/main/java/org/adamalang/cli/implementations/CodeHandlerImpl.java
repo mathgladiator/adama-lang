@@ -36,6 +36,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class CodeHandlerImpl implements CodeHandler {
   @Override
@@ -67,7 +68,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
   @Override
   public void compileFile(Arguments.CodeCompileFileArgs args, Output.YesOrError output) throws Exception {
-    FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null, null, null);
+    FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null);
     CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
     if (args.dumpTo != null) {
       Files.writeString(new File(args.dumpTo).toPath(), result.code);
@@ -92,7 +93,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
   @Override
   public void reflectDump(Arguments.CodeReflectDumpArgs args, Output.YesOrError output) throws Exception {
-    FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null, null, null);
+    FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null);
     CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
     if (args.dumpTo != null) {
       Files.writeString(new File(args.dumpTo).toPath(), result.reflection);
@@ -273,7 +274,7 @@ public class CodeHandlerImpl implements CodeHandler {
       this.code = code;
       this.reflection = reflection;
       try {
-        new LivingDocumentFactory("space", "TempClass", code, reflection, Deliverer.FAILURE);
+        new LivingDocumentFactory("space", "TempClass", code, reflection, Deliverer.FAILURE, new TreeMap<>());
       } catch (Exception ex) {
         ex.printStackTrace();
       }

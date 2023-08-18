@@ -16,6 +16,7 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -28,13 +29,14 @@ public class OndemandDeploymentFactoryBaseTests {
 
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     Assert.assertFalse(base.contains("space"));
+    MockDeploySync sync = new MockDeploySync();
     OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(base, new PlanFetcher() {
       @Override
-      public void find(String space, Callback<DeploymentPlan> callback) {
+      public void find(String space, Callback<DeploymentBundle> callback) {
         Assert.assertEquals("space", space);
-        callback.success(plan);
+        callback.success(new DeploymentBundle(plan, new TreeMap<>()));
       }
-    });
+    }, sync);
     CountDownLatch latch = new CountDownLatch(1);
     ondemand.fetch(new Key("space", "key"), new Callback<LivingDocumentFactory>() {
       @Override
@@ -49,6 +51,7 @@ public class OndemandDeploymentFactoryBaseTests {
     });
     Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     Assert.assertTrue(base.contains("space"));
+    sync.assertContains("space");
   }
 
   @Test
@@ -59,13 +62,14 @@ public class OndemandDeploymentFactoryBaseTests {
 
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     Assert.assertFalse(base.contains("space"));
+    MockDeploySync sync = new MockDeploySync();
     OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(base, new PlanFetcher() {
       @Override
-      public void find(String space, Callback<DeploymentPlan> callback) {
+      public void find(String space, Callback<DeploymentBundle> callback) {
         Assert.assertEquals("space", space);
-        callback.success(plan);
+        callback.success(new DeploymentBundle(plan, new TreeMap<>()));
       }
-    });
+    }, sync);
     CountDownLatch latch = new CountDownLatch(1);
     ondemand.fetch(new Key("space", "key"), new Callback<LivingDocumentFactory>() {
       @Override
@@ -81,5 +85,6 @@ public class OndemandDeploymentFactoryBaseTests {
     });
     Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     Assert.assertFalse(base.contains("space"));
+    sync.assertDoesNotContains("space");
   }
 }

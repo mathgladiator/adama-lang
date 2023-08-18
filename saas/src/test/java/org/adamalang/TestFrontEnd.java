@@ -138,6 +138,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
       String planJson = plan.toString();
       Spaces.setPlan(dataBase, spaceId, planJson, "hash");
     }
+    String masterKey = MasterKey.generateMasterKey();
     this.caravanPath = File.createTempFile("ADAMATEST_", "caravan");
     caravanPath.delete();
     caravanPath.mkdirs();
@@ -211,7 +212,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
             1);
     this.netBase = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity, 1, 2);
     this.clientExecutor = SimpleExecutor.create("disk");
-    this.deploymentAgent = new DeploymentAgent(this.clientExecutor, dataBase, new DeploymentMetrics(new NoOpMetricsFactory()), "test-region", identity.ip + ":" + port, deploymentFactoryBase, coreService);
+    this.deploymentAgent = new DeploymentAgent(this.clientExecutor, dataBase, new DeploymentMetrics(new NoOpMetricsFactory()), "test-region", identity.ip + ":" + port, deploymentFactoryBase, coreService, masterKey);
     proxyDeploymentFactory.setAgent(deploymentAgent);
     ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, deploymentAgent, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(),  1800000L), port, 2);
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
@@ -325,7 +326,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
         System.err.println("domain needs certificate:" + domain);
       }
     };
-    this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, MasterKey.generateMasterKey(), webBase, "test-region", hostKeyPair.getPrivate(), keyId, new String[] {}, signalControl, globalFinder, new PrivateKeyWithId(0, hostKeyPair.getPrivate()));
+    this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, masterKey, webBase, "test-region", hostKeyPair.getPrivate(), keyId, new String[] {}, signalControl, globalFinder, new PrivateKeyWithId(0, hostKeyPair.getPrivate()));
     this.frontend = BootstrapGlobalServiceBase.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);
     connection = this.frontend.establish(context);

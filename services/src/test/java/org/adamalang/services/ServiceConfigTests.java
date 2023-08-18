@@ -12,6 +12,7 @@ import org.adamalang.common.ConfigObject;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.keys.MasterKey;
+import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.security.KeyPair;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class ServiceConfigTests {
   public static DataBaseConfig getLocalIntegrationConfig() throws Exception {
@@ -43,6 +45,7 @@ public class ServiceConfigTests {
         HashMap<String, Object> configMap1 = new HashMap<>();
         String masterKey = MasterKey.generateMasterKey();
 
+        final TreeMap<Integer, PrivateKeyBundle> keys;
         {
           KeyPair serverKey = PublicPrivateKeyPartnership.genKeyPair();
           KeyPair clientKey = PublicPrivateKeyPartnership.genKeyPair();
@@ -52,8 +55,10 @@ public class ServiceConfigTests {
 
           byte[] clientSecret = PublicPrivateKeyPartnership.secretFrom(PublicPrivateKeyPartnership.keyPairFrom(publicKeyForClient, PublicPrivateKeyPartnership.privateKeyOf(clientKey)));
           String cipher = PublicPrivateKeyPartnership.encrypt(clientSecret, "plain-text-secret");
+
           configMap1.put("secret", keyId + ";" + PublicPrivateKeyPartnership.publicKeyOf(clientKey) + ";" + cipher);
           configMap1.put("secret_fail5", keyId + ";x;" + cipher);
+          keys = Secrets.getKeys(dataBase, masterKey, "space");
         }
         configMap1.put("secret_fail1", ";");
         configMap1.put("secret_fail2", "x;z;z");
@@ -61,7 +66,7 @@ public class ServiceConfigTests {
         configMap1.put("secret_fail4", "100;z;z");
 
         configMap1.put("int", 3);
-        ServiceConfig config1 = new ServiceConfig(dataBase, "space", configMap1, masterKey);
+        ServiceConfig config1 = new ServiceConfig("space", configMap1, keys);
         Assert.assertEquals("plain-text-secret", config1.getDecryptedSecret("secret"));
 
         try {
@@ -86,7 +91,7 @@ public class ServiceConfigTests {
           config1.getDecryptedSecret("secret_fail4");
           Assert.fail();
         } catch (ErrorCodeException ex) {
-          Assert.assertEquals(786436, ex.code);
+          Assert.assertEquals(785601, ex.code);
         }
         try {
           config1.getDecryptedSecret("secret_fail5");

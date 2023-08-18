@@ -21,10 +21,12 @@ import java.util.Collection;
 public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFactory  {
   private final DeploymentFactoryBase base;
   private final PlanFetcher fetcher;
+  private final DeploySync deploySync;
 
-  public OndemandDeploymentFactoryBase(DeploymentFactoryBase base, PlanFetcher fetcher) {
+  public OndemandDeploymentFactoryBase(DeploymentFactoryBase base, PlanFetcher fetcher, DeploySync deploySync) {
     this.base = base;
     this.fetcher = fetcher;
+    this.deploySync = deploySync;
   }
 
   @Override
@@ -32,11 +34,12 @@ public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFacto
     if (base.contains(key.space)) {
       base.fetch(key, callback);
     } else {
-      fetcher.find(key.space, new Callback<DeploymentPlan>() {
+      fetcher.find(key.space, new Callback<>() {
         @Override
-        public void success(DeploymentPlan plan) {
+        public void success(DeploymentBundle bundle) {
           try {
-            base.deploy(key.space, plan);
+            base.deploy(key.space, bundle.plan, bundle.keys);
+            deploySync.watch(key.space);
             base.fetch(key, callback);
           } catch (ErrorCodeException ex) {
             callback.failure(ex);

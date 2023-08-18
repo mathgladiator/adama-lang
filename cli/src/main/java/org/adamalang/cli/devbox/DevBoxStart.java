@@ -13,7 +13,7 @@ import org.adamalang.api.SelfClient;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.region.DeploymentSync;
+import org.adamalang.region.AdamaDeploymentSync;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
@@ -46,7 +46,7 @@ public class DevBoxStart {
     MultiWebClientRetryPoolConfig config = new MultiWebClientRetryPoolConfig(new ConfigObject(Json.parseJsonObject("{\"multi-connection-count\":1}")));
     MultiWebClientRetryPool productionPool = new MultiWebClientRetryPool(offload, webClientBase, new MultiWebClientRetryPoolMetrics(new NoOpMetricsFactory()), config, ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
     SelfClient production = new SelfClient(productionPool);
-    DeploymentSync sync = new DeploymentSync(production, offload, developerIdentity, (initial, space) -> {
+    AdamaDeploymentSync sync = new AdamaDeploymentSync(production, offload, developerIdentity, (initial, space) -> {
       if (!initial) {
         terminal.important("hivemind|" + space + " was deployed!");
       }

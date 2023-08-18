@@ -11,6 +11,7 @@ package org.adamalang.runtime.deploy;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -24,10 +25,7 @@ import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -47,7 +45,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
    * @param plan - the plan to compile
    * @throws ErrorCodeException
    */
-  public DeploymentFactory(String name, String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan, Deliverer deliverer) throws ErrorCodeException {
+  public DeploymentFactory(String name, String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
     this.name = name;
     this.factories = new HashMap<>();
     long _memoryUsed = 0L;
@@ -61,7 +59,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
         }
       }
       if (factory == null) {
-        factory = compile(name, spacePrefix + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes, deliverer);
+        factory = compile(name, spacePrefix + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes, deliverer, keys);
       }
       _memoryUsed += factory.memoryUsage;
       factories.put(entry.getKey(), factory);
@@ -70,7 +68,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
     this.memoryUsed = _memoryUsed;
   }
 
-  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer) throws ErrorCodeException {
+  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
     try {
       final var options = CompilerOptions.start().make();
       final var globals = GlobalObjectPool.createPoolWithStdLib();
@@ -87,7 +85,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
       final var java = document.compileJava(state);
       JsonStreamWriter reflection = new JsonStreamWriter();
       document.writeTypeReflectionJson(reflection);
-      return new LivingDocumentFactory(spaceName, className, java, reflection.toString(), deliverer);
+      return new LivingDocumentFactory(spaceName, className, java, reflection.toString(), deliverer, keys);
     } catch (AdamaLangException ex) {
       throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_PARSE_LANGUAGE, ex);
     }

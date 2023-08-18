@@ -45,7 +45,7 @@ public class ServiceRemoteTests {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     synchronized (ServiceRegistry.REGISTRY) {
-      ServiceRegistry.REGISTRY.put("sqr1", (space, properties) -> {
+      ServiceRegistry.REGISTRY.put("sqr1", (space, properties, keys) -> {
         return new SimpleService("sqr1", NtPrincipal.NO_ONE, true) {
           @Override
           public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
@@ -110,7 +110,7 @@ public class ServiceRemoteTests {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     synchronized (ServiceRegistry.REGISTRY) {
-      ServiceRegistry.REGISTRY.put("sqr2", (space, properties) -> {
+      ServiceRegistry.REGISTRY.put("sqr2", (space, properties, keys) -> {
         return new SimpleService("sqr2", NtPrincipal.NO_ONE, true) {
           @Override
           public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
@@ -189,7 +189,7 @@ public class ServiceRemoteTests {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     synchronized (ServiceRegistry.REGISTRY) {
-      ServiceRegistry.REGISTRY.put("sqr3", (space, properties) -> {
+      ServiceRegistry.REGISTRY.put("sqr3", (space, properties, keys) -> {
         return new SimpleService("sqr3", NtPrincipal.NO_ONE, false) {
           @Override
           public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
@@ -273,7 +273,7 @@ public class ServiceRemoteTests {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     synchronized (ServiceRegistry.REGISTRY) {
-      ServiceRegistry.REGISTRY.put("sqr4", (space, properties) -> {
+      ServiceRegistry.REGISTRY.put("sqr4", (space, properties, keys) -> {
         return new SimpleService("sqr4", NtPrincipal.NO_ONE, false) {
           @Override
           public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
@@ -349,7 +349,7 @@ public class ServiceRemoteTests {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     synchronized (ServiceRegistry.REGISTRY) {
-      ServiceRegistry.REGISTRY.put("sqr5", (space, properties) -> {
+      ServiceRegistry.REGISTRY.put("sqr5", (space, properties, keys) -> {
         return new SimpleService("sqr5", NtPrincipal.NO_ONE, false) {
           @Override
           public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
@@ -429,7 +429,7 @@ public class ServiceRemoteTests {
     ArrayList<Runnable> actions = new ArrayList<>();
 
     synchronized (ServiceRegistry.REGISTRY) {
-      ServiceRegistry.REGISTRY.put("sqr6", (space, properties) -> {
+      ServiceRegistry.REGISTRY.put("sqr6", (space, properties, keys) -> {
         return new SimpleService("sqr6", NtPrincipal.NO_ONE, true) {
           @Override
           public void request(NtPrincipal who, String method, String request, Callback<String> callback) {

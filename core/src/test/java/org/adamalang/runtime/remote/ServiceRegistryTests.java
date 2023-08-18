@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
 import java.util.function.Function;
 
 public class ServiceRegistryTests {
@@ -25,11 +26,11 @@ public class ServiceRegistryTests {
     Assert.assertFalse(registry.contains("xyz"));
     HashMap<String, HashMap<String, Object>> config = new HashMap<>();
     config.put("xyz", new HashMap<>());
-    registry.resolve("space", config);
+    registry.resolve("space", config, new TreeMap<>());
     Assert.assertTrue(registry.contains("xyz"));
     Assert.assertTrue(registry.find("nooop") == Service.FAILURE);
     Assert.assertFalse(ServiceRegistry.NOT_READY.contains("x"));
-    ServiceRegistry.NOT_READY.resolve("x", null);
+    ServiceRegistry.NOT_READY.resolve("x", null, null);
   }
 
   @Test
@@ -47,7 +48,7 @@ public class ServiceRegistryTests {
 
   @Test
   public void nulldef() {
-    ServiceRegistry.add("xyz", DumbXYZ.class, (x, y) -> new DumbXYZ());
+    ServiceRegistry.add("xyz", DumbXYZ.class, (x, y, z) -> new DumbXYZ());
     Assert.assertNull(ServiceRegistry.getLinkDefinition("xyz", 1, "{}", new HashSet<>(), (err) -> {}));
   }
 }

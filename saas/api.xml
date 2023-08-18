@@ -513,6 +513,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="private-key-bundle" type="json-object">
+        <documentation>
+            A bundle of private keys for decrypting secrets
+        </documentation>
+    </field-definition>
+
     <field-definition name="rxhtml" type="string">
         <documentation>
             The RxHTML forest for a space.
@@ -1444,7 +1450,12 @@
         <parameter name="identity"/>
     </method>
 
-    <method name="regional/get-plan" responder="plan" scope="global" internal="true">
+    <responder name="plan-with-keys">
+        <field name="plan"/>
+        <field name="private-key-bundle" />
+    </responder>
+
+    <method name="regional/get-plan" responder="plan-with-keys" scope="global" internal="true">
         <documentation>
             Download a plan (internally)
         </documentation>

@@ -11,6 +11,7 @@ package org.adamalang.runtime.deploy;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -19,6 +20,7 @@ import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.Collection;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -51,8 +53,8 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deli
     deliverer.deliver(agent, key, id, result, firstParty, callback);
   }
 
-  public void deploy(String space, DeploymentPlan plan) throws ErrorCodeException {
-    spaces.put(space, new DeploymentFactory(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan, this));
+  public void deploy(String space, DeploymentPlan plan, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
+    spaces.put(space, new DeploymentFactory(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan, this, keys));
   }
 
   public boolean contains(String space) {

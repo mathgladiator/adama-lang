@@ -23,6 +23,7 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -243,7 +244,7 @@ public class ServiceDeploymentTests {
                   "public static HashMap<String, Object> __config() { return new HashMap<>(); }" +
                   "public static HashMap<String, HashMap<String, Object>> __services() { return new HashMap<>(); }" +
                   "}",
-              "{}", Deliverer.FAILURE));
+              "{}", Deliverer.FAILURE, new TreeMap<>()));
       CountDownLatch deployed = new CountDownLatch(1);
       service.deploy(
           new DeploymentMonitor() {

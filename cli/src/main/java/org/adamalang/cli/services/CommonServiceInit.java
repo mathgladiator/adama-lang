@@ -162,7 +162,7 @@ public class CommonServiceInit {
     engine = netBase.startGossiping();
     // TODO: promote the concept of the multi-region client as "everyone needs a client"
     services = SimpleExecutor.create("executor");
-    FirstPartyServices.install(services, metricsFactory, database, webBase, masterKey, new InternalSigner(publicKeyId, hostKey));
+    FirstPartyServices.install(services, metricsFactory, webBase, new InternalSigner(publicKeyId, hostKey));
 
     System.out.println("[Setup]");
     System.out.println("         role:" + role.name);

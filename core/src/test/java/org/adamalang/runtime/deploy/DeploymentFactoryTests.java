@@ -13,6 +13,7 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DeploymentFactoryTests {
@@ -26,7 +27,7 @@ public class DeploymentFactoryTests {
 
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     try {
-      base.deploy("space", plan);
+      base.deploy("space", plan, new TreeMap<>());
       Assert.fail();
     } catch (ErrorCodeException ex) {
       Assert.assertEquals(117823, ex.code);
@@ -42,7 +43,7 @@ public class DeploymentFactoryTests {
 
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     try {
-      base.deploy("space", plan);
+      base.deploy("space", plan, new TreeMap<>());
       Assert.fail();
     } catch (ErrorCodeException ex) {
       Assert.assertEquals(132157, ex.code);
@@ -56,7 +57,7 @@ public class DeploymentFactoryTests {
             "{\"versions\":{\"x\":\"public int x = 123;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
     DeploymentFactoryBase base = new DeploymentFactoryBase();
-    base.deploy("space", plan);
+    base.deploy("space", plan, new TreeMap<>());
     Assert.assertEquals("0w9NHaDbD2fTGSLlHuGyCQ==", base.hashOf("space"));
   }
 
@@ -67,7 +68,7 @@ public class DeploymentFactoryTests {
             "{\"versions\":{\"x\":{\"main\":\"public int x = 123;\",\"rxhtml\":\"<forest><page uri=\\\"/\\\">Hello World</page></forest>\"}},\"default\":\"x\",\"plan\":[]}",
             (t, errorCode) -> {});
     DeploymentFactoryBase base = new DeploymentFactoryBase();
-    base.deploy("space", plan);
+    base.deploy("space", plan, new TreeMap<>());
     Assert.assertEquals("W9ngBjBRMNDRTZY3N3OjKA==", base.hashOf("space"));
   }
 
@@ -78,7 +79,7 @@ public class DeploymentFactoryTests {
             "{\"versions\":{\"x\":\"public int x = 123;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
     DeploymentFactory newFactory =
-        new DeploymentFactory("space", "Space_", new AtomicInteger(1000), null, plan, Deliverer.FAILURE);
+        new DeploymentFactory("space", "Space_", new AtomicInteger(1000), null, plan, Deliverer.FAILURE, new TreeMap<>());
     Assert.assertEquals(1, newFactory.spacesAvailable().size());
   }
 }

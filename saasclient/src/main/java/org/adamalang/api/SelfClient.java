@@ -577,12 +577,12 @@ private final MultiWebClientRetryPool pool;
   }
 
   /** regional/get-plan */
-  public void regionalGetPlan(ClientRegionalGetPlanRequest request, Callback<ClientPlanResponse> callback) {
+  public void regionalGetPlan(ClientRegionalGetPlanRequest request, Callback<ClientPlanWithKeysResponse> callback) {
     ObjectNode node = Json.newJsonObject();
     node.put("method", "regional/get-plan");
     node.put("identity", request.identity);
     node.put("space", request.space);
-    pool.requestResponse(node, (obj) -> new ClientPlanResponse(obj), callback);
+    pool.requestResponse(node, (obj) -> new ClientPlanWithKeysResponse(obj), callback);
   }
 
   /** regional/capacity/add */
