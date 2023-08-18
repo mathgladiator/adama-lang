@@ -20,6 +20,7 @@ public class Hosts {
   /** initialize the public key for a web host; this host has a private key that it will use to sign keys */
   public static int initializeHost(DataBase dataBase, String region, String machine, String role, String publicKey) throws Exception {
     return dataBase.transactSimple((connection) -> {
+      /*
       String sqlDelete = "DELETE FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `machine`=? AND `role`=?";
       try (PreparedStatement statement = connection.prepareStatement(sqlDelete)) {
         statement.setString(1, region);
@@ -27,6 +28,7 @@ public class Hosts {
         statement.setString(3, role);
         statement.execute();
       }
+      */
       String sqlInsert = "INSERT INTO `" + dataBase.databaseName + "`.`hosts` (`region`, `machine`, `role`, `public_key`) VALUES (?,?,?,?)";
       try (PreparedStatement statement = connection.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, region);
