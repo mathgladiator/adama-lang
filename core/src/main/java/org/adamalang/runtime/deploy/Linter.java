@@ -108,6 +108,9 @@ public class Linter {
   }
 
   private void pumpCompareIssuesStructure(String what, HashMap<String, Object> fieldsFrom, HashMap<String, Object> fieldsTo) {
+    if (what.contains("_AnonObjConvert_") || what.contains("_AutoMaxRecord_") || what.contains("_TupleConvert_")) {
+      return;
+    }
     for (Map.Entry<String, Object> fieldFromEntry : fieldsFrom.entrySet()) {
       HashMap<String, Object> fieldFrom = (HashMap<String, Object>) fieldFromEntry.getValue();
       HashMap<String, Object> fieldTo = (HashMap<String, Object>) fieldsTo.get(fieldFromEntry.getKey());

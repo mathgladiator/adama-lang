@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 
 public class CodeHandlerImpl implements CodeHandler {
   @Override
@@ -127,10 +128,19 @@ public class CodeHandlerImpl implements CodeHandler {
   }
 
   public static boolean sharedValidatePlan(String plan) {
-    return sharedValidatePlanGetLastReflection(plan) != null;
+    return sharedValidatePlanGetLastReflection(plan, (ln) -> System.err.println(ln)) != null;
   }
 
-  public static String sharedValidatePlanGetLastReflection(String plan) {
+  private static void reportVersionFailure(String version, Exception e, Consumer<String> println) {
+    if (!(e instanceof KnownException)) {
+      println.accept("version '" + version + "' failed to validate: " + e.getMessage());
+      e.printStackTrace();
+    } else {
+      println.accept("version '" + version + "' failed to validate");
+    }
+  }
+
+  public static String sharedValidatePlanGetLastReflection(String plan, Consumer<String> println) {
     ObjectNode node = Json.parseJsonObject(plan);
     JsonNode versionsNode = node.get("versions");
     JsonNode defaultNode = node.get("default");
@@ -139,30 +149,27 @@ public class CodeHandlerImpl implements CodeHandler {
     String lastReflection = null;
     boolean success = true;
     if (versionsNode == null || !versionsNode.isObject()) {
-      System.err.println("'versions' node in root plan json is not an object or doesn't exist");
+      println.accept("'versions' node in root plan json is not an object or doesn't exist");
       success = false;
     } else {
       Iterator<Map.Entry<String, JsonNode>> it = versionsNode.fields();
       while (it.hasNext()) {
         Map.Entry<String, JsonNode> entry = it.next();
         if (entry.getValue() == null) {
-          System.err.println("version '" + entry.getKey() + "' didn't exist or wasn't text");
+          println.accept("version '" + entry.getKey() + "' didn't exist or wasn't text");
           success = false;
         } else if (entry.getValue().isTextual()) {
           try {
-            sharedCompileCode(entry.getKey(), entry.getValue().textValue(), new HashMap<>());
+            sharedCompileCode(entry.getKey(), entry.getValue().textValue(), new HashMap<>(), println);
           } catch (Exception e) {
-            System.err.println("version '" + entry.getValue() + "' failed to validate: " + e.getMessage());
-            if (!(e instanceof KnownException)) {
-              e.printStackTrace();
-            }
+            reportVersionFailure(entry.getKey(), e, println);
             success = false;
           }
         } else if (entry.getValue().isObject()) {
           ObjectNode bundle = (ObjectNode) entry.getValue();
           JsonNode main = bundle.get("main");
           if (main == null || !main.isTextual()) {
-            System.err.println("bundle '" + bundle.toPrettyString() + "' doesn't have a main or if it wasn't text");
+            println.accept("bundle '" + bundle.toPrettyString() + "' doesn't have a main or if it wasn't text");
             success = false;
           } else {
             JsonNode includesNode = bundle.get("includes");
@@ -170,14 +177,14 @@ public class CodeHandlerImpl implements CodeHandler {
             if (includesNode == null || includesNode.isNull()) {
               // this is fine, nothing to include
             } else if (!includesNode.isObject()) {
-              System.err.println("bundle '" + bundle.toPrettyString() + "' doesn't have an includes that is an object");
+              println.accept("bundle '" + bundle.toPrettyString() + "' doesn't have an includes that is an object");
               success = false;
             } else {
               Iterator<Map.Entry<String, JsonNode>> inf = includesNode.fields();
               while (inf.hasNext()) {
                 Map.Entry<String, JsonNode> infe = inf.next();
                 if (infe.getValue() == null | !infe.getValue().isTextual()) {
-                  System.err.println("bundle '" + infe.getKey() + "' was either null or not text when it should be text");
+                  println.accept("bundle '" + infe.getKey() + "' was either null or not text when it should be text");
                   success = false;
                 } else {
                   includes.put(infe.getKey(), infe.getValue().textValue());
@@ -185,12 +192,9 @@ public class CodeHandlerImpl implements CodeHandler {
               }
             }
             try {
-              lastReflection = sharedCompileCode(entry.getKey(), main.textValue(), includes).reflection;
+              lastReflection = sharedCompileCode(entry.getKey(), main.textValue(), includes, println).reflection;
             } catch (Exception e) {
-              System.err.println("version '" + entry.getKey() + "' failed to validate: " + e.getMessage());
-              if (!(e instanceof KnownException)) {
-                e.printStackTrace();
-              }
+              reportVersionFailure(entry.getKey(), e, println);
               success = false;
             }
           }
@@ -199,28 +203,28 @@ public class CodeHandlerImpl implements CodeHandler {
     }
 
     if (defaultNode == null || !defaultNode.isTextual()) {
-      System.err.println("'default' node in root plan json is not text or doesn't exist");
+      println.accept("'default' node in root plan json is not text or doesn't exist");
       success = false;
     } else {
       JsonNode planVersion = versionsNode.get(defaultNode.textValue());
       if (planVersion == null || planVersion.isNull()) {
-        System.err.println("default version of '" + defaultNode.textValue() + "' pointed to a version which was not found");
+        println.accept("default version of '" + defaultNode.textValue() + "' pointed to a version which was not found");
         success = false;
       }
     }
 
     if (planNode == null || !planNode.isArray()) {
-      System.err.println("'plan' node in root plan json is not an array (or doesn't exist)");
+      println.accept("'plan' node in root plan json is not an array (or doesn't exist)");
       success = false;
     } else {
       for (int k = 0; k < planNode.size(); k++) {
         if (!planNode.get(k).isTextual()) {
-          System.err.println("'plan' element " + k + " is not text");
+          println.accept("'plan' element " + k + " is not text");
           success = false;
         } else {
           JsonNode planVersion = versionsNode.get(planNode.get(k).textValue());
           if (planVersion == null || planVersion.isNull()) {
-            System.err.println("'plan' element " + k + " pointed to a version which was not found");
+            println.accept("'plan' element " + k + " pointed to a version which was not found");
             success = false;
           }
         }
@@ -233,6 +237,10 @@ public class CodeHandlerImpl implements CodeHandler {
   }
 
   public static CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) throws Exception {
+    return sharedCompileCode(filename, code, includes, (String ln) -> System.err.println(Util.prefix(ln, Util.ANSI.Red)));
+  }
+
+  public static CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes, Consumer<String> println) throws Exception {
     final var options = CompilerOptions.start().make();
     final var globals = GlobalObjectPool.createPoolWithStdLib();
     final var state = new EnvironmentState(globals, options);
@@ -256,8 +264,8 @@ public class CodeHandlerImpl implements CodeHandler {
       int endLine = errorItem.get("range").get("end").get("line").intValue();
       int startCharacter = errorItem.get("range").get("start").get("character").intValue();
       int endCharacter = errorItem.get("range").get("end").get("character").intValue();
-      String file = errorItem.get("file").textValue();
-      System.err.println(Util.prefix("[" + file + ";start=" + startLine + ":" + startCharacter + ", end=" + endLine + ":" + endCharacter + "]", Util.ANSI.Red) + " :" + errorItem.get("message").textValue());
+      String file = errorItem.has("file") ? errorItem.get("file").textValue() : "unknown-file (bug)";
+      println.accept("[" + file + ";start=" + startLine + ":" + startCharacter + ", end=" + endLine + ":" + endCharacter + "] :" + errorItem.get("message").textValue());
     }
     throw new KnownException();
   }

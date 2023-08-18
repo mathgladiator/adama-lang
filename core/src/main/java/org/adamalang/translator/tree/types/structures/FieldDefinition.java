@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.tree.types.structures;
 
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -88,12 +89,21 @@ public class FieldDefinition extends StructureComponent {
   }
 
   public static FieldDefinition invent(final TyType type, final String name) {
-    return new FieldDefinition(new PublicPolicy(null), null, type, Token.WRAP(name), null, null, null, null, null);
+    PublicPolicy policy = null;
+    if (type != null) {
+      policy = new PublicPolicy(null);
+      policy.ingest(type);
+    }
+    FieldDefinition fd = new FieldDefinition(policy, null, type, Token.WRAP(name), null, null, null, null, null);
+    fd.ingest(type);
+    return fd;
   }
 
 
   public static FieldDefinition inventId(DocumentPosition dp) {
-    return new FieldDefinition(null, null, new TyReactiveInteger(null).withPosition(dp), Token.WRAP("id"), null, null, null, null, null);
+    FieldDefinition fd = new FieldDefinition(null, null, new TyReactiveInteger(null).withPosition(dp), Token.WRAP("id"), null, null, null, null, null);
+    fd.ingest(dp);
+    return fd;
   }
 
   @Override

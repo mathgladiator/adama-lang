@@ -392,7 +392,10 @@ public class RuleSetCommon {
           final var bFd = bActualMessage.storage.fields.get(aEntry.getKey());
           final FieldDefinition toAdd;
           if (bFd != null) {
-            toAdd = new FieldDefinition(new PublicPolicy(null), null, GetMaxType(environment, aEntry.getValue().type, bFd.type, false), bFd.nameToken, null, null, null, null, null);
+            PublicPolicy policy = new PublicPolicy(null);
+            policy.ingest(bFd);
+            toAdd = new FieldDefinition(policy, null, GetMaxType(environment, aEntry.getValue().type, bFd.type, false), bFd.nameToken, null, null, null, null, null);
+            toAdd.ingest(bFd);
           } else {
             toAdd = aEntry.getValue();
           }
@@ -404,7 +407,7 @@ public class RuleSetCommon {
             newStorage.add(bEntry.getValue());
           }
         }
-        return new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("AutoMaxRecord" + environment.autoVariable()), newStorage);
+        return new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("_AutoMaxRecord_" + environment.autoVariable()), newStorage);
       } else {
         if (environment.rules.CanStructureAProjectIntoStructureB(bActualMessage, aActualMessage, silent)) {
           return bActualMessage;

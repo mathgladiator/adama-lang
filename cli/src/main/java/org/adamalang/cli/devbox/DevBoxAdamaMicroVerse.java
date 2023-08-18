@@ -108,7 +108,7 @@ public class DevBoxAdamaMicroVerse {
           if (!defn.lastDeployedPlan.equals(plan)) {
             long start = System.currentTimeMillis();
             io.notice("adama|validating: " + defn.spaceName);
-            String newReflection = CodeHandlerImpl.sharedValidatePlanGetLastReflection(plan);
+            String newReflection = CodeHandlerImpl.sharedValidatePlanGetLastReflection(plan, (ln) -> io.error(ln));
             if (newReflection != null) {
               if (defn.lastReflection != null) {
                 List<String> issues = Linter.compare(defn.lastReflection, newReflection);

@@ -70,7 +70,7 @@ public class Token implements Comparable<Token> {
   }
 
   public static Token WRAP(final String text) {
-    return new Token(null, text, null, null, 0, 0, 0, 0, 0, 0);
+    return new Token(null, text, null, null, Integer.MAX_VALUE, Integer.MAX_VALUE, 0, 0, Integer.MAX_VALUE, 0);
   }
 
   /** clone the token with new text */

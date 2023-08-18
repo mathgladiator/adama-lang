@@ -92,7 +92,9 @@ public class TyNativeTuple extends TyType implements //
 
   public void add(Token token, TyType type) {
     ingest(token);
-    storage.add(FieldDefinition.invent(type, AnonymousTuple.nameOf(types.size())));
+    FieldDefinition fd = FieldDefinition.invent(type, AnonymousTuple.nameOf(types.size()));
+    fd.ingest(this);
+    storage.add(fd);
     types.add(new PrefixedType(token, type));
   }
 
