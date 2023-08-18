@@ -652,9 +652,8 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"M\":{\"nature\":\"native_message\",\"name\":\"M\",\"anonymous\":false,\"fields\":{\"xyz\":{\"type\":{\"nature\":\"native_value\",\"annotations\":[{\"Z\":42},{\"uri\":\"/blah/{tenant}/view/thing/{id}\"}],\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
@@ -1581,9 +1580,8 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x0\":{\"type\":{\"nature\":\"reactive_value\",\"annotations\":[\"A\",\"B\"],\"type\":\"int\"},\"privacy\":\"public\"},\"x1\":{\"type\":{\"nature\":\"reactive_value\",\"annotations\":[\"C\",\"D\"],\"type\":\"double\"},\"privacy\":\"public\"},\"x\":{\"type\":{\"nature\":\"reactive_table\",\"annotations\":[\"F\",\"G\",\"H\"],\"record_name\":\"X\"},\"privacy\":\"private\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"a\":{\"type\":{\"nature\":\"reactive_value\",\"annotations\":[\"E\"],\"type\":\"int\"},\"privacy\":\"public\"}}},\"_TupleConvert_2\":{\"nature\":\"native_message\",\"name\":\"_TupleConvert_2\",\"anonymous\":true,\"fields\":{\"first\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"second\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");

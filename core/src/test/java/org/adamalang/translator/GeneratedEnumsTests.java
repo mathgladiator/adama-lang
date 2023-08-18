@@ -892,9 +892,8 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"head\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":0,\"B\":1,\"C\":4},\"names\":{\"0\":\"A\",\"1\":\"B\",\"4\":\"C\"},\"default\":\"B\"}},\"privacy\":\"public\"},\"n1\":{\"type\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":0,\"B\":1,\"C\":4},\"names\":{\"0\":\"A\",\"1\":\"B\",\"4\":\"C\"},\"default\":\"B\"}},\"privacy\":\"public\"},\"n2\":{\"type\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":0,\"B\":1,\"C\":4},\"names\":{\"0\":\"A\",\"1\":\"B\",\"4\":\"C\"},\"default\":\"B\"}},\"privacy\":\"public\"},\"n3\":{\"type\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":0,\"B\":1,\"C\":4},\"names\":{\"0\":\"A\",\"1\":\"B\",\"4\":\"C\"},\"default\":\"B\"}},\"privacy\":\"public\"},\"n4\":{\"type\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":0,\"B\":1,\"C\":4},\"names\":{\"0\":\"A\",\"1\":\"B\",\"4\":\"C\"},\"default\":\"B\"}},\"privacy\":\"public\"},\"p3\":{\"type\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":0,\"B\":1,\"C\":4},\"names\":{\"0\":\"A\",\"1\":\"B\",\"4\":\"C\"},\"default\":\"B\"}},\"privacy\":\"public\"},\"p2\":{\"type\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":0,\"B\":1,\"C\":4},\"names\":{\"0\":\"A\",\"1\":\"B\",\"4\":\"C\"},\"default\":\"B\"}},\"privacy\":\"public\"},\"p1\":{\"type\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":0,\"B\":1,\"C\":4},\"names\":{\"0\":\"A\",\"1\":\"B\",\"4\":\"C\"},\"default\":\"B\"}},\"privacy\":\"public\"},\"p0\":{\"type\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":0,\"B\":1,\"C\":4},\"names\":{\"0\":\"A\",\"1\":\"B\",\"4\":\"C\"},\"default\":\"B\"}},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"E\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"A\":0,\"B\":1,\"C\":4},\"names\":{\"0\":\"A\",\"1\":\"B\",\"4\":\"C\"},\"default\":\"B\"}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
@@ -1663,9 +1662,8 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"y\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"E\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"X\":0,\"Y\":1},\"names\":{\"0\":\"X\",\"1\":\"Y\"},\"default\":\"X\"}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
@@ -2427,9 +2425,8 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"y\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"u\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"double\"},\"privacy\":\"private\"},\"v\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"double\"},\"privacy\":\"private\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"E\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"X\":0,\"Y\":1},\"names\":{\"0\":\"X\",\"1\":\"Y\"},\"default\":\"X\"}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");

@@ -85,7 +85,7 @@ public class TestForge {
     for (final File testFile : files) {
       final var test = TestFile.fromFilename(testFile.getName());
       if (!lastClazz.equals(test.clazz)) {
-        System.out.println("\u001b[34mSuite: " + test.clazz + "\u001b[0m");
+        System.out.print("\u001b[34mSuite: " + test.clazz + "\u001b[0m\n");
         lastClazz = test.clazz;
       }
       System.out.print("  " + test.name);
@@ -99,7 +99,7 @@ public class TestForge {
         classMap.put(test.clazz, testClass);
       }
       boolean result = testClass.addTest(test);
-      System.out.println((test.success == result) ? "\u001b[32mGOOD\u001b[0m" : "\u001b[31mBAD\u001b[0m");
+      System.out.print((test.success == result) ? "\u001b[32mGOOD\u001b[0m\n" : "\u001b[31mBAD\u001b[0m\n");
     }
     return classMap;
   }
