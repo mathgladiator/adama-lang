@@ -20,25 +20,11 @@ public class PhaseCompile {
   public static LivingDocumentFactory go(final String className, final String java, final StringBuilder outputFile) throws Exception {
     final var memoryResultsCompiler = new ByteArrayOutputStream();
     final var ps = new PrintStream(memoryResultsCompiler);
-    final var oldErr = System.err;
     System.setErr(ps);
-    LivingDocumentFactory factory = null;
-    try {
-      outputFile.append("--JAVA COMPILE RESULTS-----------------------------").append("\n");
-      System.err.println("Begin");
-      factory = new LivingDocumentFactory("test", className, java, "{}", Deliverer.FAILURE, new TreeMap<>());
-      System.err.println("End");
-    } finally {
-      ps.flush();
-      System.setErr(oldErr);
-      String[] lines = memoryResultsCompiler.toString().split(Pattern.quote("\n"));
-      for (String lineX : lines) {
-        String line = lineX.trim();
-        if (!line.contains("Error during class instrumentation") && line.length() > 0) {
-          outputFile.append(line);
-          outputFile.append("\n");
-        }
-      }
+    outputFile.append("--=[LivingDocumentFactory COMPILING]=---").append("\n");
+    LivingDocumentFactory factory = new LivingDocumentFactory("test", className, java, "{}", Deliverer.FAILURE, new TreeMap<>());
+    if (factory != null) {
+      outputFile.append("--=[LivingDocumentFactory MADE]=---\n");
     }
     return factory;
   }

@@ -602,9 +602,8 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[\"sm_1\"]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
@@ -1440,9 +1439,8 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"v\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"enum\",\"enum\":\"X\",\"options\":{\"values\":{\"Ax\":0,\"Ay\":1,\"Az\":2,\"B\":3,\"C\":4},\"names\":{\"0\":\"Ax\",\"1\":\"Ay\",\"2\":\"Az\",\"3\":\"B\",\"4\":\"C\"},\"default\":\"Ax\"}},\"privacy\":\"public\"},\"sum\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"X\",\"options\":{\"values\":{\"Ax\":0,\"Ay\":1,\"Az\":2,\"B\":3,\"C\":4},\"names\":{\"0\":\"Ax\",\"1\":\"Ay\",\"2\":\"Az\",\"3\":\"B\",\"4\":\"C\"},\"default\":\"Ax\"}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
@@ -2102,9 +2100,8 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"sum\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"sum3\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");

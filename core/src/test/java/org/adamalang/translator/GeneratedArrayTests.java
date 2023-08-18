@@ -596,9 +596,8 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"count\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
@@ -1606,9 +1605,8 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"tbl\":{\"type\":{\"nature\":\"reactive_table\",\"record_name\":\"X\"},\"privacy\":\"private\"},\"sum\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"found_impossible_thing\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"bool\"},\"privacy\":\"private\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"y\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"}}},\"_AnonObjConvert_0\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_0\",\"anonymous\":true,\"fields\":{\"x\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"y\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
@@ -2260,9 +2258,8 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"E\":{\"nature\":\"native_value\",\"type\":\"enum\",\"enum\":\"E\",\"options\":{\"values\":{\"X\":0,\"Y\":1},\"names\":{\"0\":\"X\",\"1\":\"Y\"},\"default\":\"X\"}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");

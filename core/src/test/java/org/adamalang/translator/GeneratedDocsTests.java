@@ -842,9 +842,8 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"score\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"_records\":{\"type\":{\"nature\":\"reactive_table\",\"record_name\":\"R\"},\"privacy\":\"private\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"R\":{\"nature\":\"reactive_record\",\"name\":\"R\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[\"transition1\",\"transition2\",\"transition3\",\"transition4\"]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
@@ -2380,9 +2379,8 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"R\":{\"nature\":\"reactive_record\",\"name\":\"R\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"score\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"R2\":{\"nature\":\"reactive_record\",\"name\":\"R2\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"score\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"ds\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"R3\":{\"nature\":\"reactive_record\",\"name\":\"R3\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"owner\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"private\"}}},\"R4\":{\"nature\":\"reactive_record\",\"name\":\"R4\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"owner\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"private\"},\"balance\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"policy\"}}},\"R5\":{\"nature\":\"reactive_record\",\"name\":\"R5\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"},\"owner\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"private\"},\"balance\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");

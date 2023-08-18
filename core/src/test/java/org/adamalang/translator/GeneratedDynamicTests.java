@@ -613,9 +613,8 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"t\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"bool\"},\"privacy\":\"private\"},\"t2\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"bool\"},\"privacy\":\"private\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
@@ -1466,9 +1465,8 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"food\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"dynamic\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"native_message\",\"name\":\"X\",\"anonymous\":false,\"fields\":{\"ninja\":{\"type\":{\"nature\":\"native_value\",\"type\":\"dynamic\"},\"privacy\":\"public\"}}},\"__GenASSOC2\":{\"nature\":\"native_message\",\"name\":\"__GenASSOC2\",\"anonymous\":false,\"fields\":{\"v\":{\"type\":{\"nature\":\"native_value\",\"type\":\"dynamic\"},\"privacy\":\"public\"}}}},\"channels\":{\"assoc\":\"X\",\"assoc2\":\"__GenASSOC2\"},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
@@ -2319,9 +2317,8 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n  /* end of file */");
     gold.append("\n}");
     gold.append("\n");
-    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
-    gold.append("\nBegin");
-    gold.append("\nEnd");
+    gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
+    gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"food\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"dynamic\"},\"privacy\":\"public\"},\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"native_message\",\"name\":\"X\",\"anonymous\":false,\"fields\":{\"ninja\":{\"type\":{\"nature\":\"native_value\",\"type\":\"dynamic\"},\"privacy\":\"public\"}}},\"__GenASSOC2\":{\"nature\":\"native_message\",\"name\":\"__GenASSOC2\",\"anonymous\":false,\"fields\":{\"v\":{\"type\":{\"nature\":\"native_value\",\"type\":\"dynamic\"},\"privacy\":\"public\"}}}},\"channels\":{\"assoc\":\"X\",\"assoc2\":\"__GenASSOC2\"},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");

@@ -33,10 +33,10 @@ public class GenerateTemplateTests {
           continue;
         }
         boolean devMode = file.getName().startsWith("dev_");
-        System.out.println("\u001b[36mTemplate:\u001b[0m" + file.getName());
+        System.out.print("\u001b[36mTemplate:\u001b[0m" + file.getName() + "\n");
         StringBuilder issues = new StringBuilder();
         Feedback feedback = (element, warning) -> {
-          System.out.println("  " + warning);
+          System.out.print("  " + warning + "\n");
           issues.append("WARNING:").append(warning).append("\n");
         };
         String gold = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file)), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end()).toString().replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js"));

@@ -53,7 +53,7 @@ public class GenerateLanguageTests {
     final var globals = GlobalObjectPool.createPoolWithStdLib();
     final var state = new EnvironmentState(globals, options);
     final var root = new File(inputRootPath);
-    writer.println("file,start_line,start_character,end_line,end_character,message");
+    writer.print("file,start_line,start_character,end_line,end_character,message\n");
     for (final File testFile : root.listFiles()) {
       final var test = TestFile.fromFilename(testFile.getName());
       if (!test.success) {
@@ -79,7 +79,8 @@ public class GenerateLanguageTests {
           JsonStreamWriter escaped = new JsonStreamWriter();
           escaped.writeString(node.get("message").toString().replaceAll(Pattern.quote("\\"), "/"));
           writer.print(escaped);
-          writer.println();
+          writer.print("\n");
+          writer.flush();
         }
       }
     }
