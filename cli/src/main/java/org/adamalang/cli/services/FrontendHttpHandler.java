@@ -240,6 +240,7 @@ public class FrontendHttpHandler implements HttpHandler {
       // TODO: if global, then ping database
       // TODO: if region, then ping global region
       // TODO: abstract the health checks to be a set
+      callback.success(health.toString());
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(0, ex, EXLOGGER));
     }
