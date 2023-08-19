@@ -54,7 +54,7 @@ public class ServiceLoadShedTests {
       latch.run();
       dataService.assertLogAt(0, "INIT:space/key:1->{\"__constructed\":true,\"__entropy\":\"-4964420948893066024\",\"__messages\":null,\"__seq\":1}");
       dataService.assertLogAt(1, "LOAD:space/key");
-      dataService.assertLogAt(4, "CLOSE:space/key");
+      dataService.assertLogAt(4, "SHED:space/key");
     } finally {
       service.shutdown();
     }
