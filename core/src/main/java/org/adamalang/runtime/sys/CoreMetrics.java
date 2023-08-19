@@ -11,6 +11,7 @@ package org.adamalang.runtime.sys;
 import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.common.metrics.RequestResponseMonitor;
 
 /** metrics for the core adama service */
 public class CoreMetrics {
@@ -53,6 +54,8 @@ public class CoreMetrics {
   public final Runnable document_collision;
   public final CallbackMonitor document_load_startup;
 
+  public final Runnable trigger_deployment;
+  public final RequestResponseMonitor deployment;
 
   public CoreMetrics(MetricsFactory metricsFactory) {
     serviceCreate = metricsFactory.makeCallbackMonitor("core_service_create");
@@ -93,5 +96,8 @@ public class CoreMetrics {
     internal_seq_drift = metricsFactory.counter("core_document_internal_seq_drift");
     document_collision = metricsFactory.counter("core_document_document_collision");
     document_load_startup = metricsFactory.makeCallbackMonitor("core_document_load_startup");
+
+    trigger_deployment = metricsFactory.counter("core_trigger_deployment");
+    deployment = metricsFactory.makeRequestResponseMonitor("core_deployment");
   }
 }

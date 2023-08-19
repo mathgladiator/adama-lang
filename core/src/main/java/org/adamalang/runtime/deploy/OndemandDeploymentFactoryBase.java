@@ -18,15 +18,15 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 import java.util.Collection;
 
 /** ensures an instance is always alive by fetching plans... on demand  */
-public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFactory  {
+public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFactory, Undeploy, Deploy {
   private final DeploymentFactoryBase base;
   private final PlanFetcher fetcher;
-  private final DeploySync deploySync;
+  private final DeploySync sync;
 
-  public OndemandDeploymentFactoryBase(DeploymentFactoryBase base, PlanFetcher fetcher, DeploySync deploySync) {
+  public OndemandDeploymentFactoryBase(DeploymentFactoryBase base, PlanFetcher fetcher, DeploySync sync) {
     this.base = base;
     this.fetcher = fetcher;
-    this.deploySync = deploySync;
+    this.sync = sync;
   }
 
   @Override
@@ -39,7 +39,7 @@ public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFacto
         public void success(DeploymentBundle bundle) {
           try {
             base.deploy(key.space, bundle.plan, bundle.keys);
-            deploySync.watch(key.space);
+            sync.watch(key.space);
             base.fetch(key, callback);
           } catch (ErrorCodeException ex) {
             callback.failure(ex);
@@ -52,6 +52,32 @@ public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFacto
         }
       });
     }
+  }
+
+  @Override
+  public void deploy(String space, Callback<Void> callback) {
+    fetcher.find(space, new Callback<DeploymentBundle>() {
+      @Override
+      public void success(DeploymentBundle bundle) {
+        try {
+          base.deploy(space, bundle.plan, bundle.keys);
+          sync.watch(space);
+          callback.success(null);
+        } catch (ErrorCodeException ex) {
+          failure(ex);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
+  @Override
+  public void undeploy(String space) {
+    base.undeploy(space);
   }
 
   @Override

@@ -138,6 +138,7 @@ public class AdamaDeploymentSync implements DeploySync {
     }
   }
 
+  @Override
   public void watch(String space) {
     executor.execute(new NamedRunnable("deploymentsync-watch") {
       @Override
@@ -151,6 +152,7 @@ public class AdamaDeploymentSync implements DeploySync {
     });
   }
 
+  @Override
   public void unwatch(String space) {
     executor.execute(new NamedRunnable("deploymentsync-unwatch") {
       @Override
