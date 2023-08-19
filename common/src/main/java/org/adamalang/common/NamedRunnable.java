@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 public abstract class NamedRunnable implements Runnable {
   private static final Logger RUNNABLE_LOGGER = LoggerFactory.getLogger("nrex");
   public final String __runnableName;
+  private String runningIn = "unknown";
+  private long created;
 
   public NamedRunnable(String first, String... tail) {
     if (tail == null || tail.length == 0) {
@@ -28,12 +30,20 @@ public abstract class NamedRunnable implements Runnable {
       }
       this.__runnableName = sb.toString();
     }
+    this.created = System.currentTimeMillis();
+  }
+
+  public void bind(String executorName) {
+    this.runningIn = executorName;
   }
 
   @Override
   public void run() {
+    long ran = System.currentTimeMillis();
     try {
       execute();
+      long finished = System.currentTimeMillis();
+      // TODO: report.. somewhere
     } catch (Exception ex) {
       boolean noise = noisy(ex);
       if (!noise) {
