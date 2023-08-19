@@ -37,12 +37,13 @@ public interface SimpleExecutor {
     }
   };
 
-  // TODO: INSTRUMENT THIS
+  // TODO: Finishing NamedRunnable instrumentation
   static SimpleExecutor create(String name) {
     ScheduledExecutorService realExecutor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(name));
     return new SimpleExecutor() {
       @Override
       public void execute(NamedRunnable command) {
+        command.bind(name);
         realExecutor.execute(command);
       }
 
