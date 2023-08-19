@@ -160,8 +160,10 @@ Adama.Debugger = (function() {
               delete rowsByKey[key];
             },
             '~': function (order) {
-              paging.order = order;
-              paging.reform();
+              if (order != null) {
+                paging.order = order;
+                paging.reform();
+              }
             }
           }
         }
@@ -173,7 +175,7 @@ Adama.Debugger = (function() {
           name: "list<" + dummy.name + ">",
           update: {
             '+': function (key) {
-              var itemHolder = documnet.createElement("span");
+              var itemHolder = document.createElement("span");
               var result = convertTypeToDomDelta(type.type, types);
               itemHolder.append(result.dom);
               itemHolder.append(simple("span", ", "));
