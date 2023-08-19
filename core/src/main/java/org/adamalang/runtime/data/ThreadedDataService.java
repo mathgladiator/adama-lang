@@ -84,6 +84,11 @@ public class ThreadedDataService implements DataService {
   }
 
   @Override
+  public void shed(Key key) {
+    at(key, service -> service.shed(key));
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     at(key, (service) -> service.close(key, callback));
   }

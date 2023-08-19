@@ -513,6 +513,11 @@ public class CaravanDataService implements ArchivingDataService {
   }
 
   @Override
+  public void shed(Key key) {
+    close(key, Callback.DONT_CARE_VOID);
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     execute("close", key, false, callback, (cached) -> {
       if (cached != null) {

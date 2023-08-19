@@ -60,6 +60,11 @@ public class PrefixSplitDataService implements DataService {
   }
 
   @Override
+  public void shed(Key key) {
+    ds(key).shed(key);
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     ds(key).close(key, callback);
   }

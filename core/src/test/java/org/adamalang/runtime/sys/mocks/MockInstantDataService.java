@@ -168,6 +168,11 @@ public class MockInstantDataService implements DataService {
   }
 
   @Override
+  public void shed(Key key) {
+    println("SHED:" + key.space + "/" + key.key);
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     callback.success(null);
     println("CLOSE:" + key.space + "/" + key.key);

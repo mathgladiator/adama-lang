@@ -174,6 +174,11 @@ public class InMemoryDataService implements DataService {
   }
 
   @Override
+  public void shed(Key key) {
+    close(key, Callback.DONT_CARE_VOID);
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     executor.execute(() -> {
       InMemoryDocument document = datum.remove(key);

@@ -129,7 +129,7 @@ public class DocumentThreadBase {
       }
     }
     for (DurableLivingDocument close : inactive) {
-      close.cleanupWhileInExecutor();
+      close.cleanupWhileInExecutor(false);
     }
     HashMap<String, PredictiveInventory> nextInventoryBySpace = new HashMap<>();
     for (Map.Entry<String, PredictiveInventory.PreciseSnapshotAccumulator> entry : accumulators.entrySet()) {

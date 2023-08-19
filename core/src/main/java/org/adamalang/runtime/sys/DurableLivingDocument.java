@@ -390,10 +390,10 @@ public class DurableLivingDocument implements Queryable {
   public void shedWhileInExecutor() {
     base.metrics.document_load_shed.run();
     loadShedOccurred = true;
-    issueCloseWhileInExecutor(ErrorCodes.DOCUMENT_SHEDDING_LOAD);
+    issueCloseWhileInExecutor(ErrorCodes.DOCUMENT_SHEDDING_LOAD, true);
   }
 
-  private void issueCloseWhileInExecutor(int errorCode) {
+  private void issueCloseWhileInExecutor(int errorCode, boolean shed) {
     document.__nukeViews();
     document.__nukeWebGetQueue();
     ErrorCodeException ex = new ErrorCodeException(errorCode);
@@ -404,10 +404,10 @@ public class DurableLivingDocument implements Queryable {
       observer.failure(ex);
     }
     observers.clear();
-    cleanupWhileInExecutor();
+    cleanupWhileInExecutor(shed);
   }
 
-  public void cleanupWhileInExecutor() {
+  public void cleanupWhileInExecutor(boolean shed) {
     DurableLivingDocument removed = base.map.remove(key);
     if (removed != null) {
       removed.document.__removed();
@@ -415,7 +415,11 @@ public class DurableLivingDocument implements Queryable {
       if (getCurrentFactory().delete_on_close) {
         executeDelete(Callback.DONT_CARE_VOID);
       } else {
-        base.service.close(key, Callback.DONT_CARE_VOID);
+        if (shed) {
+          base.service.shed(key);
+        } else {
+          base.service.close(key, Callback.DONT_CARE_VOID);
+        }
       }
     }
   }
@@ -464,7 +468,7 @@ public class DurableLivingDocument implements Queryable {
     inflightPatch = false;
     base.metrics.document_catastrophic_failure.run();
     catastrophicFailureOccurred = true;
-    issueCloseWhileInExecutor(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION);
+    issueCloseWhileInExecutor(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION, true);
   }
 
   private IngestRequest isolate(IngestRequest requestToFocus, IngestRequest[] all) {
@@ -794,7 +798,7 @@ public class DurableLivingDocument implements Queryable {
       @Override
       public void execute() throws Exception {
         if (document.__canRemoveFromMemory()) {
-          cleanupWhileInExecutor();
+          cleanupWhileInExecutor(false);
         }
       }
     }, base.getMillisecondsForCleanupCheck());

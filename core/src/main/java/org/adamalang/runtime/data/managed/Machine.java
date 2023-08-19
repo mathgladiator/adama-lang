@@ -147,7 +147,6 @@ public class Machine {
 
       @Override
       public void failure(ErrorCodeException ex) {
-        ex.printStackTrace();
         archive_Failure(ex, null);
       }
     });
@@ -320,16 +319,32 @@ public class Machine {
     }
   }
 
-  public void close() {
+  private void signalClose(boolean shed) {
     attemptClose = true;
     if (state == State.Unknown) {
       closed = true;
       base.documents.remove(key);
       return;
     }
-    if (state == State.OnMachine && pendingWrites == 0) {
-      executeClosed();
+    if (state == State.OnMachine) {
+      if (pendingWrites == 0) {
+        executeClosed();
+      } else if (shed) {
+        if (cancelArchive != null) {
+          cancelArchive.run();
+          cancelArchive = null;
+        }
+        scheduleArchiveWhileInExecutor(true);
+      }
     }
+  }
+
+  public void shed() {
+    signalClose(true);
+  }
+
+  public void close() {
+    signalClose(false);
   }
 
   public void delete() {

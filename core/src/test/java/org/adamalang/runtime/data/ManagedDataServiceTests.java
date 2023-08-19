@@ -8,6 +8,8 @@
  */
 package org.adamalang.runtime.data;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.managed.Base;
@@ -28,6 +30,7 @@ public class ManagedDataServiceTests {
   public static final Key KEY_CANT_BIND = new Key("space", "cant-bind");
   public static final Key KEY_SLOW_FIND = new Key("space", "slow-find");
   public static final Key KEY_SLOW_FIND_WHILE_FINDING = new Key("space", "slow-find-delete-while-finding");
+  public static final Key KEY_FAILED_DELETE_MARK = new Key("space", "fail-mark");
   public static final Key KEY_OFFBOX = new Key("space", "offbox");
   public static final Key KEY_RETRY_KEY = new Key("space", "retry-key");
   public static final Key KEY_CANT_DELETE_LOCAL = new Key("space", "cant-delete-delete");
@@ -106,6 +109,35 @@ public class ManagedDataServiceTests {
       gotSlow.run();
       cb_Get.assertFailure(786620);
       Assert.assertTrue(setup.delete.deleted.contains(KEY_SLOW_FIND_WHILE_FINDING));
+    }
+  }
+
+  @Test
+  public void delete_failure_unable_mark() throws Exception {
+    try (Setup setup = new Setup()) {
+      SimpleVoidCallback sbInit = new SimpleVoidCallback();
+      setup.managed.initialize(KEY_FAILED_DELETE_MARK, UPDATE_1, sbInit);
+      sbInit.assertSuccess();
+      SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
+      setup.managed.delete(KEY_FAILED_DELETE_MARK, DeleteTask.TRIVIAL, cb_Delete);
+      cb_Delete.assertFailure(-12389);
+    }
+  }
+
+  @Test
+  public void delete_failure_bad_task() throws Exception {
+    try (Setup setup = new Setup()) {
+      SimpleVoidCallback sbInit = new SimpleVoidCallback();
+      setup.managed.initialize(KEY1, UPDATE_1, sbInit);
+      sbInit.assertSuccess();
+      SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
+      setup.managed.delete(KEY1, new DeleteTask() {
+        @Override
+        public void executeAfterMark(Callback<Void> callback) {
+          callback.failure(new ErrorCodeException(11111));
+        }
+      }, cb_Delete);
+      cb_Delete.assertFailure(11111);
     }
   }
 

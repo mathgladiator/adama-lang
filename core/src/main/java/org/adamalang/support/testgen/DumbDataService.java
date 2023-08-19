@@ -128,6 +128,10 @@ public class DumbDataService implements DataService {
   }
 
   @Override
+  public void shed(Key key) {
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     callback.success(null);
   }
