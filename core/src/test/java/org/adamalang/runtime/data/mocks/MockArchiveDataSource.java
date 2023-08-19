@@ -198,6 +198,11 @@ public class MockArchiveDataSource implements ArchivingDataService {
   }
 
   @Override
+  public void shed(Key key) {
+    println("SHED:" + key.space + "/" + key.key);
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     data.close(key, callback);
   }

@@ -104,15 +104,6 @@ public class ManagedDataService implements DataService {
       public void failure(ErrorCodeException ex) {
         LOG.error("delete-from-finder-failed:", ex);
         base.on(key, machine -> machine.close());
-        base.data.close(key, Callback.DONT_CARE_VOID);
-        /* There are two core failure modes.
-
-           (I) It failed and the mapping is still valid. In this case, failing the request is appropriate and the user is free to retry.
-
-           (II) It actually was deleted and the network failed to return. In this case, we have a problem of leaking data.
-
-           This is OK if and only IF the finder and local storage communicate via ids which is the case for caravan. We can also use keys, so this can work in the new world as well.
-        */
         callback.failure(ex);
       }
     });
@@ -147,6 +138,13 @@ public class ManagedDataService implements DataService {
       machine.write(new Action(() -> {
         base.data.snapshot(key, snapshot, callback);
       }, callback));
+    });
+  }
+
+  @Override
+  public void shed(Key key) {
+    base.on(key, machine -> {
+      machine.shed();
     });
   }
 

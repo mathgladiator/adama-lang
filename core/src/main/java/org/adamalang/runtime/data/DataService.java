@@ -32,6 +32,9 @@ public interface DataService {
   /** Snapshot the state of the document */
   void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback);
 
+  /** a command from on-high to shed the key from the machine */
+  void shed(Key key);
+
   /** close the storage */
   void close(Key key, Callback<Void> callback);
 }

@@ -116,6 +116,11 @@ public class MockDelayDataService implements DataService {
   }
 
   @Override
+  public void shed(Key key) {
+    enqueue(() -> parent.shed(key));
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     enqueue(() -> parent.close(key, callback));
   }

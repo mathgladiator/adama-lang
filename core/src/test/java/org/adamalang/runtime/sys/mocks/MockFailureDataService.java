@@ -48,6 +48,10 @@ public class MockFailureDataService implements DataService {
   }
 
   @Override
+  public void shed(Key key) {
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     callback.failure(new ErrorCodeException(1231));
   }

@@ -72,6 +72,59 @@ public class MachineTests {
   }
 
   @Test
+  public void shed() throws Exception {
+    MockInstantDataService data = new MockInstantDataService();
+    MockArchiveDataSource archive = new MockArchiveDataSource(data);
+
+    CountDownLatch latch = new CountDownLatch(1);
+    AtomicReference<String> val = new AtomicReference<>();
+    Callback<LocalDocumentChange> got = new Callback<LocalDocumentChange>() {
+      @Override
+      public void success(LocalDocumentChange value) {
+        val.set(value.patch);
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        ex.printStackTrace();
+        latch.countDown();
+      }
+    };
+
+    Callback<Void> debug = new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        ex.printStackTrace();
+      }
+    };
+
+    Runnable gotIt = archive.latchLogAt(1);
+    BaseTests.flow((base) -> {
+      base.on(KEY, (machine) -> {
+        machine.write(new Action(() -> archive.initialize(KEY, update(1, "{\"x\":1}", "{\"x\":0}"), debug), debug));
+        machine.write(new Action(() -> archive.patch(KEY, new RemoteDocumentUpdate[] { update(2, "{\"x\":2}", "{\"x\":1}") }, debug), debug));
+        machine.read(new Action(() -> archive.get(KEY, got), got));
+      });
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+      Assert.assertEquals("{\"x\":2}", val.get());
+      CountDownLatch sentShed = new CountDownLatch(1);
+      base.on(KEY, (machine) -> {
+        machine.write(new Action(() -> archive.patch(KEY, new RemoteDocumentUpdate[] { update(3, "{\"x\":3}", "{\"x\":2}") }, debug), debug));
+        machine.shed();
+        sentShed.countDown();
+      });
+      Assert.assertTrue(sentShed.await(1000, TimeUnit.MILLISECONDS));
+      gotIt.run();
+      archive.assertLogAt(0, "BACKUP:space/key");
+    }, archive);
+  }
+
+  @Test
   public void closing() throws Exception {
     MockInstantDataService data = new MockInstantDataService();
     MockArchiveDataSource archive = new MockArchiveDataSource(data);
