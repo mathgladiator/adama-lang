@@ -348,15 +348,6 @@ var RxHTML = (function () {
     }
   };
 
-  var subscribe_view = function (state, unsub) {
-    if (state.view != null) {
-      unsub.__view = state.view.tree.subscribe(root_of(state.view).delta);
-    } else {
-      unsub.__view = function () {
-      };
-    }
-  };
-
   // RUNTIME | Switch to the view object
   self.pV = function (state) {
     return { service: state.service, data: state.data, view: state.view, current: "view" };
@@ -626,21 +617,16 @@ var RxHTML = (function () {
 
     var sub = {
       "+": function (key) {
-        var new_state = self.pIE(it_state, key, expandView);
-        new_state = {
-          service: new_state.service,
-          data: new_state.data,
-          view: new_delta_copy(new_state.view),
-          current: new_state.current
-        };
-
+        var new_state = fork(self.pIE(it_state, key, expandView));
         var unsub = make_unsub();
         var dom = maker(new_state);
         domByKey[key] = dom;
         viewUnSubByKey[key] = unsub;
         parentDom.append(dom);
-        subscribe_view(new_state, unsub);
-        return new_state[new_state.current].delta;
+        var item_delta = new_state.data.delta;
+        new_state.data.delta = {};
+        subscribe_state(new_state, unsub);
+        return item_delta;
       },
       "-": function (key) {
         if (key in domByKey) {
