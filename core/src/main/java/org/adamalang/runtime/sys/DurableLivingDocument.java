@@ -468,7 +468,7 @@ public class DurableLivingDocument implements Queryable {
     inflightPatch = false;
     base.metrics.document_catastrophic_failure.run();
     catastrophicFailureOccurred = true;
-    issueCloseWhileInExecutor(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION, true);
+    issueCloseWhileInExecutor(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION, false);
   }
 
   private IngestRequest isolate(IngestRequest requestToFocus, IngestRequest[] all) {
