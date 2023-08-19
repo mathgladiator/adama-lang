@@ -51,7 +51,7 @@ public class CoreService implements Deliverer, Queryable {
   };
   public final DataService dataService;
   public final ServiceShield shield;
-  private final CoreMetrics metrics;
+  public final CoreMetrics metrics;
   private final LivingDocumentFactoryFactory livingDocumentFactoryFactory;
   private final DocumentThreadBase[] bases;
   private final AtomicBoolean alive;
