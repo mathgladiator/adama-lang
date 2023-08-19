@@ -314,7 +314,9 @@ function AdamaTree() {
     }
   };
 
+  this.update_in_progress = false;
   this.update = function (delta) {
+    this.update_in_progress = true;
     var arr = []; // convert the subscriptions into an array
     for (var k in all_subscriptions) {
       arr.push(all_subscriptions[k]);
@@ -322,6 +324,20 @@ function AdamaTree() {
     var events = [];
     merge(root, delta, arr, events); // execute the merge and fire events
     fire_events(events);
+    while (this.subscribe_delay.length > 0) {
+      var copy = this.subscribe_delay;
+      this.subscribe_delay = [];
+      var flat = [];
+      for (var k = 0; k < copy.length; k++) {
+        if (!copy[k].aborted) {
+          flat.push(copy[k].sub);
+        }
+      }
+      events = [];
+      merge({}, make_delta(root), flat, events); // execute the merge and fire events
+      fire_events(events);
+    }
+    this.update_in_progress = false;
   };
 
   // fix the callback structure from the user's happy land to the rigor of the format needed
@@ -383,18 +399,31 @@ function AdamaTree() {
     return delta;
   };
 
+  this.subscribe_delay = [];
+
   // `subscribe` the given structural callback
   this.subscribe = function (callback) {
     var sub = {};
     transform_callback_into_sub(callback, sub);  // transform the callback into a safe callback
-    var delta = make_delta(root);
-    var events = [];
-    merge({}, delta, [sub], events); // execute the callback now on a callback of all data to fire events and fill the subscription object
-    fire_events(events);
     var S = "" + id++; // create an id for the subscription
     all_subscriptions[S] = sub; // record the subscription
-    return function () { // return a method to unsubscribe
-      delete all_subscriptions[S];
-    };
+    if (this.update_in_progress) {
+      var sm = {};
+      sm.sub = sub;
+      sm.aborted = false;
+      this.subscribe_delay.push(sm);
+      return function() {
+        sm.aborted = true;
+        delete all_subscriptions[S];
+      };
+    } else {
+      var delta = make_delta(root);
+      var events = [];
+      merge({}, delta, [sub], events); // execute the callback now on a callback of all data to fire events and fill the subscription object
+      fire_events(events);
+      return function () { // return a method to unsubscribe
+        delete all_subscriptions[S];
+      };
+    }
   };
 }
