@@ -8,8 +8,8 @@
  */
 package org.adamalang.cli.services.distributed;
 
+import org.adamalang.caravan.CaravanBoot;
 import org.adamalang.cli.Config;
-import org.adamalang.cli.services.CaravanInit;
 import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.*;
@@ -55,7 +55,8 @@ public class Backend {
     String billingRootPath = config.get_string("billing-path", "billing");
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     ProxyDeploymentFactory factoryProxy = new ProxyDeploymentFactory(deploymentFactoryBase);
-    CaravanInit caravan = new CaravanInit(init, config);
+
+    CaravanBoot caravan = new CaravanBoot(init.alive, config.get_string("caravan-root", "caravan"), init.metricsFactory, init.region, init.machine, init.globalFinder, init.s3, init.s3);
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), caravan.service, TimeSource.REAL_TIME, coreThreads);
     DeploymentAgent deployAgent = new DeploymentAgent(init.picker, init.database, deploymentMetrics, init.region, init.machine, deploymentFactoryBase, service, init.masterKey);
@@ -118,7 +119,6 @@ public class Backend {
         // This will send to all connections an empty list which will remove from the routing table. At this point, we should wait all connections migrate away
         System.err.println("backend shutting down");
         handle.kill();
-        caravan.shutdown();
       }
     })));
     System.err.println("backend running");
