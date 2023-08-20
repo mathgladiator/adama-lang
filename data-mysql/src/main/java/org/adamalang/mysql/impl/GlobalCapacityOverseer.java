@@ -60,6 +60,7 @@ public class GlobalCapacityOverseer implements CapacityOverseer  {
   public void add(String space, String region, String machine, Callback<Void> callback) {
     try {
       Capacity.add(database, space, region, machine);
+      callback.success(null);
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GLOBAL_CAPACITY_EXCEPTION_ADD, ex, LOGGER));
     }
@@ -69,6 +70,7 @@ public class GlobalCapacityOverseer implements CapacityOverseer  {
   public void remove(String space, String region, String machine, Callback<Void> callback) {
     try {
       Capacity.remove(database, space, region, machine);
+      callback.success(null);
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GLOBAL_CAPACITY_EXCEPTION_REMOVE, ex, LOGGER));
     }
@@ -78,6 +80,7 @@ public class GlobalCapacityOverseer implements CapacityOverseer  {
   public void nuke(String space, Callback<Void> callback) {
     try {
       Capacity.removeAll(database, space);
+      callback.success(null);
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GLOBAL_CAPACITY_EXCEPTION_NUKE, ex, LOGGER));
     }
@@ -86,7 +89,12 @@ public class GlobalCapacityOverseer implements CapacityOverseer  {
   @Override
   public void pickStableHostForSpace(String space, String region, Callback<String> callback) {
     try {
-      callback.success(Hosts.pickStableHostFromRegion(database, region, "adama", space));
+      String result = Hosts.pickStableHostFromRegion(database, region, "adama", space);
+      if (result == null) {
+        callback.failure(new ErrorCodeException(ErrorCodes.GLOBAL_CAPACITY_EMPTY_PICKHOST));
+        return;
+      }
+      callback.success(result);
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GLOBAL_CAPACITY_EXCEPTION_PICKHOST, ex, LOGGER));
     }
@@ -94,7 +102,15 @@ public class GlobalCapacityOverseer implements CapacityOverseer  {
 
   @Override
   public void pickNewHostForSpace(String space, String region, Callback<String> callback) {
-    // TODO
-    callback.failure(new ErrorCodeException(-1));
+    try {
+      String result = Hosts.pickNewHostForSpace(database, region, "adama", space);
+      if (result == null) {
+        callback.failure(new ErrorCodeException(ErrorCodes.GLOBAL_CAPACITY_EMPTY_NEWHOST));
+        return;
+      }
+      callback.success(result);
+    } catch (Exception ex) {
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GLOBAL_CAPACITY_EXCEPTION_NEWHOST, ex, LOGGER));
+    }
   }
 }

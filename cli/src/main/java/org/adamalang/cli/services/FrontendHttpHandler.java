@@ -133,18 +133,16 @@ public class FrontendHttpHandler implements HttpHandler {
     rxHtmlFetcher.fetch(space, new Callback<>() {
       @Override
       public void success(LiveSiteRxHtmlResult result) {
-        if (result != null) {
-          if (result.test(uri)) {
-            callback.success(new HttpResult("text/html", result.html, false));
-            return;
-          }
+        if (result.test(uri)) {
+          callback.success(new HttpResult("text/html", result.html, false));
+          return;
         }
         get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
+        get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
       }
     });
   }

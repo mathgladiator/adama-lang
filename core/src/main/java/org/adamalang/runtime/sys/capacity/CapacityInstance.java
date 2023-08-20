@@ -8,8 +8,10 @@
  */
 package org.adamalang.runtime.sys.capacity;
 
+import java.util.Objects;
+
 /** a region bound machine */
-public class CapacityInstance {
+public class CapacityInstance implements Comparable<CapacityInstance> {
   public final String space;
   public final String region;
   public final String machine;
@@ -20,5 +22,33 @@ public class CapacityInstance {
     this.region = region;
     this.machine = machine;
     this.override = override;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    CapacityInstance instance = (CapacityInstance) o;
+    return override == instance.override && Objects.equals(space, instance.space) && Objects.equals(region, instance.region) && Objects.equals(machine, instance.machine);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(space, region, machine, override);
+  }
+
+  @Override
+  public int compareTo(CapacityInstance o) {
+    int delta = region.compareTo(o.region);
+    if (delta == 0) {
+      delta = machine.compareTo(o.machine);
+      if (delta == 0) {
+        delta = space.compareTo(o.space);
+        if (delta == 0) {
+          delta = Boolean.compare(override, o.override);
+        }
+      }
+    }
+    return delta;
   }
 }

@@ -17,6 +17,7 @@ import org.adamalang.region.AdamaDeploymentSync;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
+import org.adamalang.runtime.deploy.Deploy;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.web.client.WebClientBase;
@@ -30,6 +31,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -46,9 +48,15 @@ public class DevBoxStart {
     MultiWebClientRetryPoolConfig config = new MultiWebClientRetryPoolConfig(new ConfigObject(Json.parseJsonObject("{\"multi-connection-count\":1}")));
     MultiWebClientRetryPool productionPool = new MultiWebClientRetryPool(offload, webClientBase, new MultiWebClientRetryPoolMetrics(new NoOpMetricsFactory()), config, ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
     SelfClient production = new SelfClient(productionPool);
-    AdamaDeploymentSync sync = new AdamaDeploymentSync(production, offload, developerIdentity, (initial, space) -> {
-      if (!initial) {
-        terminal.important("hivemind|" + space + " was deployed!");
+    AdamaDeploymentSync sync = new AdamaDeploymentSync(production, offload, developerIdentity, new Deploy() {
+      private HashSet<String> ignoredFirst = new HashSet<>();
+      @Override
+      public void deploy(String space, Callback<Void> callback) {
+        if (ignoredFirst.contains(space)) {
+          terminal.important("hivemind|" + space + " was deployed!");
+        } else {
+          ignoredFirst.add(space);
+        }
       }
     });
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
@@ -57,7 +65,6 @@ public class DevBoxStart {
         sync.shutdown();
       }
     }));
-
     DynamicControl control = new DynamicControl();
     AtomicBoolean alive = new AtomicBoolean(true);
     String localLibAdamaJSPath = "".equals(args.localLibadamaPath) ? null : args.localLibadamaPath;

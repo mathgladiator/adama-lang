@@ -11,6 +11,7 @@ package org.adamalang.region;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
+import org.adamalang.runtime.deploy.Deploy;
 import org.adamalang.runtime.deploy.DeploySync;
 
 import java.util.HashMap;
@@ -23,9 +24,9 @@ public class AdamaDeploymentSync implements DeploySync {
   private final String identity;
   private final SimpleExecutor executor;
   private final HashMap<String, SM> stateMachines;
-  private final BiConsumer<Boolean, String> event;
+  private final Deploy event;
 
-  public AdamaDeploymentSync(SelfClient client, SimpleExecutor executor, String identity, BiConsumer<Boolean, String> event) {
+  public AdamaDeploymentSync(SelfClient client, SimpleExecutor executor, String identity, Deploy event) {
     this.client = client;
     this.executor = executor;
     this.identity = identity;
@@ -79,7 +80,7 @@ public class AdamaDeploymentSync implements DeploySync {
             if (data.has("deployments")) {
               int deploymentsValue = data.get("deployments").intValue();
               if (deploymentsValue > deploymentAt) {
-                event.accept(deploymentAt == -1, space);
+                event.deploy(space, Callback.DONT_CARE_VOID);
               }
               deploymentAt = deploymentsValue;
             }
