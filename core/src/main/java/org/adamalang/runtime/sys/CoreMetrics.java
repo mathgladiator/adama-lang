@@ -55,7 +55,6 @@ public class CoreMetrics {
   public final CallbackMonitor document_load_startup;
 
   public final Runnable trigger_deployment;
-  public final RequestResponseMonitor deployment;
 
   public CoreMetrics(MetricsFactory metricsFactory) {
     serviceCreate = metricsFactory.makeCallbackMonitor("core_service_create");
@@ -98,6 +97,5 @@ public class CoreMetrics {
     document_load_startup = metricsFactory.makeCallbackMonitor("core_document_load_startup");
 
     trigger_deployment = metricsFactory.counter("core_trigger_deployment");
-    deployment = metricsFactory.makeRequestResponseMonitor("core_deployment");
   }
 }
