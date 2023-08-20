@@ -113,6 +113,19 @@ public class ManagedDataServiceTests {
   }
 
   @Test
+  public void shed_while_starting() throws Exception {
+    try (Setup setup = new Setup()) {
+      setup.finder.bindLocal(KEY_SLOW_FIND_WHILE_FINDING);
+      Runnable gotSlow = setup.finder.latchOnSlowFind();
+      SimpleDataCallback cb_Get = new SimpleDataCallback();
+      setup.managed.get(KEY_SLOW_FIND_WHILE_FINDING, cb_Get);
+      setup.managed.shed(KEY_SLOW_FIND_WHILE_FINDING);
+      gotSlow.run();
+      cb_Get.assertFailure(791691);
+    }
+  }
+
+  @Test
   public void delete_failure_unable_mark() throws Exception {
     try (Setup setup = new Setup()) {
       SimpleVoidCallback sbInit = new SimpleVoidCallback();

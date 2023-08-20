@@ -90,11 +90,7 @@ public class DeploymentPlan {
                           _seed = reader.readString();
                           break;
                         case "percent":
-                          try {
-                            _percent = reader.readDouble();
-                          } catch (NumberFormatException nfe) {
-                            throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_PLAN_PERCENT_MUST_BE_DOUBLE);
-                          }
+                          _percent = reader.readDouble();
                           break;
                         default:
                           throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_UNKNOWN_FIELD_STAGE);

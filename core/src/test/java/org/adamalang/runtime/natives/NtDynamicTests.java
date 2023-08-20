@@ -30,6 +30,8 @@ public class NtDynamicTests {
     T.hashCode();
     Assert.assertTrue(NtDynamic.NULL.equals(new NtDynamic("null")));
     Assert.assertEquals(10, F.memory());
+    Assert.assertEquals(T, T.to_dynamic());
+    Assert.assertTrue(T == T.to_dynamic());
   }
 
   @Test

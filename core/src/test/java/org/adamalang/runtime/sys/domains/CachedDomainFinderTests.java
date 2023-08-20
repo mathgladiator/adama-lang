@@ -45,4 +45,36 @@ public class CachedDomainFinderTests {
       executor.shutdown();
     }
   }
+
+  @Test
+  public void max() throws Exception {
+    SimpleExecutor executor = SimpleExecutor.create("x");
+    try {
+      int N = 50000;
+      MockDomainFinder mock = new MockDomainFinder();
+      for (int k = 0; k < N; k++) {
+        mock.with("host-" + k, new Domain("domain", 1, "space", "key", false, "", null, 123L));
+      }
+      CachedDomainFinder finder = new CachedDomainFinder(TimeSource.REAL_TIME, 100, 100000, executor, mock);
+      CountDownLatch latch = new CountDownLatch(20000);
+      for (int k = 0; k < N; k++) {
+        finder.find("host-" +k, new Callback<Domain>() {
+          @Override
+          public void success(Domain value) {
+            Assert.assertEquals("domain", value.domain);
+            Assert.assertEquals("space", value.space);
+            latch.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+      }
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    } finally {
+      executor.shutdown();
+    }
+  }
 }

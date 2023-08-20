@@ -190,10 +190,6 @@ public class ErrorCodes {
   public static final int DEPLOYMENT_PLAN_PLAN_ARRAY_ELEMENT_MUST_OBJECT = 176703;
 
   @User
-  @Description("The deployment plan is not correct; plan objects must have percent be numeric")
-  public static final int DEPLOYMENT_PLAN_PERCENT_MUST_BE_DOUBLE = 151615;
-
-  @User
   @Description("The deployment plan is not correct; plan object must point to a version which exists")
   public static final int DEPLOYMENT_PLAN_VERSION_MUST_EXIST = 120895;
 
