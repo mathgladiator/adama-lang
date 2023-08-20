@@ -8522,7 +8522,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __assert_truth(false, 28, 4, 28, 17);");
     gold.append("\n    }");
     gold.append("\n    __track(22);");
-    gold.append("\n    __assert_truth((LibArithmetic.Mod.O(10, 3)).getOrDefaultTo(-100) > 0, 30, 2, 30, 43);");
+    gold.append("\n    __assert_truth((LibArithmetic.Mod.II(10, 3)).getOrDefaultTo(-100) > 0, 30, 2, 30, 43);");
     gold.append("\n    __track(23);");
     gold.append("\n    __assert_truth(2 * 3 > 5, 31, 2, 31, 19);");
     gold.append("\n    __track(24);");

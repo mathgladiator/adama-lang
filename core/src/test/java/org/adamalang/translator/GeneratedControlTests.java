@@ -5184,7 +5184,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      x.opAddTo(4);");
     gold.append("\n    }");
     gold.append("\n    __track(6);");
-    gold.append("\n    if (LibArithmetic.Or.o(new NtMaybe<Boolean>(false), true)) {");
+    gold.append("\n    if (LibArithmetic.Or.mBB(new NtMaybe<Boolean>(false), true)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(7);");
     gold.append("\n      x.opAddTo(8);");
@@ -6512,7 +6512,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
-    gold.append("\n    int k = (LibArithmetic.Mod.O(sum.get(), 7)).getOrDefaultTo(-100);");
+    gold.append("\n    int k = (LibArithmetic.Mod.II(sum.get(), 7)).getOrDefaultTo(-100);");
     gold.append("\n    __track(3);");
     gold.append("\n    {");
     gold.append("\n      for (;__goodwill(7, 8, 7, 15) && (k < 100);k++) {");
